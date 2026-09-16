@@ -42,8 +42,8 @@ includes.
 - `docs/ARCHITECTURE.md` - system shape, package boundaries, code rules.
 - `docs/PROTOCOL.md` - A2UI v0.9 usage and the A2A subset on the wire.
 - `docs/CATALOG.md` - the Homeward component catalog and client functions.
-- `docs/AGENT.md` - agent loop, prompts, tools, research fallback, voice door.
-- `docs/MARKETS.md` - rule pack schema, curation, sources, researched packs.
+- `docs/AGENT.md` - agent loop, prompts, tools, uncovered markets, voice door.
+- `docs/MARKETS.md` - rule pack schema, curation, sources, reference rates.
 - `docs/REQUIREMENTS_APP.md` - client app screens and behavior.
 - `docs/REQUIREMENTS_SERVER.md` - endpoints, auth, key handling, deployment.
 - `docs/FIRESTORE.md` - collections, rules, and indexes.
@@ -62,8 +62,11 @@ first.
 - Market rules live in rule packs, never in prompts, widgets, or tool bodies.
 - Finance math lives once, in `common`, and is used by both server tools and
   client functions.
-- Every curated rule carries a source and a review date. Researched rules are
-  always labelled as researched.
+- Every rule carries a source and a review date. Homeward states rules only for
+  curated markets and says plainly when a market is not covered.
+- Everything runs on free tiers: buyers' free Gemini keys, Google Cloud within its
+  free allowances, no paid store accounts. A feature that needs payment is not
+  built.
 - The Gemini API key belongs to the user. Never log, persist, or echo it.
 - Write no code comments. Names, small functions, and types carry the meaning.
 - Prefer composition and small reusable units over copy and paste; prefer
