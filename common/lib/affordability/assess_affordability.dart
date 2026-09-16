@@ -1,15 +1,9 @@
-import '../finance/amortization_tier.dart';
-import '../finance/annuity.dart';
 import '../finance/monthly_payment.dart';
-import '../finance/repayment_style.dart';
-import '../finance/straight.dart';
 import '../markets/applicability.dart';
 import '../markets/income_basis.dart';
 import '../markets/lending_limits.dart';
 import '../markets/lending_rules.dart';
-import '../markets/living_costs.dart';
 import '../markets/loan_type.dart';
-import '../markets/reference_rate.dart';
 import '../markets/resolved_market.dart';
 import '../markets/rule_section.dart';
 import '../markets/stress_kind.dart';
@@ -26,13 +20,12 @@ import 'constraint_kind.dart';
 import 'down_payment_bounds.dart';
 import 'interest_deduction.dart';
 import 'largest_loan.dart';
+import 'scenario_payment.dart';
 
 Affordability assessAffordability({
   required Scenario scenario,
   required ResolvedMarket market,
   required BuyerProfile profile,
-  required Map<String, ReferenceRate> referenceRates,
-  LivingCosts? livingCosts,
 }) {
   final currency = market.currency;
   if (scenario.price.currency != currency ||
@@ -63,48 +56,21 @@ Affordability assessAffordability({
       unconvertedCurrencies: unconvertedCurrencies,
     );
   }
+  final livingCosts = market.livingCosts;
   if (lending.leftToLiveOn.isNotEmpty && livingCosts == null) {
-    throw ArgumentError.notNull('livingCosts');
+    throw ArgumentError.notNull('market.livingCosts');
   }
-  final loanType = market.loanTypes.firstWhere(
-    (type) => type.id == scenario.loanTypeId,
-    orElse: () => throw ArgumentError.value(
-      scenario.loanTypeId,
-      'scenario.loanTypeId',
-      'Not a loan type of ${market.id.code}',
-    ),
-  );
-  final referenceRate =
-      referenceRates[loanType.referenceRateId] ??
-      (throw ArgumentError.value(
-        loanType.referenceRateId,
-        'referenceRates',
-        'Missing',
-      ));
-  final annualRate =
-      referenceRate.rate + scenario.rateSpread + scenario.rateShock;
+  final loanType = loanTypeOf(scenario, market);
+  final annualRate = scenarioRate(scenario, market);
   final loan = scenario.loan;
   final zero = Money.zero(currency);
 
-  MonthlyPayment paymentAt(Money principal, Rate rate) =>
-      switch (lending.repaymentStyle ?? RepaymentStyle.annuity) {
-        RepaymentStyle.annuity => firstAnnuityPayment(
-          principal: principal,
-          annualRate: rate,
-          months: scenario.months,
-          rounding: Rounding.halfUp,
-        ),
-        RepaymentStyle.straight => firstStraightPayment(
-          principal: principal,
-          annualRate: rate,
-          annualAmortizationRate: requiredAmortizationRate(
-            loan: principal,
-            value: scenario.price,
-            tiers: lending.amortization.map((rule) => rule.tier),
-          ),
-          rounding: Rounding.halfUp,
-        ),
-      };
+  MonthlyPayment paymentAt(Money principal, Rate rate) => paymentFor(
+    principal: principal,
+    annualRate: rate,
+    scenario: scenario,
+    market: market,
+  );
 
   Money deductionOn(Money monthlyInterest) => lending.interestDeduction.fold(
     zero,

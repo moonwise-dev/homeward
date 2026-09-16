@@ -5,6 +5,7 @@ export 'affordability/constraint_kind.dart';
 export 'affordability/down_payment_bounds.dart';
 export 'affordability/interest_deduction.dart';
 export 'affordability/largest_loan.dart';
+export 'affordability/scenario_payment.dart';
 export 'finance/amortization_tier.dart';
 export 'finance/annuity.dart';
 export 'finance/bracket.dart';

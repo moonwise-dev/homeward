@@ -1,36 +1,46 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../money/currency.dart';
+import '../money/currency_json_converter.dart';
 import '../profile/buyer_profile.dart';
 import '../profile/profile_field.dart';
 import 'applicability.dart';
 import 'cost_rule.dart';
 import 'identified.dart';
 import 'lending_rules.dart';
+import 'living_costs.dart';
 import 'loan_type.dart';
 import 'market_id.dart';
+import 'market_id_json_converter.dart';
 import 'market_rule_pack.dart';
+import 'reference_rate.dart';
 import 'rule_section.dart';
 import 'source.dart';
 
 part 'resolved_market.freezed.dart';
+part 'resolved_market.g.dart';
 
 @freezed
 abstract class ResolvedMarket with _$ResolvedMarket {
   const factory ResolvedMarket({
-    required MarketId id,
+    @MarketIdJsonConverter() required MarketId id,
     required String name,
-    required Currency currency,
+    @CurrencyJsonConverter() required Currency currency,
     required LendingRules lending,
     required List<CostRule> purchaseCosts,
     required List<CostRule> recurringCosts,
     required List<LoanType> loanTypes,
+    @Default({}) Map<String, ReferenceRate> referenceRates,
+    LivingCosts? livingCosts,
     required List<Source> sources,
     required Map<String, PendingRule> pendingRules,
     required Set<ProfileField> requiredFields,
   }) = _ResolvedMarket;
 
   const ResolvedMarket._();
+
+  factory ResolvedMarket.fromJson(Map<String, Object?> json) =>
+      _$ResolvedMarketFromJson(json);
 
   Set<ProfileField> missingFor(RuleSection section) => {
     for (final rule in pendingRules.values)
@@ -44,9 +54,17 @@ abstract class PendingRule with _$PendingRule {
     required RuleSection section,
     required Set<ProfileField> missing,
   }) = _PendingRule;
+
+  factory PendingRule.fromJson(Map<String, Object?> json) =>
+      _$PendingRuleFromJson(json);
 }
 
-ResolvedMarket resolveForBuyer(MarketRulePack pack, BuyerProfile profile) {
+ResolvedMarket resolveForBuyer(
+  MarketRulePack pack,
+  BuyerProfile profile, {
+  Map<String, ReferenceRate> referenceRates = const {},
+  LivingCosts? livingCosts,
+}) {
   final currency = pack.currency;
   if (pack.parent != null || currency == null) {
     throw ArgumentError.value(
@@ -106,6 +124,11 @@ ResolvedMarket resolveForBuyer(MarketRulePack pack, BuyerProfile profile) {
     purchaseCosts: purchaseCosts,
     recurringCosts: recurringCosts,
     loanTypes: pack.loanTypes,
+    referenceRates: {
+      for (final loanType in pack.loanTypes)
+        loanType.referenceRateId: ?referenceRates[loanType.referenceRateId],
+    },
+    livingCosts: resolvedLending.leftToLiveOn.isEmpty ? null : livingCosts,
     sources: pack.sources,
     pendingRules: pendingRules,
     requiredFields: {

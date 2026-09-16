@@ -62,12 +62,16 @@ void main() {
       adults: 2,
       childAges: const [],
     );
-    Affordability assess(BuyerProfile profile) => assessAffordability(
-      scenario: scenario,
-      market: resolveForBuyer(pack, profile),
-      profile: profile,
+    ResolvedMarket marketFor(BuyerProfile profile) => resolveForBuyer(
+      pack,
+      profile,
       referenceRates: rates,
       livingCosts: livingCosts,
+    );
+    Affordability assess(BuyerProfile profile) => assessAffordability(
+      scenario: scenario,
+      market: marketFor(profile),
+      profile: profile,
     );
 
     test('a well-paid couple is bound by the loan-to-value cap', () {
@@ -146,34 +150,29 @@ void main() {
 
     test('rejects an unknown loan type, a missing rate, and missing costs', () {
       final profile = couple(netMonthly: 62000);
-      final market = resolveForBuyer(pack, profile);
+      final market = marketFor(profile);
 
       expect(
         () => assessAffordability(
           scenario: scenario.copyWith(loanTypeId: 'fixed-5y'),
           market: market,
           profile: profile,
-          referenceRates: rates,
-          livingCosts: livingCosts,
         ),
         throwsArgumentError,
       );
       expect(
         () => assessAffordability(
           scenario: scenario,
-          market: market,
+          market: market.copyWith(referenceRates: const {}),
           profile: profile,
-          referenceRates: const {},
-          livingCosts: livingCosts,
         ),
         throwsArgumentError,
       );
       expect(
         () => assessAffordability(
           scenario: scenario,
-          market: market,
+          market: market.copyWith(livingCosts: null),
           profile: profile,
-          referenceRates: rates,
         ),
         throwsArgumentError,
       );
@@ -241,9 +240,8 @@ void main() {
         );
     AssessedAffordability assess(BuyerProfile profile) => assessAffordability(
       scenario: scenario,
-      market: resolveForBuyer(merged, profile),
+      market: resolveForBuyer(merged, profile, referenceRates: rates),
       profile: profile,
-      referenceRates: rates,
     ) as AssessedAffordability;
 
     test('pays an annuity at Euribor plus spread', () {
@@ -287,9 +285,8 @@ void main() {
       final profile = stockholmBuyer(netMonthly: 4000).copyWith(use: null);
       final result = assessAffordability(
         scenario: scenario,
-        market: resolveForBuyer(merged, profile),
+        market: resolveForBuyer(merged, profile, referenceRates: rates),
         profile: profile,
-        referenceRates: rates,
       );
 
       expect(

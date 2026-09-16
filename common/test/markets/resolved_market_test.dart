@@ -109,6 +109,36 @@ void main() {
     });
   });
 
+  test('round trips through JSON with its rates as the /market slice', () {
+    final market = resolveForBuyer(
+      merged,
+      BuyerProfile(taxResidence: CountryCode.parse('SE')),
+      referenceRates: {
+        'EUR.EURIBOR12M': ReferenceRate(
+          id: 'EUR.EURIBOR12M',
+          rate: const Rate.ppm(25000),
+          asOf: CalendarDate.parse('2026-08-31'),
+          source: merged.sources.first,
+        ),
+        'UNUSED': ReferenceRate(
+          id: 'UNUSED',
+          rate: Rate.zero,
+          asOf: CalendarDate.parse('2026-08-31'),
+          source: merged.sources.first,
+        ),
+      },
+    );
+
+    expect(market.referenceRates.keys, ['EUR.EURIBOR12M']);
+    expect(market.livingCosts, isNull);
+    expect(
+      ResolvedMarket.fromJson(
+        jsonDecode(jsonEncode(market.toJson())) as Map<String, Object?>,
+      ),
+      market,
+    );
+  });
+
   test('refuses a pack whose chain is not resolved', () {
     expect(
       () => resolveForBuyer(madeira, const BuyerProfile()),

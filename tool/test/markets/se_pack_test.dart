@@ -32,10 +32,13 @@ void main() {
   );
   AssessedAffordability assess(BuyerProfile profile) => assessAffordability(
     scenario: scenario,
-    market: resolveForBuyer(sweden, profile),
+    market: resolveForBuyer(
+      sweden,
+      profile,
+      referenceRates: markets.rates,
+      livingCosts: markets.livingCosts[CountryCode.parse('SE')],
+    ),
     profile: profile,
-    referenceRates: markets.rates,
-    livingCosts: markets.livingCosts[CountryCode.parse('SE')],
   ) as AssessedAffordability;
 
   test('the default rate is SBAB\'s list rate over the SCB average', () {

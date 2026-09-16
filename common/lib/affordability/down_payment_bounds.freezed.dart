@@ -12,6 +12,7 @@ part of 'down_payment_bounds.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$DownPaymentBounds {
 
@@ -22,6 +23,8 @@ mixin _$DownPaymentBounds {
 @pragma('vm:prefer-inline')
 $DownPaymentBoundsCopyWith<DownPaymentBounds> get copyWith => _$DownPaymentBoundsCopyWithImpl<DownPaymentBounds>(this as DownPaymentBounds, _$identity);
 
+  /// Serializes this DownPaymentBounds to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -30,7 +33,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is DownPaymentBounds&&(identical(other.min, _this.min) || other.min == _this.min)&&(identical(other.max, _this.max) || other.max == _this.max)&&(identical(other.step, _this.step) || other.step == _this.step));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as DownPaymentBounds;
@@ -238,11 +241,11 @@ return $default(_that.min,_that.max,_that.step);case _:
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _DownPaymentBounds implements DownPaymentBounds {
   const _DownPaymentBounds({required this.min, required this.max, required this.step});
-  
+  factory _DownPaymentBounds.fromJson(Map<String, dynamic> json) => _$DownPaymentBoundsFromJson(json);
 
 @override final  Money min;
 @override final  Money max;
@@ -254,14 +257,17 @@ class _DownPaymentBounds implements DownPaymentBounds {
 @pragma('vm:prefer-inline')
 _$DownPaymentBoundsCopyWith<_DownPaymentBounds> get copyWith => __$DownPaymentBoundsCopyWithImpl<_DownPaymentBounds>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$DownPaymentBoundsToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType&&other is _DownPaymentBounds&&(identical(other.min, min) || other.min == min)&&(identical(other.max, max) || other.max == max)&&(identical(other.step, step) || other.step == step));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
     return Object.hash(runtimeType,min,max,step);

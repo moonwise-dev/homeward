@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../money/money.dart';
 
 part 'down_payment_bounds.freezed.dart';
+part 'down_payment_bounds.g.dart';
 
 @freezed
 abstract class DownPaymentBounds with _$DownPaymentBounds {
@@ -11,6 +12,9 @@ abstract class DownPaymentBounds with _$DownPaymentBounds {
     required Money max,
     required Money step,
   }) = _DownPaymentBounds;
+
+  factory DownPaymentBounds.fromJson(Map<String, Object?> json) =>
+      _$DownPaymentBoundsFromJson(json);
 }
 
 Money downPaymentStep(Money price) {
