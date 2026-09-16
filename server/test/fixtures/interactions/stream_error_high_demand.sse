@@ -1,0 +1,9 @@
+event: interaction.created
+data: {"interaction":{"id":"v1_ChcyWmVxYXFtWUZ1RG1uc0VQMXBhazJBNBIXMlplcWFxbVlGdURtbnNFUDFwYWsyQTQ","status":"in_progress","object":"interaction","model":"gemini-3.8-flash"},"event_type":"interaction.created"}
+
+event: interaction.status_update
+data: {"interaction_id":"v1_ChcyWmVxYXFtWUZ1RG1uc0VQMXBhazJBNBIXMlplcWFxbVlGdURtbnNFUDFwYWsyQTQ","status":"in_progress","event_type":"interaction.status_update"}
+
+event: error
+data: {"error":{"message":"gemini-3.8-flash is currently experiencing high demand, spikes in demand are usually temporary. Please try again later.","code":"api_error"},"event_type":"error"}
+

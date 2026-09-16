@@ -8,14 +8,34 @@ It has no hard-coded stages; the open decisions of the plan decide the step.
 
 | Setting | Default | Config key |
 | --- | --- | --- |
-| Turn model | `gemini-3.8-flash` | `HOMEWARD_TURN_MODEL` |
-| Research model | `gemini-3.8-flash` | `HOMEWARD_RESEARCH_MODEL` |
+| Turn models, in preference order | `gemini-3.8-flash,gemini-3.5-flash` | `HOMEWARD_TURN_MODELS` |
+| Research models, in preference order | `gemini-3.8-flash,gemini-3.5-flash` | `HOMEWARD_RESEARCH_MODELS` |
+| Thinking level | `low` | `HOMEWARD_THINKING_LEVEL` |
+| Deadline to response headers | 10 s | `HOMEWARD_HEADERS_DEADLINE` |
+| Deadline to first step | 20 s | `HOMEWARD_FIRST_STEP_DEADLINE` |
+| Unhealthy model cool-down | 5 min | `HOMEWARD_MODEL_COOLDOWN` |
 | Store interactions | `true` | fixed |
 | Validation correction rounds | 2 | `HOMEWARD_MAX_CORRECTIONS` |
+| Model rounds per turn, target | ≤ 2 | measured in evals |
 | Inline surfaces per turn | 2 | fixed |
 
-Model IDs are confirmed against the user's key in spike S2. The key is the
-buyer's own, so the configured model must be available on the free tier.
+Spike S2 found every listed model available on a free-tier key, but
+`gemini-3.8-flash` overloaded on the day: `generateContent` answered 503, and
+Interactions requests hung before headers or after `interaction.created`, one
+for over 15 minutes, some ending in an in-stream `api_error`.
+`gemini-3.5-flash` answered in 7–18 s per round.
+
+### Model Selection
+
+- Each request goes to the first model in the list whose circuit is closed.
+- A request that misses a deadline, receives HTTP 503, or receives an in-stream
+  `api_error` is aborted by closing the connection. That model's circuit opens
+  for the cool-down, and the request is retried once on the next model.
+- Circuits live in memory per instance; a cold instance relearns within one
+  request.
+- A key or quota error never falls back; it is the buyer's to fix.
+- Every turn logs the model used and, when it fell back, the model and phase
+  it fell back from.
 
 ## Principles
 
@@ -63,6 +83,10 @@ server's source for the board. It is pure and unit tested.
 The first turn with nothing known draws one surface that asks for the market and
 the buyer's basic situation together, with one commit button.
 
+The tools column lists what a step needs, not who calls it. When a step's inputs
+are settled in the plan, the orchestrator pre-runs its tools before the model is
+called; the model only calls tools that need interpretation.
+
 ## Tools
 
 Tools are Dart classes in `server/lib/tools`, one per file, each an adapter over
@@ -72,6 +96,12 @@ Tools are Dart classes in `server/lib/tools`, one per file, each an adapter over
 - `planPatch`: changes to the plan record, only for `propose_*` and
   `release_decision`.
 - `seeds`: data model slices the server injects into surfaces created this turn.
+
+Each tool declares whether it can be pre-run: `load_market`,
+`compute_affordability`, `estimate_purchase_costs`, `get_obstacles`,
+`get_process`, and `get_loan_types` can, because their inputs come from the plan.
+`resolve_market`, `propose_profile`, `propose_scenario`, `release_decision`, and
+`research_market` cannot, because their inputs come from what the buyer wrote.
 
 | Tool | Input | Model result | Seeds |
 | --- | --- | --- | --- |
@@ -114,17 +144,30 @@ the system prompt stays small.
 2. If the input is an action the server can complete, apply it to the plan. If
    it needs no model, recompile the board, finish.
 3. Derive open decisions.
-4. Assemble prompt and tool declarations.
-5. Call `interactions.create` with streaming, `previous_interaction_id` when
-   present, `store: true`.
-6. Stream: forward text deltas; buffer `a2ui` fenced blocks line by line; run
-   tools on function calls and continue the interaction with their results.
-7. Validate each A2UI message against a shadow `MessageProcessor` rebuilt from
+4. **Pre-run the predictable steps.** Every tool whose inputs are already
+   settled in the plan runs now, without the model: loading the selected market,
+   computing affordability for a committed profile, costs for a committed
+   scenario, obstacles, process. Their model results go into the turn context
+   and their seeds are staged for surfaces created this turn.
+5. Assemble prompt, the pre-run results, and declarations for only the tools
+   that still need interpretation: resolving a free-text place, proposing values
+   the buyer stated, releasing a decision, research.
+6. Call `interactions.create` with streaming, `previous_interaction_id` when
+   present, `store: true`, through model selection.
+7. Stream: forward the full text so far; buffer `a2ui` fenced blocks line by
+   line; run tools on function calls, run any predictable steps they unlock, and
+   continue the interaction with all results at once.
+8. Validate each A2UI message against a shadow `MessageProcessor` rebuilt from
    the session's stored messages; on failure send a correction and continue.
-8. Seed and forward valid messages.
-9. Persist the turn, the new `lastInteractionId`, and plan patches.
-10. Recompile and forward the board if the plan changed.
-11. Release the lease, emit `completed`.
+9. Seed and forward valid messages.
+10. Persist the turn, the new `lastInteractionId`, the models used, the number
+    of model rounds, and plan patches.
+11. Recompile and forward the board if the plan changed.
+12. Release the lease, emit `completed`.
+
+A turn that commits a profile or scenario therefore usually needs one model
+round: the numbers are already computed, and the model only writes and lays
+out. A turn that starts from free text usually needs two.
 
 ### Stream Parser
 
@@ -141,10 +184,42 @@ progressively while the model is still writing.
 
 ### Rebuilding History
 
-Interaction history is a cache. When `previous_interaction_id` is unknown to the
-key in use — the buyer changed keys, or storage expired — the orchestrator
-starts a fresh interaction with the plan summary and the last few turns' text.
-Nothing is lost because the plan record holds every decision.
+Interaction history is a cache. When a request carrying
+`previous_interaction_id` fails with 404 `not_found` (deleted or expired) or
+400 `invalid_request` (unknown to this key, or never stored), the orchestrator
+retries once without it, starting a fresh interaction from the plan summary and
+the last few turns' text. Nothing is lost because the plan record holds every
+decision.
+
+### Interactions API Client
+
+`server/lib/gemini` is a hand-written client over REST, shaped by spike S2:
+
+- `POST /v1beta/interactions?alt=sse` with `x-goog-api-key` and `stream: true`.
+- SSE events have an `event:` name and a JSON `data:` carrying `event_type`,
+  except the terminator `event: done` / `data: [DONE]`.
+- Events: `interaction.created` (ID), `interaction.status_update`,
+  `step.start` / `step.delta` / `step.stop` per step, `interaction.completed`
+  (status and usage), `error`.
+- Steps: `thought` (deltas are `thought_signature`, ignored),
+  `model_output` (deltas are `text`), `function_call` (`step.start` carries
+  `id` and `name`; deltas are `arguments_delta` string fragments, joined and
+  parsed at `step.stop`).
+- A completed status of `requires_action` means function calls are pending.
+  They are answered by a new interaction with `previous_interaction_id` and
+  `input` as a list of `{ "type": "function_result", "call_id", "name",
+  "result" }`, one per call.
+- Tools are declared as `{ "type": "function", "name", "description",
+  "parameters" }` and re-sent on every request.
+- Errors arrive in three shapes: a Google RPC array
+  `[{ "error": { "code": 401, "status": "UNAUTHENTICATED" } }]` for key failures,
+  an object `{ "error": { "code": "not_found" | "invalid_request", "message" } }`
+  for request failures, and an in-stream `error` event such as `api_error` for
+  overload. The client maps all three to one sealed error type.
+- A stream is cancelled by closing the connection. The cancel endpoint returned
+  404 for a stalled streamed interaction.
+- Recorded streams and error bodies live in
+  `server/test/fixtures/interactions/`.
 
 ## Researched Fallback
 
@@ -195,8 +270,10 @@ Rules:
 
 | Failure | Behavior |
 | --- | --- |
-| Invalid Gemini key | Turn fails with `gemini_key_invalid`; app routes to the key screen |
-| Key quota exhausted | Turn fails with `gemini_quota_exhausted` and retry-after; app explains it is the buyer's own quota |
+| Invalid Gemini key (HTTP 401 or 403) | Turn fails with `gemini_key_invalid`; app routes to the key screen |
+| Key quota exhausted (HTTP 429) | Turn fails with `gemini_quota_exhausted` and retry-after; app explains it is the buyer's own quota |
+| Model overloaded or stalled | Model selection falls back once; if every model is unhealthy, the turn fails with `gemini_unavailable` |
+| Unknown or expired previous interaction | Retry once with rebuilt history |
 | Model output invalid after corrections | Model text plus a retry surface |
 | Tool error | Short explanation plus retry surface |
 | Stream dropped | Client resumes with `tasks/get`; server keeps the task for 10 minutes |

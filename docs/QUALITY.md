@@ -67,7 +67,11 @@ official calculator or a tax authority worked example.
 | Research validation | Unsourced fields dropped, citations matched to grounding metadata |
 
 Gemini is never called in `make test`. The Interactions client is exercised
-against recorded SSE fixtures.
+against the streams and error bodies recorded in spike S2 under
+`server/test/fixtures/interactions/`: text, function call, function result
+continuation, stall after `interaction.created`, in-stream high-demand error,
+invalid key, unknown model, invalid tool, and deleted previous interaction.
+Model selection is tested with a fake clock and a fake transport.
 
 ### `app`
 
@@ -135,6 +139,8 @@ Computed for every turn of every case:
 - No money amounts or rates in chat text.
 - Asked profile fields equal the pack's required fields for the persona.
 - Turns to first affordability surface.
+- Model rounds per turn, against the target of at most two.
+- Models used and fallbacks.
 - Latency and token usage.
 
 ### Judged Scores

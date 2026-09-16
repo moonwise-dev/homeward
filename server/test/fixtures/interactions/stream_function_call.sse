@@ -1,0 +1,30 @@
+event: interaction.created
+data: {"interaction":{"id":"v1_ChdCcGFxYXEyTlBPNjB2ZElQbnBuWW1RMBIXQnBhcWFxMk5QTzYwdmRJUG5wblltUTA","status":"in_progress","object":"interaction","model":"gemini-3.5-flash"},"event_type":"interaction.created"}
+
+event: interaction.status_update
+data: {"interaction_id":"v1_ChdCcGFxYXEyTlBPNjB2ZElQbnBuWW1RMBIXQnBhcWFxMk5QTzYwdmRJUG5wblltUTA","status":"in_progress","event_type":"interaction.status_update"}
+
+event: step.start
+data: {"index":0,"step":{"type":"thought"},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":0,"delta":{"signature":"EtsCCtgCARFNMg+ZhvqHWQdSJLYuLHe61OM7OLZ+OpURAEN1p9/GVXPy4l7gM9N1nrDuOOacD9EJVnUC6mN9HGZudBZ84NkXALGeRMBEKSfA0yVPxcjXlF18/aYJB6TwLhLhHhNlGX+QTrohxT0r8rdF0cd3i4jPD9BG4lK1p+6sHP+3W/ae9mRnS4jBgDgLSLjLYV2dJgO+s44u4C4iEBqNUx/mryFgRKo4bgcuoweehoB6Q7+rTex1KcTO+GpuOj9ckL1QjlxE8Tz1OYAd5gzbGiHCdppM3hF/bMRvtoaLZPpqxKgSCw85ba01nfJcIQRJ4WjqApUW/fGYUYdp/xZUnnbeU0KkdqbNHfPOceejWLGMrx1PIjCJH/yKaV1NODbFqb4HIsnnfUs0AjVjI457mWzR4KdIP2116hVL5Nz7HzNUevW29r6TUyUdnc6ly3Bh+KymqYOdksTLLFk=","type":"thought_signature"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":0,"event_type":"step.stop"}
+
+event: step.start
+data: {"index":1,"step":{"id":"call_153395","type":"function_call","name":"resolve_market","arguments":{}},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":1,"delta":{"arguments":"{\"query\":\"Funchal\"}","type":"arguments_delta"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":1,"event_type":"step.stop"}
+
+event: interaction.completed
+data: {"interaction":{"id":"v1_ChdCcGFxYXEyTlBPNjB2ZElQbnBuWW1RMBIXQnBhcWFxMk5QTzYwdmRJUG5wblltUTA","status":"requires_action","usage":{"total_tokens":160,"total_input_tokens":93,"input_tokens_by_modality":[{"modality":"text","tokens":93}],"total_cached_tokens":0,"total_output_tokens":18,"total_tool_use_tokens":0,"total_thought_tokens":49,"raw_prompt_token":132,"model_invocation_token_counts":[{"prompt_tokens_details":[{"modality":"text","tokens":132}],"candidates_tokens_details":[{"modality":"text","tokens":24}],"thoughts_tokens_details":[{"modality":"text","tokens":49}]}]},"created":"2026-09-16T13:13:52Z","updated":"2026-09-16T13:13:52Z","service_tier":"standard","object":"interaction","model":"gemini-3.5-flash"},"event_type":"interaction.completed"}
+
+event: done
+data: [DONE]
+

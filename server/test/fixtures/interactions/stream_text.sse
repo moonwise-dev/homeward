@@ -1,0 +1,30 @@
+event: interaction.created
+data: {"interaction":{"id":"v1_ChdPcGlxYXRpX0xaV0ZrZFVQcGE2anlBaxIXT3BpcWF0aV9MWldGa2RVUHBhNmp5QWs","status":"in_progress","object":"interaction","model":"gemini-3.5-flash"},"event_type":"interaction.created"}
+
+event: interaction.status_update
+data: {"interaction_id":"v1_ChdPcGlxYXRpX0xaV0ZrZFVQcGE2anlBaxIXT3BpcWF0aV9MWldGa2RVUHBhNmp5QWs","status":"in_progress","event_type":"interaction.status_update"}
+
+event: step.start
+data: {"index":0,"step":{"type":"thought"},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":0,"delta":{"signature":"Eu4ECusEARFNMg9RcFm1S7KN8uK+XngUxHBf9JhWpHF2kKE4/u3vlJvgBqbXLAMWUYLFd6vVYWChkoFCD8Tb3v9PzzNWdUeK17DZht6V8QeBBrXLP6NgFiNaSWNa4emx/ZoavFr6Wxsn5HIZg7jP1E57a3ietirXXm0MP2cnKgdGskjyfQra9F0RxD/7kWVQZwK/nOGcBMrEsVU3zfhtErwMHp0/ZSPD0lEhwRxCnDgvcPirmoiAK8oml3JFV1fMZku4CONSXW+s0DJRIt5nZCFZ0IC5bNhNdUThqtrGAvYw0tFa0pAuRKB/0C6FruglhnpkaQoNL2nGJ91nMN70zMC/w062XDrgYfphhNCzBHifaOH+44M0RN8kCZdRvsHgEjzlr5bVafNlJNrZzypDeBz2IX3MXkBuAEXHdeqezFCtOPy8rVA0fPzHb00jVwtzEz1JFdk8Au6UcR0IZ2Uqj2jYr8caiMggfpC5oufoG6YN90+B0O4C6Ch1TZ1NmclB1/tvxLaBaFJsw29BbVTuuNJ/cQkxCaz6SbEYRGxklqdDFq0PJtywI1ra149OdRRbp36uP7AH2X6FrHN6Ka90s/VYFOHbMrfeO25teF7tv04wERxRk8MjYuwHYtHpMPZ4gaKkUWcNKWBbwy3e+hRHHIPvgPNTBHiGLSyKS+u0B2Vpc5WM3JyFMZDkTx91A8gknahIuf4/07nsoux3zEH2BKq6FBSmEU2wD178io+mp6WFaUGTD4ARh1i5yDwKa76D2CeprD1bMHzC6NxFZXQSuA1vcpPod0kaHKWkVvsK7eSMFIN561uoZ13/g43a0nqrKw==","type":"thought_signature"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":0,"event_type":"step.stop"}
+
+event: step.start
+data: {"index":1,"step":{"type":"model_output"},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":"one, two, three, four, five","type":"text"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":1,"event_type":"step.stop"}
+
+event: interaction.completed
+data: {"interaction":{"id":"v1_ChdPcGlxYXRpX0xaV0ZrZFVQcGE2anlBaxIXT3BpcWF0aV9MWldGa2RVUHBhNmp5QWs","status":"completed","usage":{"total_tokens":164,"total_input_tokens":16,"input_tokens_by_modality":[{"modality":"text","tokens":16}],"total_cached_tokens":0,"total_output_tokens":9,"total_tool_use_tokens":0,"total_thought_tokens":139,"raw_prompt_token":51,"model_invocation_token_counts":[{"prompt_tokens_details":[{"modality":"text","tokens":51}],"candidates_tokens_details":[{"modality":"text","tokens":13}],"thoughts_tokens_details":[{"modality":"text","tokens":139}]}]},"created":"2026-09-16T13:23:15Z","updated":"2026-09-16T13:23:15Z","service_tier":"standard","object":"interaction","model":"gemini-3.5-flash"},"event_type":"interaction.completed"}
+
+event: done
+data: [DONE]
+

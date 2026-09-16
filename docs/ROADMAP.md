@@ -42,6 +42,9 @@ Deliverables:
 - Research fallback returns a researched `MarketSnapshotCard` for one uncovered
   market.
 
+- Latency re-measured with the S2 probe at two different times of day; model
+  order confirmed.
+
 Exit: at the Sep 28 session, a Stockholm buyer goes from first message to a
 live down payment slider updating payment locally, on web and one phone.
 
@@ -101,7 +104,7 @@ resolution.
 | ID | Question | Method | Decision gate |
 | --- | --- | --- | --- |
 | S1 | What does `genui_a2a` 0.10.x put on the wire: A2A version, SSE or WebSocket, A2UI MIME type, where capabilities and data model travel, how actions are sent? | Run `genui_a2a` against a recording fake A2A server | **Answered:** the protocol fits; the app uses its own client, see `docs/SPIKES.md`. |
-| S2 | Can Dart drive the Interactions API cleanly: request shape, SSE event types, function calling continuation, `previous_interaction_id`, error codes for bad key and quota? Is `gemini-3.8-flash` available on free-tier keys? | Minimal Dart client against a free-tier key | Confirms `server/lib/gemini` design and default models. |
+| S2 | Can Dart drive the Interactions API cleanly: request shape, SSE event types, function calling continuation, `previous_interaction_id`, error codes for bad key and quota? Is `gemini-3.8-flash` available on free-tier keys? | Curl and a Dart console probe against a free-tier key | **Answered:** yes; see `docs/SPIKES.md`. Quota (429) shape not observed. |
 | S3 | Can one interaction combine `google_search` with structured JSON output, and what grounding metadata links fields to URLs? | Research call for `PT-20` | One interaction or search-then-extract. |
 | S4 | Do genui client functions accept object arguments and return numbers, strings, and booleans; can a catalog item subscribe to a whole slice; is a six-component slider drag at 60 fps? | Throwaway catalog item and profiling on web and Android | Confirms coarse bindings. Otherwise fine-grained bindings with a selector layer in `app/lib/catalog/bindings`. |
 | S5 | Is `a2ui_core` pure Dart and usable on the server for message models and validation? | Import into a console app | **Answered:** yes; used from `common`, see `docs/SPIKES.md`. |
@@ -114,7 +117,9 @@ resolution.
 | --- | --- | --- |
 | genui and A2UI change between now and recording | Rework in catalog and connector | Pin exact versions; genui confined to two places; no upgrades after M2 until recording |
 | A Google A2A client changes what it accepts | Other clients stop rendering Homeward | Server emits only `task` and `status-update`, full text snapshots; `genui_a2a` contract test in the app |
-| No official Dart GenAI SDK | Client maintenance | Thin typed client over REST, fixture tests, S2 |
+| No official Dart GenAI SDK | Client maintenance | Thin typed client over REST, recorded fixtures from S2 |
+| Gemini latency: 7–18 s per model round on 2026-09-16 | Slow turns on camera | Server pre-runs predictable steps, at most two rounds per turn, full text streamed as it grows, latency re-measured in M1 and before recording |
+| Preferred model overloaded | Hung or failed turns | Deadlines, circuit breaker, fallback to the next model |
 | Free-tier key limits during demo or recording | Failed turns on camera | Recording uses a Moonwise paid key; quota errors are explained in the app |
 | Researched rules are wrong | Buyer misled | Researched badge, citations, unknown over guessed, estimates-not-advice framing, never promoted without review |
 | Curated rules change after review | Stale numbers | 180-day expiry, effective dates, check warnings |
@@ -165,6 +170,8 @@ Decisions from the planning session on 2026-09-16.
 | D35 | Server surface state | Shadow `MessageProcessor` rebuilt per turn from stored messages | Hand-tracked surface IDs and seeded paths |
 | D36 | App A2A client | Own thin client in `common/wire`, server kept `genui_a2a`-compatible; supersedes the client half of D21 | `genui_a2a` with workarounds, `genui_a2a` internals |
 | D37 | Streaming text | Each status update carries the full text so far | Deltas in artifact updates, deltas in status updates |
+| D38 | Model selection | Ordered model list with deadlines and a per-instance circuit breaker | 3.5-flash only, decide after re-measuring |
+| D39 | Turn shape | Server pre-runs predictable steps; model calls only interpretive tools; at most two rounds | Model calls every tool, parallel calls only |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

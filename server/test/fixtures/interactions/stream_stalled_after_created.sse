@@ -1,0 +1,6 @@
+event: interaction.created
+data: {"interaction":{"id":"v1_Chd1cGVxYXR1REpKQ1VrZFVQd2RPNDBRaxIXdXBlcWF0dURKSkNVa2RVUHdkTzQwUWs","status":"in_progress","object":"interaction","model":"gemini-3.8-flash"},"event_type":"interaction.created"}
+
+event: interaction.status_update
+data: {"interaction_id":"v1_Chd1cGVxYXR1REpKQ1VrZFVQd2RPNDBRaxIXdXBlcWF0dURKSkNVa2RVUHdkTzQwUWs","status":"in_progress","event_type":"interaction.status_update"}
+

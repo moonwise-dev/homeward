@@ -1,0 +1,42 @@
+event: interaction.created
+data: {"interaction":{"id":"v1_ChcxNVdxYXJtMEk3V2IzYm9QNWFQTjhRaxIXNTVXcWFwU0NNX25tbnNFUG05RGp5UWM","status":"in_progress","object":"interaction","model":"gemini-3.5-flash"},"event_type":"interaction.created"}
+
+event: interaction.status_update
+data: {"interaction_id":"v1_ChcxNVdxYXJtMEk3V2IzYm9QNWFQTjhRaxIXNTVXcWFwU0NNX25tbnNFUG05RGp5UWM","status":"in_progress","event_type":"interaction.status_update"}
+
+event: step.start
+data: {"index":0,"step":{"type":"thought"},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":0,"delta":{"signature":"Eo4DCosDARFNMg/zi1ymDrGxBepTRLoq9A6SAshJrjURfEsqwn6JnJePQC13DbpaYhLTO0z7NhorvePac9LXwv2XQzQzy+pAzxD+kFvF/hZIWkOnPzLAVEBKiBBmY/lzpHrl/5OpoAmcWoOcCjT6+EMLxa+D+luerys/m0jgalF0hA5UZ+exGZi/hHssGVaBHLgM/ouCeaZw99i80GLa7l/7LB9IiHpLbfzpgUU886gDvlQbuMen6bUx4/fgJzVbyy7wBYl/UmO4jGzRCfTp4n4z8/EC5DDCW31k0W4Vnhjergz0lCWUcqKxYV/D3aw57twgUcJLi+59DNJpiHb/ZCNpkaCFRAhPH8TjV9x71kgLhMcAmEPpy5Li5XF6J6jGJeVdd+00JC+y0I6bIklrc0dpMZbuFPJTf8idI4MkWjfLxfmHdrn7Ed83ctBo/wDf49h6Cq9dKXyosUvWMp1sK/GEiwWNDeqVEI1NQo017ZCPM+uAfB8wEUzzWQbIXlqrbJMtzdE/eHzP/Wpp0lfthjU=","type":"thought_signature"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":0,"event_type":"step.stop"}
+
+event: step.start
+data: {"index":1,"step":{"type":"model_output"},"event_type":"step.start"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":"We have curated coverage in the Madeira market (including Funchal)!","type":"text"},"event_type":"step.delta"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":" I can certainly help you with your search for a flat there. \n\nTo help me find the best options for you,","type":"text"},"event_type":"step.delta"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":" could you share a bit more about:\n* Your budget range?\n* How many bedrooms or bathrooms you're looking for?","type":"text"},"event_type":"step.delta"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":"\n* Any specific features or neighborhoods in Funchal you prefer (e.g., close to the sea, historic","type":"text"},"event_type":"step.delta"}
+
+event: step.delta
+data: {"index":1,"delta":{"text":" center, etc.)?","type":"text"},"event_type":"step.delta"}
+
+event: step.stop
+data: {"index":1,"event_type":"step.stop"}
+
+event: interaction.completed
+data: {"interaction":{"id":"v1_ChcxNVdxYXJtMEk3V2IzYm9QNWFQTjhRaxIXNTVXcWFwU0NNX25tbnNFUG05RGp5UWM","status":"completed","usage":{"total_tokens":341,"total_input_tokens":191,"input_tokens_by_modality":[{"modality":"text","tokens":191}],"total_cached_tokens":0,"total_output_tokens":95,"total_tool_use_tokens":0,"total_thought_tokens":55,"raw_prompt_token":240,"model_invocation_token_counts":[{"prompt_tokens_details":[{"modality":"text","tokens":240}],"candidates_tokens_details":[{"modality":"text","tokens":99}],"thoughts_tokens_details":[{"modality":"text","tokens":55}]}]},"created":"2026-09-16T13:13:20Z","updated":"2026-09-16T13:13:20Z","service_tier":"standard","object":"interaction","model":"gemini-3.5-flash"},"event_type":"interaction.completed"}
+
+event: done
+data: [DONE]
+

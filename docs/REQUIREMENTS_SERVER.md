@@ -69,7 +69,7 @@ instances.
 | `gemini_key_missing` | Key header absent |
 | `gemini_key_invalid` | Gemini rejected the key |
 | `gemini_quota_exhausted` | Gemini returned a quota error; includes retry-after |
-| `gemini_unavailable` | Gemini returned a server error |
+| `gemini_unavailable` | Every configured model is overloaded, stalled, or returned a server error |
 | `rate_limited` | Homeward limit reached |
 | `turn_in_progress` | Another turn is running in this session |
 | `session_not_found` | Unknown or foreign session |
@@ -95,8 +95,12 @@ runs after every plan change and on session open when the board is missing.
 
 | Key | Purpose |
 | --- | --- |
-| `HOMEWARD_TURN_MODEL` | Turn model ID |
-| `HOMEWARD_RESEARCH_MODEL` | Research model ID |
+| `HOMEWARD_TURN_MODELS` | Turn model IDs in preference order |
+| `HOMEWARD_RESEARCH_MODELS` | Research model IDs in preference order |
+| `HOMEWARD_THINKING_LEVEL` | Gemini thinking level |
+| `HOMEWARD_HEADERS_DEADLINE` | Deadline for Gemini response headers |
+| `HOMEWARD_FIRST_STEP_DEADLINE` | Deadline for the first Gemini step |
+| `HOMEWARD_MODEL_COOLDOWN` | How long an overloaded model is skipped |
 | `HOMEWARD_MAX_CORRECTIONS` | Validation correction rounds |
 | `HOMEWARD_ALLOWED_ORIGINS` | CORS origins |
 | `HOMEWARD_APP_CHECK_ENFORCED` | Enforce App Check, off for local development |

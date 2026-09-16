@@ -1,0 +1,1 @@
+{"error":{"message":"Model 'gemini-9-imaginary' not found. Did you mean 'gemini-3-pro-image'? Please verify the model name against the supported list: https://ai.google.dev/gemini-api/docs/models","code":"not_found"}}

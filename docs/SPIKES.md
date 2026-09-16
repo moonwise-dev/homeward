@@ -67,6 +67,75 @@ use it as the A2A connection?
 - `docs/QUALITY.md`: `wire` tests against the frames recorded here, and the
   `genui_a2a` contract test.
 
+## S2 — Driving The Interactions API From Dart
+
+**Answered 2026-09-16.**
+
+### Question
+
+Can the Dart server drive the Gemini Interactions API cleanly: request shape,
+streaming events, function calling continuation, `previous_interaction_id`,
+error codes? Is `gemini-3.8-flash` available on a free-tier key?
+
+### Method
+
+- Read the Interactions API reference.
+- Raw `curl` against the API with the buyer-style free key: model listing, plain
+  and streamed interactions, tool declarations, function results, continuation,
+  deletion, and deliberate errors.
+- A Dart console probe on `package:http` implemented SSE parsing, event
+  assembly, a multi-round tool loop over `previous_interaction_id`, and a
+  first-step deadline, then ran it on two models.
+- Latency compared across `gemini-3.5-flash` at `minimal`, `low`, and `high`
+  thinking, `gemini-3.5-flash-lite`, and `gemini-3.1-flash-lite`.
+
+### Findings
+
+| Area | Result |
+| --- | --- |
+| Availability | The key lists 58 models including `gemini-3.8-flash`, `gemini-3.7-flash`, `gemini-3.5-flash`, and `gemini-3.8-live`. |
+| Overload | `gemini-3.8-flash`: `generateContent` answered 503 "high demand" in 1.8 s. Interactions requests either hung before response headers (one for over 15 minutes) or sent `interaction.created` and then nothing; one ended with an in-stream `error` event, code `api_error`. `gemini-3.7-flash` and `gemini-flash-latest` also hung. |
+| Latency | `gemini-3.5-flash` took 7–18 s per round across every model and thinking level tried; `gemini-3.1-flash-lite` was fastest at 7.5 s. Every response included a thought step. The day's overload likely inflates these numbers. |
+| Auth | `x-goog-api-key` header; the new `AQ.` key format works. |
+| Request | `POST /v1beta/interactions`, `?alt=sse` with `stream: true` to stream. Fields `model`, `input` (string or list), `system_instruction`, `tools`, `generation_config.thinking_level`, `store`, `previous_interaction_id`. |
+| Tools | `{ "type": "function", "name", "description", "parameters" }`; a missing `type` is a 400. |
+| Response | `id`, `status` (`completed`, `requires_action`, …), `steps` (`thought` with an opaque signature, `model_output` with text content, `function_call` with `id`, `name`, parsed `arguments`), `usage` including thought tokens, `service_tier`. |
+| Streaming | Named SSE events with JSON `data` carrying `event_type`: `interaction.created`, `interaction.status_update`, `step.start`, `step.delta`, `step.stop`, `interaction.completed`, then `event: done` with `data: [DONE]`, which is not JSON. |
+| Streamed calls | `step.start` carries the call's `id` and `name` with empty `arguments`; `step.delta` of type `arguments_delta` carries JSON string fragments. |
+| Continuation | A new interaction with `previous_interaction_id` and `input: [{ "type": "function_result", "call_id", "name", "result" }]` continued the turn and the model used the result. The Dart loop ran resolve, compute, answer across three rounds with correctly typed arguments (`priceMinorUnits: 35000000`, `residency: nonResident`) and an answer that stated no numbers. |
+| History errors | Deleted previous interaction: 404 `not_found`. Unknown or never-stored ID: 400 `invalid_request`. `store: false` returns no ID. |
+| Error shapes | Invalid key: 401 with a JSON array of Google RPC errors (numeric code, `UNAUTHENTICATED`). Unknown model: 404 object with string code `not_found`. Invalid tool: 400 `invalid_request`. Overload: in-stream `error` event. |
+| Cancel | `POST /interactions/{id}/cancel` returned 404 for a stalled streamed interaction after the client disconnected; closing the connection is the cancel. |
+| Caching | `total_cached_tokens` stayed 0 for these short prompts. |
+| Not observed | The quota exhaustion (429) response shape. |
+
+Recorded streams and error bodies are committed in
+`server/test/fixtures/interactions/`. They contain no key.
+
+### Decisions
+
+- **D38:** The server takes an ordered model list, `gemini-3.8-flash` then
+  `gemini-3.5-flash`. Each request has a 10 s deadline to headers and a 20 s
+  deadline to the first step. A deadline miss, 503, or in-stream `api_error`
+  aborts the request, opens that model's circuit for 5 minutes, and retries once
+  on the next model. Key and quota errors never fall back.
+- **D39:** Before calling the model, the orchestrator pre-runs every tool whose
+  inputs are settled in the plan and puts the results in the turn context. The
+  model calls only the tools that need interpretation. The target is at most two
+  model rounds per turn.
+
+### Consequences
+
+- `docs/AGENT.md`: model configuration and selection, pre-run steps in the turn
+  orchestrator and tools, history rebuild on 404 or 400, an Interactions API
+  client section, failure handling for overload.
+- `docs/REQUIREMENTS_SERVER.md`: model list, thinking level, deadline, and
+  cool-down configuration; `gemini_unavailable` covers overload.
+- `docs/QUALITY.md`: the Interactions client is tested against the recorded
+  fixtures; evals track model rounds and fallbacks.
+- `docs/ROADMAP.md`: latency and overload risks; latency re-measured in M1 before
+  confirming the model order.
+
 ## S5 — `a2ui_core` On The Server
 
 **Answered 2026-09-16.**
