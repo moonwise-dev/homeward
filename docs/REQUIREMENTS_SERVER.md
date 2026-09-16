@@ -157,8 +157,11 @@ service account through Application Default Credentials.
 - Firebase Hosting sends `Cross-Origin-Opener-Policy: same-origin` and
   `Cross-Origin-Embedder-Policy: require-corp` on the web app for multi-threaded
   Wasm rendering.
-- `make deploy-server` and `make deploy-web` exist and run only when explicitly
-  asked.
+- `make deploy-server` refuses a dirty working tree, tags the image with the
+  commit, pushes it, and deploys the service with the flags above.
+  `make deploy-web` builds the Wasm web app and deploys Hosting with the
+  headers and a single-page fallback from the root `firebase.json`. Both run
+  only when explicitly asked.
 
 ## Local Development
 

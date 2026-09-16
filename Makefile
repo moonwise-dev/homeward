@@ -3,6 +3,11 @@ DART_PACKAGES := common server tool
 CODEGEN_PACKAGES := common server
 SERVER_BINARY := server/build/server
 SERVER_IMAGE := homeward-server
+FIREBASE_PROJECT := homeward-genui
+REGION := europe-north1
+SERVER_SERVICE := homeward-server
+SERVER_ACCOUNT := $(SERVER_SERVICE)@$(FIREBASE_PROJECT).iam.gserviceaccount.com
+SERVER_REGISTRY_IMAGE := $(REGION)-docker.pkg.dev/$(FIREBASE_PROJECT)/homeward/server:$(shell git rev-parse --short HEAD)
 
 .PHONY: help
 help:
@@ -21,6 +26,8 @@ help:
 	@echo "  make server-build  Cross-compile the server for linux/x64"
 	@echo "  make server-image  Build the server container image"
 	@echo "  make server-image-run  Run the server container image on port 8080"
+	@echo "  make deploy-server  Push the image tagged with the commit and deploy Cloud Run"
+	@echo "  make deploy-web     Build the Wasm web app and deploy Firebase Hosting"
 	@echo "  make app-web       Run the app in Chrome"
 	@echo "  make app-macos     Run the app on macOS"
 	@echo "  make clean         Remove build outputs and resolved packages"
@@ -85,6 +92,24 @@ server-image: server-build
 .PHONY: server-image-run
 server-image-run: server-image
 	@docker run --rm --platform linux/amd64 -p 8080:8080 $(SERVER_IMAGE)
+
+.PHONY: clean-tree
+clean-tree:
+	@test -z "$$(git status --porcelain)" || (echo "Commit or stash changes first: images are tagged with the commit" && exit 1)
+
+.PHONY: deploy-server
+deploy-server: clean-tree server-image
+	@docker tag $(SERVER_IMAGE) $(SERVER_REGISTRY_IMAGE)
+	@docker push $(SERVER_REGISTRY_IMAGE)
+	@gcloud run deploy $(SERVER_SERVICE) --project $(FIREBASE_PROJECT) --region $(REGION) \
+		--image $(SERVER_REGISTRY_IMAGE) --service-account $(SERVER_ACCOUNT) --no-invoker-iam-check \
+		--min-instances 0 --max-instances 2 --concurrency 40 --timeout 300 \
+		--set-env-vars GOOGLE_CLOUD_PROJECT=$(FIREBASE_PROJECT) --quiet
+
+.PHONY: deploy-web
+deploy-web:
+	@cd app && flutter build web --wasm
+	@firebase deploy --only hosting --project $(FIREBASE_PROJECT)
 
 .PHONY: app-web
 app-web:
