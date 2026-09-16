@@ -103,9 +103,12 @@ make server-image-run
 Always resolve dependencies from the root with `make get`. Running
 `pub get` inside a package also resolves the whole workspace.
 
-Generated Dart files are committed and never edited by hand:
+Generated files are committed and never edited by hand:
 
 - `*.g.dart` and `*.freezed.dart`, from `make codegen`
+- `app/lib/firebase_options.dart`, `app/firebase.json`,
+  `app/android/app/google-services.json`, and both
+  `GoogleService-Info.plist` files, from `flutterfire configure`
 - `common/lib/money/generated/*`, from `make iso-4217`
 - `common/lib/catalog/generated/*`
 - `server/prompts/generated/*`

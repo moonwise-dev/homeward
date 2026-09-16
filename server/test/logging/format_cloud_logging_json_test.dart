@@ -10,7 +10,7 @@ import 'package:test/test.dart';
 void main() {
   Map<String, Object?> format(
     LogRecord record, {
-    String? projectId = 'homeward-staging',
+    String? projectId = 'homeward-genui',
   }) =>
       jsonDecode(formatCloudLoggingJson(record, projectId: projectId))
           as Map<String, Object?>;
@@ -73,7 +73,7 @@ void main() {
     expect(json['requestId'], 'r-1');
     expect(
       json['logging.googleapis.com/trace'],
-      'projects/homeward-staging/traces/4bf92f3577b34da6a3ce929d0e0e4736',
+      'projects/homeward-genui/traces/4bf92f3577b34da6a3ce929d0e0e4736',
     );
     expect(json['logging.googleapis.com/spanId'], '00f067aa0ba902b7');
     expect(

@@ -17,7 +17,7 @@ Deliverables:
 - Monorepo: move the Flutter scaffold into `app/`, create `server/`, `common/`,
   `markets/`, `tool/`, root `Makefile`, shared analysis options, CI running
   `make check`.
-- Firebase project `homeward-staging`: anonymous auth, Firestore `eur3`, App
+- Firebase project `homeward-genui`: anonymous auth, Firestore `eur3`, App
   Check providers, Hosting site, Cloud Run service shell.
 - Spikes S1 to S6 answered with a written decision in the decision log.
 - S7 started.
@@ -180,7 +180,7 @@ Decisions from the planning session on 2026-09-16.
 | D39 | Turn shape | Server pre-runs predictable steps; model calls only interpretive tools; at most two rounds | Model calls every tool, parallel calls only |
 | D40 | Paid features | None. No Google Search grounding, so runtime research is not built; supersedes the fallback half of D5 | Moonwise key for shared research, research with paid buyer keys, offline research |
 | D41 | Free-key quota | Bring-your-own only; quota errors never fall back to another model | Fall back across models per key, Moonwise allowance |
-| D42 | Billing | Attached, designed for €0 with a €1 budget alert and capped instances | No billing account, Google-provided project |
+| D42 | Billing | Attached, designed for €0 with a 25 SEK budget alert and capped instances | No billing account, Google-provided project |
 | D43 | Devices | Free only: web, simulators, sideloaded Android APKs, personally provisioned iPhones | Existing Moonwise store accounts |
 | D44 | Charts | Own `CustomPainter` charts in `app/lib/ui` | `fl_chart` redrawing less often, `fl_chart` as is |
 | D45 | Web build | Wasm with JS fallback, COOP and COEP headers | JS only |

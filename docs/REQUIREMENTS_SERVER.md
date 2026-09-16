@@ -140,10 +140,11 @@ service account through Application Default Credentials.
 - Cloud Run `europe-north1`, concurrency 40, request timeout 300 s, minimum
   instances 0, maximum 2, to stay within the free allowance; cold starts are
   accepted.
-- Artifact Registry repository with a cleanup policy keeping the last three
-  images.
-- Service account roles: Firestore user, Firebase Auth viewer, App Check token
-  verifier, logging writer.
+- Artifact Registry Docker repository `homeward` in `europe-north1`, with a
+  cleanup policy keeping the three most recent images and deleting the rest.
+- Cloud Run runs as `homeward-server@homeward-genui.iam.gserviceaccount.com`
+  with Cloud Datastore User, Firebase Authentication Viewer, Firebase App Check
+  Token Verifier, and Logs Writer.
 - Firebase Hosting rewrites `/a2a`, `/api/**`, and `/.well-known/**` to the
   Cloud Run service, and sends `Cross-Origin-Opener-Policy: same-origin` and
   `Cross-Origin-Embedder-Policy: require-corp` on the web app for multi-threaded

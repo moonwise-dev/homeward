@@ -15,12 +15,12 @@ void main() {
       ServerConfig.fromEnvironment({
         'PORT': '9090',
         'HOMEWARD_LOG_FORMAT': 'json',
-        'GOOGLE_CLOUD_PROJECT': 'homeward-staging',
+        'GOOGLE_CLOUD_PROJECT': 'homeward-genui',
       }),
       const ServerConfig(
         port: 9090,
         logFormat: LogFormat.json,
-        projectId: 'homeward-staging',
+        projectId: 'homeward-genui',
       ),
     );
   });
