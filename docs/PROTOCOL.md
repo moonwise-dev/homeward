@@ -115,24 +115,34 @@ A text turn:
 }
 ```
 
-An action turn carries the A2UI action as a data part and the surface data
-model in metadata:
+An action turn carries the A2UI action as a data part, exactly as genui's
+`SurfaceController` submits it, references the previous task, and carries the
+surface data model in metadata:
 
 ```json
 {
   "kind": "data",
-  "metadata": { "mimeType": "application/json+a2ui" },
   "data": {
+    "version": "v0.9",
     "action": {
-      "name": "commit_scenario",
       "surfaceId": "t3-affordability",
+      "name": "commit_scenario",
       "sourceComponentId": "commit",
-      "timestamp": "2026-10-02T09:14:03Z",
+      "timestamp": "2026-10-02T09:14:03.201",
       "context": { "scenarioPath": "/scenario" }
     }
   }
 }
 ```
+
+- genui does not attach the data model; the app reads it from
+  `SurfaceController.contextFor(surfaceId).dataModel` and puts it in metadata.
+- genui writes `timestamp` in local time without a zone. The server never uses
+  it and records its own receive time.
+- The client sends `a2uiClientCapabilities` on every turn.
+- Clients may serialize absent optional fields as explicit `null`
+  (`configuration`, `metadata`, `extensions`, `taskId`). The server treats
+  `null` and absent the same.
 
 ```json
 "metadata": {
@@ -152,18 +162,47 @@ model in metadata:
 ```
 
 Both shapes are what `a2ui_core` 0.1.1 produces through
-`MessageProcessor.getClientCapabilities` and `getClientDataModel`: capabilities
-are keyed by A2UI version, and the data model carries its version. Spike S1
-confirms that `genui_a2a` sends the same shapes.
+`MessageProcessor.getClientCapabilities` and `getClientDataModel`, and spike S1
+recorded `genui_a2a` sending exactly these.
 
 ### Server To Client
 
-SSE events, in order:
+Each SSE event is `data: {"jsonrpc":"2.0","id":<request id>,"result":<event>}`
+followed by a blank line. The server emits only two event kinds, because
+`genui_a2a` rejects any other kind with an uncaught error and ignores
+`artifact-update`:
 
-1. `status-update` with `state: working`.
-2. Zero or more agent text parts, streamed as they arrive.
-3. Zero or more data parts, one A2UI message each.
-4. `status-update` with `state: completed`, `failed`, or `canceled`, `final: true`.
+| Kind | When |
+| --- | --- |
+| `task` | Once, first, with `state: submitted` |
+| `status-update` | Every later event |
+
+Within a turn:
+
+1. `task` with `state: submitted`, carrying `id` (the turn's task ID) and
+   `contextId` (the session ID).
+2. `status-update` with `state: working` and no message, as soon as the model
+   is called.
+3. `status-update` with `state: working` whose message carries a text part with
+   **the agent's full text so far**, whenever it grows. Clients replace the
+   text they show rather than append. Clients may trim it, which is harmless for
+   a full text and would drop spaces between deltas.
+4. `status-update` with `state: working` whose message carries one data part
+   per A2UI message, in order, as each passes validation.
+5. `status-update` with `state: completed`, `final: true`, whose message
+   carries the final full text.
+
+A canceled turn ends with `state: canceled`, `final: true`.
+
+A failed turn ends with a JSON-RPC error event instead of a status, then the
+stream closes:
+
+```json
+{ "jsonrpc": "2.0", "id": 7, "error": { "code": -32001, "message": "Your Gemini quota is used up", "data": { "code": "gemini_quota_exhausted", "retryAfterSeconds": 40 } } }
+```
+
+`error.data.code` is a Homeward error code from `docs/REQUIREMENTS_SERVER.md`.
+A `failed` status is not used, because A2A clients surface it only as text.
 
 ```json
 {
@@ -190,6 +229,14 @@ SSE events, in order:
 
 The client sends `X-A2A-Extensions: https://a2ui.org/a2a-extension/a2ui/v0.9`.
 The server rejects `message/stream` without it.
+
+### Clients
+
+- The Homeward app uses its own client in `common/wire`, built on the same A2A
+  models the server encodes with. See `docs/SPIKES.md` S1 for why it does not
+  use `genui_a2a`.
+- The server stays compatible with `genui_a2a` 0.10.x: every rule above holds for
+  it, and a contract test replays recorded server streams through its connector.
 
 ## Surfaces
 

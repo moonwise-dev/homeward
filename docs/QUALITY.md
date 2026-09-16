@@ -43,12 +43,13 @@ There are no widget tests and no golden image tests.
 
 | Area | What is pinned |
 | --- | --- |
-| `money` | Every rounding mode and step against a hand table, 10 000 random cases against exact big integer arithmetic, currency parsing, currency mismatch errors, JSON; run on the VM and in Chrome because web integers are 53-bit
+| `money` | Every rounding mode and step against a hand table, 10 000 random cases against exact big integer arithmetic, currency parsing, currency mismatch errors, JSON; run on the VM and in Chrome because web integers are 53-bit |
 | `finance` | Annuity and straight amortization payments, LTV, DSTI, LTI, stress payment, maximum loan and binding constraint, purchase cost brackets including marginal and deduction styles, cash needed, currency exposure |
 | `markets` | Overlay resolution, predicate applicability, required profile fields per buyer |
 | `markets/<id>` | Worked examples per curated pack, with the expected figures derived by hand from the cited sources |
 | `plan` | Open decisions for every combination the flow table depends on |
 | `catalog` | Every declared example validates against its schema; bound-number annotations present on every money, rate, and percentage property |
+| `wire` | A2A models round-trip the frames recorded in spike S1, including explicit `null` fields; the client turns text, A2UI, cancel, and JSON-RPC error events into turn events |
 
 Finance tests are table driven. Each row names its source, for example an
 official calculator or a tax authority worked example.
@@ -67,6 +68,13 @@ official calculator or a tax authority worked example.
 
 Gemini is never called in `make test`. The Interactions client is exercised
 against recorded SSE fixtures.
+
+### `app`
+
+One test only, and not a widget test: `genui_a2a` compatibility. Server streams
+recorded by the server tests are replayed through `genui_a2a`'s
+`A2uiAgentConnector` against a local fake, proving any A2A client built on the
+Flutter team's connector renders Homeward's turns.
 
 ## Markets Check
 

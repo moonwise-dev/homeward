@@ -137,9 +137,9 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 | `GeminiKeyRepository` | `flutter_secure_storage`, session memory on web |
 | `KeyVerificationRepository` | `ApiClient` to `/api/keys/verify` |
 | `PlansRepository` | Firestore `sessions` and `plans` streams, server delete route |
-| `AgentRepository` | `genui_a2a` connector, `SurfaceController`, turn event stream |
+| `AgentRepository` | Homeward A2A client from `common/wire`, `SurfaceController`, turn event stream |
 | `TurnHistoryRepository` | Firestore `turns` for replay |
-| `WireLogRepository` | In-memory ring buffer fed by the agent connector |
+| `WireLogRepository` | In-memory ring buffer fed by the Homeward A2A client |
 
 `AgentRepository` is the only class outside `app/lib/catalog` that touches
 genui.

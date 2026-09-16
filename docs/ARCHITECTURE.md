@@ -86,7 +86,8 @@ common/lib/
   a2ui/           additions over a2ui_core: client action parsing, component
                   schema, allow-list, and tree structure validation; the server
                   adds ownership, shadow state, and seeding on top
-  wire/           A2A subset models, Homeward action names, data model paths
+  wire/           A2A subset models (Freezed), SSE framing, the Homeward A2A
+                  client the app uses, action names, data model paths, error codes
   errors/         HomewardError
 ```
 
@@ -235,7 +236,10 @@ app/lib/
 ### Flutter Stack
 
 - `genui` pinned to an exact version, A2UI v0.9.
-- `genui_a2a` for the A2A connection, pending spike S1.
+- The A2A connection uses the Homeward client from `common/wire`, not
+  `genui_a2a`; see `docs/SPIKES.md` S1. `genui_a2a` appears only in the app's
+  contract test.
+- `http` for the A2A client's requests; headers are added per request.
 - `freezed`, `json_serializable`.
 - `riverpod_annotation`, `flutter_riverpod`, `hooks_riverpod`, `flutter_hooks`.
 - `go_router`.
@@ -251,7 +255,9 @@ its API is confined to two places:
 
 - `app/lib/catalog/` for catalog items, client functions, and data bindings.
 - `app/lib/data/repository/agent_repository.dart` and its providers for the
-  `SurfaceController`, transport, and connector.
+  `SurfaceController`: it submits actions from `onSubmit` through the Homeward
+  A2A client, attaching capabilities and the surface data model, and feeds
+  every received `a2ui_core` message to `handleMessage`.
 
 Features read surfaces through providers and render `Surface` widgets. They
 never construct genui objects. A genui upgrade should touch those two places

@@ -100,7 +100,7 @@ resolution.
 
 | ID | Question | Method | Decision gate |
 | --- | --- | --- | --- |
-| S1 | What does `genui_a2a` 0.10.x put on the wire: A2A version, SSE or WebSocket, A2UI MIME type, where capabilities and data model travel, how actions are sent? | Run the `verdure` example against a logging proxy | If it fits a shelf A2A subset, use it. If not, write a genui `Transport` over our own A2A client in `AgentRepository`. |
+| S1 | What does `genui_a2a` 0.10.x put on the wire: A2A version, SSE or WebSocket, A2UI MIME type, where capabilities and data model travel, how actions are sent? | Run `genui_a2a` against a recording fake A2A server | **Answered:** the protocol fits; the app uses its own client, see `docs/SPIKES.md`. |
 | S2 | Can Dart drive the Interactions API cleanly: request shape, SSE event types, function calling continuation, `previous_interaction_id`, error codes for bad key and quota? Is `gemini-3.8-flash` available on free-tier keys? | Minimal Dart client against a free-tier key | Confirms `server/lib/gemini` design and default models. |
 | S3 | Can one interaction combine `google_search` with structured JSON output, and what grounding metadata links fields to URLs? | Research call for `PT-20` | One interaction or search-then-extract. |
 | S4 | Do genui client functions accept object arguments and return numbers, strings, and booleans; can a catalog item subscribe to a whole slice; is a six-component slider drag at 60 fps? | Throwaway catalog item and profiling on web and Android | Confirms coarse bindings. Otherwise fine-grained bindings with a selector layer in `app/lib/catalog/bindings`. |
@@ -113,7 +113,7 @@ resolution.
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
 | genui and A2UI change between now and recording | Rework in catalog and connector | Pin exact versions; genui confined to two places; no upgrades after M2 until recording |
-| `genui_a2a` does not match an A2A server we can reasonably write | Transport rework | S1 first; fallback transport designed in advance |
+| A Google A2A client changes what it accepts | Other clients stop rendering Homeward | Server emits only `task` and `status-update`, full text snapshots; `genui_a2a` contract test in the app |
 | No official Dart GenAI SDK | Client maintenance | Thin typed client over REST, fixture tests, S2 |
 | Free-tier key limits during demo or recording | Failed turns on camera | Recording uses a Moonwise paid key; quota errors are explained in the app |
 | Researched rules are wrong | Buyer misled | Researched badge, citations, unknown over guessed, estimates-not-advice framing, never promoted without review |
@@ -163,6 +163,8 @@ Decisions from the planning session on 2026-09-16.
 | D33 | Server dev loop | Hot reload with `hotreloader` | Plain restart, Docker locally |
 | D34 | A2UI protocol types | `a2ui_core` in `common`, components declared as `ComponentApi` | Own Freezed models in `common/wire`, `a2ui_core` on the server only |
 | D35 | Server surface state | Shadow `MessageProcessor` rebuilt per turn from stored messages | Hand-tracked surface IDs and seeded paths |
+| D36 | App A2A client | Own thin client in `common/wire`, server kept `genui_a2a`-compatible; supersedes the client half of D21 | `genui_a2a` with workarounds, `genui_a2a` internals |
+| D37 | Streaming text | Each status update carries the full text so far | Deltas in artifact updates, deltas in status updates |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

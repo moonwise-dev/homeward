@@ -4,6 +4,69 @@ Each spike answers one question from `docs/ROADMAP.md` with evidence, ends in a
 decision, and lists what the decision changed. Probe code lives outside the
 repository; the findings here are what remains.
 
+## S1 — What `genui_a2a` Puts On The Wire
+
+**Answered 2026-09-16.**
+
+### Question
+
+What does `genui_a2a` 0.10.x send and accept, and can the Homeward server and app
+use it as the A2A connection?
+
+### Method
+
+- Read `genui_a2a` 0.10.1 and the parts of `genui` 0.10.3 that submit actions.
+- A scratch Flutter package ran the real `A2uiAgentConnector` against a local
+  fake A2A server that recorded every request and replied with scripted SSE
+  frames: a text turn, streamed text, an action turn, `sendEvent`, artifact and
+  unknown event kinds, failure states, JSON-RPC errors, cancellation, and
+  per-request headers.
+
+### Findings
+
+| Area | Result |
+| --- | --- |
+| Transport | HTTP POST to the agent URL with `Accept: text/event-stream`; JSON-RPC 2.0 `message/stream`, integer request IDs. No WebSocket. |
+| Extension header | `X-A2A-Extensions: https://a2ui.org/a2a-extension/a2ui/v0.9`, set once at construction. |
+| Message | `role`, `parts`, `messageId` (UUID), `contextId` from the connector, `referenceTaskIds: [previous task]` on later turns, `kind: message`. Absent optionals are sent as explicit `null`. |
+| Capabilities | `metadata.a2uiClientCapabilities = { "v0.9": { "supportedCatalogIds": [...] } }`, only when the caller passes them. |
+| Data model | `metadata.a2uiClientDataModel`, exactly what the caller passes. genui does not attach it; the app reads `SurfaceController.contextFor(id).dataModel`. |
+| Actions | `SurfaceController.onSubmit` emits a user message whose part becomes a data part `{ "version": "v0.9", "action": { surfaceId, name, sourceComponentId, timestamp, context } }`. `timestamp` is local time without a zone. |
+| `sendEvent` | Uses non-streaming `message/send` without the data model, and the response is only logged. Not a usable action path. |
+| A2UI delivery | Read only from data parts inside `status-update` (or `task`) messages; any data map with an A2UI message key is parsed with `a2ui_core`. The part's `mimeType` is ignored. All three test messages arrived in order. |
+| Artifacts | `artifact-update` events are parsed and ignored. |
+| Unknown kinds | A `kind: message` result throws an uncaught `ArgumentError` out of `connectAndSend`. |
+| Text | Every text part of every status message is trimmed and emitted. Deltas lose spaces: `["Your limit", "is set by", "the loan-to-value cap."]`. The final text is emitted again with the completed status. |
+| Failed status | Reaches `errorStream` as `A2A Error: TaskState.failed: Message(...)`, the `toString()` of the whole message. |
+| JSON-RPC error | Throws `A2AJsonRpcException` with `code`, `message`, and `data` intact, but the type is not exported from the package. |
+| Cancellation | A `CancellationSignal` sends `tasks/cancel` with `{ "id": taskId }` over a separate POST. |
+| Headers | `SseTransport`, `Transport`, and the exception types are not exported. Per-request headers work only through `http.runWithClient` around construction; a fresh token per request was verified. |
+
+### Decisions
+
+- **D36:** The app talks to the server through its own thin A2A client in
+  `common/wire`, built on Freezed models of the A2A subset that the server also
+  encodes with. It exposes typed turn events (full text, A2UI message, error
+  code), adds headers per request, and feeds messages to genui's
+  `SurfaceController.handleMessage`. The server stays compatible with
+  `genui_a2a`, checked by a contract test in the app. This supersedes the client
+  half of D21; the server half stands.
+- **D37:** Each `status-update` carries the agent's full text so far, so clients
+  replace rather than append, and trimming is harmless.
+
+### Consequences
+
+- `docs/PROTOCOL.md`: action part shape, explicit `null` tolerance, server events
+  limited to `task` and `status-update`, full text snapshots, failures as
+  JSON-RPC error events with `data.code`, and a Clients section.
+- `docs/ARCHITECTURE.md`: `common/wire` holds the A2A client; the app stack no
+  longer lists `genui_a2a`; the genui boundary names how `AgentRepository` wires
+  `onSubmit` and `handleMessage`.
+- `docs/REQUIREMENTS_APP.md`: `AgentRepository` and `WireLogRepository` are backed
+  by the Homeward client.
+- `docs/QUALITY.md`: `wire` tests against the frames recorded here, and the
+  `genui_a2a` contract test.
+
 ## S5 — `a2ui_core` On The Server
 
 **Answered 2026-09-16.**
