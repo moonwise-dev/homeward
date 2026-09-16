@@ -16,7 +16,7 @@ validation, plan state, and the board. It holds no Gemini key of its own.
 | DELETE | `/api/sessions/:id` | Firebase ID token, App Check | Deletes session, turns, plan |
 | DELETE | `/api/me` | Firebase ID token, App Check | Deletes every session of the caller |
 | POST | `/internal/cleanup` | Cloud Scheduler OIDC | Deletes plans inactive for 90 days, expired researched packs |
-| GET | `/healthz` | none | Liveness |
+| GET | `/health` | none | Liveness; not `/healthz`, which Cloud Run may reserve |
 | GET | `/live` | Phase 2 | Voice WebSocket door |
 
 `/api/*` routes use the envelope `{ "ok": true, "data": {} }` and
@@ -107,17 +107,34 @@ service account through Application Default Credentials.
 
 ## Observability
 
-- Structured JSON logs to Cloud Logging with request ID, UID hash, session ID,
-  turn ID, tool names and durations, validation failures, token usage, model
-  latency.
+- One JSON object per line on stdout, in the shape Cloud Logging parses:
+  `severity`, `message`, `time`, `logger`, `requestId`, and structured fields.
+- Traces link through `logging.googleapis.com/trace` and `spanId`, read from
+  `traceparent` or `X-Cloud-Trace-Context`. The trace link needs
+  `GOOGLE_CLOUD_PROJECT`, set at deploy time because Cloud Run does not set it.
+- Every response carries `x-request-id`.
+- Every request logs method, path, status, and duration.
+- Planned fields as features land: UID hash, session ID, turn ID, tool names and
+  durations, validation failures, token usage, model latency.
 - No prompt text, buyer messages, profile values, or model output in logs.
   Those live only in the buyer's Firestore documents.
-- Error Reporting on uncaught exceptions.
+- Unhandled errors are logged at `SEVERE` with the Error Reporting event type
+  and stack trace, and the client receives only the `internal` error envelope.
+- `HOMEWARD_LOG_FORMAT` is `json` in the image and `text` by default locally.
 
 ## Deployment
 
-- `server/Dockerfile`: multi-stage, `dart compile exe`, runtime on a minimal
-  base image, `markets/` copied in.
+- The server is cross-compiled, not compiled inside Docker, because the pub
+  workspace includes the Flutter app and a plain Dart image cannot resolve it.
+  `make server-build` runs `dart compile exe --target-os linux --target-arch x64`
+  against the committed lockfile.
+- `server/Dockerfile` copies that binary onto
+  `gcr.io/distroless/cc-debian12:nonroot`: glibc and CA certificates, no shell,
+  user 65532. The image is about 31 MB. `markets/` is copied in once it exists.
+- The root `.dockerignore` admits only the server binary into the build context.
+- The server exits on SIGTERM within Cloud Run's grace period: it stops
+  accepting connections, lets in-flight requests finish, and releases every
+  signal watcher so the process can end.
 - Cloud Run `europe-north1`, concurrency 40, request timeout 300 s, minimum
   instances 0, maximum 10. Minimum 1 during recording sessions.
 - Service account roles: Firestore user, Firebase Auth viewer, App Check token
@@ -129,7 +146,10 @@ service account through Application Default Credentials.
 
 ## Local Development
 
-- `make server-dev` runs the server with hot restart against the Firebase
-  emulators for Auth and Firestore, App Check not enforced.
+- `make server-dev` runs `server/tool/dev.dart` with the VM service and
+  `hotreloader`: saved changes in `server` and `common` reload in place. New
+  routes need a restart. Firebase emulators for Auth and Firestore join when
+  those features land, with App Check not enforced.
+- `make server-image-run` builds and runs the production image on port 8080.
 - `make app-dev` runs the app against the local server.
 - The Gemini key is entered in the app like in production.

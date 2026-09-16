@@ -137,11 +137,18 @@ Dart, `shelf` and `shelf_router`, deployed to Cloud Run.
 
 ```text
 server/
-  bin/server.dart
+  bin/server.dart   production entry point
+  tool/dev.dart     development entry point with hot reload
   lib/
-    app.dart
-    config/
-    middleware/     request id, auth, app check, gemini key, redaction, rate limit, cors
+    app.dart        router and middleware pipeline
+    run_server.dart serve, wait for SIGTERM or SIGINT, close
+    config/         ServerConfig from environment
+    request/        RequestContext, trace header parsing, request ids
+    logging/        LogEntry, Cloud Logging JSON and text formatters
+    http/           response helpers
+    health/         GET /health
+    middleware/     request context, request logging, internal errors;
+                    later auth, app check, gemini key, redaction, rate limit, cors
     a2a/            agent card, json-rpc dispatch, sse writer, task registry
     agent/          turn orchestrator, prompt assembly, stream parser,
                     validation passes, surface seeding, board compiler
@@ -171,6 +178,12 @@ Rules:
 - The agent loop is the only place that talks to Gemini.
 - There is no dependency injection framework on the server. `data/providers`
   is a plain composition root.
+- Logging uses `package:logging`. Code logs a plain message or a `LogEntry` with
+  structured fields; one listener formats records as Cloud Logging JSON in
+  production and as text locally. Request context travels in a zone, so any
+  log line written while handling a request carries its request ID and trace
+  without passing a logger around.
+- Paths ending in `z` are avoided because Cloud Run reserves some of them.
 
 ### Why A Dart Server
 

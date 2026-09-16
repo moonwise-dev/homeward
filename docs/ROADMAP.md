@@ -22,7 +22,7 @@ Deliverables:
 - Spikes S1 to S6 answered with a written decision in the decision log.
 - S7 started.
 
-Exit: a `/healthz` deploy exists, the app builds for iOS, Android, and Web,
+Exit: a `/health` deploy exists, the app builds for iOS, Android, and Web,
 every spike has a decision.
 
 ### M1 Thin Slice — Sep 21 to Sep 27
@@ -157,6 +157,10 @@ Decisions from the planning session on 2026-09-16.
 | D27 | Rate unit | Integer parts per million | Integer basis points, `decimal` package |
 | D28 | Rounding | Explicit mode and step on every money conversion; cost rules can override | Always half-even, always half-up |
 | D29 | Value types | Extension types for single values, Freezed for multi-field | Freezed everywhere, hand-written classes |
+| D30 | Server image build | Cross-compile on host or CI, Docker packages the binary | Flutter SDK build stage, strip app from workspace in Docker |
+| D31 | Server base image | `distroless/cc-debian12:nonroot` | scratch with Dart runtime files, `debian:bookworm-slim` |
+| D32 | Server logging | `package:logging` with Cloud Logging JSON lines | Own logger interface, Cloud Logging API client |
+| D33 | Server dev loop | Hot reload with `hotreloader` | Plain restart, Docker locally |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

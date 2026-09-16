@@ -84,6 +84,14 @@ make test
 make check
 ```
 
+Server:
+
+```sh
+make server-dev
+make server-build
+make server-image-run
+```
+
 `make check` runs format-check, analyze, and test. `markets-check`,
 `catalog-check`, and `eval` join as their milestones land; `make eval` needs
 `HOMEWARD_EVAL_GEMINI_KEY` and is never part of `check`.
