@@ -91,6 +91,7 @@ const portugalPackJson = r'''
       "rateType": "variable",
       "referenceRateId": "EUR.EURIBOR12M",
       "typicalSpread": { "min": "0.75%", "max": "1.6%" },
+      "defaultSpread": "1.6%",
       "sourceId": "bpi-price-list"
     }
   ],
@@ -190,7 +191,8 @@ const swedenLendingJson = r'''
       "id": "kalp",
       "stressRate": "7%",
       "typicalRange": { "min": "6%", "max": "7%" },
-      "runningCostsMonthly": "1000",
+      "runningCostsMonthly": "750",
+      "transportMonthlyPerAdult": "850",
       "sourceId": "lender-norms"
     }
   ],

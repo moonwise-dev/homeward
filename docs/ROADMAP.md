@@ -150,62 +150,12 @@ Decisions from the planning session on 2026-09-16.
 | D4 | UI authoring | Model lays out, code does numbers | Raw prompt-first A2UI, typed tools compiled by server |
 | D5 | Rule source | Curated packs plus researched fallback | Curated only, fully researched, single market first |
 | D6 | Curated markets | SE, PT with Madeira, ES, UK, US, plus popular destinations | — |
-| D7 | Product scope | Financing and buying process, no listings | Fixture listings, real listings APIs |
-| D8 | Voice | Phase 2, designed now | MVP, out of scope |
-| D9 | Tiering | SE and PT-30 for recording; ES, UK, US next; destinations after | All five before recording, fallback only before recording |
-| D10 | US depth | National plus FL, CA, NY, TX | National only, all states |
-| D11 | Tier 3 groups | Southern Europe, tax-friendly hubs, Americas lifestyle, Asia-Pacific | — |
-| D12 | Platforms | Web, iOS, Android, responsive two-pane | Mobile only, web first |
-| D13 | Rates and lenders | Loan types with official reference rates, no bank names | Named banks, fictional lenders |
-| D14 | Persistence | Anonymous auth and Firestore | In-memory, full accounts |
-| D15 | Tests | Math and pack tests, agent evals, no widget tests | Evals only, no tests |
-| D16 | Video technique | Adaptive form, then instant what-if | Researched rules, voice, progressive streaming |
-| D17 | Name | Homeward | Find Home, Threshold |
-| D18 | Design | Token-first, calm fintech | Material defaults, designer handoff |
-| D19 | Gemini key | Bring your own key only | Server key, server key plus BYO |
-| D20 | Hosting project | New Moonwise project | Google-provided project |
-| D21 | Transport | A2A subset on shelf with `genui_a2a` | Custom SSE, community `a2a` package |
-| D22 | Package wiring | Dart pub workspace, one lockfile | Independent packages with path dependencies, workspace with Melos |
-| D23 | Application ID | `se.moonwise.homeward` | `com.moonwise.homeward` |
-| D24 | Desktop platforms | macOS kept for development; Linux and Windows removed | Remove all desktop, keep all |
-| D25 | Git workflow | Commit directly to `main` | Branch per chunk, one branch per milestone |
-| D26 | Currency source | ISO 4217 table generated from the SIX list | `intl` CLDR digits, enum of supported currencies |
-| D27 | Rate unit | Integer parts per million | Integer basis points, `decimal` package |
-| D28 | Rounding | Explicit mode and step on every money conversion; cost rules can override | Always half-even, always half-up |
-| D29 | Value types | Extension types for single values, Freezed for multi-field | Freezed everywhere, hand-written classes |
-| D30 | Server image build | Cross-compile on host or CI, Docker packages the binary | Flutter SDK build stage, strip app from workspace in Docker |
-| D31 | Server base image | `distroless/cc-debian12:nonroot` | scratch with Dart runtime files, `debian:bookworm-slim` |
-| D32 | Server logging | `package:logging` with Cloud Logging JSON lines | Own logger interface, Cloud Logging API client |
-| D33 | Server dev loop | Hot reload with `hotreloader` | Plain restart, Docker locally |
-| D34 | A2UI protocol types | `a2ui_core` in `common`, components declared as `ComponentApi` | Own Freezed models in `common/wire`, `a2ui_core` on the server only |
-| D35 | Server surface state | Shadow `MessageProcessor` rebuilt per turn from stored messages | Hand-tracked surface IDs and seeded paths |
-| D36 | App A2A client | Own thin client in `common/wire`, server kept `genui_a2a`-compatible; supersedes the client half of D21 | `genui_a2a` with workarounds, `genui_a2a` internals |
-| D37 | Streaming text | Each status update carries the full text so far | Deltas in artifact updates, deltas in status updates |
-| D38 | Model selection | Ordered model list with deadlines and a per-instance circuit breaker | 3.5-flash only, decide after re-measuring |
-| D39 | Turn shape | Server pre-runs predictable steps; model calls only interpretive tools; at most two rounds | Model calls every tool, parallel calls only |
-| D40 | Paid features | None. No Google Search grounding, so runtime research is not built; supersedes the fallback half of D5 | Moonwise key for shared research, research with paid buyer keys, offline research |
-| D41 | Free-key quota | Bring-your-own only; quota errors never fall back to another model | Fall back across models per key, Moonwise allowance |
-| D42 | Billing | Attached, designed for €0 with a 25 SEK budget alert and capped instances | No billing account, Google-provided project |
-| D43 | Devices | Free only: web, simulators, sideloaded Android APKs, personally provisioned iPhones | Existing Moonwise store accounts |
-| D44 | Charts | Own `CustomPainter` charts in `app/lib/ui` | `fl_chart` redrawing less often, `fl_chart` as is |
-| D45 | Web build | Wasm with JS fallback, COOP and COEP headers | JS only |
-| D46 | Performance harness | `make perf` in the repository, run on demand | One-off measurements |
-| D47 | Non-resident IMT in the hero | Ask prior tax residency and residency intent; show the refundable part and claim deadline | 7.5% shown as final with the refund only on explain; refund only in the relocator persona |
-| D48 | Portugal non-resident LTV | 70% lender norm from a lender's price list, shown under the 80% regulatory cap | 60% from secondary sources; 80% regulatory cap only |
-| D49 | Hero buyer age | Over 35 | 35 or younger, with the youth IMT exemption |
-| D50 | Web App Check | reCAPTCHA Enterprise with one-day tokens, within the free tier | One-hour tokens; no App Check on web |
-| D51 | API path | Every client calls Cloud Run directly with CORS; Hosting serves only the web app | Direct for `/a2a` only; Hosting rewrites for everything |
-| D52 | Cloud Run auth | Invoker IAM check disabled; Firebase ID token in `Authorization` verified by the server | ID token in a custom header behind the public invoker check |
-| D53 | Checks before sharing code | Git pre-push hook running `make check`; no hosted CI until the repository is hosted | GitHub Actions in a Moonwise repository; no checks until a repository exists |
-| D54 | Repository | Private until M4, then public under Apache-2.0 | Public now under Apache-2.0; private with the license undecided |
-| D55 | Swedish affordability | Left-to-live-on check with a stress rate, living costs, and running costs, plus an income-multiple cap | Income multiple only; a DSTI limit like other markets |
-| D56 | Swedish interest deduction | Payments shown before and after it; the left-to-live-on check uses the net figure | Gross only |
-| D57 | Scenario rate | Official reference rate plus the loan type's conservative spread, adjustable through `rateSpreadPpm` | Fixed official rate; buyer-entered rate only |
-| D58 | Pack values | Written as published: decimal amount strings, percent rate strings, ISO dates and periods | Minor units and parts per million |
-| D59 | Pack format definition | Strict parsing of the Freezed models, semantic checks in `make markets-check`, no JSON schema | Hand-written JSON schema; schema declared with json_schema_builder |
 | D60 | Unknown buyer facts | Rules needing them are pending; the facts become required profile fields and dependent figures wait | Assume the stricter rule; skip the rule until known |
 | D61 | Borrowers | Household income totals, savings, debts, a borrower count, and the oldest borrower's age; the deduction threshold scales by borrower | A profile per borrower now; a single borrower only |
 | D62 | Household | Adults and each child's age, costed from Konsumentverket's tables | Adults and a child count with an averaged cost; adults only |
+| D63 | Swedish left-to-live-on costs | Konsumentverket's 2026 table plus the Riksbank memo's bank norms: 750 SEK running costs for a bostadsrätt, 850 SEK transport per adult, 7% stress rate | Konsumentverket's table only; one bank's published norms |
+| D64 | Swedish income cap | 5× gross income, typical range 5–6×, labelled as bank practice from secondary sources | 5.5× midpoint; no income cap |
+| D65 | Swedish variable spread | 0–1.2% over SCB's negotiated average, starting at 0.41%, SBAB's list rate; the 0.5% first proposed did not match banks' list rates | Start at 1.2%, Nordea's list rate; start at the average |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

@@ -16,6 +16,7 @@ _LeftToLiveOnRule _$LeftToLiveOnRuleFromJson(Map<String, dynamic> json) =>
           'stressRate',
           'typicalRange',
           'runningCostsMonthly',
+          'transportMonthlyPerAdult',
           'sourceId',
         ],
       );
@@ -40,6 +41,10 @@ _LeftToLiveOnRule _$LeftToLiveOnRuleFromJson(Map<String, dynamic> json) =>
           'runningCostsMonthly',
           (v) => const ExactDecimalJsonConverter().fromJson(v as String),
         ),
+        transportMonthlyPerAdult: $checkedConvert(
+          'transportMonthlyPerAdult',
+          (v) => const ExactDecimalJsonConverter().fromJson(v as String),
+        ),
         sourceId: $checkedConvert('sourceId', (v) => v as String),
       );
       return val;
@@ -53,6 +58,9 @@ Map<String, dynamic> _$LeftToLiveOnRuleToJson(_LeftToLiveOnRule instance) =>
       'typicalRange': ?instance.typicalRange?.toJson(),
       'runningCostsMonthly': const ExactDecimalJsonConverter().toJson(
         instance.runningCostsMonthly,
+      ),
+      'transportMonthlyPerAdult': const ExactDecimalJsonConverter().toJson(
+        instance.transportMonthlyPerAdult,
       ),
       'sourceId': instance.sourceId,
     };

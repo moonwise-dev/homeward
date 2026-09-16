@@ -172,6 +172,8 @@ Affordability assessAffordability({
                 ) -
                 (scenario.associationFee ?? zero) -
                 rule.runningCostsMonthly.toMoney(currency) -
+                rule.transportMonthlyPerAdult.toMoney(currency) *
+                    profile.adults! -
                 (stressed.total - deductionOn(stressed.interest));
             return !leftOver.isNegative;
           },

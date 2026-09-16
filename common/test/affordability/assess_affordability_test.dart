@@ -31,6 +31,7 @@ void main() {
           rateType: RateType.variable,
           referenceRateId: 'SE.AVG_VARIABLE_3M',
           typicalSpread: const RateRange(min: Rate.zero, max: Rate.zero),
+          defaultSpread: Rate.zero,
           sourceId: source.id,
         ),
       ],
@@ -100,14 +101,14 @@ void main() {
       final result = assess(couple(netMonthly: 35000)) as AssessedAffordability;
 
       expect(result.binding?.kind, ConstraintKind.leftToLiveOn);
-      expect(result.maxLoan, sek(358565742));
+      expect(result.maxLoan, sek(335458199));
       expect(
         result.checks
             .singleWhere((check) => check.ruleId == 'kalp')
             .allows(result.loan),
         isFalse,
       );
-      expect(result.downPaymentBounds.min, sek(91434258));
+      expect(result.downPaymentBounds.min, sek(114541801));
     });
 
     test('lists the facts it still needs', () {

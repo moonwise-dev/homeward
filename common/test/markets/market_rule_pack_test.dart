@@ -110,7 +110,11 @@ void main() {
       expect(kalp.typicalRange?.min, const Rate.ppm(60000));
       expect(
         kalp.runningCostsMonthly.toMoney(Currency.parse('SEK')),
-        sek(100000),
+        sek(75000),
+      );
+      expect(
+        kalp.transportMonthlyPerAdult.toMoney(Currency.parse('SEK')),
+        sek(85000),
       );
       expect(lending.maxLti.single.multiple.scaledBy(2), 550);
       expect(lending.repaymentStyle, RepaymentStyle.straight);

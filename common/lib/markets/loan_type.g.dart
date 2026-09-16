@@ -16,6 +16,7 @@ _LoanType _$LoanTypeFromJson(Map<String, dynamic> json) =>
           'rateType',
           'referenceRateId',
           'typicalSpread',
+          'defaultSpread',
           'fixedYears',
           'sourceId',
         ],
@@ -32,6 +33,10 @@ _LoanType _$LoanTypeFromJson(Map<String, dynamic> json) =>
           'typicalSpread',
           (v) => RateRange.fromJson(v as Map<String, dynamic>),
         ),
+        defaultSpread: $checkedConvert(
+          'defaultSpread',
+          (v) => const PercentJsonConverter().fromJson(v as String),
+        ),
         fixedYears: $checkedConvert(
           'fixedYears',
           (v) => (v as num?)?.toInt() ?? 0,
@@ -47,6 +52,7 @@ Map<String, dynamic> _$LoanTypeToJson(_LoanType instance) => <String, dynamic>{
   'rateType': _$RateTypeEnumMap[instance.rateType]!,
   'referenceRateId': instance.referenceRateId,
   'typicalSpread': instance.typicalSpread.toJson(),
+  'defaultSpread': const PercentJsonConverter().toJson(instance.defaultSpread),
   'fixedYears': instance.fixedYears,
   'sourceId': instance.sourceId,
 };

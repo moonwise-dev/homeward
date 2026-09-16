@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LoanType {
 
- String get id; String get label; RateType get rateType; String get referenceRateId; RateRange get typicalSpread; int get fixedYears; String get sourceId;
+ String get id; String get label; RateType get rateType; String get referenceRateId; RateRange get typicalSpread;@PercentJsonConverter() Rate get defaultSpread; int get fixedYears; String get sourceId;
 /// Create a copy of LoanType
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $LoanTypeCopyWith<LoanType> get copyWith => _$LoanTypeCopyWithImpl<LoanType>(thi
 @override
 bool operator ==(Object other) {
   final _this = this as LoanType;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoanType&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.rateType, _this.rateType) || other.rateType == _this.rateType)&&(identical(other.referenceRateId, _this.referenceRateId) || other.referenceRateId == _this.referenceRateId)&&(identical(other.typicalSpread, _this.typicalSpread) || other.typicalSpread == _this.typicalSpread)&&(identical(other.fixedYears, _this.fixedYears) || other.fixedYears == _this.fixedYears)&&(identical(other.sourceId, _this.sourceId) || other.sourceId == _this.sourceId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoanType&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.rateType, _this.rateType) || other.rateType == _this.rateType)&&(identical(other.referenceRateId, _this.referenceRateId) || other.referenceRateId == _this.referenceRateId)&&(identical(other.typicalSpread, _this.typicalSpread) || other.typicalSpread == _this.typicalSpread)&&(identical(other.defaultSpread, _this.defaultSpread) || other.defaultSpread == _this.defaultSpread)&&(identical(other.fixedYears, _this.fixedYears) || other.fixedYears == _this.fixedYears)&&(identical(other.sourceId, _this.sourceId) || other.sourceId == _this.sourceId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as LoanType;
-  return Object.hash(runtimeType,_this.id,_this.label,_this.rateType,_this.referenceRateId,_this.typicalSpread,_this.fixedYears,_this.sourceId);
+  return Object.hash(runtimeType,_this.id,_this.label,_this.rateType,_this.referenceRateId,_this.typicalSpread,_this.defaultSpread,_this.fixedYears,_this.sourceId);
 }
 
 @override
 String toString() {
   final _this = this as LoanType;
-  return 'LoanType(id: ${_this.id}, label: ${_this.label}, rateType: ${_this.rateType}, referenceRateId: ${_this.referenceRateId}, typicalSpread: ${_this.typicalSpread}, fixedYears: ${_this.fixedYears}, sourceId: ${_this.sourceId})';
+  return 'LoanType(id: ${_this.id}, label: ${_this.label}, rateType: ${_this.rateType}, referenceRateId: ${_this.referenceRateId}, typicalSpread: ${_this.typicalSpread}, defaultSpread: ${_this.defaultSpread}, fixedYears: ${_this.fixedYears}, sourceId: ${_this.sourceId})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $LoanTypeCopyWith<$Res>  {
   factory $LoanTypeCopyWith(LoanType value, $Res Function(LoanType) _then) = _$LoanTypeCopyWithImpl;
 @useResult
 $Res call({
- String id, String label, RateType rateType, String referenceRateId, RateRange typicalSpread, int fixedYears, String sourceId
+ String id, String label, RateType rateType, String referenceRateId, RateRange typicalSpread,@PercentJsonConverter() Rate defaultSpread, int fixedYears, String sourceId
 });
 
 
@@ -71,14 +71,15 @@ class _$LoanTypeCopyWithImpl<$Res>
 
 /// Create a copy of LoanType
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? label = null,Object? rateType = null,Object? referenceRateId = null,Object? typicalSpread = null,Object? fixedYears = null,Object? sourceId = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? label = null,Object? rateType = null,Object? referenceRateId = null,Object? typicalSpread = null,Object? defaultSpread = null,Object? fixedYears = null,Object? sourceId = null,}) {
   return _then(LoanType(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String,rateType: null == rateType ? _self.rateType : rateType // ignore: cast_nullable_to_non_nullable
 as RateType,referenceRateId: null == referenceRateId ? _self.referenceRateId : referenceRateId // ignore: cast_nullable_to_non_nullable
 as String,typicalSpread: null == typicalSpread ? _self.typicalSpread : typicalSpread // ignore: cast_nullable_to_non_nullable
-as RateRange,fixedYears: null == fixedYears ? _self.fixedYears : fixedYears // ignore: cast_nullable_to_non_nullable
+as RateRange,defaultSpread: null == defaultSpread ? _self.defaultSpread : defaultSpread // ignore: cast_nullable_to_non_nullable
+as Rate,fixedYears: null == fixedYears ? _self.fixedYears : fixedYears // ignore: cast_nullable_to_non_nullable
 as int,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -174,10 +175,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String label,  RateType rateType,  String referenceRateId,  RateRange typicalSpread,  int fixedYears,  String sourceId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String label,  RateType rateType,  String referenceRateId,  RateRange typicalSpread, @PercentJsonConverter()  Rate defaultSpread,  int fixedYears,  String sourceId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoanType() when $default != null:
-return $default(_that.id,_that.label,_that.rateType,_that.referenceRateId,_that.typicalSpread,_that.fixedYears,_that.sourceId);case _:
+return $default(_that.id,_that.label,_that.rateType,_that.referenceRateId,_that.typicalSpread,_that.defaultSpread,_that.fixedYears,_that.sourceId);case _:
   return orElse();
 
 }
@@ -195,10 +196,10 @@ return $default(_that.id,_that.label,_that.rateType,_that.referenceRateId,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String label,  RateType rateType,  String referenceRateId,  RateRange typicalSpread,  int fixedYears,  String sourceId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String label,  RateType rateType,  String referenceRateId,  RateRange typicalSpread, @PercentJsonConverter()  Rate defaultSpread,  int fixedYears,  String sourceId)  $default,) {final _that = this;
 switch (_that) {
 case _LoanType():
-return $default(_that.id,_that.label,_that.rateType,_that.referenceRateId,_that.typicalSpread,_that.fixedYears,_that.sourceId);case _:
+return $default(_that.id,_that.label,_that.rateType,_that.referenceRateId,_that.typicalSpread,_that.defaultSpread,_that.fixedYears,_that.sourceId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -215,10 +216,10 @@ return $default(_that.id,_that.label,_that.rateType,_that.referenceRateId,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String label,  RateType rateType,  String referenceRateId,  RateRange typicalSpread,  int fixedYears,  String sourceId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String label,  RateType rateType,  String referenceRateId,  RateRange typicalSpread, @PercentJsonConverter()  Rate defaultSpread,  int fixedYears,  String sourceId)?  $default,) {final _that = this;
 switch (_that) {
 case _LoanType() when $default != null:
-return $default(_that.id,_that.label,_that.rateType,_that.referenceRateId,_that.typicalSpread,_that.fixedYears,_that.sourceId);case _:
+return $default(_that.id,_that.label,_that.rateType,_that.referenceRateId,_that.typicalSpread,_that.defaultSpread,_that.fixedYears,_that.sourceId);case _:
   return null;
 
 }
@@ -230,7 +231,7 @@ return $default(_that.id,_that.label,_that.rateType,_that.referenceRateId,_that.
 @JsonSerializable()
 
 class _LoanType implements LoanType {
-  const _LoanType({required this.id, required this.label, required this.rateType, required this.referenceRateId, required this.typicalSpread, this.fixedYears = 0, required this.sourceId});
+  const _LoanType({required this.id, required this.label, required this.rateType, required this.referenceRateId, required this.typicalSpread, @PercentJsonConverter() required this.defaultSpread, this.fixedYears = 0, required this.sourceId});
   factory _LoanType.fromJson(Map<String, dynamic> json) => _$LoanTypeFromJson(json);
 
 @override final  String id;
@@ -238,6 +239,7 @@ class _LoanType implements LoanType {
 @override final  RateType rateType;
 @override final  String referenceRateId;
 @override final  RateRange typicalSpread;
+@override@PercentJsonConverter() final  Rate defaultSpread;
 @override@JsonKey() final  int fixedYears;
 @override final  String sourceId;
 
@@ -254,18 +256,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoanType&&(identical(other.id, id) || other.id == id)&&(identical(other.label, label) || other.label == label)&&(identical(other.rateType, rateType) || other.rateType == rateType)&&(identical(other.referenceRateId, referenceRateId) || other.referenceRateId == referenceRateId)&&(identical(other.typicalSpread, typicalSpread) || other.typicalSpread == typicalSpread)&&(identical(other.fixedYears, fixedYears) || other.fixedYears == fixedYears)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoanType&&(identical(other.id, id) || other.id == id)&&(identical(other.label, label) || other.label == label)&&(identical(other.rateType, rateType) || other.rateType == rateType)&&(identical(other.referenceRateId, referenceRateId) || other.referenceRateId == referenceRateId)&&(identical(other.typicalSpread, typicalSpread) || other.typicalSpread == typicalSpread)&&(identical(other.defaultSpread, defaultSpread) || other.defaultSpread == defaultSpread)&&(identical(other.fixedYears, fixedYears) || other.fixedYears == fixedYears)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,label,rateType,referenceRateId,typicalSpread,fixedYears,sourceId);
+    return Object.hash(runtimeType,id,label,rateType,referenceRateId,typicalSpread,defaultSpread,fixedYears,sourceId);
 }
 
 @override
 String toString() {
-    return 'LoanType(id: $id, label: $label, rateType: $rateType, referenceRateId: $referenceRateId, typicalSpread: $typicalSpread, fixedYears: $fixedYears, sourceId: $sourceId)';
+    return 'LoanType(id: $id, label: $label, rateType: $rateType, referenceRateId: $referenceRateId, typicalSpread: $typicalSpread, defaultSpread: $defaultSpread, fixedYears: $fixedYears, sourceId: $sourceId)';
 }
 
 
@@ -276,7 +278,7 @@ abstract mixin class _$LoanTypeCopyWith<$Res> implements $LoanTypeCopyWith<$Res>
   factory _$LoanTypeCopyWith(_LoanType value, $Res Function(_LoanType) _then) = __$LoanTypeCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String label, RateType rateType, String referenceRateId, RateRange typicalSpread, int fixedYears, String sourceId
+ String id, String label, RateType rateType, String referenceRateId, RateRange typicalSpread,@PercentJsonConverter() Rate defaultSpread, int fixedYears, String sourceId
 });
 
 
@@ -293,14 +295,15 @@ class __$LoanTypeCopyWithImpl<$Res>
 
 /// Create a copy of LoanType
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? label = null,Object? rateType = null,Object? referenceRateId = null,Object? typicalSpread = null,Object? fixedYears = null,Object? sourceId = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? label = null,Object? rateType = null,Object? referenceRateId = null,Object? typicalSpread = null,Object? defaultSpread = null,Object? fixedYears = null,Object? sourceId = null,}) {
   return _then(_LoanType(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String,rateType: null == rateType ? _self.rateType : rateType // ignore: cast_nullable_to_non_nullable
 as RateType,referenceRateId: null == referenceRateId ? _self.referenceRateId : referenceRateId // ignore: cast_nullable_to_non_nullable
 as String,typicalSpread: null == typicalSpread ? _self.typicalSpread : typicalSpread // ignore: cast_nullable_to_non_nullable
-as RateRange,fixedYears: null == fixedYears ? _self.fixedYears : fixedYears // ignore: cast_nullable_to_non_nullable
+as RateRange,defaultSpread: null == defaultSpread ? _self.defaultSpread : defaultSpread // ignore: cast_nullable_to_non_nullable
+as Rate,fixedYears: null == fixedYears ? _self.fixedYears : fixedYears // ignore: cast_nullable_to_non_nullable
 as int,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
 as String,
   ));

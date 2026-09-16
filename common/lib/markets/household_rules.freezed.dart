@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LeftToLiveOnRule {
 
- String get id; BuyerPredicate? get appliesTo;@PercentJsonConverter() Rate get stressRate; RateRange? get typicalRange;@ExactDecimalJsonConverter() ExactDecimal get runningCostsMonthly; String get sourceId;
+ String get id; BuyerPredicate? get appliesTo;@PercentJsonConverter() Rate get stressRate; RateRange? get typicalRange;@ExactDecimalJsonConverter() ExactDecimal get runningCostsMonthly;@ExactDecimalJsonConverter() ExactDecimal get transportMonthlyPerAdult; String get sourceId;
 /// Create a copy of LeftToLiveOnRule
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $LeftToLiveOnRuleCopyWith<LeftToLiveOnRule> get copyWith => _$LeftToLiveOnRuleCo
 @override
 bool operator ==(Object other) {
   final _this = this as LeftToLiveOnRule;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LeftToLiveOnRule&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.appliesTo, _this.appliesTo) || other.appliesTo == _this.appliesTo)&&(identical(other.stressRate, _this.stressRate) || other.stressRate == _this.stressRate)&&(identical(other.typicalRange, _this.typicalRange) || other.typicalRange == _this.typicalRange)&&(identical(other.runningCostsMonthly, _this.runningCostsMonthly) || other.runningCostsMonthly == _this.runningCostsMonthly)&&(identical(other.sourceId, _this.sourceId) || other.sourceId == _this.sourceId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LeftToLiveOnRule&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.appliesTo, _this.appliesTo) || other.appliesTo == _this.appliesTo)&&(identical(other.stressRate, _this.stressRate) || other.stressRate == _this.stressRate)&&(identical(other.typicalRange, _this.typicalRange) || other.typicalRange == _this.typicalRange)&&(identical(other.runningCostsMonthly, _this.runningCostsMonthly) || other.runningCostsMonthly == _this.runningCostsMonthly)&&(identical(other.transportMonthlyPerAdult, _this.transportMonthlyPerAdult) || other.transportMonthlyPerAdult == _this.transportMonthlyPerAdult)&&(identical(other.sourceId, _this.sourceId) || other.sourceId == _this.sourceId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as LeftToLiveOnRule;
-  return Object.hash(runtimeType,_this.id,_this.appliesTo,_this.stressRate,_this.typicalRange,_this.runningCostsMonthly,_this.sourceId);
+  return Object.hash(runtimeType,_this.id,_this.appliesTo,_this.stressRate,_this.typicalRange,_this.runningCostsMonthly,_this.transportMonthlyPerAdult,_this.sourceId);
 }
 
 @override
 String toString() {
   final _this = this as LeftToLiveOnRule;
-  return 'LeftToLiveOnRule(id: ${_this.id}, appliesTo: ${_this.appliesTo}, stressRate: ${_this.stressRate}, typicalRange: ${_this.typicalRange}, runningCostsMonthly: ${_this.runningCostsMonthly}, sourceId: ${_this.sourceId})';
+  return 'LeftToLiveOnRule(id: ${_this.id}, appliesTo: ${_this.appliesTo}, stressRate: ${_this.stressRate}, typicalRange: ${_this.typicalRange}, runningCostsMonthly: ${_this.runningCostsMonthly}, transportMonthlyPerAdult: ${_this.transportMonthlyPerAdult}, sourceId: ${_this.sourceId})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $LeftToLiveOnRuleCopyWith<$Res>  {
   factory $LeftToLiveOnRuleCopyWith(LeftToLiveOnRule value, $Res Function(LeftToLiveOnRule) _then) = _$LeftToLiveOnRuleCopyWithImpl;
 @useResult
 $Res call({
- String id, BuyerPredicate? appliesTo,@PercentJsonConverter() Rate stressRate, RateRange? typicalRange,@ExactDecimalJsonConverter() ExactDecimal runningCostsMonthly, String sourceId
+ String id, BuyerPredicate? appliesTo,@PercentJsonConverter() Rate stressRate, RateRange? typicalRange,@ExactDecimalJsonConverter() ExactDecimal runningCostsMonthly,@ExactDecimalJsonConverter() ExactDecimal transportMonthlyPerAdult, String sourceId
 });
 
 
@@ -71,13 +71,14 @@ class _$LeftToLiveOnRuleCopyWithImpl<$Res>
 
 /// Create a copy of LeftToLiveOnRule
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? appliesTo = freezed,Object? stressRate = null,Object? typicalRange = freezed,Object? runningCostsMonthly = null,Object? sourceId = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? appliesTo = freezed,Object? stressRate = null,Object? typicalRange = freezed,Object? runningCostsMonthly = null,Object? transportMonthlyPerAdult = null,Object? sourceId = null,}) {
   return _then(LeftToLiveOnRule(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,appliesTo: freezed == appliesTo ? _self.appliesTo : appliesTo // ignore: cast_nullable_to_non_nullable
 as BuyerPredicate?,stressRate: null == stressRate ? _self.stressRate : stressRate // ignore: cast_nullable_to_non_nullable
 as Rate,typicalRange: freezed == typicalRange ? _self.typicalRange : typicalRange // ignore: cast_nullable_to_non_nullable
 as RateRange?,runningCostsMonthly: null == runningCostsMonthly ? _self.runningCostsMonthly : runningCostsMonthly // ignore: cast_nullable_to_non_nullable
+as ExactDecimal,transportMonthlyPerAdult: null == transportMonthlyPerAdult ? _self.transportMonthlyPerAdult : transportMonthlyPerAdult // ignore: cast_nullable_to_non_nullable
 as ExactDecimal,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -188,10 +189,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  BuyerPredicate? appliesTo, @PercentJsonConverter()  Rate stressRate,  RateRange? typicalRange, @ExactDecimalJsonConverter()  ExactDecimal runningCostsMonthly,  String sourceId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  BuyerPredicate? appliesTo, @PercentJsonConverter()  Rate stressRate,  RateRange? typicalRange, @ExactDecimalJsonConverter()  ExactDecimal runningCostsMonthly, @ExactDecimalJsonConverter()  ExactDecimal transportMonthlyPerAdult,  String sourceId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LeftToLiveOnRule() when $default != null:
-return $default(_that.id,_that.appliesTo,_that.stressRate,_that.typicalRange,_that.runningCostsMonthly,_that.sourceId);case _:
+return $default(_that.id,_that.appliesTo,_that.stressRate,_that.typicalRange,_that.runningCostsMonthly,_that.transportMonthlyPerAdult,_that.sourceId);case _:
   return orElse();
 
 }
@@ -209,10 +210,10 @@ return $default(_that.id,_that.appliesTo,_that.stressRate,_that.typicalRange,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  BuyerPredicate? appliesTo, @PercentJsonConverter()  Rate stressRate,  RateRange? typicalRange, @ExactDecimalJsonConverter()  ExactDecimal runningCostsMonthly,  String sourceId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  BuyerPredicate? appliesTo, @PercentJsonConverter()  Rate stressRate,  RateRange? typicalRange, @ExactDecimalJsonConverter()  ExactDecimal runningCostsMonthly, @ExactDecimalJsonConverter()  ExactDecimal transportMonthlyPerAdult,  String sourceId)  $default,) {final _that = this;
 switch (_that) {
 case _LeftToLiveOnRule():
-return $default(_that.id,_that.appliesTo,_that.stressRate,_that.typicalRange,_that.runningCostsMonthly,_that.sourceId);case _:
+return $default(_that.id,_that.appliesTo,_that.stressRate,_that.typicalRange,_that.runningCostsMonthly,_that.transportMonthlyPerAdult,_that.sourceId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -229,10 +230,10 @@ return $default(_that.id,_that.appliesTo,_that.stressRate,_that.typicalRange,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  BuyerPredicate? appliesTo, @PercentJsonConverter()  Rate stressRate,  RateRange? typicalRange, @ExactDecimalJsonConverter()  ExactDecimal runningCostsMonthly,  String sourceId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  BuyerPredicate? appliesTo, @PercentJsonConverter()  Rate stressRate,  RateRange? typicalRange, @ExactDecimalJsonConverter()  ExactDecimal runningCostsMonthly, @ExactDecimalJsonConverter()  ExactDecimal transportMonthlyPerAdult,  String sourceId)?  $default,) {final _that = this;
 switch (_that) {
 case _LeftToLiveOnRule() when $default != null:
-return $default(_that.id,_that.appliesTo,_that.stressRate,_that.typicalRange,_that.runningCostsMonthly,_that.sourceId);case _:
+return $default(_that.id,_that.appliesTo,_that.stressRate,_that.typicalRange,_that.runningCostsMonthly,_that.transportMonthlyPerAdult,_that.sourceId);case _:
   return null;
 
 }
@@ -244,7 +245,7 @@ return $default(_that.id,_that.appliesTo,_that.stressRate,_that.typicalRange,_th
 @JsonSerializable()
 
 class _LeftToLiveOnRule implements LeftToLiveOnRule {
-  const _LeftToLiveOnRule({required this.id, this.appliesTo, @PercentJsonConverter() required this.stressRate, this.typicalRange, @ExactDecimalJsonConverter() required this.runningCostsMonthly, required this.sourceId});
+  const _LeftToLiveOnRule({required this.id, this.appliesTo, @PercentJsonConverter() required this.stressRate, this.typicalRange, @ExactDecimalJsonConverter() required this.runningCostsMonthly, @ExactDecimalJsonConverter() required this.transportMonthlyPerAdult, required this.sourceId});
   factory _LeftToLiveOnRule.fromJson(Map<String, dynamic> json) => _$LeftToLiveOnRuleFromJson(json);
 
 @override final  String id;
@@ -252,6 +253,7 @@ class _LeftToLiveOnRule implements LeftToLiveOnRule {
 @override@PercentJsonConverter() final  Rate stressRate;
 @override final  RateRange? typicalRange;
 @override@ExactDecimalJsonConverter() final  ExactDecimal runningCostsMonthly;
+@override@ExactDecimalJsonConverter() final  ExactDecimal transportMonthlyPerAdult;
 @override final  String sourceId;
 
 /// Create a copy of LeftToLiveOnRule
@@ -267,18 +269,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LeftToLiveOnRule&&(identical(other.id, id) || other.id == id)&&(identical(other.appliesTo, appliesTo) || other.appliesTo == appliesTo)&&(identical(other.stressRate, stressRate) || other.stressRate == stressRate)&&(identical(other.typicalRange, typicalRange) || other.typicalRange == typicalRange)&&(identical(other.runningCostsMonthly, runningCostsMonthly) || other.runningCostsMonthly == runningCostsMonthly)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LeftToLiveOnRule&&(identical(other.id, id) || other.id == id)&&(identical(other.appliesTo, appliesTo) || other.appliesTo == appliesTo)&&(identical(other.stressRate, stressRate) || other.stressRate == stressRate)&&(identical(other.typicalRange, typicalRange) || other.typicalRange == typicalRange)&&(identical(other.runningCostsMonthly, runningCostsMonthly) || other.runningCostsMonthly == runningCostsMonthly)&&(identical(other.transportMonthlyPerAdult, transportMonthlyPerAdult) || other.transportMonthlyPerAdult == transportMonthlyPerAdult)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,appliesTo,stressRate,typicalRange,runningCostsMonthly,sourceId);
+    return Object.hash(runtimeType,id,appliesTo,stressRate,typicalRange,runningCostsMonthly,transportMonthlyPerAdult,sourceId);
 }
 
 @override
 String toString() {
-    return 'LeftToLiveOnRule(id: $id, appliesTo: $appliesTo, stressRate: $stressRate, typicalRange: $typicalRange, runningCostsMonthly: $runningCostsMonthly, sourceId: $sourceId)';
+    return 'LeftToLiveOnRule(id: $id, appliesTo: $appliesTo, stressRate: $stressRate, typicalRange: $typicalRange, runningCostsMonthly: $runningCostsMonthly, transportMonthlyPerAdult: $transportMonthlyPerAdult, sourceId: $sourceId)';
 }
 
 
@@ -289,7 +291,7 @@ abstract mixin class _$LeftToLiveOnRuleCopyWith<$Res> implements $LeftToLiveOnRu
   factory _$LeftToLiveOnRuleCopyWith(_LeftToLiveOnRule value, $Res Function(_LeftToLiveOnRule) _then) = __$LeftToLiveOnRuleCopyWithImpl;
 @override @useResult
 $Res call({
- String id, BuyerPredicate? appliesTo,@PercentJsonConverter() Rate stressRate, RateRange? typicalRange,@ExactDecimalJsonConverter() ExactDecimal runningCostsMonthly, String sourceId
+ String id, BuyerPredicate? appliesTo,@PercentJsonConverter() Rate stressRate, RateRange? typicalRange,@ExactDecimalJsonConverter() ExactDecimal runningCostsMonthly,@ExactDecimalJsonConverter() ExactDecimal transportMonthlyPerAdult, String sourceId
 });
 
 
@@ -306,13 +308,14 @@ class __$LeftToLiveOnRuleCopyWithImpl<$Res>
 
 /// Create a copy of LeftToLiveOnRule
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? appliesTo = freezed,Object? stressRate = null,Object? typicalRange = freezed,Object? runningCostsMonthly = null,Object? sourceId = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? appliesTo = freezed,Object? stressRate = null,Object? typicalRange = freezed,Object? runningCostsMonthly = null,Object? transportMonthlyPerAdult = null,Object? sourceId = null,}) {
   return _then(_LeftToLiveOnRule(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,appliesTo: freezed == appliesTo ? _self.appliesTo : appliesTo // ignore: cast_nullable_to_non_nullable
 as BuyerPredicate?,stressRate: null == stressRate ? _self.stressRate : stressRate // ignore: cast_nullable_to_non_nullable
 as Rate,typicalRange: freezed == typicalRange ? _self.typicalRange : typicalRange // ignore: cast_nullable_to_non_nullable
 as RateRange?,runningCostsMonthly: null == runningCostsMonthly ? _self.runningCostsMonthly : runningCostsMonthly // ignore: cast_nullable_to_non_nullable
+as ExactDecimal,transportMonthlyPerAdult: null == transportMonthlyPerAdult ? _self.transportMonthlyPerAdult : transportMonthlyPerAdult // ignore: cast_nullable_to_non_nullable
 as ExactDecimal,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
 as String,
   ));

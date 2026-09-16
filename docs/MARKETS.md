@@ -131,14 +131,15 @@ LendingRules
   maxAgeAtMaturity      [{ id, appliesTo, years, sourceId }]
   incomeAdjustments     [{ id, appliesTo, whenAgeAtMaturityAbove, reduction, weightedByTermShare, exceptRetired, sourceId }]
   amortization          [{ id, appliesTo, whenLtvAbove, annualRate, sourceId }]
-  leftToLiveOn          [{ id, appliesTo, stressRate, typicalRange?, runningCostsMonthly, sourceId }]
+  leftToLiveOn          [{ id, appliesTo, stressRate, typicalRange?, runningCostsMonthly, transportMonthlyPerAdult, sourceId }]
   interestDeduction     [{ id, appliesTo, yearlyBrackets: [{ upTo?, rate }], perBorrower, sourceId }]
   repaymentStyle        annuity | straight
 ```
 
 A `leftToLiveOn` rule is the Swedish lender check (D55): monthly net income minus
 housing cost at `stressRate`, after `interestDeduction`, minus association fee,
-`runningCostsMonthly`, and household living costs must not fall below zero. It
+`runningCostsMonthly`, `transportMonthlyPerAdult` for each adult, and household
+living costs must not fall below zero. It
 binds alongside `maxLti`, not instead of it. Payments are shown both before and
 after `interestDeduction` (D56).
 
@@ -193,6 +194,7 @@ LoanType
   rateType              variable | mixed | fixed
   referenceRateId       EUR.EURIBOR12M
   typicalSpread         { min, max }
+  defaultSpread         the spread a new scenario starts with
   fixedYears            0
   sourceId
 ```
@@ -249,7 +251,7 @@ The server never fetches rates at request time. Snapshots older than 14 days
 fail `make markets-check` for curated markets.
 
 A scenario's rate is the loan type's reference rate plus its spread. The spread
-starts at the conservative end of `typicalSpread` and the buyer can change it
+starts at the loan type's `defaultSpread` and the buyer can change it
 in `/scenario/rateSpreadPpm` to try an actual offer (D57).
 
 ## Living Costs

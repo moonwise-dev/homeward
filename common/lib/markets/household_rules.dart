@@ -23,6 +23,7 @@ abstract class LeftToLiveOnRule
     @PercentJsonConverter() required Rate stressRate,
     RateRange? typicalRange,
     @ExactDecimalJsonConverter() required ExactDecimal runningCostsMonthly,
+    @ExactDecimalJsonConverter() required ExactDecimal transportMonthlyPerAdult,
     required String sourceId,
   }) = _LeftToLiveOnRule;
 
