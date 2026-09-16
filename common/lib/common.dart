@@ -1,5 +1,6 @@
 export 'finance/amortization_tier.dart';
 export 'finance/annuity.dart';
+export 'finance/bracket.dart';
 export 'finance/monthly_amount.dart';
 export 'finance/monthly_payment.dart';
 export 'finance/share.dart';

@@ -258,7 +258,7 @@ including the second-person review, before it becomes a pack field.
 | New builds: no amortization for up to five years for the first buyer | Verified | Lag (2026:226) 10 § |
 | LTV uses the market value at purchase; revaluation after five years or on a substantial change | Verified | Lag (2026:226) 13 § |
 | Lender stress rates commonly 6–7% in the KALP check | Lender norm, to verify | Bank lending policies, Finansinspektionen's mortgage report |
-| Interest deduction 30% of interest up to 100 000 SEK a year per person, 21% above | To verify | Skatteverket |
+| Interest deduction: tax reduced by 30% of a capital deficit up to 100 000 SEK a year and 21% above, per taxpayer | Verified | Inkomstskattelag (1999:1229) 67 kap. 10 § |
 | Household living costs by age and household size | To verify | Konsumentverket, *Koll på pengarna* |
 | Running costs of a bostadsrätt beyond the association fee | Lender norm, to verify | Bank lending policies |
 | Lender income multiples roughly 5–6× gross | Lender norm, to verify | Bank lending policies |

@@ -40,7 +40,7 @@ abstract class Rounding with _$Rounding {
     }
     final wholePart = value ~/ divisor * multiplier;
     final fractionalNumerator = value.remainder(divisor) * multiplier;
-    return _roundToStep(wholePart, fractionalNumerator, divisor);
+    return roundFraction(wholePart, fractionalNumerator, divisor);
   }
 
   int roundDouble(double value) {
@@ -60,7 +60,12 @@ abstract class Rounding with _$Rounding {
     return steps * step;
   }
 
-  int _roundToStep(int wholePart, int fractionalNumerator, int divisor) {
+  int roundFraction(int wholePart, int fractionalNumerator, int divisor) {
+    if (divisor <= 0 || (wholePart.sign * fractionalNumerator.sign) < 0) {
+      throw ArgumentError(
+        '$wholePart + $fractionalNumerator / $divisor must have one sign',
+      );
+    }
     final numerator = wholePart.remainder(step) * divisor + fractionalNumerator;
     final denominator = divisor * step;
     final truncatedSteps = wholePart ~/ step + numerator ~/ denominator;

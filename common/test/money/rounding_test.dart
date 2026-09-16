@@ -100,6 +100,22 @@ void main() {
     });
   });
 
+  group('roundFraction', () {
+    test('rounds a whole part plus a fraction once', () {
+      expect(Rounding.halfUp.roundFraction(2, 5, 10), 3);
+      expect(Rounding.down.roundFraction(2, 19, 10), 3);
+      expect(Rounding.halfUp.roundFraction(-2, -5, 10), -3);
+    });
+
+    test('refuses mixed signs and a divisor that is not positive', () {
+      expect(
+        () => Rounding.halfUp.roundFraction(-2, 5, 10),
+        throwsArgumentError,
+      );
+      expect(() => Rounding.halfUp.roundFraction(2, 5, 0), throwsArgumentError);
+    });
+  });
+
   group('roundDouble', () {
     const cases = <(RoundingMode, int, double, int)>[
       (RoundingMode.halfUp, 1, 2.5, 3),
