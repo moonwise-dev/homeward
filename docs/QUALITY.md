@@ -192,10 +192,12 @@ deterministic score blocks merging prompt or catalog changes.
 `make eval-replay` replays recorded Gemini streams from the last report so
 parser, validation, seeding, and board changes can be checked without a key.
 
-## Continuous Integration
+## Pre-Push Hook
 
-GitHub Actions:
+There is no hosted CI while the repository has no remote (D53).
 
-- On every pull request: `make check`, `make eval-replay`.
-- Manual dispatch only: `make eval --cases …` with a free eval key secret,
-  report uploaded as an artifact.
+- `make hooks` sets `core.hooksPath` to `tool/githooks` once per clone.
+- `tool/githooks/pre-push` runs `make check`; `make eval-replay` joins it when
+  replay mode lands.
+- Live evals run by hand: `make eval --cases …` with a free eval key.
+- Hosted CI running the same targets is added when the repository is hosted.

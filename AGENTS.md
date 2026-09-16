@@ -82,6 +82,7 @@ Root `Makefile` targets:
 
 ```sh
 make get
+make hooks
 make format
 make analyze
 make test
@@ -99,6 +100,9 @@ make server-image-run
 `make check` runs format-check, analyze, and test. `markets-check`,
 `catalog-check`, and `eval` join as their milestones land; `make eval` needs
 `HOMEWARD_EVAL_GEMINI_KEY` and is never part of `check`.
+
+`make hooks` is run once per clone; it points git at `tool/githooks`, whose
+`pre-push` runs `make check`.
 
 Always resolve dependencies from the root with `make get`. Running
 `pub get` inside a package also resolves the whole workspace.

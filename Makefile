@@ -9,6 +9,7 @@ help:
 	@echo "Homeward workspace commands"
 	@echo ""
 	@echo "  make get           Resolve dependencies for the whole workspace"
+	@echo "  make hooks         Run make check before every git push"
 	@echo "  make analyze       Analyze every package"
 	@echo "  make format        Format every package"
 	@echo "  make format-check  Fail if any package is not formatted"
@@ -27,6 +28,10 @@ help:
 .PHONY: get
 get:
 	@flutter pub get
+
+.PHONY: hooks
+hooks:
+	@git config core.hooksPath tool/githooks
 
 .PHONY: analyze
 analyze:

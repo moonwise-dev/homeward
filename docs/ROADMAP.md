@@ -15,8 +15,8 @@
 Deliverables:
 
 - Monorepo: move the Flutter scaffold into `app/`, create `server/`, `common/`,
-  `markets/`, `tool/`, root `Makefile`, shared analysis options, CI running
-  `make check`.
+  `markets/`, `tool/`, root `Makefile`, shared analysis options, a pre-push
+  hook running `make check`.
 - Firebase project `homeward-genui`: anonymous auth, Firestore `eur3`, App
   Check providers, Hosting site, Cloud Run service shell.
 - Spikes S1 to S6 answered with a written decision in the decision log.
@@ -88,9 +88,10 @@ resolution.
   `US-CA`, `US-NY`, `US-TX`.
 - Reference rate refresh tool and snapshots for every curated market.
 - Remaining tools: `get_process`, `get_loan_types`, `release_decision`.
-- Full eval case set; replay mode in CI.
+- Full eval case set; replay mode in the pre-push hook.
 - Dark theme.
 - Public web deployment and README with screenshots.
+- Repository made public under Apache-2.0.
 
 ### M5 Voice Door — after M4
 
@@ -192,6 +193,8 @@ Decisions from the planning session on 2026-09-16.
 | D50 | Web App Check | reCAPTCHA Enterprise with one-day tokens, within the free tier | One-hour tokens; no App Check on web |
 | D51 | API path | Every client calls Cloud Run directly with CORS; Hosting serves only the web app | Direct for `/a2a` only; Hosting rewrites for everything |
 | D52 | Cloud Run auth | Invoker IAM check disabled; Firebase ID token in `Authorization` verified by the server | ID token in a custom header behind the public invoker check |
+| D53 | Checks before sharing code | Git pre-push hook running `make check`; no hosted CI until the repository is hosted | GitHub Actions in a Moonwise repository; no checks until a repository exists |
+| D54 | Repository | Private until M4, then public under Apache-2.0 | Public now under Apache-2.0; private with the license undecided |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.
@@ -214,13 +217,11 @@ them before M0 ends.
 
 ## Open Questions
 
-1. Repository visibility and license. travel-a2ui is public under Apache-2.0;
-   Google will likely expect the same for a vertical sample.
-2. Exact recording date, segment length, and production help from Andrew's
+1. Exact recording date, segment length, and production help from Andrew's
    team.
-3. What to present at the Sep 28 session and who attends.
-4. Whether Google wants a public deployment and where it will be linked.
-5. Who is the second reviewer for pack curation at Moonwise.
-6. Catalog ID domain: `moonwise.se/homeward` or a dedicated domain.
-7. Reply on the email thread with project details, which Hilda asked Moonwise
+2. What to present at the Sep 28 session and who attends.
+3. Whether Google wants a public deployment and where it will be linked.
+4. Who is the second reviewer for pack curation at Moonwise.
+5. Catalog ID domain: `moonwise.se/homeward` or a dedicated domain.
+6. Reply on the email thread with project details, which Hilda asked Moonwise
    for on 2026-09-14.
