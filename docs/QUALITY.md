@@ -44,7 +44,7 @@ There are no widget tests and no golden image tests.
 | Area | What is pinned |
 | --- | --- |
 | `money` | Every rounding mode and step against a hand table, 10 000 random cases against exact big integer arithmetic, currency parsing, currency mismatch errors, JSON; run on the VM and in Chrome because web integers are 53-bit |
-| `finance` | Annuity and straight amortization payments, LTV, DSTI, LTI, stress payment, maximum loan and binding constraint, purchase cost brackets including marginal and deduction styles, deductions derived from marginal bands equal to published tables, refunds by recomputation, cash needed, currency exposure |
+| `finance` | Annuity and straight amortization payments against Banco BPI's published examples and Lag (2026:226), inverse maximum principal, exact limit comparisons, LTV, DSTI, LTI, left to live on, interest deduction, stress payment, maximum loan and binding constraint, purchase cost brackets including marginal and deduction styles, deductions derived from marginal bands equal to published tables, refunds by recomputation, cash needed, currency exposure |
 | `markets` | Overlay resolution, buyer and loan predicate applicability, exactly one applicable rule per cost group, required profile fields per buyer |
 | `markets/<id>` | Worked examples per curated pack, with the expected figures derived by hand from the cited sources |
 | `plan` | Open decisions for every combination the flow table depends on |

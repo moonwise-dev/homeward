@@ -20,15 +20,44 @@ abstract class Rounding with _$Rounding {
 
   static const halfUp = Rounding(mode: RoundingMode.halfUp);
 
+  static const down = Rounding(mode: RoundingMode.down);
+
+  static const _maxExactInteger = 9007199254740991;
+
   int divide(int dividend, int divisor) => scale(dividend, 1, divisor);
 
   int scale(int value, int multiplier, int divisor) {
     if (divisor < 0) {
       return scale(-value, multiplier, -divisor);
     }
+    final limit = multiplier == 0
+        ? _maxExactInteger
+        : _maxExactInteger ~/ multiplier.abs();
+    if (divisor > limit || value.abs() ~/ divisor > limit) {
+      throw ArgumentError(
+        '$value * $multiplier / $divisor exceeds exact integer range',
+      );
+    }
     final wholePart = value ~/ divisor * multiplier;
     final fractionalNumerator = value.remainder(divisor) * multiplier;
     return _roundToStep(wholePart, fractionalNumerator, divisor);
+  }
+
+  int roundDouble(double value) {
+    if (!value.isFinite || value.abs() > _maxExactInteger) {
+      throw ArgumentError.value(value, 'value', 'Not an exact integer range');
+    }
+    final quotient = value / step;
+    final truncatedSteps = quotient.truncate();
+    final remainder = (quotient - truncatedSteps).abs();
+    if (remainder == 0) {
+      return truncatedSteps * step;
+    }
+    final steps =
+        _roundsAwayFromZero(remainder.compareTo(0.5), truncatedSteps.isOdd)
+        ? truncatedSteps + quotient.sign.toInt()
+        : truncatedSteps;
+    return steps * step;
   }
 
   int _roundToStep(int wholePart, int fractionalNumerator, int divisor) {
@@ -39,18 +68,22 @@ abstract class Rounding with _$Rounding {
     if (remainder == 0) {
       return truncatedSteps * step;
     }
-    final doubledRemainder = remainder.abs() * 2;
-    final roundsAwayFromZero = switch (mode) {
-      RoundingMode.down => false,
-      RoundingMode.up => true,
-      RoundingMode.halfUp => doubledRemainder >= denominator,
-      RoundingMode.halfEven =>
-        doubledRemainder > denominator ||
-            (doubledRemainder == denominator && truncatedSteps.isOdd),
-    };
-    final steps = roundsAwayFromZero
+    final steps =
+        _roundsAwayFromZero(
+          (remainder.abs() * 2).compareTo(denominator),
+          truncatedSteps.isOdd,
+        )
         ? truncatedSteps + remainder.sign
         : truncatedSteps;
     return steps * step;
   }
+
+  bool _roundsAwayFromZero(int comparedToHalf, bool truncatedIsOdd) =>
+      switch (mode) {
+        RoundingMode.down => false,
+        RoundingMode.up => true,
+        RoundingMode.halfUp => comparedToHalf >= 0,
+        RoundingMode.halfEven =>
+          comparedToHalf > 0 || (comparedToHalf == 0 && truncatedIsOdd),
+      };
 }

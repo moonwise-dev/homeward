@@ -283,7 +283,8 @@ The model binds to these paths and never writes values.
   obstacles              applicable foreign buyer obstacles
   process                applicable steps and documents
   sources                source list for everything above
-/scenario                price, downPayment, termYears, loanTypeId, rateShockPpm
+/scenario                price, downPayment, termYears, loanTypeId, rateSpreadPpm,
+                         rateShockPpm, associationFee
 /derived                 computed by server tools at seed time
   affordability          maxLoan, maxPrice, bindingConstraint, headroom
   downPaymentBounds      min, max, step

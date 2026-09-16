@@ -195,6 +195,9 @@ Decisions from the planning session on 2026-09-16.
 | D52 | Cloud Run auth | Invoker IAM check disabled; Firebase ID token in `Authorization` verified by the server | ID token in a custom header behind the public invoker check |
 | D53 | Checks before sharing code | Git pre-push hook running `make check`; no hosted CI until the repository is hosted | GitHub Actions in a Moonwise repository; no checks until a repository exists |
 | D54 | Repository | Private until M4, then public under Apache-2.0 | Public now under Apache-2.0; private with the license undecided |
+| D55 | Swedish affordability | Left-to-live-on check with a stress rate, living costs, and running costs, plus an income-multiple cap | Income multiple only; a DSTI limit like other markets |
+| D56 | Swedish interest deduction | Payments shown before and after it; the left-to-live-on check uses the net figure | Gross only |
+| D57 | Scenario rate | Official reference rate plus the loan type's conservative spread, adjustable through `rateSpreadPpm` | Fixed official rate; buyer-entered rate only |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

@@ -1,3 +1,9 @@
+export 'finance/amortization_tier.dart';
+export 'finance/annuity.dart';
+export 'finance/monthly_amount.dart';
+export 'finance/monthly_payment.dart';
+export 'finance/share.dart';
+export 'finance/straight.dart';
 export 'money/currency.dart';
 export 'money/currency_json_converter.dart';
 export 'money/money.dart';

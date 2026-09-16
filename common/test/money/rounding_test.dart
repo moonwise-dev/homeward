@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:common/common.dart';
 import 'package:test/test.dart';
 
-import 'exact_rounding.dart';
+import '../support/exact_rounding.dart';
 
 void main() {
   group('divide', () {
@@ -84,6 +84,57 @@ void main() {
           reason: '$rounding $value * $multiplier / $divisor',
         );
       }
+    });
+  });
+
+  group('scale range', () {
+    test('refuses products beyond exact integer range', () {
+      expect(
+        () => Rounding.halfUp.scale(1, 1000000, 10000000000),
+        throwsArgumentError,
+      );
+      expect(
+        () => Rounding.halfUp.scale(10000000000000, 1000000, 1),
+        throwsArgumentError,
+      );
+    });
+  });
+
+  group('roundDouble', () {
+    const cases = <(RoundingMode, int, double, int)>[
+      (RoundingMode.halfUp, 1, 2.5, 3),
+      (RoundingMode.halfUp, 1, 2.4999999, 2),
+      (RoundingMode.halfUp, 1, -2.5, -3),
+      (RoundingMode.halfEven, 1, 2.5, 2),
+      (RoundingMode.halfEven, 1, 3.5, 4),
+      (RoundingMode.halfEven, 1, -2.5, -2),
+      (RoundingMode.halfEven, 1, 2.5000001, 3),
+      (RoundingMode.down, 1, 2.9, 2),
+      (RoundingMode.down, 1, -2.9, -2),
+      (RoundingMode.up, 1, 2.1, 3),
+      (RoundingMode.up, 1, -2.1, -3),
+      (RoundingMode.up, 1, 42.0, 42),
+      (RoundingMode.halfUp, 100, 12350.0, 12400),
+      (RoundingMode.halfUp, 100, 12349.9, 12300),
+      (RoundingMode.down, 100, 12399.9, 12300),
+    ];
+
+    for (final (mode, step, value, expected) in cases) {
+      test('${mode.name} $value to step $step is $expected', () {
+        expect(Rounding(mode: mode, step: step).roundDouble(value), expected);
+      });
+    }
+
+    test('refuses values that are not finite or not exact integers', () {
+      expect(
+        () => Rounding.halfUp.roundDouble(double.nan),
+        throwsArgumentError,
+      );
+      expect(
+        () => Rounding.halfUp.roundDouble(double.infinity),
+        throwsArgumentError,
+      );
+      expect(() => Rounding.halfUp.roundDouble(1e16), throwsArgumentError);
     });
   });
 

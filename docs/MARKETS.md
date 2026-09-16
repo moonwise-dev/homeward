@@ -95,8 +95,16 @@ LendingRules
   maxAgeAtMaturity      [{ appliesTo, years, sourceId }]
   incomeAdjustments     [{ appliesTo, whenAgeAtMaturityAbove, reductionPpm, weightedByTermShare, exceptRetired, sourceId }]
   amortization          [{ appliesTo, whenLtvAbovePpm, annualPpm, sourceId }]
+  leftToLiveOn          [{ appliesTo, stressRatePpm, typicalRangePpm?, runningCostsMonthly, sourceId }]
+  interestDeduction     [{ appliesTo, brackets: [{ upToYearly, ppm }], perBorrower, sourceId }]
   repaymentStyle        annuity | straight
 ```
+
+A `leftToLiveOn` rule is the Swedish lender check (D55): monthly net income minus
+housing cost at `stressRatePpm`, after `interestDeduction`, minus association fee,
+`runningCostsMonthly`, and household living costs must not fall below zero. It
+binds alongside `maxLti`, not instead of it. Payments are shown both before and
+after `interestDeduction` (D56).
 
 Where a rule is a lender norm rather than law, `typicalRangePpm` carries the
 market range and the value is the conservative end. When several entries of one
@@ -200,6 +208,17 @@ by `referenceRateId`, refreshed by `tool/refresh_rates`.
 The server never fetches rates at request time. Snapshots older than 14 days
 fail `make markets-check` for curated markets.
 
+A scenario's rate is the loan type's reference rate plus its spread. The spread
+starts at the conservative end of `typicalSpreadPpm` and the buyer can change it
+in `/scenario/rateSpreadPpm` to try an actual offer (D57).
+
+## Living Costs
+
+`markets/living_costs/*.json` hold dated snapshots of official household living
+cost norms used by `leftToLiveOn`, keyed by household member type: adults by age
+band and children by age. Sweden uses Konsumentverket's yearly *Koll på
+pengarna* figures. Snapshots older than 400 days fail `make markets-check`.
+
 ## Curation Workflow
 
 1. Open a branch `markets/<id>`.
@@ -238,7 +257,10 @@ including the second-person review, before it becomes a pack field.
 | Stricter amortization for debt over 4.5× gross income removed 2026-04-01; no income-based rule remains in law | Verified | Finansinspektionen notice 2026-03-19; Lag (2026:226) |
 | New builds: no amortization for up to five years for the first buyer | Verified | Lag (2026:226) 10 § |
 | LTV uses the market value at purchase; revaluation after five years or on a substantial change | Verified | Lag (2026:226) 13 § |
-| Lender stress rates commonly 6–7% | Lender norm, to verify | Bank affordability calculators (KALP) |
+| Lender stress rates commonly 6–7% in the KALP check | Lender norm, to verify | Bank lending policies, Finansinspektionen's mortgage report |
+| Interest deduction 30% of interest up to 100 000 SEK a year per person, 21% above | To verify | Skatteverket |
+| Household living costs by age and household size | To verify | Konsumentverket, *Koll på pengarna* |
+| Running costs of a bostadsrätt beyond the association fee | Lender norm, to verify | Bank lending policies |
 | Lender income multiples roughly 5–6× gross | Lender norm, to verify | Bank lending policies |
 | Bostadsrätt purchase has no title registration fee or mortgage deed fee; the association may charge a pledge fee | To verify | Lantmäteriet, BRF statutes |
 | House purchase: title registration 1.5% plus fee, mortgage deed 2% of new deeds plus fee | To verify | Lantmäteriet |
