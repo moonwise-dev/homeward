@@ -78,6 +78,8 @@ resolution.
 - Recording build tagged; a free key whose daily quota is untouched that day;
   the server warmed with one request just before recording.
 - Backup: screen capture of every hero step recorded the day before.
+- Portugal sources re-read in the recording week; hero figures in
+  `docs/PRODUCT.md` recomputed if any changed.
 
 ### M4 Sample Complete — Oct 13 to livestream
 
@@ -110,7 +112,7 @@ resolution.
 | S4 | Do genui client functions accept object arguments and return numbers, strings, and booleans; can a catalog item subscribe to a whole slice; is a six-component slider drag at 60 fps? | Probe app, widget test, profile web builds in headless Chrome with CPU throttling | **Answered:** bindings and functions work; charts drawn with `fl_chart` are the bottleneck; see `docs/SPIKES.md`. Android unmeasured. |
 | S5 | Is `a2ui_core` pure Dart and usable on the server for message models and validation? | Import into a console app | **Answered:** yes; used from `common`, see `docs/SPIKES.md`. |
 | S6 | Does `firebase_admin_sdk` verify anonymous ID tokens and App Check tokens and run Firestore transactions on Cloud Run with ADC? | Deploy a probe route | Confirms server data layer. |
-| S7 | Verify the high-impact Tier 1 claims: Portugal non-resident IMT, Portugal DSTI limit, Portugal non-resident LTV, Sweden top-up cap | Primary sources listed in `docs/MARKETS.md` | Pack values and hero script numbers. |
+| S7 | Verify the high-impact Tier 1 claims: Portugal non-resident IMT, Portugal DSTI limit, Portugal non-resident LTV, Sweden top-up cap | Primary sources listed in `docs/MARKETS.md` | **Answered:** Sweden confirmed; Portugal corrected: DSTI 45% from 2026-08-01, non-resident IMT by Decree-Law 97/2026 with a refund path, non-resident 70% is lender practice; see `docs/SPIKES.md`. |
 
 ## Risks
 
@@ -126,7 +128,7 @@ resolution.
 | Free-tier daily cap, about 20 requests per model | Failed turns in rehearsal or on camera; about ten turns a day per buyer | One full run per key per day; recording on a key unused that day; the cap explained in the app |
 | Free-tier prompts may be used by Google to improve its products | Buyers' financial details lose a privacy promise | Disclosed on the key screen; terms wording verified before it ships |
 | Buyers ask about markets that are not curated | The "any location" idea goes unmet | Honest uncovered state, uncovered requests logged per market to drive curation order |
-| Curated rules change after review | Stale numbers | 180-day expiry, effective dates, check warnings |
+| Curated rules change after review; Portugal changed lending limits and non-resident IMT within four months of 2026 | Stale numbers on camera | 180-day expiry, effective dates, check warnings, sources re-read in the recording week |
 | Four weeks for server, client, catalog, and two markets | Scope slip before recording | Thin slice by Sep 28; Phase 2 components and Tier 2 explicitly after recording |
 | BYO key friction for video viewers | Fewer people try the demo | One-screen key flow with direct AI Studio link; hero prompt ready on first plan |
 | Financial data privacy in EU | Compliance exposure | Anonymous auth, `eur3`, no content in logs, delete controls, 90-day inactivity cleanup |
@@ -183,6 +185,9 @@ Decisions from the planning session on 2026-09-16.
 | D44 | Charts | Own `CustomPainter` charts in `app/lib/ui` | `fl_chart` redrawing less often, `fl_chart` as is |
 | D45 | Web build | Wasm with JS fallback, COOP and COEP headers | JS only |
 | D46 | Performance harness | `make perf` in the repository, run on demand | One-off measurements |
+| D47 | Non-resident IMT in the hero | Ask prior tax residency and residency intent; show the refundable part and claim deadline | 7.5% shown as final with the refund only on explain; refund only in the relocator persona |
+| D48 | Portugal non-resident LTV | 70% lender norm from a lender's price list, shown under the 80% regulatory cap | 60% from secondary sources; 80% regulatory cap only |
+| D49 | Hero buyer age | Over 35 | 35 or younger, with the youth IMT exemption |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

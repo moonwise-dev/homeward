@@ -49,15 +49,27 @@ Every rule may carry `appliesTo`. A rule without it applies to everyone.
 
 ```text
 BuyerPredicate
-  residency             resident | nonResident
-  citizenship           domestic | regional | foreign      regional = EU/EEA for EU markets
+  residency             resident | nonResident                tax residency in this market
+  formerResident        true | false                          ever tax resident in this market
+  residencyIntent       stay | becomeResident
+  citizenship           domestic | regional | foreign         regional = EU/EEA for EU markets
   use                   primary | secondary | investment
   firstTime             true | false
   employment            employed | selfEmployed | retired
+  age                   { min?, max? }                        oldest borrower, at application
 ```
 
 Predicates are evaluated against the profile by `common/markets/applicability.dart`.
 The resolved `/market` slice a surface receives contains only rules that apply.
+
+```text
+LoanPredicate
+  rateType              variable | mixed | fixed
+  termYears             { min?, max? }
+```
+
+Rules that depend on the loan rather than the buyer carry `appliesToLoan` and
+are evaluated against the scenario.
 
 ### Profile Field Requirements
 
@@ -76,23 +88,27 @@ lays out the fields; the pack decides which fields exist.
 ```text
 LendingRules
   maxLtv                [{ appliesTo, ppm, typicalRangePpm?, sourceId }]
-  maxDsti               [{ appliesTo, ppm, incomeBasis: net | gross, sourceId }]
+  maxDsti               [{ appliesTo, ppm, incomeBasis: net | gross, exceptionQuotaPpm?, sourceId }]
   maxLti                [{ appliesTo, multipleTimes100, incomeBasis, sourceId }]
-  stress                [{ appliesTo, kind: fixedRate | shock, ppm, sourceId }]
+  stress                [{ appliesTo, appliesToLoan, kind: fixedRate | shock, ppm, sourceId }]
   maxTermYears          [{ appliesTo, years, sourceId }]
   maxAgeAtMaturity      [{ appliesTo, years, sourceId }]
+  incomeAdjustments     [{ appliesTo, whenAgeAtMaturityAbove, reductionPpm, weightedByTermShare, exceptRetired, sourceId }]
   amortization          [{ appliesTo, whenLtvAbovePpm, annualPpm, sourceId }]
   repaymentStyle        annuity | straight
 ```
 
 Where a rule is a lender norm rather than law, `typicalRangePpm` carries the
-market range and the value is the conservative end.
+market range and the value is the conservative end. When several entries of one
+limit apply, the lowest binds, and each is shown with its source kind, so a 70%
+lender norm appears under the 80% regulatory cap it sits beneath.
 
 ### Cost Rules
 
 ```text
 CostRule
-  id                    imt
+  id                    imt-nonresident
+  group                 imt
   label                 Municipal property transfer tax (IMT)
   localTerm             IMT
   appliesTo
@@ -104,8 +120,24 @@ CostRule
     percentWithMin      { ppm, min }
   recurrence            once | monthly | yearly
   rounding              { mode: halfUp | halfEven | down | up, step }, default halfUp to one minor unit
+  refund                { when, recomputeAs, deadline, claimWindow, sourceId }, optional
   sourceId
 ```
+
+Rules in one `group` are alternatives for the same charge; exactly one applies
+to a buyer, and a pack that leaves zero or several applicable fails
+`make markets-check`.
+
+Bracket rules take either style. Marginal brackets tax each band at its rate.
+Deduction brackets, `marginal: false`, apply the bracket's rate to the whole
+base and subtract its deduction, which is how Portugal publishes IMT; a single
+rate on the whole value is a bracket with no deduction.
+
+A `refund` returns part of a charge when the buyer later meets a condition.
+`when` is a buyer predicate on intent, such as `residencyIntent: becomeResident`.
+The refundable amount is the charge minus the same group recomputed for the
+profile overridden by `recomputeAs`, such as `residency: resident`. `deadline`
+and `claimWindow` are durations that `ForeignBuyerObstacles` shows with dates.
 
 ### Loan Types
 
@@ -191,40 +223,51 @@ is a property of resolution, not a field of the pack.
 
 ## Tier 1 Curation Notes
 
-Starting points gathered during planning. **Nothing here is verified for the
-pack.** Each line becomes a pack field only after the curation workflow.
+Starting points for the `SE`, `PT`, and `PT-30` packs. Lines marked verified
+were checked against the named primary source in spike S7 on 2026-09-16; see
+`docs/SPIKES.md`. Every line still goes through the curation workflow,
+including the second-person review, before it becomes a pack field.
 
 ### Sweden (`SE`)
 
-| Claim | Status | Lead |
+| Claim | Status | Source |
 | --- | --- | --- |
-| Loan-to-value cap for purchases is 90% from 2026-04-01 | Reported by several sources | Law 2026:226, Regeringen press release Dec 2025 |
-| Stricter amortization for debt over 4.5× gross income removed 2026-04-01 | Reported by several sources | Same |
-| Amortization 2% yearly above 70% LTV, 1% from 50% to 70%, none below 50% | Reported by several sources | Law 2026:226 |
-| Top-up loan cap 80% | Single secondary source | Verify in law text |
-| Lender stress rates commonly 6–7% | Lender norm | Bank affordability calculators (KALP) |
-| Lender income multiples roughly 5–6× gross | Lender norm | Bank lending policies |
+| Loan-to-value cap 90% when a mortgage is granted, from 2026-04-01 | Verified | Lag (2026:226) 3 §, 4 § |
+| Loan-to-value cap 80% when a mortgage is increased | Verified | Lag (2026:226) 5 § |
+| Amortization 1% a year above 50% LTV and 2% above 70%, of the highest credit amount since the latest valuation | Verified | Lag (2026:226) 7 § |
+| Stricter amortization for debt over 4.5× gross income removed 2026-04-01; no income-based rule remains in law | Verified | Finansinspektionen notice 2026-03-19; Lag (2026:226) |
+| New builds: no amortization for up to five years for the first buyer | Verified | Lag (2026:226) 10 § |
+| LTV uses the market value at purchase; revaluation after five years or on a substantial change | Verified | Lag (2026:226) 13 § |
+| Lender stress rates commonly 6–7% | Lender norm, to verify | Bank affordability calculators (KALP) |
+| Lender income multiples roughly 5–6× gross | Lender norm, to verify | Bank lending policies |
 | Bostadsrätt purchase has no title registration fee or mortgage deed fee; the association may charge a pledge fee | To verify | Lantmäteriet, BRF statutes |
 | House purchase: title registration 1.5% plus fee, mortgage deed 2% of new deeds plus fee | To verify | Lantmäteriet |
 | Monthly association fee is a recurring cost for bostadsrätt | Structural | Pack models it as a profile or scenario input |
 
 ### Portugal (`PT`) and Madeira (`PT-30`)
 
-| Claim | Status | Lead |
+| Claim | Status | Source |
 | --- | --- | --- |
-| Non-resident LTV limited to 70%; lenders commonly 60–70% | Secondary sources | Banco de Portugal macroprudential recommendation |
-| Resident primary residence LTV up to 90% | To verify | Banco de Portugal |
-| Debt-service-to-income limit cut from 50% to 45% on 2026-05-20 | Single secondary source | Banco de Portugal progress report March 2026 and later notices |
-| Maximum term and interest-rate shock in affordability assessment | To verify | Banco de Portugal |
-| IMT uses progressive brackets for primary residences | To verify | Autoridade Tributária, PwC Portugal tax guide 2026 |
-| IMT bracket thresholds are 25% higher in Madeira and the Azores | Two secondary sources | Autoridade Tributária |
-| Non-residents pay a flat 7.5% IMT on residential purchases from 2026 | Single secondary source, high impact | Orçamento do Estado 2026, Autoridade Tributária |
-| Stamp duty on purchase and on the loan amount | To verify rates | Código do Imposto do Selo |
+| LTV capped by purpose: 90% for an own permanent residence, 80% otherwise; no residency-based cap | Verified | Banco de Portugal Recomendação Macroprudencial 1/2026 art. 5 |
+| Non-resident foreigners limited to the lower of 70% of price and 70% of valuation | Verified at one lender | Banco BPI price list from 2026-09-16; a second lender at curation |
+| DSTI 45% of net income for assessments from 2026-08-01; up to 10% of each lender's lending per semester may exceed it | Verified | Recomendação 1/2026 arts. 2, 4, 6, 11 |
+| Stress: index plus 0.5, 1, or 1.5 points for terms up to 5, up to 10, or over 10 years, on variable and mixed rates only | Verified | Instrução BdP 23/2023, cited by Recomendação 1/2026 art. 4 |
+| Maximum term 40 years when the oldest borrower is 35 or younger, otherwise 35 | Verified | Recomendação 1/2026 art. 7 |
+| Income reduced by at least 20%, weighted by the share of the term past age 70, unless retired | Verified | Recomendação 1/2026 art. 4 |
+| IMT on housing: deduction brackets up to €660,982 for a primary residence and €633,931 otherwise, a single rate on the whole value above | Verified | CIMT art. 17; Ofício Circulado 40129/2026 tables I and III |
+| IMT thresholds 25% higher in Madeira and the Azores | Verified | Lei 21/90; Ofício Circulado 40129/2026 tables IV to VI |
+| Non-residents pay a flat 7.5% IMT on housing with no exemption, from 2026-05-25 | Verified | Decreto-Lei 97/2026; CIMT art. 17 n.º 10 |
+| Former Portuguese tax residents pay normal IMT rates | Verified | CIMT art. 17 n.º 10 a) |
+| Becoming tax resident within two years, or renting at capped rent for 36 months within five years, annuls the difference on request within six months | Verified | CIMT art. 17 n.os 10–12 |
+| The flat 7.5% applies unchanged in Madeira, because regional tables adapt thresholds only | Inference, to confirm | Lei 21/90 |
+| Buyers 35 or younger pay no IMT on a primary residence up to €330,539, €413,174 in the regions | Tables verified, conditions to verify | CIMT arts. 9 and 17; Ofício Circulado 40129/2026 tables II and V |
+| Stamp duty 0.6% on loans of five years or more and 4% on interest | Stated by a lender, law to verify | Banco BPI price list; Tabela Geral do Imposto do Selo |
+| Stamp duty on the purchase price | To verify rate | Código do Imposto do Selo |
 | Tax number (NIF) required before purchase; fiscal representative for some non-residents | To verify | Portal das Finanças |
 | Real estate no longer qualifies for the Golden Visa | To verify | AIMA |
 
-The non-resident IMT and DSTI claims change the hero flow's numbers
-materially. They are the first two items verified in spike S7.
+Portugal changed its lending limits and non-resident taxes within four months
+of 2026. The PT sources are re-read in the recording week.
 
 ## Tier 2 And Tier 3
 

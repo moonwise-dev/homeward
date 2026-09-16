@@ -107,12 +107,14 @@ next.
 
 The profile captures only what the applicable rules need. The rule pack
 declares which profile fields matter for which buyer, so a cross-border buyer
-is asked for income currency and residency intent while a local buyer is not.
+is asked for income currency, prior tax residency, and residency intent while a
+local buyer is not.
 
-Profile fields include citizenship, residency, tax residency, intended use
-(primary, secondary, investment), first-time buyer status, employment type,
-net and gross monthly income with currency, savings, existing monthly debt
-payments, age, and co-buyers.
+Profile fields include citizenship, residency, tax residency, prior tax
+residency in the target market, residency intent, intended use (primary,
+secondary, investment), first-time buyer status, employment type, net and gross
+monthly income with currency, savings, existing monthly debt payments, age, and
+co-buyers.
 
 ### Target Market Resolution
 
@@ -177,23 +179,38 @@ explanation with the rule, its source, and what would change it.
 
 The flow the video segment is built around. Contrast is the point.
 
-1. A buyer types: *"I live in Stockholm and want a two-bedroom flat in Funchal,
-   around €350k."*
+1. A buyer over 35 types: *"I live in Stockholm and want a two-bedroom flat in
+   Funchal, around €350k."*
 2. Homeward resolves `PT-30`, shows a market snapshot with a curated badge, and
    draws a profile form. Because the buyer is a non-resident with SEK income,
-   the form includes income currency and residency intent.
+   the form includes income currency, age, whether they were ever a Portuguese
+   tax resident, and whether they intend to become one within two years.
 3. The same opening from a Lisbon resident draws a different form: no currency
-   field, resident lending limits, primary-residence tax treatment.
+   or residency fields, resident lending limits, primary-residence tax
+   treatment.
 4. After committing the profile, the Stockholm buyer sees an affordability
-   summary where the binding constraint is the non-resident LTV, a payment
-   breakdown, the cash needed including non-resident purchase taxes, and the
-   obstacles (tax number, local account).
+   summary where the binding constraint is lenders' 70% non-resident limit,
+   shown under the 80% legal cap; a payment breakdown; the cash needed,
+   including the flat 7.5% non-resident IMT and the part refunded if they become
+   resident; and the obstacles: tax number, local account, and the refund claim
+   deadline.
 5. The buyer drags the down payment slider. Payment, stress chart, cash needed,
    and eligibility update instantly. The wire inspector shows zero network
    traffic during the drag.
 6. The commit button is disabled while the down payment is below the minimum,
    with the reason shown, through A2UI checks.
 7. Committing updates the plan board.
+
+Hero figures, verified against primary sources in spike S7 on 2026-09-16 and
+checked again in the recording week:
+
+| Figure | Amount |
+| --- | --- |
+| IMT at the deed as a non-resident | €26,250.00 |
+| IMT as a resident's primary home | €11,427.52 |
+| Refundable on request after becoming tax resident within two years | €14,822.48 |
+| Maximum loan at the 70% non-resident limit | €245,000.00 |
+| Down payment at that limit | €105,000.00 |
 
 ## Non-Goals For v1
 

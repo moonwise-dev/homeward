@@ -358,3 +358,105 @@ validation, or does Homeward own its v0.9 models?
 - `docs/AGENT.md`: the turn orchestrator validates through the shadow processor.
 - Spike S1 must confirm `genui_a2a` sends the same capability and data model
   shapes.
+
+## S7 — Tier 1 Rules Behind The Hero Numbers
+
+**Answered 2026-09-16.**
+
+### Question
+
+Are the high-impact Tier 1 claims true in primary sources: Portugal's
+non-resident IMT, Portugal's DSTI limit, Portugal's non-resident LTV, and
+Sweden's top-up cap?
+
+### Method
+
+- Read the law, regulator, and tax authority texts directly. PDFs were
+  downloaded and their text extracted locally; nothing relied on a search
+  summary.
+- Sweden: Lag (2026:226) om begränsning av bostadskrediter as consolidated by
+  Riksdagen, and Finansinspektionen's repeal notice of 2026-03-19.
+- Portugal lending: Banco de Portugal Recomendação Macroprudencial n.º 1/2026
+  and Instrução n.º 23/2023 from Boletim Oficial 9/2023.
+- Portugal tax: Decreto-Lei n.º 97/2026 and Declaração de Retificação
+  n.º 26/2026/1 from Diário da República, article 17 of the Código do IMT as
+  consolidated by the Autoridade Tributária, and Ofício Circulado
+  n.º 40129/2026 with the 2026 practical tables.
+- Lender practice: Banco BPI's credit price list in force from 2026-09-16.
+- Hero figures recomputed with decimal arithmetic, and bracket deductions
+  derived from the marginal bands to cross-check the published tables.
+
+### Findings
+
+| Claim | Result | Source |
+| --- | --- | --- |
+| Sweden top-up cap 80% | **Confirmed.** 90% when a mortgage is granted, 80% when one is increased. | 2026:226 4 §, 5 § |
+| Sweden 4.5× income amortization removed | **Confirmed.** The law holds no income-based rule. | FI notice; 2026:226 |
+| Sweden amortization tiers | **Confirmed**, with a detail: 1% or 2% of the highest credit amount since the latest valuation, not of the current balance. | 2026:226 7 § |
+| Portugal DSTI cut to 45% on 2026-05-20 | **Date wrong.** 45% of net income applies to solvency assessments from **2026-08-01**. Up to 10% of each lender's lending per semester may exceed it. | Recommendation 1/2026 arts. 2, 6, 11 |
+| Portugal non-resident LTV 70% | **Not a regulation.** Banco de Portugal caps LTV by purpose: 90% for an own permanent residence, 80% otherwise. 70% for non-resident foreigners is lender practice. | Recommendation 1/2026 art. 5; BPI price list |
+| Portugal non-resident IMT 7.5% from the 2026 budget | **True, different law.** Decree-Law 97/2026, in force 2026-05-25. Flat 7.5% on any urban residential purchase by a non-resident, no exemptions. | CIMT art. 17 n.os 10–12 |
+| Portugal IMT thresholds 25% higher in Madeira and the Azores | **Confirmed.** Published as tables IV to VI under Lei 21/90. | Ofício Circulado 40129/2026 |
+
+Beyond the four claims:
+
+- **Non-resident IMT exceptions:** a buyer who was ever a Portuguese tax
+  resident pays the normal rates. A buyer who becomes tax resident within two
+  years of purchase, or rents the home at capped rent within six months and for
+  36 months within five years, can have the difference annulled on request
+  within six months of qualifying.
+- **Madeira inference:** the regional tables change thresholds only, so the
+  flat 7.5% applies unchanged in Madeira. No source states this explicitly;
+  curation confirms it.
+- **Stress:** the index is shocked by 0.5, 1, or 1.5 percentage points for
+  terms up to 5, up to 10, or over 10 years, on variable and mixed rates. Fixed
+  rates are not shocked. Recommendation 1/2026 still cites Instrução 23/2023.
+- **Maximum term:** 40 years when the oldest borrower is 35 or younger,
+  otherwise 35.
+- **Age at maturity:** income is reduced by at least 20%, weighted by the share
+  of the term after the borrower turns 70, unless already retired.
+- **IMT table shape:** marginal rates with a deduction per bracket up to
+  €660,982 for a primary residence, or €633,931 otherwise; above that a single
+  rate on the whole value. Deductions derived from the marginal bands match the
+  published ones to the cent.
+- **Youth exemption:** buyers 35 or younger pay no IMT on a primary residence up
+  to €330,539, or €413,174 in the regions. Its other conditions are unverified.
+- **Lender norms at BPI:** a resident's primary home is limited to the lower of
+  90% of the price and 85% of the valuation; a second home to the lower of 80%
+  and 70%.
+- **Stamp duty on the loan:** BPI states 0.6% for terms of five years or more,
+  and 4% on interest. Stamp duty on the purchase price is still unverified.
+
+Hero figures for a buyer over 35 buying at €350,000 in Funchal:
+
+| Figure | Amount |
+| --- | --- |
+| IMT at the deed as a non-resident | €26,250.00 |
+| IMT as a resident's primary home, table IV: 7% less €13,072.48 | €11,427.52 |
+| Refundable after becoming tax resident within two years | €14,822.48 |
+| Maximum loan at the 70% lender norm | €245,000.00 |
+| Down payment at that limit | €105,000.00 |
+| Maximum loan at the 80% legal cap | €280,000.00 |
+
+### Decisions
+
+- **D47:** The Portugal profile asks whether the buyer was ever a Portuguese tax
+  resident and whether they intend to become one within two years. The
+  non-resident IMT shows its refundable part and the claim deadline, computed
+  by code from pack rules.
+- **D48:** Portugal's non-resident limit is a 70% lender norm sourced to a
+  lender's published price list, shown under the 80% regulatory cap. A second
+  lender is checked during curation to set the range.
+- **D49:** The hero buyer is over 35: a 35-year maximum term and no youth
+  exemption.
+
+### Consequences
+
+- `docs/MARKETS.md`: Tier 1 notes carry verified status and exact sources;
+  schema gains cost rule groups and refunds, buyer age and residency intent
+  predicates, loan predicates for stress, and income adjustments.
+- `docs/PRODUCT.md`: hero form fields and hero figures.
+- `docs/QUALITY.md`: hero eval asks the new fields; `finance` tests pin bracket
+  deductions against marginal bands.
+- `docs/ROADMAP.md`: S7 answered; D47 to D49; Portugal rules re-verified in the
+  recording week.

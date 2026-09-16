@@ -44,8 +44,8 @@ There are no widget tests and no golden image tests.
 | Area | What is pinned |
 | --- | --- |
 | `money` | Every rounding mode and step against a hand table, 10 000 random cases against exact big integer arithmetic, currency parsing, currency mismatch errors, JSON; run on the VM and in Chrome because web integers are 53-bit |
-| `finance` | Annuity and straight amortization payments, LTV, DSTI, LTI, stress payment, maximum loan and binding constraint, purchase cost brackets including marginal and deduction styles, cash needed, currency exposure |
-| `markets` | Overlay resolution, predicate applicability, required profile fields per buyer |
+| `finance` | Annuity and straight amortization payments, LTV, DSTI, LTI, stress payment, maximum loan and binding constraint, purchase cost brackets including marginal and deduction styles, deductions derived from marginal bands equal to published tables, refunds by recomputation, cash needed, currency exposure |
+| `markets` | Overlay resolution, buyer and loan predicate applicability, exactly one applicable rule per cost group, required profile fields per buyer |
 | `markets/<id>` | Worked examples per curated pack, with the expected figures derived by hand from the cited sources |
 | `plan` | Open decisions for every combination the flow table depends on |
 | `catalog` | Every declared example validates against its schema; bound-number annotations present on every money, rate, and percentage property |
@@ -135,7 +135,7 @@ turns:
       coverage: curated
       components_include: [MarketSnapshotCard, MoneyInput, LocationPicker]
       components_exclude: [StressTestChart]
-      profile_fields_asked: [incomeCurrency, residencyIntent]
+      profile_fields_asked: [incomeCurrency, age, formerResident, residencyIntent]
   - action: commit_profile
     data_model: fixtures/madeira-nonresident-profile.json
     expect:

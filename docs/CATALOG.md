@@ -167,7 +167,8 @@ affordability limit, with today and stress marked.
 ### 8. `PurchaseCostsTable`
 
 Itemized upfront costs for this buyer, the total, and cash needed including the
-down payment.
+down payment. A charge with a refund shows the refundable part and the condition
+that earns it.
 
 | Property | Type | Required |
 | --- | --- | --- |
