@@ -28,7 +28,10 @@ errors with the same codes in `error.data.code`.
 1. Request ID.
 2. Redaction: removes `X-Homeward-Gemini-Key` and `Authorization` from anything
    that could be logged.
-3. CORS: allows the Hosting origin and local development origins.
+3. CORS: allows the Hosting origins and local development origins, answers
+   preflight for `Authorization`, `X-Firebase-AppCheck`,
+   `X-Homeward-Gemini-Key`, and `X-A2A-Extensions`, and caches preflight for an
+   hour.
 4. Firebase ID token verification with `firebase_admin_sdk`; anonymous accounts
    accepted.
 5. App Check token verification.
@@ -145,8 +148,13 @@ service account through Application Default Credentials.
 - Cloud Run runs as `homeward-server@homeward-genui.iam.gserviceaccount.com`
   with Cloud Datastore User, Firebase Authentication Viewer, Firebase App Check
   Token Verifier, and Logs Writer.
-- Firebase Hosting rewrites `/a2a`, `/api/**`, and `/.well-known/**` to the
-  Cloud Run service, and sends `Cross-Origin-Opener-Policy: same-origin` and
+- Cloud Run deploys with `--no-invoker-iam-check`. With the check on, Cloud Run
+  answers 401 to any `Authorization` bearer token that is not a Google identity
+  token, including Firebase ID tokens, before the request reaches the server.
+- Clients call the Cloud Run URL directly. Firebase Hosting has no rewrites to
+  the server: they buffer whole responses and never return after about 60
+  seconds.
+- Firebase Hosting sends `Cross-Origin-Opener-Policy: same-origin` and
   `Cross-Origin-Embedder-Policy: require-corp` on the web app for multi-threaded
   Wasm rendering.
 - `make deploy-server` and `make deploy-web` exist and run only when explicitly

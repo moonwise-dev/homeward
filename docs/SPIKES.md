@@ -460,3 +460,74 @@ Hero figures for a buyer over 35 buying at €350,000 in Funchal:
   deductions against marginal bands.
 - `docs/ROADMAP.md`: S7 answered; D47 to D49; Portugal rules re-verified in the
   recording week.
+
+## S6 — Firebase Admin SDK On Cloud Run, And The Web Path To It
+
+**Answered 2026-09-16.**
+
+### Question
+
+Does `firebase_admin_sdk` verify anonymous ID tokens and App Check tokens and
+run Firestore transactions on Cloud Run with Application Default Credentials?
+Do the cross-origin isolation headers for multi-threaded Wasm break reCAPTCHA
+for App Check? Can a web client reach the server the way the architecture
+assumed, through Firebase Hosting rewrites?
+
+### Method
+
+- A throwaway shelf server outside the repository used `firebase_admin_sdk`
+  0.5.5, was cross-compiled to Linux x64, packaged on the distroless image, and
+  deployed as a Cloud Run service running as `homeward-server` with 0 to 1
+  instances. One route ran every check against the tokens it received and timed
+  each step; another streamed one SSE event a second.
+- A script signed in anonymously through the Identity Toolkit REST API and
+  called the service directly and through a Hosting preview channel.
+- A throwaway Flutter web app built with `--wasm` used `firebase_auth` and
+  `firebase_app_check` with a reCAPTCHA Enterprise key. The same build was
+  served from one preview channel under three header variants: `require-corp`,
+  `credentialless`, and none. It signed in, got an App Check token, streamed
+  from Cloud Run with `fetch` and with `package:http`, and called the server
+  through Hosting and directly. Headless Chrome drove each variant through the
+  DevTools protocol and captured console output and blocked requests.
+
+### Findings
+
+| Area | Result |
+| --- | --- |
+| ID tokens | Anonymous tokens verify: 41 ms on first use while public keys load, then under 1 ms. The revocation check calls `getUser` and works with Firebase Authentication Viewer, about 200 ms. |
+| App Check | reCAPTCHA Enterprise tokens verify under 25 ms. Replay protection with `consume` works with Firebase App Check Token Verifier: the first use reports `alreadyConsumed: false`, later uses `true`. |
+| Firestore | A read-then-write transaction works with Cloud Datastore User: 839 ms on a fresh instance, 130–330 ms warm. |
+| Credentials | ADC on Cloud Run needs no key file. OAuth refresh tokens, which is what `gcloud auth application-default login` produces, cannot reach Firestore, so local development uses the emulators. |
+| Build | The SDK cross-compiles to Linux x64; its FFI use is libc `setenv`, present in the distroless image. Instances listen 200–450 ms after starting. |
+| Errors | Malformed tokens fail with `auth/argument-error` and `app-check/invalid-argument`. |
+| Cloud Run invoker check | With the invoker IAM check on, even a public service answers 401 to any `Authorization` bearer token that is not a Google identity token, Firebase ID tokens included; `X-Serverless-Authorization` is checked the same way. With `--no-invoker-iam-check` the header reaches the server. |
+| Hosting rewrites | They buffer the whole response. A 10-second SSE stream arrived at once with a `Content-Length`; a 55-second stream arrived at once after 55 seconds; a 65-second stream never returned. Direct to Cloud Run, events arrived about 150 ms after they were sent. |
+| Direct calls from web | CORS with an hour of cached preflight works from the Hosting origin. Both `fetch` and `package:http` streamed live from Cloud Run, one chunk a second. |
+| Classic reCAPTCHA | Firebase no longer accepts classic reCAPTCHA v3 for App Check; its console field is disabled. A key created in the reCAPTCHA admin console is a Google Cloud key in the project and works with the Enterprise provider. |
+| reCAPTCHA price | 10,000 assessments a month are free; above that a flat $8 up to 100,000, then $1 per 1,000. Each App Check token exchange is one assessment. |
+| Isolation headers | Under `require-corp` and `credentialless` the page was cross-origin isolated and rendered with Wasm. reCAPTCHA Enterprise, anonymous sign-in, App Check, and direct cross-origin calls all worked under both. |
+| Propagation | App Check rejected exchanges with a 400 for about a minute after its configuration was saved. |
+| Auth and App Check | With App Check activated, Firebase Auth on web waits for an App Check token before signing in; an unusable site key surfaces as `auth/network-request-failed`. |
+| Safari | Not tested. Checked in M1 against the real web app on macOS and iOS Safari. |
+
+### Decisions
+
+- **D50:** Web App Check uses reCAPTCHA Enterprise with one-day tokens, within
+  the free assessment tier.
+- **D51:** Every client calls the Cloud Run URL directly, with CORS for the
+  Hosting origins; Hosting serves only the web app.
+- **D52:** Cloud Run runs with the invoker IAM check disabled, and the server
+  verifies the Firebase ID token from `Authorization` and App Check itself.
+
+`require-corp` stays as chosen in D45.
+
+### Consequences
+
+- `docs/ARCHITECTURE.md`: App Check on reCAPTCHA Enterprise, no Hosting
+  rewrites, the invoker check, reCAPTCHA in the Cost section.
+- `docs/REQUIREMENTS_SERVER.md`: CORS headers and preflight caching, deployment
+  flags, no rewrites.
+- `docs/REQUIREMENTS_APP.md`: the server URL is a build-time value.
+- `docs/PROTOCOL.md`: the agent card points at the Cloud Run URL.
+- `docs/ROADMAP.md`: S6 answered; D50 to D52; the isolation header risk
+  replaced by a reCAPTCHA cost risk.

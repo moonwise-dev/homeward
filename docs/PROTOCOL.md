@@ -47,7 +47,7 @@ model yet.
 {
   "name": "Homeward",
   "description": "Home-buying finance agent: affordability, purchase costs, and foreign buyer obstacles for any location.",
-  "url": "https://homeward-genui.web.app/a2a",
+  "url": "https://homeward-server-1065509330520.europe-north1.run.app/a2a",
   "version": "1.0.0",
   "capabilities": {
     "streaming": true,

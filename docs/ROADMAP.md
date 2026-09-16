@@ -111,7 +111,7 @@ resolution.
 | S3 | Can one interaction combine `google_search` with structured JSON output, and what grounding metadata links fields to URLs? | Research call for `PT-20` | **Closed by design:** grounding is paid only, so research is not built (D40); see `docs/SPIKES.md`. |
 | S4 | Do genui client functions accept object arguments and return numbers, strings, and booleans; can a catalog item subscribe to a whole slice; is a six-component slider drag at 60 fps? | Probe app, widget test, profile web builds in headless Chrome with CPU throttling | **Answered:** bindings and functions work; charts drawn with `fl_chart` are the bottleneck; see `docs/SPIKES.md`. Android unmeasured. |
 | S5 | Is `a2ui_core` pure Dart and usable on the server for message models and validation? | Import into a console app | **Answered:** yes; used from `common`, see `docs/SPIKES.md`. |
-| S6 | Does `firebase_admin_sdk` verify anonymous ID tokens and App Check tokens and run Firestore transactions on Cloud Run with ADC? | Deploy a probe route | Confirms server data layer. |
+| S6 | Does `firebase_admin_sdk` verify anonymous ID tokens and App Check tokens and run Firestore transactions on Cloud Run with ADC? | Deploy a probe route | **Answered:** yes; clients call Cloud Run directly because Hosting rewrites cannot stream, and the invoker IAM check is off; see `docs/SPIKES.md`. |
 | S7 | Verify the high-impact Tier 1 claims: Portugal non-resident IMT, Portugal DSTI limit, Portugal non-resident LTV, Sweden top-up cap | Primary sources listed in `docs/MARKETS.md` | **Answered:** Sweden confirmed; Portugal corrected: DSTI 45% from 2026-08-01, non-resident IMT by Decree-Law 97/2026 with a refund path, non-resident 70% is lender practice; see `docs/SPIKES.md`. |
 
 ## Risks
@@ -124,7 +124,8 @@ resolution.
 | Gemini latency: 7–18 s per model round on 2026-09-16 | Slow turns on camera | Server pre-runs predictable steps, at most two rounds per turn, full text streamed as it grows, latency re-measured in M1 and before recording |
 | Preferred model overloaded | Hung or failed turns | Deadlines, circuit breaker, fallback to the next model |
 | Android slider performance unmeasured | Sluggish drag on real phones | `make perf` on a physical phone in M1 |
-| `Cross-Origin-Embedder-Policy: require-corp` blocks third-party scripts such as reCAPTCHA for App Check | Web App Check or other embeds fail to load | Verify in S6; fall back to `credentialless` or single-threaded Wasm |
+| Safari untested with `require-corp`, reCAPTCHA Enterprise, and cross-origin streaming | iPhone viewers cannot sign in or stream | Check macOS and iOS Safari in M1; fall back to single-threaded Wasm without isolation headers for Safari |
+| Scripted abuse of the web app exhausts reCAPTCHA's 10,000 free monthly assessments | $8 for the month, then $1 per 1,000 above 100,000 | One-day App Check tokens, the 25 SEK budget alert, per-UID rate limits |
 | Free-tier daily cap, about 20 requests per model | Failed turns in rehearsal or on camera; about ten turns a day per buyer | One full run per key per day; recording on a key unused that day; the cap explained in the app |
 | Free-tier prompts may be used by Google to improve its products | Buyers' financial details lose a privacy promise | Disclosed on the key screen; terms wording verified before it ships |
 | Buyers ask about markets that are not curated | The "any location" idea goes unmet | Honest uncovered state, uncovered requests logged per market to drive curation order |
@@ -188,6 +189,9 @@ Decisions from the planning session on 2026-09-16.
 | D47 | Non-resident IMT in the hero | Ask prior tax residency and residency intent; show the refundable part and claim deadline | 7.5% shown as final with the refund only on explain; refund only in the relocator persona |
 | D48 | Portugal non-resident LTV | 70% lender norm from a lender's price list, shown under the 80% regulatory cap | 60% from secondary sources; 80% regulatory cap only |
 | D49 | Hero buyer age | Over 35 | 35 or younger, with the youth IMT exemption |
+| D50 | Web App Check | reCAPTCHA Enterprise with one-day tokens, within the free tier | One-hour tokens; no App Check on web |
+| D51 | API path | Every client calls Cloud Run directly with CORS; Hosting serves only the web app | Direct for `/a2a` only; Hosting rewrites for everything |
+| D52 | Cloud Run auth | Invoker IAM check disabled; Firebase ID token in `Authorization` verified by the server | ID token in a custom header behind the public invoker check |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

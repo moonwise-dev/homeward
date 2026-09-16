@@ -284,7 +284,9 @@ build for browsers with WasmGC and a JS build as fallback. skwasm built frames
 2.5–3× faster than JS in every unthrottled run of spike S4. Multi-threaded
 skwasm needs `Cross-Origin-Opener-Policy: same-origin` and
 `Cross-Origin-Embedder-Policy: require-corp` on the page, set in Firebase
-Hosting.
+Hosting. Spike S6 confirmed that reCAPTCHA Enterprise, App Check, Firebase
+Auth, and cross-origin streaming calls to Cloud Run all work under these
+headers.
 
 ### Features
 
@@ -345,13 +347,18 @@ sees the turn.
   `se.moonwise.homeward`, macOS sharing the iOS app, and Web.
 - Firebase Auth, anonymous provider.
 - Firestore, region `eur3`.
-- App Check: reCAPTCHA v3 on Web. Device builds are not distributed through the
-  stores, so App Attest and Play Integrity are unlikely to pass; simulators,
-  sideloaded Android builds, and personally provisioned iPhones use registered
-  debug tokens. Unverified until spike S6.
-- Cloud Run, region `europe-north1`, container built from `server/Dockerfile`.
-- Firebase Hosting serves the Flutter web build; `/a2a`, `/api/**`, and
-  `/.well-known/**` rewrite to Cloud Run so web runs same-origin.
+- App Check: reCAPTCHA Enterprise on Web with a score-based key in this
+  project and one-day tokens; Firebase no longer accepts classic reCAPTCHA v3.
+  Device builds are not distributed through the stores, so App Attest and Play
+  Integrity are unlikely to pass; simulators, sideloaded Android builds, and
+  personally provisioned iPhones use registered debug tokens.
+- Cloud Run service `homeward-server`, region `europe-north1`, container built
+  from `server/Dockerfile`, invoker IAM check disabled because the server
+  verifies Firebase ID tokens and App Check itself.
+- Every client, web included, calls the Cloud Run URL directly. Firebase Hosting
+  serves only the Flutter web build: its rewrites buffer whole responses and
+  never return after about 60 seconds, so A2A turns could not stream through
+  them.
 - No Gemini key is stored in the project. Keys are bring-your-own; see
   `docs/REQUIREMENTS_SERVER.md`.
 
@@ -360,13 +367,15 @@ sees the turn.
 Homeward is designed to cost nothing to run (D40, D42, D43):
 
 - Billing is attached to `homeward-genui` because Cloud Run, Artifact
-  Registry, Cloud Scheduler, and Hosting rewrites require it, with a budget alert
+  Registry, and Cloud Scheduler require it, with a budget alert
   of 25 SEK, about €2, at 50%, 90%, and 100%.
 - Cloud Run: minimum 0 and maximum 2 instances; cold starts are accepted.
 - Artifact Registry keeps the last three server images.
 - Firestore stays within its free daily quota; one Cloud Scheduler job.
-- No Secret Manager, no reCAPTCHA Enterprise, no paid Gemini features such as
-  Google Search grounding.
+- reCAPTCHA Enterprise stays within its free 10,000 assessments a month: each
+  App Check token exchange is one assessment, and tokens last a day. Above that
+  it costs a flat $8 a month up to 100,000.
+- No Secret Manager, no paid Gemini features such as Google Search grounding.
 - No paid store accounts: builds reach devices as web, simulators, sideloaded
   Android APKs, and personally provisioned iPhones.
 

@@ -11,8 +11,10 @@ logic.
 
 - iOS and Android phones, portrait first, landscape supported.
 - Tablets and foldables use the wide layout.
-- Web on desktop and mobile browsers, served from Firebase Hosting at the same
-  origin as the server, as a Wasm build with a JS fallback.
+- Web on desktop and mobile browsers, served from Firebase Hosting as a Wasm
+  build with a JS fallback.
+- Every platform calls the server at its Cloud Run URL, a build-time value that
+  points at a local server in development.
 - macOS for development only, never released.
 - No store distribution: web, simulators, sideloaded Android APKs, and
   personally provisioned iPhones with seven-day profiles.
