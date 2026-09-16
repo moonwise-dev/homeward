@@ -19,10 +19,12 @@ code, and never contains market rules or prompts.
 
 ## Repository Shape
 
-The repository is planned as a small monorepo. Until milestone M0 lands, the
-root still holds the default Flutter scaffold, which moves into `app/`.
+The repository is a Dart pub workspace. The root `pubspec.yaml` lists every
+package, there is one `pubspec.lock`, and the root `analysis_options.yaml`
+holds the shared analyzer, linter, and formatter settings that each package
+includes.
 
-- `app` - Flutter client for iOS, Android, and Web.
+- `app` - Flutter client for iOS, Android, and Web; macOS for development only.
 - `server` - Dart `shelf` server on Cloud Run: A2A endpoint, agent loop, tools.
 - `common` - pure Dart package shared by `app`, `server`, and `tool`: domain
   models, finance math, market rule pack schema, catalog contract, wire types.
@@ -72,20 +74,22 @@ first.
 
 ## Verification
 
-Planned root `Makefile` targets:
+Root `Makefile` targets:
 
 ```sh
 make get
+make format
 make analyze
 make test
-make markets-check
-make catalog-check
-make eval
 make check
 ```
 
-`make check` runs analyze, test, markets-check, and catalog-check. `make eval`
-needs `HOMEWARD_EVAL_GEMINI_KEY` and is not part of `check`.
+`make check` runs format-check, analyze, and test. `markets-check`,
+`catalog-check`, and `eval` join as their milestones land; `make eval` needs
+`HOMEWARD_EVAL_GEMINI_KEY` and is never part of `check`.
+
+Always resolve dependencies from the root with `make get`. Running
+`pub get` inside a package also resolves the whole workspace.
 
 Generated Dart files are committed and never edited by hand:
 

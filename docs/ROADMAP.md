@@ -149,6 +149,10 @@ Decisions from the planning session on 2026-09-16.
 | D19 | Gemini key | Bring your own key only | Server key, server key plus BYO |
 | D20 | Hosting project | New Moonwise project | Google-provided project |
 | D21 | Transport | A2A subset on shelf with `genui_a2a` | Custom SSE, community `a2a` package |
+| D22 | Package wiring | Dart pub workspace, one lockfile | Independent packages with path dependencies, workspace with Melos |
+| D23 | Application ID | `se.moonwise.homeward` | `com.moonwise.homeward` |
+| D24 | Desktop platforms | macOS kept for development; Linux and Windows removed | Remove all desktop, keep all |
+| D25 | Git workflow | Commit directly to `main` | Branch per chunk, one branch per milestone |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

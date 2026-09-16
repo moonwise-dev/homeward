@@ -13,6 +13,7 @@ logic.
 - Tablets and foldables use the wide layout.
 - Web on desktop and mobile browsers, served from Firebase Hosting at the same
   origin as the server.
+- macOS for development only, never released.
 
 ## Layout
 

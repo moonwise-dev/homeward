@@ -40,7 +40,23 @@ Three rules shape everything:
 /docs
 AGENTS.md
 Makefile
+pubspec.yaml            workspace: app, common, server, tool
+pubspec.lock            the only lockfile
+analysis_options.yaml   shared analyzer, linter, formatter settings
 ```
+
+The repository is a Dart pub workspace. Every package declares
+`resolution: workspace`, so all packages resolve to one set of versions and
+code generators cannot drift between app and server. Each package's
+`analysis_options.yaml` includes its lint set (`flutter_lints` or `lints`) and
+the root file.
+
+| Package | Pub name |
+| --- | --- |
+| `app` | `homeward` |
+| `common` | `common` |
+| `server` | `homeward_server` |
+| `tool` | `homeward_tool` |
 
 ### Dependency Direction
 
@@ -155,8 +171,11 @@ Rules:
 
 ## `/app`
 
-Flutter for iOS, Android, and Web. The implementation rules follow the Moonwise
-conventions used in Purrtrait.
+Flutter for iOS, Android, and Web, with macOS kept as a development target for
+fast local iteration. macOS is never a release target, and features that need
+App Check or platform integrations are not required to work there. The
+application ID and bundle identifier are `se.moonwise.homeward`. The
+implementation rules follow the Moonwise conventions used in Purrtrait.
 
 ```text
 app/lib/
