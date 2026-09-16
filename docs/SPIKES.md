@@ -136,6 +136,86 @@ Recorded streams and error bodies are committed in
 - `docs/ROADMAP.md`: latency and overload risks; latency re-measured in M1 before
   confirming the model order.
 
+## S3 — Search Grounding With Structured Output
+
+**Closed by design 2026-09-16.**
+
+### Question
+
+Can one interaction combine the `google_search` tool with structured JSON output,
+and do citations link each rule to a source URL?
+
+### Method
+
+- Read the Interactions API reference for the tool, `response_format`, search
+  step types, and citation annotations.
+- Called the API with `google_search` on the same free-tier key used in S2,
+  then `url_context`, then plain requests to separate a tool limit from a
+  request cap.
+- Read the Gemini API pricing page for grounding availability.
+
+### Findings
+
+| Area | Result |
+| --- | --- |
+| Shapes from the reference | Tool `{ "type": "google_search", "search_types": ["web_search"] }`; `response_format: { "type": "text", "mime_type": "application/json", "schema": {...} }`; steps `google_search_call` (`arguments.queries`) and `google_search_result` (`result`, `is_error`); text `annotations` of type `url_citation` with `start_index`, `end_index`, `url`, `title`; `usage.grounding_tool_count`. The reference does not say whether `response_format` combines with tools. |
+| Search on a free key | Every request with `google_search` returned 429 `too_many_requests` within 0.4 s on `gemini-3.8-flash` and `gemini-3.5-flash`, while plain requests to the same model succeeded. |
+| Pricing | Grounding with Google Search is "Not available" on the free tier for Gemini 3.x; paid keys get 5,000 searches a month shared across 3.x models, then $14 per 1,000. |
+| Free-tier request cap | A later 429 named `generate_content_free_tier_requests, limit: 20, model: gemini-3.8-flash`. It still refused a minute later with a fresh "retry in 28 s" hint, while `gemini-3.1-flash-lite` answered: the cap is about 20 requests a day per model per project, and the retry hint is not a real retry time. Limits apply per project and reset at midnight Pacific. |
+| Overload shape | `gemini-3.5-flash` returned HTTP 500 with a high-demand message, in addition to the stream error seen in S2. |
+| `generateContent` | Returned 404 for `gemini-3.8-flash` and `gemini-3.5-flash` at the time of testing, so structured quota details were not available. |
+
+The quota and overload bodies are committed as fixtures in
+`server/test/fixtures/interactions/`.
+
+### Decisions
+
+- **D40:** Homeward uses no paid features. Google Search grounding is paid only,
+  so runtime research of uncovered markets is not built; uncovered markets get
+  an honest "not covered yet" state. This supersedes the researched fallback in
+  D5. The research design, should a paid key ever exist, is kept in
+  `docs/AGENT.md` and was chosen without measurement: search and extraction as
+  two interactions, with every figure tied to a `url_citation`.
+- **D41:** Buyers bring their own free keys, and a quota error never falls back
+  to another model, even though each model has its own daily cap.
+- **D42:** Billing is attached to the project only because Cloud Run, Artifact
+  Registry, Cloud Scheduler, and Hosting rewrites require it; everything is
+  sized to stay at €0 with a €1 budget alert.
+- **D43:** No paid store accounts; builds reach devices as web, simulators,
+  sideloaded Android APKs, and personally provisioned iPhones.
+
+### What This Costs The Product
+
+- **Coverage:** only curated markets get rules. The "any location" idea becomes
+  "any curated location", and Tier 3 breadth depends on curation speed.
+- **Headroom:** about ten turns a day per buyer on a free key; about one full hero
+  run a day per key for rehearsal and recording; live evals run as daily subsets
+  with replay covering the rest.
+- **Privacy wording:** unpaid Gemini API use lets Google use prompts and responses
+  to improve its products, so the key screen discloses it.
+- **History:** free-tier interactions are kept one day, so a plan resumed the next
+  day always rebuilds history from the plan record.
+- **Devices:** no TestFlight or Play testing tracks; App Attest and Play Integrity
+  are unlikely to pass on unsigned builds, so device App Check relies on debug
+  tokens.
+
+### Consequences
+
+- `docs/PRODUCT.md`: coverage is curated or uncovered; research and store
+  distribution are non-goals.
+- `docs/AGENT.md`: research models, the research tool, and the researched
+  fallback are replaced by an Uncovered Markets section and a not-built research
+  design; free-tier caps and 429 and 500 shapes are documented.
+- `docs/MARKETS.md`, `docs/FIRESTORE.md`, `docs/DESIGN.md`: researched packs and
+  their collection, rules, TTL, and badge are removed.
+- `docs/ARCHITECTURE.md`: a Cost section; App Check providers match free
+  distribution.
+- `docs/REQUIREMENTS_SERVER.md`, `docs/REQUIREMENTS_APP.md`: no research limits or
+  cleanup; Cloud Run capped at two instances; the key screen discloses the cap and
+  data use.
+- `docs/QUALITY.md`, `docs/ROADMAP.md`: eval cases, CI, recording plan, risks,
+  and decisions updated.
+
 ## S5 — `a2ui_core` On The Server
 
 **Answered 2026-09-16.**

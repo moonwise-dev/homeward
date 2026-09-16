@@ -12,7 +12,7 @@
                 │ A2A JSON-RPC message/stream + Firebase ID token + BYO key │ SSE: text + A2UI
 ┌───────────────▼───────────────────────── server (Dart, Cloud Run) ─────────┴──────────────┐
 │ middleware ─ a2a ─ agent (turn orchestrator, stream parser, validation passes)           │
-│ tools ──► common/finance · markets (curated packs + researched packs)                    │
+│ tools ──► common/finance · markets (curated packs)                                       │
 │ gemini: Interactions API client (REST + SSE) · Live API client (phase 2, WebSocket)      │
 │ data: firebase_admin_sdk ─► Firestore                                                     │
 └──────────────────────────────────────────────────────────────────────────────────────────┘
@@ -162,10 +162,10 @@ server/
                     validation passes, surface seeding, board compiler
     gemini/         interactions client, live client, request/response models
     tools/          one file per tool, each a thin adapter over common + repositories
-    markets/        pack loader, overlay resolver, research service
+    markets/        pack loader, overlay resolver, coverage
     data/
       providers/    composition root: builds every dependency once
-      repository/   sessions, turns, plans, researched packs
+      repository/   sessions, turns, plans
   prompts/
     role.md
     flow.md
@@ -333,13 +333,30 @@ sees the turn.
 - Project: new Moonwise project, `homeward-staging`.
 - Firebase Auth, anonymous provider.
 - Firestore, region `eur3`.
-- App Check: App Attest on iOS, Play Integrity on Android, reCAPTCHA Enterprise
-  on Web.
+- App Check: reCAPTCHA v3 on Web. Device builds are not distributed through the
+  stores, so App Attest and Play Integrity are unlikely to pass; simulators,
+  sideloaded Android builds, and personally provisioned iPhones use registered
+  debug tokens. Unverified until spike S6.
 - Cloud Run, region `europe-north1`, container built from `server/Dockerfile`.
 - Firebase Hosting serves the Flutter web build; `/a2a`, `/api/**`, and
   `/.well-known/**` rewrite to Cloud Run so web runs same-origin.
 - No Gemini key is stored in the project. Keys are bring-your-own; see
   `docs/REQUIREMENTS_SERVER.md`.
+
+### Cost
+
+Homeward is designed to cost nothing to run (D40, D42, D43):
+
+- Billing is attached to `homeward-staging` because Cloud Run, Artifact
+  Registry, Cloud Scheduler, and Hosting rewrites require it, with a budget alert
+  at €1.
+- Cloud Run: minimum 0 and maximum 2 instances; cold starts are accepted.
+- Artifact Registry keeps the last three server images.
+- Firestore stays within its free daily quota; one Cloud Scheduler job.
+- No Secret Manager, no reCAPTCHA Enterprise, no paid Gemini features such as
+  Google Search grounding.
+- No paid store accounts: builds reach devices as web, simulators, sideloaded
+  Android APKs, and personally provisioned iPhones.
 
 ## Code Rules
 

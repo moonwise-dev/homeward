@@ -39,9 +39,7 @@ Deliverables:
 - App: key screen, plans, plan chat with inline surfaces, catalog items
   `LocationPicker`, `MoneyInput`, `AmountSlider`, `AffordabilitySummary`,
   `PaymentBreakdown`, client functions `withinMaxLtv` and `monthlyPayment`.
-- Research fallback returns a researched `MarketSnapshotCard` for one uncovered
-  market.
-
+- An uncovered market gets `MarketSnapshotCard` in its uncovered state.
 - Latency re-measured with the S2 probe at two different times of day; model
   order confirmed.
 
@@ -55,16 +53,16 @@ Deliverables:
 - `SE` and `PT` + `PT-30` curated and reviewed.
 - Remaining MVP components: `MarketSnapshotCard`, `StressTestChart`,
   `PurchaseCostsTable`, `EligibilityChecklist`, `ForeignBuyerObstacles`.
-- Remaining MVP tools: `research_market`, `estimate_purchase_costs`,
-  `get_obstacles`.
+- Remaining MVP tools: `estimate_purchase_costs`, `get_obstacles`.
 - Board compiler and responsive two-pane and sheet layouts.
 - Session persistence and replay.
 - Wire inspector and catalog gallery.
 - Design pass: final tokens and primitives.
 - Eval cases `stockholm-first-time`, `madeira-nonresident`,
-  `madeira-resident-contrast`, `azores-researched`, `change-down-payment`
+  `madeira-resident-contrast`, `azores-uncovered`, `change-down-payment`
   passing deterministic scores.
-- Hero script rehearsed end to end three times without a correction round.
+- Hero script rehearsed end to end three times without a correction round, on
+  separate days or keys: a free key allows about one full run a day.
 
 Exit: the hero flow in `docs/PRODUCT.md` runs reliably on web at recording
 resolution.
@@ -74,8 +72,8 @@ resolution.
 - Agree segment outline with Andrew: adaptive form, then instant what-if, then
   the code that makes it possible (catalog declaration, client function, one
   validation pass).
-- Recording build tagged, minimum Cloud Run instances set to 1, Moonwise key
-  used.
+- Recording build tagged; a free key whose daily quota is untouched that day;
+  the server warmed with one request just before recording.
 - Backup: screen capture of every hero step recorded the day before.
 
 ### M4 Sample Complete — Oct 13 to livestream
@@ -104,8 +102,8 @@ resolution.
 | ID | Question | Method | Decision gate |
 | --- | --- | --- | --- |
 | S1 | What does `genui_a2a` 0.10.x put on the wire: A2A version, SSE or WebSocket, A2UI MIME type, where capabilities and data model travel, how actions are sent? | Run `genui_a2a` against a recording fake A2A server | **Answered:** the protocol fits; the app uses its own client, see `docs/SPIKES.md`. |
-| S2 | Can Dart drive the Interactions API cleanly: request shape, SSE event types, function calling continuation, `previous_interaction_id`, error codes for bad key and quota? Is `gemini-3.8-flash` available on free-tier keys? | Curl and a Dart console probe against a free-tier key | **Answered:** yes; see `docs/SPIKES.md`. Quota (429) shape not observed. |
-| S3 | Can one interaction combine `google_search` with structured JSON output, and what grounding metadata links fields to URLs? | Research call for `PT-20` | One interaction or search-then-extract. |
+| S2 | Can Dart drive the Interactions API cleanly: request shape, SSE event types, function calling continuation, `previous_interaction_id`, error codes for bad key and quota? Is `gemini-3.8-flash` available on free-tier keys? | Curl and a Dart console probe against a free-tier key | **Answered:** yes; see `docs/SPIKES.md`. Quota (429) shapes recorded during S3. |
+| S3 | Can one interaction combine `google_search` with structured JSON output, and what grounding metadata links fields to URLs? | Research call for `PT-20` | **Closed by design:** grounding is paid only, so research is not built (D40); see `docs/SPIKES.md`. |
 | S4 | Do genui client functions accept object arguments and return numbers, strings, and booleans; can a catalog item subscribe to a whole slice; is a six-component slider drag at 60 fps? | Throwaway catalog item and profiling on web and Android | Confirms coarse bindings. Otherwise fine-grained bindings with a selector layer in `app/lib/catalog/bindings`. |
 | S5 | Is `a2ui_core` pure Dart and usable on the server for message models and validation? | Import into a console app | **Answered:** yes; used from `common`, see `docs/SPIKES.md`. |
 | S6 | Does `firebase_admin_sdk` verify anonymous ID tokens and App Check tokens and run Firestore transactions on Cloud Run with ADC? | Deploy a probe route | Confirms server data layer. |
@@ -120,8 +118,9 @@ resolution.
 | No official Dart GenAI SDK | Client maintenance | Thin typed client over REST, recorded fixtures from S2 |
 | Gemini latency: 7–18 s per model round on 2026-09-16 | Slow turns on camera | Server pre-runs predictable steps, at most two rounds per turn, full text streamed as it grows, latency re-measured in M1 and before recording |
 | Preferred model overloaded | Hung or failed turns | Deadlines, circuit breaker, fallback to the next model |
-| Free-tier key limits during demo or recording | Failed turns on camera | Recording uses a Moonwise paid key; quota errors are explained in the app |
-| Researched rules are wrong | Buyer misled | Researched badge, citations, unknown over guessed, estimates-not-advice framing, never promoted without review |
+| Free-tier daily cap, about 20 requests per model | Failed turns in rehearsal or on camera; about ten turns a day per buyer | One full run per key per day; recording on a key unused that day; the cap explained in the app |
+| Free-tier prompts may be used by Google to improve its products | Buyers' financial details lose a privacy promise | Disclosed on the key screen; terms wording verified before it ships |
+| Buyers ask about markets that are not curated | The "any location" idea goes unmet | Honest uncovered state, uncovered requests logged per market to drive curation order |
 | Curated rules change after review | Stale numbers | 180-day expiry, effective dates, check warnings |
 | Four weeks for server, client, catalog, and two markets | Scope slip before recording | Thin slice by Sep 28; Phase 2 components and Tier 2 explicitly after recording |
 | BYO key friction for video viewers | Fewer people try the demo | One-screen key flow with direct AI Studio link; hero prompt ready on first plan |
@@ -172,6 +171,10 @@ Decisions from the planning session on 2026-09-16.
 | D37 | Streaming text | Each status update carries the full text so far | Deltas in artifact updates, deltas in status updates |
 | D38 | Model selection | Ordered model list with deadlines and a per-instance circuit breaker | 3.5-flash only, decide after re-measuring |
 | D39 | Turn shape | Server pre-runs predictable steps; model calls only interpretive tools; at most two rounds | Model calls every tool, parallel calls only |
+| D40 | Paid features | None. No Google Search grounding, so runtime research is not built; supersedes the fallback half of D5 | Moonwise key for shared research, research with paid buyer keys, offline research |
+| D41 | Free-key quota | Bring-your-own only; quota errors never fall back to another model | Fall back across models per key, Moonwise allowance |
+| D42 | Billing | Attached, designed for €0 with a €1 budget alert and capped instances | No billing account, Google-provided project |
+| D43 | Devices | Free only: web, simulators, sideloaded Android APKs, personally provisioned iPhones | Existing Moonwise store accounts |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

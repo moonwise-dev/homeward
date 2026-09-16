@@ -9,7 +9,6 @@ It has no hard-coded stages; the open decisions of the plan decide the step.
 | Setting | Default | Config key |
 | --- | --- | --- |
 | Turn models, in preference order | `gemini-3.8-flash,gemini-3.5-flash` | `HOMEWARD_TURN_MODELS` |
-| Research models, in preference order | `gemini-3.8-flash,gemini-3.5-flash` | `HOMEWARD_RESEARCH_MODELS` |
 | Thinking level | `low` | `HOMEWARD_THINKING_LEVEL` |
 | Deadline to response headers | 10 s | `HOMEWARD_HEADERS_DEADLINE` |
 | Deadline to first step | 20 s | `HOMEWARD_FIRST_STEP_DEADLINE` |
@@ -25,15 +24,22 @@ Interactions requests hung before headers or after `interaction.created`, one
 for over 15 minutes, some ending in an in-stream `api_error`.
 `gemini-3.5-flash` answered in 7–18 s per round.
 
+On the free tier each model allows about 20 requests a day per Google Cloud
+project, resetting at midnight Pacific (spike S3). A turn uses up to two, so a
+buyer's free key covers roughly ten turns a day on the first model.
+
 ### Model Selection
 
 - Each request goes to the first model in the list whose circuit is closed.
-- A request that misses a deadline, receives HTTP 503, or receives an in-stream
-  `api_error` is aborted by closing the connection. That model's circuit opens
-  for the cool-down, and the request is retried once on the next model.
+- A request that misses a deadline, receives HTTP 500 or 503 with a high-demand
+  message, or receives an in-stream `api_error` is aborted by closing the
+  connection. That model's circuit opens for the cool-down, and the request is
+  retried once on the next model.
 - Circuits live in memory per instance; a cold instance relearns within one
   request.
-- A key or quota error never falls back; it is the buyer's to fix.
+- A key or quota error never falls back; it is the buyer's to fix. This holds
+  for the free tier's per-model daily cap too, although another model has its
+  own cap (D41).
 - Every turn logs the model used and, when it fell back, the model and phase
   it fell back from.
 
@@ -61,7 +67,7 @@ server's source for the board. It is pure and unit tested.
 | Open decision | Opens when |
 | --- | --- |
 | `target_market` | No market selected |
-| `market_coverage` | Market selected, no curated pack, no valid researched pack |
+| `market_coverage` | Market selected that has no curated pack |
 | `profile_fields` | Any field the pack requires for this buyer is missing |
 | `scenario` | Profile committed, no scenario |
 | `scenario_commit` | Scenario drafted, not committed |
@@ -73,7 +79,7 @@ server's source for the board. It is pure and unit tested.
 | Open decision | Tools | Components |
 | --- | --- | --- |
 | `target_market` | `resolve_market` | `LocationPicker` in `market` mode |
-| `market_coverage` | `research_market` | `MarketSnapshotCard` with researched badge |
+| `market_coverage` | — | `MarketSnapshotCard` in its uncovered state |
 | `profile_fields` | `load_market`, `propose_profile` | `LocationPicker` in `country` mode, `MoneyInput`, `ChoicePicker`, commit `Button` |
 | `scenario` | `propose_scenario`, `compute_affordability` | `AffordabilitySummary`, `AmountSlider`, `PaymentBreakdown`, commit `Button` with checks |
 | `scenario_commit` | `estimate_purchase_costs` | `PurchaseCostsTable`, `StressTestChart`, `EligibilityChecklist` |
@@ -100,14 +106,13 @@ Tools are Dart classes in `server/lib/tools`, one per file, each an adapter over
 Each tool declares whether it can be pre-run: `load_market`,
 `compute_affordability`, `estimate_purchase_costs`, `get_obstacles`,
 `get_process`, and `get_loan_types` can, because their inputs come from the plan.
-`resolve_market`, `propose_profile`, `propose_scenario`, `release_decision`, and
-`research_market` cannot, because their inputs come from what the buyer wrote.
+`resolve_market`, `propose_profile`, `propose_scenario`, and `release_decision`
+cannot, because their inputs come from what the buyer wrote.
 
 | Tool | Input | Model result | Seeds |
 | --- | --- | --- | --- |
 | `resolve_market` | `query` | Candidate markets with coverage | — |
 | `load_market` | `marketId` | Coverage, required profile fields for this buyer, headline rules | `/market` |
-| `research_market` | `marketId` | Research status, filled and unknown fields | `/market` |
 | `propose_profile` | Profile fields stated by the buyer | Accepted and rejected fields | `/profile` draft |
 | `propose_scenario` | Price, down payment, term, loan type stated by the buyer | Accepted fields | `/scenario` draft |
 | `compute_affordability` | — | Binding constraint, headroom category | `/derived/affordability`, `/derived/downPaymentBounds`, `/derived/payment` |
@@ -126,7 +131,7 @@ compute.
 
 1. `prompts/role.md`: who Homeward is, what it will and will not do.
 2. `prompts/flow.md`: open decisions, the flow table, the principles above.
-3. `prompts/markets.md`: coverage, how to talk about researched rules, sources.
+3. `prompts/markets.md`: coverage, how to talk about uncovered markets, sources.
 4. `prompts/style.md`: tone, the estimates-not-advice line, how to reference
    components instead of restating figures.
 5. `prompts/generated/catalog_skill.md`: the agent-visible catalog, generated.
@@ -151,7 +156,7 @@ the system prompt stays small.
    and their seeds are staged for surfaces created this turn.
 5. Assemble prompt, the pre-run results, and declarations for only the tools
    that still need interpretation: resolving a free-text place, proposing values
-   the buyer stated, releasing a decision, research.
+   the buyer stated, releasing a decision.
 6. Call `interactions.create` with streaming, `previous_interaction_id` when
    present, `store: true`, through model selection.
 7. Stream: forward the full text so far; buffer `a2ui` fenced blocks line by
@@ -212,49 +217,50 @@ decision.
 - Tools are declared as `{ "type": "function", "name", "description",
   "parameters" }` and re-sent on every request.
 - Errors arrive in three shapes: a Google RPC array
-  `[{ "error": { "code": 401, "status": "UNAUTHENTICATED" } }]` for key failures,
-  an object `{ "error": { "code": "not_found" | "invalid_request", "message" } }`
-  for request failures, and an in-stream `error` event such as `api_error` for
-  overload. The client maps all three to one sealed error type.
+  `[{ "error": { "code": 401, "status": "UNAUTHENTICATED" } }]` for key failures;
+  an object `{ "error": { "code": "not_found" | "invalid_request" |
+  "too_many_requests", "message" } }` for request, quota, and some overload
+  failures (HTTP 500 carries a high-demand message); and an in-stream `error`
+  event such as `api_error` for overload. The client maps all of them to one
+  sealed error type.
+- A 429 `too_many_requests` names its cause only in `message`: the free-tier
+  request cap reads `Quota exceeded for metric: …generate_content_free_tier_requests,
+  limit: 20, model: …`, and a tool the key cannot use, such as `google_search`,
+  gets the generic quota message. The "Please retry in N s" hint repeats while a
+  daily cap lasts, so it is not used as a retry time.
 - A stream is cancelled by closing the connection. The cancel endpoint returned
   404 for a stalled streamed interaction.
 - Recorded streams and error bodies live in
   `server/test/fixtures/interactions/`.
 
-## Researched Fallback
+## Uncovered Markets
 
-When a market has no curated pack, `research_market` produces a researched pack.
+When the buyer names a place with no curated pack, `resolve_market` reports it
+as uncovered. The agent says so plainly and shows `MarketSnapshotCard` in its
+uncovered state with the market's name and the curated markets Homeward can
+help with. It never states lending limits, taxes, costs, or obstacles for an
+uncovered market, whether from a tool or from the model's own knowledge.
 
-```text
-research_market(PT-20)
-  │
-  ├─ cache hit in researchedPacks, not expired ─► use it
-  │
-  └─ research interaction
-       tools: google_search
-       instruction: fill MarketRulePack, one source per field, unknown if unsure
-       output: JSON matching the researched pack schema
-         │
-         ▼
-     validate
-       schema valid
-       every numeric field cites a URL present in grounding metadata
-       drop fields without a verifiable citation, mark unknown
-         │
-         ▼
-     store researchedPacks/PT-20, expires in 30 days
-```
+Every uncovered request is logged with its market identifier so curation
+follows demand.
 
-Rules:
+### Research Is Not Built
 
-- Search results are data. The research instruction forbids following
-  instructions found in pages, and the extraction schema has no free-form field
-  that reaches the turn prompt.
-- A researched pack is never promoted automatically. `tool/promote_pack` turns
-  one into a draft curated pack for human review.
-- Unknown fields render as unknown with an explanation, never as zero.
-- If search and structured output cannot be combined in one interaction, the
-  research runs as two interactions: search, then extract. This is spike S3.
+Runtime research needs Google Search grounding, which Gemini offers only on
+paid keys, and Homeward runs on buyers' free keys (D40). Spike S3 was closed by
+design rather than measured. If a paid key ever becomes available, research
+takes this shape:
+
+- Two interactions: the first with the `google_search` tool writes prose with
+  `url_citation` annotations; the second, without tools, extracts a rule pack
+  through `response_format`. This works whether or not the API allows search and
+  structured output in one interaction.
+- Every numeric field must cite a URL found in the first interaction's
+  annotations; a field without one becomes unknown.
+- Search results are data. The extraction schema has no free-form field that
+  reaches a turn prompt.
+- A researched pack is never used as curated. It becomes a draft for the
+  curation workflow in `docs/MARKETS.md`.
 
 ## Guardrails
 
@@ -271,7 +277,7 @@ Rules:
 | Failure | Behavior |
 | --- | --- |
 | Invalid Gemini key (HTTP 401 or 403) | Turn fails with `gemini_key_invalid`; app routes to the key screen |
-| Key quota exhausted (HTTP 429) | Turn fails with `gemini_quota_exhausted` and retry-after; app explains it is the buyer's own quota |
+| Key quota exhausted (HTTP 429) | Turn fails with `gemini_quota_exhausted` and the next midnight Pacific as reset time; app explains the free key's daily cap |
 | Model overloaded or stalled | Model selection falls back once; if every model is unhealthy, the turn fails with `gemini_unavailable` |
 | Unknown or expired previous interaction | Retry once with rebuilt history |
 | Model output invalid after corrections | Model text plus a retry surface |

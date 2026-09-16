@@ -2,8 +2,8 @@
 
 ## Product Summary
 
-Homeward answers one question for anyone, anywhere: *can I buy this home, and
-what will it really take?*
+Homeward answers one question for anyone buying in a market it covers: *can I
+buy this home, and what will it really take?*
 
 A buyer names a place and describes themselves in plain language. Homeward
 works out which rules apply to that buyer in that place — lending limits,
@@ -34,9 +34,9 @@ the stakes make getting the right inputs in front of the right buyer matter.
 2. **The model lays out; code does numbers.** Every rate, payment, limit, cost,
    and stress result is computed by shared finance code from a rule pack. The
    model chooses and arranges components and binds them to data paths.
-3. **Rules are data with provenance.** Every rule comes from a rule pack. Every
-   curated rule shows its source and review date. Researched rules are labelled
-   as researched and ask the buyer to verify.
+3. **Rules are data with provenance.** Every rule comes from a curated rule pack
+   and shows its source and review date. Homeward never guesses rules for a
+   market it does not cover.
 4. **What-if is instant.** Dragging a slider recomputes locally. The agent is
    consulted when the buyer commits a decision or asks a question, not on every
    pixel of a drag.
@@ -77,13 +77,18 @@ personas and are not part of v1.
 
 ## Coverage
 
-Homeward never refuses a location. Coverage decides how trustworthy the rules
-are, not whether the agent answers.
+Coverage decides whether Homeward can state rules for a market. It never
+guesses.
 
 | Coverage | Meaning | UI treatment |
 | --- | --- | --- |
 | Curated | Hand-verified rule pack with sources and review date | Curated badge, sources on tap |
-| Researched | Rule pack filled by grounded search at runtime | Researched badge, "verify with a local professional" note, sources on tap, unknown fields shown as unknown |
+| Uncovered | No curated pack | "Not covered yet" state naming the market, the curated markets Homeward can help with, and no rules of any kind |
+
+Runtime research of uncovered markets is not built. It needs Google Search
+grounding, which Gemini offers only on paid keys, and Homeward runs on buyers'
+free keys. Requests for uncovered markets are counted to decide what to curate
+next.
 
 ### Curated Tiers
 
@@ -199,6 +204,8 @@ The flow the video segment is built around. Contrast is the point.
 - Voice. Planned for phase 2, see `docs/AGENT.md`.
 - Localized UI. English only, with local terms explained inline.
 - Refinancing, porting, and bridging.
+- Runtime research of uncovered markets, which needs paid Gemini features.
+- Store distribution: TestFlight, App Store, and Google Play testing tracks.
 
 ## Related Documents
 

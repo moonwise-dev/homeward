@@ -12,7 +12,7 @@ caller's own sessions, plans, and turns.
 | `ownerUid` | string | |
 | `title` | string | Derived from market and first request |
 | `marketId` | string? | |
-| `coverage` | `curated` \| `researched` \| null | |
+| `coverage` | `curated` \| `uncovered` \| null | |
 | `status` | `idle` \| `running` | |
 | `lease` | map? | `{ turnId, expiresAt }` |
 | `lastInteractionId` | string? | Cache only; may be unusable with a different key |
@@ -55,25 +55,12 @@ caller's own sessions, plans, and turns.
 | `acknowledgedObstacles` | array | Obstacle IDs |
 | `updatedAt` | timestamp | |
 
-### `researchedPacks/{marketId}`
-
-| Field | Type | Notes |
-| --- | --- | --- |
-| `pack` | map | `MarketRulePack` with `coverage: researched` |
-| `status` | `valid` \| `partial` \| `failed` | |
-| `unknownFields` | array | |
-| `model` | string | |
-| `researchedAt` | timestamp | |
-| `expiresAt` | timestamp | |
-
-Shared across buyers. A researched pack contains no buyer data.
-
 ### `rateLimits/{uid_window}`
 
 | Field | Type |
 | --- | --- |
 | `uid` | string |
-| `kind` | `turn` \| `research` |
+| `kind` | `turn` |
 | `windowStart` | timestamp |
 | `count` | int |
 | `expiresAt` | timestamp |
@@ -92,7 +79,6 @@ service cloud.firestore {
     match /sessions/{id} { allow read: if owns(); allow write: if false; }
     match /plans/{id}    { allow read: if owns(); allow write: if false; }
     match /turns/{id}    { allow read: if owns(); allow write: if false; }
-    match /researchedPacks/{id} { allow read, write: if false; }
     match /rateLimits/{id}      { allow read, write: if false; }
   }
 }
@@ -108,6 +94,5 @@ service cloud.firestore {
 ## TTL And Cleanup
 
 - `rateLimits.expiresAt` TTL policy.
-- `researchedPacks.expiresAt` TTL policy.
 - `/internal/cleanup` daily: sessions with `updatedAt` older than 90 days and
   their turns and plans.

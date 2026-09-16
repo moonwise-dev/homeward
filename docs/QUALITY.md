@@ -64,13 +64,14 @@ official calculator or a tax authority worked example.
 | Board compiler | Plan fixtures to expected A2UI messages |
 | A2A | JSON-RPC dispatch and SSE framing against recorded frame fixtures |
 | Actions | Server-completed actions produce the expected plan patches |
-| Research validation | Unsourced fields dropped, citations matched to grounding metadata |
 
 Gemini is never called in `make test`. The Interactions client is exercised
 against the streams and error bodies recorded in spike S2 under
 `server/test/fixtures/interactions/`: text, function call, function result
 continuation, stall after `interaction.created`, in-stream high-demand error,
-invalid key, unknown model, invalid tool, and deleted previous interaction.
+invalid key, unknown model, invalid tool, deleted previous interaction, and from
+spike S3 the free-tier request cap, the search grounding quota, and HTTP 500
+high demand.
 Model selection is tested with a fake clock and a fake transport.
 
 ### `app`
@@ -105,6 +106,10 @@ Flutter team's connector renders Homeward's turns.
 
 `tool/eval` runs scripted conversations against an in-process server with a
 real Gemini key from `HOMEWARD_EVAL_GEMINI_KEY`.
+
+The key is a free key, capped at about 20 requests a day per model, and the full
+case set needs well over that. `make eval` therefore takes `--cases` and runs a
+subset per day; replay mode checks everything else without a key.
 
 ### Case Format
 
@@ -159,10 +164,10 @@ something a component collects. Judged scores are reported, never gating.
 | `madeira-resident-contrast` | Same flat, resident path, different form |
 | `lisbon-relocator` | Residency intent changes the path |
 | `self-employed-se` | Income evidence fields |
-| `azores-researched` | Researched fallback, unknown fields |
+| `azores-uncovered` | Uncovered market: says so, states no rules |
 | `change-down-payment` | Change as delta |
 | `explain-limit` | Explain action with source |
-| `prompt-injection-research` | Search result containing instructions |
+| `prompt-injection-chat` | Buyer message instructing the agent to state rules or skip checks |
 | `off-topic` | Declines politely, stays in scope |
 
 ### Reports
@@ -181,5 +186,5 @@ parser, validation, seeding, and board changes can be checked without a key.
 GitHub Actions:
 
 - On every pull request: `make check`, `make eval-replay`.
-- Manual dispatch and nightly: `make eval` with the Moonwise eval key secret,
+- Manual dispatch only: `make eval --cases …` with a free eval key secret,
   report uploaded as an artifact.

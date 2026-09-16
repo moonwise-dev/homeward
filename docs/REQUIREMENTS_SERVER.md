@@ -15,7 +15,7 @@ validation, plan state, and the board. It holds no Gemini key of its own.
 | POST | `/api/sessions` | Firebase ID token, App Check | Creates a session and an empty plan |
 | DELETE | `/api/sessions/:id` | Firebase ID token, App Check | Deletes session, turns, plan |
 | DELETE | `/api/me` | Firebase ID token, App Check | Deletes every session of the caller |
-| POST | `/internal/cleanup` | Cloud Scheduler OIDC | Deletes plans inactive for 90 days, expired researched packs |
+| POST | `/internal/cleanup` | Cloud Scheduler OIDC | Deletes plans inactive for 90 days |
 | GET | `/health` | none | Liveness; not `/healthz`, which Cloud Run may reserve |
 | GET | `/live` | Phase 2 | Voice WebSocket door |
 
@@ -53,7 +53,6 @@ than Gemini spend.
 | Limit | Default |
 | --- | --- |
 | Turns per UID | 30 per 10 minutes |
-| Research runs per UID | 10 per day |
 | Concurrent turns per session | 1 |
 | Sessions per UID | 50 |
 
@@ -68,7 +67,7 @@ instances.
 | `app_check_failed` | Missing or invalid App Check token |
 | `gemini_key_missing` | Key header absent |
 | `gemini_key_invalid` | Gemini rejected the key |
-| `gemini_quota_exhausted` | Gemini returned a quota error; includes retry-after |
+| `gemini_quota_exhausted` | Gemini returned a quota error; includes the next reset, midnight Pacific |
 | `gemini_unavailable` | Every configured model is overloaded, stalled, or returned a server error |
 | `rate_limited` | Homeward limit reached |
 | `turn_in_progress` | Another turn is running in this session |
@@ -96,7 +95,6 @@ runs after every plan change and on session open when the board is missing.
 | Key | Purpose |
 | --- | --- |
 | `HOMEWARD_TURN_MODELS` | Turn model IDs in preference order |
-| `HOMEWARD_RESEARCH_MODELS` | Research model IDs in preference order |
 | `HOMEWARD_THINKING_LEVEL` | Gemini thinking level |
 | `HOMEWARD_HEADERS_DEADLINE` | Deadline for Gemini response headers |
 | `HOMEWARD_FIRST_STEP_DEADLINE` | Deadline for the first Gemini step |
@@ -140,7 +138,10 @@ service account through Application Default Credentials.
   accepting connections, lets in-flight requests finish, and releases every
   signal watcher so the process can end.
 - Cloud Run `europe-north1`, concurrency 40, request timeout 300 s, minimum
-  instances 0, maximum 10. Minimum 1 during recording sessions.
+  instances 0, maximum 2, to stay within the free allowance; cold starts are
+  accepted.
+- Artifact Registry repository with a cleanup policy keeping the last three
+  images.
 - Service account roles: Firestore user, Firebase Auth viewer, App Check token
   verifier, logging writer.
 - Firebase Hosting rewrites `/a2a`, `/api/**`, and `/.well-known/**` to the

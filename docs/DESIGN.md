@@ -32,7 +32,7 @@ of milestone M2.
 | `accentSoft` | `#1D5C4D` @ 10% | Selected states |
 | `info` | `#2B5C8A` | Series 2, informational notes |
 | `positive` | `#2E7D5B` | Pass |
-| `warning` | `#A86B12` | Warn, researched badge, stress marker |
+| `warning` | `#A86B12` | Warn, uncovered badge, stress marker |
 | `danger` | `#B3261E` | Fail, limit lines |
 
 Dark tokens are defined alongside from the start and shipped after the
@@ -78,13 +78,11 @@ Fonts ship through `google_fonts` with bundled fallbacks for offline web.
 - All money formatting goes through `AppFormats.money(Money, locale)`.
 - Rates show two decimals, percentages of price show one.
 - Units and currency codes use `textTertiary`.
-- A figure computed from a researched rule carries a small `warning` dot that
-  opens its source.
 
 ## Coverage And Sources
 
-- `AppCoverageBadge`: curated is an `accent` outline with a check; researched is
-  a `warning` outline with a magnifier and the word "researched".
+- `AppCoverageBadge`: curated is an `accent` outline with a check; uncovered is
+  a `warning` outline with the words "not covered yet".
 - Tapping any badge or source dot opens `AppSourcesSheet`: rule, value, source
   publisher and title, link, retrieved or reviewed date.
 

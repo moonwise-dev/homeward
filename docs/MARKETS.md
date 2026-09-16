@@ -26,7 +26,6 @@ MarketRulePack
   parent                PT
   name                  Madeira
   currency              EUR
-  coverage              curated | researched
   version               integer, bumped on every change
   effectiveFrom         date the newest rule took effect
   reviewedAt            date a curator last verified every rule
@@ -183,16 +182,12 @@ fail `make markets-check` for curated markets.
 `make markets-check` fails on schema errors, missing sources, broken overlays,
 or an expired pack, and warns when a pack expires within 30 days.
 
-## Researched Packs
+## Uncovered Markets
 
-Researched packs use the same schema with `coverage: researched`, stored in
-Firestore `researchedPacks`, never in `markets/`. See `docs/AGENT.md` for the
-research flow. Differences from curated packs:
-
-- Every field is optional; missing means unknown.
-- `reviewedAt` and `reviewedBy` are absent; `researchedAt` and `model` are set.
-- Expires after 30 days.
-- The UI always shows the researched badge and a verify note.
+A market with no pack in `markets/packs` is uncovered. Resolution returns its
+identifier and name and nothing else; no rule is guessed or researched at
+runtime. See `docs/AGENT.md`. Every pack in `markets/` is curated, so coverage
+is a property of resolution, not a field of the pack.
 
 ## Tier 1 Curation Notes
 

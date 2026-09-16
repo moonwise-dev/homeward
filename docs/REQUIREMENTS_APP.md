@@ -14,6 +14,8 @@ logic.
 - Web on desktop and mobile browsers, served from Firebase Hosting at the same
   origin as the server.
 - macOS for development only, never released.
+- No store distribution: web, simulators, sideloaded Android APKs, and
+  personally provisioned iPhones with seven-day profiles.
 
 ## Layout
 
@@ -59,6 +61,11 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 - States that the key is sent to Homeward's server per request, used only to
   call Gemini, and never stored or logged by Homeward, and that Gemini stores
   interactions under the buyer's key according to Google's terms.
+- States that a free key allows a limited number of requests per day, about ten
+  Homeward turns, resetting at midnight Pacific.
+- States that Google's terms for unpaid Gemini API use allow Google to use
+  prompts and responses to improve its products. The wording is checked against
+  the current terms before this screen ships.
 - Remove key is available here and in settings.
 
 ### Plans
@@ -74,14 +81,14 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 - Transcript: buyer messages, agent text streamed as it arrives, inline surfaces
   under their agent message.
 - Status line during a turn from task status updates, for example
-  "Researching rules for Madeira".
+  "Checking the rules for Madeira".
 - Composer with send; stop while a turn is running.
 - Starter prompts on a new plan.
 - Opening an existing plan replays stored A2UI messages into a fresh surface
   controller before enabling the composer.
 - Turn failures show a toast and a retry affordance on the failed turn.
 - `gemini_key_invalid` routes to `/key`. `gemini_quota_exhausted` explains that
-  the buyer's own quota is used up and when to retry.
+  the buyer's free key has reached its daily cap and shows when it resets.
 
 ### Plan Board
 
@@ -96,7 +103,7 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 - Lists every catalog component with phase and agent visibility.
 - Renders each declared example with its example data model.
 - Toggles: locked state, resident or non-resident example profile, curated or
-  researched coverage.
+  uncovered market.
 - Reachable from settings when developer tools are enabled.
 
 ### Wire Inspector
