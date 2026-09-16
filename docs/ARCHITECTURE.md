@@ -76,7 +76,7 @@ Pure Dart. The only package allowed to define domain vocabulary.
 ```text
 common/lib/
   common.dart
-  money/          Money, Currency, Rate (basis points), rounding
+  money/          Money, Currency, Rate (parts per million), Rounding, ISO 4217 table
   finance/        affordability, amortization, payment, stress, purchase_costs, fx
   markets/        MarketRulePack models, buyer predicates, overlay resolution
   profile/        BuyerProfile, Residency, Citizenship, Employment
@@ -89,10 +89,22 @@ common/lib/
 
 Rules:
 
-- Freezed for data classes, `json_serializable` for wire and persistence.
-- Money is integer minor units plus currency. Rates are integer basis points.
-  Floating point is allowed only inside a formula and is rounded to minor units
-  at the formula's boundary.
+- Freezed for multi-field data classes, `json_serializable` for wire and
+  persistence.
+- Single-value wrappers are extension types (`Rate`, `Currency`): type safety
+  with no allocation, and their JSON is the bare number or string.
+- `Money` is integer minor units plus a `Currency`. Arithmetic across currencies
+  throws.
+- `Rate` is integer parts per million, exact for every published rate. `Rate.bps`
+  exists for convenience only.
+- `Currency` accepts only ISO 4217 codes from the generated table
+  (`make iso-4217`), which records its SIX publication date.
+- Nothing rounds silently. Every conversion to money takes a `Rounding` with a
+  mode and a step. Rounding is exact integer arithmetic that stays within 53
+  bits, so results match on the VM and on the web.
+- Floating point is allowed only inside a formula that needs it, such as an
+  annuity power, and is converted back through a `Rounding` at the formula's
+  boundary.
 - Every formula is a pure top-level function or a static method on a small
   value type. No service classes, no I/O, no clocks; time is a parameter.
 - `catalog/` is the contract shared by the app's widget implementations, the

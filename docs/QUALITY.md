@@ -43,7 +43,7 @@ There are no widget tests and no golden image tests.
 
 | Area | What is pinned |
 | --- | --- |
-| `money` | Rounding to minor units, currency mismatch errors, basis point conversions |
+| `money` | Every rounding mode and step against a hand table, 10 000 random cases against exact big integer arithmetic, currency parsing, currency mismatch errors, JSON; run on the VM and in Chrome because web integers are 53-bit
 | `finance` | Annuity and straight amortization payments, LTV, DSTI, LTI, stress payment, maximum loan and binding constraint, purchase cost brackets including marginal and deduction styles, cash needed, currency exposure |
 | `markets` | Overlay resolution, predicate applicability, required profile fields per buyer |
 | `markets/<id>` | Worked examples per curated pack, with the expected figures derived by hand from the cited sources |

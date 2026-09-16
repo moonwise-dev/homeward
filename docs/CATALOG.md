@@ -73,7 +73,7 @@ sliders always use `AmountSlider`.
 | `MarketRef` | `{ "path": "/market" }` | Resolved rules for this buyer |
 | `ScenarioRef` | `{ "path": "/scenario" }` | Current scenario |
 | `MoneyPath` | `{ "path": "…" }` | Integer minor units, bound |
-| `BpsPath` | `{ "path": "…" }` | Integer basis points, bound |
+| `PpmPath` | `{ "path": "…" }` | Integer parts per million, bound |
 | `BoundsPath` | `{ "path": "…" }` | `{ min, max, step }` in minor units, bound |
 | `Label` | DynamicString | Literal allowed |
 | `Action` | A2UI action | Names from `docs/PROTOCOL.md` |
@@ -218,8 +218,8 @@ typical duration.
 
 | Property | Type | Required | Notes |
 | --- | --- | --- | --- |
-| `value` | `BpsPath` | yes | Writes `rateShockBps` |
-| `step` | integer | no | Default 25 |
+| `value` | `PpmPath` | yes | Writes `rateShockPpm` |
+| `step` | integer ppm | no | Default 2 500, which is 25 basis points |
 
 ### 14. `LoanTypeComparison`
 
@@ -291,10 +291,10 @@ Registered in the Homeward catalog, implemented as thin adapters over
 | Function | Arguments | Returns |
 | --- | --- | --- |
 | `loanAmount` | `scenario` | money |
-| `loanToValue` | `scenario` | bps |
+| `loanToValue` | `scenario` | ppm |
 | `monthlyPayment` | `scenario`, `market` | money |
 | `cashNeeded` | `scenario`, `market`, `profile` | money |
-| `debtServiceToIncome` | `scenario`, `market`, `profile` | bps |
+| `debtServiceToIncome` | `scenario`, `market`, `profile` | ppm |
 | `withinMaxLtv` | `scenario`, `market`, `profile` | boolean |
 | `withinMaxDsti` | `scenario`, `market`, `profile` | boolean |
 | `withinStress` | `scenario`, `market`, `profile` | boolean |

@@ -153,6 +153,10 @@ Decisions from the planning session on 2026-09-16.
 | D23 | Application ID | `se.moonwise.homeward` | `com.moonwise.homeward` |
 | D24 | Desktop platforms | macOS kept for development; Linux and Windows removed | Remove all desktop, keep all |
 | D25 | Git workflow | Commit directly to `main` | Branch per chunk, one branch per milestone |
+| D26 | Currency source | ISO 4217 table generated from the SIX list | `intl` CLDR digits, enum of supported currencies |
+| D27 | Rate unit | Integer parts per million | Integer basis points, `decimal` package |
+| D28 | Rounding | Explicit mode and step on every money conversion; cost rules can override | Always half-even, always half-up |
+| D29 | Value types | Extension types for single values, Freezed for multi-field | Freezed everywhere, hand-written classes |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

@@ -76,17 +76,17 @@ lays out the fields; the pack decides which fields exist.
 
 ```text
 LendingRules
-  maxLtv                [{ appliesTo, bps, typicalRangeBps?, sourceId }]
-  maxDsti               [{ appliesTo, bps, incomeBasis: net | gross, sourceId }]
+  maxLtv                [{ appliesTo, ppm, typicalRangePpm?, sourceId }]
+  maxDsti               [{ appliesTo, ppm, incomeBasis: net | gross, sourceId }]
   maxLti                [{ appliesTo, multipleTimes100, incomeBasis, sourceId }]
-  stress                [{ appliesTo, kind: fixedRate | shock, bps, sourceId }]
+  stress                [{ appliesTo, kind: fixedRate | shock, ppm, sourceId }]
   maxTermYears          [{ appliesTo, years, sourceId }]
   maxAgeAtMaturity      [{ appliesTo, years, sourceId }]
-  amortization          [{ appliesTo, whenLtvAboveBps, annualBps, sourceId }]
+  amortization          [{ appliesTo, whenLtvAbovePpm, annualPpm, sourceId }]
   repaymentStyle        annuity | straight
 ```
 
-Where a rule is a lender norm rather than law, `typicalRangeBps` carries the
+Where a rule is a lender norm rather than law, `typicalRangePpm` carries the
 market range and the value is the conservative end.
 
 ### Cost Rules
@@ -99,11 +99,12 @@ CostRule
   appliesTo
   base                  price | loan | pledgedAmount | fixed
   kind
-    flatRate            { bps }
-    brackets            { brackets: [{ upTo, bps, deduction }], marginal: bool }
+    flatRate            { ppm }
+    brackets            { brackets: [{ upTo, ppm, deduction }], marginal: bool }
     fixed               { amount }
-    percentWithMin      { bps, min }
+    percentWithMin      { ppm, min }
   recurrence            once | monthly | yearly
+  rounding              { mode: halfUp | halfEven | down | up, step }, default halfUp to one minor unit
   sourceId
 ```
 
@@ -114,7 +115,7 @@ LoanType
   id                    euribor12m
   label                 Variable, Euribor 12M + spread
   referenceRateId       EUR.EURIBOR12M
-  typicalSpreadBps      { min, max }
+  typicalSpreadPpm      { min, max }
   fixedYears            0
   sourceId
 ```

@@ -93,7 +93,7 @@ Always resolve dependencies from the root with `make get`. Running
 
 Generated Dart files are committed and never edited by hand:
 
-- `*.g.dart`
-- `*.freezed.dart`
+- `*.g.dart` and `*.freezed.dart`, from `make codegen`
+- `common/lib/money/generated/*`, from `make iso-4217`
 - `common/lib/catalog/generated/*`
 - `server/prompts/generated/*`

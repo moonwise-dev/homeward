@@ -221,7 +221,7 @@ The model binds to these paths and never writes values.
   obstacles              applicable foreign buyer obstacles
   process                applicable steps and documents
   sources                source list for everything above
-/scenario                price, downPayment, termYears, loanTypeId, rateShockBps
+/scenario                price, downPayment, termYears, loanTypeId, rateShockPpm
 /derived                 computed by server tools at seed time
   affordability          maxLoan, maxPrice, bindingConstraint, headroom
   downPaymentBounds      min, max, step
@@ -234,7 +234,8 @@ The model binds to these paths and never writes values.
 /ui                      locked
 ```
 
-Money values are integer minor units. Rates are integer basis points. Every
+Money values are `{ "minorUnits": 35000000, "currency": "EUR" }`. Rates are
+integer parts per million, and field names end in `Ppm`. Every
 money object carries its currency at the nearest `market.currency` or explicit
 `currency` field.
 

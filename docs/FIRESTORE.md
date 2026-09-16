@@ -48,7 +48,7 @@ caller's own sessions, plans, and turns.
 | `marketId` | string? | |
 | `profile` | map | `BuyerProfile`, committed values only |
 | `profileDraft` | map | Proposed by the model, not yet committed |
-| `scenarios` | array | Committed scenarios `{ id, label, price, downPayment, termYears, loanTypeId, rateShockBps, committedAt }` |
+| `scenarios` | array | Committed scenarios `{ id, label, price, downPayment, termYears, loanTypeId, rateShockPpm, committedAt }` |
 | `activeScenarioId` | string? | |
 | `scenarioDraft` | map? | |
 | `checklist` | map | `{ documentId: bool }` |
