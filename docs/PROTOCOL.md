@@ -296,6 +296,9 @@ The model binds to these paths and never writes values.
 /ui                      locked
 ```
 
+Data model values are JSON-shaped as produced by `jsonDecode`; see the binding
+rules in `docs/CATALOG.md`.
+
 Money values are `{ "minorUnits": 35000000, "currency": "EUR" }`. Rates are
 integer parts per million, and field names end in `Ppm`. Every
 money object carries its currency at the nearest `market.currency` or explicit

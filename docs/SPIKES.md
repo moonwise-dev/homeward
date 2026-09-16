@@ -216,6 +216,92 @@ The quota and overload bodies are committed as fixtures in
 - `docs/QUALITY.md`, `docs/ROADMAP.md`: eval cases, CI, recording plan, risks,
   and decisions updated.
 
+## S4 — genui Bindings, Client Functions, And Drag Performance
+
+**Answered 2026-09-16.**
+
+### Question
+
+Do genui client functions accept object arguments and return numbers, strings,
+and booleans? Can a catalog item subscribe to a whole slice and update when a
+nested value changes? Does a slider drag with six bound components hold 60 fps?
+
+### Method
+
+- Read `genui` 0.10.3 and `a2ui_core` 0.1.1: client functions, function call
+  evaluation, data model subscriptions, the basic Slider and Button, check
+  validation.
+- A scratch Flutter app with a probe catalog: an `AmountSlider` writing
+  `/scenario/downPayment`, four insight cards and two line charts (41 and 360
+  points) bound to `/scenario` and `/market`, a basic `Text` whose content is
+  `formatMoney(monthlyPayment(scenario, market), currency)`, and a basic
+  `Button` with a `withinMaxLtv` check. Functions and builders counted their
+  executions and time.
+- A widget test drove a nested data model update and a real slider drag.
+- Profile web builds, JS and Wasm, ran in headless Chrome on an Apple silicon
+  Mac. A ticker wrote the down payment every frame for six seconds and the page
+  posted frame timing percentiles to a local server. The DevTools protocol applied
+  1× and 4× CPU throttling. Variants isolated the cost: no charts, the same
+  widgets without genui, charts with fewer points, and charts drawn with a
+  `CustomPainter` instead of `fl_chart`.
+
+### Findings
+
+| Area | Result |
+| --- | --- |
+| Object arguments | A `{ "path": "/scenario" }` argument resolves to the whole map and re-evaluates when anything under it changes. |
+| Return types | `number`, `string`, and `boolean` returns all worked; nested calls worked: 1141.60 → 1397.87 → 532.29 EUR as the down payment changed. |
+| Checks | genui evaluates `{ "condition": <DynamicBoolean>, "message" }`. The flat `call`/`args` shape in `docs/CATALOG.md` was wrong. The Button disabled at 85.7% LTV and re-enabled at 32.6%. |
+| Slice subscriptions | `a2ui_core` notifies watchers of ancestors and descendants of a written path, and genui's notifier forces a notification when the value is the same mutated map. All six slice-bound components rebuilt exactly once per update. |
+| Coalescing | Widget rebuilds coalesce to one per frame; function executions do not (9 executions for 3 writes in one frame). |
+| Data model typing | Seeding with a Dart map literal made later writes throw `_Map<String, Object?> is not a subtype of Map<String, Object>`. JSON-decoded data does not. |
+| Basic Slider | Creates a new check stream on every build and writes bare numbers. |
+| Builder cost | Finance math plus widget construction stayed under 0.2 ms per component even at 4× throttling. |
+| Android | Not measured: emulators do not support profile builds and no phone was connected. |
+
+Frame timings, six-second sweeps, milliseconds:
+
+| Build | Variant | CPU | Frames | Over 16.7 ms | Build p50 | Build p90 | Total p90 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| JS | genui + `fl_chart` | 1× | 361 | 4 | 6.9 | 8.6 | 11.2 |
+| JS | genui + `fl_chart` | 4× | 139 | 139 | 32.3 | 39.7 | 50.1 |
+| JS | no genui, `fl_chart` | 4× | 169 | 169 | 26.6 | 31.3 | 39.8 |
+| JS | genui, no charts | 4× | 356 | 10 | 8.4 | 10.8 | 13.5 |
+| JS | genui, `fl_chart` with fewer points | 4× | 193 | 193 | 24.3 | 29.8 | 36.9 |
+| JS | genui, `CustomPainter` charts | 4× | 339 | 78 | 8.9 | 14.2 | 20.8 |
+| Wasm | genui + `fl_chart` | 1× | 358 | 3 | 2.7 | 3.6 | 6.3 |
+| Wasm | genui, no charts | 1× | 361 | 1 | 1.7 | 3.1 | 4.3 |
+| Wasm | genui, `CustomPainter` charts | 1× | 361 | 9 | 3.6 | 4.5 | 10.2 |
+
+Wasm under 4× throttling varied too much to rank: the same `CustomPainter` build
+gave 268 frames over budget in one run and 2 in the next, and the `fl_chart`
+build 86 and 223. DevTools CPU throttling evidently does not slow skwasm's render
+worker consistently.
+
+### Decisions
+
+- **D44:** Charts are Homeward's own `CustomPainter` widgets in `app/lib/ui`, not
+  `fl_chart`, which dominated build time during a drag.
+- **D45:** The web app is a Wasm build with a JS fallback, served with COOP and
+  COEP headers for multi-threaded rendering.
+- **D46:** The frame-timing harness becomes `tool/perf` and `make perf`, run on
+  demand against a gallery page, on web and on a physical Android phone.
+
+Coarse slice bindings (P5) and whole-object client function arguments are
+confirmed as designed.
+
+### Consequences
+
+- `docs/CATALOG.md`: the check example uses `condition`; binding rules for slice
+  subscriptions, function cost, JSON-shaped data, and money inputs.
+- `docs/PROTOCOL.md`: data model values are JSON-shaped.
+- `docs/ARCHITECTURE.md`: no chart package; a Web Build section.
+- `docs/DESIGN.md`: charts are `CustomPainter` widgets.
+- `docs/REQUIREMENTS_APP.md`, `docs/REQUIREMENTS_SERVER.md`: measured performance
+  method, Wasm build, Hosting headers.
+- `docs/QUALITY.md`: a Performance Check section.
+- `docs/ROADMAP.md`: `make perf` in M1; Android and COEP risks.
+
 ## S5 — `a2ui_core` On The Server
 
 **Answered 2026-09-16.**

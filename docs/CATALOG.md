@@ -301,7 +301,8 @@ Registered in the Homeward catalog, implemented as thin adapters over
 | `formatMoney` | `value`, `currency` | string |
 | `formatRate` | `value` | string |
 
-Commit button with rule checks:
+Commit button with rule checks. A check is `{ "condition": <DynamicBoolean>,
+"message" }` with no other properties, per genui's embedded v0.9 schema:
 
 ```json
 {
@@ -311,8 +312,10 @@ Commit button with rule checks:
   "variant": "primary",
   "checks": [
     {
-      "call": "withinMaxLtv",
-      "args": { "scenario": { "path": "/scenario" }, "market": { "path": "/market" }, "profile": { "path": "/profile" } },
+      "condition": {
+        "call": "withinMaxLtv",
+        "args": { "scenario": { "path": "/scenario" }, "market": { "path": "/market" }, "profile": { "path": "/profile" } }
+      },
       "message": "Down payment is below the minimum for your situation"
     }
   ],
@@ -356,3 +359,23 @@ In `app/lib/catalog/items/`, a catalog item:
    callbacks.
 
 The plain widget has no genui imports and is what the gallery renders.
+
+### Binding Rules
+
+Measured in spike S4:
+
+- A slice binding subscribes once per widget state with
+  `DataContext.subscribe(DataPath('/scenario'))` and disposes the listenable.
+  An update to `/scenario/downPayment` notifies it, even though the map object is
+  the same instance mutated in place. `app/lib/catalog/bindings/` owns this
+  subscription so no item writes it twice.
+- Widget rebuilds coalesce to one per frame. Client function executions do not:
+  every data model write re-runs every function bound to it. Client functions
+  therefore stay scalar and cheap; series for charts are computed inside the
+  component, where rebuilds coalesce.
+- Everything written to the data model is JSON-shaped: `Map<String, dynamic>`
+  and `List<dynamic>` as produced by `jsonDecode`, never typed Dart literals.
+  `a2ui_core` stores maps as given, so writing a `Map<String, Object?>` into a
+  map typed `Map<String, Object>` throws.
+- Homeward money inputs are Homeward components. genui's basic `Slider` creates
+  a new check stream on every build and writes bare numbers.

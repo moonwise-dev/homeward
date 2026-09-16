@@ -101,8 +101,11 @@ Colour is never the only signal.
 
 ## Charts
 
-- `fl_chart` wrapped by `AppLineChart` and `AppStackedBar` so catalog items pass
-  typed series, never chart library objects.
+- `AppLineChart` and `AppStackedBar` are Homeward's own `CustomPainter` widgets
+  inside a `RepaintBoundary`, repainting only when their series change. Catalog
+  items pass typed series. No chart package: in spike S4, `fl_chart` redrawn on
+  every frame of a drag cut a throttled JS build to about 23 fps, and a
+  `CustomPainter` with the same series held about 57.
 - Series 1 `accent`, series 2 `info`, limit lines `danger` dashed, markers
   `warning`.
 - Axis labels in `caption`, gridlines in `border`.

@@ -12,7 +12,7 @@ logic.
 - iOS and Android phones, portrait first, landscape supported.
 - Tablets and foldables use the wide layout.
 - Web on desktop and mobile browsers, served from Firebase Hosting at the same
-  origin as the server.
+  origin as the server, as a Wasm build with a JS fallback.
 - macOS for development only, never released.
 - No store distribution: web, simulators, sideloaded Android APKs, and
   personally provisioned iPhones with seven-day profiles.
@@ -165,8 +165,14 @@ genui.
 
 - Dragging an `AmountSlider` keeps 60 fps on a mid-range Android phone and in
   Chrome on a mid-range laptop with six bound insight components on screen.
-- Local recompute per component per frame stays under 2 ms.
+- Local recompute per component per frame stays under 2 ms; spike S4 measured
+  under 0.2 ms with 4× CPU throttling.
 - Text deltas render within one frame of arrival.
+- Measured with `make perf`: a scripted sweep writes the down payment every
+  frame for six seconds and reports frame build, raster, and total times.
+  "Mid-range laptop" is approximated by 4× CPU throttling in headless Chrome.
+  Mid-range Android is measured on a physical phone in profile mode, because
+  emulators do not support profile builds.
 
 ## Copy
 

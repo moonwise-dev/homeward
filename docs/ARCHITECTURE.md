@@ -245,7 +245,8 @@ app/lib/
 - `go_router`.
 - `firebase_core`, `firebase_auth`, `cloud_firestore`, `firebase_app_check`.
 - `flutter_secure_storage` for the user's Gemini key.
-- `fl_chart` for charts.
+- Charts are drawn by Homeward's own `CustomPainter` primitives in `app/lib/ui`,
+  not a chart package; see `docs/DESIGN.md` and spike S4.
 - `google_fonts`, `intl`.
 
 ### genui Boundary
@@ -275,6 +276,15 @@ common/finance/payment.dart             the numbers
 
 The widget a catalog item builds takes plain typed values and callbacks, so it
 renders identically in the catalog gallery, in a surface, and on the plan board.
+
+### Web Build
+
+The web app is built with `flutter build web --wasm`, which emits a skwasm
+build for browsers with WasmGC and a JS build as fallback. skwasm built frames
+2.5–3× faster than JS in every unthrottled run of spike S4. Multi-threaded
+skwasm needs `Cross-Origin-Opener-Policy: same-origin` and
+`Cross-Origin-Embedder-Policy: require-corp` on the page, set in Firebase
+Hosting.
 
 ### Features
 

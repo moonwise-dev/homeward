@@ -42,6 +42,9 @@ Deliverables:
 - An uncovered market gets `MarketSnapshotCard` in its uncovered state.
 - Latency re-measured with the S2 probe at two different times of day; model
   order confirmed.
+- `tool/perf` and `make perf` against a minimal gallery page holding the M1
+  components; first run on web and on a physical Android phone. The full
+  catalog gallery follows in M2.
 
 Exit: at the Sep 28 session, a Stockholm buyer goes from first message to a
 live down payment slider updating payment locally, on web and one phone.
@@ -104,7 +107,7 @@ resolution.
 | S1 | What does `genui_a2a` 0.10.x put on the wire: A2A version, SSE or WebSocket, A2UI MIME type, where capabilities and data model travel, how actions are sent? | Run `genui_a2a` against a recording fake A2A server | **Answered:** the protocol fits; the app uses its own client, see `docs/SPIKES.md`. |
 | S2 | Can Dart drive the Interactions API cleanly: request shape, SSE event types, function calling continuation, `previous_interaction_id`, error codes for bad key and quota? Is `gemini-3.8-flash` available on free-tier keys? | Curl and a Dart console probe against a free-tier key | **Answered:** yes; see `docs/SPIKES.md`. Quota (429) shapes recorded during S3. |
 | S3 | Can one interaction combine `google_search` with structured JSON output, and what grounding metadata links fields to URLs? | Research call for `PT-20` | **Closed by design:** grounding is paid only, so research is not built (D40); see `docs/SPIKES.md`. |
-| S4 | Do genui client functions accept object arguments and return numbers, strings, and booleans; can a catalog item subscribe to a whole slice; is a six-component slider drag at 60 fps? | Throwaway catalog item and profiling on web and Android | Confirms coarse bindings. Otherwise fine-grained bindings with a selector layer in `app/lib/catalog/bindings`. |
+| S4 | Do genui client functions accept object arguments and return numbers, strings, and booleans; can a catalog item subscribe to a whole slice; is a six-component slider drag at 60 fps? | Probe app, widget test, profile web builds in headless Chrome with CPU throttling | **Answered:** bindings and functions work; charts drawn with `fl_chart` are the bottleneck; see `docs/SPIKES.md`. Android unmeasured. |
 | S5 | Is `a2ui_core` pure Dart and usable on the server for message models and validation? | Import into a console app | **Answered:** yes; used from `common`, see `docs/SPIKES.md`. |
 | S6 | Does `firebase_admin_sdk` verify anonymous ID tokens and App Check tokens and run Firestore transactions on Cloud Run with ADC? | Deploy a probe route | Confirms server data layer. |
 | S7 | Verify the high-impact Tier 1 claims: Portugal non-resident IMT, Portugal DSTI limit, Portugal non-resident LTV, Sweden top-up cap | Primary sources listed in `docs/MARKETS.md` | Pack values and hero script numbers. |
@@ -118,6 +121,8 @@ resolution.
 | No official Dart GenAI SDK | Client maintenance | Thin typed client over REST, recorded fixtures from S2 |
 | Gemini latency: 7–18 s per model round on 2026-09-16 | Slow turns on camera | Server pre-runs predictable steps, at most two rounds per turn, full text streamed as it grows, latency re-measured in M1 and before recording |
 | Preferred model overloaded | Hung or failed turns | Deadlines, circuit breaker, fallback to the next model |
+| Android slider performance unmeasured | Sluggish drag on real phones | `make perf` on a physical phone in M1 |
+| `Cross-Origin-Embedder-Policy: require-corp` blocks third-party scripts such as reCAPTCHA for App Check | Web App Check or other embeds fail to load | Verify in S6; fall back to `credentialless` or single-threaded Wasm |
 | Free-tier daily cap, about 20 requests per model | Failed turns in rehearsal or on camera; about ten turns a day per buyer | One full run per key per day; recording on a key unused that day; the cap explained in the app |
 | Free-tier prompts may be used by Google to improve its products | Buyers' financial details lose a privacy promise | Disclosed on the key screen; terms wording verified before it ships |
 | Buyers ask about markets that are not curated | The "any location" idea goes unmet | Honest uncovered state, uncovered requests logged per market to drive curation order |
@@ -175,6 +180,9 @@ Decisions from the planning session on 2026-09-16.
 | D41 | Free-key quota | Bring-your-own only; quota errors never fall back to another model | Fall back across models per key, Moonwise allowance |
 | D42 | Billing | Attached, designed for €0 with a €1 budget alert and capped instances | No billing account, Google-provided project |
 | D43 | Devices | Free only: web, simulators, sideloaded Android APKs, personally provisioned iPhones | Existing Moonwise store accounts |
+| D44 | Charts | Own `CustomPainter` charts in `app/lib/ui` | `fl_chart` redrawing less often, `fl_chart` as is |
+| D45 | Web build | Wasm with JS fallback, COOP and COEP headers | JS only |
+| D46 | Performance harness | `make perf` in the repository, run on demand | One-off measurements |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.
@@ -192,7 +200,7 @@ them before M0 ends.
 | P9 | Chat text never states money amounts or rates | Figures stay in code-computed components |
 | P10 | Values the buyer states are proposed by the model and committed by the buyer | Keeps "code does numbers" honest for user-provided inputs |
 | P11 | Cloud Run `europe-north1`, Firestore `eur3` | EU data residency for EU buyers |
-| P12 | Charts with `fl_chart`, fonts Fraunces and Inter | Mature, web-capable, calm editorial tone |
+| P12 | Fonts Fraunces and Inter; charts decided in D44 | Calm editorial tone |
 | P13 | English only in v1, local terms glossed | Global video audience |
 
 ## Open Questions

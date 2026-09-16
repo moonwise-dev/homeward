@@ -81,6 +81,17 @@ recorded by the server tests are replayed through `genui_a2a`'s
 `A2uiAgentConnector` against a local fake, proving any A2A client built on the
 Flutter team's connector renders Homeward's turns.
 
+## Performance Check
+
+`make perf` builds the app's catalog gallery for web in profile mode, JS and Wasm,
+serves it locally, and drives headless Chrome through the DevTools protocol at 1×
+and 4× CPU throttling. A scripted sweep writes the down payment every frame for
+six seconds; the page posts frame build, raster, and total time percentiles back
+to the runner, which prints a table. It is not part of `make check`, because
+timings depend on the machine. Wasm results under throttling vary widely between
+runs, so each configuration runs at least twice. On a physical Android phone the
+same sweep runs with `flutter run --profile` and prints its report.
+
 ## Markets Check
 
 `tool/markets_check`:

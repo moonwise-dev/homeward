@@ -145,7 +145,9 @@ service account through Application Default Credentials.
 - Service account roles: Firestore user, Firebase Auth viewer, App Check token
   verifier, logging writer.
 - Firebase Hosting rewrites `/a2a`, `/api/**`, and `/.well-known/**` to the
-  Cloud Run service.
+  Cloud Run service, and sends `Cross-Origin-Opener-Policy: same-origin` and
+  `Cross-Origin-Embedder-Policy: require-corp` on the web app for multi-threaded
+  Wasm rendering.
 - `make deploy-server` and `make deploy-web` exist and run only when explicitly
   asked.
 
