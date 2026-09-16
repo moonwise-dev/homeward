@@ -4,11 +4,13 @@ import '../time/calendar_date.dart';
 import '../time/calendar_date_json_converter.dart';
 import 'source_kind.dart';
 
+import 'identified.dart';
+
 part 'source.freezed.dart';
 part 'source.g.dart';
 
 @freezed
-abstract class Source with _$Source {
+abstract class Source with _$Source implements Identified {
   const factory Source({
     required String id,
     required String publisher,

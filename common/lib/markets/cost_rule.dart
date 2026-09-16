@@ -7,11 +7,13 @@ import 'cost_calculation.dart';
 import 'recurrence.dart';
 import 'refund_rule.dart';
 
+import 'identified.dart';
+
 part 'cost_rule.freezed.dart';
 part 'cost_rule.g.dart';
 
 @freezed
-abstract class CostRule with _$CostRule {
+abstract class CostRule with _$CostRule implements ConditionalRule {
   const factory CostRule({
     required String id,
     String? group,

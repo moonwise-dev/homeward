@@ -11,9 +11,13 @@ packs; nothing else knows a market.
   `ES-CT` Catalonia, `US-FL` Florida, `AE-DU` Dubai.
 - A regional pack declares `parent` and overlays only what differs.
 
-Overlay resolution in `common/markets/overlay.dart` merges parent then child:
-scalar fields replace, lists merge by rule `id`, and a child can remove a parent
-rule by ID.
+`resolvePackChain` in `common/markets/pack_overlay.dart` merges parent then
+child: the child's identity and scalar fields win, the currency is inherited,
+lists merge by entry `id` with replacements kept in the parent's order, and
+`removedRuleIds` drops parent entries. The merged pack takes the newest
+`effectiveFrom` and the oldest `reviewedAt`, so it expires with its oldest part.
+Removing an ID the parent lacks, a missing parent, a cycle, and a root pack
+without a currency are errors.
 
 ## Rule Pack Schema
 
@@ -79,6 +83,18 @@ BuyerPredicate
 ```
 
 Predicates are evaluated against the profile by `common/markets/applicability.dart`.
+The profile holds facts, not answers relative to a market: citizenship and tax
+residence are country codes. `residency` compares tax residence with the
+market's country; `citizenship` is `domestic` for the market's country,
+`regional` when both countries are in the European Economic Area, and
+`foreign` otherwise.
+
+Each rule applies, does not apply, or is pending (D60). A known mismatch makes a
+rule not apply even when other facts are unknown. A rule is pending when no
+known fact contradicts it and some fact it needs is unknown. `resolveForBuyer`
+keeps only rules that apply, lists pending rules with the facts each needs, and
+adds those facts to the required profile fields, so the form asks for exactly
+what settles the rules. Figures that depend on a pending rule are not shown.
 The resolved `/market` slice a surface receives contains only rules that apply.
 
 ```text

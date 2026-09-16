@@ -3,11 +3,15 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../profile/profile_field.dart';
 import 'buyer_predicate.dart';
 
+import 'identified.dart';
+
 part 'profile_field_requirement.freezed.dart';
 part 'profile_field_requirement.g.dart';
 
 @freezed
-abstract class ProfileFieldRequirement with _$ProfileFieldRequirement {
+abstract class ProfileFieldRequirement
+    with _$ProfileFieldRequirement
+    implements ConditionalRule {
   const factory ProfileFieldRequirement({
     required String id,
     required ProfileField field,

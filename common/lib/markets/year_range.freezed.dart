@@ -215,8 +215,8 @@ return $default(_that.min,_that.max);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _YearRange implements YearRange {
-  const _YearRange({this.min, this.max});
+class _YearRange extends YearRange {
+  const _YearRange({this.min, this.max}): super._();
   factory _YearRange.fromJson(Map<String, dynamic> json) => _$YearRangeFromJson(json);
 
 @override final  int? min;

@@ -10,6 +10,8 @@ import 'pack_fixtures.dart';
 void main() {
   Map<String, Object?> madeira() =>
       jsonDecode(madeiraPackJson) as Map<String, Object?>;
+  Map<String, Object?> portugal() =>
+      jsonDecode(portugalPackJson) as Map<String, Object?>;
 
   group('MarketRulePack', () {
     test('parses a regional pack', () {
@@ -18,13 +20,13 @@ void main() {
       expect(pack.id, MarketId.parse('PT-30'));
       expect(pack.parent, MarketId.parse('PT'));
       expect(pack.currency, isNull);
-      expect(pack.expiresAt, CalendarDate.parse('2027-03-15'));
-      expect(pack.purchaseCosts.map((rule) => rule.group), ['imt', 'imt']);
-      expect(pack.sources, hasLength(2));
+      expect(pack.expiresAt, CalendarDate.parse('2027-03-09'));
+      expect(pack.purchaseCosts.map((rule) => rule.group), ['imt']);
+      expect(pack.sources, isEmpty);
     });
 
     test('round trips through JSON', () {
-      final pack = MarketRulePack.fromJson(madeira());
+      final pack = MarketRulePack.fromJson(portugal());
 
       expect(
         MarketRulePack.fromJson(
@@ -54,7 +56,7 @@ void main() {
     });
 
     test('carries the non-resident rate and its refund', () {
-      final rule = MarketRulePack.fromJson(madeira()).purchaseCosts.last;
+      final rule = MarketRulePack.fromJson(portugal()).purchaseCosts.last;
       final calculation = rule.calculation as FlatRateCalculation;
 
       expect(
@@ -117,7 +119,7 @@ void main() {
 
   group('strict parsing', () {
     Map<String, Object?> edited(void Function(Map<String, Object?> json) edit) {
-      final json = madeira();
+      final json = portugal();
       edit(json);
       return json;
     }

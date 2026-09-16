@@ -8,11 +8,15 @@ import 'values/exact_decimal.dart';
 import 'values/exact_decimal_json_converter.dart';
 import 'values/percent_json_converter.dart';
 
+import 'identified.dart';
+
 part 'household_rules.freezed.dart';
 part 'household_rules.g.dart';
 
 @freezed
-abstract class LeftToLiveOnRule with _$LeftToLiveOnRule {
+abstract class LeftToLiveOnRule
+    with _$LeftToLiveOnRule
+    implements ConditionalRule {
   const factory LeftToLiveOnRule({
     required String id,
     BuyerPredicate? appliesTo,
@@ -27,7 +31,9 @@ abstract class LeftToLiveOnRule with _$LeftToLiveOnRule {
 }
 
 @freezed
-abstract class InterestDeductionRule with _$InterestDeductionRule {
+abstract class InterestDeductionRule
+    with _$InterestDeductionRule
+    implements ConditionalRule {
   const factory InterestDeductionRule({
     required String id,
     BuyerPredicate? appliesTo,

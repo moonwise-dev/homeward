@@ -200,6 +200,7 @@ Decisions from the planning session on 2026-09-16.
 | D57 | Scenario rate | Official reference rate plus the loan type's conservative spread, adjustable through `rateSpreadPpm` | Fixed official rate; buyer-entered rate only |
 | D58 | Pack values | Written as published: decimal amount strings, percent rate strings, ISO dates and periods | Minor units and parts per million |
 | D59 | Pack format definition | Strict parsing of the Freezed models, semantic checks in `make markets-check`, no JSON schema | Hand-written JSON schema; schema declared with json_schema_builder |
+| D60 | Unknown buyer facts | Rules needing them are pending; the facts become required profile fields and dependent figures wait | Assume the stricter rule; skip the rule until known |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.
