@@ -130,12 +130,12 @@ markets/
   rates/
     SE.json
     EUR.json
-  schema/
-    market_rule_pack.schema.json
+  living_costs/
+    SE.json
 ```
 
-Packs are validated by `make markets-check` against the schema generated from
-`common/markets`. The server bundles `markets/` into its image. The app never
+Packs parse strictly into the `common/markets` models, and `make markets-check`
+adds semantic checks. The server bundles `markets/` into its image. The app never
 loads packs; the values a surface needs arrive in its data model. See
 `docs/MARKETS.md`.
 

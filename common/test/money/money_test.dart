@@ -1,4 +1,5 @@
 import 'package:common/common.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -103,7 +104,13 @@ void main() {
     test('rejects unknown currencies', () {
       expect(
         () => Money.fromJson({'minorUnits': 1, 'currency': 'XYZ'}),
-        throwsFormatException,
+        throwsA(
+          isA<CheckedFromJsonException>().having(
+            (error) => error.innerError,
+            'innerError',
+            isFormatException,
+          ),
+        ),
       );
     });
   });

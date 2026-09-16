@@ -96,7 +96,9 @@ same sweep runs with `flutter run --profile` and prints its report.
 
 `tool/markets_check`:
 
-- Schema validation of every pack.
+- Every pack parses strictly into the `common/markets` models.
+- Every list entry `id` is unique within its pack.
+- Bracket amounts have no more decimals than the pack currency allows.
 - Every rule references an existing source.
 - Every source has `retrievedAt`.
 - Curated packs have `reviewedAt`, `reviewedBy`, and are not expired; warn within

@@ -198,6 +198,8 @@ Decisions from the planning session on 2026-09-16.
 | D55 | Swedish affordability | Left-to-live-on check with a stress rate, living costs, and running costs, plus an income-multiple cap | Income multiple only; a DSTI limit like other markets |
 | D56 | Swedish interest deduction | Payments shown before and after it; the left-to-live-on check uses the net figure | Gross only |
 | D57 | Scenario rate | Official reference rate plus the loan type's conservative spread, adjustable through `rateSpreadPpm` | Fixed official rate; buyer-entered rate only |
+| D58 | Pack values | Written as published: decimal amount strings, percent rate strings, ISO dates and periods | Minor units and parts per million |
+| D59 | Pack format definition | Strict parsing of the Freezed models, semantic checks in `make markets-check`, no JSON schema | Hand-written JSON schema; schema declared with json_schema_builder |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

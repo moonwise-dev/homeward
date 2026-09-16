@@ -17,31 +17,50 @@ rule by ID.
 
 ## Rule Pack Schema
 
-The canonical schema is the Freezed model in `common/markets`. The JSON schema
-in `markets/schema` is generated from it.
+The Freezed models in `common/markets` are the only definition of the pack
+format (D59). Packs parse strictly: unknown keys and wrong types are rejected,
+and the error names the key. `make markets-check` adds the checks a parser
+cannot make. There is no separate JSON schema.
+
+### Values
+
+Packs are written the way sources publish figures, so a reviewer can compare a
+pack line by line with its source (D58):
+
+| Value | Written as | Parsed to |
+| --- | --- | --- |
+| Amount | Decimal string in the pack currency: `"2658.66"` | `ExactDecimal`, converted to `Money` with the pack currency; more decimals than the currency allows is an error |
+| Rate | Percent string with at most four decimals: `"7.5%"` | `Rate` in parts per million |
+| Multiple | Decimal string: `"5.5"` | `ExactDecimal` |
+| Date | `"2026-09-16"` | `CalendarDate` |
+| Duration | ISO 8601 period: `"P2Y"`, `"P6M"`, `"P3W"` | `Period` |
+| Market | ISO 3166 code: `"PT-30"` | `MarketId` |
+
+### Pack
 
 ```text
 MarketRulePack
   id                    PT-30
   parent                PT
   name                  Madeira
-  currency              EUR
+  currency              EUR; required on country packs, inherited by regions
   version               integer, bumped on every change
   effectiveFrom         date the newest rule took effect
   reviewedAt            date a curator last verified every rule
   reviewedBy            curator handle
-  expiresAt             reviewedAt + 180 days
+  expiresAt             computed: reviewedAt + 180 days
 
   profileFields         [ProfileFieldRequirement]
   lending               LendingRules
   purchaseCosts         [CostRule]
   recurringCosts        [CostRule]
   loanTypes             [LoanType]
-  ownership             [OwnershipRestriction]
-  obstacles             [Obstacle]
-  process               [ProcessStep]
+  removedRuleIds        [id]; parent rules a region removes
   sources               [Source]
 ```
+
+Every list entry has an `id`, unique within its pack, so a regional pack can
+replace or remove its parent's entries.
 
 ### Buyer Predicates
 
@@ -75,6 +94,7 @@ are evaluated against the scenario.
 
 ```text
 ProfileFieldRequirement
+  id                    income-currency
   field                 incomeCurrency
   appliesTo             { residency: nonResident }
   reason                lending limits depend on income currency
@@ -87,26 +107,26 @@ lays out the fields; the pack decides which fields exist.
 
 ```text
 LendingRules
-  maxLtv                [{ appliesTo, ppm, typicalRangePpm?, sourceId }]
-  maxDsti               [{ appliesTo, ppm, incomeBasis: net | gross, exceptionQuotaPpm?, sourceId }]
-  maxLti                [{ appliesTo, multipleTimes100, incomeBasis, sourceId }]
-  stress                [{ appliesTo, appliesToLoan, kind: fixedRate | shock, ppm, sourceId }]
-  maxTermYears          [{ appliesTo, years, sourceId }]
-  maxAgeAtMaturity      [{ appliesTo, years, sourceId }]
-  incomeAdjustments     [{ appliesTo, whenAgeAtMaturityAbove, reductionPpm, weightedByTermShare, exceptRetired, sourceId }]
-  amortization          [{ appliesTo, whenLtvAbovePpm, annualPpm, sourceId }]
-  leftToLiveOn          [{ appliesTo, stressRatePpm, typicalRangePpm?, runningCostsMonthly, sourceId }]
-  interestDeduction     [{ appliesTo, brackets: [{ upToYearly, ppm }], perBorrower, sourceId }]
+  maxLtv                [{ id, appliesTo, rate, typicalRange?, sourceId }]
+  maxDsti               [{ id, appliesTo, rate, incomeBasis: net | gross, exceptionQuota?, sourceId }]
+  maxLti                [{ id, appliesTo, multiple, incomeBasis, typicalRange?, sourceId }]
+  stress                [{ id, appliesTo, appliesToLoan, kind: fixedRate | shock, rate, sourceId }]
+  maxTermYears          [{ id, appliesTo, years, sourceId }]
+  maxAgeAtMaturity      [{ id, appliesTo, years, sourceId }]
+  incomeAdjustments     [{ id, appliesTo, whenAgeAtMaturityAbove, reduction, weightedByTermShare, exceptRetired, sourceId }]
+  amortization          [{ id, appliesTo, whenLtvAbove, annualRate, sourceId }]
+  leftToLiveOn          [{ id, appliesTo, stressRate, typicalRange?, runningCostsMonthly, sourceId }]
+  interestDeduction     [{ id, appliesTo, yearlyBrackets: [{ upTo?, rate }], perBorrower, sourceId }]
   repaymentStyle        annuity | straight
 ```
 
 A `leftToLiveOn` rule is the Swedish lender check (D55): monthly net income minus
-housing cost at `stressRatePpm`, after `interestDeduction`, minus association fee,
+housing cost at `stressRate`, after `interestDeduction`, minus association fee,
 `runningCostsMonthly`, and household living costs must not fall below zero. It
 binds alongside `maxLti`, not instead of it. Payments are shown both before and
 after `interestDeduction` (D56).
 
-Where a rule is a lender norm rather than law, `typicalRangePpm` carries the
+Where a rule is a lender norm rather than law, `typicalRange` carries the
 market range and the value is the conservative end. When several entries of one
 limit apply, the lowest binds, and each is shown with its source kind, so a 70%
 lender norm appears under the 80% regulatory cap it sits beneath.
@@ -117,15 +137,15 @@ lender norm appears under the 80% regulatory cap it sits beneath.
 CostRule
   id                    imt-nonresident
   group                 imt
-  label                 Municipal property transfer tax (IMT)
+  label                 Municipal property transfer tax
   localTerm             IMT
   appliesTo
   base                  price | loan | pledgedAmount | fixed
-  kind
-    flatRate            { ppm }
-    brackets            { brackets: [{ upTo, ppm, deduction }], marginal: bool }
+  calculation           one of, by "type":
+    flatRate            { rate }
+    brackets            { brackets: [{ upTo?, rate, deduction? }], marginal }
     fixed               { amount }
-    percentWithMin      { ppm, min }
+    percentWithMin      { rate, min }
   recurrence            once | monthly | yearly
   rounding              { mode: halfUp | halfEven | down | up, step }, default halfUp to one minor unit
   refund                { when, recomputeAs, deadline, claimWindow, sourceId }, optional
@@ -139,7 +159,8 @@ to a buyer, and a pack that leaves zero or several applicable fails
 Bracket rules take either style. Marginal brackets tax each band at its rate.
 Deduction brackets, `marginal: false`, apply the bracket's rate to the whole
 base and subtract its deduction, which is how Portugal publishes IMT; a single
-rate on the whole value is a bracket with no deduction.
+rate on the whole value is a bracket with no deduction. Only the last bracket
+may omit `upTo`.
 
 A `refund` returns part of a charge when the buyer later meets a condition.
 `when` is a buyer predicate on intent, such as `residencyIntent: becomeResident`.
@@ -153,13 +174,16 @@ and `claimWindow` are durations that `ForeignBuyerObstacles` shows with dates.
 LoanType
   id                    euribor12m
   label                 Variable, Euribor 12M + spread
+  rateType              variable | mixed | fixed
   referenceRateId       EUR.EURIBOR12M
-  typicalSpreadPpm      { min, max }
+  typicalSpread         { min, max }
   fixedYears            0
   sourceId
 ```
 
 ### Ownership Restrictions, Obstacles, Process
+
+Modelled in M2 with the components that show them.
 
 ```text
 OwnershipRestriction
@@ -209,7 +233,7 @@ The server never fetches rates at request time. Snapshots older than 14 days
 fail `make markets-check` for curated markets.
 
 A scenario's rate is the loan type's reference rate plus its spread. The spread
-starts at the conservative end of `typicalSpreadPpm` and the buyer can change it
+starts at the conservative end of `typicalSpread` and the buyer can change it
 in `/scenario/rateSpreadPpm` to try an actual offer (D57).
 
 ## Living Costs
@@ -230,7 +254,7 @@ pengarna* figures. Snapshots older than 400 days fail `make markets-check`.
 6. Add or update the worked examples in `common/test/markets/<id>_test.dart`
    so math against the pack is pinned.
 
-`make markets-check` fails on schema errors, missing sources, broken overlays,
+`make markets-check` fails on parse errors, missing sources, broken overlays,
 or an expired pack, and warns when a pack expires within 30 days.
 
 ## Uncovered Markets

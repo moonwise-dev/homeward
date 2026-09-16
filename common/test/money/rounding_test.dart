@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:common/common.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:test/test.dart';
 
 import '../support/exact_rounding.dart';
@@ -173,7 +174,13 @@ void main() {
   test('rejects a step that is not positive', () {
     expect(
       () => Rounding.fromJson({'mode': 'halfUp', 'step': 0}),
-      throwsA(isA<AssertionError>()),
+      throwsA(
+        isA<CheckedFromJsonException>().having(
+          (error) => error.innerError,
+          'innerError',
+          isA<AssertionError>(),
+        ),
+      ),
     );
   });
 }

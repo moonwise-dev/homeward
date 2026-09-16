@@ -1,0 +1,17 @@
+enum ProfileField {
+  citizenship,
+  residency,
+  formerResident,
+  residencyIntent,
+  use,
+  firstTime,
+  employment,
+  netMonthlyIncome,
+  grossMonthlyIncome,
+  incomeCurrency,
+  savings,
+  monthlyDebtPayments,
+  age,
+  household,
+  coBuyers,
+}

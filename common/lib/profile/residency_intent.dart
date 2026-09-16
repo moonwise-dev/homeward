@@ -1,0 +1,1 @@
+enum ResidencyIntent { stay, becomeResident }
