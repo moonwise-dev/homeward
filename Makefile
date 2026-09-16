@@ -11,6 +11,8 @@ help:
 	@echo "  make format-check  Fail if any package is not formatted"
 	@echo "  make test          Run tests in pure Dart packages"
 	@echo "  make check         format-check, analyze, test"
+	@echo "  make codegen       Run build_runner in common"
+	@echo "  make iso-4217      Regenerate the ISO 4217 currency table from SIX"
 	@echo "  make app-web       Run the app in Chrome"
 	@echo "  make app-macos     Run the app on macOS"
 	@echo "  make clean         Remove build outputs and resolved packages"
@@ -42,6 +44,15 @@ test:
 
 .PHONY: check
 check: format-check analyze test
+
+.PHONY: codegen
+codegen:
+	@cd common && dart run build_runner build --delete-conflicting-outputs
+
+.PHONY: iso-4217
+iso-4217:
+	@dart run tool/bin/generate_iso_4217.dart common/lib/money/generated/iso_4217.dart
+	@dart format common/lib/money/generated/iso_4217.dart
 
 .PHONY: app-web
 app-web:
