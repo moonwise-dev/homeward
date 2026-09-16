@@ -34,14 +34,17 @@ buyer's free key covers roughly ten turns a day on the first model.
 - A request that misses a deadline, receives HTTP 500 or 503 with a high-demand
   message, or receives an in-stream `api_error` is aborted by closing the
   connection. That model's circuit opens for the cool-down, and the request is
-  retried once on the next model.
+  retried once on the next model, but only while nothing beyond
+  `interaction.created` has reached the buyer; after text or a function call
+  has streamed, the turn fails with `gemini_unavailable` instead of repeating
+  output.
 - Circuits live in memory per instance; a cold instance relearns within one
   request.
 - A key or quota error never falls back; it is the buyer's to fix. This holds
   for the free tier's per-model daily cap too, although another model has its
   own cap (D41).
-- Every turn logs the model used and, when it fell back, the model and phase
-  it fell back from.
+- Every turn logs the model used and, when it fell back, the model and reason
+  it fell back from, which the client streams as a `modelFailed` event.
 
 ## Principles
 
@@ -230,6 +233,13 @@ decision.
   daily cap lasts, so it is not used as a retry time.
 - A stream is cancelled by closing the connection. The cancel endpoint returned
   404 for a stalled streamed interaction.
+- The client streams typed events: `created`, `textDelta`, `functionCall` with
+  parsed arguments once its step stops, `completed` with status and usage, and
+  `modelFailed`. Thought steps and signatures are dropped. SSE framing comes
+  from `decodeSse` in `common/wire`, a stream transformer, so cancelling a turn
+  cancels the connection even while the stream is silent.
+- A 429 is always `gemini_quota_exhausted` with the next midnight Pacific as
+  its reset, computed from the US daylight saving rules.
 - Recorded streams and error bodies live in
   `server/test/fixtures/interactions/`.
 

@@ -1,0 +1,25 @@
+final class ModelCircuits {
+  ModelCircuits({
+    required List<String> models,
+    required this.cooldown,
+    DateTime Function()? now,
+  }) : models = List.unmodifiable(models),
+       _now = now ?? DateTime.now;
+
+  final List<String> models;
+  final Duration cooldown;
+  final DateTime Function() _now;
+  final _openUntil = <String, DateTime>{};
+
+  List<String> get healthyModels => [
+    for (final model in models)
+      if (!_isOpen(model)) model,
+  ];
+
+  void open(String model) => _openUntil[model] = _now().add(cooldown);
+
+  bool _isOpen(String model) => switch (_openUntil[model]) {
+    final until? => _now().isBefore(until),
+    null => false,
+  };
+}

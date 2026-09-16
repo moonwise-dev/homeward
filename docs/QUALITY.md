@@ -63,6 +63,7 @@ official calculator or a tax authority worked example.
 | Surface seeding | Seeds contain exactly the slices bound components need |
 | Board compiler | Plan fixtures to expected A2UI messages |
 | A2A | JSON-RPC dispatch and SSE framing against recorded frame fixtures |
+| Gemini client | Recorded streams and error bodies to typed events and errors, request JSON, headers and first-step deadlines, fallback only before output, circuits, no key in any error, the next midnight Pacific across daylight saving changes |
 | Actions | Server-completed actions produce the expected plan patches |
 
 Gemini is never called in `make test`. The Interactions client is exercised
