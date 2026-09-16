@@ -105,7 +105,9 @@ A text turn:
       "parts": [{ "kind": "text", "text": "I live in Stockholm and want a flat in Funchal around €350k" }],
       "metadata": {
         "a2uiClientCapabilities": {
-          "supportedCatalogIds": ["https://moonwise.se/homeward/catalogs/v1/catalog.json"]
+          "v0.9": {
+            "supportedCatalogIds": ["https://moonwise.se/homeward/catalogs/v1/catalog.json"]
+          }
         }
       }
     }
@@ -134,12 +136,25 @@ model in metadata:
 
 ```json
 "metadata": {
-  "a2uiClientCapabilities": { "supportedCatalogIds": ["…"] },
+  "a2uiClientCapabilities": { "v0.9": { "supportedCatalogIds": ["…"] } },
   "a2uiClientDataModel": {
-    "surfaces": { "t3-affordability": { "scenario": { "price": 35000000, "downPayment": 12000000 } } }
+    "version": "v0.9",
+    "surfaces": {
+      "t3-affordability": {
+        "scenario": {
+          "price": { "minorUnits": 35000000, "currency": "EUR" },
+          "downPayment": { "minorUnits": 12000000, "currency": "EUR" }
+        }
+      }
+    }
   }
 }
 ```
+
+Both shapes are what `a2ui_core` 0.1.1 produces through
+`MessageProcessor.getClientCapabilities` and `getClientDataModel`: capabilities
+are keyed by A2UI version, and the data model carries its version. Spike S1
+confirms that `genui_a2a` sends the same shapes.
 
 ### Server To Client
 
@@ -267,19 +282,33 @@ a client. Failures are returned to the model as `VALIDATION_FAILED` errors in
 the A2UI error shape, with at most two correction rounds per turn.
 
 1. **Parse.** One JSON object per line inside an `a2ui` fenced block.
-2. **Envelope.** Exactly one message type, `version` is `v0.9`.
+2. **Envelope.** `A2uiMessage.fromJson` from `a2ui_core`: exactly one message
+   type, `version` is `v0.9`. It reports wrong field types as raw cast errors,
+   so the pass maps any `TypeError` to a `VALIDATION_FAILED` error.
 3. **Ownership.** Surface ID matches the turn namespace; `board` is refused.
 4. **Allow-list.** Component is in the agent-visible catalog subset.
-5. **Schema.** Component properties validate against `common/catalog`.
-6. **Bound numbers.** Properties annotated as money, rate, or percentage are a
-   `path` or a function `call`, never a literal.
+   `a2ui_core` does not check this, so the pass does.
+5. **Schema.** Component properties validate against the component's
+   `ComponentApi.schema` from `common/catalog`. Schemas set
+   `additionalProperties: false`, so misspelled properties fail.
+6. **Bound numbers.** Money, rate, and percentage properties are typed as
+   `CommonSchemas.dataBinding` or a function call in the schema, so a literal
+   fails pass 5. This pass exists as a separate test fixture, not separate
+   code.
 7. **Structure.** Exactly one `root`, every child ID exists, no cycles, no
-   orphans.
-8. **Paths.** Every bound path exists in the seeded data model for that surface.
+   orphans. `a2ui_core` does not check this, so the pass does.
+8. **Paths.** The session's stored messages are replayed into an `a2ui_core`
+   `MessageProcessor` at the start of the turn. Each candidate message goes
+   through that shadow processor: an update to an unknown surface or a duplicate
+   `createSurface` fails, and every bound path must resolve in the shadow data
+   model.
 9. **Actions.** Action names are in the action table.
 10. **Seed.** The server prepends `createSurface` with `sendDataModel: true` if
     the model omitted it, and emits `updateDataModel` for the slices the
     components bind to.
+
+Measured in spike S5: schema validation costs about 12 µs per component in the
+AOT server binary.
 
 After two failed correction rounds the turn ends with the model's text and a
 single `Text` surface offering to retry.

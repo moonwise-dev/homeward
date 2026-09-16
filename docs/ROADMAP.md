@@ -104,7 +104,7 @@ resolution.
 | S2 | Can Dart drive the Interactions API cleanly: request shape, SSE event types, function calling continuation, `previous_interaction_id`, error codes for bad key and quota? Is `gemini-3.8-flash` available on free-tier keys? | Minimal Dart client against a free-tier key | Confirms `server/lib/gemini` design and default models. |
 | S3 | Can one interaction combine `google_search` with structured JSON output, and what grounding metadata links fields to URLs? | Research call for `PT-20` | One interaction or search-then-extract. |
 | S4 | Do genui client functions accept object arguments and return numbers, strings, and booleans; can a catalog item subscribe to a whole slice; is a six-component slider drag at 60 fps? | Throwaway catalog item and profiling on web and Android | Confirms coarse bindings. Otherwise fine-grained bindings with a selector layer in `app/lib/catalog/bindings`. |
-| S5 | Is `a2ui_core` pure Dart and usable on the server for message models and validation? | Import into a console app | Use it in `server`, or own the v0.9 message models in `common/wire`. |
+| S5 | Is `a2ui_core` pure Dart and usable on the server for message models and validation? | Import into a console app | **Answered:** yes; used from `common`, see `docs/SPIKES.md`. |
 | S6 | Does `firebase_admin_sdk` verify anonymous ID tokens and App Check tokens and run Firestore transactions on Cloud Run with ADC? | Deploy a probe route | Confirms server data layer. |
 | S7 | Verify the high-impact Tier 1 claims: Portugal non-resident IMT, Portugal DSTI limit, Portugal non-resident LTV, Sweden top-up cap | Primary sources listed in `docs/MARKETS.md` | Pack values and hero script numbers. |
 
@@ -161,6 +161,8 @@ Decisions from the planning session on 2026-09-16.
 | D31 | Server base image | `distroless/cc-debian12:nonroot` | scratch with Dart runtime files, `debian:bookworm-slim` |
 | D32 | Server logging | `package:logging` with Cloud Logging JSON lines | Own logger interface, Cloud Logging API client |
 | D33 | Server dev loop | Hot reload with `hotreloader` | Plain restart, Docker locally |
+| D34 | A2UI protocol types | `a2ui_core` in `common`, components declared as `ComponentApi` | Own Freezed models in `common/wire`, `a2ui_core` on the server only |
+| D35 | Server surface state | Shadow `MessageProcessor` rebuilt per turn from stored messages | Hand-tracked surface IDs and seeded paths |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

@@ -322,10 +322,13 @@ Commit button with rule checks:
 
 ## Declaring A Component
 
-In `common/lib/catalog/components/`, each component is one declaration:
+In `common/lib/catalog/components/`, each component is one declaration: a
+class extending `ComponentApi` from `a2ui_core`, the same interface genui uses
+internally for its catalog items. It carries:
 
 - Name.
-- JSON schema built with `json_schema_builder`.
+- JSON schema built with `json_schema_builder` and `CommonSchemas`, with
+  `additionalProperties: false`.
 - Bound-number annotations.
 - Agent visibility and phase.
 - One or more example component trees with example data models.
@@ -345,7 +348,8 @@ reverse.
 
 In `app/lib/catalog/items/`, a catalog item:
 
-1. Takes its schema from the `common` declaration.
+1. Is a genui `CatalogItem` whose `name` and `dataSchema` come from the
+   `common` declaration.
 2. Reads bindings through `app/lib/catalog/bindings/`.
 3. Calls `common/finance` for figures.
 4. Builds a plain widget from `app/lib/ui` primitives, passing typed values and

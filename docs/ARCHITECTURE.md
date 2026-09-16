@@ -81,8 +81,11 @@ common/lib/
   markets/        MarketRulePack models, buyer predicates, overlay resolution
   profile/        BuyerProfile, Residency, Citizenship, Employment
   plan/           Plan, Scenario, ChecklistState
-  catalog/        component contracts: names, schemas, bound-number annotations,
-                  function signatures, examples; generated/ skill text
+  catalog/        ComponentApi declarations: names, schemas, function signatures,
+                  examples; generated/ skill text
+  a2ui/           additions over a2ui_core: client action parsing, component
+                  schema, allow-list, and tree structure validation; the server
+                  adds ownership, shadow state, and seeding on top
   wire/           A2A subset models, Homeward action names, data model paths
   errors/         HomewardError
 ```
@@ -110,6 +113,10 @@ Rules:
 - `catalog/` is the contract shared by the app's widget implementations, the
   server's validation passes, and the generated prompt skill. A component that
   is not declared here does not exist.
+- A2UI protocol types come from `a2ui_core`, the pure Dart package genui is
+  built on, pinned to an exact version: message classes, `ComponentApi`,
+  `Catalog`, `CommonSchemas`, and `MessageProcessor`. `common/a2ui` adds only
+  what it lacks. No Homeward package re-implements a type `a2ui_core` provides.
 
 ## `/markets`
 

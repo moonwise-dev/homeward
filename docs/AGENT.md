@@ -119,7 +119,8 @@ the system prompt stays small.
    present, `store: true`.
 6. Stream: forward text deltas; buffer `a2ui` fenced blocks line by line; run
    tools on function calls and continue the interaction with their results.
-7. Validate each A2UI message; on failure send a correction and continue.
+7. Validate each A2UI message against a shadow `MessageProcessor` rebuilt from
+   the session's stored messages; on failure send a correction and continue.
 8. Seed and forward valid messages.
 9. Persist the turn, the new `lastInteractionId`, and plan patches.
 10. Recompile and forward the board if the plan changed.

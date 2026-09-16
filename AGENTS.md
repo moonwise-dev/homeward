@@ -50,6 +50,7 @@ includes.
 - `docs/DESIGN.md` - design tokens and how generated UI stays on-brand.
 - `docs/QUALITY.md` - code standards, tests, pack checks, agent evals.
 - `docs/ROADMAP.md` - milestones, spikes, risks, decision log, open questions.
+- `docs/SPIKES.md` - evidence and decisions from answered spikes.
 
 If a product or implementation convention changes, update the canonical doc
 first.
