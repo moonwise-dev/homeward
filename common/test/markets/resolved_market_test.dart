@@ -60,15 +60,28 @@ void main() {
     expect(market.lending.maxLtv, isEmpty);
     expect(market.lending.maxDsti.map((limit) => limit.id), ['dsti']);
     expect(market.pendingRules, {
-      'former-resident': {ProfileField.residency},
-      'ltv-primary-residence': {ProfileField.use},
-      'ltv-secondary': {ProfileField.use},
-      'imt-primary-residence': {ProfileField.residency, ProfileField.use},
-      'imt-nonresident': {
-        ProfileField.residency,
-        ProfileField.formerResident,
-      },
+      'former-resident': const PendingRule(
+        section: RuleSection.profileFields,
+        missing: {ProfileField.residency},
+      ),
+      'ltv-primary-residence': const PendingRule(
+        section: RuleSection.lending,
+        missing: {ProfileField.use},
+      ),
+      'ltv-secondary': const PendingRule(
+        section: RuleSection.lending,
+        missing: {ProfileField.use},
+      ),
+      'imt-primary-residence': const PendingRule(
+        section: RuleSection.purchaseCosts,
+        missing: {ProfileField.residency, ProfileField.use},
+      ),
+      'imt-nonresident': const PendingRule(
+        section: RuleSection.purchaseCosts,
+        missing: {ProfileField.residency, ProfileField.formerResident},
+      ),
     });
+    expect(market.missingFor(RuleSection.lending), {ProfileField.use});
     expect(market.requiredFields, {
       ProfileField.residency,
       ProfileField.use,
@@ -87,7 +100,7 @@ void main() {
       'ltv-secondary',
       'imt-nonresident',
     ]);
-    expect(market.pendingRules['imt-nonresident'], {
+    expect(market.pendingRules['imt-nonresident']?.missing, {
       ProfileField.formerResident,
     });
     expect(market.requiredFields, {

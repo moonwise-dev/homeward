@@ -57,6 +57,9 @@ Deliverables:
 - Remaining MVP components: `MarketSnapshotCard`, `StressTestChart`,
   `PurchaseCostsTable`, `EligibilityChecklist`, `ForeignBuyerObstacles`.
 - Remaining MVP tools: `estimate_purchase_costs`, `get_obstacles`.
+- Maximum price including purchase costs, term and age-at-maturity eligibility
+  checks, and an exchange-rate snapshot for income in another currency, which
+  the hero flow needs.
 - Board compiler and responsive two-pane and sheet layouts.
 - Session persistence and replay.
 - Wire inspector and catalog gallery.

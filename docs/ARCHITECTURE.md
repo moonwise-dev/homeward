@@ -77,7 +77,9 @@ Pure Dart. The only package allowed to define domain vocabulary.
 common/lib/
   common.dart
   money/          Money, Currency, Rate (parts per million), Rounding, ISO 4217 table
-  finance/        affordability, amortization, payment, stress, purchase_costs, fx
+  finance/        payments, amortization tiers, shares and limits, brackets
+  affordability/  maximum loan per lending rule, binding constraint, payment,
+                  interest deduction, down payment bounds
   markets/        MarketRulePack models, buyer predicates, overlay resolution
   profile/        BuyerProfile, Residency, Citizenship, Employment
   plan/           Plan, Scenario, ChecklistState

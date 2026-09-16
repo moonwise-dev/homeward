@@ -45,6 +45,7 @@ There are no widget tests and no golden image tests.
 | --- | --- |
 | `money` | Every rounding mode and step against a hand table, 10 000 random cases against exact big integer arithmetic, currency parsing, currency mismatch errors, JSON; run on the VM and in Chrome because web integers are 53-bit |
 | `finance` | Annuity and straight amortization payments against Banco BPI's published examples and Lag (2026:226), inverse maximum principal, exact limit comparisons, LTV, DSTI, LTI, left to live on, interest deduction, stress payment, maximum loan and binding constraint, purchase cost brackets including marginal and deduction styles, deductions derived from marginal bands equal to published tables, refunds by recomputation, cash needed, currency exposure |
+| `affordability` | Maximum loan per lending rule and the binding constraint for Swedish and Portuguese buyers against independently computed figures, the Swedish interest deduction, down payment bounds, facts still missing, pending lending rules, and income in another currency |
 | `markets` | Overlay resolution, buyer and loan predicate applicability, exactly one applicable rule per cost group, required profile fields per buyer |
 | `markets/<id>` | Worked examples per curated pack, with the expected figures derived by hand from the cited sources |
 | `plan` | Open decisions for every combination the flow table depends on |

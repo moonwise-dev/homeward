@@ -208,3 +208,40 @@ const swedenLendingJson = r'''
   "repaymentStyle": "straight"
 }
 ''';
+
+const fixtureSourceJson = r'''
+{
+  "id": "fixture",
+  "publisher": "Fixture",
+  "title": "Synthetic figures for tests",
+  "url": "https://example.com",
+  "kind": "officialStatistics",
+  "retrievedAt": "2026-09-17"
+}
+''';
+
+const livingCostsFixtureJson = r'''
+{
+  "id": "fixture",
+  "currency": "SEK",
+  "year": 2026,
+  "individual": [
+    { "ageFrom": 0, "ageTo": 5, "monthly": "2000" },
+    { "ageFrom": 6, "ageTo": 17, "monthly": "3000" },
+    { "ageFrom": 18, "monthly": "4000" }
+  ],
+  "household": [
+    { "persons": 1, "monthly": "1000" },
+    { "persons": 2, "monthly": "1500" },
+    { "persons": 3, "monthly": "2000" }
+  ],
+  "source": {
+    "id": "fixture",
+    "publisher": "Fixture",
+    "title": "Synthetic living costs",
+    "url": "https://example.com",
+    "kind": "officialStatistics",
+    "retrievedAt": "2026-09-17"
+  }
+}
+''';

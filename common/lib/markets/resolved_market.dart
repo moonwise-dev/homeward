@@ -10,6 +10,7 @@ import 'lending_rules.dart';
 import 'loan_type.dart';
 import 'market_id.dart';
 import 'market_rule_pack.dart';
+import 'rule_section.dart';
 import 'source.dart';
 
 part 'resolved_market.freezed.dart';
@@ -25,9 +26,24 @@ abstract class ResolvedMarket with _$ResolvedMarket {
     required List<CostRule> recurringCosts,
     required List<LoanType> loanTypes,
     required List<Source> sources,
-    required Map<String, Set<ProfileField>> pendingRules,
+    required Map<String, PendingRule> pendingRules,
     required Set<ProfileField> requiredFields,
   }) = _ResolvedMarket;
+
+  const ResolvedMarket._();
+
+  Set<ProfileField> missingFor(RuleSection section) => {
+    for (final rule in pendingRules.values)
+      if (rule.section == section) ...rule.missing,
+  };
+}
+
+@freezed
+abstract class PendingRule with _$PendingRule {
+  const factory PendingRule({
+    required RuleSection section,
+    required Set<ProfileField> missing,
+  }) = _PendingRule;
 }
 
 ResolvedMarket resolveForBuyer(MarketRulePack pack, BuyerProfile profile) {
@@ -39,8 +55,8 @@ ResolvedMarket resolveForBuyer(MarketRulePack pack, BuyerProfile profile) {
       'Resolve the pack chain before resolving for a buyer',
     );
   }
-  final pendingRules = <String, Set<ProfileField>>{};
-  List<T> keep<T extends ConditionalRule>(List<T> rules) {
+  final pendingRules = <String, PendingRule>{};
+  List<T> keep<T extends ConditionalRule>(List<T> rules, RuleSection section) {
     final kept = <T>[];
     for (final rule in rules) {
       switch (applicabilityOf(
@@ -53,7 +69,10 @@ ResolvedMarket resolveForBuyer(MarketRulePack pack, BuyerProfile profile) {
         case DoesNotApply():
           break;
         case Pending(:final missing):
-          pendingRules[rule.id] = missing;
+          pendingRules[rule.id] = PendingRule(
+            section: section,
+            missing: missing,
+          );
       }
     }
     return kept;
@@ -61,21 +80,24 @@ ResolvedMarket resolveForBuyer(MarketRulePack pack, BuyerProfile profile) {
 
   final lending = pack.lending;
   final resolvedLending = LendingRules(
-    maxLtv: keep(lending.maxLtv),
-    maxDsti: keep(lending.maxDsti),
-    maxLti: keep(lending.maxLti),
-    stress: keep(lending.stress),
-    maxTermYears: keep(lending.maxTermYears),
-    maxAgeAtMaturity: keep(lending.maxAgeAtMaturity),
-    incomeAdjustments: keep(lending.incomeAdjustments),
-    amortization: keep(lending.amortization),
-    leftToLiveOn: keep(lending.leftToLiveOn),
-    interestDeduction: keep(lending.interestDeduction),
+    maxLtv: keep(lending.maxLtv, RuleSection.lending),
+    maxDsti: keep(lending.maxDsti, RuleSection.lending),
+    maxLti: keep(lending.maxLti, RuleSection.lending),
+    stress: keep(lending.stress, RuleSection.lending),
+    maxTermYears: keep(lending.maxTermYears, RuleSection.lending),
+    maxAgeAtMaturity: keep(lending.maxAgeAtMaturity, RuleSection.lending),
+    incomeAdjustments: keep(lending.incomeAdjustments, RuleSection.lending),
+    amortization: keep(lending.amortization, RuleSection.lending),
+    leftToLiveOn: keep(lending.leftToLiveOn, RuleSection.lending),
+    interestDeduction: keep(lending.interestDeduction, RuleSection.lending),
     repaymentStyle: lending.repaymentStyle,
   );
-  final purchaseCosts = keep(pack.purchaseCosts);
-  final recurringCosts = keep(pack.recurringCosts);
-  final profileFields = keep(pack.profileFields);
+  final purchaseCosts = keep(pack.purchaseCosts, RuleSection.purchaseCosts);
+  final recurringCosts = keep(
+    pack.recurringCosts,
+    RuleSection.recurringCosts,
+  );
+  final profileFields = keep(pack.profileFields, RuleSection.profileFields);
   return ResolvedMarket(
     id: pack.id,
     name: pack.name,
@@ -88,7 +110,7 @@ ResolvedMarket resolveForBuyer(MarketRulePack pack, BuyerProfile profile) {
     pendingRules: pendingRules,
     requiredFields: {
       for (final requirement in profileFields) requirement.field,
-      for (final missing in pendingRules.values) ...missing,
+      for (final pending in pendingRules.values) ...pending.missing,
     },
   );
 }

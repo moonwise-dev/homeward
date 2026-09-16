@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ResolvedMarket {
 
- MarketId get id; String get name; Currency get currency; LendingRules get lending; List<CostRule> get purchaseCosts; List<CostRule> get recurringCosts; List<LoanType> get loanTypes; List<Source> get sources; Map<String, Set<ProfileField>> get pendingRules; Set<ProfileField> get requiredFields;
+ MarketId get id; String get name; Currency get currency; LendingRules get lending; List<CostRule> get purchaseCosts; List<CostRule> get recurringCosts; List<LoanType> get loanTypes; List<Source> get sources; Map<String, PendingRule> get pendingRules; Set<ProfileField> get requiredFields;
 /// Create a copy of ResolvedMarket
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -51,7 +51,7 @@ abstract mixin class $ResolvedMarketCopyWith<$Res>  {
   factory $ResolvedMarketCopyWith(ResolvedMarket value, $Res Function(ResolvedMarket) _then) = _$ResolvedMarketCopyWithImpl;
 @useResult
 $Res call({
- MarketId id, String name, Currency currency, LendingRules lending, List<CostRule> purchaseCosts, List<CostRule> recurringCosts, List<LoanType> loanTypes, List<Source> sources, Map<String, Set<ProfileField>> pendingRules, Set<ProfileField> requiredFields
+ MarketId id, String name, Currency currency, LendingRules lending, List<CostRule> purchaseCosts, List<CostRule> recurringCosts, List<LoanType> loanTypes, List<Source> sources, Map<String, PendingRule> pendingRules, Set<ProfileField> requiredFields
 });
 
 
@@ -79,7 +79,7 @@ as List<CostRule>,recurringCosts: null == recurringCosts ? _self.recurringCosts 
 as List<CostRule>,loanTypes: null == loanTypes ? _self.loanTypes : loanTypes // ignore: cast_nullable_to_non_nullable
 as List<LoanType>,sources: null == sources ? _self.sources : sources // ignore: cast_nullable_to_non_nullable
 as List<Source>,pendingRules: null == pendingRules ? _self.pendingRules : pendingRules // ignore: cast_nullable_to_non_nullable
-as Map<String, Set<ProfileField>>,requiredFields: null == requiredFields ? _self.requiredFields : requiredFields // ignore: cast_nullable_to_non_nullable
+as Map<String, PendingRule>,requiredFields: null == requiredFields ? _self.requiredFields : requiredFields // ignore: cast_nullable_to_non_nullable
 as Set<ProfileField>,
   ));
 }
@@ -174,7 +174,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MarketId id,  String name,  Currency currency,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<Source> sources,  Map<String, Set<ProfileField>> pendingRules,  Set<ProfileField> requiredFields)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MarketId id,  String name,  Currency currency,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<Source> sources,  Map<String, PendingRule> pendingRules,  Set<ProfileField> requiredFields)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ResolvedMarket() when $default != null:
 return $default(_that.id,_that.name,_that.currency,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.sources,_that.pendingRules,_that.requiredFields);case _:
@@ -195,7 +195,7 @@ return $default(_that.id,_that.name,_that.currency,_that.lending,_that.purchaseC
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MarketId id,  String name,  Currency currency,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<Source> sources,  Map<String, Set<ProfileField>> pendingRules,  Set<ProfileField> requiredFields)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MarketId id,  String name,  Currency currency,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<Source> sources,  Map<String, PendingRule> pendingRules,  Set<ProfileField> requiredFields)  $default,) {final _that = this;
 switch (_that) {
 case _ResolvedMarket():
 return $default(_that.id,_that.name,_that.currency,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.sources,_that.pendingRules,_that.requiredFields);case _:
@@ -215,7 +215,7 @@ return $default(_that.id,_that.name,_that.currency,_that.lending,_that.purchaseC
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MarketId id,  String name,  Currency currency,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<Source> sources,  Map<String, Set<ProfileField>> pendingRules,  Set<ProfileField> requiredFields)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MarketId id,  String name,  Currency currency,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<Source> sources,  Map<String, PendingRule> pendingRules,  Set<ProfileField> requiredFields)?  $default,) {final _that = this;
 switch (_that) {
 case _ResolvedMarket() when $default != null:
 return $default(_that.id,_that.name,_that.currency,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.sources,_that.pendingRules,_that.requiredFields);case _:
@@ -229,8 +229,8 @@ return $default(_that.id,_that.name,_that.currency,_that.lending,_that.purchaseC
 /// @nodoc
 
 
-class _ResolvedMarket implements ResolvedMarket {
-  const _ResolvedMarket({required this.id, required this.name, required this.currency, required this.lending, required  List<CostRule> purchaseCosts, required  List<CostRule> recurringCosts, required  List<LoanType> loanTypes, required  List<Source> sources, required  Map<String, Set<ProfileField>> pendingRules, required  Set<ProfileField> requiredFields}): _purchaseCosts = purchaseCosts,_recurringCosts = recurringCosts,_loanTypes = loanTypes,_sources = sources,_pendingRules = pendingRules,_requiredFields = requiredFields;
+class _ResolvedMarket extends ResolvedMarket {
+  const _ResolvedMarket({required this.id, required this.name, required this.currency, required this.lending, required  List<CostRule> purchaseCosts, required  List<CostRule> recurringCosts, required  List<LoanType> loanTypes, required  List<Source> sources, required  Map<String, PendingRule> pendingRules, required  Set<ProfileField> requiredFields}): _purchaseCosts = purchaseCosts,_recurringCosts = recurringCosts,_loanTypes = loanTypes,_sources = sources,_pendingRules = pendingRules,_requiredFields = requiredFields,super._();
   
 
 @override final  MarketId id;
@@ -265,8 +265,8 @@ class _ResolvedMarket implements ResolvedMarket {
   return EqualUnmodifiableListView(_sources);
 }
 
- final  Map<String, Set<ProfileField>> _pendingRules;
-@override Map<String, Set<ProfileField>> get pendingRules {
+ final  Map<String, PendingRule> _pendingRules;
+@override Map<String, PendingRule> get pendingRules {
   if (_pendingRules is EqualUnmodifiableMapView) return _pendingRules;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableMapView(_pendingRules);
@@ -312,7 +312,7 @@ abstract mixin class _$ResolvedMarketCopyWith<$Res> implements $ResolvedMarketCo
   factory _$ResolvedMarketCopyWith(_ResolvedMarket value, $Res Function(_ResolvedMarket) _then) = __$ResolvedMarketCopyWithImpl;
 @override @useResult
 $Res call({
- MarketId id, String name, Currency currency, LendingRules lending, List<CostRule> purchaseCosts, List<CostRule> recurringCosts, List<LoanType> loanTypes, List<Source> sources, Map<String, Set<ProfileField>> pendingRules, Set<ProfileField> requiredFields
+ MarketId id, String name, Currency currency, LendingRules lending, List<CostRule> purchaseCosts, List<CostRule> recurringCosts, List<LoanType> loanTypes, List<Source> sources, Map<String, PendingRule> pendingRules, Set<ProfileField> requiredFields
 });
 
 
@@ -340,7 +340,7 @@ as List<CostRule>,recurringCosts: null == recurringCosts ? _self._recurringCosts
 as List<CostRule>,loanTypes: null == loanTypes ? _self._loanTypes : loanTypes // ignore: cast_nullable_to_non_nullable
 as List<LoanType>,sources: null == sources ? _self._sources : sources // ignore: cast_nullable_to_non_nullable
 as List<Source>,pendingRules: null == pendingRules ? _self._pendingRules : pendingRules // ignore: cast_nullable_to_non_nullable
-as Map<String, Set<ProfileField>>,requiredFields: null == requiredFields ? _self._requiredFields : requiredFields // ignore: cast_nullable_to_non_nullable
+as Map<String, PendingRule>,requiredFields: null == requiredFields ? _self._requiredFields : requiredFields // ignore: cast_nullable_to_non_nullable
 as Set<ProfileField>,
   ));
 }
@@ -355,6 +355,279 @@ $LendingRulesCopyWith<$Res> get lending {
     return _then(_self.copyWith(lending: value));
   });
 }
+}
+
+/// @nodoc
+mixin _$PendingRule {
+
+ RuleSection get section; Set<ProfileField> get missing;
+/// Create a copy of PendingRule
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PendingRuleCopyWith<PendingRule> get copyWith => _$PendingRuleCopyWithImpl<PendingRule>(this as PendingRule, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as PendingRule;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PendingRule&&(identical(other.section, _this.section) || other.section == _this.section)&&const DeepCollectionEquality().equals(other.missing, _this.missing));
+}
+
+
+@override
+int get hashCode {
+  final _this = this as PendingRule;
+  return Object.hash(runtimeType,_this.section,const DeepCollectionEquality().hash(_this.missing));
+}
+
+@override
+String toString() {
+  final _this = this as PendingRule;
+  return 'PendingRule(section: ${_this.section}, missing: ${_this.missing})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PendingRuleCopyWith<$Res>  {
+  factory $PendingRuleCopyWith(PendingRule value, $Res Function(PendingRule) _then) = _$PendingRuleCopyWithImpl;
+@useResult
+$Res call({
+ RuleSection section, Set<ProfileField> missing
+});
+
+
+
+
+}
+/// @nodoc
+class _$PendingRuleCopyWithImpl<$Res>
+    implements $PendingRuleCopyWith<$Res> {
+  _$PendingRuleCopyWithImpl(this._self, this._then);
+
+  final PendingRule _self;
+  final $Res Function(PendingRule) _then;
+
+/// Create a copy of PendingRule
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? section = null,Object? missing = null,}) {
+  return _then(PendingRule(
+section: null == section ? _self.section : section // ignore: cast_nullable_to_non_nullable
+as RuleSection,missing: null == missing ? _self.missing : missing // ignore: cast_nullable_to_non_nullable
+as Set<ProfileField>,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [PendingRule].
+extension PendingRulePatterns on PendingRule {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PendingRule value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _PendingRule() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PendingRule value)  $default,){
+final _that = this;
+switch (_that) {
+case _PendingRule():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PendingRule value)?  $default,){
+final _that = this;
+switch (_that) {
+case _PendingRule() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RuleSection section,  Set<ProfileField> missing)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _PendingRule() when $default != null:
+return $default(_that.section,_that.missing);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RuleSection section,  Set<ProfileField> missing)  $default,) {final _that = this;
+switch (_that) {
+case _PendingRule():
+return $default(_that.section,_that.missing);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RuleSection section,  Set<ProfileField> missing)?  $default,) {final _that = this;
+switch (_that) {
+case _PendingRule() when $default != null:
+return $default(_that.section,_that.missing);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _PendingRule implements PendingRule {
+  const _PendingRule({required this.section, required  Set<ProfileField> missing}): _missing = missing;
+  
+
+@override final  RuleSection section;
+ final  Set<ProfileField> _missing;
+@override Set<ProfileField> get missing {
+  if (_missing is EqualUnmodifiableSetView) return _missing;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableSetView(_missing);
+}
+
+
+/// Create a copy of PendingRule
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$PendingRuleCopyWith<_PendingRule> get copyWith => __$PendingRuleCopyWithImpl<_PendingRule>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PendingRule&&(identical(other.section, section) || other.section == section)&&const DeepCollectionEquality().equals(other.missing, _missing));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,section,const DeepCollectionEquality().hash(_missing));
+}
+
+@override
+String toString() {
+    return 'PendingRule(section: $section, missing: $missing)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$PendingRuleCopyWith<$Res> implements $PendingRuleCopyWith<$Res> {
+  factory _$PendingRuleCopyWith(_PendingRule value, $Res Function(_PendingRule) _then) = __$PendingRuleCopyWithImpl;
+@override @useResult
+$Res call({
+ RuleSection section, Set<ProfileField> missing
+});
+
+
+
+
+}
+/// @nodoc
+class __$PendingRuleCopyWithImpl<$Res>
+    implements _$PendingRuleCopyWith<$Res> {
+  __$PendingRuleCopyWithImpl(this._self, this._then);
+
+  final _PendingRule _self;
+  final $Res Function(_PendingRule) _then;
+
+/// Create a copy of PendingRule
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? section = null,Object? missing = null,}) {
+  return _then(_PendingRule(
+section: null == section ? _self.section : section // ignore: cast_nullable_to_non_nullable
+as RuleSection,missing: null == missing ? _self._missing : missing // ignore: cast_nullable_to_non_nullable
+as Set<ProfileField>,
+  ));
+}
+
+
 }
 
 // dart format on

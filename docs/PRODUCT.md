@@ -112,10 +112,10 @@ local buyer is not.
 
 Profile fields include citizenship, residency, tax residency, prior tax
 residency in the target market, residency intent, intended use (primary,
-secondary, investment), first-time buyer status, employment type, household net and gross
-monthly income with currency, savings, existing monthly debt payments, the
-number of borrowers, the oldest borrower's age, the number of adults, and each
-child's age.
+secondary, investment), first-time buyer status, employment type, household
+net and gross monthly income with currency, savings, existing monthly debt
+payments, the number of borrowers, the oldest borrower's age, the number of
+adults, and each child's age.
 
 ### Target Market Resolution
 
@@ -125,10 +125,11 @@ apply on top of country rules.
 
 ### Affordability
 
-Homeward computes the maximum loan and price for the buyer and names the
-binding constraint: loan-to-value, debt-service-to-income, loan-to-income, or
-the lender stress test. The binding constraint is the single most useful thing
-to tell a buyer, and it is always explained.
+Homeward computes the maximum loan for the buyer, and from M2 the maximum price
+including purchase costs, and names the binding constraint: loan-to-value,
+debt-service-to-income, loan-to-income, or Sweden's left-to-live-on check at the
+lender stress rate. The binding constraint is the single most useful thing to
+tell a buyer, and it is always explained.
 
 ### What-If
 

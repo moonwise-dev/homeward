@@ -1,3 +1,10 @@
+export 'affordability/affordability.dart';
+export 'affordability/assess_affordability.dart';
+export 'affordability/constraint_check.dart';
+export 'affordability/constraint_kind.dart';
+export 'affordability/down_payment_bounds.dart';
+export 'affordability/interest_deduction.dart';
+export 'affordability/largest_loan.dart';
 export 'finance/amortization_tier.dart';
 export 'finance/annuity.dart';
 export 'finance/bracket.dart';
@@ -32,6 +39,7 @@ export 'markets/recurrence.dart';
 export 'markets/reference_rate.dart';
 export 'markets/refund_rule.dart';
 export 'markets/resolved_market.dart';
+export 'markets/rule_section.dart';
 export 'markets/source.dart';
 export 'markets/source_kind.dart';
 export 'markets/stress_kind.dart';
