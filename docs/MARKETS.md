@@ -254,10 +254,22 @@ in `/scenario/rateSpreadPpm` to try an actual offer (D57).
 
 ## Living Costs
 
-`markets/living_costs/*.json` hold dated snapshots of official household living
-cost norms used by `leftToLiveOn`, keyed by household member type: adults by age
-band and children by age. Sweden uses Konsumentverket's yearly *Koll på
-pengarna* figures. Snapshots older than 400 days fail `make markets-check`.
+`markets/living_costs/*.json` hold yearly snapshots of official household living
+costs used by `leftToLiveOn`. Sweden uses Konsumentverket's *Koll på pengarna*
+figures, which split into two tables:
+
+```text
+LivingCosts
+  id, currency, year, source
+  individual            [{ ageFrom, ageTo?, monthly }]   sum of per-person items for the age band
+  household             [{ persons, monthly }]           shared items by household size
+```
+
+Where Konsumentverket splits an age band by sex, the snapshot holds the higher
+figure, so Homeward never asks for sex. Every adult takes the band of the oldest
+borrower's age, the only adult age the profile holds; children take their own
+ages (D62). A household larger than the biggest listed size uses that size.
+Snapshots older than 400 days fail `make markets-check`.
 
 ## Curation Workflow
 

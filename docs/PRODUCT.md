@@ -112,9 +112,10 @@ local buyer is not.
 
 Profile fields include citizenship, residency, tax residency, prior tax
 residency in the target market, residency intent, intended use (primary,
-secondary, investment), first-time buyer status, employment type, net and gross
-monthly income with currency, savings, existing monthly debt payments, age, and
-co-buyers.
+secondary, investment), first-time buyer status, employment type, household net and gross
+monthly income with currency, savings, existing monthly debt payments, the
+number of borrowers, the oldest borrower's age, the number of adults, and each
+child's age.
 
 ### Target Market Resolution
 

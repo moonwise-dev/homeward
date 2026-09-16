@@ -13,5 +13,5 @@ enum ProfileField {
   monthlyDebtPayments,
   age,
   household,
-  coBuyers,
+  borrowers,
 }

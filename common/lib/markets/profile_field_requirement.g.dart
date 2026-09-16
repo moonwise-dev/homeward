@@ -50,5 +50,5 @@ const _$ProfileFieldEnumMap = {
   ProfileField.monthlyDebtPayments: 'monthlyDebtPayments',
   ProfileField.age: 'age',
   ProfileField.household: 'household',
-  ProfileField.coBuyers: 'coBuyers',
+  ProfileField.borrowers: 'borrowers',
 };

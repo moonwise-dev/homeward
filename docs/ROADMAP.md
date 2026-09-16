@@ -201,6 +201,8 @@ Decisions from the planning session on 2026-09-16.
 | D58 | Pack values | Written as published: decimal amount strings, percent rate strings, ISO dates and periods | Minor units and parts per million |
 | D59 | Pack format definition | Strict parsing of the Freezed models, semantic checks in `make markets-check`, no JSON schema | Hand-written JSON schema; schema declared with json_schema_builder |
 | D60 | Unknown buyer facts | Rules needing them are pending; the facts become required profile fields and dependent figures wait | Assume the stricter rule; skip the rule until known |
+| D61 | Borrowers | Household income totals, savings, debts, a borrower count, and the oldest borrower's age; the deduction threshold scales by borrower | A profile per borrower now; a single borrower only |
+| D62 | Household | Adults and each child's age, costed from Konsumentverket's tables | Adults and a child count with an averaged cost; adults only |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

@@ -19,6 +19,13 @@ _BuyerProfile _$BuyerProfileFromJson(Map<String, dynamic> json) =>
           'firstTime',
           'employment',
           'age',
+          'netMonthlyIncome',
+          'grossMonthlyIncome',
+          'monthlyDebtPayments',
+          'savings',
+          'borrowers',
+          'adults',
+          'childAges',
         ],
       );
       final val = _BuyerProfile(
@@ -51,6 +58,28 @@ _BuyerProfile _$BuyerProfileFromJson(Map<String, dynamic> json) =>
           (v) => $enumDecodeNullable(_$EmploymentEnumMap, v),
         ),
         age: $checkedConvert('age', (v) => (v as num?)?.toInt()),
+        netMonthlyIncome: $checkedConvert(
+          'netMonthlyIncome',
+          (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
+        ),
+        grossMonthlyIncome: $checkedConvert(
+          'grossMonthlyIncome',
+          (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
+        ),
+        monthlyDebtPayments: $checkedConvert(
+          'monthlyDebtPayments',
+          (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
+        ),
+        savings: $checkedConvert(
+          'savings',
+          (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
+        ),
+        borrowers: $checkedConvert('borrowers', (v) => (v as num?)?.toInt()),
+        adults: $checkedConvert('adults', (v) => (v as num?)?.toInt()),
+        childAges: $checkedConvert(
+          'childAges',
+          (v) => (v as List<dynamic>?)?.map((e) => (e as num).toInt()).toList(),
+        ),
       );
       return val;
     });
@@ -71,6 +100,13 @@ Map<String, dynamic> _$BuyerProfileToJson(_BuyerProfile instance) =>
       'firstTime': ?instance.firstTime,
       'employment': ?_$EmploymentEnumMap[instance.employment],
       'age': ?instance.age,
+      'netMonthlyIncome': ?instance.netMonthlyIncome?.toJson(),
+      'grossMonthlyIncome': ?instance.grossMonthlyIncome?.toJson(),
+      'monthlyDebtPayments': ?instance.monthlyDebtPayments?.toJson(),
+      'savings': ?instance.savings?.toJson(),
+      'borrowers': ?instance.borrowers,
+      'adults': ?instance.adults,
+      'childAges': ?instance.childAges,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(

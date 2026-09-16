@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../money/money.dart';
 import 'country_code.dart';
 import 'country_code_json_converter.dart';
 import 'employment.dart';
@@ -20,6 +21,13 @@ abstract class BuyerProfile with _$BuyerProfile {
     bool? firstTime,
     Employment? employment,
     int? age,
+    Money? netMonthlyIncome,
+    Money? grossMonthlyIncome,
+    Money? monthlyDebtPayments,
+    Money? savings,
+    int? borrowers,
+    int? adults,
+    List<int>? childAges,
   }) = _BuyerProfile;
 
   factory BuyerProfile.fromJson(Map<String, Object?> json) =>
