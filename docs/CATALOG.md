@@ -72,9 +72,9 @@ sliders always use `AmountSlider`.
 | `ProfileRef` | `{ "path": "/profile" }` | Whole buyer profile |
 | `MarketRef` | `{ "path": "/market" }` | Resolved rules for this buyer |
 | `ScenarioRef` | `{ "path": "/scenario" }` | Current scenario |
-| `MoneyPath` | `{ "path": "…" }` | Integer minor units, bound |
+| `MoneyPath` | `{ "path": "…" }` | A money object `{ minorUnits, currency }`, bound |
 | `PpmPath` | `{ "path": "…" }` | Integer parts per million, bound |
-| `BoundsPath` | `{ "path": "…" }` | `{ min, max, step }` in minor units, bound |
+| `BoundsPath` | `{ "path": "…" }` | `{ min, max, step }`, each a money object, bound |
 | `Label` | DynamicString | Literal allowed |
 | `Action` | A2UI action | Names from `docs/PROTOCOL.md` |
 
@@ -99,7 +99,7 @@ A currency-aware amount field.
 | Property | Type | Required | Notes |
 | --- | --- | --- | --- |
 | `label` | `Label` | yes | |
-| `value` | `MoneyPath` | yes | Writes minor units |
+| `value` | `MoneyPath` | yes | Writes a money object |
 | `currency` | path or ISO 4217 literal | yes | Currency is not a number; literal allowed |
 | `period` | `once` \| `monthly` \| `yearly` | no | Changes the suffix only |
 | `checks` | A2UI checks | no | |
@@ -111,7 +111,7 @@ A money slider with the value, its share of a reference, and bounds from rules.
 | Property | Type | Required | Notes |
 | --- | --- | --- | --- |
 | `label` | `Label` | yes | |
-| `value` | `MoneyPath` | yes | Writes minor units |
+| `value` | `MoneyPath` | yes | Writes a money object |
 | `bounds` | `BoundsPath` | yes | Seeded from rules, for example minimum down payment |
 | `shareOf` | `MoneyPath` | no | Shows the value as a percentage of this amount |
 | `currency` | path | yes | |
@@ -285,9 +285,14 @@ Board only; not agent-visible.
 
 ## Client Functions
 
-Registered in the Homeward catalog, implemented as thin adapters over
-`common/finance`. They exist for basic components: composing a sentence in
-`Text`, and disabling a `Button` through `checks`.
+Declared in `common/lib/catalog/functions/` as `a2ui_core` `FunctionApi`
+classes with a pure `evaluate` over JSON-shaped arguments, which the app wraps
+as genui `ClientFunction`s and the server reuses when seeding `/derived`. They
+exist for basic components: composing a sentence in `Text`, and disabling a
+`Button` through `checks`. `/market` is already resolved for the buyer, so
+functions that need only rules take no `profile`. Evaluators return null, or
+false for checks, while their inputs are incomplete. M1 implements
+`monthlyPayment` and `withinMaxLtv`.
 
 | Function | Arguments | Returns |
 | --- | --- | --- |
@@ -296,7 +301,7 @@ Registered in the Homeward catalog, implemented as thin adapters over
 | `monthlyPayment` | `scenario`, `market` | money |
 | `cashNeeded` | `scenario`, `market`, `profile` | money |
 | `debtServiceToIncome` | `scenario`, `market`, `profile` | ppm |
-| `withinMaxLtv` | `scenario`, `market`, `profile` | boolean |
+| `withinMaxLtv` | `scenario`, `market` | boolean |
 | `withinMaxDsti` | `scenario`, `market`, `profile` | boolean |
 | `withinStress` | `scenario`, `market`, `profile` | boolean |
 | `formatMoney` | `value`, `currency` | string |
@@ -327,16 +332,20 @@ Commit button with rule checks. A check is `{ "condition": <DynamicBoolean>,
 ## Declaring A Component
 
 In `common/lib/catalog/components/`, each component is one declaration: a
-class extending `ComponentApi` from `a2ui_core`, the same interface genui uses
-internally for its catalog items. It carries:
+`CatalogComponent`, which implements `ComponentApi` from `a2ui_core`, the same
+interface genui uses internally for its catalog items. It carries:
 
 - Name.
-- JSON schema built with `json_schema_builder` and `CommonSchemas`, with
-  `additionalProperties: false`.
-- Bound-number annotations.
+- Properties built with `json_schema_builder`, `CommonSchemas`, and
+  `CatalogSchemas`. The schema adds the v0.9 envelope (`id`, `component`,
+  `weight`, `accessibility`) and sets `additionalProperties: false`. Slice
+  references accept only their own path.
+- Bound properties, which accept only `{ "path" }`, never a literal.
 - Agent visibility and phase.
-- One or more example component trees with example data models.
-- A one-paragraph usage note for the model.
+- One or more example component trees with a data model. Examples share the
+  Stockholm sample: a profile, a scenario, and a `/market` generated from
+  `markets/packs/SE.json`, which a tool test keeps in step with the pack.
+- A usage note for the model.
 
 From these declarations `tool` generates:
 

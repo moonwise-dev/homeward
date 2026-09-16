@@ -1,0 +1,271 @@
+const stockholmMarketJson = r'''
+{
+  "id": "SE",
+  "name": "Sweden",
+  "currency": "SEK",
+  "lending": {
+    "maxLtv": [
+      {
+        "id": "ltv-new-loan",
+        "rate": "90%",
+        "sourceId": "sfs-2026-226"
+      }
+    ],
+    "maxDsti": [],
+    "maxLti": [
+      {
+        "id": "lti-bank-practice",
+        "multiple": "5",
+        "incomeBasis": "gross",
+        "typicalRange": {
+          "min": "500%",
+          "max": "600%"
+        },
+        "sourceId": "debt-to-income-caps"
+      }
+    ],
+    "stress": [],
+    "maxTermYears": [],
+    "maxAgeAtMaturity": [],
+    "incomeAdjustments": [],
+    "amortization": [
+      {
+        "id": "amortization-over-50",
+        "whenLtvAbove": "50%",
+        "annualRate": "1%",
+        "sourceId": "sfs-2026-226"
+      },
+      {
+        "id": "amortization-over-70",
+        "whenLtvAbove": "70%",
+        "annualRate": "2%",
+        "sourceId": "sfs-2026-226"
+      }
+    ],
+    "leftToLiveOn": [
+      {
+        "id": "left-to-live-on",
+        "stressRate": "7%",
+        "typicalRange": {
+          "min": "6%",
+          "max": "7%"
+        },
+        "runningCostsMonthly": "750",
+        "transportMonthlyPerAdult": "850",
+        "sourceId": "riksbank-credit-assessment"
+      }
+    ],
+    "interestDeduction": [
+      {
+        "id": "capital-deficit-reduction",
+        "yearlyBrackets": [
+          {
+            "upTo": "100000",
+            "rate": "30%"
+          },
+          {
+            "rate": "21%"
+          }
+        ],
+        "perBorrower": true,
+        "sourceId": "itl-67-10"
+      }
+    ],
+    "repaymentStyle": "straight"
+  },
+  "purchaseCosts": [],
+  "recurringCosts": [],
+  "loanTypes": [
+    {
+      "id": "variable-3m",
+      "label": "Variable, 3 months",
+      "rateType": "variable",
+      "referenceRateId": "SE.AVG_VARIABLE_3M",
+      "typicalSpread": {
+        "min": "0%",
+        "max": "1.2%"
+      },
+      "defaultSpread": "0.41%",
+      "fixedYears": 0,
+      "sourceId": "sbab-list-rates"
+    }
+  ],
+  "referenceRates": {
+    "SE.AVG_VARIABLE_3M": {
+      "id": "SE.AVG_VARIABLE_3M",
+      "rate": "2.74%",
+      "asOf": "2026-07-31",
+      "source": {
+        "id": "scb-mortgage-rates-2026-07",
+        "publisher": "Statistics Sweden (SCB)",
+        "title": "Finansmarknadsstatistik juli 2026: average rate on new floating-rate mortgages",
+        "url": "https://www.scb.se/hitta-statistik/statistik-efter-amne/finansmarknad/finansmarknadsstatistik/finansmarknadsstatistik/pong/statistiknyhet/finansmarknadsstatistik-juli-2026",
+        "kind": "officialStatistics",
+        "retrievedAt": "2026-09-17"
+      }
+    }
+  },
+  "livingCosts": {
+    "id": "SE-2026",
+    "currency": "SEK",
+    "year": 2026,
+    "individual": [
+      {
+        "ageFrom": 0,
+        "ageTo": 0,
+        "monthly": "3950"
+      },
+      {
+        "ageFrom": 1,
+        "ageTo": 3,
+        "monthly": "3830"
+      },
+      {
+        "ageFrom": 4,
+        "ageTo": 6,
+        "monthly": "3710"
+      },
+      {
+        "ageFrom": 7,
+        "ageTo": 10,
+        "monthly": "4220"
+      },
+      {
+        "ageFrom": 11,
+        "ageTo": 14,
+        "monthly": "4720"
+      },
+      {
+        "ageFrom": 15,
+        "ageTo": 17,
+        "monthly": "5440"
+      },
+      {
+        "ageFrom": 18,
+        "ageTo": 24,
+        "monthly": "5040"
+      },
+      {
+        "ageFrom": 25,
+        "ageTo": 50,
+        "monthly": "4870"
+      },
+      {
+        "ageFrom": 51,
+        "ageTo": 70,
+        "monthly": "4560"
+      },
+      {
+        "ageFrom": 71,
+        "monthly": "4390"
+      }
+    ],
+    "household": [
+      {
+        "persons": 1,
+        "monthly": "3530"
+      },
+      {
+        "persons": 2,
+        "monthly": "4390"
+      },
+      {
+        "persons": 3,
+        "monthly": "5500"
+      },
+      {
+        "persons": 4,
+        "monthly": "6530"
+      },
+      {
+        "persons": 5,
+        "monthly": "7510"
+      },
+      {
+        "persons": 6,
+        "monthly": "8410"
+      },
+      {
+        "persons": 7,
+        "monthly": "9330"
+      }
+    ],
+    "source": {
+      "id": "konsumentverket-household-costs-2026",
+      "publisher": "Konsumentverket",
+      "title": "Hushållskostnader 2026: food with all meals cooked at home plus other individual costs; shared household costs",
+      "url": "https://stpubshop.blob.core.windows.net/publikationer/kostnadsberakningar-hushallskostnader-2026-sv-kov_tga_32d.pdf",
+      "kind": "officialStatistics",
+      "retrievedAt": "2026-09-17"
+    }
+  },
+  "sources": [
+    {
+      "id": "sfs-2026-226",
+      "publisher": "Sveriges riksdag",
+      "title": "Lag (2026:226) om begränsning av bostadskrediter",
+      "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2026226-om-begransning-av-bostadskrediter_sfs-2026-226/",
+      "kind": "law",
+      "retrievedAt": "2026-09-16"
+    },
+    {
+      "id": "itl-67-10",
+      "publisher": "Sveriges riksdag",
+      "title": "Inkomstskattelag (1999:1229), 67 kap. 10 §",
+      "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/inkomstskattelag-19991229_sfs-1999-1229/",
+      "kind": "law",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "riksbank-credit-assessment",
+      "publisher": "Sveriges riksbank",
+      "title": "Staff memo: Kreditprövningen vid bolån (2024)",
+      "url": "https://www.riksbank.se/globalassets/media/rapporter/staff-memo/svenska/2024/staff-memo_kreditprovningen-vid-bolan.pdf",
+      "kind": "lenderNorm",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "konsumentverket-household-costs-2026",
+      "publisher": "Konsumentverket",
+      "title": "Hushållskostnader 2026",
+      "url": "https://stpubshop.blob.core.windows.net/publikationer/kostnadsberakningar-hushallskostnader-2026-sv-kov_tga_32d.pdf",
+      "kind": "officialStatistics",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "debt-to-income-caps",
+      "publisher": "Veckans Finans",
+      "title": "Bolånetak och skuldkvotstak, updated 2026-05-29",
+      "url": "https://veckansfinans.se/artiklar/bolanetak-skuldkvotstak",
+      "kind": "secondary",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "sbab-list-rates",
+      "publisher": "SBAB",
+      "title": "Våra räntor: 3 months list rate 3.15%",
+      "url": "https://www.sbab.se/1/privat/vara_rantor.html",
+      "kind": "lenderNorm",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "nordea-list-rates",
+      "publisher": "Nordea",
+      "title": "Listräntor: 3 months list rate 3.94%",
+      "url": "https://www.nordea.se/privat/produkter/bolan/listrantor.html",
+      "kind": "lenderNorm",
+      "retrievedAt": "2026-09-17"
+    }
+  ],
+  "pendingRules": {},
+  "requiredFields": [
+    "netMonthlyIncome",
+    "grossMonthlyIncome",
+    "monthlyDebtPayments",
+    "age",
+    "household",
+    "borrowers",
+    "savings"
+  ]
+}
+''';

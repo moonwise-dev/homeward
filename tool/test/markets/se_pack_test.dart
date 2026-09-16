@@ -41,6 +41,20 @@ void main() {
     profile: profile,
   ) as AssessedAffordability;
 
+  test('the catalog sample market matches the Swedish pack', () {
+    expect(
+      resolveForBuyer(
+        sweden,
+        stockholmProfile,
+        referenceRates: markets.rates,
+        livingCosts: markets.livingCosts[CountryCode.parse('SE')],
+      ),
+      stockholmMarket,
+      reason:
+          'Regenerate common/lib/catalog/examples/stockholm_market_json.dart',
+    );
+  });
+
   test('the default rate is SBAB\'s list rate over the SCB average', () {
     final result = assess(stockholmCouple(netMonthly: 62000));
 

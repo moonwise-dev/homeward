@@ -275,11 +275,14 @@ The model binds to these paths and never writes values.
 
 ```text
 /profile                 BuyerProfile
-/market                  resolved rules for this buyer in this market
-  id, name, currency, coverage
-  lending                maxLtv, maxDsti, maxLti, stress, maxTermYears, amortization
-  costs                  applicable purchase cost rules
-  loanTypes              loan types with reference rate and spread range
+/market                  ResolvedMarket in the pack's published format (D66)
+  id, name, currency
+  lending                every lending rule that applies to this buyer
+  purchaseCosts, recurringCosts
+  loanTypes              loan types with spread range and default spread
+  referenceRates         dated snapshots for those loan types
+  livingCosts            the living cost table when a left-to-live-on rule applies
+  pendingRules, requiredFields
   obstacles              applicable foreign buyer obstacles
   process                applicable steps and documents
   sources                source list for everything above
@@ -300,10 +303,11 @@ The model binds to these paths and never writes values.
 Data model values are JSON-shaped as produced by `jsonDecode`; see the binding
 rules in `docs/CATALOG.md`.
 
-Money values are `{ "minorUnits": 35000000, "currency": "EUR" }`. Rates are
-integer parts per million, and field names end in `Ppm`. Every
-money object carries its currency at the nearest `market.currency` or explicit
-`currency` field.
+In slices the buyer edits, `/profile` and `/scenario`, and in `/derived`, money
+values are `{ "minorUnits": 35000000, "currency": "EUR" }` and rates are integer
+parts per million in fields ending in `Ppm`. `/market` is read-only and uses the
+pack format: amounts as decimal strings and rates as percent strings, so the
+same `common` models parse packs and the slice.
 
 `/derived` holds seeded values so a surface renders correctly before any
 interaction. Homeward components recompute their own figures from `/scenario`
