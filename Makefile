@@ -1,5 +1,8 @@
 PACKAGES := app common server tool
 DART_PACKAGES := common server tool
+CODEGEN_PACKAGES := common server
+SERVER_BINARY := server/build/server
+SERVER_IMAGE := homeward-server
 
 .PHONY: help
 help:
@@ -11,8 +14,12 @@ help:
 	@echo "  make format-check  Fail if any package is not formatted"
 	@echo "  make test          Run tests in pure Dart packages"
 	@echo "  make check         format-check, analyze, test"
-	@echo "  make codegen       Run build_runner in common"
+	@echo "  make codegen       Run build_runner in common and server"
 	@echo "  make iso-4217      Regenerate the ISO 4217 currency table from SIX"
+	@echo "  make server-dev    Run the server locally with hot reload"
+	@echo "  make server-build  Cross-compile the server for linux/x64"
+	@echo "  make server-image  Build the server container image"
+	@echo "  make server-image-run  Run the server container image on port 8080"
 	@echo "  make app-web       Run the app in Chrome"
 	@echo "  make app-macos     Run the app on macOS"
 	@echo "  make clean         Remove build outputs and resolved packages"
@@ -47,12 +54,32 @@ check: format-check analyze test
 
 .PHONY: codegen
 codegen:
-	@cd common && dart run build_runner build --delete-conflicting-outputs
+	@set -e; for dir in $(CODEGEN_PACKAGES); do \
+		echo "==> build_runner $$dir"; \
+		(cd $$dir && dart run build_runner build --delete-conflicting-outputs); \
+	done
 
 .PHONY: iso-4217
 iso-4217:
 	@dart run tool/bin/generate_iso_4217.dart common/lib/money/generated/iso_4217.dart
 	@dart format common/lib/money/generated/iso_4217.dart
+
+.PHONY: server-dev
+server-dev:
+	@dart run --enable-vm-service server/tool/dev.dart
+
+.PHONY: server-build
+server-build:
+	@mkdir -p $(dir $(SERVER_BINARY))
+	@dart compile exe server/bin/server.dart --target-os linux --target-arch x64 -o $(SERVER_BINARY)
+
+.PHONY: server-image
+server-image: server-build
+	@docker build --platform linux/amd64 -f server/Dockerfile -t $(SERVER_IMAGE) .
+
+.PHONY: server-image-run
+server-image-run: server-image
+	@docker run --rm --platform linux/amd64 -p 8080:8080 $(SERVER_IMAGE)
 
 .PHONY: app-web
 app-web:

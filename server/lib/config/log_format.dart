@@ -1,0 +1,1 @@
+enum LogFormat { text, json }
