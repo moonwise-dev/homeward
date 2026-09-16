@@ -8,7 +8,7 @@
 2. `flutter analyze` / `dart analyze` with zero issues.
 3. `make test`.
 4. `make markets-check`.
-5. `make catalog-check`.
+5. `make catalog-check`, once it lands.
 
 `make eval` runs separately because it calls Gemini.
 
@@ -47,7 +47,6 @@ There are no widget tests and no golden image tests.
 | `finance` | Annuity and straight amortization payments against Banco BPI's published examples and Lag (2026:226), inverse maximum principal, exact limit comparisons, LTV, DSTI, LTI, left to live on, interest deduction, stress payment, maximum loan and binding constraint, purchase cost brackets including marginal and deduction styles, deductions derived from marginal bands equal to published tables, refunds by recomputation, cash needed, currency exposure |
 | `affordability` | Maximum loan per lending rule and the binding constraint for Swedish and Portuguese buyers against independently computed figures, the Swedish interest deduction, down payment bounds, facts still missing, pending lending rules, and income in another currency |
 | `markets` | Overlay resolution, buyer and loan predicate applicability, exactly one applicable rule per cost group, required profile fields per buyer |
-| `markets/<id>` | Worked examples per curated pack, with the expected figures derived by hand from the cited sources |
 | `plan` | Open decisions for every combination the flow table depends on |
 | `catalog` | Every declared example validates against its schema; bound-number annotations present on every money, rate, and percentage property |
 | `wire` | A2A models round-trip the frames recorded in spike S1, including explicit `null` fields; the client turns text, A2UI, cancel, and JSON-RPC error events into turn events |
@@ -95,17 +94,21 @@ same sweep runs with `flutter run --profile` and prints its report.
 
 ## Markets Check
 
-`tool/markets_check`:
+`tool/bin/markets_check.dart`, run by `make markets-check` and part of
+`make check`. Errors fail; warnings print.
 
-- Every pack parses strictly into the `common/markets` models.
-- Every list entry `id` is unique within its pack.
-- Bracket amounts have no more decimals than the pack currency allows.
-- Every rule references an existing source.
-- Every source has `retrievedAt`.
-- Curated packs have `reviewedAt`, `reviewedBy`, and are not expired; warn within
-  30 days of expiry.
-- Overlays resolve without cycles; child removals reference parent rule IDs.
-- Reference rate snapshots for curated markets are at most 14 days old.
+- Every pack, rate file, and living cost file parses strictly into the
+  `common/markets` models, and each pack is stored under its own ID.
+- Every entry `id` is unique within its pack, and rate IDs are unique.
+- Overlays resolve without cycles, missing parents, or unknown removals.
+- Every rule and refund references a source in its resolved pack.
+- Amounts and brackets are valid in the pack currency.
+- Every loan type has a reference rate snapshot at most 75 days old.
+- Every pack with a left-to-live-on rule has a living cost table in its
+  currency from this year or last.
+- A pack without `reviewedAt` warns that review is pending; a reviewed pack
+  needs `reviewedBy`, fails once expired, and warns within 30 days of expiry.
+- `tool/test/markets/<id>_pack_test.dart` pins worked examples on the real files.
 
 ## Catalog Check
 

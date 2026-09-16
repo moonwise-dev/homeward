@@ -19,7 +19,8 @@ help:
 	@echo "  make format        Format every package"
 	@echo "  make format-check  Fail if any package is not formatted"
 	@echo "  make test          Run tests in pure Dart packages"
-	@echo "  make check         format-check, analyze, test"
+	@echo "  make check         format-check, analyze, test, markets-check"
+	@echo "  make markets-check Check rule packs, rate snapshots, and living costs"
 	@echo "  make codegen       Run build_runner in common and server"
 	@echo "  make iso-4217      Regenerate the ISO 4217 currency table from SIX"
 	@echo "  make server-dev    Run the server locally with hot reload"
@@ -62,7 +63,11 @@ test:
 	done
 
 .PHONY: check
-check: format-check analyze test
+check: format-check analyze test markets-check
+
+.PHONY: markets-check
+markets-check:
+	@dart run tool/bin/markets_check.dart markets
 
 .PHONY: codegen
 codegen:

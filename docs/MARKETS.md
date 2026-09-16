@@ -139,9 +139,8 @@ LendingRules
 A `leftToLiveOn` rule is the Swedish lender check (D55): monthly net income minus
 housing cost at `stressRate`, after `interestDeduction`, minus association fee,
 `runningCostsMonthly`, `transportMonthlyPerAdult` for each adult, and household
-living costs must not fall below zero. It
-binds alongside `maxLti`, not instead of it. Payments are shown both before and
-after `interestDeduction` (D56).
+living costs must not fall below zero. It binds alongside `maxLti`, not instead
+of it. Payments are shown both before and after `interestDeduction` (D56).
 
 Where a rule is a lender norm rather than law, `typicalRange` carries the
 market range and the value is the conservative end. When several entries of one
@@ -247,8 +246,9 @@ by `referenceRateId`, refreshed by `tool/refresh_rates`.
 | `GB.BANK_RATE` | Bank of England |
 | `US.PMMS30` | Freddie Mac Primary Mortgage Market Survey |
 
-The server never fetches rates at request time. Snapshots older than 14 days
-fail `make markets-check` for curated markets.
+The server never fetches rates at request time. Statistics agencies publish
+monthly averages about four weeks after the month ends, so a snapshot whose
+`asOf` is more than 75 days old fails `make markets-check`.
 
 A scenario's rate is the loan type's reference rate plus its spread. The spread
 starts at the loan type's `defaultSpread` and the buyer can change it
@@ -267,11 +267,13 @@ LivingCosts
   household             [{ persons, monthly }]           shared items by household size
 ```
 
-Where Konsumentverket splits an age band by sex, the snapshot holds the higher
-figure, so Homeward never asks for sex. Every adult takes the band of the oldest
-borrower's age, the only adult age the profile holds; children take their own
-ages (D62). A household larger than the biggest listed size uses that size.
-Snapshots older than 400 days fail `make markets-check`.
+Individual costs use the food figure for all meals cooked at home, the higher
+of Konsumentverket's two, and ignore its small footnote reductions. If a table
+ever splits an age band by sex, the snapshot holds the higher figure, so
+Homeward never asks for sex. Every adult takes the band of the oldest borrower's
+age, the only adult age the profile holds; children take their own ages (D62). A
+household larger than the biggest listed size uses that size. A table for a year
+before last fails `make markets-check`.
 
 ## Curation Workflow
 
@@ -311,11 +313,13 @@ including the second-person review, before it becomes a pack field.
 | Stricter amortization for debt over 4.5× gross income removed 2026-04-01; no income-based rule remains in law | Verified | Finansinspektionen notice 2026-03-19; Lag (2026:226) |
 | New builds: no amortization for up to five years for the first buyer | Verified | Lag (2026:226) 10 § |
 | LTV uses the market value at purchase; revaluation after five years or on a substantial change | Verified | Lag (2026:226) 13 § |
-| Lender stress rates commonly 6–7% in the KALP check | Lender norm, to verify | Bank lending policies, Finansinspektionen's mortgage report |
+| Left-to-live-on stress rate 7%; banks use a little over 6% up to 7% | Drafted in `SE.json` (D63) | Riksbank staff memo *Kreditprövningen vid bolån*, 2024 |
 | Interest deduction: tax reduced by 30% of a capital deficit up to 100 000 SEK a year and 21% above, per taxpayer | Verified | Inkomstskattelag (1999:1229) 67 kap. 10 § |
-| Household living costs by age and household size | To verify | Konsumentverket, *Koll på pengarna* |
-| Running costs of a bostadsrätt beyond the association fee | Lender norm, to verify | Bank lending policies |
-| Lender income multiples roughly 5–6× gross | Lender norm, to verify | Bank lending policies |
+| Household living costs 2026: food with all meals cooked at home plus other individual costs by age band, and shared costs by household size | Drafted in `living_costs/SE.json` | Konsumentverket, *Hushållskostnader 2026* |
+| Bank norms beyond Konsumentverket: 750 SEK running costs for a bostadsrätt, 850 SEK public transport per adult | Drafted in `SE.json` (D63) | Riksbank staff memo, 2024 |
+| Income cap 5× gross; banks 5–6×; Nordea states it has no cap | Drafted in `SE.json`, secondary source (D64) | Veckans Finans, updated 2026-05-29; Nordea |
+| Average rate on new variable mortgages 2.74% in July 2026 | In `rates/SE.json` | Statistics Sweden, Finansmarknadsstatistik juli 2026 |
+| Three-month list rates 3.15% at SBAB and 3.94% at Nordea on 2026-09-17: spread 0–1.2%, default 0.41% | Drafted in `SE.json` (D65) | SBAB, Nordea |
 | Bostadsrätt purchase has no title registration fee or mortgage deed fee; the association may charge a pledge fee | To verify | Lantmäteriet, BRF statutes |
 | House purchase: title registration 1.5% plus fee, mortgage deed 2% of new deeds plus fee | To verify | Lantmäteriet |
 | Monthly association fee is a recurring cost for bostadsrätt | Structural | Pack models it as a profile or scenario input |
