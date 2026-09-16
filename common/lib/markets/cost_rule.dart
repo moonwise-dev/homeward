@@ -13,7 +13,7 @@ part 'cost_rule.freezed.dart';
 part 'cost_rule.g.dart';
 
 @freezed
-abstract class CostRule with _$CostRule implements ConditionalRule {
+abstract class CostRule with _$CostRule implements ConditionalRule, Sourced {
   const factory CostRule({
     required String id,
     String? group,

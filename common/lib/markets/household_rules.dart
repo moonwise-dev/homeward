@@ -16,7 +16,7 @@ part 'household_rules.g.dart';
 @freezed
 abstract class LeftToLiveOnRule
     with _$LeftToLiveOnRule
-    implements ConditionalRule {
+    implements ConditionalRule, Sourced {
   const factory LeftToLiveOnRule({
     required String id,
     BuyerPredicate? appliesTo,
@@ -34,7 +34,7 @@ abstract class LeftToLiveOnRule
 @freezed
 abstract class InterestDeductionRule
     with _$InterestDeductionRule
-    implements ConditionalRule {
+    implements ConditionalRule, Sourced {
   const factory InterestDeductionRule({
     required String id,
     BuyerPredicate? appliesTo,

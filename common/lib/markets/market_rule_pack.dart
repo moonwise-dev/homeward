@@ -5,6 +5,7 @@ import '../money/currency_json_converter.dart';
 import '../time/calendar_date.dart';
 import '../time/calendar_date_json_converter.dart';
 import 'cost_rule.dart';
+import 'identified.dart';
 import 'lending_rules.dart';
 import 'loan_type.dart';
 import 'market_id.dart';
@@ -43,4 +44,22 @@ abstract class MarketRulePack with _$MarketRulePack {
   static const reviewValidityDays = 180;
 
   CalendarDate? get expiresAt => reviewedAt?.plusDays(reviewValidityDays);
+
+  List<Identified> get entries => [
+    ...profileFields,
+    ...lending.maxLtv,
+    ...lending.maxDsti,
+    ...lending.maxLti,
+    ...lending.stress,
+    ...lending.maxTermYears,
+    ...lending.maxAgeAtMaturity,
+    ...lending.incomeAdjustments,
+    ...lending.amortization,
+    ...lending.leftToLiveOn,
+    ...lending.interestDeduction,
+    ...purchaseCosts,
+    ...recurringCosts,
+    ...loanTypes,
+    ...sources,
+  ];
 }

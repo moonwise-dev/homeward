@@ -17,7 +17,7 @@ part 'lending_limits.freezed.dart';
 part 'lending_limits.g.dart';
 
 @freezed
-abstract class LtvLimit with _$LtvLimit implements ConditionalRule {
+abstract class LtvLimit with _$LtvLimit implements ConditionalRule, Sourced {
   const factory LtvLimit({
     required String id,
     BuyerPredicate? appliesTo,
@@ -31,7 +31,7 @@ abstract class LtvLimit with _$LtvLimit implements ConditionalRule {
 }
 
 @freezed
-abstract class DstiLimit with _$DstiLimit implements ConditionalRule {
+abstract class DstiLimit with _$DstiLimit implements ConditionalRule, Sourced {
   const factory DstiLimit({
     required String id,
     BuyerPredicate? appliesTo,
@@ -46,7 +46,7 @@ abstract class DstiLimit with _$DstiLimit implements ConditionalRule {
 }
 
 @freezed
-abstract class LtiLimit with _$LtiLimit implements ConditionalRule {
+abstract class LtiLimit with _$LtiLimit implements ConditionalRule, Sourced {
   const factory LtiLimit({
     required String id,
     BuyerPredicate? appliesTo,
@@ -61,7 +61,9 @@ abstract class LtiLimit with _$LtiLimit implements ConditionalRule {
 }
 
 @freezed
-abstract class StressRule with _$StressRule implements ConditionalRule {
+abstract class StressRule
+    with _$StressRule
+    implements ConditionalRule, Sourced {
   const factory StressRule({
     required String id,
     BuyerPredicate? appliesTo,
@@ -76,7 +78,9 @@ abstract class StressRule with _$StressRule implements ConditionalRule {
 }
 
 @freezed
-abstract class YearsLimit with _$YearsLimit implements ConditionalRule {
+abstract class YearsLimit
+    with _$YearsLimit
+    implements ConditionalRule, Sourced {
   const factory YearsLimit({
     required String id,
     BuyerPredicate? appliesTo,
@@ -91,7 +95,7 @@ abstract class YearsLimit with _$YearsLimit implements ConditionalRule {
 @freezed
 abstract class IncomeAdjustment
     with _$IncomeAdjustment
-    implements ConditionalRule {
+    implements ConditionalRule, Sourced {
   const factory IncomeAdjustment({
     required String id,
     BuyerPredicate? appliesTo,
@@ -109,7 +113,7 @@ abstract class IncomeAdjustment
 @freezed
 abstract class AmortizationRule
     with _$AmortizationRule
-    implements ConditionalRule {
+    implements ConditionalRule, Sourced {
   const factory AmortizationRule({
     required String id,
     BuyerPredicate? appliesTo,

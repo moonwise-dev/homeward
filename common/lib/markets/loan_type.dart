@@ -11,7 +11,7 @@ part 'loan_type.freezed.dart';
 part 'loan_type.g.dart';
 
 @freezed
-abstract class LoanType with _$LoanType implements Identified {
+abstract class LoanType with _$LoanType implements Sourced {
   const factory LoanType({
     required String id,
     required String label,

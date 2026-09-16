@@ -10,7 +10,9 @@ MarketRulePack resolvePackChain(
 
 MarketRulePack overlayPack(MarketRulePack parent, MarketRulePack child) {
   final removed = child.removedRuleIds.toSet();
-  final unknown = removed.difference(_ruleIds(parent));
+  final unknown = removed.difference({
+    for (final entry in parent.entries) entry.id,
+  });
   if (unknown.isNotEmpty) {
     throw ArgumentError.value(
       unknown,
@@ -94,24 +96,3 @@ MarketRulePack _resolve(
   }
   return overlayPack(_resolve(parentId, packs, {...visiting, id}), pack);
 }
-
-Set<String> _ruleIds(MarketRulePack pack) => {
-  for (final list in <List<Identified>>[
-    pack.profileFields,
-    pack.lending.maxLtv,
-    pack.lending.maxDsti,
-    pack.lending.maxLti,
-    pack.lending.stress,
-    pack.lending.maxTermYears,
-    pack.lending.maxAgeAtMaturity,
-    pack.lending.incomeAdjustments,
-    pack.lending.amortization,
-    pack.lending.leftToLiveOn,
-    pack.lending.interestDeduction,
-    pack.purchaseCosts,
-    pack.recurringCosts,
-    pack.loanTypes,
-    pack.sources,
-  ])
-    for (final entry in list) entry.id,
-};
