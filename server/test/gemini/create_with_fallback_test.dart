@@ -16,14 +16,16 @@ import 'fixture_http_client.dart';
 void main() {
   const preferred = 'gemini-3.8-flash';
   const fallback = 'gemini-3.5-flash';
+  const last = 'gemini-3.5-flash-lite';
   const request = InteractionRequest(input: InteractionInput.text('Hello'));
   var clock = DateTime.utc(2026, 9, 17, 10);
 
-  ModelCircuits circuits() => ModelCircuits(
-    models: const [preferred, fallback],
-    cooldown: const Duration(minutes: 5),
-    now: () => clock,
-  );
+  ModelCircuits circuits({List<String> models = const [preferred, fallback]}) =>
+      ModelCircuits(
+        models: models,
+        cooldown: const Duration(minutes: 5),
+        now: () => clock,
+      );
 
   Stream<InteractionEvent> run(
     Map<String, FixtureResponse> byModel,
@@ -205,6 +207,59 @@ void main() {
       ]);
     },
   );
+
+  test('moves past every model refused at a request limit', () async {
+    final recorded = <RecordedRequest>[];
+    final refused = fixture(
+      'error_free_tier_request_quota_429.json',
+      status: 429,
+    );
+
+    final events = await run(
+      {preferred: refused, fallback: refused, last: fixture('stream_text.sse')},
+      circuits(models: const [preferred, fallback, last]),
+      recorded: recorded,
+    ).toList();
+
+    expect(
+      [for (final request in recorded) request.body['model']],
+      [
+        preferred,
+        fallback,
+        last,
+      ],
+    );
+    expect(events.whereType<ModelFailed>().map((event) => event.model), [
+      preferred,
+      fallback,
+    ]);
+    expect(events.last, isA<InteractionCompleted>());
+  });
+
+  test('retries an overloaded round on one more model only', () async {
+    final recorded = <RecordedRequest>[];
+    final overloaded = fixture('error_high_demand_500.json', status: 500);
+
+    await expectLater(
+      run(
+        {
+          preferred: overloaded,
+          fallback: overloaded,
+          last: fixture('stream_text.sse'),
+        },
+        circuits(models: const [preferred, fallback, last]),
+        recorded: recorded,
+      ).drain<void>(),
+      throwsA(isA<GeminiUnavailable>()),
+    );
+    expect(
+      [for (final request in recorded) request.body['model']],
+      [
+        preferred,
+        fallback,
+      ],
+    );
+  });
 
   test('asks the capped model again when every model is capped', () async {
     final caps = ModelCaps(now: () => clock)

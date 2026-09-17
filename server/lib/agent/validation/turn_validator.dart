@@ -24,15 +24,15 @@ final class TurnValidator {
 
   Set<String> get surfacesCreated => _components.keys.toSet();
 
-  ValidationOutcome validate(String line) {
+  ValidationOutcome validate(String source) {
     final Object? json;
     try {
-      json = jsonDecode(line);
+      json = jsonDecode(source);
     } on FormatException catch (error) {
       return _reject('', '', 'Not valid JSON: ${error.message}');
     }
     if (json is! Map<String, Object?>) {
-      return _reject('', '', 'Each a2ui line must be one JSON object');
+      return _reject('', '', 'Each a2ui message must be one JSON object');
     }
     final A2uiMessage message;
     try {

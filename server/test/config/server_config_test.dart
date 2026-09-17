@@ -10,7 +10,11 @@ void main() {
         port: 8080,
         logFormat: LogFormat.text,
         publicUrl: Uri.parse('http://localhost:8080'),
-        turnModels: const ['gemini-3.5-flash', 'gemini-3.8-flash'],
+        turnModels: const [
+          'gemini-3.5-flash-lite',
+          'gemini-3.5-flash',
+          'gemini-3.8-flash',
+        ],
         thinkingLevel: 'low',
         headersDeadline: const Duration(seconds: 10),
         firstStepDeadline: const Duration(seconds: 20),

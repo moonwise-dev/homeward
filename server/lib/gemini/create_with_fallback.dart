@@ -14,10 +14,8 @@ Stream<InteractionEvent> createWithFallback({
   required bool Function() canFallBack,
   Future<void>? cancellation,
 }) async* {
-  final candidates = caps
-      .uncapped(apiKey, circuits.candidates)
-      .take(2)
-      .toList();
+  final candidates = caps.uncapped(apiKey, circuits.candidates);
+  var retriedOverload = false;
   for (final (attempt, model) in candidates.indexed) {
     try {
       await for (final event in client.create(
@@ -33,6 +31,10 @@ Stream<InteractionEvent> createWithFallback({
       switch (reason) {
         case GeminiUnavailable():
           circuits.open(model);
+          if (retriedOverload) {
+            rethrow;
+          }
+          retriedOverload = true;
         case GeminiQuotaExhausted(perModel: true):
           caps.cap(apiKey, model);
         case _:

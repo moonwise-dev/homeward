@@ -287,8 +287,8 @@ final class TurnRun {
         }
         _text.write(text);
         yield* _emitText();
-      case A2uiLineOutput(:final line):
-        switch (_validator.validate(line)) {
+      case A2uiMessageOutput(:final source):
+        switch (_validator.validate(source)) {
           case Accepted(:final message):
             _acceptedInRound++;
             for (final json in _seeder.forward(message, _validator.seeds)) {

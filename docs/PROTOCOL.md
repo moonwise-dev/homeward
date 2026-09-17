@@ -367,7 +367,9 @@ JSON pointer into the rejected message, with at most two correction rounds per
 turn. A message is forwarded only if every pass accepts it; the first failing
 pass rejects it.
 
-1. **Parse.** One JSON object per line inside an `a2ui` fenced block.
+1. **Parse.** One JSON object per message inside an `a2ui` fenced block; the
+   catalog skill asks for one per line, and a message spread over several lines
+   is joined once its braces close.
 2. **Envelope.** `A2uiMessage.fromJson` from `a2ui_core`: exactly one message
    type, `version` is `v0.9`. It reports wrong field types as raw cast errors,
    so the pass maps any `TypeError` to a `VALIDATION_FAILED` error.

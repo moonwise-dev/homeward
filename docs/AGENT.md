@@ -8,7 +8,7 @@ It has no hard-coded stages; the open decisions of the plan decide the step.
 
 | Setting | Default | Config key |
 | --- | --- | --- |
-| Turn models, in preference order | `gemini-3.5-flash,gemini-3.8-flash` | `HOMEWARD_TURN_MODELS` |
+| Turn models, in preference order | `gemini-3.5-flash-lite,gemini-3.5-flash,gemini-3.8-flash` | `HOMEWARD_TURN_MODELS` |
 | Thinking level | `low` | `HOMEWARD_THINKING_LEVEL` |
 | Deadline to response headers | 10 s | `HOMEWARD_HEADERS_DEADLINE` |
 | Deadline to first step | 20 s | `HOMEWARD_FIRST_STEP_DEADLINE` |
@@ -29,8 +29,15 @@ Live turns on 2026-09-17 with `gemini-3.8-flash` first repeated it: of four
 turns none finished on it alone. Twice it sent no step within 20 s, and twice
 it failed with high demand after its text had streamed; its completed rounds
 took 5–20 s, while `gemini-3.5-flash` rounds took 4–10 s. `gemini-3.5-flash`
-therefore goes first (D72), and the order is compared again for quality in the
-recording week.
+therefore went first (D72).
+
+`gemini-3.5-flash-lite` has gone first since D81: 25 times the free daily
+requests of a Flash model and three times its requests a minute. In probes on
+2026-09-17 it ran the Stockholm hero script, message, `commit_profile`, and
+`commit_scenario`, in four requests and 16 s without a correction, and drew the
+profile form with its first text after about 5 s in ten further first
+messages. The Flash models follow it, and the order is compared again for
+quality in the M2 rehearsals.
 
 Free-tier limits, read in AI Studio for the Homeward project on 2026-09-17.
 They apply per Google Cloud project, so every key in the project and AI Studio
@@ -43,8 +50,8 @@ share them, and daily limits reset at midnight Pacific:
 | `gemma-4-26b-a4b-it`, `gemma-4-31b-it` | 30 | 16K | 14,400 |
 
 A turn uses up to two requests, and a model at a limit hands the turn to the
-next (D79), so a buyer's free key covers roughly twenty turns a day on the two
-Flash models. Two or three quick turns in a minute can reach a Flash model's
+next (D79), so a buyer's free key covers roughly 250 turns a day on
+`gemini-3.5-flash-lite` and about twenty more on the Flash models. Two or three quick turns in a minute can reach a Flash model's
 per-minute limit. AI Studio counts refused requests too: it showed 7 of 5 a
 minute and 24 of 20 a day.
 
@@ -62,6 +69,9 @@ minute and 24 of 20 a day.
   its function calls and rejections are dropped, because tools run only after a
   round completes. Once a message of the round has been accepted, the turn
   fails with `gemini_unavailable` instead of repeating output.
+- An overloaded round is retried on one more model only. A request limit
+  refusal arrives within a second, so it moves on through every remaining
+  model.
 - Circuits live in memory per instance; a cold instance relearns within one
   request.
 - A key error, a quota that is not per model, and depleted prepaid credits
@@ -232,8 +242,8 @@ owner, and leases it; `turn_run.dart` runs one turn:
    - Assemble the system instruction with a fresh turn context.
 5. Call `interactions.create` with streaming, `previous_interaction_id` when
    present, `store: true`, through model selection.
-6. Stream: forward the full text so far as it grows; validate each line of an
-   `a2ui` block as it completes; collect function calls.
+6. Stream: forward the full text so far as it grows; validate each message of
+   an `a2ui` block as it completes; collect function calls.
 7. Forward accepted messages through the seeder: a `createSurface` is held
    until its first valid `updateComponents`, then sent with
    `sendDataModel: true`, followed by one `updateDataModel` for each seeded
@@ -274,13 +284,18 @@ separate requests.
 A small state machine over text deltas:
 
 ```text
-prose ──"```a2ui"──► a2ui ──newline──► emit line as message candidate
+prose ──"```a2ui"──► a2ui ──braces close──► emit message candidate
   ▲                    │
   └──────"```"─────────┘
 ```
 
-Complete lines are validated and forwarded as they arrive, so components appear
-progressively while the model is still writing.
+Inside a block, lines join into one message until its braces and brackets close
+outside strings, so a message on one line and a message pretty-printed over
+several lines both parse. Complete messages are validated and forwarded as they
+arrive, so components appear progressively while the model is still writing.
+On 2026-09-17 `gemini-3.5-flash-lite` pretty-printed in two of five first
+messages; when each line was a candidate, every line was rejected, two
+correction rounds followed, and one turn drew its form twice.
 
 ### Rebuilding History
 

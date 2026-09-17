@@ -56,12 +56,12 @@ extension ParsedOutputPatterns on ParsedOutput {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ProseOutput value)?  prose,TResult Function( A2uiLineOutput value)?  a2uiLine,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ProseOutput value)?  prose,TResult Function( A2uiMessageOutput value)?  a2uiMessage,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case ProseOutput() when prose != null:
-return prose(_that);case A2uiLineOutput() when a2uiLine != null:
-return a2uiLine(_that);case _:
+return prose(_that);case A2uiMessageOutput() when a2uiMessage != null:
+return a2uiMessage(_that);case _:
   return orElse();
 
 }
@@ -79,12 +79,12 @@ return a2uiLine(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ProseOutput value)  prose,required TResult Function( A2uiLineOutput value)  a2uiLine,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ProseOutput value)  prose,required TResult Function( A2uiMessageOutput value)  a2uiMessage,}){
 final _that = this;
 switch (_that) {
 case ProseOutput():
-return prose(_that);case A2uiLineOutput():
-return a2uiLine(_that);}
+return prose(_that);case A2uiMessageOutput():
+return a2uiMessage(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -98,12 +98,12 @@ return a2uiLine(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ProseOutput value)?  prose,TResult? Function( A2uiLineOutput value)?  a2uiLine,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ProseOutput value)?  prose,TResult? Function( A2uiMessageOutput value)?  a2uiMessage,}){
 final _that = this;
 switch (_that) {
 case ProseOutput() when prose != null:
-return prose(_that);case A2uiLineOutput() when a2uiLine != null:
-return a2uiLine(_that);case _:
+return prose(_that);case A2uiMessageOutput() when a2uiMessage != null:
+return a2uiMessage(_that);case _:
   return null;
 
 }
@@ -120,11 +120,11 @@ return a2uiLine(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String text)?  prose,TResult Function( String line)?  a2uiLine,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String text)?  prose,TResult Function( String source)?  a2uiMessage,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ProseOutput() when prose != null:
-return prose(_that.text);case A2uiLineOutput() when a2uiLine != null:
-return a2uiLine(_that.line);case _:
+return prose(_that.text);case A2uiMessageOutput() when a2uiMessage != null:
+return a2uiMessage(_that.source);case _:
   return orElse();
 
 }
@@ -142,11 +142,11 @@ return a2uiLine(_that.line);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String text)  prose,required TResult Function( String line)  a2uiLine,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String text)  prose,required TResult Function( String source)  a2uiMessage,}) {final _that = this;
 switch (_that) {
 case ProseOutput():
-return prose(_that.text);case A2uiLineOutput():
-return a2uiLine(_that.line);}
+return prose(_that.text);case A2uiMessageOutput():
+return a2uiMessage(_that.source);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -160,11 +160,11 @@ return a2uiLine(_that.line);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String text)?  prose,TResult? Function( String line)?  a2uiLine,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String text)?  prose,TResult? Function( String source)?  a2uiMessage,}) {final _that = this;
 switch (_that) {
 case ProseOutput() when prose != null:
-return prose(_that.text);case A2uiLineOutput() when a2uiLine != null:
-return a2uiLine(_that.line);case _:
+return prose(_that.text);case A2uiMessageOutput() when a2uiMessage != null:
+return a2uiMessage(_that.source);case _:
   return null;
 
 }
@@ -243,45 +243,45 @@ as String,
 /// @nodoc
 
 
-class A2uiLineOutput implements ParsedOutput {
-  const A2uiLineOutput(this.line);
+class A2uiMessageOutput implements ParsedOutput {
+  const A2uiMessageOutput(this.source);
   
 
- final  String line;
+ final  String source;
 
 /// Create a copy of ParsedOutput
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$A2uiLineOutputCopyWith<A2uiLineOutput> get copyWith => _$A2uiLineOutputCopyWithImpl<A2uiLineOutput>(this, _$identity);
+$A2uiMessageOutputCopyWith<A2uiMessageOutput> get copyWith => _$A2uiMessageOutputCopyWithImpl<A2uiMessageOutput>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is A2uiLineOutput&&(identical(other.line, line) || other.line == line));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is A2uiMessageOutput&&(identical(other.source, source) || other.source == source));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,line);
+    return Object.hash(runtimeType,source);
 }
 
 @override
 String toString() {
-    return 'ParsedOutput.a2uiLine(line: $line)';
+    return 'ParsedOutput.a2uiMessage(source: $source)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $A2uiLineOutputCopyWith<$Res> implements $ParsedOutputCopyWith<$Res> {
-  factory $A2uiLineOutputCopyWith(A2uiLineOutput value, $Res Function(A2uiLineOutput) _then) = _$A2uiLineOutputCopyWithImpl;
+abstract mixin class $A2uiMessageOutputCopyWith<$Res> implements $ParsedOutputCopyWith<$Res> {
+  factory $A2uiMessageOutputCopyWith(A2uiMessageOutput value, $Res Function(A2uiMessageOutput) _then) = _$A2uiMessageOutputCopyWithImpl;
 @useResult
 $Res call({
- String line
+ String source
 });
 
 
@@ -289,18 +289,18 @@ $Res call({
 
 }
 /// @nodoc
-class _$A2uiLineOutputCopyWithImpl<$Res>
-    implements $A2uiLineOutputCopyWith<$Res> {
-  _$A2uiLineOutputCopyWithImpl(this._self, this._then);
+class _$A2uiMessageOutputCopyWithImpl<$Res>
+    implements $A2uiMessageOutputCopyWith<$Res> {
+  _$A2uiMessageOutputCopyWithImpl(this._self, this._then);
 
-  final A2uiLineOutput _self;
-  final $Res Function(A2uiLineOutput) _then;
+  final A2uiMessageOutput _self;
+  final $Res Function(A2uiMessageOutput) _then;
 
 /// Create a copy of ParsedOutput
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? line = null,}) {
-  return _then(A2uiLineOutput(
-null == line ? _self.line : line // ignore: cast_nullable_to_non_nullable
+@pragma('vm:prefer-inline') $Res call({Object? source = null,}) {
+  return _then(A2uiMessageOutput(
+null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

@@ -69,8 +69,8 @@ Deliverables:
   passing deterministic scores.
 - Hero script rehearsed end to end three times without a correction round, on
   separate days or keys: a free key allows about one full run a day.
-- `gemini-3.5-flash-lite` as a later fallback model on the same key, once its
-  limits are read in AI Studio and the hero script passes on it (D80).
+- Model order compared for quality in the hero rehearsals: Flash-Lite first
+  against the Flash models (D81).
 
 Exit: the hero flow in `docs/PRODUCT.md` runs reliably on web at recording
 resolution.
@@ -136,12 +136,12 @@ resolution.
 | genui and A2UI change between now and recording | Rework in catalog and connector | Pin exact versions; genui confined to two places; no upgrades after M2 until recording |
 | A Google A2A client changes what it accepts | Other clients stop rendering Homeward | Server emits only `task` and `status-update`, full text snapshots; `genui_a2a` contract test in the app |
 | No official Dart GenAI SDK | Client maintenance | Thin typed client over REST, recorded fixtures from S2 |
-| Gemini latency: 7–18 s per model round on 2026-09-16 | Slow turns on camera | Server pre-runs predictable steps, at most two rounds per turn, full text streamed as it grows, latency re-measured in M1 and before recording |
+| Gemini latency: 7–18 s per model round on 2026-09-16 on Flash, 3–5 s on Flash-Lite on 2026-09-17 | Slow turns on camera | Flash-Lite first (D81), server pre-runs predictable steps, at most two rounds per turn, full text streamed as it grows, latency re-measured before recording |
 | Preferred model overloaded | Hung or failed turns | Deadlines, circuit breaker, fallback to the next model |
 | Android slider performance unmeasured | Sluggish drag on real phones | `make perf` on a physical phone in M1 |
 | Safari untested with `require-corp`, reCAPTCHA Enterprise, and cross-origin streaming | iPhone viewers cannot sign in or stream | Check macOS and iOS Safari in M1; fall back to single-threaded Wasm without isolation headers for Safari |
 | Scripted abuse of the web app exhausts reCAPTCHA's 10,000 free monthly assessments | $8 for the month, then $1 per 1,000 above 100,000 | One-day App Check tokens, the 25 SEK budget alert, per-UID rate limits |
-| Free-tier daily cap, about 20 requests per model per Google Cloud project | Failed turns in rehearsal or on camera; about twenty turns a day per buyer across two models | At most two requests per turn (D78); the next model takes over at a cap (D79); recording on a key unused that day; the cap explained in the app |
+| Free-tier limits per model per Google Cloud project: 20 requests a day on Flash, 500 on Flash-Lite | Failed turns in rehearsal or on camera; about 250 turns a day per buyer on Flash-Lite | At most two requests per turn (D78); the next model takes over at a cap (D79); recording on a key unused that day; the cap explained in the app |
 | Free-tier prompts may be used by Google to improve its products and read by human reviewers; the terms ask for no sensitive or personal information | Buyers' financial details lose a privacy promise | Quoted on the key screen with advice to use round figures or a billing-enabled key (D76); no names are ever asked; terms re-read before recording |
 | Buyers ask about markets that are not curated | The "any location" idea goes unmet | Honest uncovered state, uncovered requests logged per market to drive curation order |
 | Curated rules change after review; Portugal changed lending limits and non-resident IMT within four months of 2026 | Stale numbers on camera | 180-day expiry, effective dates, check warnings, sources re-read in the recording week |
@@ -173,7 +173,7 @@ Decisions from the planning session on 2026-09-16.
 | D69 | Catalog skill | The exact composed catalog document and common types as compact JSON Schema, plus message rules, data model paths, actions, and component and surface examples, as genui's `PromptBuilder` and the A2UI agent SDK embed schemas; about 12k tokens | A compact generated summary of about 5k tokens; schemas without examples |
 | D70 | Turn context placement | Appended to `system_instruction`, re-sent on every request and never stored in history | Prepended to the buyer's message, which keeps stale snapshots in history |
 | D71 | A single resolved market | `resolve_market` selects it for the plan in the same model round, and the surface offers a change | The buyer confirms every market in a picker first, one extra turn per plan; a market draft committed with the profile |
-| D72 | Turn model order | `gemini-3.5-flash` first and `gemini-3.8-flash` as fallback, after live turns found 3.8 stalling or failing mid-stream in every turn; quality compared again in the recording week | 3.8 first; 3.5 only |
+| D72 | Turn model order | `gemini-3.5-flash` first and `gemini-3.8-flash` as fallback, after live turns found 3.8 stalling or failing mid-stream in every turn; replaced by D81 | 3.8 first; 3.5 only |
 | D73 | A model failing after its text streamed | Take the round back and retry it on the next model while no A2UI message of the round was accepted, since clients replace the full text | Fail the turn once any text streamed |
 | D74 | Plans list in M1 | Plans started during this app run, held in app memory, while the server keeps sessions in memory; the Firestore list replaces it in M2 | A server list route over in-memory sessions; no plans screen until M2 |
 | D75 | Gemini key verification | `POST /api/keys/verify` looks up the first turn model with the key, which spends none of the free daily generate requests | Save the key unchecked and let the first turn report `gemini_key_invalid` |
@@ -182,6 +182,7 @@ Decisions from the planning session on 2026-09-16.
 | D78 | Model requests per turn | One tool round per turn: the request carrying tool results ends with a note that tools are done and sets `tool_choice` to `none`, and tools without input, such as `compute_affordability`, run only on the server and reach the model in `preRun` | Up to four tool rounds with every tool offered, which took four requests in a live turn; prompt guidance alone |
 | D79 | A model at its free request limit | The round moves to the next model, and the refused model is skipped for that key for a minute, since per-minute and daily refusals read the same, which roughly doubles a free key's turns; other quota errors and depleted credits still stop the turn. Replaces D41 for this cap after a live session hit the cap on its fifth turn | Keep D41 and stop at the first model's cap |
 | D80 | Models and APIs beside Gemini | Later fallback models on the same key before the recording, `gemini-3.5-flash-lite` once its limits and the hero script check out, Gemma 4 ruled out by its free-tier token limit; an OpenAI-compatible provider choice after the livestream | Gemini models only; the provider choice before the recording; no change until after it |
+| D81 | Turn model order | `gemini-3.5-flash-lite` first, then `gemini-3.5-flash` and `gemini-3.8-flash`: 500 free requests a day and 15 a minute against 20 and 5, the hero script in four requests and 16 s; replaces D72 | Flash first and Flash-Lite last, about ten turns a day on Flash; Flash only |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

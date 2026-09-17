@@ -189,8 +189,8 @@ The quota and overload bodies are committed as fixtures in
 
 - **Coverage:** only curated markets get rules. The "any location" idea becomes
   "any curated location", and Tier 3 breadth depends on curation speed.
-- **Headroom:** about ten turns a day per buyer on a free key, twenty since D79
-  lets the second model take over at a cap; about one full hero run a day per
+- **Headroom:** about ten turns a day per buyer on a free key, about 250 since
+  `gemini-3.5-flash-lite` goes first (D81); about one full hero run a day per
   key for rehearsal and recording; live evals run as daily subsets
   with replay covering the rest.
 - **Privacy wording:** unpaid Gemini API use lets Google use prompts and responses
@@ -623,13 +623,22 @@ minute rather than until midnight.
   the full hero script; `gemini-3.1-flash-lite` only if needed, since it is
   slower and proposes less; Gemma 4 is out on the free tier. After the
   livestream, an OpenAI-compatible provider choice.
+- **D81:** `gemini-3.5-flash-lite` goes first, with `gemini-3.5-flash` and
+  `gemini-3.8-flash` after it, once AI Studio showed it 500 requests a day and
+  15 a minute against 20 and 5, and the hero script ran on it. Its needless
+  market picker, one first message in three, stopped after `flow.md` said a
+  market returned with `selected: true` is set: five of five drew the form.
+  Its pretty-printed messages, two first messages in five, stopped costing
+  corrections once the stream parser joined lines into messages: five of five
+  passed without one.
 
 ### Consequences
 
 - `docs/ROADMAP.md`: S8 answered; D80; a fallback model item in M2; M7
   Provider Choice.
 - `docs/AGENT.md`: the tool round closes with a note and `tool_choice: none`
-  (D78).
+  (D78); free-tier limits per model; Flash-Lite first (D81); request limit
+  refusals move through every model; messages spread over lines.
 - `server/prompts/flow.md`: tools are done once their results come back.
 
 ### Sources

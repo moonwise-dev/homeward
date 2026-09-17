@@ -64,7 +64,7 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 - States that the key is sent to Homeward's server per request, used only to
   call Gemini, and never stored or logged by Homeward, and that Gemini stores
   interactions under the buyer's key according to Google's terms.
-- States that a free key allows a limited number of requests per day, about ten
+- States that a free key allows a limited number of requests per day, about 250
   Homeward turns, resetting at midnight Pacific.
 - States that on a free key Google may use conversations to improve its
   products and people may review them, as the Gemini API terms last modified

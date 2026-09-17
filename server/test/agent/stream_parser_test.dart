@@ -37,13 +37,13 @@ void main() {
       reason: '$deltas',
     );
     expect(
-      outputs.whereType<A2uiLineOutput>().map((output) => output.line),
+      outputs.whereType<A2uiMessageOutput>().map((output) => output.source),
       [createSurface, updateComponents],
       reason: '$deltas',
     );
   }
 
-  test('splits prose from a2ui lines in one delta', () {
+  test('splits prose from a2ui messages in one delta', () {
     expectSplit([response]);
   });
 
@@ -69,7 +69,7 @@ void main() {
     expect(parser.add('\n``'), [const ParsedOutput.prose('\n')]);
     expect(parser.add('`a2'), isEmpty);
     expect(parser.add('ui\n{"a":1}'), isEmpty);
-    expect(parser.add('\n'), [const ParsedOutput.a2uiLine('{"a":1}')]);
+    expect(parser.add('\n'), [const ParsedOutput.a2uiMessage('{"a":1}')]);
   });
 
   test('ends a block whose closing fence is the last output', () {
@@ -82,15 +82,54 @@ void main() {
 
     expect(outputs, [
       const ParsedOutput.prose('Fill this in.\n'),
-      const ParsedOutput.a2uiLine(createSurface),
+      const ParsedOutput.a2uiMessage(createSurface),
     ]);
   });
 
   test('flushes an unterminated block and trailing prose on close', () {
     final block = StreamParser()..add('```a2ui\n{"a":1}');
-    expect(block.close(), [const ParsedOutput.a2uiLine('{"a":1}')]);
+    expect(block.close(), [const ParsedOutput.a2uiMessage('{"a":1}')]);
 
     final prose = StreamParser()..add('`');
     expect(prose.close(), [const ParsedOutput.prose('`')]);
+  });
+
+  test('joins a message written over several lines', () {
+    const prettyPrinted = [
+      '```a2ui',
+      '{',
+      '  "version": "v0.9",',
+      '  "createSurface": {',
+      '    "surfaceId": "t1-form",',
+      '    "note": "a } and a \\" stay inside the string"',
+      '  }',
+      '}',
+      createSurface,
+      '{"broken":',
+      '```',
+    ];
+    final random = Random(17);
+    final text = prettyPrinted.join('\n');
+    for (var i = 0; i < 200; i++) {
+      final parser = StreamParser();
+      final outputs = <ParsedOutput>[];
+      var start = 0;
+      while (start < text.length) {
+        final end = min(text.length, start + 1 + random.nextInt(9));
+        outputs.addAll(parser.add(text.substring(start, end)));
+        start = end;
+      }
+      outputs.addAll(parser.close());
+
+      expect(
+        outputs.whereType<A2uiMessageOutput>().map((output) => output.source),
+        [
+          [for (final line in prettyPrinted.sublist(1, 8)) line.trim()]
+              .join('\n'),
+          createSurface,
+          '{"broken":',
+        ],
+      );
+    }
   });
 }

@@ -5,8 +5,12 @@ const _closingFence = '```';
 
 final class StreamParser {
   final _pending = StringBuffer();
+  final _message = StringBuffer();
   var _insideBlock = false;
   var _lineIsProse = false;
+  var _depth = 0;
+  var _insideString = false;
+  var _escaped = false;
 
   List<ParsedOutput> add(String delta) {
     final outputs = <ParsedOutput>[];
@@ -23,12 +27,13 @@ final class StreamParser {
     final rest = _pending.toString();
     _pending.clear();
     if (_insideBlock) {
-      _insideBlock = false;
+      final outputs = <ParsedOutput>[];
       final line = rest.trim();
-      return [
-        if (line.isNotEmpty && line != _closingFence)
-          ParsedOutput.a2uiLine(line),
-      ];
+      if (line.isNotEmpty && line != _closingFence) {
+        _appendToMessage(line, outputs);
+      }
+      _endBlock(outputs);
+      return outputs;
     }
     return [if (rest.isNotEmpty) ParsedOutput.prose(rest)];
   }
@@ -37,9 +42,9 @@ final class StreamParser {
     final trimmed = line.trim();
     if (_insideBlock) {
       if (trimmed == _closingFence) {
-        _insideBlock = false;
+        _endBlock(outputs);
       } else if (trimmed.isNotEmpty) {
-        outputs.add(ParsedOutput.a2uiLine(trimmed));
+        _appendToMessage(trimmed, outputs);
       }
     } else if (!_lineIsProse && trimmed == _openingFence) {
       _insideBlock = true;
@@ -60,5 +65,54 @@ final class StreamParser {
     }
     outputs.add(ParsedOutput.prose(partial));
     _lineIsProse = true;
+  }
+
+  void _appendToMessage(String line, List<ParsedOutput> outputs) {
+    if (_message.isNotEmpty) {
+      _message.write('\n');
+    }
+    _message.write(line);
+    for (final character in line.split('')) {
+      _track(character);
+    }
+    if (_depth <= 0 && !_insideString) {
+      _emitMessage(outputs);
+    }
+  }
+
+  void _track(String character) {
+    if (_insideString) {
+      if (_escaped) {
+        _escaped = false;
+      } else if (character == r'\') {
+        _escaped = true;
+      } else if (character == '"') {
+        _insideString = false;
+      }
+      return;
+    }
+    switch (character) {
+      case '"':
+        _insideString = true;
+      case '{' || '[':
+        _depth++;
+      case '}' || ']':
+        _depth--;
+    }
+  }
+
+  void _endBlock(List<ParsedOutput> outputs) {
+    _emitMessage(outputs);
+    _insideBlock = false;
+  }
+
+  void _emitMessage(List<ParsedOutput> outputs) {
+    if (_message.isNotEmpty) {
+      outputs.add(ParsedOutput.a2uiMessage(_message.toString()));
+    }
+    _message.clear();
+    _depth = 0;
+    _insideString = false;
+    _escaped = false;
   }
 }

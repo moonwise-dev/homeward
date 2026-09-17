@@ -12,7 +12,7 @@ class KeyDisclosure extends StatelessWidget {
           'to call Gemini. Homeward never stores or logs it.',
       'Gemini keeps your conversations under your key, as Google\'s terms '
           'describe.',
-      'A free key allows a limited number of requests a day, about ten '
+      'A free key allows a limited number of requests a day, about 250 '
           'Homeward turns. The limit resets at midnight Pacific time.',
       'On a free key, Google may use your conversations to improve its '
           'products, and people may review them. Google asks that you do not '
