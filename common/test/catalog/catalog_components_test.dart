@@ -15,6 +15,7 @@ void main() {
       'MarketSnapshotCard',
       'AffordabilitySummary',
       'PaymentBreakdown',
+      'PurchaseCostsTable',
     ]);
   });
 

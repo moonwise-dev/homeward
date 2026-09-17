@@ -310,7 +310,7 @@ false for checks, while their inputs are incomplete. M1 implements
 | `loanAmount` | `scenario` | money |
 | `loanToValue` | `scenario` | ppm |
 | `monthlyPayment` | `scenario`, `market` | money |
-| `cashNeeded` | `scenario`, `market`, `profile` | money |
+| `cashNeeded` | `scenario`, `market` | money |
 | `debtServiceToIncome` | `scenario`, `market`, `profile` | ppm |
 | `withinMaxLtv` | `scenario`, `market` | boolean |
 | `withinMaxDsti` | `scenario`, `market`, `profile` | boolean |
@@ -356,6 +356,9 @@ interface genui uses internally for its catalog items. It carries:
 - One or more example component trees with a data model. Examples share the
   Stockholm sample: a profile, a scenario, and a `/market` generated from
   `markets/packs/SE.json`, which a tool test keeps in step with the pack.
+  Components that only Portugal exercises, such as `PurchaseCostsTable`, use
+  the Funchal sample from `PT-30` the same way: a non-resident buying at
+  €350,000, kept in step by the same kind of test.
 - A usage note for the model.
 
 `homewardCatalogDocument()` builds the catalog document from these

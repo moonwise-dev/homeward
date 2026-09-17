@@ -15,6 +15,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `MarketSnapshotCard` | mvp | yes | `market`, `profile` | `market`, `profile` | A curated market, A market without rules |
 | `AffordabilitySummary` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple |
 | `PaymentBreakdown` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple |
+| `PurchaseCostsTable` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Funchal non-resident |
 
 ### LocationPicker
 
@@ -44,6 +45,10 @@ The maximum loan, the rule that limits it, and headroom against the current scen
 
 The first monthly payment split into interest and amortization, with fees, the total, and in Sweden the cost after the interest deduction.
 
+### PurchaseCostsTable
+
+Every upfront cost this buyer owes on the day, the total, and the cash needed with the down payment. A charge that is partly refunded shows what comes back and what earns it.
+
 ## Basic Components
 
 Agent-visible from the A2UI v0.9 basic catalog: `Text`, `Row`, `Column`, `Card`, `Divider`, `List`, `Tabs`, `Icon`, `Button`, `CheckBox`, `ChoicePicker`, `TextField`, `DateTimeInput`.
@@ -52,6 +57,7 @@ Agent-visible from the A2UI v0.9 basic catalog: `Text`, `Row`, `Column`, `Card`,
 
 | Function | Returns | Arguments | Description |
 | --- | --- | --- | --- |
+| `cashNeeded` | object | `scenario`, `market` | The down payment plus every upfront cost, as a money object. Null until the facts that pick the charges are answered. |
 | `monthlyPayment` | object | `scenario`, `market` | First monthly payment for the scenario, interest plus amortization, as a money object. Null until the scenario and market are complete. |
 | `withinMaxLtv` | boolean | `scenario`, `market` | Whether the scenario loan is within every loan-to-value limit that applies to this buyer. False while a lending rule is still pending. |
 

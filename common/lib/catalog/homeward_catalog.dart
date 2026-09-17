@@ -8,6 +8,8 @@ import 'components/location_picker.dart';
 import 'components/market_snapshot_card.dart';
 import 'components/money_input.dart';
 import 'components/payment_breakdown.dart';
+import 'components/purchase_costs_table.dart';
+import 'functions/cash_needed_function.dart';
 import 'functions/catalog_function.dart';
 import 'functions/monthly_payment_function.dart';
 import 'functions/within_max_ltv_function.dart';
@@ -23,9 +25,11 @@ const homewardComponents = <CatalogComponent>[
   MarketSnapshotCard(),
   AffordabilitySummary(),
   PaymentBreakdown(),
+  PurchaseCostsTable(),
 ];
 
 const homewardFunctions = <CatalogFunction>[
+  CashNeededFunction(),
   MonthlyPaymentFunction(),
   WithinMaxLtvFunction(),
 ];

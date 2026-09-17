@@ -3,6 +3,7 @@ import 'package:json_schema_builder/json_schema_builder.dart';
 import 'package:test/test.dart';
 
 void main() {
+  const cashNeeded = CashNeededFunction();
   const monthlyPayment = MonthlyPaymentFunction();
   const withinMaxLtv = WithinMaxLtvFunction();
 
@@ -18,6 +19,7 @@ void main() {
 
   test('functions are declared with their argument schemas', () {
     expect(homewardFunctions.map((function) => function.name), [
+      'cashNeeded',
       'monthlyPayment',
       'withinMaxLtv',
     ]);
@@ -55,6 +57,38 @@ void main() {
             },
           ),
         ),
+        isNull,
+      );
+    });
+  });
+
+  group('cashNeeded', () {
+    test('adds every Funchal charge to the down payment', () {
+      expect(
+        cashNeeded.evaluate({
+          'scenario': funchalDataModel['scenario'],
+          'market': funchalDataModel['market'],
+        }),
+        {'minorUnits': 13552000, 'currency': 'EUR'},
+      );
+    });
+
+    test('is null until the facts that pick the charges are answered', () {
+      expect(cashNeeded.evaluate(const {}), isNull);
+      expect(
+        cashNeeded.evaluate({
+          'scenario': funchalDataModel['scenario'],
+          'market': funchalMarket
+              .copyWith(
+                pendingRules: const {
+                  'imt-nonresident': PendingRule(
+                    section: RuleSection.purchaseCosts,
+                    missing: {ProfileField.formerResident},
+                  ),
+                },
+              )
+              .toJson(),
+        }),
         isNull,
       );
     });

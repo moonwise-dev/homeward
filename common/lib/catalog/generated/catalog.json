@@ -1228,6 +1228,80 @@
         "profile"
       ],
       "additionalProperties": false
+    },
+    "PurchaseCostsTable": {
+      "type": "object",
+      "description": "Every upfront cost this buyer owes on the day, the total, and the cash needed with the down payment. A charge that is partly refunded shows what comes back and what earns it.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "PurchaseCostsTable"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "scenario": {
+          "type": "object",
+          "description": "Always { \"path\": \"/scenario\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/scenario"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "market": {
+          "type": "object",
+          "description": "Always { \"path\": \"/market\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/market"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "profile": {
+          "type": "object",
+          "description": "Always { \"path\": \"/profile\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/profile"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "explain": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "scenario",
+        "market",
+        "profile"
+      ],
+      "additionalProperties": false
     }
   },
   "functions": {
@@ -1752,6 +1826,61 @@
       ],
       "unevaluatedProperties": false
     },
+    "cashNeeded": {
+      "type": "object",
+      "description": "The down payment plus every upfront cost, as a money object. Null until the facts that pick the charges are answered.",
+      "properties": {
+        "call": {
+          "const": "cashNeeded"
+        },
+        "args": {
+          "type": "object",
+          "properties": {
+            "scenario": {
+              "type": "object",
+              "description": "Always { \"path\": \"/scenario\" }.",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "const": "/scenario"
+                }
+              },
+              "required": [
+                "path"
+              ],
+              "additionalProperties": false
+            },
+            "market": {
+              "type": "object",
+              "description": "Always { \"path\": \"/market\" }.",
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "const": "/market"
+                }
+              },
+              "required": [
+                "path"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "scenario",
+            "market"
+          ],
+          "additionalProperties": false
+        },
+        "returnType": {
+          "const": "object"
+        }
+      },
+      "required": [
+        "call",
+        "args"
+      ],
+      "unevaluatedProperties": false
+    },
     "monthlyPayment": {
       "type": "object",
       "description": "First monthly payment for the scenario, interest plus amortization, as a money object. Null until the scenario and market are complete.",
@@ -1954,6 +2083,9 @@
         },
         {
           "$ref": "#/components/PaymentBreakdown"
+        },
+        {
+          "$ref": "#/components/PurchaseCostsTable"
         }
       ]
     },
@@ -2000,6 +2132,9 @@
         },
         {
           "$ref": "#/functions/not"
+        },
+        {
+          "$ref": "#/functions/cashNeeded"
         },
         {
           "$ref": "#/functions/monthlyPayment"

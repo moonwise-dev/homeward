@@ -164,6 +164,14 @@ void main() {
     );
   });
 
+  test('the catalog sample market matches the Madeira pack', () {
+    expect(
+      resolveForBuyer(madeira, funchalProfile, referenceRates: markets.rates),
+      funchalMarket,
+      reason: 'Regenerate common/lib/catalog/examples/funchal_market_json.dart',
+    );
+  });
+
   test('a borrower over 35 is held to a 35 year term', () {
     expect(
       resolve(buyer(taxResidence: 'SE')).lending.maxTermYears.single.years,

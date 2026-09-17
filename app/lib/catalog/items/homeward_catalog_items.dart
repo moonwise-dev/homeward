@@ -7,6 +7,7 @@ import 'location_picker_item.dart';
 import 'market_snapshot_card_item.dart';
 import 'money_input_item.dart';
 import 'payment_breakdown_item.dart';
+import 'purchase_costs_table_item.dart';
 
 final homewardCatalogItems = <CatalogItem>[
   locationPickerItem,
@@ -16,4 +17,5 @@ final homewardCatalogItems = <CatalogItem>[
   marketSnapshotCardItem,
   affordabilitySummaryItem,
   paymentBreakdownItem,
+  purchaseCostsTableItem,
 ];
