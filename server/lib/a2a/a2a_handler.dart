@@ -4,6 +4,7 @@ import 'package:common/common.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:shelf/shelf.dart';
 
+import '../agent/turn/turn_input.dart';
 import '../agent/turn/turn_orchestrator.dart';
 import '../errors/homeward_failure.dart';
 import '../http/json_response.dart';
@@ -64,15 +65,12 @@ final class A2aHandler {
       return _error(rpc.id, JsonRpcErrors.invalidParams('Expected a message'));
     }
     final sessionId = message.contextId;
-    final text = [
-      for (final part in message.parts)
-        if (part case A2aTextPart(:final text)) text,
-    ].join('\n').trim();
-    if (sessionId == null || text.isEmpty) {
+    final input = _turnInput(message);
+    if (sessionId == null || input == null) {
       return _error(
         rpc.id,
         JsonRpcErrors.invalidParams(
-          'A message needs the session as contextId and a text part',
+          'A message needs the session as contextId and a text or action part',
         ),
       );
     }
@@ -95,7 +93,7 @@ final class A2aHandler {
       run: (cancellation) => turns.run(
         sessionId: sessionId,
         uid: uid,
-        text: text,
+        input: input,
         apiKey: apiKey,
         cancellation: cancellation,
       ),
@@ -129,6 +127,37 @@ final class A2aHandler {
     }
     await task.cancel();
     return jsonResponse(200, wire.snapshot(rpc.id, task));
+  }
+
+  TurnInput? _turnInput(A2aMessage message) {
+    for (final part in message.parts) {
+      if (part case A2aDataPart(
+        data: {'action': final Map<String, Object?> json},
+      )) {
+        try {
+          final action = ClientAction.fromJson(json);
+          return TurnInput.action(
+            action,
+            surfaceData: switch (message.metadata) {
+              {
+                'a2uiClientDataModel': {
+                  'surfaces': final Map<String, Object?> surfaces,
+                },
+              } =>
+                surfaces[action.surfaceId] as Map<String, Object?>? ?? const {},
+              _ => const {},
+            },
+          );
+        } on CheckedFromJsonException {
+          return null;
+        }
+      }
+    }
+    final text = [
+      for (final part in message.parts)
+        if (part case A2aTextPart(:final text)) text,
+    ].join('\n').trim();
+    return text.isEmpty ? null : TurnInput.text(text);
   }
 
   RunningTask? _task(Request request, JsonRpcRequest rpc) {

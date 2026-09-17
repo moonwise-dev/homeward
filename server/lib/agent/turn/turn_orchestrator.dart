@@ -5,6 +5,7 @@ import '../prompt/prompt_assembler.dart';
 import 'create_interaction.dart';
 import 'tool_belt.dart';
 import 'turn_event.dart';
+import 'turn_input.dart';
 import '../../errors/homeward_failure.dart';
 import 'turn_run.dart';
 import 'turn_settings.dart';
@@ -31,7 +32,7 @@ final class TurnOrchestrator {
   Stream<TurnEvent> run({
     required String sessionId,
     required String uid,
-    required String text,
+    required TurnInput input,
     required String apiKey,
     Future<void>? cancellation,
   }) async* {
@@ -56,7 +57,7 @@ final class TurnOrchestrator {
     try {
       yield const TurnEvent.working();
       yield* run.execute(
-        text: text,
+        turnInput: input,
         apiKey: apiKey,
         cancellation: cancellation,
       );

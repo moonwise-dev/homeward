@@ -8,6 +8,8 @@ import '../../gemini/interaction_event.dart';
 import '../../gemini/interaction_input.dart';
 import '../../gemini/interaction_request.dart';
 import '../../logging/log_entry.dart';
+import '../actions/action_input.dart';
+import '../actions/apply_action.dart';
 import '../parsed_output.dart';
 import '../prompt/prompt_assembler.dart';
 import '../prompt/turn_context.dart';
@@ -22,6 +24,7 @@ import 'retry_surface.dart';
 import 'surface_seeder.dart';
 import 'tool_belt.dart';
 import 'turn_event.dart';
+import 'turn_input.dart';
 import '../../errors/homeward_failure.dart';
 import 'turn_seeds.dart';
 import 'turn_settings.dart';
@@ -75,11 +78,11 @@ final class TurnRun {
   );
 
   Stream<TurnEvent> execute({
-    required String text,
+    required TurnInput turnInput,
     required String apiKey,
     Future<void>? cancellation,
   }) async* {
-    InteractionInput input = InteractionInput.text(text);
+    InteractionInput input = InteractionInput.text(_modelText(turnInput));
     var toolRounds = 0;
     var corrections = 0;
     var mayRebuildHistory = _interactionId != null;
@@ -164,6 +167,22 @@ final class TurnRun {
       );
       yield TurnEvent.completed(_text.toString().trim());
       return;
+    }
+  }
+
+  String _modelText(TurnInput turnInput) {
+    switch (turnInput) {
+      case TextTurnInput(:final text):
+        return text;
+      case ActionTurnInput(:final action, :final surfaceData):
+        final outcome = applyAction(
+          action: action,
+          surfaceData: surfaceData,
+          plan: _plan,
+          markets: tools.markets,
+        );
+        _plan = outcome.plan;
+        return actionInput(outcome.summary);
     }
   }
 

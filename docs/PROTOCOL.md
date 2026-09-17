@@ -337,9 +337,9 @@ and `/market` through `common/finance` when the buyer changes a bound input.
 
 | Action | Context | Server behavior before the model runs |
 | --- | --- | --- |
-| `commit_profile` | `profilePath` | Validate and write profile to plan |
+| `commit_profile` | `profilePath` | Save every valid field from the surface's `/profile` over the saved profile, clear the draft, and report invalid fields |
 | `select_market` | `marketId` | Resolve market, write to plan; profile facts on the surface become the profile draft |
-| `commit_scenario` | `scenarioPath` | Validate against rules, write scenario to plan |
+| `commit_scenario` | `scenarioPath` | Parse `/scenario`, refuse it unless amounts are in the market currency and `withinMaxLtv` holds, then save it and clear the draft |
 | `toggle_document` | `documentId` | Toggle checklist state, recompile board, no model call |
 | `change` | `section` | Release the decision in the plan, then run the model |
 | `explain` | `topic`, `path` | Run the model with the resolved value and its source attached |
@@ -349,6 +349,14 @@ Every interactive surface is created with `sendDataModel: true` so committed
 values arrive with the action.
 
 Actions the server can complete without the model do not call the model.
+
+`server/lib/agent/actions/apply_action.dart` applies an action to the plan before
+the model runs and hands the model a summary: the action, the surface, whether
+it was applied, and why not or which fields were refused. Values are read as
+the basic inputs write them: a `ChoicePicker` writes a one-item list, and a
+`TextField` writes a number or a numeric string, so profile fields are
+normalized by their data model kind first. In M1 every action runs the model;
+`explain` and the actions of later milestones reach it with their context.
 
 ## Server Validation Passes
 

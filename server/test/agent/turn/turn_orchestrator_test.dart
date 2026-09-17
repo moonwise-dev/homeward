@@ -6,6 +6,7 @@ import 'package:common/common.dart';
 import 'package:homeward_server/agent/prompt/prompt_assembler.dart';
 import 'package:homeward_server/agent/turn/tool_belt.dart';
 import 'package:homeward_server/agent/turn/turn_event.dart';
+import 'package:homeward_server/agent/turn/turn_input.dart';
 import 'package:homeward_server/errors/homeward_failure.dart';
 import 'package:homeward_server/agent/turn/turn_orchestrator.dart';
 import 'package:homeward_server/agent/turn/turn_settings.dart';
@@ -47,7 +48,12 @@ void main() {
   }
 
   Stream<TurnEvent> send(TurnOrchestrator agent, [String text = 'Hi']) =>
-      agent.run(sessionId: 's-1', uid: 'uid-1', text: text, apiKey: 'key');
+      agent.run(
+        sessionId: 's-1',
+        uid: 'uid-1',
+        input: TurnInput.text(text),
+        apiKey: 'key',
+      );
 
   String a2ui(String surfaceId, List<Map<String, Object?>> components) => [
     '```a2ui',
@@ -249,7 +255,12 @@ void main() {
 
     expect(
       await agent
-          .run(sessionId: 's-1', uid: 'uid-2', text: 'Hi', apiKey: 'key')
+          .run(
+            sessionId: 's-1',
+            uid: 'uid-2',
+            input: const TurnInput.text('Hi'),
+            apiKey: 'key',
+          )
           .toList(),
       [const TurnEvent.failed(HomewardFailure.sessionNotFound)],
     );

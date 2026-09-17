@@ -36,4 +36,13 @@ enum SurfaceAction {
   static final Set<String> wireNames = {
     for (final action in values) action.wireName,
   };
+
+  static SurfaceAction? named(String wireName) {
+    for (final action in values) {
+      if (action.wireName == wireName) {
+        return action;
+      }
+    }
+    return null;
+  }
 }

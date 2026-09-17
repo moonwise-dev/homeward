@@ -131,6 +131,58 @@ void main() {
   );
 
   test(
+    'applies an action with its surface data before the model runs',
+    () async {
+      final script = ScriptedInteractions([reply('i1', text: 'Saved.')]);
+      final handler = handlerFor(script);
+
+      await events(
+        await handler(
+          rpc('message/stream', {
+            'message': {
+              'role': 'user',
+              'parts': [
+                {
+                  'kind': 'data',
+                  'data': {
+                    'version': 'v0.9',
+                    'action': {
+                      'surfaceId': 't1-start',
+                      'name': 'select_market',
+                      'sourceComponentId': 'go',
+                      'timestamp': '2026-09-17T10:00:00.000',
+                      'context': {'marketId': 'SE'},
+                    },
+                  },
+                },
+              ],
+              'messageId': 'm-2',
+              'contextId': 's-1',
+              'metadata': {
+                'a2uiClientDataModel': {
+                  'version': 'v0.9',
+                  'surfaces': {
+                    't1-start': {
+                      'selection': {'marketId': 'SE'},
+                      'profile': {'taxResidence': 'SE'},
+                    },
+                  },
+                },
+              },
+            },
+          }),
+        ),
+      );
+
+      final plan = (await sessions.find('s-1'))!.plan;
+      expect(plan.marketId, MarketId.parse('SE'));
+      expect(plan.profileDraft?.taxResidence, CountryCode.parse('SE'));
+      final input = script.requests.single.input;
+      expect(jsonEncode(input.toJson()), contains('select_market'));
+    },
+  );
+
+  test(
     'ends a failed turn with a JSON-RPC error carrying the Homeward code',
     () async {
       final handler = handlerFor(
