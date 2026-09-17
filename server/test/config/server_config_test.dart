@@ -6,7 +6,11 @@ void main() {
   test('defaults to port 8080 and text logs', () {
     expect(
       ServerConfig.fromEnvironment({}),
-      const ServerConfig(port: 8080, logFormat: LogFormat.text),
+      ServerConfig(
+        port: 8080,
+        logFormat: LogFormat.text,
+        publicUrl: Uri.parse('http://localhost:8080'),
+      ),
     );
   });
 
@@ -16,10 +20,12 @@ void main() {
         'PORT': '9090',
         'HOMEWARD_LOG_FORMAT': 'json',
         'GOOGLE_CLOUD_PROJECT': 'homeward-genui',
+        'HOMEWARD_PUBLIC_URL': 'https://homeward.example.run.app',
       }),
-      const ServerConfig(
+      ServerConfig(
         port: 9090,
         logFormat: LogFormat.json,
+        publicUrl: Uri.parse('https://homeward.example.run.app'),
         projectId: 'homeward-genui',
       ),
     );

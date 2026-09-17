@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ServerConfig {
 
- int get port; LogFormat get logFormat; String? get projectId;
+ int get port; LogFormat get logFormat; Uri get publicUrl; String? get projectId;
 /// Create a copy of ServerConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $ServerConfigCopyWith<ServerConfig> get copyWith => _$ServerConfigCopyWithImpl<S
 @override
 bool operator ==(Object other) {
   final _this = this as ServerConfig;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServerConfig&&(identical(other.port, _this.port) || other.port == _this.port)&&(identical(other.logFormat, _this.logFormat) || other.logFormat == _this.logFormat)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServerConfig&&(identical(other.port, _this.port) || other.port == _this.port)&&(identical(other.logFormat, _this.logFormat) || other.logFormat == _this.logFormat)&&(identical(other.publicUrl, _this.publicUrl) || other.publicUrl == _this.publicUrl)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId));
 }
 
 
 @override
 int get hashCode {
   final _this = this as ServerConfig;
-  return Object.hash(runtimeType,_this.port,_this.logFormat,_this.projectId);
+  return Object.hash(runtimeType,_this.port,_this.logFormat,_this.publicUrl,_this.projectId);
 }
 
 @override
 String toString() {
   final _this = this as ServerConfig;
-  return 'ServerConfig(port: ${_this.port}, logFormat: ${_this.logFormat}, projectId: ${_this.projectId})';
+  return 'ServerConfig(port: ${_this.port}, logFormat: ${_this.logFormat}, publicUrl: ${_this.publicUrl}, projectId: ${_this.projectId})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $ServerConfigCopyWith<$Res>  {
   factory $ServerConfigCopyWith(ServerConfig value, $Res Function(ServerConfig) _then) = _$ServerConfigCopyWithImpl;
 @useResult
 $Res call({
- int port, LogFormat logFormat, String? projectId
+ int port, LogFormat logFormat, Uri publicUrl, String? projectId
 });
 
 
@@ -68,11 +68,12 @@ class _$ServerConfigCopyWithImpl<$Res>
 
 /// Create a copy of ServerConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? port = null,Object? logFormat = null,Object? projectId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? port = null,Object? logFormat = null,Object? publicUrl = null,Object? projectId = freezed,}) {
   return _then(ServerConfig(
 port: null == port ? _self.port : port // ignore: cast_nullable_to_non_nullable
 as int,logFormat: null == logFormat ? _self.logFormat : logFormat // ignore: cast_nullable_to_non_nullable
-as LogFormat,projectId: freezed == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
+as LogFormat,publicUrl: null == publicUrl ? _self.publicUrl : publicUrl // ignore: cast_nullable_to_non_nullable
+as Uri,projectId: freezed == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int port,  LogFormat logFormat,  String? projectId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int port,  LogFormat logFormat,  Uri publicUrl,  String? projectId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ServerConfig() when $default != null:
-return $default(_that.port,_that.logFormat,_that.projectId);case _:
+return $default(_that.port,_that.logFormat,_that.publicUrl,_that.projectId);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.port,_that.logFormat,_that.projectId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int port,  LogFormat logFormat,  String? projectId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int port,  LogFormat logFormat,  Uri publicUrl,  String? projectId)  $default,) {final _that = this;
 switch (_that) {
 case _ServerConfig():
-return $default(_that.port,_that.logFormat,_that.projectId);case _:
+return $default(_that.port,_that.logFormat,_that.publicUrl,_that.projectId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.port,_that.logFormat,_that.projectId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int port,  LogFormat logFormat,  String? projectId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int port,  LogFormat logFormat,  Uri publicUrl,  String? projectId)?  $default,) {final _that = this;
 switch (_that) {
 case _ServerConfig() when $default != null:
-return $default(_that.port,_that.logFormat,_that.projectId);case _:
+return $default(_that.port,_that.logFormat,_that.publicUrl,_that.projectId);case _:
   return null;
 
 }
@@ -214,11 +215,12 @@ return $default(_that.port,_that.logFormat,_that.projectId);case _:
 
 
 class _ServerConfig implements ServerConfig {
-  const _ServerConfig({required this.port, required this.logFormat, this.projectId});
+  const _ServerConfig({required this.port, required this.logFormat, required this.publicUrl, this.projectId});
   
 
 @override final  int port;
 @override final  LogFormat logFormat;
+@override final  Uri publicUrl;
 @override final  String? projectId;
 
 /// Create a copy of ServerConfig
@@ -231,18 +233,18 @@ _$ServerConfigCopyWith<_ServerConfig> get copyWith => __$ServerConfigCopyWithImp
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ServerConfig&&(identical(other.port, port) || other.port == port)&&(identical(other.logFormat, logFormat) || other.logFormat == logFormat)&&(identical(other.projectId, projectId) || other.projectId == projectId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ServerConfig&&(identical(other.port, port) || other.port == port)&&(identical(other.logFormat, logFormat) || other.logFormat == logFormat)&&(identical(other.publicUrl, publicUrl) || other.publicUrl == publicUrl)&&(identical(other.projectId, projectId) || other.projectId == projectId));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,port,logFormat,projectId);
+    return Object.hash(runtimeType,port,logFormat,publicUrl,projectId);
 }
 
 @override
 String toString() {
-    return 'ServerConfig(port: $port, logFormat: $logFormat, projectId: $projectId)';
+    return 'ServerConfig(port: $port, logFormat: $logFormat, publicUrl: $publicUrl, projectId: $projectId)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$ServerConfigCopyWith<$Res> implements $ServerConfigCopyWi
   factory _$ServerConfigCopyWith(_ServerConfig value, $Res Function(_ServerConfig) _then) = __$ServerConfigCopyWithImpl;
 @override @useResult
 $Res call({
- int port, LogFormat logFormat, String? projectId
+ int port, LogFormat logFormat, Uri publicUrl, String? projectId
 });
 
 
@@ -270,11 +272,12 @@ class __$ServerConfigCopyWithImpl<$Res>
 
 /// Create a copy of ServerConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? port = null,Object? logFormat = null,Object? projectId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? port = null,Object? logFormat = null,Object? publicUrl = null,Object? projectId = freezed,}) {
   return _then(_ServerConfig(
 port: null == port ? _self.port : port // ignore: cast_nullable_to_non_nullable
 as int,logFormat: null == logFormat ? _self.logFormat : logFormat // ignore: cast_nullable_to_non_nullable
-as LogFormat,projectId: freezed == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
+as LogFormat,publicUrl: null == publicUrl ? _self.publicUrl : publicUrl // ignore: cast_nullable_to_non_nullable
+as Uri,projectId: freezed == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

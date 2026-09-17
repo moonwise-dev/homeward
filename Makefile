@@ -7,6 +7,7 @@ FIREBASE_PROJECT := homeward-genui
 REGION := europe-north1
 SERVER_SERVICE := homeward-server
 SERVER_ACCOUNT := $(SERVER_SERVICE)@$(FIREBASE_PROJECT).iam.gserviceaccount.com
+SERVER_URL := https://homeward-server-1065509330520.europe-north1.run.app
 SERVER_REGISTRY_IMAGE := $(REGION)-docker.pkg.dev/$(FIREBASE_PROJECT)/homeward/server:$(shell git rev-parse --short HEAD)
 
 .PHONY: help
@@ -131,7 +132,7 @@ deploy-server: clean-tree server-image
 	@gcloud run deploy $(SERVER_SERVICE) --project $(FIREBASE_PROJECT) --region $(REGION) \
 		--image $(SERVER_REGISTRY_IMAGE) --service-account $(SERVER_ACCOUNT) --no-invoker-iam-check \
 		--min-instances 0 --max-instances 2 --concurrency 40 --timeout 300 \
-		--set-env-vars GOOGLE_CLOUD_PROJECT=$(FIREBASE_PROJECT) --quiet
+		--set-env-vars GOOGLE_CLOUD_PROJECT=$(FIREBASE_PROJECT),HOMEWARD_PUBLIC_URL=$(SERVER_URL) --quiet
 
 .PHONY: deploy-web
 deploy-web:

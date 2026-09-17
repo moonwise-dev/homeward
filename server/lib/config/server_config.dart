@@ -9,6 +9,7 @@ abstract class ServerConfig with _$ServerConfig {
   const factory ServerConfig({
     required int port,
     required LogFormat logFormat,
+    required Uri publicUrl,
     String? projectId,
   }) = _ServerConfig;
 
@@ -17,6 +18,9 @@ abstract class ServerConfig with _$ServerConfig {
         port: int.parse(environment['PORT'] ?? '8080'),
         logFormat: LogFormat.values.byName(
           environment['HOMEWARD_LOG_FORMAT'] ?? LogFormat.text.name,
+        ),
+        publicUrl: Uri.parse(
+          environment['HOMEWARD_PUBLIC_URL'] ?? 'http://localhost:8080',
         ),
         projectId: environment['GOOGLE_CLOUD_PROJECT'],
       );

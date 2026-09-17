@@ -45,6 +45,7 @@ model yet.
 
 ```json
 {
+  "protocolVersion": "0.3.0",
   "name": "Homeward",
   "description": "Home-buying finance agent: affordability, purchase costs, and foreign buyer obstacles for any location.",
   "url": "https://homeward-server-1065509330520.europe-north1.run.app/a2a",
@@ -69,14 +70,21 @@ model yet.
     "gemini": { "type": "apiKey", "in": "header", "name": "X-Homeward-Gemini-Key" }
   },
   "security": [{ "firebase": [], "gemini": [] }],
+  "defaultInputModes": ["text/plain", "application/json"],
+  "defaultOutputModes": ["text/plain", "application/json+a2ui"],
   "skills": [
-    { "id": "affordability", "name": "Affordability", "description": "Maximum loan and price, binding constraint, what-if." },
-    { "id": "purchase_costs", "name": "Purchase costs", "description": "Upfront taxes and fees for a buyer in a market." },
-    { "id": "foreign_buyer", "name": "Foreign buyer", "description": "Obstacles, restrictions, and process for non-residents." },
-    { "id": "buying_process", "name": "Buying process", "description": "Steps and documents for a purchase." }
+    { "id": "affordability", "name": "Affordability", "description": "Maximum loan and price, binding constraint, what-if.", "tags": ["mortgage", "affordability"] },
+    { "id": "purchase_costs", "name": "Purchase costs", "description": "Upfront taxes and fees for a buyer in a market.", "tags": ["taxes", "fees"] },
+    { "id": "foreign_buyer", "name": "Foreign buyer", "description": "Obstacles, restrictions, and process for non-residents.", "tags": ["cross-border"] },
+    { "id": "buying_process", "name": "Buying process", "description": "Steps and documents for a purchase.", "tags": ["process", "documents"] }
   ]
 }
 ```
+
+`protocolVersion`, `defaultInputModes`, `defaultOutputModes`, and skill `tags`
+are required by `genui_a2a`'s agent card parser. `url` comes from
+`HOMEWARD_PUBLIC_URL`. The card is built from the Freezed A2A models in
+`common/lib/wire/a2a`, which the server encodes every A2A message with.
 
 ### Methods
 

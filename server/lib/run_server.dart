@@ -14,7 +14,7 @@ final _log = Logger('server');
 Future<void> runServer(ServerConfig config) async {
   configureLogging(config);
   final server = await shelf_io.serve(
-    buildApp(),
+    buildApp(config),
     InternetAddress.anyIPv4,
     config.port,
     poweredByHeader: null,

@@ -105,6 +105,7 @@ runs after every plan change and on session open when the board is missing.
 | `HOMEWARD_MAX_CORRECTIONS` | Validation correction rounds |
 | `HOMEWARD_ALLOWED_ORIGINS` | CORS origins |
 | `HOMEWARD_APP_CHECK_ENFORCED` | Enforce App Check, off for local development |
+| `HOMEWARD_PUBLIC_URL` | Base URL clients call, used for the agent card's `url` |
 | `GOOGLE_CLOUD_PROJECT` | Firebase project |
 
 No secrets are required in production. Credentials come from the Cloud Run
