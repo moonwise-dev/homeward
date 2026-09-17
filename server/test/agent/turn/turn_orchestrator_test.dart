@@ -254,6 +254,48 @@ void main() {
   );
 
   test(
+    'runs tool calls sent after the tool round once when nothing was drawn',
+    () async {
+      await sessions.create('uid-1');
+      final script = ScriptedInteractions([
+        reply(
+          'i1',
+          calls: const [
+            FunctionCall(
+              callId: 'market',
+              name: 'resolve_market',
+              arguments: {'placeName': 'Södermalm', 'countryCode': 'SE'},
+            ),
+          ],
+        ),
+        reply(
+          'i2',
+          calls: const [
+            FunctionCall(
+              callId: 'profile',
+              name: 'propose_profile',
+              arguments: {'adults': 2},
+            ),
+          ],
+        ),
+        reply('i3', text: 'Tell me about your household.'),
+      ]);
+
+      final events = await send(orchestrator(script)).toList();
+
+      expect(script.requests, hasLength(3));
+      final third = script.requests[2];
+      expect(third.toolChoice, ToolChoice.none);
+      expect((third.input as FunctionResultsInput).note, toolsDoneNote);
+      expect(
+        events.last,
+        const TurnEvent.completed('Tell me about your household.'),
+      );
+      expect((await sessions.find('s-1'))!.plan.profileDraft?.adults, 2);
+    },
+  );
+
+  test(
     'takes back a failed model\'s draft and continues on the fallback',
     () async {
       await sessions.create('uid-1');

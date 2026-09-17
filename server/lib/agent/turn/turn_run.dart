@@ -88,6 +88,7 @@ final class TurnRun {
   }) async* {
     InteractionInput input = InteractionInput.text(_modelText(turnInput));
     var toolRounds = 0;
+    var ranLateCalls = false;
     var corrections = 0;
     var mayRebuildHistory = _interactionId != null;
     while (true) {
@@ -173,8 +174,21 @@ final class TurnRun {
       for (final output in parser.close()) {
         yield* _emit(output);
       }
-      if (calls.isNotEmpty && toolRounds < settings.maxToolRounds) {
-        toolRounds++;
+      final drewNothing =
+          _acceptedInRound == 0 &&
+          _text.toString().trim() == textBeforeRound.trim();
+      final runsLateCalls =
+          calls.isNotEmpty &&
+          toolRounds >= settings.maxToolRounds &&
+          drewNothing &&
+          !ranLateCalls;
+      if (calls.isNotEmpty &&
+          (toolRounds < settings.maxToolRounds || runsLateCalls)) {
+        if (runsLateCalls) {
+          ranLateCalls = true;
+        } else {
+          toolRounds++;
+        }
         final results = {
           for (final call
               in [...calls]..sort(
@@ -208,6 +222,7 @@ final class TurnRun {
             'turn': turn,
             'modelRounds': _rounds,
             'toolRounds': toolRounds,
+            'ranLateCalls': ranLateCalls,
             'corrections': corrections,
             'surfaces': _validator.surfacesCreated.length,
           },

@@ -15,7 +15,7 @@ It has no hard-coded stages; the open decisions of the plan decide the step.
 | Unhealthy model cool-down | 5 min | `HOMEWARD_MODEL_COOLDOWN` |
 | Store interactions | `true` | fixed |
 | Validation correction rounds | 2 | `HOMEWARD_MAX_CORRECTIONS` |
-| Model rounds per turn | ≤ 2, plus correction rounds | enforced by the tool round cap |
+| Model rounds per turn | ≤ 2, plus correction rounds and one run of late tool calls | enforced by the tool round cap |
 | Inline surfaces per turn | 2 | fixed |
 | Tool rounds per turn, cap | 1 | fixed (D78) |
 
@@ -261,10 +261,13 @@ owner, and leases it; `turn_run.dart` runs one turn:
    A turn has one tool round: the request carrying the results ends with a
    text note that tools are done for the turn, and it and every request after
    it set `tool_choice` to `none`, so the model writes its text and surfaces
-   with what it has. Function calls it sends anyway are dropped (D78). On
-   2026-09-17 `gemini-3.1-flash-lite` called tools again when the tools were
-   left out and again under `tool_choice: none`, ending the turn with nothing
-   drawn; with the note it drew the form in that request. Every round
+   with what it has. Function calls it sends anyway are dropped when the
+   request also wrote text or a surface (D78). When it drew nothing, the calls
+   run and the model is asked once more, the only way a turn reaches a third
+   request besides corrections (D84). On 2026-09-17 `gemini-3.1-flash-lite`
+   called tools again with the tools left out and under `tool_choice: none`;
+   the note fixed that in probes, but a live turn on `gemini-3.5-flash-lite`
+   still called `propose_profile` after it and showed the buyer nothing. Every round
    is logged with its status, the names of the tools called, and its
    duration.
 9. When messages were rejected, continue with one text input listing each
