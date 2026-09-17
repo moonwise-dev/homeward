@@ -317,4 +317,51 @@ final class AgentRepositoryProvider
   }
 }
 
-String _$agentRepositoryHash() => r'669273834f02b6e029dc0695fd5993519cf25a13';
+String _$agentRepositoryHash() => r'c2ee69d1b2c8ccba174f21e7bf57a434cf6523f8';
+
+@ProviderFor(galleryRepository)
+final galleryRepositoryProvider = GalleryRepositoryProvider._();
+
+final class GalleryRepositoryProvider
+    extends
+        $FunctionalProvider<
+          GalleryRepository,
+          GalleryRepository,
+          GalleryRepository
+        >
+    with $Provider<GalleryRepository> {
+  GalleryRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'galleryRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$galleryRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<GalleryRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  GalleryRepository create(Ref ref) {
+    return galleryRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GalleryRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GalleryRepository>(value),
+    );
+  }
+}
+
+String _$galleryRepositoryHash() => r'2a972fe4def298729d9b7828e37c53790b92b7f5';

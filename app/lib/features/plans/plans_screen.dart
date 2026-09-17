@@ -23,6 +23,11 @@ class PlansScreen extends ConsumerWidget {
       title: 'Plans',
       actions: [
         IconButton(
+          tooltip: 'Catalog gallery',
+          icon: const Icon(Icons.widgets_outlined),
+          onPressed: () => context.push(AppRoutes.gallery),
+        ),
+        IconButton(
           tooltip: 'Gemini key',
           icon: const Icon(Icons.key_outlined),
           onPressed: () => context.push(AppRoutes.geminiKey),

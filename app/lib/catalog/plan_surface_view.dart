@@ -4,8 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../data/providers/repository_providers.dart';
 
-class SurfaceView extends ConsumerWidget {
-  const SurfaceView({
+class PlanSurfaceView extends ConsumerWidget {
+  const PlanSurfaceView({
     required this.sessionId,
     required this.surfaceId,
     super.key,

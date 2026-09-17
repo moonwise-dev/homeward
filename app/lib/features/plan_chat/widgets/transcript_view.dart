@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../catalog/surface_view.dart';
+import '../../../catalog/plan_surface_view.dart';
 import '../../../data/models/transcript_entry.dart';
 import '../../../display/surface_action_label.dart';
 import '../../../ui/app_chat_bubble.dart';
@@ -51,7 +51,7 @@ class TranscriptView extends StatelessWidget {
               onRetry: () => onRetry(id),
               surfaces: [
                 for (final surfaceId in surfaceIds)
-                  SurfaceView(
+                  PlanSurfaceView(
                     key: ValueKey(surfaceId),
                     sessionId: sessionId,
                     surfaceId: surfaceId,

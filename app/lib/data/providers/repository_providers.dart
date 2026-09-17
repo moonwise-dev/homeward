@@ -6,6 +6,7 @@ import '../../catalog/homeward_genui_catalog.dart';
 import '../repository/agent_repository.dart';
 import '../repository/app_check_repository.dart';
 import '../repository/auth_repository.dart';
+import '../repository/gallery_repository.dart';
 import '../repository/gemini_key_repository.dart';
 import '../repository/key_verification_repository.dart';
 import '../repository/plans_repository.dart';
@@ -53,3 +54,7 @@ AgentRepository agentRepository(Ref ref) => GenUiAgentRepository(
   ref.watch(geminiKeyRepositoryProvider),
   homewardGenuiCatalog(),
 );
+
+@Riverpod(keepAlive: true)
+GalleryRepository galleryRepository(Ref ref) =>
+    GenUiGalleryRepository(homewardGenuiCatalog());

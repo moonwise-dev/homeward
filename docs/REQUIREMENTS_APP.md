@@ -41,6 +41,7 @@ them and scroll with the transcript.
 | `/settings` | Settings |
 
 Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
+`/gallery` needs neither, because it renders declared examples offline.
 
 ## Screens
 
