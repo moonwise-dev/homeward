@@ -85,5 +85,6 @@ export 'time/calendar_date.dart';
 export 'time/calendar_date_json_converter.dart';
 export 'time/period.dart';
 export 'time/period_json_converter.dart';
+export 'wire/action_names.dart';
 export 'wire/decode_sse.dart';
 export 'wire/sse_event.dart';

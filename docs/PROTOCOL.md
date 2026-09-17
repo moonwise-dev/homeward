@@ -334,13 +334,19 @@ Actions the server can complete without the model do not call the model.
 
 Every A2UI message the model produces passes these in order before it reaches
 a client. Failures are returned to the model as `VALIDATION_FAILED` errors in
-the A2UI error shape, with at most two correction rounds per turn.
+the A2UI error shape, `{ code, surfaceId, path, message }`, where `path` is a
+JSON pointer into the rejected message, with at most two correction rounds per
+turn. A message is forwarded only if every pass accepts it; the first failing
+pass rejects it.
 
 1. **Parse.** One JSON object per line inside an `a2ui` fenced block.
 2. **Envelope.** `A2uiMessage.fromJson` from `a2ui_core`: exactly one message
    type, `version` is `v0.9`. It reports wrong field types as raw cast errors,
    so the pass maps any `TypeError` to a `VALIDATION_FAILED` error.
 3. **Ownership.** Surface ID matches the turn namespace; `board` is refused.
+   The model may send only `createSurface`, with the Homeward catalog ID and at
+   most two per turn, and `updateComponents` for a surface it created in this
+   turn. `updateDataModel` and `deleteSurface` are the server's.
 4. **Allow-list.** Component is in the agent-visible catalog subset.
    `a2ui_core` does not check this, so the pass does.
 5. **Schema.** Components validate against the Homeward catalog document from
@@ -355,12 +361,17 @@ the A2UI error shape, with at most two correction rounds per turn.
    fails pass 5. This pass exists as a separate test fixture, not separate
    code.
 7. **Structure.** Exactly one `root`, every child ID exists, no cycles, no
-   orphans. `a2ui_core` does not check this, so the pass does.
+   orphans. `a2ui_core` does not check this, so the pass does. The check runs
+   on the surface's components after merging each `updateComponents`, so every
+   message must leave a complete tree; references are read from `child`,
+   `children`, `tabs[].child`, `trigger`, and `content` as the v0.9 basic
+   catalog defines them.
 8. **Paths.** The session's stored messages are replayed into an `a2ui_core`
    `MessageProcessor` at the start of the turn. Each candidate message goes
    through that shadow processor: an update to an unknown surface or a duplicate
-   `createSurface` fails, and every bound path must resolve in the shadow data
-   model.
+   `createSurface` fails, and every bound absolute path must resolve in the data
+   model the server will seed. An input may bind to a missing field of an
+   existing object, which it will write; relative template paths are skipped.
 9. **Actions.** Action names are in the action table.
 10. **Seed.** The server prepends `createSurface` with `sendDataModel: true` if
     the model omitted it, and emits `updateDataModel` for the slices the

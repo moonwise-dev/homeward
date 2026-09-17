@@ -1,0 +1,172 @@
+import 'dart:convert';
+
+import 'package:a2ui_core/a2ui_core.dart';
+import 'package:common/common.dart';
+
+import 'component_tree.dart';
+import 'validation_failure.dart';
+import 'validation_outcome.dart';
+
+final class TurnValidator {
+  TurnValidator({
+    required this.turn,
+    required this.catalog,
+    required this.shadow,
+    required this.seeds,
+    this.maxSurfaces = 2,
+  }) : _surfacePattern = RegExp('^t$turn-[a-z0-9]+(-[a-z0-9]+)*\$');
+
+  final int turn;
+  final CatalogValidator catalog;
+  final MessageProcessor<ComponentApi> shadow;
+  final Map<String, Object?> seeds;
+  final int maxSurfaces;
+  final RegExp _surfacePattern;
+  final _components = <String, Map<String, Map<String, Object?>>>{};
+
+  Set<String> get surfacesCreated => _components.keys.toSet();
+
+  ValidationOutcome validate(String line) {
+    final Object? json;
+    try {
+      json = jsonDecode(line);
+    } on FormatException catch (error) {
+      return _reject('', '', 'Not valid JSON: ${error.message}');
+    }
+    if (json is! Map<String, Object?>) {
+      return _reject('', '', 'Each a2ui line must be one JSON object');
+    }
+    final A2uiMessage message;
+    try {
+      message = A2uiMessage.fromJson(json);
+    } on A2uiValidationError catch (error) {
+      return _reject(_surfaceIdIn(json), '', error.message);
+    } on TypeError {
+      return _reject(
+        _surfaceIdIn(json),
+        '',
+        'A field has the wrong type; check surfaceId, catalogId, and components',
+      );
+    }
+    return switch (message) {
+      CreateSurfaceMessage() => _createSurface(message),
+      UpdateComponentsMessage() => _updateComponents(message),
+      UpdateDataModelMessage(:final surfaceId) => _reject(
+        surfaceId,
+        '/updateDataModel',
+        'The server writes the data model; bind components to paths instead',
+      ),
+      DeleteSurfaceMessage(:final surfaceId) => _reject(
+        surfaceId,
+        '/deleteSurface',
+        'Surfaces cannot be deleted',
+      ),
+      _ => _reject('', '', 'Unknown message type'),
+    };
+  }
+
+  ValidationOutcome _createSurface(CreateSurfaceMessage message) {
+    final surfaceId = message.surfaceId;
+    if (_ownershipProblem(surfaceId) case final problem?) {
+      return _reject(surfaceId, '/createSurface/surfaceId', problem);
+    }
+    if (message.catalogId != homewardCatalogId) {
+      return _reject(
+        surfaceId,
+        '/createSurface/catalogId',
+        'Use catalogId $homewardCatalogId',
+      );
+    }
+    if (_components.length >= maxSurfaces) {
+      return _reject(
+        surfaceId,
+        '/createSurface',
+        'A turn may create at most $maxSurfaces surfaces',
+      );
+    }
+    return _apply(message, () => _components[surfaceId] = {});
+  }
+
+  ValidationOutcome _updateComponents(UpdateComponentsMessage message) {
+    final surfaceId = message.surfaceId;
+    if (_ownershipProblem(surfaceId) case final problem?) {
+      return _reject(surfaceId, '/updateComponents/surfaceId', problem);
+    }
+    final existing = _components[surfaceId];
+    if (existing == null) {
+      return _reject(
+        surfaceId,
+        '/updateComponents/surfaceId',
+        'Create surface $surfaceId in this turn before adding components',
+      );
+    }
+    final merged = {...existing};
+    for (final (index, component) in message.components.indexed) {
+      final path = '/updateComponents/components/$index';
+      final name = component['component'];
+      if (!catalog.componentNames.contains(name)) {
+        return _reject(
+          surfaceId,
+          '$path/component',
+          '$name is not in the catalog',
+        );
+      }
+      final errors = catalog.validateComponent(component) ?? const [];
+      if (errors.isNotEmpty) {
+        final first = errors.first;
+        return _reject(
+          surfaceId,
+          '$path/${first.path.join('/')}',
+          '$name: ${first.details ?? first.error.name}',
+        );
+      }
+      for (final bound in boundPaths(component)) {
+        if (!resolvesForBinding(seeds, bound)) {
+          return _reject(surfaceId, path, '$bound is not in the data model');
+        }
+      }
+      for (final action in actionNames(component)) {
+        if (!ActionNames.all.contains(action)) {
+          return _reject(surfaceId, path, 'Unknown action $action');
+        }
+      }
+      merged[component['id']! as String] = component;
+    }
+    if (structureProblem(merged) case final problem?) {
+      return _reject(surfaceId, '/updateComponents/components', problem);
+    }
+    return _apply(message, () => _components[surfaceId] = merged);
+  }
+
+  String? _ownershipProblem(String surfaceId) => switch (surfaceId) {
+    'board' => 'The board is compiled by the server',
+    _ when !_surfacePattern.hasMatch(surfaceId) =>
+      'Surface ids in turn $turn look like t$turn-budget',
+    _ => null,
+  };
+
+  ValidationOutcome _apply(A2uiMessage message, void Function() record) {
+    try {
+      shadow.processMessages([message]);
+    } on A2uiError catch (error) {
+      final surfaceId = switch (message) {
+        CreateSurfaceMessage(:final surfaceId) => surfaceId,
+        UpdateComponentsMessage(:final surfaceId) => surfaceId,
+        _ => '',
+      };
+      return _reject(surfaceId, '', error.message);
+    }
+    record();
+    return Accepted(message);
+  }
+
+  Rejected _reject(String surfaceId, String path, String message) => Rejected(
+    ValidationFailure(surfaceId: surfaceId, path: path, message: message),
+  );
+
+  String _surfaceIdIn(Map<String, Object?> json) => switch (json) {
+    {'createSurface': {'surfaceId': final String id}} => id,
+    {'updateComponents': {'surfaceId': final String id}} => id,
+    _ => '',
+  };
+}
