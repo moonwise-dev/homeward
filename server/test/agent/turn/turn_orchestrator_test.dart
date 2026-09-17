@@ -155,7 +155,7 @@ void main() {
       expect(second.toolChoice, ToolChoice.none);
       expect(second.systemInstruction, contains('"load_market": {'));
       final input = second.input as FunctionResultsInput;
-      expect(input.results.single.result, containsPair('selected', true));
+      expect(input.results.single.result, contains('selectedMarket'));
       expect(input.note, toolsDoneNote);
 
       final saved = (await sessions.find('s-1'))!;

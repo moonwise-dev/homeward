@@ -77,8 +77,12 @@ void main() {
   for (final (name, arguments, expected, selected) in cases) {
     test('resolves $name', () {
       final result = tool.run(arguments, contextWith());
-      final candidates = (result.modelResult['candidates']! as List<Object?>)
-          .cast<Map<String, Object?>>();
+      final candidates = switch (result.modelResult) {
+        {'selectedMarket': final Map<String, Object?> market} => [market],
+        {'candidates': final List<Object?> markets} =>
+          markets.cast<Map<String, Object?>>(),
+        _ => fail('No markets in ${result.modelResult}'),
+      };
 
       expect(
         [
@@ -87,14 +91,14 @@ void main() {
         ],
         expected,
       );
-      expect(result.modelResult['selected'], selected);
+      expect(result.modelResult.containsKey('selectedMarket'), selected);
       expect(
         result.plan?.marketId?.code,
         selected ? expected.single.$1 : isNull,
       );
       expect(
-        (result.seeds['selection']! as Map<String, Object?>)['marketId'],
-        expected.first.$1,
+        (result.seeds['selection'] as Map<String, Object?>?)?['marketId'],
+        selected ? isNull : expected.first.$1,
       );
     });
   }
@@ -133,10 +137,9 @@ void main() {
 
   test('names regions with their country', () {
     final result = tool.run({'placeName': 'Funchal'}, contextWith());
-    final candidate =
-        (result.modelResult['candidates']! as List<Object?>).single;
+    final market = result.modelResult['selectedMarket']!;
 
-    expect((candidate! as Map<String, Object?>)['name'], 'Madeira, Portugal');
+    expect((market as Map<String, Object?>)['name'], 'Madeira, Portugal');
   });
 
   test('offers the curated markets when nothing resolves', () {
@@ -151,7 +154,8 @@ void main() {
   });
 
   test('is declared for the model and never pre-run', () {
-    expect(tool.declaration.toJson()['name'], 'resolve_market');
+    expect(tool.declaration.toJson(), containsPair('name', 'resolve_market'));
+    expect(tool.parameters['required'], ['placeName', 'countryCode']);
     expect(
       tool.settledArguments(
         contextWith(plan: Plan(marketId: MarketId.parse('SE'))),

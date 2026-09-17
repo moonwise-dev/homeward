@@ -138,6 +138,11 @@ is buying and where they pay tax, with one button sending `select_market`. The
 server selects the market from the action context and keeps the profile facts
 from the surface's data model as the profile draft.
 
+The country code is required: in live turns on 2026-09-17 `gemini-3.5-flash-lite`
+sometimes left it out, the place list, which holds only regions with their own
+rules, did not know Stockholm, and the turn drew a market picker or a form
+without a market.
+
 When `resolve_market` finds exactly one market for the place the buyer typed, it
 selects that market for the plan in the same model round, so `load_market` runs
 and the profile form is drawn in that turn (D71). Selecting a different market
@@ -175,7 +180,7 @@ plan, one request at a time.
 
 | Tool | Input | Model result | Seeds |
 | --- | --- | --- | --- |
-| `resolve_market` | `placeName`, and the model's `countryCode` and `subdivisionCode` | Candidate markets with name and coverage, whether exactly one was selected for the plan, curated markets when none resolve | `/selection` |
+| `resolve_market` | `placeName` and the model's `countryCode`, both required, and its `subdivisionCode` | `selectedMarket` with name and coverage when exactly one matches, already the plan's market; otherwise `candidates`, with the curated markets when none resolve | `/selection` when several match |
 | `load_market` | `marketId` | Coverage, currency, profile fields with the profile paths that answer them and reasons, kinds of lending rule, never rule values | `/market` |
 | `propose_profile` | Facts the buyer stated: countries as ISO codes, enums, amounts as `{ amount, currency? }` in major units | Accepted and rejected facts with reasons | `/profile` from the plan's profile draft |
 | `propose_scenario` | Price, and any down payment, term, loan type, or association fee the buyer stated | Accepted, defaulted, and rejected fields; unstated values come from the market: the smallest down payment the loan-to-value limit allows, the first loan type and its default spread, the shortest maximum term or 30 years | `/scenario` from the plan's scenario draft |

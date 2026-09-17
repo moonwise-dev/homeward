@@ -11,10 +11,10 @@ final class ResolveMarketTool extends ModelTool {
   @override
   String get description =>
       'Resolve a place the buyer named to a market Homeward can talk about. '
-      'Pass the place as written and your best ISO 3166 codes for it. The '
-      'result lists candidate markets with coverage. When exactly one '
-      'matches, it becomes the market of the plan; when several match, let '
-      'the buyer pick with a LocationPicker in market mode.';
+      'Pass the place as written and your best ISO 3166 codes for it. When '
+      'exactly one market matches, the result names it as selectedMarket and '
+      'it is already the market of the plan. When several match, the result '
+      'lists candidates with coverage for a LocationPicker in market mode.';
 
   @override
   Map<String, Object?> get parameters => {
@@ -26,14 +26,16 @@ final class ResolveMarketTool extends ModelTool {
       },
       'countryCode': {
         'type': 'string',
-        'description': 'ISO 3166-1 alpha-2 code of the country, such as PT.',
+        'description':
+            'ISO 3166-1 alpha-2 code of the country the place is in, such as '
+            'PT for Funchal or SE for Stockholm.',
       },
       'subdivisionCode': {
         'type': 'string',
         'description': 'ISO 3166-2 code of the region, such as PT-30.',
       },
     },
-    'required': ['placeName'],
+    'required': ['placeName', 'countryCode'],
   };
 
   @override
@@ -61,14 +63,16 @@ final class ResolveMarketTool extends ModelTool {
     final selected = ids.length == 1 ? ids.single : null;
     final plan = context.plan;
     return ToolResult(
-      modelResult: {
-        'candidates': candidates,
-        'selected': selected != null,
-        if (candidates.isEmpty)
+      modelResult: switch (candidates) {
+        [final market] => {'selectedMarket': market},
+        [] => {
+          'candidates': candidates,
           'curatedMarkets': markets.curatedMarketNames.toList(),
+        },
+        _ => {'candidates': candidates},
       },
       seeds: {
-        if (candidates.isNotEmpty)
+        if (candidates.length > 1)
           'selection': {
             'marketId': candidates.first['marketId'],
             'candidates': candidates,
