@@ -39,6 +39,14 @@ profile form with its first text after about 5 s in ten further first
 messages. The Flash models follow it, and the order is compared again for
 quality in the M2 rehearsals.
 
+A live run of the M1 exit flow in the web app on 2026-09-17, after D82 to D84:
+the Stockholm starter drew the full profile form with `HouseholdInput` in two
+requests and 7 s; `commit_profile` drew the what-if in one request and 4.4 s;
+dragging the down payment slider recomputed the loan, interest, amortization
+tier, and deduction with no server traffic; `commit_scenario` stalled on
+`gemini-3.5-flash-lite` and then `gemini-3.5-flash`, 20 s each, failed with
+`gemini_unavailable`, and succeeded on Retry in one request and 7.8 s.
+
 Free-tier limits, read in AI Studio for the Homeward project on 2026-09-17.
 They apply per Google Cloud project, so every key in the project and AI Studio
 share them, and daily limits reset at midnight Pacific:
