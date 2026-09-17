@@ -19,8 +19,10 @@ help:
 	@echo "  make format        Format every package"
 	@echo "  make format-check  Fail if any package is not formatted"
 	@echo "  make test          Run tests in pure Dart packages"
-	@echo "  make check         format-check, analyze, test, markets-check"
+	@echo "  make check         format-check, analyze, test, markets-check, catalog-check"
 	@echo "  make markets-check Check rule packs, rate snapshots, and living costs"
+	@echo "  make catalog       Regenerate the catalog document, model skill, and reference"
+	@echo "  make catalog-check Fail if catalog outputs are stale or an example is invalid"
 	@echo "  make codegen       Run build_runner in common and server"
 	@echo "  make iso-4217      Regenerate the ISO 4217 currency table from SIX"
 	@echo "  make a2ui-schemas  Vendor the pinned A2UI v0.9 basic catalog and common types"
@@ -65,11 +67,19 @@ test:
 	done
 
 .PHONY: check
-check: format-check analyze test markets-check
+check: format-check analyze test markets-check catalog-check
 
 .PHONY: markets-check
 markets-check:
 	@dart run tool/bin/markets_check.dart markets
+
+.PHONY: catalog
+catalog:
+	@dart run tool/bin/generate_catalog.dart .
+
+.PHONY: catalog-check
+catalog-check:
+	@dart run tool/bin/catalog_check.dart .
 
 .PHONY: codegen
 codegen:

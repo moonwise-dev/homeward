@@ -27,6 +27,9 @@ void main() {
     });
     expect(result.modelResult.toString(), isNot(contains('4050000')));
     final derived = result.seeds['derived']! as Map<String, Object?>;
+    expect(derived.keys, [
+      for (final field in derivedSlice.fields) field.name,
+    ]);
     expect(
       derived['downPaymentBounds'],
       (stockholmDataModel['derived']!

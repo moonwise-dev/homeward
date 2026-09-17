@@ -1,17 +1,21 @@
 enum ProfileField {
-  citizenship,
-  residency,
-  formerResident,
-  residencyIntent,
-  use,
-  firstTime,
-  employment,
-  netMonthlyIncome,
-  grossMonthlyIncome,
-  incomeCurrency,
-  savings,
-  monthlyDebtPayments,
-  age,
-  household,
-  borrowers,
+  citizenship(['citizenship']),
+  residency(['taxResidence']),
+  formerResident(['formerResident']),
+  residencyIntent(['residencyIntent']),
+  use(['use']),
+  firstTime(['firstTime']),
+  employment(['employment']),
+  netMonthlyIncome(['netMonthlyIncome']),
+  grossMonthlyIncome(['grossMonthlyIncome']),
+  incomeCurrency(['netMonthlyIncome', 'grossMonthlyIncome']),
+  savings(['savings']),
+  monthlyDebtPayments(['monthlyDebtPayments']),
+  age(['age']),
+  household(['adults', 'childAges']),
+  borrowers(['borrowers']);
+
+  const ProfileField(this.profileKeys);
+
+  final List<String> profileKeys;
 }

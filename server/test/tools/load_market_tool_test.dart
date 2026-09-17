@@ -26,6 +26,16 @@ void main() {
         'savings',
       ],
     );
+    expect(
+      (result.modelResult['profileFields']! as List<Object?>).firstWhere(
+        (field) => (field! as Map<String, Object?>)['field'] == 'household',
+      ),
+      {
+        'field': 'household',
+        'paths': ['/profile/adults', '/profile/childAges'],
+        'reason': isA<String>(),
+      },
+    );
     expect(result.modelResult['lendingRules'], [
       'loanToValue',
       'loanToIncome',

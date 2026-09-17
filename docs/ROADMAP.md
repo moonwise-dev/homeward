@@ -159,6 +159,8 @@ Decisions from the planning session on 2026-09-16.
 | D66 | `/market` slice | The resolved market in the pack's published format with its reference rates and living costs, parsed by the same models on app and server | A separate data-model format with ppm integers and money objects |
 | D67 | Basic component validation | Vendor the A2UI v0.9 basic catalog and common types at a pinned spec commit and validate against a composed Homeward catalog document | Hand-declared basic components; no property schemas for basic components |
 | D68 | Place resolution | The model proposes ISO 3166 codes; generated CLDR tables verify them and a curated place list for rule-bearing regions overrides them | A curated gazetteer only; OpenStreetMap Nominatim |
+| D69 | Catalog skill | The exact composed catalog document and common types as compact JSON Schema, plus message rules, data model paths, actions, and component and surface examples, as genui's `PromptBuilder` and the A2UI agent SDK embed schemas; about 12k tokens | A compact generated summary of about 5k tokens; schemas without examples |
+| D70 | Turn context placement | Appended to `system_instruction`, re-sent on every request and never stored in history | Prepended to the buyer's message, which keeps stale snapshots in history |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

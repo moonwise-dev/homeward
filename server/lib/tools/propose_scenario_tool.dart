@@ -2,6 +2,7 @@ import 'package:common/common.dart';
 
 import 'agent_tool.dart';
 import 'amount_arguments.dart';
+import 'slice_parameters.dart';
 
 final class ProposeScenarioTool extends AgentTool {
   const ProposeScenarioTool();
@@ -19,17 +20,17 @@ final class ProposeScenarioTool extends AgentTool {
       'the default loan type and spread, and the longest allowed term.';
 
   @override
-  Map<String, Object?> get parameters => {
-    'type': 'object',
-    'properties': {
-      'price': amountParameter,
-      'downPayment': amountParameter,
-      'termYears': {'type': 'integer'},
-      'loanTypeId': {'type': 'string'},
-      'associationFee': amountParameter,
+  Map<String, Object?> get parameters => sliceParameters(
+    scenarioSlice,
+    only: const {
+      'price',
+      'downPayment',
+      'termYears',
+      'loanTypeId',
+      'associationFee',
     },
-    'required': ['price'],
-  };
+    required: const ['price'],
+  );
 
   @override
   bool get preRunnable => false;

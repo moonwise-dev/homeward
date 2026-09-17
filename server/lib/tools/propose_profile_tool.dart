@@ -3,15 +3,14 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'agent_tool.dart';
 import 'amount_arguments.dart';
+import 'slice_parameters.dart';
 
 final class ProposeProfileTool extends AgentTool {
   const ProposeProfileTool();
 
-  static const _moneyFields = {
-    'netMonthlyIncome',
-    'grossMonthlyIncome',
-    'monthlyDebtPayments',
-    'savings',
+  static final _moneyFields = {
+    for (final field in profileSlice.fields)
+      if (field.kind == FieldKind.money) field.name,
   };
 
   @override
@@ -24,44 +23,7 @@ final class ProposeProfileTool extends AgentTool {
       'the form. Countries are ISO 3166-1 alpha-2 codes.';
 
   @override
-  Map<String, Object?> get parameters => {
-    'type': 'object',
-    'properties': {
-      'taxResidence': {
-        'type': 'string',
-        'description': 'Country the buyer pays tax in.',
-      },
-      'citizenship': {
-        'type': 'string',
-        'description': 'Country of citizenship.',
-      },
-      'formerResident': {
-        'type': 'boolean',
-        'description': 'Ever tax resident in the target market.',
-      },
-      'residencyIntent': {
-        'type': 'string',
-        'enum': ['stay', 'becomeResident'],
-      },
-      'use': {
-        'type': 'string',
-        'enum': ['primary', 'secondary', 'investment'],
-      },
-      'firstTime': {'type': 'boolean'},
-      'employment': {
-        'type': 'string',
-        'enum': ['employed', 'selfEmployed', 'retired'],
-      },
-      'age': {'type': 'integer', 'description': 'Age of the oldest borrower.'},
-      for (final field in _moneyFields) field: amountParameter,
-      'borrowers': {'type': 'integer'},
-      'adults': {'type': 'integer'},
-      'childAges': {
-        'type': 'array',
-        'items': {'type': 'integer'},
-      },
-    },
-  };
+  Map<String, Object?> get parameters => sliceParameters(profileSlice);
 
   @override
   bool get preRunnable => false;

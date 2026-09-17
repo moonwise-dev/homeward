@@ -350,16 +350,38 @@ interface genui uses internally for its catalog items. It carries:
 `homewardCatalogDocument()` builds the catalog document from these
 declarations and the vendored A2UI v0.9 basic catalog: the agent-visible basic
 components, every basic function, and the Homeward components and functions,
-with `anyComponent` and `anyFunction` rebuilt over all of them. The server
-validates against it. From the same declarations `tool` generates:
+with `anyComponent` and `anyFunction` rebuilt over all of them. `a2ui_core`'s
+`CommonSchemas` mark shared types with a `REF:` description instead of a
+`$ref`; the document turns each into a `$ref` to the vendored common types, as
+`a2ui_core` does for inline catalogs, so Homeward and basic components validate
+against the same definitions. The server validates against it.
+
+Beside the components, `common/lib/catalog` declares:
+
+- `data_model/`: the slices the server seeds and the fields components may
+  bind, with value shapes and meanings. `propose_profile` and
+  `propose_scenario` build their tool parameters from the same fields, and
+  `ProfileField.profileKeys` maps each pack profile field to the profile keys
+  that answer it.
+- `examples/surface_examples.dart`: whole surfaces, a profile form and an
+  affordability what-if, that show the model complete trees with basic
+  layout, checks, and actions.
+- `SurfaceAction` and `InlineSurfaces` in `common/lib/wire`: action names with
+  their context keys, and the surface ID and per-turn limits.
+
+From the same declarations `make catalog` generates:
 
 - `common/lib/catalog/generated/catalog.json`, the catalog document.
-- `server/prompts/generated/catalog_skill.md`, the model-facing skill.
+- `server/prompts/generated/catalog_skill.md`, the model-facing skill: how to
+  write messages, the data model paths, the actions, the surface and component
+  examples, and then the catalog document and the common types as compact JSON
+  Schema, exactly what validation enforces (D69).
 - `docs/generated/catalog_reference.md`, a human reference.
 
-`make catalog-check` fails if generated files are stale, if an example does not
-validate, or if an app catalog item exists without a declaration or the
-reverse.
+`make catalog-check` fails if generated files are stale or if any component or
+surface example is rejected by the server's `TurnValidator`. Once the app's
+catalog items land, it also fails if an item exists without a declaration or
+the reverse.
 
 ## Implementing A Component
 

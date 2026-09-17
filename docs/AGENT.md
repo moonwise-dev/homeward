@@ -116,7 +116,7 @@ cannot, because their inputs come from what the buyer wrote.
 | Tool | Input | Model result | Seeds |
 | --- | --- | --- | --- |
 | `resolve_market` | `placeName`, and the model's `countryCode` and `subdivisionCode` | Candidate markets with name and coverage, whether one is confirmed, curated markets when none resolve | `/selection` |
-| `load_market` | `marketId` | Coverage, currency, profile fields with reasons, kinds of lending rule, never rule values | `/market` |
+| `load_market` | `marketId` | Coverage, currency, profile fields with the profile paths that answer them and reasons, kinds of lending rule, never rule values | `/market` |
 | `propose_profile` | Facts the buyer stated: countries as ISO codes, enums, amounts as `{ amount, currency? }` in major units | Accepted and rejected facts with reasons | `/profile` from the plan's profile draft |
 | `propose_scenario` | Price, and any down payment, term, loan type, or association fee the buyer stated | Accepted, defaulted, and rejected fields; unstated values come from the market: the smallest down payment the loan-to-value limit allows, the first loan type and its default spread, the shortest maximum term or 30 years | `/scenario` from the plan's scenario draft |
 | `compute_affordability` | — | `assessed` with the binding limit and headroom `comfortable`, `atLimit`, or `overLimit`; `incomplete` with missing facts; or what it needs first. Never amounts | `/derived/affordability`, `/derived/downPaymentBounds`, `/derived/payment` |
@@ -139,11 +139,20 @@ compute.
 4. `prompts/style.md`: tone, the estimates-not-advice line, how to reference
    components instead of restating figures.
 5. `prompts/generated/catalog_skill.md`: the agent-visible catalog, generated.
-6. A per-turn context block: open decisions, plan summary, coverage, surface IDs
-   already used. No rule values.
+6. A per-turn context block: turn number, open decisions, plan summary,
+   coverage, surface IDs already used. No rule values.
 
-The catalog skill uses compact examples rather than the full JSON schema, so
-the system prompt stays small.
+Everything, the context block included, is sent as `system_instruction`, which
+goes out again with every request of the turn, tool-result rounds included, and
+is never stored in the interaction history. The model therefore sees only the
+current plan state, and stale snapshots never pile up in history (D70).
+
+The catalog skill carries the composed catalog document and the A2UI common
+types as compact JSON Schema, exactly what validation enforces, after the
+message rules, data model paths, actions, and examples (D69). It is about 12k
+tokens. Tokens cost nothing on a buyer's free key, but every correction round
+spends one of their roughly 20 daily requests, so a first message that
+validates is worth more than a short prompt.
 
 ## Turn Orchestrator
 

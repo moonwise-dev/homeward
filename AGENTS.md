@@ -97,8 +97,8 @@ make server-build
 make server-image-run
 ```
 
-`make check` runs format-check, analyze, test, and markets-check.
-`catalog-check` and `eval` join as their milestones land; `make eval` needs
+`make check` runs format-check, analyze, test, markets-check, and
+catalog-check. `eval` joins as its milestone lands; `make eval` needs
 `HOMEWARD_EVAL_GEMINI_KEY` and is never part of `check`.
 
 `make hooks` is run once per clone; it points git at `tool/githooks`, whose
@@ -118,5 +118,5 @@ Generated files are committed and never edited by hand:
   commit
 - `common/lib/geo/generated/*` and `server/lib/markets/generated/*`, from
   `make territories`, pinned to a CLDR release
-- `common/lib/catalog/generated/*`
-- `server/prompts/generated/*`
+- `common/lib/catalog/generated/*`, `server/prompts/generated/*`, and
+  `docs/generated/*`, from `make catalog`

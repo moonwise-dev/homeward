@@ -62,11 +62,11 @@ final class LoadMarketTool extends AgentTool {
         'currency': market.currency.code,
         'profileFields': [
           for (final requirement in market.profileFields)
-            {'field': requirement.field.name, 'reason': requirement.reason},
+            _profileField(requirement.field, requirement.reason),
           for (final field in market.requiredFields.difference({
             for (final requirement in market.profileFields) requirement.field,
           }))
-            {'field': field.name, 'reason': 'Decides which rules apply'},
+            _profileField(field, 'Decides which rules apply'),
         ],
         'lendingRules': [
           if (lending.maxLtv.isNotEmpty) 'loanToValue',
@@ -81,4 +81,10 @@ final class LoadMarketTool extends AgentTool {
       seeds: {'market': market.toJson()},
     );
   }
+
+  Map<String, Object?> _profileField(ProfileField field, String reason) => {
+    'field': field.name,
+    'paths': [for (final key in field.profileKeys) profileSlice.pathOf(key)],
+    'reason': reason,
+  };
 }

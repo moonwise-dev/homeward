@@ -1,0 +1,56 @@
+import 'dart:io';
+
+import 'package:a2ui_core/a2ui_core.dart';
+import 'package:common/common.dart';
+import 'package:homeward_server/agent/validation/turn_validator.dart';
+import 'package:homeward_server/agent/validation/validation_outcome.dart';
+import 'package:homeward_server/markets/finding.dart';
+
+import 'catalog_outputs.dart';
+import 'example_messages.dart';
+
+List<Finding> checkCatalog(Directory root) => [
+  for (final MapEntry(key: path, value: content) in catalogOutputs().entries)
+    if (!_matches(File('${root.path}/$path'), content))
+      findingError(path, 'Stale; run make catalog'),
+  ...checkCatalogExamples(),
+];
+
+List<Finding> checkCatalogExamples({
+  List<CatalogComponent> components = homewardComponents,
+  List<CatalogExample>? surfaces,
+}) {
+  final catalog = CatalogValidator(homewardCatalogDocument());
+  final examples = [
+    for (final component in components)
+      for (final example in component.examples)
+        (subject: '${component.name}: ${example.name}', example: example),
+    for (final example in surfaces ?? surfaceExamples)
+      (subject: 'Surface: ${example.name}', example: example),
+  ];
+  return [
+    for (final (:subject, :example) in examples)
+      if (_firstRejection(catalog, example) case final failure?)
+        findingError(subject, failure),
+  ];
+}
+
+String? _firstRejection(CatalogValidator catalog, CatalogExample example) {
+  final validator = TurnValidator(
+    turn: exampleTurn,
+    catalog: catalog,
+    shadow: MessageProcessor<ComponentApi>(
+      catalogs: [Catalog(id: homewardCatalogId, components: const [])],
+    ),
+    seeds: example.dataModel,
+  );
+  for (final message in exampleMessages(example)) {
+    if (validator.validate(message) case Rejected(:final failure)) {
+      return '${failure.path} ${failure.message}';
+    }
+  }
+  return null;
+}
+
+bool _matches(File file, String content) =>
+    file.existsSync() && file.readAsStringSync() == content;

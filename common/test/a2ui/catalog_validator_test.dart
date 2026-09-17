@@ -145,6 +145,44 @@ void main() {
     );
   });
 
+  test('Homeward components reference the vendored common types', () {
+    final location =
+        (document['components']! as Map<String, Object?>)['LocationPicker']!
+            as Map<String, Object?>;
+    final properties = location['properties']! as Map<String, Object?>;
+
+    expect(properties['label'], {
+      r'$ref': 'https://a2ui.org/specification/v0_9/common_types.json#/\$defs/DynamicString',
+      'description': 'Represents a string',
+    });
+    expect(document.toString(), isNot(contains('REF:')));
+    for (final component in [
+      {
+        'id': 'root',
+        'component': 'LocationPicker',
+        'label': 42,
+        'value': {'path': '/selection/marketId'},
+        'mode': 'market',
+      },
+      {
+        'id': 'root',
+        'component': 'LocationPicker',
+        'label': 'Where?',
+        'value': {'path': '/selection/marketId'},
+        'mode': 'market',
+        'action': {'event': 'select_market'},
+      },
+    ]) {
+      final errors = validator.validateComponent(component);
+      expect(errors, isNotEmpty, reason: '$component');
+      expect(
+        errors!.map((error) => error.error.name),
+        isNot(contains('refResolutionError')),
+        reason: '$component',
+      );
+    }
+  });
+
   test('knows nothing about components outside the catalog', () {
     expect(
       validator.validateComponent({'id': 'x', 'component': 'Slider'}),

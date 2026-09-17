@@ -8,7 +8,7 @@
 2. `flutter analyze` / `dart analyze` with zero issues.
 3. `make test`.
 4. `make markets-check`.
-5. `make catalog-check`, once it lands.
+5. `make catalog-check`.
 
 `make eval` runs separately because it calls Gemini.
 
@@ -113,12 +113,16 @@ same sweep runs with `flutter run --profile` and prints its report.
 
 ## Catalog Check
 
-`tool/catalog_check`:
+`tool/bin/catalog_check.dart`:
 
 - Generated catalog JSON, prompt skill, and reference doc are up to date.
-- Every declared component has an app catalog item and the reverse.
-- Every agent-visible component has at least one example.
-- Every action name used in examples exists in the action table.
+- Every component example and surface example passes the server's
+  `TurnValidator` against the Stockholm data model: envelope, ownership,
+  allow-list, schema, structure, paths, and action names.
+- Every agent-visible component has at least one example, checked by the
+  `common` catalog tests.
+- Every declared component has an app catalog item and the reverse, once the
+  app's catalog items land.
 
 ## Agent Evals
 

@@ -13,14 +13,12 @@ final class TurnValidator {
     required this.catalog,
     required this.shadow,
     required this.seeds,
-    this.maxSurfaces = 2,
-  }) : _surfacePattern = RegExp('^t$turn-[a-z0-9]+(-[a-z0-9]+)*\$');
+  }) : _surfacePattern = InlineSurfaces.idPattern(turn);
 
   final int turn;
   final CatalogValidator catalog;
   final MessageProcessor<ComponentApi> shadow;
   final Map<String, Object?> seeds;
-  final int maxSurfaces;
   final RegExp _surfacePattern;
   final _components = <String, Map<String, Map<String, Object?>>>{};
 
@@ -77,11 +75,11 @@ final class TurnValidator {
         'Use catalogId $homewardCatalogId',
       );
     }
-    if (_components.length >= maxSurfaces) {
+    if (_components.length >= InlineSurfaces.maxPerTurn) {
       return _reject(
         surfaceId,
         '/createSurface',
-        'A turn may create at most $maxSurfaces surfaces',
+        'A turn may create at most ${InlineSurfaces.maxPerTurn} surfaces',
       );
     }
     return _apply(message, () => _components[surfaceId] = {});
@@ -126,7 +124,7 @@ final class TurnValidator {
         }
       }
       for (final action in actionNames(component)) {
-        if (!ActionNames.all.contains(action)) {
+        if (!SurfaceAction.wireNames.contains(action)) {
           return _reject(surfaceId, path, 'Unknown action $action');
         }
       }
@@ -139,9 +137,9 @@ final class TurnValidator {
   }
 
   String? _ownershipProblem(String surfaceId) => switch (surfaceId) {
-    'board' => 'The board is compiled by the server',
+    InlineSurfaces.boardId => 'The board is compiled by the server',
     _ when !_surfacePattern.hasMatch(surfaceId) =>
-      'Surface ids in turn $turn look like t$turn-budget',
+      'Surface ids in turn $turn look like ${InlineSurfaces.id(turn, 'budget')}',
     _ => null,
   };
 

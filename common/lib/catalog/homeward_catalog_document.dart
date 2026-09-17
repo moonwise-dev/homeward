@@ -11,11 +11,19 @@ Map<String, Object?> homewardCatalogDocument({
   List<CatalogFunction> functions = homewardFunctions,
 }) {
   final basic = jsonDecode(a2uiBasicCatalogJson) as Map<String, Object?>;
+  final commonTypes = Uri.parse(
+    (jsonDecode(a2uiCommonTypesJson) as Map<String, Object?>)[r'$id']!
+        as String,
+  );
   final basicComponents = basic['components']! as Map<String, Object?>;
   final componentSchemas = <String, Object?>{
     for (final name in agentVisibleBasicComponents) name: basicComponents[name],
     for (final component in components)
-      if (component.agentVisible) component.name: component.schema.value,
+      if (component.agentVisible)
+        component.name: _withCommonTypeRefs(
+          component.schema.value,
+          commonTypes,
+        ),
   };
   final functionSchemas = <String, Object?>{
     ...basic['functions']! as Map<String, Object?>,
@@ -25,7 +33,10 @@ Map<String, Object?> homewardCatalogDocument({
         'description': function.description,
         'properties': {
           'call': {'const': function.name},
-          'args': function.argumentSchema.value,
+          'args': _withCommonTypeRefs(
+            function.argumentSchema.value,
+            commonTypes,
+          ),
           'returnType': {'const': function.returnType.jsonValue},
         },
         'required': ['call', 'args'],
@@ -55,3 +66,27 @@ Map<String, Object?> homewardCatalogDocument({
     },
   };
 }
+
+Object? _withCommonTypeRefs(Object? json, Uri commonTypes) => switch (json) {
+  {'description': final String description}
+      when description.startsWith(_referencePrefix) =>
+    _commonTypeRef(description.substring(_referencePrefix.length), commonTypes),
+  final Map<String, Object?> map => {
+    for (final MapEntry(:key, :value) in map.entries)
+      key: _withCommonTypeRefs(value, commonTypes),
+  },
+  final List<Object?> list => [
+    for (final item in list) _withCommonTypeRefs(item, commonTypes),
+  ],
+  _ => json,
+};
+
+Map<String, Object?> _commonTypeRef(String annotation, Uri commonTypes) {
+  final [reference, ...description] = annotation.split('|');
+  return {
+    r'$ref': commonTypes.resolve(reference).toString(),
+    if (description.isNotEmpty) 'description': description.join('|'),
+  };
+}
+
+const _referencePrefix = 'REF:';
