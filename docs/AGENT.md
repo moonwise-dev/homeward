@@ -39,6 +39,8 @@ buyer's free key covers roughly ten turns a day on the first model.
 ### Model Selection
 
 - Each request goes to the first model in the list whose circuit is closed.
+  When every circuit is open, the request tries only the model whose circuit
+  closes first, so a busy minute never fails a turn without asking Gemini.
 - A request that misses a deadline, receives HTTP 500 or 503 with a high-demand
   message, or receives an in-stream `api_error` is aborted by closing the
   connection. That model's circuit opens for the cool-down, and the round is

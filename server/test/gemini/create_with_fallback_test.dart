@@ -162,25 +162,39 @@ void main() {
     expect(recorded, hasLength(1));
   });
 
+  test('fails when the last healthy model fails', () async {
+    final modelCircuits = circuits()..open(preferred);
+    await expectLater(
+      run({
+        fallback: fixture('error_high_demand_500.json', status: 500),
+      }, modelCircuits).drain<void>(),
+      throwsA(isA<GeminiUnavailable>()),
+    );
+  });
+
   test(
-    'fails when the last healthy model fails or every model cools down',
+    'tries only the model that recovers first when every model cools down',
     () async {
-      final modelCircuits = circuits()..open(preferred);
-      await expectLater(
-        run({
-          fallback: fixture('error_high_demand_500.json', status: 500),
-        }, modelCircuits).drain<void>(),
-        throwsA(isA<GeminiUnavailable>()),
-      );
-      await expectLater(
-        run(const {}, modelCircuits).drain<void>(),
-        throwsA(
-          isA<GeminiUnavailable>().having(
-            (error) => error.message,
-            'message',
-            contains('cooling down'),
-          ),
-        ),
+      final recorded = <RecordedRequest>[];
+      final modelCircuits = circuits()..open(fallback);
+      clock = clock.add(const Duration(minutes: 1));
+      modelCircuits.open(preferred);
+
+      final events = await run(
+        {
+          preferred: fixture('stream_text.sse'),
+          fallback: fixture('stream_text.sse'),
+        },
+        modelCircuits,
+        recorded: recorded,
+      ).toList();
+
+      expect(events.last, isA<InteractionCompleted>());
+      expect(
+        [for (final request in recorded) request.body['model']],
+        [
+          fallback,
+        ],
       );
     },
   );

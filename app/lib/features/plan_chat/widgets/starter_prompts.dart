@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../ui/app_spacing.dart';
+import '../../../ui/app_suggestion.dart';
 import '../../../ui/app_text_styles.dart';
 
 const _starterPrompts = [
@@ -17,15 +18,15 @@ class StarterPrompts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       Text('Start with', style: AppTextStyles.label),
       const SizedBox(height: AppSpacing.xs),
       for (final prompt in _starterPrompts)
         Padding(
           padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-          child: ActionChip(
-            label: Text(prompt, style: AppTextStyles.body),
+          child: AppSuggestion(
+            text: prompt,
             onPressed: () => onSelected(prompt),
           ),
         ),

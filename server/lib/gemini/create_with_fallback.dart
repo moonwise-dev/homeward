@@ -12,10 +12,7 @@ Stream<InteractionEvent> createWithFallback({
   required bool Function() canFallBack,
   Future<void>? cancellation,
 }) async* {
-  final candidates = circuits.healthyModels.take(2).toList();
-  if (candidates.isEmpty) {
-    throw const GeminiUnavailable('Every model is cooling down');
-  }
+  final candidates = circuits.candidates.take(2).toList();
   for (final (attempt, model) in candidates.indexed) {
     try {
       await for (final event in client.create(

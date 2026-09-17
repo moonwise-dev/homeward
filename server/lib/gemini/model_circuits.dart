@@ -16,6 +16,16 @@ final class ModelCircuits {
       if (!_isOpen(model)) model,
   ];
 
+  List<String> get candidates => switch (healthyModels) {
+    [] => [
+      models.reduce(
+        (soonest, model) =>
+            _openUntil[model]!.isBefore(_openUntil[soonest]!) ? model : soonest,
+      ),
+    ],
+    final healthy => healthy,
+  };
+
   void open(String model) => _openUntil[model] = _now().add(cooldown);
 
   bool _isOpen(String model) => switch (_openUntil[model]) {
