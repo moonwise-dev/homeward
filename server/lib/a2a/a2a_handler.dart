@@ -140,7 +140,7 @@ final class A2aHandler {
             action,
             surfaceData: switch (message.metadata) {
               {
-                'a2uiClientDataModel': {
+                A2uiExtension.dataModelKey: {
                   'surfaces': final Map<String, Object?> surfaces,
                 },
               } =>

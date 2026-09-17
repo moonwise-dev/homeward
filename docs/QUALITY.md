@@ -62,7 +62,8 @@ official calculator or a tax authority worked example.
 | Validation passes | One fixture per rule in `docs/PROTOCOL.md`, valid and invalid |
 | Surface seeding | Seeds contain exactly the slices bound components need |
 | Board compiler | Plan fixtures to expected A2UI messages |
-| A2A | JSON-RPC dispatch and SSE framing against recorded frame fixtures |
+| A2A | JSON-RPC dispatch and SSE framing against recorded frame fixtures; the app's `HomewardClient` from `common/wire` reads a scripted turn and its failures through the real app handler; an unexpected error ends a turn with `internal` |
+| Key verification | Model lookup request, invalid key, unknown model, and deadline to typed errors; the route's statuses and envelope |
 | Gemini client | Recorded streams and error bodies to typed events and errors, request JSON, headers and first-step deadlines, fallback only before output, circuits, no key in any error, the next midnight Pacific across daylight saving changes |
 | Actions | Server-completed actions produce the expected plan patches |
 
@@ -72,7 +73,8 @@ against the streams and error bodies recorded in spike S2 under
 continuation, stall after `interaction.created`, in-stream high-demand error,
 invalid key, unknown model, invalid tool, deleted previous interaction, and from
 spike S3 the free-tier request cap, the search grounding quota, and HTTP 500
-high demand.
+high demand. Model lookups for key verification use the responses recorded
+under `server/test/fixtures/models/`.
 Model selection is tested with a fake clock and a fake transport.
 
 ### `app`

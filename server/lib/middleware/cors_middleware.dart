@@ -1,12 +1,13 @@
+import 'package:common/common.dart';
 import 'package:shelf/shelf.dart';
 
-const _allowedHeaders = [
+final _allowedHeaders = [
   'authorization',
   'content-type',
-  'x-firebase-appcheck',
-  'x-homeward-gemini-key',
-  'x-a2a-extensions',
-];
+  HomewardHeaders.appCheck,
+  HomewardHeaders.geminiKey,
+  A2uiExtension.header,
+].map((header) => header.toLowerCase());
 
 Middleware corsMiddleware(List<String> allowedOrigins) {
   bool allows(String origin) => allowedOrigins.any(

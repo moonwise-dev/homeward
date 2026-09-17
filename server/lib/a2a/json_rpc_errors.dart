@@ -16,12 +16,12 @@ abstract final class JsonRpcErrors {
   );
 
   static const taskNotFound = JsonRpcError(
-    code: -32001,
+    code: A2aErrorCodes.taskNotFound,
     message: 'Task not found',
   );
 
   static const taskNotCancelable = JsonRpcError(
-    code: -32002,
+    code: A2aErrorCodes.taskNotCancelable,
     message: 'Task can no longer be canceled',
   );
 
@@ -34,7 +34,7 @@ abstract final class JsonRpcErrors {
       JsonRpcError(code: -32602, message: message);
 
   static JsonRpcError homeward(HomewardFailure failure) => JsonRpcError(
-    code: -32000,
+    code: A2aErrorCodes.homeward,
     message: failure.message,
     data: {
       'code': failure.code.wireName,

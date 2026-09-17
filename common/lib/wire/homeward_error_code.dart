@@ -14,4 +14,9 @@ enum HomewardErrorCode {
   const HomewardErrorCode(this.wireName);
 
   final String wireName;
+
+  static HomewardErrorCode fromWire(Object? wireName) => values.firstWhere(
+    (code) => code.wireName == wireName,
+    orElse: () => internal,
+  );
 }

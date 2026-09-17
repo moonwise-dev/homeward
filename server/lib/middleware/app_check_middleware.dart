@@ -1,3 +1,4 @@
+import 'package:common/common.dart';
 import 'package:shelf/shelf.dart';
 
 import '../auth/app_check_verifier.dart';
@@ -12,7 +13,7 @@ Middleware appCheckMiddleware(
       if (!enforced) {
         return inner(request);
       }
-      final token = request.headers['x-firebase-appcheck'];
+      final token = request.headers[HomewardHeaders.appCheck];
       return token != null && await appCheck.verify(token)
           ? inner(request)
           : failureResponse(request, 401, HomewardFailure.appCheckFailed);

@@ -1,6 +1,11 @@
 import 'dart:async';
 
+import 'package:logging/logging.dart';
+
 import '../agent/turn/turn_event.dart';
+import '../errors/homeward_failure.dart';
+
+final _log = Logger('turn');
 
 final class RunningTask {
   RunningTask({
@@ -10,7 +15,9 @@ final class RunningTask {
     required Stream<TurnEvent> Function(Future<void> cancellation) run,
     required this.onFinished,
   }) {
-    _subscription = run(_cancellation.future).listen(_record, onDone: _finish);
+    _subscription = run(
+      _cancellation.future,
+    ).listen(_record, onError: _fail, onDone: _finish);
   }
 
   final String id;
@@ -53,6 +60,11 @@ final class RunningTask {
   void _record(TurnEvent event) {
     _history.add(event);
     _live.add(event);
+  }
+
+  void _fail(Object error, StackTrace stackTrace) {
+    _log.severe('Turn failed unexpectedly', error.runtimeType, stackTrace);
+    _record(const TurnEvent.failed(HomewardFailure.internal));
   }
 
   void _finish() {

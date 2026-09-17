@@ -6,4 +6,8 @@ abstract final class A2uiExtension {
   static const mimeType = 'application/json+a2ui';
 
   static const version = 'v0.9';
+
+  static const capabilitiesKey = 'a2uiClientCapabilities';
+
+  static const dataModelKey = 'a2uiClientDataModel';
 }
