@@ -17,6 +17,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `PaymentBreakdown` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple |
 | `PurchaseCostsTable` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Funchal non-resident |
 | `StressTestChart` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple, Funchal non-resident |
+| `EligibilityChecklist` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Funchal non-resident, Stockholm couple |
 
 ### LocationPicker
 
@@ -53,6 +54,10 @@ Every upfront cost this buyer owes on the day, the total, and the cash needed wi
 ### StressTestChart
 
 Monthly cost from today's rate up past the rate the lender tests, against the most this buyer can pay each month, with today and the stress rate marked.
+
+### EligibilityChecklist
+
+Every lending rule this buyer is measured against, each passing, warning, or failing, with what would settle it and what facts are still missing.
 
 ## Basic Components
 

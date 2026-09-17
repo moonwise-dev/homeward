@@ -17,6 +17,7 @@ void main() {
       'PaymentBreakdown',
       'PurchaseCostsTable',
       'StressTestChart',
+      'EligibilityChecklist',
     ]);
   });
 

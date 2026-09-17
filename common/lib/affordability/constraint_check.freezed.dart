@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ConstraintCheck {
 
- ConstraintKind get kind; String get ruleId; Money get maxLoan;
+ ConstraintKind get kind; String get ruleId; String get sourceId; Money get maxLoan;
 /// Create a copy of ConstraintCheck
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $ConstraintCheckCopyWith<ConstraintCheck> get copyWith => _$ConstraintCheckCopyW
 @override
 bool operator ==(Object other) {
   final _this = this as ConstraintCheck;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ConstraintCheck&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&(identical(other.ruleId, _this.ruleId) || other.ruleId == _this.ruleId)&&(identical(other.maxLoan, _this.maxLoan) || other.maxLoan == _this.maxLoan));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ConstraintCheck&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&(identical(other.ruleId, _this.ruleId) || other.ruleId == _this.ruleId)&&(identical(other.sourceId, _this.sourceId) || other.sourceId == _this.sourceId)&&(identical(other.maxLoan, _this.maxLoan) || other.maxLoan == _this.maxLoan));
 }
 
 
 @override
 int get hashCode {
   final _this = this as ConstraintCheck;
-  return Object.hash(runtimeType,_this.kind,_this.ruleId,_this.maxLoan);
+  return Object.hash(runtimeType,_this.kind,_this.ruleId,_this.sourceId,_this.maxLoan);
 }
 
 @override
 String toString() {
   final _this = this as ConstraintCheck;
-  return 'ConstraintCheck(kind: ${_this.kind}, ruleId: ${_this.ruleId}, maxLoan: ${_this.maxLoan})';
+  return 'ConstraintCheck(kind: ${_this.kind}, ruleId: ${_this.ruleId}, sourceId: ${_this.sourceId}, maxLoan: ${_this.maxLoan})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $ConstraintCheckCopyWith<$Res>  {
   factory $ConstraintCheckCopyWith(ConstraintCheck value, $Res Function(ConstraintCheck) _then) = _$ConstraintCheckCopyWithImpl;
 @useResult
 $Res call({
- ConstraintKind kind, String ruleId, Money maxLoan
+ ConstraintKind kind, String ruleId, String sourceId, Money maxLoan
 });
 
 
@@ -68,10 +68,11 @@ class _$ConstraintCheckCopyWithImpl<$Res>
 
 /// Create a copy of ConstraintCheck
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? kind = null,Object? ruleId = null,Object? maxLoan = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? kind = null,Object? ruleId = null,Object? sourceId = null,Object? maxLoan = null,}) {
   return _then(ConstraintCheck(
 kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
 as ConstraintKind,ruleId: null == ruleId ? _self.ruleId : ruleId // ignore: cast_nullable_to_non_nullable
+as String,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
 as String,maxLoan: null == maxLoan ? _self.maxLoan : maxLoan // ignore: cast_nullable_to_non_nullable
 as Money,
   ));
@@ -167,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ConstraintKind kind,  String ruleId,  Money maxLoan)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ConstraintKind kind,  String ruleId,  String sourceId,  Money maxLoan)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ConstraintCheck() when $default != null:
-return $default(_that.kind,_that.ruleId,_that.maxLoan);case _:
+return $default(_that.kind,_that.ruleId,_that.sourceId,_that.maxLoan);case _:
   return orElse();
 
 }
@@ -188,10 +189,10 @@ return $default(_that.kind,_that.ruleId,_that.maxLoan);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ConstraintKind kind,  String ruleId,  Money maxLoan)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ConstraintKind kind,  String ruleId,  String sourceId,  Money maxLoan)  $default,) {final _that = this;
 switch (_that) {
 case _ConstraintCheck():
-return $default(_that.kind,_that.ruleId,_that.maxLoan);case _:
+return $default(_that.kind,_that.ruleId,_that.sourceId,_that.maxLoan);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +209,10 @@ return $default(_that.kind,_that.ruleId,_that.maxLoan);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ConstraintKind kind,  String ruleId,  Money maxLoan)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ConstraintKind kind,  String ruleId,  String sourceId,  Money maxLoan)?  $default,) {final _that = this;
 switch (_that) {
 case _ConstraintCheck() when $default != null:
-return $default(_that.kind,_that.ruleId,_that.maxLoan);case _:
+return $default(_that.kind,_that.ruleId,_that.sourceId,_that.maxLoan);case _:
   return null;
 
 }
@@ -223,11 +224,12 @@ return $default(_that.kind,_that.ruleId,_that.maxLoan);case _:
 
 
 class _ConstraintCheck extends ConstraintCheck {
-  const _ConstraintCheck({required this.kind, required this.ruleId, required this.maxLoan}): super._();
+  const _ConstraintCheck({required this.kind, required this.ruleId, required this.sourceId, required this.maxLoan}): super._();
   
 
 @override final  ConstraintKind kind;
 @override final  String ruleId;
+@override final  String sourceId;
 @override final  Money maxLoan;
 
 /// Create a copy of ConstraintCheck
@@ -240,18 +242,18 @@ _$ConstraintCheckCopyWith<_ConstraintCheck> get copyWith => __$ConstraintCheckCo
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ConstraintCheck&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.ruleId, ruleId) || other.ruleId == ruleId)&&(identical(other.maxLoan, maxLoan) || other.maxLoan == maxLoan));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ConstraintCheck&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.ruleId, ruleId) || other.ruleId == ruleId)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId)&&(identical(other.maxLoan, maxLoan) || other.maxLoan == maxLoan));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,kind,ruleId,maxLoan);
+    return Object.hash(runtimeType,kind,ruleId,sourceId,maxLoan);
 }
 
 @override
 String toString() {
-    return 'ConstraintCheck(kind: $kind, ruleId: $ruleId, maxLoan: $maxLoan)';
+    return 'ConstraintCheck(kind: $kind, ruleId: $ruleId, sourceId: $sourceId, maxLoan: $maxLoan)';
 }
 
 
@@ -262,7 +264,7 @@ abstract mixin class _$ConstraintCheckCopyWith<$Res> implements $ConstraintCheck
   factory _$ConstraintCheckCopyWith(_ConstraintCheck value, $Res Function(_ConstraintCheck) _then) = __$ConstraintCheckCopyWithImpl;
 @override @useResult
 $Res call({
- ConstraintKind kind, String ruleId, Money maxLoan
+ ConstraintKind kind, String ruleId, String sourceId, Money maxLoan
 });
 
 
@@ -279,10 +281,11 @@ class __$ConstraintCheckCopyWithImpl<$Res>
 
 /// Create a copy of ConstraintCheck
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? kind = null,Object? ruleId = null,Object? maxLoan = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? kind = null,Object? ruleId = null,Object? sourceId = null,Object? maxLoan = null,}) {
   return _then(_ConstraintCheck(
 kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
 as ConstraintKind,ruleId: null == ruleId ? _self.ruleId : ruleId // ignore: cast_nullable_to_non_nullable
+as String,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
 as String,maxLoan: null == maxLoan ? _self.maxLoan : maxLoan // ignore: cast_nullable_to_non_nullable
 as Money,
   ));

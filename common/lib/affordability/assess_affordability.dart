@@ -95,18 +95,21 @@ Affordability assessAffordability({
       ConstraintCheck(
         kind: ConstraintKind.loanToValue,
         ruleId: rule.id,
+        sourceId: rule.sourceId,
         maxLoan: scenario.price.applyRate(rule.rate, rounding: Rounding.down),
       ),
     for (final rule in lending.maxLti)
       ConstraintCheck(
         kind: ConstraintKind.loanToIncome,
         ruleId: rule.id,
+        sourceId: rule.sourceId,
         maxLoan: _yearlyMultiple(_incomeFor(rule.incomeBasis, profile), rule),
       ),
     for (final rule in lending.maxDsti)
       ConstraintCheck(
         kind: ConstraintKind.debtServiceToIncome,
         ruleId: rule.id,
+        sourceId: rule.sourceId,
         maxLoan: largestLoanWhere(
           upper: scenario.price,
           allows: (principal) =>
@@ -117,6 +120,7 @@ Affordability assessAffordability({
       ConstraintCheck(
         kind: ConstraintKind.leftToLiveOn,
         ruleId: rule.id,
+        sourceId: rule.sourceId,
         maxLoan: largestLoanWhere(
           upper: scenario.price,
           allows: (principal) {

@@ -3,6 +3,7 @@ import 'package:a2ui_core/a2ui_core.dart';
 import 'catalog_component.dart';
 import 'components/affordability_summary.dart';
 import 'components/amount_slider.dart';
+import 'components/eligibility_checklist.dart';
 import 'components/household_input.dart';
 import 'components/location_picker.dart';
 import 'components/market_snapshot_card.dart';
@@ -28,6 +29,7 @@ const homewardComponents = <CatalogComponent>[
   PaymentBreakdown(),
   PurchaseCostsTable(),
   StressTestChart(),
+  EligibilityChecklist(),
 ];
 
 const homewardFunctions = <CatalogFunction>[

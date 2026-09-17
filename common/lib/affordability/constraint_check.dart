@@ -10,6 +10,7 @@ abstract class ConstraintCheck with _$ConstraintCheck {
   const factory ConstraintCheck({
     required ConstraintKind kind,
     required String ruleId,
+    required String sourceId,
     required Money maxLoan,
   }) = _ConstraintCheck;
 

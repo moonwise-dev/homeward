@@ -53,6 +53,9 @@ abstract class ResolvedMarket with _$ResolvedMarket {
   factory ResolvedMarket.fromJson(Map<String, Object?> json) =>
       _$ResolvedMarketFromJson(json);
 
+  Source? sourceOf(String id) =>
+      sources.where((source) => source.id == id).firstOrNull;
+
   Set<ProfileField> missingFor(RuleSection section) => {
     for (final rule in pendingRules.values)
       if (rule.section == section) ...rule.missing,

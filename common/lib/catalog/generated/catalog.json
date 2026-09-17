@@ -1376,6 +1376,80 @@
         "profile"
       ],
       "additionalProperties": false
+    },
+    "EligibilityChecklist": {
+      "type": "object",
+      "description": "Every lending rule this buyer is measured against, each passing, warning, or failing, with what would settle it and what facts are still missing.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "EligibilityChecklist"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "scenario": {
+          "type": "object",
+          "description": "Always { \"path\": \"/scenario\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/scenario"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "market": {
+          "type": "object",
+          "description": "Always { \"path\": \"/market\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/market"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "profile": {
+          "type": "object",
+          "description": "Always { \"path\": \"/profile\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/profile"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "explain": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "scenario",
+        "market",
+        "profile"
+      ],
+      "additionalProperties": false
     }
   },
   "functions": {
@@ -2163,6 +2237,9 @@
         },
         {
           "$ref": "#/components/StressTestChart"
+        },
+        {
+          "$ref": "#/components/EligibilityChecklist"
         }
       ]
     },
