@@ -1,47 +1,57 @@
 import 'package:common/common.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../gemini/gemini_exception.dart';
+import '../gemini/gemini_exception.dart';
 
-part 'turn_failure.freezed.dart';
+part 'homeward_failure.freezed.dart';
 
 @freezed
-abstract class TurnFailure with _$TurnFailure {
-  const factory TurnFailure({
+abstract class HomewardFailure with _$HomewardFailure {
+  const factory HomewardFailure({
     required HomewardErrorCode code,
     required String message,
     Duration? retryAfter,
-  }) = _TurnFailure;
+  }) = _HomewardFailure;
 
-  factory TurnFailure.fromGemini(GeminiException error, DateTime now) =>
+  factory HomewardFailure.fromGemini(GeminiException error, DateTime now) =>
       switch (error) {
-        GeminiKeyInvalid() => const TurnFailure(
+        GeminiKeyInvalid() => const HomewardFailure(
           code: HomewardErrorCode.geminiKeyInvalid,
           message: 'Gemini did not accept your API key',
         ),
-        GeminiQuotaExhausted(:final resetsAt) => TurnFailure(
+        GeminiQuotaExhausted(:final resetsAt) => HomewardFailure(
           code: HomewardErrorCode.geminiQuotaExhausted,
           message: 'Your Gemini key has used up its requests for today',
           retryAfter: resetsAt.difference(now),
         ),
-        GeminiUnavailable() => const TurnFailure(
+        GeminiUnavailable() => const HomewardFailure(
           code: HomewardErrorCode.geminiUnavailable,
           message: 'Gemini is overloaded right now; try again shortly',
         ),
         GeminiHistoryMissing() || GeminiRequestInvalid() => internal,
       };
 
-  static const internal = TurnFailure(
+  static const internal = HomewardFailure(
     code: HomewardErrorCode.internal,
     message: 'Something went wrong on our side',
   );
 
-  static const sessionNotFound = TurnFailure(
+  static const sessionNotFound = HomewardFailure(
     code: HomewardErrorCode.sessionNotFound,
     message: 'This plan does not exist',
   );
 
-  static const turnInProgress = TurnFailure(
+  static const geminiKeyMissing = HomewardFailure(
+    code: HomewardErrorCode.geminiKeyMissing,
+    message: 'Add your Gemini API key to continue',
+  );
+
+  static const unauthenticated = HomewardFailure(
+    code: HomewardErrorCode.unauthenticated,
+    message: 'Sign in again to continue',
+  );
+
+  static const turnInProgress = HomewardFailure(
     code: HomewardErrorCode.turnInProgress,
     message: 'Another message in this plan is still being answered',
   );

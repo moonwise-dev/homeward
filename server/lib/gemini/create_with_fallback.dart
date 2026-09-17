@@ -9,6 +9,7 @@ Stream<InteractionEvent> createWithFallback({
   required ModelCircuits circuits,
   required String apiKey,
   required InteractionRequest request,
+  Future<void>? cancellation,
 }) async* {
   final candidates = circuits.healthyModels.take(2).toList();
   if (candidates.isEmpty) {
@@ -21,6 +22,7 @@ Stream<InteractionEvent> createWithFallback({
         apiKey: apiKey,
         model: model,
         request: request,
+        cancellation: cancellation,
       )) {
         reachedBuyer = reachedBuyer || event is! InteractionCreated;
         yield event;

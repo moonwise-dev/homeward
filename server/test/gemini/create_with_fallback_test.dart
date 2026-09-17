@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:homeward_server/gemini/create_with_fallback.dart';
 import 'package:homeward_server/gemini/gemini_exception.dart';
+import 'package:homeward_server/gemini/interaction_cancelled.dart';
 import 'package:homeward_server/gemini/interaction_event.dart';
 import 'package:homeward_server/gemini/interaction_input.dart';
 import 'package:homeward_server/gemini/interaction_request.dart';
@@ -25,6 +28,7 @@ void main() {
     Map<String, FixtureResponse> byModel,
     ModelCircuits modelCircuits, {
     List<RecordedRequest>? recorded,
+    Future<void>? cancellation,
   }) => createWithFallback(
     client: InteractionsClient(
       httpClient: fixtureClient(
@@ -37,6 +41,7 @@ void main() {
     circuits: modelCircuits,
     apiKey: 'AQ.test',
     request: request,
+    cancellation: cancellation,
   );
 
   setUp(() => clock = DateTime.utc(2026, 9, 17, 10));
@@ -78,6 +83,39 @@ void main() {
     );
     expect(recorded.map((request) => request.body['model']), [preferred]);
   });
+
+  test(
+    'a cancelled turn aborts the stream without blaming the model',
+    () async {
+      final recorded = <RecordedRequest>[];
+      final cancellation = Completer<void>();
+      final modelCircuits = circuits();
+      final events = StreamIterator(
+        run(
+          {
+            preferred: fixture(
+              'stream_stalled_after_created.sse',
+              keepOpen: true,
+            ),
+            fallback: fixture('stream_text.sse'),
+          },
+          modelCircuits,
+          recorded: recorded,
+          cancellation: cancellation.future,
+        ),
+      );
+
+      expect(await events.moveNext(), isTrue);
+      cancellation.complete();
+
+      await expectLater(
+        events.moveNext(),
+        throwsA(isA<InteractionCancelled>()),
+      );
+      expect(recorded, hasLength(1));
+      expect(modelCircuits.healthyModels, [preferred, fallback]);
+    },
+  );
 
   test('never falls back on a key or quota error', () async {
     final recorded = <RecordedRequest>[];

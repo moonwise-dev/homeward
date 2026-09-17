@@ -6,7 +6,7 @@ import 'package:common/common.dart';
 import 'package:homeward_server/agent/prompt/prompt_assembler.dart';
 import 'package:homeward_server/agent/turn/tool_belt.dart';
 import 'package:homeward_server/agent/turn/turn_event.dart';
-import 'package:homeward_server/agent/turn/turn_failure.dart';
+import 'package:homeward_server/errors/homeward_failure.dart';
 import 'package:homeward_server/agent/turn/turn_orchestrator.dart';
 import 'package:homeward_server/agent/turn/turn_settings.dart';
 import 'package:homeward_server/data/models/session.dart';
@@ -241,15 +241,7 @@ void main() {
   test('refuses foreign sessions and a second turn while one runs', () async {
     await sessions.create('uid-1');
     final gate = Completer<void>();
-    final script = ScriptedInteractions([
-      () async* {
-        await gate.future;
-        yield const InteractionEvent.completed(
-          interactionId: 'i1',
-          status: 'completed',
-        );
-      },
-    ]);
+    final script = ScriptedInteractions([silentUntil(gate.future)]);
     final agent = orchestrator(script);
 
     final running = StreamIterator(send(agent));
@@ -259,10 +251,10 @@ void main() {
       await agent
           .run(sessionId: 's-1', uid: 'uid-2', text: 'Hi', apiKey: 'key')
           .toList(),
-      [const TurnEvent.failed(TurnFailure.sessionNotFound)],
+      [const TurnEvent.failed(HomewardFailure.sessionNotFound)],
     );
     expect(await send(agent).toList(), [
-      const TurnEvent.failed(TurnFailure.turnInProgress),
+      const TurnEvent.failed(HomewardFailure.turnInProgress),
     ]);
 
     gate.complete();

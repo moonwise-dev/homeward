@@ -5,7 +5,7 @@ import '../prompt/prompt_assembler.dart';
 import 'create_interaction.dart';
 import 'tool_belt.dart';
 import 'turn_event.dart';
-import 'turn_failure.dart';
+import '../../errors/homeward_failure.dart';
 import 'turn_run.dart';
 import 'turn_settings.dart';
 
@@ -33,14 +33,15 @@ final class TurnOrchestrator {
     required String uid,
     required String text,
     required String apiKey,
+    Future<void>? cancellation,
   }) async* {
     final session = await sessions.find(sessionId);
     if (session == null || session.ownerUid != uid) {
-      yield const TurnEvent.failed(TurnFailure.sessionNotFound);
+      yield const TurnEvent.failed(HomewardFailure.sessionNotFound);
       return;
     }
     if (!await sessions.lease(sessionId)) {
-      yield const TurnEvent.failed(TurnFailure.turnInProgress);
+      yield const TurnEvent.failed(HomewardFailure.turnInProgress);
       return;
     }
     final run = TurnRun(
@@ -54,7 +55,11 @@ final class TurnOrchestrator {
     );
     try {
       yield const TurnEvent.working();
-      yield* run.execute(text: text, apiKey: apiKey);
+      yield* run.execute(
+        text: text,
+        apiKey: apiKey,
+        cancellation: cancellation,
+      );
     } finally {
       await sessions.save(run.session);
       await sessions.release(sessionId);

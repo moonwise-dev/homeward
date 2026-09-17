@@ -41,6 +41,13 @@ http.Client fixtureClient(
     ..add(utf8.encode(response.body));
   if (!response.keepOpen) {
     unawaited(controller.close());
+  } else if (request case http.Abortable(:final abortTrigger?)) {
+    unawaited(
+      abortTrigger.whenComplete(() {
+        controller.addError(http.RequestAbortedException(request.url));
+        unawaited(controller.close());
+      }),
+    );
   }
   return http.StreamedResponse(controller.stream, response.status);
 });

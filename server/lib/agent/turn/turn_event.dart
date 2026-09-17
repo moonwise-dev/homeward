@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'turn_failure.dart';
+import '../../errors/homeward_failure.dart';
 
 part 'turn_event.freezed.dart';
 
@@ -14,5 +14,7 @@ sealed class TurnEvent with _$TurnEvent {
 
   const factory TurnEvent.completed(String text) = TurnCompleted;
 
-  const factory TurnEvent.failed(TurnFailure failure) = TurnFailed;
+  const factory TurnEvent.failed(HomewardFailure failure) = TurnFailed;
+
+  const factory TurnEvent.canceled() = TurnCanceled;
 }

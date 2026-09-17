@@ -5,6 +5,7 @@ import 'package:common/common.dart';
 import 'package:http/http.dart' as http;
 
 import 'gemini_exception.dart';
+import 'interaction_cancelled.dart';
 import 'interaction_event.dart';
 import 'interaction_request.dart';
 
@@ -32,11 +33,20 @@ final class InteractionsClient {
     required String apiKey,
     required String model,
     required InteractionRequest request,
+    Future<void>? cancellation,
   }) async* {
     final started = Stopwatch()..start();
     final abort = Completer<void>();
+    var cancelled = false;
     final httpRequest =
-        http.AbortableRequest('POST', endpoint, abortTrigger: abort.future)
+        http.AbortableRequest(
+            'POST',
+            endpoint,
+            abortTrigger: Future.any([
+              abort.future,
+              ?cancellation?.whenComplete(() => cancelled = true),
+            ]),
+          )
           ..headers['content-type'] = 'application/json'
           ..headers['x-goog-api-key'] = apiKey
           ..body = jsonEncode(request.toJson(model: model));
@@ -82,6 +92,9 @@ final class InteractionsClient {
         await sse.cancel();
       }
     } on http.RequestAbortedException {
+      if (cancelled) {
+        throw const InteractionCancelled();
+      }
       throw GeminiUnavailable('Request aborted', model: model);
     } on http.ClientException catch (error) {
       throw GeminiUnavailable(error.message, model: model);

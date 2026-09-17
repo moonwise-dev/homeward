@@ -94,6 +94,14 @@ are required by `genui_a2a`'s agent card parser. `url` comes from
 | `tasks/get` | Resume after a dropped stream |
 | `tasks/cancel` | Buyer stops a running turn |
 
+A turn runs independently of the HTTP stream that started it, so a dropped
+connection does not stop it. `tasks/get` returns the task with its state and
+one message holding the full text so far and every A2UI message forwarded so
+far, in order; a failed task returns its JSON-RPC error instead. `tasks/cancel`
+aborts the Gemini request at once, ends the stream with `canceled`, and
+returns the canceled task. Tasks are kept for 10 minutes after they end, in
+memory per instance in M1.
+
 `contextId` is the Homeward session ID. Each turn is one task.
 
 ### Client To Server
@@ -206,10 +214,14 @@ A failed turn ends with a JSON-RPC error event instead of a status, then the
 stream closes:
 
 ```json
-{ "jsonrpc": "2.0", "id": 7, "error": { "code": -32001, "message": "Your Gemini quota is used up", "data": { "code": "gemini_quota_exhausted", "retryAfterSeconds": 40 } } }
+{ "jsonrpc": "2.0", "id": 7, "error": { "code": -32000, "message": "Your Gemini key has used up its requests for today", "data": { "code": "gemini_quota_exhausted", "retryAfterSeconds": 40 } } }
 ```
 
-`error.data.code` is a Homeward error code from `docs/REQUIREMENTS_SERVER.md`.
+`error.data.code` is a Homeward error code from `docs/REQUIREMENTS_SERVER.md`,
+always under JSON-RPC code `-32000`. The A2A codes keep their meaning:
+`-32001` task not found, including another caller's task, and `-32002` a task
+that already ended and cannot be canceled. Malformed requests get `-32700`,
+`-32600`, `-32601`, or `-32602`, as JSON with HTTP 200.
 A `failed` status is not used, because A2A clients surface it only as text.
 
 ```json

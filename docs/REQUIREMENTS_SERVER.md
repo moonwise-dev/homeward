@@ -84,7 +84,8 @@ instances.
 - A turn takes a lease on the session in a Firestore transaction with a
   two-minute expiry, released on completion.
 - Tasks are held in memory for streaming and in Firestore for `tasks/get`
-  resumption for 10 minutes.
+  resumption for 10 minutes. In M1 both sessions and tasks live in memory,
+  which holds only while one instance serves the plan.
 - Instances are stateless between requests. Any instance can serve any turn.
 
 ## Board Compiler

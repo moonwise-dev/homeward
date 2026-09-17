@@ -3,6 +3,7 @@ import 'package:logging/logging.dart';
 
 import '../../data/models/session.dart';
 import '../../gemini/gemini_exception.dart';
+import '../../gemini/interaction_cancelled.dart';
 import '../../gemini/interaction_event.dart';
 import '../../gemini/interaction_input.dart';
 import '../../gemini/interaction_request.dart';
@@ -21,7 +22,7 @@ import 'retry_surface.dart';
 import 'surface_seeder.dart';
 import 'tool_belt.dart';
 import 'turn_event.dart';
-import 'turn_failure.dart';
+import '../../errors/homeward_failure.dart';
 import 'turn_seeds.dart';
 import 'turn_settings.dart';
 
@@ -76,6 +77,7 @@ final class TurnRun {
   Stream<TurnEvent> execute({
     required String text,
     required String apiKey,
+    Future<void>? cancellation,
   }) async* {
     InteractionInput input = InteractionInput.text(text);
     var toolRounds = 0;
@@ -90,6 +92,7 @@ final class TurnRun {
         await for (final event in createInteraction(
           apiKey: apiKey,
           request: _request(input),
+          cancellation: cancellation,
         )) {
           switch (event) {
             case TextDelta(:final text):
@@ -110,16 +113,18 @@ final class TurnRun {
             case InteractionCreated():
           }
         }
+      } on InteractionCancelled {
+        return;
       } on GeminiHistoryMissing {
         if (mayRebuildHistory) {
           mayRebuildHistory = false;
           _interactionId = null;
           continue;
         }
-        yield const TurnEvent.failed(TurnFailure.internal);
+        yield const TurnEvent.failed(HomewardFailure.internal);
         return;
       } on GeminiException catch (error) {
-        yield TurnEvent.failed(TurnFailure.fromGemini(error, now()));
+        yield TurnEvent.failed(HomewardFailure.fromGemini(error, now()));
         return;
       }
       mayRebuildHistory = false;
