@@ -23,7 +23,7 @@ There are no fixed stages. The turn context at the end of these instructions say
 ## Each Turn
 
 - Call the tools the step needs, then write your text and surfaces in the same turn. A turn that only says what you are about to do is never enough.
-- Every response you send costs the buyer one of a small number of daily requests, so a turn has one round of tool calls. Call every tool you have inputs for together in your first response, such as `resolve_market`, `propose_profile`, and `propose_scenario` for a first message that names the place, the household, and the price. The server runs them in the right order. Once their results come back, no tools are offered: write your text and surfaces with what you have.
+- Every response you send costs the buyer one of a small number of daily requests, so a turn has one round of tool calls. Call every tool you have inputs for together in your first response, such as `resolve_market`, `propose_profile`, and `propose_scenario` for a first message that names the place, the household, and the price. The server runs them in the right order. Once their results come back, tools are done for the turn: write your text and surfaces with what you have.
 - Propose every value the buyer states in chat with `propose_profile` or `propose_scenario`, so the form arrives filled in. Only the buyer saves values, with a commit button.
 - Pick inputs by the value shape in the data model table: `LocationPicker` in country mode for countries, `MoneyInput` for money, `ChoicePicker` for a choice, `CheckBox` for a yes or no, and `TextField` with the number variant for counts and ages.
 - Draw at most two surfaces in a turn. Never change a surface from an earlier turn; draw a new one when something changes.

@@ -7,6 +7,7 @@ import '../../gemini/interaction_cancelled.dart';
 import '../../gemini/interaction_event.dart';
 import '../../gemini/interaction_input.dart';
 import '../../gemini/interaction_request.dart';
+import '../../gemini/tool_choice.dart';
 import '../../logging/log_entry.dart';
 import '../actions/action_input.dart';
 import '../actions/apply_action.dart';
@@ -23,6 +24,7 @@ import 'create_interaction.dart';
 import 'retry_surface.dart';
 import 'surface_seeder.dart';
 import 'tool_belt.dart';
+import 'tools_done_note.dart';
 import 'turn_event.dart';
 import 'turn_input.dart';
 import '../../errors/homeward_failure.dart';
@@ -102,7 +104,7 @@ final class TurnRun {
           apiKey: apiKey,
           request: _request(
             input,
-            offerTools: toolRounds < settings.maxToolRounds,
+            allowToolCalls: toolRounds < settings.maxToolRounds,
           ),
           canFallBack: () => _acceptedInRound == 0,
           cancellation: cancellation,
@@ -180,9 +182,10 @@ final class TurnRun {
               ))
             call.callId: _runCall(call),
         };
-        input = InteractionInput.functionResults([
-          for (final call in calls) results[call.callId]!,
-        ]);
+        input = InteractionInput.functionResults(
+          [for (final call in calls) results[call.callId]!],
+          note: toolRounds < settings.maxToolRounds ? null : toolsDoneNote,
+        );
         continue;
       }
       if (_pendingFailures.isNotEmpty) {
@@ -244,7 +247,7 @@ final class TurnRun {
 
   InteractionRequest _request(
     InteractionInput input, {
-    required bool offerTools,
+    required bool allowToolCalls,
   }) {
     final settled = tools.runSettled(_plan);
     _validator.seeds = turnSeeds(_plan, [
@@ -268,7 +271,8 @@ final class TurnRun {
           },
         ),
       ),
-      tools: offerTools ? tools.declarationsFor(_plan) : const [],
+      tools: tools.declarationsFor(_plan),
+      toolChoice: allowToolCalls ? null : ToolChoice.none,
       thinkingLevel: settings.thinkingLevel,
       previousInteractionId: _interactionId,
     );

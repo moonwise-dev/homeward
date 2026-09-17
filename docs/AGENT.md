@@ -231,9 +231,13 @@ owner, and leases it; `turn_run.dart` runs one turn:
    list, so `resolve_market` selects the market before a profile proposal in
    the same round converts amounts into its currency, and continue the
    interaction with all results at once, in the order the model called them.
-   A turn has one tool round: the request carrying the results, and every
-   request after it, offers no tools, so the model writes its text and
-   surfaces with what it has. Function calls it sends anyway are dropped (D78). Every round
+   A turn has one tool round: the request carrying the results ends with a
+   text note that tools are done for the turn, and it and every request after
+   it set `tool_choice` to `none`, so the model writes its text and surfaces
+   with what it has. Function calls it sends anyway are dropped (D78). On
+   2026-09-17 `gemini-3.1-flash-lite` called tools again when the tools were
+   left out and again under `tool_choice: none`, ending the turn with nothing
+   drawn; with the note it drew the form in that request. Every round
    is logged with its status, the names of the tools called, and its
    duration.
 9. When messages were rejected, continue with one text input listing each

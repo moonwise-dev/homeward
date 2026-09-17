@@ -536,7 +536,7 @@ assumed, through Firebase Hosting rewrites?
 
 ## S8 — Other Models And APIs Beside Gemini
 
-**Researched 2026-09-17; decision pending.**
+**Answered 2026-09-17.**
 
 ### Question
 
@@ -546,7 +546,7 @@ server, the app, and the free-key promise?
 
 ### Method
 
-- Desk research only; no request was sent to any model. Read the Gemini API
+- Desk research first. Read the Gemini API
   rate limit, pricing, models, Interactions API, Gemma on Gemini API, and
   OpenAI compatibility pages; the rate limit pages of OpenRouter, Groq, and
   Cerebras; the pub.dev pages of `dartantic_ai` and packages matching `genui`.
@@ -555,6 +555,10 @@ server, the app, and the free-key promise?
   with what S3 measured, so none is quoted.
 - Sized each route against one Homeward request: a system instruction of about
   12k tokens (D69) plus the turn, sent at most twice a turn (D78).
+- After the decision, sent the hero first message, "We are a couple in
+  Stockholm looking at a 3-room flat in Södermalm for about 4.5 million
+  kronor", through a local server limited to one candidate model at a time,
+  with `tool/bin/probe_turn.dart` and the probe key.
 
 ### Findings
 
@@ -576,6 +580,19 @@ server, the app, and the free-key promise?
 | Fit with the app | The key screen takes one Gemini key. A choice needs a provider picker, verification per provider, and data use terms per provider, as D76 quotes for Gemini. |
 | Fit with quality | Prompts and the catalog skill were written and checked on Gemini. Every added model needs the hero script and evals before a buyer can pick it. |
 
+### Probes
+
+| Model | Result |
+| --- | --- |
+| `gemini-3.5-flash-lite` | Two requests: `resolve_market`, `propose_profile`, and `propose_scenario` together, then text and a valid profile form with five inputs and a commit button, no correction. First text after 5.0 s, done after 7.9 s. |
+| `gemini-3.1-flash-lite` | Called `resolve_market` alone, then `propose_profile` and `propose_scenario` in the second request although no tools were offered, and again under `tool_choice: none`: the turn ended with no text and no surface. With a note after the tool results that tools are done, it wrote text and a valid form in the second request, without proposing the household or the price. First text after 15.2 s. |
+| `gemma-4-26b-a4b-it`, `gemma-4-31b-it` | `thinking_level: low` is refused; only `high` and `minimal` are accepted. With `high`, 26B answered HTTP 500 and 31B sent no step within 20 s. Then both refused with `generate_content_free_tier_input_token_count, limit: 16000`, retry in about 15 s: 16k input tokens a minute on the free tier, less than two Homeward requests. |
+
+`tool_choice` belongs in `generation_config`; at the top level the request is
+refused with `Unknown parameter 'tool_choice'`. A per-minute token quota is
+reported like the daily cap and would be shown to a buyer as a daily limit;
+no Gemini Flash model reached it.
+
 ### Options
 
 1. **More Gemini API models on the same key.** Add a flash-lite model or Gemma
@@ -590,6 +607,22 @@ server, the app, and the free-key promise?
    limit is below one request, OpenRouter's free limit is 50 requests a day.
 3. **Both, in order:** option 1 before the recording, option 2 after the
    livestream.
+
+### Decisions
+
+- **D80:** Before the recording, later fallback models on the same key:
+  `gemini-3.5-flash-lite` is the candidate, pending its limits in AI Studio and
+  the full hero script; `gemini-3.1-flash-lite` only if needed, since it is
+  slower and proposes less; Gemma 4 is out on the free tier. After the
+  livestream, an OpenAI-compatible provider choice.
+
+### Consequences
+
+- `docs/ROADMAP.md`: S8 answered; D80; a fallback model item in M2; M7
+  Provider Choice.
+- `docs/AGENT.md`: the tool round closes with a note and `tool_choice: none`
+  (D78).
+- `server/prompts/flow.md`: tools are done once their results come back.
 
 ### Sources
 

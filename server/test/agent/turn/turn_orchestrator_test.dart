@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:common/common.dart';
 import 'package:homeward_server/agent/prompt/prompt_assembler.dart';
 import 'package:homeward_server/agent/turn/tool_belt.dart';
+import 'package:homeward_server/agent/turn/tools_done_note.dart';
 import 'package:homeward_server/agent/turn/turn_event.dart';
 import 'package:homeward_server/agent/turn/turn_input.dart';
 import 'package:homeward_server/errors/homeward_failure.dart';
@@ -15,6 +16,7 @@ import 'package:homeward_server/data/repository/in_memory_session_repository.dar
 import 'package:homeward_server/gemini/gemini_exception.dart';
 import 'package:homeward_server/gemini/interaction_event.dart';
 import 'package:homeward_server/gemini/interaction_input.dart';
+import 'package:homeward_server/gemini/tool_choice.dart';
 import 'package:homeward_server/tools/homeward_tools.dart';
 import 'package:test/test.dart';
 
@@ -148,11 +150,13 @@ void main() {
         'propose_profile',
         'propose_scenario',
       ]);
+      expect(first.toolChoice, isNull);
       expect(second.previousInteractionId, 'i1');
-      expect(second.tools, isEmpty);
+      expect(second.toolChoice, ToolChoice.none);
       expect(second.systemInstruction, contains('"load_market": {'));
-      final results = (second.input as FunctionResultsInput).results;
-      expect(results.single.result, containsPair('selected', true));
+      final input = second.input as FunctionResultsInput;
+      expect(input.results.single.result, containsPair('selected', true));
+      expect(input.note, toolsDoneNote);
 
       final saved = (await sessions.find('s-1'))!;
       expect(saved.plan.marketId, MarketId.parse('SE'));
@@ -236,7 +240,7 @@ void main() {
         first.tools.map((tool) => tool.name),
         isNot(contains('compute_affordability')),
       );
-      expect(second.tools, isEmpty);
+      expect(second.toolChoice, ToolChoice.none);
       expect(second.systemInstruction, contains('"compute_affordability": {'));
       expect(
         events.last,

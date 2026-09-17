@@ -6,15 +6,18 @@ part 'interaction_input.freezed.dart';
 sealed class InteractionInput with _$InteractionInput {
   const factory InteractionInput.text(String text) = TextInput;
 
-  const factory InteractionInput.functionResults(List<FunctionResult> results) =
-      FunctionResultsInput;
+  const factory InteractionInput.functionResults(
+    List<FunctionResult> results, {
+    String? note,
+  }) = FunctionResultsInput;
 
   const InteractionInput._();
 
   Object toJson() => switch (this) {
     TextInput(:final text) => text,
-    FunctionResultsInput(:final results) => [
+    FunctionResultsInput(:final results, :final note) => [
       for (final result in results) result.toJson(),
+      if (note != null) {'type': 'text', 'text': note},
     ],
   };
 }

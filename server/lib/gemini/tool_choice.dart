@@ -1,0 +1,1 @@
+enum ToolChoice { auto, none }

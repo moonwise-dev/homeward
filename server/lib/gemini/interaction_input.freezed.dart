@@ -120,11 +120,11 @@ return functionResults(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String text)?  text,TResult Function( List<FunctionResult> results)?  functionResults,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String text)?  text,TResult Function( List<FunctionResult> results,  String? note)?  functionResults,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case TextInput() when text != null:
 return text(_that.text);case FunctionResultsInput() when functionResults != null:
-return functionResults(_that.results);case _:
+return functionResults(_that.results,_that.note);case _:
   return orElse();
 
 }
@@ -142,11 +142,11 @@ return functionResults(_that.results);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String text)  text,required TResult Function( List<FunctionResult> results)  functionResults,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String text)  text,required TResult Function( List<FunctionResult> results,  String? note)  functionResults,}) {final _that = this;
 switch (_that) {
 case TextInput():
 return text(_that.text);case FunctionResultsInput():
-return functionResults(_that.results);}
+return functionResults(_that.results,_that.note);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -160,11 +160,11 @@ return functionResults(_that.results);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String text)?  text,TResult? Function( List<FunctionResult> results)?  functionResults,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String text)?  text,TResult? Function( List<FunctionResult> results,  String? note)?  functionResults,}) {final _that = this;
 switch (_that) {
 case TextInput() when text != null:
 return text(_that.text);case FunctionResultsInput() when functionResults != null:
-return functionResults(_that.results);case _:
+return functionResults(_that.results,_that.note);case _:
   return null;
 
 }
@@ -244,7 +244,7 @@ as String,
 
 
 class FunctionResultsInput extends InteractionInput {
-  const FunctionResultsInput( List<FunctionResult> results): _results = results,super._();
+  const FunctionResultsInput( List<FunctionResult> results, {this.note}): _results = results,super._();
   
 
  final  List<FunctionResult> _results;
@@ -254,6 +254,7 @@ class FunctionResultsInput extends InteractionInput {
   return EqualUnmodifiableListView(_results);
 }
 
+ final  String? note;
 
 /// Create a copy of InteractionInput
 /// with the given fields replaced by the non-null parameter values.
@@ -265,18 +266,18 @@ $FunctionResultsInputCopyWith<FunctionResultsInput> get copyWith => _$FunctionRe
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is FunctionResultsInput&&const DeepCollectionEquality().equals(other.results, _results));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is FunctionResultsInput&&const DeepCollectionEquality().equals(other.results, _results)&&(identical(other.note, note) || other.note == note));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_results));
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_results),note);
 }
 
 @override
 String toString() {
-    return 'InteractionInput.functionResults(results: $results)';
+    return 'InteractionInput.functionResults(results: $results, note: $note)';
 }
 
 
@@ -287,7 +288,7 @@ abstract mixin class $FunctionResultsInputCopyWith<$Res> implements $Interaction
   factory $FunctionResultsInputCopyWith(FunctionResultsInput value, $Res Function(FunctionResultsInput) _then) = _$FunctionResultsInputCopyWithImpl;
 @useResult
 $Res call({
- List<FunctionResult> results
+ List<FunctionResult> results, String? note
 });
 
 
@@ -304,10 +305,11 @@ class _$FunctionResultsInputCopyWithImpl<$Res>
 
 /// Create a copy of InteractionInput
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? results = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? results = null,Object? note = freezed,}) {
   return _then(FunctionResultsInput(
 null == results ? _self._results : results // ignore: cast_nullable_to_non_nullable
-as List<FunctionResult>,
+as List<FunctionResult>,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

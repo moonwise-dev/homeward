@@ -4,6 +4,7 @@ import 'package:homeward_server/gemini/interaction_event.dart';
 import 'package:homeward_server/gemini/interaction_input.dart';
 import 'package:homeward_server/gemini/interaction_request.dart';
 import 'package:homeward_server/gemini/interactions_client.dart';
+import 'package:homeward_server/gemini/tool_choice.dart';
 import 'package:homeward_server/gemini/pacific_midnight.dart';
 import 'package:http/http.dart' as http;
 import 'package:test/test.dart';
@@ -77,7 +78,7 @@ void main() {
                 name: 'resolve_market',
                 result: {'marketId': 'PT-30'},
               ),
-            ]),
+            ], note: 'Tools are done.'),
             systemInstruction: 'You are Homeward.',
             tools: [
               FunctionDeclaration(
@@ -86,6 +87,7 @@ void main() {
                 parameters: {'type': 'object'},
               ),
             ],
+            toolChoice: ToolChoice.none,
             thinkingLevel: 'low',
             previousInteractionId: 'v1_previous',
           ),
@@ -104,6 +106,7 @@ void main() {
           'name': 'resolve_market',
           'result': {'marketId': 'PT-30'},
         },
+        {'type': 'text', 'text': 'Tools are done.'},
       ],
       'system_instruction': 'You are Homeward.',
       'tools': [
@@ -114,7 +117,7 @@ void main() {
           'parameters': {'type': 'object'},
         },
       ],
-      'generation_config': {'thinking_level': 'low'},
+      'generation_config': {'thinking_level': 'low', 'tool_choice': 'none'},
       'previous_interaction_id': 'v1_previous',
       'store': true,
       'stream': true,

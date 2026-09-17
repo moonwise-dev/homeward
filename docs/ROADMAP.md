@@ -69,6 +69,8 @@ Deliverables:
   passing deterministic scores.
 - Hero script rehearsed end to end three times without a correction round, on
   separate days or keys: a free key allows about one full run a day.
+- `gemini-3.5-flash-lite` as a later fallback model on the same key, once its
+  limits are read in AI Studio and the hero script passes on it (D80).
 
 Exit: the hero flow in `docs/PRODUCT.md` runs reliably on web at recording
 resolution.
@@ -106,6 +108,14 @@ resolution.
 - Southern Europe, tax-friendly hubs, Americas lifestyle, Asia-Pacific, in that
   order unless demand says otherwise.
 
+### M7 Provider Choice — after livestream
+
+- A second model API beside Gemini, picked by the buyer (D80): one
+  OpenAI-compatible `CreateInteraction` for OpenRouter, Cerebras, Mistral,
+  OpenAI, and a local Ollama; the model conversation stored in the session;
+  a provider picker with verification and data use terms per provider; the
+  hero script and evals passing on each provider offered.
+
 ## Spikes
 
 | ID | Question | Method | Decision gate |
@@ -117,7 +127,7 @@ resolution.
 | S5 | Is `a2ui_core` pure Dart and usable on the server for message models and validation? | Import into a console app | **Answered:** yes; used from `common`, see `docs/SPIKES.md`. |
 | S6 | Does `firebase_admin_sdk` verify anonymous ID tokens and App Check tokens and run Firestore transactions on Cloud Run with ADC? | Deploy a probe route | **Answered:** yes; clients call Cloud Run directly because Hosting rewrites cannot stream, and the invoker IAM check is off; see `docs/SPIKES.md`. |
 | S7 | Verify the high-impact Tier 1 claims: Portugal non-resident IMT, Portugal DSTI limit, Portugal non-resident LTV, Sweden top-up cap | Primary sources listed in `docs/MARKETS.md` | **Answered:** Sweden confirmed; Portugal corrected: DSTI 45% from 2026-08-01, non-resident IMT by Decree-Law 97/2026 with a refund path, non-resident 70% is lender practice; see `docs/SPIKES.md`. |
-| S8 | Can a buyer pick another model or API beside Gemini, and what does each route cost? | Desk research of Google and third-party provider limits, prices, APIs, and Dart libraries | **Researched:** decision pending; see `docs/SPIKES.md`. |
+| S8 | Can a buyer pick another model or API beside Gemini, and what does each route cost? | Desk research of Google and third-party provider limits, prices, APIs, and Dart libraries; one hero message on each candidate Gemini API model | **Answered:** `gemini-3.5-flash-lite` is the fallback candidate, Gemma 4 does not fit the free tier's 16k input tokens a minute, and an OpenAI-compatible provider choice follows the livestream (D80); see `docs/SPIKES.md`. |
 
 ## Risks
 
@@ -169,8 +179,9 @@ Decisions from the planning session on 2026-09-16.
 | D75 | Gemini key verification | `POST /api/keys/verify` looks up the first turn model with the key, which spends none of the free daily generate requests | Save the key unchecked and let the first turn report `gemini_key_invalid` |
 | D76 | Free-tier data use on the key screen | Quote the Gemini API terms (last modified 2026-04-28): on a free key Google may use conversations to improve its products and people may review them, and Google asks that sensitive or personal information not be sent; Homeward suggests round figures or a key from a project with billing, whose conversations Google does not use | Disclose without advice; a Moonwise billing-enabled key for the recording |
 | D77 | Money formatting | Each country pack declares a BCP 47 `locale`, carried in `/market`, and components format amounts the way that market writes them inside English copy | English grouping with ISO codes everywhere; English grouping with the currency symbol |
-| D78 | Model requests per turn | One tool round per turn: the request carrying tool results offers no tools, and tools without input, such as `compute_affordability`, run only on the server and reach the model in `preRun` | Up to four tool rounds with every tool offered, which took four requests in a live turn; prompt guidance alone |
+| D78 | Model requests per turn | One tool round per turn: the request carrying tool results ends with a note that tools are done and sets `tool_choice` to `none`, and tools without input, such as `compute_affordability`, run only on the server and reach the model in `preRun` | Up to four tool rounds with every tool offered, which took four requests in a live turn; prompt guidance alone |
 | D79 | A model at its free daily cap | The round moves to the next model, and the capped model is skipped for that key until midnight Pacific, which roughly doubles a free key's turns; other quota errors and depleted credits still stop the turn. Replaces D41 for this cap after a live session hit the cap on its fifth turn | Keep D41 and stop at the first model's cap |
+| D80 | Models and APIs beside Gemini | Later fallback models on the same key before the recording, `gemini-3.5-flash-lite` once its limits and the hero script check out, Gemma 4 ruled out by its free-tier token limit; an OpenAI-compatible provider choice after the livestream | Gemini models only; the provider choice before the recording; no change until after it |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

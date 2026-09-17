@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'function_declaration.dart';
 import 'interaction_input.dart';
+import 'tool_choice.dart';
 
 part 'interaction_request.freezed.dart';
 
@@ -11,6 +12,7 @@ abstract class InteractionRequest with _$InteractionRequest {
     required InteractionInput input,
     String? systemInstruction,
     @Default([]) List<FunctionDeclaration> tools,
+    ToolChoice? toolChoice,
     String? thinkingLevel,
     String? previousInteractionId,
   }) = _InteractionRequest;
@@ -22,8 +24,11 @@ abstract class InteractionRequest with _$InteractionRequest {
     'input': input.toJson(),
     'system_instruction': ?systemInstruction,
     if (tools.isNotEmpty) 'tools': [for (final tool in tools) tool.toJson()],
-    if (thinkingLevel case final level?)
-      'generation_config': {'thinking_level': level},
+    if (thinkingLevel != null || toolChoice != null)
+      'generation_config': {
+        'thinking_level': ?thinkingLevel,
+        'tool_choice': ?toolChoice?.name,
+      },
     'previous_interaction_id': ?previousInteractionId,
     'store': true,
     'stream': true,
