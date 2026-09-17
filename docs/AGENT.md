@@ -261,8 +261,10 @@ decision.
   "result" }`, one per call.
 - Tools are declared as `{ "type": "function", "name", "description",
   "parameters" }` and re-sent on every request.
-- Errors arrive in three shapes: a Google RPC array
+- Errors arrive in four shapes: a Google RPC array
   `[{ "error": { "code": 401, "status": "UNAUTHENTICATED" } }]` for key failures;
+  HTTP 400 `INVALID_ARGUMENT` with a `details` reason `API_KEY_INVALID` for a
+  malformed key, recorded on 2026-09-17;
   an object `{ "error": { "code": "not_found" | "invalid_request" |
   "too_many_requests", "message" } }` for request, quota, and some overload
   failures (HTTP 500 carries a high-demand message); and an in-stream `error`
@@ -328,7 +330,7 @@ takes this shape:
 
 | Failure | Behavior |
 | --- | --- |
-| Invalid Gemini key (HTTP 401 or 403) | Turn fails with `gemini_key_invalid`; app routes to the key screen |
+| Invalid Gemini key (HTTP 401 or 403, or 400 with `API_KEY_INVALID`) | Turn fails with `gemini_key_invalid`; app routes to the key screen |
 | Key quota exhausted (HTTP 429) | Turn fails with `gemini_quota_exhausted` and the next midnight Pacific as reset time; app explains the free key's daily cap |
 | Model overloaded or stalled | Model selection falls back once; if every model is unhealthy, the turn fails with `gemini_unavailable` |
 | Unknown or expired previous interaction | Retry once with rebuilt history |

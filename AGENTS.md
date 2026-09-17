@@ -101,6 +101,11 @@ make server-image-run
 catalog-check. `eval` joins as its milestone lands; `make eval` needs
 `HOMEWARD_EVAL_GEMINI_KEY` and is never part of `check`.
 
+`make probe SERVER=http://localhost:8080 MESSAGE="…"` signs in anonymously,
+creates a session, and streams one live turn against a running server,
+printing text, surfaces, and timings. It reads the key from
+`HOMEWARD_EVAL_GEMINI_KEY` and never prints it.
+
 `make hooks` is run once per clone; it points git at `tool/githooks`, whose
 `pre-push` runs `make check`.
 

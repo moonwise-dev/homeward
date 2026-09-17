@@ -153,6 +153,12 @@ void main() {
         isA<GeminiRequestInvalid>(),
       ),
       (
+        'a malformed key',
+        fixture('error_malformed_key_400.json', status: 400),
+        request,
+        isA<GeminiKeyInvalid>(),
+      ),
+      (
         'an invalid tool',
         fixture('error_invalid_tool_400.json', status: 400),
         request,

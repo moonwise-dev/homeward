@@ -42,9 +42,10 @@ GeminiException geminiHttpError({
   required bool continuesHistory,
   required DateTime now,
 }) {
-  final (code, message) = _errorOf(body);
+  final (code, message, reasons) = _errorOf(body);
   return switch (statusCode) {
     401 || 403 => GeminiKeyInvalid(message),
+    400 when reasons.contains('API_KEY_INVALID') => GeminiKeyInvalid(message),
     429 => GeminiQuotaExhausted(message, resetsAt: nextPacificMidnight(now)),
     400 || 404
         when continuesHistory &&
@@ -65,7 +66,7 @@ GeminiException geminiStreamError({
       : GeminiRequestInvalid(message);
 }
 
-(Object?, String) _errorOf(String body) {
+(Object?, String, Set<String>) _errorOf(String body) {
   try {
     final json = jsonDecode(body);
     final error = switch (json) {
@@ -73,8 +74,16 @@ GeminiException geminiStreamError({
       {'error': final Map<String, Object?> error} => error,
       _ => const <String, Object?>{},
     };
-    return (error['code'], error['message'] as String? ?? 'Gemini error');
+    return (
+      error['code'],
+      error['message'] as String? ?? 'Gemini error',
+      {
+        if (error['details'] case final List<Object?> details)
+          for (final detail in details)
+            if (detail case {'reason': final String reason}) reason,
+      },
+    );
   } on FormatException {
-    return (null, 'Gemini error');
+    return (null, 'Gemini error', const <String>{});
   }
 }
