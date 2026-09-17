@@ -377,7 +377,8 @@ Homeward is designed to cost nothing to run (D40, D42, D43):
 - Billing is attached to `homeward-genui` because Cloud Run, Artifact
   Registry, and Cloud Scheduler require it, with a budget alert
   of 25 SEK, about €2, at 50%, 90%, and 100%.
-- Cloud Run: minimum 0 and maximum 2 instances; cold starts are accepted.
+- Cloud Run: minimum 0 and maximum 2 instances, 1 while M1 keeps sessions in
+  memory; cold starts are accepted.
 - Artifact Registry keeps the last three server images.
 - Firestore stays within its free daily quota; one Cloud Scheduler job.
 - reCAPTCHA Enterprise stays within its free 10,000 assessments a month: each

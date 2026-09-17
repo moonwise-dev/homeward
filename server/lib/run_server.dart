@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:async/async.dart';
+import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 
 import 'app.dart';
 import 'config/server_config.dart';
+import 'data/providers/providers.dart';
 import 'logging/configure_logging.dart';
 import 'logging/log_entry.dart';
 
@@ -13,8 +15,9 @@ final _log = Logger('server');
 
 Future<void> runServer(ServerConfig config) async {
   configureLogging(config);
+  final httpClient = http.Client();
   final server = await shelf_io.serve(
-    buildApp(config),
+    buildApp(Providers.production(config, httpClient)),
     InternetAddress.anyIPv4,
     config.port,
     poweredByHeader: null,
@@ -28,4 +31,5 @@ Future<void> runServer(ServerConfig config) async {
   ]).first;
   _log.info('Shutting down');
   await server.close();
+  httpClient.close();
 }

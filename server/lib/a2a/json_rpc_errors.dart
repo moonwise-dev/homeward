@@ -39,7 +39,7 @@ abstract final class JsonRpcErrors {
     data: {
       'code': failure.code.wireName,
       if (failure.retryAfter case final retryAfter?)
-        'retryAfterSeconds': retryAfter.inSeconds,
+        'retryAfterSeconds': (retryAfter.inMilliseconds / 1000).ceil(),
     },
   );
 }

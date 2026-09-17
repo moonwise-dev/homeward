@@ -25,19 +25,32 @@ errors with the same codes in `error.data.code`.
 
 ## Middleware Order
 
-1. Request ID.
-2. Redaction: removes `X-Homeward-Gemini-Key` and `Authorization` from anything
-   that could be logged.
-3. CORS: allows the Hosting origins and local development origins, answers
-   preflight for `Authorization`, `X-Firebase-AppCheck`,
-   `X-Homeward-Gemini-Key`, and `X-A2A-Extensions`, and caches preflight for an
-   hour.
-4. Firebase ID token verification with `firebase_admin_sdk`; anonymous accounts
-   accepted.
-5. App Check token verification.
-6. Gemini key extraction into the request context for routes that need it.
-7. Rate limiting per UID.
-8. Error mapping.
+For every route:
+
+1. Request ID and trace context.
+2. Request logging: method, path, status, and duration only. No header, body,
+   key, or token is ever logged, which is how `X-Homeward-Gemini-Key` and
+   `Authorization` stay out of logs; a test sends both and checks every record.
+3. CORS: allows `HOMEWARD_ALLOWED_ORIGINS`, where `http://localhost:*` matches
+   any local port, answers preflight for `Authorization`, `Content-Type`,
+   `X-Firebase-AppCheck`, `X-Homeward-Gemini-Key`, and `X-A2A-Extensions`,
+   refuses preflight from other origins, exposes `x-request-id`, and caches
+   preflight for an hour.
+4. Error mapping: an unhandled error becomes the `internal` envelope.
+
+Then, for `/a2a` and `/api/*`:
+
+5. Firebase ID token verification with `firebase_admin_sdk`, from
+   `Authorization: Bearer`; anonymous accounts accepted, revocation not checked.
+6. App Check token verification from `X-Firebase-AppCheck`, without replay
+   protection because tokens live a day; skipped when
+   `HOMEWARD_APP_CHECK_ENFORCED` is `false`.
+7. Gemini key extraction into the request context, for `/a2a` only.
+8. Rate limiting per UID, for `/a2a` only.
+
+Failures in these steps answer with HTTP 401 or 429 and the error shape of the
+route: the envelope for `/api/*`, a JSON-RPC error without an ID for `/a2a`.
+`retryAfterSeconds` is rounded up.
 
 ## Gemini Key Handling
 
@@ -60,7 +73,8 @@ than Gemini spend.
 | Sessions per UID | 50 |
 
 Limits are counted in Firestore with fixed windows so they hold across
-instances.
+instances. In M1 the turn limit is counted in memory with the same fixed
+window, and the session limit joins with Firestore in M2.
 
 ## Error Codes
 
@@ -100,13 +114,15 @@ runs after every plan change and on session open when the board is missing.
 | --- | --- |
 | `HOMEWARD_TURN_MODELS` | Turn model IDs in preference order |
 | `HOMEWARD_THINKING_LEVEL` | Gemini thinking level |
-| `HOMEWARD_HEADERS_DEADLINE` | Deadline for Gemini response headers |
-| `HOMEWARD_FIRST_STEP_DEADLINE` | Deadline for the first Gemini step |
-| `HOMEWARD_MODEL_COOLDOWN` | How long an overloaded model is skipped |
+| `HOMEWARD_HEADERS_DEADLINE` | Deadline for Gemini response headers, in seconds |
+| `HOMEWARD_FIRST_STEP_DEADLINE` | Deadline for the first Gemini step, in seconds |
+| `HOMEWARD_MODEL_COOLDOWN` | How long an overloaded model is skipped, in seconds |
 | `HOMEWARD_MAX_CORRECTIONS` | Validation correction rounds |
 | `HOMEWARD_ALLOWED_ORIGINS` | CORS origins |
 | `HOMEWARD_APP_CHECK_ENFORCED` | Enforce App Check, off for local development |
 | `HOMEWARD_PUBLIC_URL` | Base URL clients call, used for the agent card's `url` |
+| `HOMEWARD_PROMPTS_DIR` | Prompt files; `/app/prompts` in the image |
+| `HOMEWARD_MARKETS_DIR` | Rule packs, rates, living costs, and places; `/app/markets` in the image |
 | `GOOGLE_CLOUD_PROJECT` | Firebase project |
 
 No secrets are required in production. Credentials come from the Cloud Run
@@ -135,15 +151,19 @@ service account through Application Default Credentials.
   workspace includes the Flutter app and a plain Dart image cannot resolve it.
   `make server-build` runs `dart compile exe --target-os linux --target-arch x64`
   against the committed lockfile.
-- `server/Dockerfile` copies that binary onto
+- `server/Dockerfile` copies that binary, `server/prompts/`, and `markets/` onto
   `gcr.io/distroless/cc-debian12:nonroot`: glibc and CA certificates, no shell,
-  user 65532. The image is about 31 MB. `markets/` is copied in once it exists.
-- The root `.dockerignore` admits only the server binary into the build context.
+  user 65532. The image is about 31 MB.
+- The root `.dockerignore` admits only the server binary, the prompts, and the
+  markets into the build context.
+- The server loads markets and prompts once at startup and refuses to start if
+  a market file fails to parse.
 - The server exits on SIGTERM within Cloud Run's grace period: it stops
   accepting connections, lets in-flight requests finish, and releases every
   signal watcher so the process can end.
 - Cloud Run `europe-north1`, concurrency 40, request timeout 300 s, minimum
-  instances 0, maximum 2, to stay within the free allowance; cold starts are
+  instances 0, maximum 2, to stay within the free allowance; maximum 1 while
+  sessions and tasks live in memory in M1; cold starts are
   accepted.
 - Artifact Registry Docker repository `homeward` in `europe-north1`, with a
   cleanup policy keeping the three most recent images and deleting the rest.

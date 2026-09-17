@@ -106,7 +106,7 @@ territories:
 
 .PHONY: server-dev
 server-dev:
-	@dart run --enable-vm-service server/tool/dev.dart
+	@HOMEWARD_APP_CHECK_ENFORCED=false GOOGLE_CLOUD_PROJECT=$(FIREBASE_PROJECT) dart run --enable-vm-service server/tool/dev.dart
 
 .PHONY: server-build
 server-build:
@@ -119,7 +119,7 @@ server-image: server-build
 
 .PHONY: server-image-run
 server-image-run: server-image
-	@docker run --rm --platform linux/amd64 -p 8080:8080 $(SERVER_IMAGE)
+	@docker run --rm --platform linux/amd64 -p 8080:8080 -e HOMEWARD_APP_CHECK_ENFORCED=false -e GOOGLE_CLOUD_PROJECT=$(FIREBASE_PROJECT) $(SERVER_IMAGE)
 
 .PHONY: clean-tree
 clean-tree:
@@ -131,7 +131,7 @@ deploy-server: clean-tree server-image
 	@docker push $(SERVER_REGISTRY_IMAGE)
 	@gcloud run deploy $(SERVER_SERVICE) --project $(FIREBASE_PROJECT) --region $(REGION) \
 		--image $(SERVER_REGISTRY_IMAGE) --service-account $(SERVER_ACCOUNT) --no-invoker-iam-check \
-		--min-instances 0 --max-instances 2 --concurrency 40 --timeout 300 \
+		--min-instances 0 --max-instances 1 --concurrency 40 --timeout 300 \
 		--set-env-vars GOOGLE_CLOUD_PROJECT=$(FIREBASE_PROJECT),HOMEWARD_PUBLIC_URL=$(SERVER_URL) --quiet
 
 .PHONY: deploy-web

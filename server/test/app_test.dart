@@ -1,23 +1,45 @@
 import 'dart:convert';
 
 import 'package:homeward_server/app.dart';
-import 'package:homeward_server/config/server_config.dart';
 import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
+import 'agent/turn/scripted_interactions.dart';
+import 'support/test_providers.dart';
+
 void main() {
-  final app = buildApp(
-    ServerConfig.fromEnvironment({
-      'HOMEWARD_PUBLIC_URL': 'https://homeward.example.run.app',
-    }),
+  const hosting = 'https://homeward-genui.web.app';
+  const verifiedHeaders = {
+    'authorization': 'Bearer id-token-1',
+    'x-firebase-appcheck': 'app-check-1',
+  };
+
+  Handler app({
+    Map<String, String> environment = const {},
+    ScriptedInteractions? script,
+  }) => buildApp(testProviders(environment: environment, script: script));
+
+  Future<Response> send(
+    Handler handler,
+    String method,
+    String path, {
+    Map<String, String> headers = const {},
+    String? body,
+  }) async => handler(
+    Request(
+      method,
+      Uri.parse('http://localhost$path'),
+      headers: headers,
+      body: body,
+    ),
   );
 
-  Future<Response> get(String path) =>
-      Future.value(app(Request('GET', Uri.parse('http://localhost$path'))));
+  Future<Map<String, Object?>> json(Response response) async =>
+      jsonDecode(await response.readAsString()) as Map<String, Object?>;
 
   test('health reports ok as json with a request id', () async {
-    final response = await get('/health');
+    final response = await send(app(), 'GET', '/health');
 
     expect(response.statusCode, 200);
     expect(response.headers['content-type'], 'application/json');
@@ -25,15 +47,14 @@ void main() {
       response.headers['x-request-id'],
       matches(RegExp(r'^[0-9a-f]{16}$')),
     );
-    expect(jsonDecode(await response.readAsString()), {'status': 'ok'});
+    expect(await json(response), {'status': 'ok'});
   });
 
   test('serves the agent card with the A2UI extension and its url', () async {
-    final response = await get('/.well-known/agent-card.json');
-    final card =
-        jsonDecode(await response.readAsString()) as Map<String, Object?>;
+    final card = await json(
+      await send(app(), 'GET', '/.well-known/agent-card.json'),
+    );
 
-    expect(response.statusCode, 200);
     expect(card['url'], 'https://homeward.example.run.app/a2a');
     expect(card['protocolVersion'], isA<String>());
     expect(card['defaultInputModes'], isNotEmpty);
@@ -58,18 +79,132 @@ void main() {
     }
   });
 
-  test('unknown routes are not found', () async {
-    expect((await get('/missing')).statusCode, 404);
+  test('answers preflight for Hosting and local origins only', () async {
+    final handler = app();
+
+    Future<Response> preflight(String origin) => send(
+      handler,
+      'OPTIONS',
+      '/a2a',
+      headers: {
+        'origin': origin,
+        'access-control-request-method': 'POST',
+      },
+    );
+
+    final hostingPreflight = await preflight(hosting);
+    expect(hostingPreflight.statusCode, 204);
+    expect(hostingPreflight.headers['access-control-allow-origin'], hosting);
+    expect(hostingPreflight.headers['access-control-max-age'], '3600');
+    expect(
+      hostingPreflight.headers['access-control-allow-headers'],
+      allOf(contains('x-homeward-gemini-key'), contains('x-a2a-extensions')),
+    );
+    expect((await preflight('http://localhost:61234')).statusCode, 204);
+    expect((await preflight('https://evil.example')).statusCode, 403);
+    expect((await preflight('http://localhost.evil.example')).statusCode, 403);
   });
 
-  test('logs every request with its status and duration', () async {
+  test('creates sessions only for verified callers', () async {
+    final handler = app();
+
+    final anonymous = await send(handler, 'POST', '/api/sessions');
+    final withoutAppCheck = await send(
+      handler,
+      'POST',
+      '/api/sessions',
+      headers: {'authorization': 'Bearer id-token-1'},
+    );
+    final verified = await send(
+      handler,
+      'POST',
+      '/api/sessions',
+      headers: {...verifiedHeaders, 'origin': hosting},
+    );
+
+    expect(anonymous.statusCode, 401);
+    expect(await json(anonymous), {
+      'ok': false,
+      'error': {
+        'code': 'unauthenticated',
+        'message': 'Sign in again to continue',
+      },
+    });
+    expect(withoutAppCheck.statusCode, 401);
+    expect(
+      (await json(withoutAppCheck))['error'],
+      containsPair('code', 'app_check_failed'),
+    );
+    expect(verified.statusCode, 201);
+    expect(verified.headers['access-control-allow-origin'], hosting);
+    expect(
+      (await json(verified))['data'],
+      containsPair('sessionId', isA<String>()),
+    );
+  });
+
+  test('skips App Check when it is not enforced', () async {
+    final response = await send(
+      app(environment: {'HOMEWARD_APP_CHECK_ENFORCED': 'false'}),
+      'POST',
+      '/api/sessions',
+      headers: {'authorization': 'Bearer id-token-1'},
+    );
+
+    expect(response.statusCode, 201);
+  });
+
+  test('answers A2A auth failures as JSON-RPC errors', () async {
+    final response = await send(app(), 'POST', '/a2a', body: '{}');
+
+    expect(response.statusCode, 401);
+    expect(await json(response), {
+      'jsonrpc': '2.0',
+      'error': {
+        'code': -32000,
+        'message': 'Sign in again to continue',
+        'data': {'code': 'unauthenticated'},
+      },
+    });
+  });
+
+  test('limits turns per caller and never logs keys or tokens', () async {
     final records = <LogRecord>[];
     final subscription = Logger.root.onRecord.listen(records.add);
     addTearDown(subscription.cancel);
+    final handler = app();
+    const secret = 'AQ.secret-gemini-key';
 
-    await get('/health');
+    Future<Response> call() => send(
+      handler,
+      'POST',
+      '/a2a',
+      headers: {...verifiedHeaders, 'x-homeward-gemini-key': secret},
+      body: jsonEncode({
+        'jsonrpc': '2.0',
+        'id': 1,
+        'method': 'tasks/get',
+        'params': {'id': 'missing'},
+      }),
+    );
 
-    expect(records.single.message, 'GET /health 200');
-    expect(records.single.loggerName, 'http');
+    final responses = [for (var i = 0; i < 31; i++) await call()];
+
+    expect(responses.first.statusCode, 200);
+    expect(responses.last.statusCode, 429);
+    expect(
+      ((await json(responses.last))['error']! as Map)['data'],
+      {'code': 'rate_limited', 'retryAfterSeconds': inInclusiveRange(599, 600)},
+    );
+    final logged = records.map(
+      (record) => '${record.message} ${record.object}',
+    );
+    expect(logged, isNotEmpty);
+    expect(logged, everyElement(isNot(contains(secret))));
+    expect(logged, everyElement(isNot(contains('id-token-1'))));
+  });
+
+  test('unknown routes are not found', () async {
+    expect((await send(app(), 'GET', '/missing')).statusCode, 404);
   });
 }

@@ -11,17 +11,54 @@ abstract class ServerConfig with _$ServerConfig {
     required LogFormat logFormat,
     required Uri publicUrl,
     String? projectId,
+    required List<String> turnModels,
+    required String thinkingLevel,
+    required Duration headersDeadline,
+    required Duration firstStepDeadline,
+    required Duration modelCooldown,
+    required int maxCorrections,
+    required List<String> allowedOrigins,
+    required bool appCheckEnforced,
+    required String promptsDirectory,
+    required String marketsDirectory,
   }) = _ServerConfig;
 
-  factory ServerConfig.fromEnvironment(Map<String, String> environment) =>
-      ServerConfig(
-        port: int.parse(environment['PORT'] ?? '8080'),
-        logFormat: LogFormat.values.byName(
-          environment['HOMEWARD_LOG_FORMAT'] ?? LogFormat.text.name,
-        ),
-        publicUrl: Uri.parse(
-          environment['HOMEWARD_PUBLIC_URL'] ?? 'http://localhost:8080',
-        ),
-        projectId: environment['GOOGLE_CLOUD_PROJECT'],
-      );
+  factory ServerConfig.fromEnvironment(Map<String, String> environment) {
+    String read(String key, String fallback) => environment[key] ?? fallback;
+    List<String> list(String key, String fallback) => [
+      for (final item in read(key, fallback).split(','))
+        if (item.trim().isNotEmpty) item.trim(),
+    ];
+    Duration seconds(String key, int fallback) =>
+        Duration(seconds: int.parse(read(key, '$fallback')));
+
+    return ServerConfig(
+      port: int.parse(read('PORT', '8080')),
+      logFormat: LogFormat.values.byName(
+        read('HOMEWARD_LOG_FORMAT', LogFormat.text.name),
+      ),
+      publicUrl: Uri.parse(
+        read('HOMEWARD_PUBLIC_URL', 'http://localhost:8080'),
+      ),
+      projectId: environment['GOOGLE_CLOUD_PROJECT'],
+      turnModels: list(
+        'HOMEWARD_TURN_MODELS',
+        'gemini-3.8-flash,gemini-3.5-flash',
+      ),
+      thinkingLevel: read('HOMEWARD_THINKING_LEVEL', 'low'),
+      headersDeadline: seconds('HOMEWARD_HEADERS_DEADLINE', 10),
+      firstStepDeadline: seconds('HOMEWARD_FIRST_STEP_DEADLINE', 20),
+      modelCooldown: seconds('HOMEWARD_MODEL_COOLDOWN', 300),
+      maxCorrections: int.parse(read('HOMEWARD_MAX_CORRECTIONS', '2')),
+      allowedOrigins: list(
+        'HOMEWARD_ALLOWED_ORIGINS',
+        'https://homeward-genui.web.app,'
+            'https://homeward-genui.firebaseapp.com,'
+            'http://localhost:*',
+      ),
+      appCheckEnforced: read('HOMEWARD_APP_CHECK_ENFORCED', 'true') == 'true',
+      promptsDirectory: read('HOMEWARD_PROMPTS_DIR', 'server/prompts'),
+      marketsDirectory: read('HOMEWARD_MARKETS_DIR', 'markets'),
+    );
+  }
 }
