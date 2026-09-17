@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LoanPredicate {
 
- RateType? get rateType; YearRange? get termYears;
+ List<RateType>? get rateTypes; YearRange? get termYears;
 /// Create a copy of LoanPredicate
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $LoanPredicateCopyWith<LoanPredicate> get copyWith => _$LoanPredicateCopyWithImp
 @override
 bool operator ==(Object other) {
   final _this = this as LoanPredicate;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoanPredicate&&(identical(other.rateType, _this.rateType) || other.rateType == _this.rateType)&&(identical(other.termYears, _this.termYears) || other.termYears == _this.termYears));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoanPredicate&&const DeepCollectionEquality().equals(other.rateTypes, _this.rateTypes)&&(identical(other.termYears, _this.termYears) || other.termYears == _this.termYears));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as LoanPredicate;
-  return Object.hash(runtimeType,_this.rateType,_this.termYears);
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.rateTypes),_this.termYears);
 }
 
 @override
 String toString() {
   final _this = this as LoanPredicate;
-  return 'LoanPredicate(rateType: ${_this.rateType}, termYears: ${_this.termYears})';
+  return 'LoanPredicate(rateTypes: ${_this.rateTypes}, termYears: ${_this.termYears})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $LoanPredicateCopyWith<$Res>  {
   factory $LoanPredicateCopyWith(LoanPredicate value, $Res Function(LoanPredicate) _then) = _$LoanPredicateCopyWithImpl;
 @useResult
 $Res call({
- RateType? rateType, YearRange? termYears
+ List<RateType>? rateTypes, YearRange? termYears
 });
 
 
@@ -71,10 +71,10 @@ class _$LoanPredicateCopyWithImpl<$Res>
 
 /// Create a copy of LoanPredicate
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? rateType = freezed,Object? termYears = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? rateTypes = freezed,Object? termYears = freezed,}) {
   return _then(LoanPredicate(
-rateType: freezed == rateType ? _self.rateType : rateType // ignore: cast_nullable_to_non_nullable
-as RateType?,termYears: freezed == termYears ? _self.termYears : termYears // ignore: cast_nullable_to_non_nullable
+rateTypes: freezed == rateTypes ? _self.rateTypes : rateTypes // ignore: cast_nullable_to_non_nullable
+as List<RateType>?,termYears: freezed == termYears ? _self.termYears : termYears // ignore: cast_nullable_to_non_nullable
 as YearRange?,
   ));
 }
@@ -172,10 +172,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( RateType? rateType,  YearRange? termYears)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<RateType>? rateTypes,  YearRange? termYears)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoanPredicate() when $default != null:
-return $default(_that.rateType,_that.termYears);case _:
+return $default(_that.rateTypes,_that.termYears);case _:
   return orElse();
 
 }
@@ -193,10 +193,10 @@ return $default(_that.rateType,_that.termYears);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( RateType? rateType,  YearRange? termYears)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<RateType>? rateTypes,  YearRange? termYears)  $default,) {final _that = this;
 switch (_that) {
 case _LoanPredicate():
-return $default(_that.rateType,_that.termYears);case _:
+return $default(_that.rateTypes,_that.termYears);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -213,10 +213,10 @@ return $default(_that.rateType,_that.termYears);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( RateType? rateType,  YearRange? termYears)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<RateType>? rateTypes,  YearRange? termYears)?  $default,) {final _that = this;
 switch (_that) {
 case _LoanPredicate() when $default != null:
-return $default(_that.rateType,_that.termYears);case _:
+return $default(_that.rateTypes,_that.termYears);case _:
   return null;
 
 }
@@ -228,10 +228,18 @@ return $default(_that.rateType,_that.termYears);case _:
 @JsonSerializable()
 
 class _LoanPredicate implements LoanPredicate {
-  const _LoanPredicate({this.rateType, this.termYears});
+  const _LoanPredicate({ List<RateType>? rateTypes, this.termYears}): _rateTypes = rateTypes;
   factory _LoanPredicate.fromJson(Map<String, dynamic> json) => _$LoanPredicateFromJson(json);
 
-@override final  RateType? rateType;
+ final  List<RateType>? _rateTypes;
+@override List<RateType>? get rateTypes {
+  final value = _rateTypes;
+  if (value == null) return null;
+  if (_rateTypes is EqualUnmodifiableListView) return _rateTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 @override final  YearRange? termYears;
 
 /// Create a copy of LoanPredicate
@@ -247,18 +255,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoanPredicate&&(identical(other.rateType, rateType) || other.rateType == rateType)&&(identical(other.termYears, termYears) || other.termYears == termYears));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoanPredicate&&const DeepCollectionEquality().equals(other.rateTypes, _rateTypes)&&(identical(other.termYears, termYears) || other.termYears == termYears));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,rateType,termYears);
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_rateTypes),termYears);
 }
 
 @override
 String toString() {
-    return 'LoanPredicate(rateType: $rateType, termYears: $termYears)';
+    return 'LoanPredicate(rateTypes: $rateTypes, termYears: $termYears)';
 }
 
 
@@ -269,7 +277,7 @@ abstract mixin class _$LoanPredicateCopyWith<$Res> implements $LoanPredicateCopy
   factory _$LoanPredicateCopyWith(_LoanPredicate value, $Res Function(_LoanPredicate) _then) = __$LoanPredicateCopyWithImpl;
 @override @useResult
 $Res call({
- RateType? rateType, YearRange? termYears
+ List<RateType>? rateTypes, YearRange? termYears
 });
 
 
@@ -286,10 +294,10 @@ class __$LoanPredicateCopyWithImpl<$Res>
 
 /// Create a copy of LoanPredicate
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? rateType = freezed,Object? termYears = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? rateTypes = freezed,Object? termYears = freezed,}) {
   return _then(_LoanPredicate(
-rateType: freezed == rateType ? _self.rateType : rateType // ignore: cast_nullable_to_non_nullable
-as RateType?,termYears: freezed == termYears ? _self.termYears : termYears // ignore: cast_nullable_to_non_nullable
+rateTypes: freezed == rateTypes ? _self._rateTypes : rateTypes // ignore: cast_nullable_to_non_nullable
+as List<RateType>?,termYears: freezed == termYears ? _self.termYears : termYears // ignore: cast_nullable_to_non_nullable
 as YearRange?,
   ));
 }

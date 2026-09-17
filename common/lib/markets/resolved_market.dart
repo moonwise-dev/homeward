@@ -3,6 +3,7 @@ import 'locale_tag_json_converter.dart';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'cost_precedence.dart';
 import 'coverage.dart';
 import '../money/currency.dart';
 import '../money/currency_json_converter.dart';
@@ -119,10 +120,11 @@ ResolvedMarket resolveForBuyer(
     interestDeduction: keep(lending.interestDeduction, RuleSection.lending),
     repaymentStyle: lending.repaymentStyle,
   );
-  final purchaseCosts = keep(pack.purchaseCosts, RuleSection.purchaseCosts);
-  final recurringCosts = keep(
-    pack.recurringCosts,
-    RuleSection.recurringCosts,
+  final purchaseCosts = costsByPrecedence(
+    keep(pack.purchaseCosts, RuleSection.purchaseCosts),
+  );
+  final recurringCosts = costsByPrecedence(
+    keep(pack.recurringCosts, RuleSection.recurringCosts),
   );
   final profileFields = keep(pack.profileFields, RuleSection.profileFields);
   return ResolvedMarket(

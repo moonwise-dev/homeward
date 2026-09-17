@@ -190,7 +190,7 @@ void main() {
     final stress = StressRule(
       id: 'stress-over-10-years',
       appliesToLoan: const LoanPredicate(
-        rateType: RateType.variable,
+        rateTypes: [RateType.variable, RateType.mixed],
         termYears: YearRange(min: 11),
       ),
       kind: StressKind.shock,

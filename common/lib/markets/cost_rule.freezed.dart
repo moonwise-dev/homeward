@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CostRule {
 
- String get id; String? get group; String get label; String? get localTerm; BuyerPredicate? get appliesTo; CostBase get base; CostCalculation get calculation; Recurrence get recurrence; Rounding get rounding; RefundRule? get refund; String get sourceId;
+ String get id; String? get group; String get label; String? get localTerm; BuyerPredicate? get appliesTo; int get precedence; CostBase get base; CostCalculation get calculation; Recurrence get recurrence; Rounding get rounding; RefundRule? get refund; String get sourceId;
 /// Create a copy of CostRule
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $CostRuleCopyWith<CostRule> get copyWith => _$CostRuleCopyWithImpl<CostRule>(thi
 @override
 bool operator ==(Object other) {
   final _this = this as CostRule;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CostRule&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.group, _this.group) || other.group == _this.group)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.localTerm, _this.localTerm) || other.localTerm == _this.localTerm)&&(identical(other.appliesTo, _this.appliesTo) || other.appliesTo == _this.appliesTo)&&(identical(other.base, _this.base) || other.base == _this.base)&&(identical(other.calculation, _this.calculation) || other.calculation == _this.calculation)&&(identical(other.recurrence, _this.recurrence) || other.recurrence == _this.recurrence)&&(identical(other.rounding, _this.rounding) || other.rounding == _this.rounding)&&(identical(other.refund, _this.refund) || other.refund == _this.refund)&&(identical(other.sourceId, _this.sourceId) || other.sourceId == _this.sourceId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CostRule&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.group, _this.group) || other.group == _this.group)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.localTerm, _this.localTerm) || other.localTerm == _this.localTerm)&&(identical(other.appliesTo, _this.appliesTo) || other.appliesTo == _this.appliesTo)&&(identical(other.precedence, _this.precedence) || other.precedence == _this.precedence)&&(identical(other.base, _this.base) || other.base == _this.base)&&(identical(other.calculation, _this.calculation) || other.calculation == _this.calculation)&&(identical(other.recurrence, _this.recurrence) || other.recurrence == _this.recurrence)&&(identical(other.rounding, _this.rounding) || other.rounding == _this.rounding)&&(identical(other.refund, _this.refund) || other.refund == _this.refund)&&(identical(other.sourceId, _this.sourceId) || other.sourceId == _this.sourceId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as CostRule;
-  return Object.hash(runtimeType,_this.id,_this.group,_this.label,_this.localTerm,_this.appliesTo,_this.base,_this.calculation,_this.recurrence,_this.rounding,_this.refund,_this.sourceId);
+  return Object.hash(runtimeType,_this.id,_this.group,_this.label,_this.localTerm,_this.appliesTo,_this.precedence,_this.base,_this.calculation,_this.recurrence,_this.rounding,_this.refund,_this.sourceId);
 }
 
 @override
 String toString() {
   final _this = this as CostRule;
-  return 'CostRule(id: ${_this.id}, group: ${_this.group}, label: ${_this.label}, localTerm: ${_this.localTerm}, appliesTo: ${_this.appliesTo}, base: ${_this.base}, calculation: ${_this.calculation}, recurrence: ${_this.recurrence}, rounding: ${_this.rounding}, refund: ${_this.refund}, sourceId: ${_this.sourceId})';
+  return 'CostRule(id: ${_this.id}, group: ${_this.group}, label: ${_this.label}, localTerm: ${_this.localTerm}, appliesTo: ${_this.appliesTo}, precedence: ${_this.precedence}, base: ${_this.base}, calculation: ${_this.calculation}, recurrence: ${_this.recurrence}, rounding: ${_this.rounding}, refund: ${_this.refund}, sourceId: ${_this.sourceId})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $CostRuleCopyWith<$Res>  {
   factory $CostRuleCopyWith(CostRule value, $Res Function(CostRule) _then) = _$CostRuleCopyWithImpl;
 @useResult
 $Res call({
- String id, String? group, String label, String? localTerm, BuyerPredicate? appliesTo, CostBase base, CostCalculation calculation, Recurrence recurrence, Rounding rounding, RefundRule? refund, String sourceId
+ String id, String? group, String label, String? localTerm, BuyerPredicate? appliesTo, int precedence, CostBase base, CostCalculation calculation, Recurrence recurrence, Rounding rounding, RefundRule? refund, String sourceId
 });
 
 
@@ -71,14 +71,15 @@ class _$CostRuleCopyWithImpl<$Res>
 
 /// Create a copy of CostRule
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? group = freezed,Object? label = null,Object? localTerm = freezed,Object? appliesTo = freezed,Object? base = null,Object? calculation = null,Object? recurrence = null,Object? rounding = null,Object? refund = freezed,Object? sourceId = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? group = freezed,Object? label = null,Object? localTerm = freezed,Object? appliesTo = freezed,Object? precedence = null,Object? base = null,Object? calculation = null,Object? recurrence = null,Object? rounding = null,Object? refund = freezed,Object? sourceId = null,}) {
   return _then(CostRule(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,group: freezed == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
 as String?,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String,localTerm: freezed == localTerm ? _self.localTerm : localTerm // ignore: cast_nullable_to_non_nullable
 as String?,appliesTo: freezed == appliesTo ? _self.appliesTo : appliesTo // ignore: cast_nullable_to_non_nullable
-as BuyerPredicate?,base: null == base ? _self.base : base // ignore: cast_nullable_to_non_nullable
+as BuyerPredicate?,precedence: null == precedence ? _self.precedence : precedence // ignore: cast_nullable_to_non_nullable
+as int,base: null == base ? _self.base : base // ignore: cast_nullable_to_non_nullable
 as CostBase,calculation: null == calculation ? _self.calculation : calculation // ignore: cast_nullable_to_non_nullable
 as CostCalculation,recurrence: null == recurrence ? _self.recurrence : recurrence // ignore: cast_nullable_to_non_nullable
 as Recurrence,rounding: null == rounding ? _self.rounding : rounding // ignore: cast_nullable_to_non_nullable
@@ -211,10 +212,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? group,  String label,  String? localTerm,  BuyerPredicate? appliesTo,  CostBase base,  CostCalculation calculation,  Recurrence recurrence,  Rounding rounding,  RefundRule? refund,  String sourceId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? group,  String label,  String? localTerm,  BuyerPredicate? appliesTo,  int precedence,  CostBase base,  CostCalculation calculation,  Recurrence recurrence,  Rounding rounding,  RefundRule? refund,  String sourceId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CostRule() when $default != null:
-return $default(_that.id,_that.group,_that.label,_that.localTerm,_that.appliesTo,_that.base,_that.calculation,_that.recurrence,_that.rounding,_that.refund,_that.sourceId);case _:
+return $default(_that.id,_that.group,_that.label,_that.localTerm,_that.appliesTo,_that.precedence,_that.base,_that.calculation,_that.recurrence,_that.rounding,_that.refund,_that.sourceId);case _:
   return orElse();
 
 }
@@ -232,10 +233,10 @@ return $default(_that.id,_that.group,_that.label,_that.localTerm,_that.appliesTo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? group,  String label,  String? localTerm,  BuyerPredicate? appliesTo,  CostBase base,  CostCalculation calculation,  Recurrence recurrence,  Rounding rounding,  RefundRule? refund,  String sourceId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? group,  String label,  String? localTerm,  BuyerPredicate? appliesTo,  int precedence,  CostBase base,  CostCalculation calculation,  Recurrence recurrence,  Rounding rounding,  RefundRule? refund,  String sourceId)  $default,) {final _that = this;
 switch (_that) {
 case _CostRule():
-return $default(_that.id,_that.group,_that.label,_that.localTerm,_that.appliesTo,_that.base,_that.calculation,_that.recurrence,_that.rounding,_that.refund,_that.sourceId);case _:
+return $default(_that.id,_that.group,_that.label,_that.localTerm,_that.appliesTo,_that.precedence,_that.base,_that.calculation,_that.recurrence,_that.rounding,_that.refund,_that.sourceId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -252,10 +253,10 @@ return $default(_that.id,_that.group,_that.label,_that.localTerm,_that.appliesTo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? group,  String label,  String? localTerm,  BuyerPredicate? appliesTo,  CostBase base,  CostCalculation calculation,  Recurrence recurrence,  Rounding rounding,  RefundRule? refund,  String sourceId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? group,  String label,  String? localTerm,  BuyerPredicate? appliesTo,  int precedence,  CostBase base,  CostCalculation calculation,  Recurrence recurrence,  Rounding rounding,  RefundRule? refund,  String sourceId)?  $default,) {final _that = this;
 switch (_that) {
 case _CostRule() when $default != null:
-return $default(_that.id,_that.group,_that.label,_that.localTerm,_that.appliesTo,_that.base,_that.calculation,_that.recurrence,_that.rounding,_that.refund,_that.sourceId);case _:
+return $default(_that.id,_that.group,_that.label,_that.localTerm,_that.appliesTo,_that.precedence,_that.base,_that.calculation,_that.recurrence,_that.rounding,_that.refund,_that.sourceId);case _:
   return null;
 
 }
@@ -267,7 +268,7 @@ return $default(_that.id,_that.group,_that.label,_that.localTerm,_that.appliesTo
 @JsonSerializable()
 
 class _CostRule implements CostRule {
-  const _CostRule({required this.id, this.group, required this.label, this.localTerm, this.appliesTo, required this.base, required this.calculation, required this.recurrence, this.rounding = Rounding.halfUp, this.refund, required this.sourceId});
+  const _CostRule({required this.id, this.group, required this.label, this.localTerm, this.appliesTo, this.precedence = 0, required this.base, required this.calculation, required this.recurrence, this.rounding = Rounding.halfUp, this.refund, required this.sourceId});
   factory _CostRule.fromJson(Map<String, dynamic> json) => _$CostRuleFromJson(json);
 
 @override final  String id;
@@ -275,6 +276,7 @@ class _CostRule implements CostRule {
 @override final  String label;
 @override final  String? localTerm;
 @override final  BuyerPredicate? appliesTo;
+@override@JsonKey() final  int precedence;
 @override final  CostBase base;
 @override final  CostCalculation calculation;
 @override final  Recurrence recurrence;
@@ -295,18 +297,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CostRule&&(identical(other.id, id) || other.id == id)&&(identical(other.group, group) || other.group == group)&&(identical(other.label, label) || other.label == label)&&(identical(other.localTerm, localTerm) || other.localTerm == localTerm)&&(identical(other.appliesTo, appliesTo) || other.appliesTo == appliesTo)&&(identical(other.base, base) || other.base == base)&&(identical(other.calculation, calculation) || other.calculation == calculation)&&(identical(other.recurrence, recurrence) || other.recurrence == recurrence)&&(identical(other.rounding, rounding) || other.rounding == rounding)&&(identical(other.refund, refund) || other.refund == refund)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CostRule&&(identical(other.id, id) || other.id == id)&&(identical(other.group, group) || other.group == group)&&(identical(other.label, label) || other.label == label)&&(identical(other.localTerm, localTerm) || other.localTerm == localTerm)&&(identical(other.appliesTo, appliesTo) || other.appliesTo == appliesTo)&&(identical(other.precedence, precedence) || other.precedence == precedence)&&(identical(other.base, base) || other.base == base)&&(identical(other.calculation, calculation) || other.calculation == calculation)&&(identical(other.recurrence, recurrence) || other.recurrence == recurrence)&&(identical(other.rounding, rounding) || other.rounding == rounding)&&(identical(other.refund, refund) || other.refund == refund)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,group,label,localTerm,appliesTo,base,calculation,recurrence,rounding,refund,sourceId);
+    return Object.hash(runtimeType,id,group,label,localTerm,appliesTo,precedence,base,calculation,recurrence,rounding,refund,sourceId);
 }
 
 @override
 String toString() {
-    return 'CostRule(id: $id, group: $group, label: $label, localTerm: $localTerm, appliesTo: $appliesTo, base: $base, calculation: $calculation, recurrence: $recurrence, rounding: $rounding, refund: $refund, sourceId: $sourceId)';
+    return 'CostRule(id: $id, group: $group, label: $label, localTerm: $localTerm, appliesTo: $appliesTo, precedence: $precedence, base: $base, calculation: $calculation, recurrence: $recurrence, rounding: $rounding, refund: $refund, sourceId: $sourceId)';
 }
 
 
@@ -317,7 +319,7 @@ abstract mixin class _$CostRuleCopyWith<$Res> implements $CostRuleCopyWith<$Res>
   factory _$CostRuleCopyWith(_CostRule value, $Res Function(_CostRule) _then) = __$CostRuleCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String? group, String label, String? localTerm, BuyerPredicate? appliesTo, CostBase base, CostCalculation calculation, Recurrence recurrence, Rounding rounding, RefundRule? refund, String sourceId
+ String id, String? group, String label, String? localTerm, BuyerPredicate? appliesTo, int precedence, CostBase base, CostCalculation calculation, Recurrence recurrence, Rounding rounding, RefundRule? refund, String sourceId
 });
 
 
@@ -334,14 +336,15 @@ class __$CostRuleCopyWithImpl<$Res>
 
 /// Create a copy of CostRule
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? group = freezed,Object? label = null,Object? localTerm = freezed,Object? appliesTo = freezed,Object? base = null,Object? calculation = null,Object? recurrence = null,Object? rounding = null,Object? refund = freezed,Object? sourceId = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? group = freezed,Object? label = null,Object? localTerm = freezed,Object? appliesTo = freezed,Object? precedence = null,Object? base = null,Object? calculation = null,Object? recurrence = null,Object? rounding = null,Object? refund = freezed,Object? sourceId = null,}) {
   return _then(_CostRule(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,group: freezed == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
 as String?,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String,localTerm: freezed == localTerm ? _self.localTerm : localTerm // ignore: cast_nullable_to_non_nullable
 as String?,appliesTo: freezed == appliesTo ? _self.appliesTo : appliesTo // ignore: cast_nullable_to_non_nullable
-as BuyerPredicate?,base: null == base ? _self.base : base // ignore: cast_nullable_to_non_nullable
+as BuyerPredicate?,precedence: null == precedence ? _self.precedence : precedence // ignore: cast_nullable_to_non_nullable
+as int,base: null == base ? _self.base : base // ignore: cast_nullable_to_non_nullable
 as CostBase,calculation: null == calculation ? _self.calculation : calculation // ignore: cast_nullable_to_non_nullable
 as CostCalculation,recurrence: null == recurrence ? _self.recurrence : recurrence // ignore: cast_nullable_to_non_nullable
 as Recurrence,rounding: null == rounding ? _self.rounding : rounding // ignore: cast_nullable_to_non_nullable

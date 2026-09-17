@@ -4,6 +4,8 @@ import 'package:homeward_server/markets/finding.dart';
 import 'package:homeward_server/markets/generated/subdivision_names.dart';
 import 'package:homeward_server/markets/markets_data.dart';
 
+import 'check_cost_groups.dart';
+
 const maxRateAgeDays = 75;
 const expiryWarningDays = 30;
 
@@ -76,6 +78,7 @@ Iterable<Finding> _checkPack(
     }
   }
   yield* _amounts(subject, pack, currency);
+  yield* checkCostGroups(subject, resolved);
   yield* _rates(subject, resolved, data, today);
   yield* _livingCosts(subject, resolved, data, today);
 }

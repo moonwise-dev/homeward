@@ -65,7 +65,7 @@ void main() {
         {
           'price': {'amount': 350000},
         },
-        contextWith(plan: Plan(marketId: MarketId.parse('PT-30'))),
+        contextWith(plan: Plan(marketId: MarketId.parse('PT-20'))),
       ).modelResult,
       {'error': 'Select a covered market first'},
     );

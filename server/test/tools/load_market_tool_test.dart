@@ -53,25 +53,26 @@ void main() {
   });
 
   test('seeds an uncovered market as a snapshot with the curated ones', () {
-    final result = tool.run({'marketId': 'PT-30'}, contextWith());
+    final result = tool.run({'marketId': 'PT-20'}, contextWith());
+    const curated = [
+      {'marketId': 'PT-30', 'name': 'Madeira, Portugal', 'coverage': 'curated'},
+      {'marketId': 'PT', 'name': 'Portugal', 'coverage': 'curated'},
+      {'marketId': 'SE', 'name': 'Sweden', 'coverage': 'curated'},
+    ];
 
     expect(result.modelResult, {
-      'marketId': 'PT-30',
-      'name': 'Madeira, Portugal',
+      'marketId': 'PT-20',
+      'name': 'Azores, Portugal',
       'coverage': 'uncovered',
-      'curatedMarkets': ['Sweden'],
+      'curatedMarkets': ['Madeira, Portugal', 'Portugal', 'Sweden'],
     });
     expect(result.seeds, {
       'market': {
-        'id': 'PT-30',
-        'name': 'Madeira, Portugal',
+        'id': 'PT-20',
+        'name': 'Azores, Portugal',
         'coverage': 'uncovered',
       },
-      'selection': {
-        'candidates': [
-          {'marketId': 'SE', 'name': 'Sweden', 'coverage': 'curated'},
-        ],
-      },
+      'selection': {'candidates': curated},
     });
   });
 

@@ -8,8 +8,10 @@ part 'loan_predicate.g.dart';
 
 @freezed
 abstract class LoanPredicate with _$LoanPredicate {
-  const factory LoanPredicate({RateType? rateType, YearRange? termYears}) =
-      _LoanPredicate;
+  const factory LoanPredicate({
+    List<RateType>? rateTypes,
+    YearRange? termYears,
+  }) = _LoanPredicate;
 
   factory LoanPredicate.fromJson(Map<String, Object?> json) =>
       _$LoanPredicateFromJson(json);

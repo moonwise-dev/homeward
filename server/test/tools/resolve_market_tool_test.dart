@@ -11,19 +11,19 @@ void main() {
     (
       'Funchal from its country',
       {'placeName': 'Funchal', 'countryCode': 'PT'},
-      [('PT-30', 'uncovered')],
+      [('PT-30', 'curated')],
       true,
     ),
     (
       'Funchal from its region',
       {'placeName': 'Funchal', 'countryCode': 'PT', 'subdivisionCode': 'PT-30'},
-      [('PT-30', 'uncovered')],
+      [('PT-30', 'curated')],
       true,
     ),
     (
       'a place written without accents',
       {'placeName': 'camara de lobos', 'countryCode': 'PT'},
-      [('PT-30', 'uncovered')],
+      [('PT-30', 'curated')],
       true,
     ),
     (
@@ -35,13 +35,13 @@ void main() {
     (
       'Lagoa, in the Azores and the Algarve',
       {'placeName': 'Lagoa', 'countryCode': 'PT', 'subdivisionCode': 'PT-08'},
-      [('PT-20', 'uncovered'), ('PT', 'uncovered')],
+      [('PT-20', 'uncovered'), ('PT', 'curated')],
       false,
     ),
     (
       'Calheta, in Madeira and the Azores',
       {'placeName': 'Calheta', 'countryCode': 'PT'},
-      [('PT-30', 'uncovered'), ('PT-20', 'uncovered')],
+      [('PT-30', 'curated'), ('PT-20', 'uncovered')],
       false,
     ),
     (
@@ -63,7 +63,7 @@ void main() {
     (
       'Funchal proposed in another country',
       {'placeName': 'Funchal', 'countryCode': 'ES'},
-      [('PT-30', 'uncovered'), ('ES', 'uncovered')],
+      [('PT-30', 'curated'), ('ES', 'uncovered')],
       false,
     ),
     (
@@ -149,7 +149,11 @@ void main() {
     );
 
     expect(result.modelResult['candidates'], isEmpty);
-    expect(result.modelResult['curatedMarkets'], ['Sweden']);
+    expect(result.modelResult['curatedMarkets'], [
+      'Madeira, Portugal',
+      'Portugal',
+      'Sweden',
+    ]);
     expect(result.seeds, isEmpty);
   });
 

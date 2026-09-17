@@ -84,7 +84,7 @@ bool matchesLoan(
   required int termYears,
 }) =>
     predicate == null ||
-    ((predicate.rateType == null || predicate.rateType == rateType) &&
+    ((predicate.rateTypes?.contains(rateType) ?? true) &&
         (predicate.termYears?.contains(termYears) ?? true));
 
 ({ProfileField field, bool? matches})? _condition<T>(

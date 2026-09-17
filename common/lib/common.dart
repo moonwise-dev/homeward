@@ -45,6 +45,7 @@ export 'markets/bracket_rule.dart';
 export 'markets/buyer_predicate.dart';
 export 'markets/cost_base.dart';
 export 'markets/cost_calculation.dart';
+export 'markets/cost_precedence.dart';
 export 'markets/cost_rule.dart';
 export 'markets/coverage.dart';
 export 'markets/european_economic_area.dart';

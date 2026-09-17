@@ -125,13 +125,17 @@ void main() {
 
   group('matchesLoan', () {
     const predicate = LoanPredicate(
-      rateType: RateType.variable,
+      rateTypes: [RateType.variable, RateType.mixed],
       termYears: YearRange(min: 11),
     );
 
     test('matches rate type and term', () {
       expect(
         matchesLoan(predicate, rateType: RateType.variable, termYears: 30),
+        isTrue,
+      );
+      expect(
+        matchesLoan(predicate, rateType: RateType.mixed, termYears: 30),
         isTrue,
       );
       expect(

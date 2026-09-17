@@ -1,0 +1,296 @@
+{
+  "id": "PT",
+  "name": "Portugal",
+  "currency": "EUR",
+  "locale": "pt-PT",
+  "version": 1,
+  "effectiveFrom": "2026-09-16",
+  "profileFields": [
+    {
+      "id": "tax-residence",
+      "field": "residency",
+      "reason": "Non-residents pay a flat transfer tax and lenders finance less of the price"
+    },
+    {
+      "id": "former-resident",
+      "field": "formerResident",
+      "appliesTo": { "residency": "nonResident" },
+      "reason": "A buyer who has been a Portuguese tax resident pays the normal transfer tax rates"
+    },
+    {
+      "id": "residency-intent",
+      "field": "residencyIntent",
+      "appliesTo": { "residency": "nonResident" },
+      "reason": "Becoming tax resident within two years annuls the difference on the transfer tax"
+    },
+    {
+      "id": "property-use",
+      "field": "use",
+      "reason": "The loan-to-value limit and the transfer tax table follow what the home is for"
+    },
+    {
+      "id": "age",
+      "field": "age",
+      "reason": "The maximum term follows the age of the oldest borrower"
+    },
+    {
+      "id": "employment",
+      "field": "employment",
+      "reason": "A borrower who is already retired keeps their full income in the assessment"
+    },
+    {
+      "id": "net-monthly-income",
+      "field": "netMonthlyIncome",
+      "reason": "The debt-service limit is a share of net monthly income"
+    },
+    {
+      "id": "monthly-debt-payments",
+      "field": "monthlyDebtPayments",
+      "reason": "Payments on other loans count towards the debt-service limit"
+    },
+    {
+      "id": "savings",
+      "field": "savings",
+      "reason": "The down payment and the purchase costs come from savings"
+    }
+  ],
+  "lending": {
+    "maxLtv": [
+      {
+        "id": "ltv-own-permanent-residence",
+        "appliesTo": { "use": "primary" },
+        "rate": "90%",
+        "sourceId": "bdp-recomendacao-1-2026"
+      },
+      {
+        "id": "ltv-secondary-home",
+        "appliesTo": { "use": "secondary" },
+        "rate": "80%",
+        "sourceId": "bdp-recomendacao-1-2026"
+      },
+      {
+        "id": "ltv-investment",
+        "appliesTo": { "use": "investment" },
+        "rate": "80%",
+        "sourceId": "bdp-recomendacao-1-2026"
+      },
+      {
+        "id": "ltv-nonresident-lender-norm",
+        "appliesTo": { "residency": "nonResident" },
+        "rate": "70%",
+        "sourceId": "bpi-price-list"
+      }
+    ],
+    "maxDsti": [
+      {
+        "id": "dsti-45",
+        "rate": "45%",
+        "incomeBasis": "net",
+        "exceptionQuota": "10%",
+        "sourceId": "bdp-recomendacao-1-2026"
+      }
+    ],
+    "stress": [
+      {
+        "id": "stress-to-5-years",
+        "appliesToLoan": { "rateTypes": ["variable", "mixed"], "termYears": { "max": 5 } },
+        "kind": "shock",
+        "rate": "0.5%",
+        "sourceId": "bdp-instrucao-23-2023"
+      },
+      {
+        "id": "stress-5-to-10-years",
+        "appliesToLoan": { "rateTypes": ["variable", "mixed"], "termYears": { "min": 6, "max": 10 } },
+        "kind": "shock",
+        "rate": "1%",
+        "sourceId": "bdp-instrucao-23-2023"
+      },
+      {
+        "id": "stress-over-10-years",
+        "appliesToLoan": { "rateTypes": ["variable", "mixed"], "termYears": { "min": 11 } },
+        "kind": "shock",
+        "rate": "1.5%",
+        "sourceId": "bdp-instrucao-23-2023"
+      }
+    ],
+    "maxTermYears": [
+      {
+        "id": "term-40-years-to-35",
+        "appliesTo": { "age": { "max": 35 } },
+        "years": 40,
+        "sourceId": "bdp-recomendacao-1-2026"
+      },
+      {
+        "id": "term-35-years-over-35",
+        "appliesTo": { "age": { "min": 36 } },
+        "years": 35,
+        "sourceId": "bdp-recomendacao-1-2026"
+      }
+    ],
+    "incomeAdjustments": [
+      {
+        "id": "income-reduction-past-70",
+        "whenAgeAtMaturityAbove": 70,
+        "reduction": "20%",
+        "weightedByTermShare": true,
+        "exceptRetired": true,
+        "sourceId": "bdp-recomendacao-1-2026"
+      }
+    ],
+    "repaymentStyle": "annuity"
+  },
+  "purchaseCosts": [
+    {
+      "id": "imt-housing",
+      "group": "imt",
+      "label": "Property transfer tax",
+      "localTerm": "IMT",
+      "base": "price",
+      "calculation": {
+        "type": "brackets",
+        "marginal": false,
+        "brackets": [
+          { "upTo": "106346", "rate": "1%" },
+          { "upTo": "145470", "rate": "2%", "deduction": "1063.46" },
+          { "upTo": "198347", "rate": "5%", "deduction": "5427.56" },
+          { "upTo": "330539", "rate": "7%", "deduction": "9394.50" },
+          { "upTo": "633931", "rate": "8%", "deduction": "12699.89" },
+          { "upTo": "1150853", "rate": "6%" },
+          { "rate": "7.5%" }
+        ]
+      },
+      "recurrence": "once",
+      "sourceId": "oficio-circulado-40129-2026"
+    },
+    {
+      "id": "imt-own-permanent-residence",
+      "group": "imt",
+      "precedence": 1,
+      "label": "Property transfer tax on an own permanent residence",
+      "localTerm": "IMT",
+      "appliesTo": { "use": "primary" },
+      "base": "price",
+      "calculation": {
+        "type": "brackets",
+        "marginal": false,
+        "brackets": [
+          { "upTo": "106346", "rate": "0%" },
+          { "upTo": "145470", "rate": "2%", "deduction": "2126.92" },
+          { "upTo": "198347", "rate": "5%", "deduction": "6491.02" },
+          { "upTo": "330539", "rate": "7%", "deduction": "10457.96" },
+          { "upTo": "660982", "rate": "8%", "deduction": "13763.35" },
+          { "upTo": "1150853", "rate": "6%" },
+          { "rate": "7.5%" }
+        ]
+      },
+      "recurrence": "once",
+      "sourceId": "oficio-circulado-40129-2026"
+    },
+    {
+      "id": "imt-nonresident",
+      "group": "imt",
+      "precedence": 2,
+      "label": "Property transfer tax for a non-resident buyer",
+      "localTerm": "IMT",
+      "appliesTo": { "residency": "nonResident", "formerResident": false },
+      "base": "price",
+      "calculation": { "type": "flatRate", "rate": "7.5%" },
+      "recurrence": "once",
+      "refund": {
+        "when": { "residencyIntent": "becomeResident" },
+        "recomputeAs": { "residency": "resident" },
+        "deadline": "P2Y",
+        "claimWindow": "P6M",
+        "sourceId": "cimt-artigo-17"
+      },
+      "sourceId": "decreto-lei-97-2026"
+    },
+    {
+      "id": "stamp-duty-purchase",
+      "label": "Stamp duty on the purchase",
+      "localTerm": "Imposto do Selo, verba 1.1",
+      "base": "price",
+      "calculation": { "type": "flatRate", "rate": "0.8%" },
+      "recurrence": "once",
+      "sourceId": "tabela-geral-imposto-do-selo"
+    },
+    {
+      "id": "stamp-duty-loan",
+      "label": "Stamp duty on the loan",
+      "localTerm": "Imposto do Selo, verba 17.1",
+      "base": "loan",
+      "calculation": { "type": "flatRate", "rate": "0.6%" },
+      "recurrence": "once",
+      "sourceId": "tabela-geral-imposto-do-selo"
+    }
+  ],
+  "loanTypes": [
+    {
+      "id": "euribor-6m",
+      "label": "Variable, 6-month Euribor",
+      "rateType": "variable",
+      "referenceRateId": "PT.EURIBOR6M_MONTHLY_AVERAGE",
+      "typicalSpread": { "min": "0.75%", "max": "1.6%" },
+      "defaultSpread": "1.6%",
+      "sourceId": "bpi-price-list"
+    }
+  ],
+  "sources": [
+    {
+      "id": "bdp-recomendacao-1-2026",
+      "publisher": "Banco de Portugal",
+      "title": "Recomendação macroprudencial n.º 1/2026 no âmbito dos novos contratos de crédito celebrados com consumidores",
+      "url": "https://www.bportugal.pt/sites/default/files/documents/2026-07/Recomendacao_Macroprudencial_n.1-2026.pdf",
+      "kind": "regulator",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "bdp-instrucao-23-2023",
+      "publisher": "Banco de Portugal",
+      "title": "Instrução n.º 23/2023: critérios para a ponderação do impacto de aumentos do indexante na solvabilidade dos consumidores",
+      "url": "https://www.bportugal.pt/instrucao/232023",
+      "kind": "regulator",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "decreto-lei-97-2026",
+      "publisher": "Diário da República",
+      "title": "Decreto-Lei n.º 97/2026, de 20 de maio",
+      "url": "https://diariodarepublica.pt/dr/detalhe/decreto-lei/97-2026-1124493227",
+      "kind": "law",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "cimt-artigo-17",
+      "publisher": "Autoridade Tributária e Aduaneira",
+      "title": "Código do IMT, artigo 17.º (Taxas), n.os 10 a 12",
+      "url": "https://info.portaldasfinancas.gov.pt/pt/informacao_fiscal/codigos_tributarios/cimt/Pages/cimt17.aspx",
+      "kind": "taxAuthority",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "oficio-circulado-40129-2026",
+      "publisher": "Autoridade Tributária e Aduaneira",
+      "title": "Ofício circulado n.º 40129/2026: IMT, tabelas práticas em vigor a partir de 01 de janeiro de 2026",
+      "url": "https://info.portaldasfinancas.gov.pt/pt/atualidades/instrucoesadmin/Paginas/Oficio-circulado-40129-2026.aspx",
+      "kind": "taxAuthority",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "tabela-geral-imposto-do-selo",
+      "publisher": "Autoridade Tributária e Aduaneira",
+      "title": "Tabela Geral do Imposto do Selo, verbas 1.1 e 17",
+      "url": "https://info.portaldasfinancas.gov.pt/pt/informacao_fiscal/codigos_tributarios/selo/Pages/ccod-selo-tabgiselo.aspx",
+      "kind": "taxAuthority",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "bpi-price-list",
+      "publisher": "Banco BPI",
+      "title": "Preçário 18: operações de crédito a particulares, em vigor desde 16 de setembro de 2026",
+      "url": "https://www.bancobpi.pt/contentservice/getContent?documentName=PP_WCS01_UCM01002197",
+      "kind": "lenderNorm",
+      "retrievedAt": "2026-09-17"
+    }
+  ]
+}

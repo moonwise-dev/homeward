@@ -1,0 +1,55 @@
+{
+  "id": "PT-30",
+  "parent": "PT",
+  "name": "Madeira, Portugal",
+  "version": 1,
+  "effectiveFrom": "2026-01-01",
+  "purchaseCosts": [
+    {
+      "id": "imt-housing",
+      "group": "imt",
+      "label": "Property transfer tax",
+      "localTerm": "IMT",
+      "base": "price",
+      "calculation": {
+        "type": "brackets",
+        "marginal": false,
+        "brackets": [
+          { "upTo": "132933", "rate": "1%" },
+          { "upTo": "181838", "rate": "2%", "deduction": "1329.33" },
+          { "upTo": "247934", "rate": "5%", "deduction": "6784.47" },
+          { "upTo": "413174", "rate": "7%", "deduction": "11743.15" },
+          { "upTo": "792414", "rate": "8%", "deduction": "15874.89" },
+          { "upTo": "1438566", "rate": "6%" },
+          { "rate": "7.5%" }
+        ]
+      },
+      "recurrence": "once",
+      "sourceId": "oficio-circulado-40129-2026"
+    },
+    {
+      "id": "imt-own-permanent-residence",
+      "group": "imt",
+      "precedence": 1,
+      "label": "Property transfer tax on an own permanent residence",
+      "localTerm": "IMT",
+      "appliesTo": { "use": "primary" },
+      "base": "price",
+      "calculation": {
+        "type": "brackets",
+        "marginal": false,
+        "brackets": [
+          { "upTo": "132933", "rate": "0%" },
+          { "upTo": "181838", "rate": "2%", "deduction": "2658.66" },
+          { "upTo": "247934", "rate": "5%", "deduction": "8113.80" },
+          { "upTo": "413174", "rate": "7%", "deduction": "13072.48" },
+          { "upTo": "826228", "rate": "8%", "deduction": "17204.22" },
+          { "upTo": "1438566", "rate": "6%" },
+          { "rate": "7.5%" }
+        ]
+      },
+      "recurrence": "once",
+      "sourceId": "oficio-circulado-40129-2026"
+    }
+  ]
+}

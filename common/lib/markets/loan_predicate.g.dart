@@ -8,11 +8,13 @@ part of 'loan_predicate.dart';
 
 _LoanPredicate _$LoanPredicateFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_LoanPredicate', json, ($checkedConvert) {
-      $checkKeys(json, allowedKeys: const ['rateType', 'termYears']);
+      $checkKeys(json, allowedKeys: const ['rateTypes', 'termYears']);
       final val = _LoanPredicate(
-        rateType: $checkedConvert(
-          'rateType',
-          (v) => $enumDecodeNullable(_$RateTypeEnumMap, v),
+        rateTypes: $checkedConvert(
+          'rateTypes',
+          (v) => (v as List<dynamic>?)
+              ?.map((e) => $enumDecode(_$RateTypeEnumMap, e))
+              .toList(),
         ),
         termYears: $checkedConvert(
           'termYears',
@@ -23,11 +25,12 @@ _LoanPredicate _$LoanPredicateFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$LoanPredicateToJson(_LoanPredicate instance) =>
-    <String, dynamic>{
-      'rateType': ?_$RateTypeEnumMap[instance.rateType],
-      'termYears': ?instance.termYears?.toJson(),
-    };
+Map<String, dynamic> _$LoanPredicateToJson(
+  _LoanPredicate instance,
+) => <String, dynamic>{
+  'rateTypes': ?instance.rateTypes?.map((e) => _$RateTypeEnumMap[e]!).toList(),
+  'termYears': ?instance.termYears?.toJson(),
+};
 
 const _$RateTypeEnumMap = {
   RateType.variable: 'variable',

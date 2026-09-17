@@ -20,6 +20,7 @@ abstract class CostRule with _$CostRule implements ConditionalRule, Sourced {
     required String label,
     String? localTerm,
     BuyerPredicate? appliesTo,
+    @Default(0) int precedence,
     required CostBase base,
     required CostCalculation calculation,
     required Recurrence recurrence,

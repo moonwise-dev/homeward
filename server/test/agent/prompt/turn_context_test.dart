@@ -78,14 +78,14 @@ void main() {
   test('an uncovered market leaves only coverage open', () {
     final context = turnContext(
       turn: 2,
-      plan: Plan(marketId: MarketId.parse('PT-30')),
+      plan: Plan(marketId: MarketId.parse('PT-20')),
       markets: realMarkets,
     );
 
     expect(context['openDecisions'], ['marketCoverage']);
     expect(context['market'], {
-      'marketId': 'PT-30',
-      'name': 'Madeira, Portugal',
+      'marketId': 'PT-20',
+      'name': 'Azores, Portugal',
       'coverage': 'uncovered',
     });
     expect(context['profile'], isNot(contains('missing')));

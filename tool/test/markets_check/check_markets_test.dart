@@ -34,6 +34,8 @@ void main() {
     );
 
     expect(errorsIn(findings), [
+      'PT-30: euribor-6m: PT.EURIBOR6M_MONTHLY_AVERAGE is from 2026-09-16, older than 75 days',
+      'PT: euribor-6m: PT.EURIBOR6M_MONTHLY_AVERAGE is from 2026-09-16, older than 75 days',
       'SE: variable-3m: SE.AVG_VARIABLE_3M is from 2026-07-31, older than 75 days',
     ]);
   });
@@ -103,6 +105,33 @@ void main() {
         ]),
       );
       expect(errors.where((error) => error.contains('BAD.json')), hasLength(1));
+    });
+
+    test('a cost group charges every buyer exactly once', () {
+      final sweden = realSweden();
+      sweden['purchaseCosts'] = [
+        for (final id in ['deed-fee', 'transfer-tax'])
+          {
+            'id': id,
+            'group': 'transfer',
+            'label': 'Transfer',
+            'appliesTo': {'use': 'primary'},
+            'base': 'price',
+            'calculation': {'type': 'flatRate', 'rate': '1%'},
+            'recurrence': 'once',
+            'sourceId': 'sfs-2026-226',
+          },
+      ];
+      write('packs/SE.json', sweden);
+
+      expect(
+        errorsIn(checkMarkets(loadMarkets(root), today: today)),
+        containsAll([
+          'SE: deed-fee and transfer-tax both charge transfer to primary',
+          'SE: No transfer charge applies to secondary',
+          'SE: No transfer charge applies to investment',
+        ]),
+      );
     });
   });
 }

@@ -102,7 +102,7 @@ The resolved `/market` slice a surface receives contains only rules that apply.
 
 ```text
 LoanPredicate
-  rateType              variable | mixed | fixed
+  rateTypes             [variable | mixed | fixed]
   termYears             { min?, max? }
 ```
 
@@ -159,6 +159,7 @@ CostRule
   label                 Municipal property transfer tax
   localTerm             IMT
   appliesTo
+  precedence            integer, default 0; higher wins inside a group
   base                  price | loan | pledgedAmount | fixed
   calculation           one of, by "type":
     flatRate            { rate }
@@ -173,7 +174,15 @@ CostRule
 
 Rules in one `group` are alternatives for the same charge; exactly one applies
 to a buyer, and a pack that leaves zero or several applicable fails
-`make markets-check`.
+`make markets-check`, which tries every combination of the facts the group's
+predicates name.
+
+Buyer predicates are positive, so a special regime that overrides a general one
+carries a higher `precedence` instead of the general rule listing every case it
+does not cover (D87). Portugal reads as the law does: a general housing rate, an
+own permanent residence table at precedence 1, and the flat non-resident rate at
+precedence 2. `resolveForBuyer` keeps the highest precedence that applies in
+each group, and a tie is a curation error.
 
 Bracket rules take either style. Marginal brackets tax each band at its rate.
 Deduction brackets, `marginal: false`, apply the bracket's rate to the whole
@@ -352,26 +361,34 @@ including the second-person review, before it becomes a pack field.
 
 | Claim | Status | Source |
 | --- | --- | --- |
-| LTV capped by purpose: 90% for an own permanent residence, 80% otherwise; no residency-based cap | Verified | Banco de Portugal Recomendação Macroprudencial 1/2026 art. 5 |
-| Non-resident foreigners limited to the lower of 70% of price and 70% of valuation | Verified at one lender | Banco BPI price list from 2026-09-16; a second lender at curation |
-| DSTI 45% of net income for assessments from 2026-08-01; up to 10% of each lender's lending per semester may exceed it | Verified | Recomendação 1/2026 arts. 2, 4, 6, 11 |
-| Stress: index plus 0.5, 1, or 1.5 points for terms up to 5, up to 10, or over 10 years, on variable and mixed rates only | Verified | Instrução BdP 23/2023, cited by Recomendação 1/2026 art. 4 |
-| Maximum term 40 years when the oldest borrower is 35 or younger, otherwise 35 | Verified | Recomendação 1/2026 art. 7 |
-| Income reduced by at least 20%, weighted by the share of the term past age 70, unless retired | Verified | Recomendação 1/2026 art. 4 |
-| IMT on housing: deduction brackets up to €660,982 for a primary residence and €633,931 otherwise, a single rate on the whole value above | Verified | CIMT art. 17; Ofício Circulado 40129/2026 tables I and III |
-| IMT thresholds 25% higher in Madeira and the Azores | Verified | Lei 21/90; Ofício Circulado 40129/2026 tables IV to VI |
-| Non-residents pay a flat 7.5% IMT on housing with no exemption, from 2026-05-25 | Verified | Decreto-Lei 97/2026; CIMT art. 17 n.º 10 |
-| Former Portuguese tax residents pay normal IMT rates | Verified | CIMT art. 17 n.º 10 a) |
-| Becoming tax resident within two years, or renting at capped rent for 36 months within five years, annuls the difference on request within six months | Verified | CIMT art. 17 n.os 10–12 |
-| The flat 7.5% applies unchanged in Madeira, because regional tables adapt thresholds only | Inference, to confirm | Lei 21/90 |
-| Buyers 35 or younger pay no IMT on a primary residence up to €330,539, €413,174 in the regions | Tables verified, conditions to verify | CIMT arts. 9 and 17; Ofício Circulado 40129/2026 tables II and V |
-| Stamp duty 0.6% on loans of five years or more and 4% on interest | Stated by a lender, law to verify | Banco BPI price list; Tabela Geral do Imposto do Selo |
-| Stamp duty on the purchase price | To verify rate | Código do Imposto do Selo |
+| LTV capped by purpose: 90% for an own permanent residence, 80% otherwise; no residency-based cap | In `PT.json` | Banco de Portugal Recomendação Macroprudencial 1/2026 art. 5 |
+| Non-resident foreigners limited to the lower of 70% of price and 70% of valuation | In `PT.json` as a lender norm (D48); a second lender sets the range | Banco BPI price list from 2026-09-16; a second lender at curation |
+| DSTI 45% of net income for assessments from 2026-08-01; up to 10% of each lender's lending per semester may exceed it | In `PT.json` | Recomendação 1/2026 arts. 2, 4, 6, 11 |
+| Stress: index plus 0.5, 1, or 1.5 points for terms up to 5, up to 10, or over 10 years, on variable and mixed rates only | In `PT.json` | Instrução BdP 23/2023, cited by Recomendação 1/2026 art. 4 |
+| Maximum term 40 years when the oldest borrower is 35 or younger, otherwise 35 | In `PT.json` | Recomendação 1/2026 art. 7 |
+| Income reduced by at least 20%, weighted by the share of the term past age 70, unless retired | In `PT.json` | Recomendação 1/2026 art. 4 |
+| IMT on housing: deduction brackets up to €660,982 for a primary residence and €633,931 otherwise, a single rate on the whole value above | Tables I and III in `PT.json` | CIMT art. 17; Ofício Circulado 40129/2026 tables I and III |
+| IMT thresholds 25% higher in Madeira and the Azores | Tables IV and VI in `PT-30.json` | Lei 21/90; Ofício Circulado 40129/2026 tables IV to VI |
+| Non-residents pay a flat 7.5% IMT on housing with no exemption, from 2026-05-25 | In `PT.json` at precedence 2 | Decreto-Lei 97/2026; CIMT art. 17 n.º 10 |
+| Former Portuguese tax residents pay normal IMT rates | In `PT.json` | CIMT art. 17 n.º 10 a) |
+| Becoming tax resident within two years annuls the difference on request within six months | In `PT.json` as the refund on the non-resident rule; the renting alternative is not modelled | CIMT art. 17 n.os 10–12 |
+| The flat 7.5% applies unchanged in Madeira, because regional tables adapt thresholds only | Inference, to confirm; `PT-30.json` inherits the rule | Lei 21/90 |
+| Buyers 35 or younger pay no IMT on a primary residence up to €330,539, €413,174 in the regions | Tables II and V verified, conditions to verify; left out of the packs, so a young buyer is charged the ordinary table | CIMT arts. 9 and 17; Ofício Circulado 40129/2026 tables II and V |
+| Stamp duty 0.6% on loans of five years or more and 4% on interest | Verba 17.1 verified; the 0.6% is in `PT.json`, the 4% on interest is not a purchase cost | Banco BPI price list; Tabela Geral do Imposto do Selo |
+| Stamp duty 0.8% on the purchase price, verba 1.1 | In `PT.json` | Código do Imposto do Selo |
 | Tax number (NIF) required before purchase; fiscal representative for some non-residents | To verify | Portal das Finanças |
 | Real estate no longer qualifies for the Golden Visa | To verify | AIMA |
 
 Portugal changed its lending limits and non-resident taxes within four months
 of 2026. The PT sources are re-read in the recording week.
+
+`PT` and `PT-30` still need, before the recording: the youth IMT tables with
+their conditions; a second lender beside BPI, to turn the 70% non-resident norm
+into a range (D48); IMI and condominium as recurring costs; fixed and mixed loan
+types, which the price list carries and `LoanTypeComparison` will need; and an
+income currency requirement, once income in another currency can be converted.
+Stamp duty on the loan is charged at the rate for terms of five years or more,
+because a cost rule cannot yet depend on the term.
 
 ## Tier 2 And Tier 3
 

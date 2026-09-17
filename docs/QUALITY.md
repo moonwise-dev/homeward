@@ -112,6 +112,9 @@ same sweep runs with `flutter run --profile` and prints its report.
 - Overlays resolve without cycles, missing parents, or unknown removals.
 - Every rule and refund references a source in its resolved pack.
 - Amounts and brackets are valid in the pack currency.
+- Every cost group charges each buyer exactly once: over every combination of
+  the facts the group's predicates name, one rule applies, and no two share the
+  highest precedence.
 - Every loan type has a reference rate snapshot at most 75 days old.
 - Every pack with a left-to-live-on rule has a living cost table in its
   currency from this year or last.
