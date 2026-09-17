@@ -152,11 +152,11 @@ void main() {
       ]);
       expect(first.toolChoice, isNull);
       expect(second.previousInteractionId, 'i1');
-      expect(second.toolChoice, ToolChoice.none);
+      expect(second.toolChoice, isNull);
       expect(second.systemInstruction, contains('"load_market": {'));
       final input = second.input as FunctionResultsInput;
       expect(input.results.single.result, contains('selectedMarket'));
-      expect(input.note, toolsDoneNote);
+      expect(input.note, isNull);
 
       final saved = (await sessions.find('s-1'))!;
       expect(saved.plan.marketId, MarketId.parse('SE'));
@@ -240,7 +240,7 @@ void main() {
         first.tools.map((tool) => tool.name),
         isNot(contains('compute_affordability')),
       );
-      expect(second.toolChoice, ToolChoice.none);
+      expect(second.toolChoice, isNull);
       expect(second.systemInstruction, contains('"compute_affordability": {'));
       expect(
         events.last,
@@ -254,46 +254,84 @@ void main() {
   );
 
   test(
-    'runs tool calls sent after the tool round once when nothing was drawn',
+    'lets a model that calls one tool at a time reach its surfaces',
     () async {
       await sessions.create('uid-1');
+      FunctionCall call(String name, Map<String, Object?> arguments) =>
+          FunctionCall(callId: name, name: name, arguments: arguments);
       final script = ScriptedInteractions([
         reply(
           'i1',
-          calls: const [
-            FunctionCall(
-              callId: 'market',
-              name: 'resolve_market',
-              arguments: {'placeName': 'Södermalm', 'countryCode': 'SE'},
-            ),
+          calls: [
+            call('resolve_market', const {
+              'placeName': 'Södermalm',
+              'countryCode': 'SE',
+            }),
           ],
         ),
         reply(
           'i2',
-          calls: const [
-            FunctionCall(
-              callId: 'profile',
-              name: 'propose_profile',
-              arguments: {'adults': 2},
-            ),
+          calls: [
+            call('propose_profile', const {'adults': 2}),
           ],
         ),
-        reply('i3', text: 'Tell me about your household.'),
+        reply(
+          'i3',
+          calls: [
+            call('propose_scenario', const {
+              'price': {'amount': 4500000},
+            }),
+          ],
+        ),
+        reply('i4', text: 'Tell me about your household.'),
       ]);
 
       final events = await send(orchestrator(script)).toList();
 
-      expect(script.requests, hasLength(3));
-      final third = script.requests[2];
-      expect(third.toolChoice, ToolChoice.none);
-      expect((third.input as FunctionResultsInput).note, toolsDoneNote);
+      expect(script.requests, hasLength(4));
+      expect(script.requests[3].toolChoice, ToolChoice.none);
+      expect(
+        (script.requests[3].input as FunctionResultsInput).note,
+        toolsDoneNote,
+      );
       expect(
         events.last,
         const TurnEvent.completed('Tell me about your household.'),
       );
-      expect((await sessions.find('s-1'))!.plan.profileDraft?.adults, 2);
+      final saved = (await sessions.find('s-1'))!.plan;
+      expect(saved.profileDraft?.adults, 2);
+      expect(saved.scenarioDraft, isNotNull);
     },
   );
+
+  test('offers a retry surface when a turn draws nothing at all', () async {
+    await sessions.create('uid-1');
+    final calling = reply(
+      'i1',
+      calls: const [
+        FunctionCall(
+          callId: 'c',
+          name: 'resolve_market',
+          arguments: {'placeName': 'Södermalm', 'countryCode': 'SE'},
+        ),
+      ],
+    );
+    final script = ScriptedInteractions([
+      calling,
+      calling,
+      calling,
+      reply('i4'),
+    ]);
+
+    final events = await send(orchestrator(script)).toList();
+
+    expect(script.requests, hasLength(4));
+    expect(
+      [for (final message in messagesIn(events)) jsonEncode(message)],
+      [contains('"t1-retry"'), contains('"t1-retry"')],
+    );
+    expect(events.last, const TurnEvent.completed(''));
+  });
 
   test(
     'takes back a failed model\'s draft and continues on the fallback',

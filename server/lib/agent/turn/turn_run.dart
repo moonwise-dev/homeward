@@ -88,7 +88,6 @@ final class TurnRun {
   }) async* {
     InteractionInput input = InteractionInput.text(_modelText(turnInput));
     var toolRounds = 0;
-    var ranLateCalls = false;
     var corrections = 0;
     var mayRebuildHistory = _interactionId != null;
     while (true) {
@@ -177,18 +176,10 @@ final class TurnRun {
       final drewNothing =
           _acceptedInRound == 0 &&
           _text.toString().trim() == textBeforeRound.trim();
-      final runsLateCalls =
-          calls.isNotEmpty &&
-          toolRounds >= settings.maxToolRounds &&
-          drewNothing &&
-          !ranLateCalls;
       if (calls.isNotEmpty &&
-          (toolRounds < settings.maxToolRounds || runsLateCalls)) {
-        if (runsLateCalls) {
-          ranLateCalls = true;
-        } else {
-          toolRounds++;
-        }
+          toolRounds < settings.maxToolRounds &&
+          (toolRounds == 0 || drewNothing)) {
+        toolRounds++;
         final results = {
           for (final call
               in [...calls]..sort(
@@ -215,6 +206,12 @@ final class TurnRun {
           yield TurnEvent.message(message);
         }
       }
+      if (_forwarded.isEmpty && _text.toString().trim().isEmpty) {
+        for (final message in retrySurface(turn)) {
+          _forwarded.add(message);
+          yield TurnEvent.message(message);
+        }
+      }
       _log.info(
         LogEntry(
           'Turn $turn completed',
@@ -222,7 +219,6 @@ final class TurnRun {
             'turn': turn,
             'modelRounds': _rounds,
             'toolRounds': toolRounds,
-            'ranLateCalls': ranLateCalls,
             'corrections': corrections,
             'surfaces': _validator.surfacesCreated.length,
           },

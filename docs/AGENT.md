@@ -15,9 +15,9 @@ It has no hard-coded stages; the open decisions of the plan decide the step.
 | Unhealthy model cool-down | 5 min | `HOMEWARD_MODEL_COOLDOWN` |
 | Store interactions | `true` | fixed |
 | Validation correction rounds | 2 | `HOMEWARD_MAX_CORRECTIONS` |
-| Model rounds per turn | ≤ 2, plus correction rounds and one run of late tool calls | enforced by the tool round cap |
+| Model rounds per turn | 2 when the model calls its tools together, up to 4 when it calls them one at a time, plus correction rounds | enforced by the tool round cap |
 | Inline surfaces per turn | 2 | fixed |
-| Tool rounds per turn, cap | 1 | fixed (D78) |
+| Tool rounds per turn, cap | 3 | fixed (D78, D85) |
 
 Spike S2 found every listed model available on a free-tier key, but
 `gemini-3.8-flash` overloaded on the day: `generateContent` answered 503, and
@@ -266,23 +266,24 @@ owner, and leases it; `turn_run.dart` runs one turn:
    list, so `resolve_market` selects the market before a profile proposal in
    the same round converts amounts into its currency, and continue the
    interaction with all results at once, in the order the model called them.
-   A turn has one tool round: the request carrying the results ends with a
-   text note that tools are done for the turn, and it and every request after
-   it set `tool_choice` to `none`, so the model writes its text and surfaces
-   with what it has. Function calls it sends anyway are dropped when the
-   request also wrote text or a surface (D78). When it drew nothing, the calls
-   run and the model is asked once more, the only way a turn reaches a third
-   request besides corrections (D84). On 2026-09-17 `gemini-3.1-flash-lite`
-   called tools again with the tools left out and under `tool_choice: none`;
-   the note fixed that in probes, but a live turn on `gemini-3.5-flash-lite`
-   still called `propose_profile` after it and showed the buyer nothing. Every round
+   A round that wrote text or a surface ends the tool phase: function calls
+   beside output are dropped, so a model cannot spread tools over requests it
+   also draws in (D78). While a round draws nothing, its calls run and the
+   model is asked again, at most three tool rounds. The request after the last
+   allowed round ends with a text note that tools are done and sets
+   `tool_choice` to `none` (D85). Live turns on 2026-09-17 called
+   `resolve_market`, then `propose_profile`, then `propose_scenario` in
+   separate requests, two first messages in three; with tools switched off
+   after one round they called them anyway and the buyer saw nothing. Every round
    is logged with its status, the names of the tools called, and its
    duration.
-9. When messages were rejected, continue with one text input listing each
+9. A turn that ends with no text and no forwarded message draws the
+   `t{turn}-retry` surface, so a buyer never sees an empty answer (D85).
+10. When messages were rejected, continue with one text input listing each
    `VALIDATION_FAILED` error, at most `HOMEWARD_MAX_CORRECTIONS` rounds. After
    the last, a server-drawn `t{turn}-retry` surface asks the buyer to send the
    message again.
-10. Save the plan, the turn number, the last completed interaction ID, and every
+11. Save the plan, the turn number, the last completed interaction ID, and every
     forwarded message, also when the turn fails or is cancelled, then release
     the lease and emit `completed`.
 
