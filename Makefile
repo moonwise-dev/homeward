@@ -23,6 +23,7 @@ help:
 	@echo "  make markets-check Check rule packs, rate snapshots, and living costs"
 	@echo "  make codegen       Run build_runner in common and server"
 	@echo "  make iso-4217      Regenerate the ISO 4217 currency table from SIX"
+	@echo "  make a2ui-schemas  Vendor the pinned A2UI v0.9 basic catalog and common types"
 	@echo "  make server-dev    Run the server locally with hot reload"
 	@echo "  make server-build  Cross-compile the server for linux/x64"
 	@echo "  make server-image  Build the server container image"
@@ -80,6 +81,11 @@ codegen:
 iso-4217:
 	@dart run tool/bin/generate_iso_4217.dart common/lib/money/generated/iso_4217.dart
 	@dart format common/lib/money/generated/iso_4217.dart
+
+.PHONY: a2ui-schemas
+a2ui-schemas:
+	@dart run tool/bin/vendor_a2ui_schemas.dart common/lib/a2ui/generated/a2ui_v09_schemas.dart
+	@dart format common/lib/a2ui/generated/a2ui_v09_schemas.dart
 
 .PHONY: server-dev
 server-dev:

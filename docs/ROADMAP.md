@@ -157,6 +157,7 @@ Decisions from the planning session on 2026-09-16.
 | D64 | Swedish income cap | 5× gross income, typical range 5–6×, labelled as bank practice from secondary sources | 5.5× midpoint; no income cap |
 | D65 | Swedish variable spread | 0–1.2% over SCB's negotiated average, starting at 0.41%, SBAB's list rate; the 0.5% first proposed did not match banks' list rates | Start at 1.2%, Nordea's list rate; start at the average |
 | D66 | `/market` slice | The resolved market in the pack's published format with its reference rates and living costs, parsed by the same models on app and server | A separate data-model format with ppm integers and money objects |
+| D67 | Basic component validation | Vendor the A2UI v0.9 basic catalog and common types at a pinned spec commit and validate against a composed Homeward catalog document | Hand-declared basic components; no property schemas for basic components |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

@@ -114,5 +114,7 @@ Generated files are committed and never edited by hand:
   `app/android/app/google-services.json`, and both
   `GoogleService-Info.plist` files, from `flutterfire configure`
 - `common/lib/money/generated/*`, from `make iso-4217`
+- `common/lib/a2ui/generated/*`, from `make a2ui-schemas`, pinned to an A2UI spec
+  commit
 - `common/lib/catalog/generated/*`
 - `server/prompts/generated/*`

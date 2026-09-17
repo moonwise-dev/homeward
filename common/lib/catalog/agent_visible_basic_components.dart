@@ -1,0 +1,15 @@
+const agentVisibleBasicComponents = {
+  'Text',
+  'Row',
+  'Column',
+  'Card',
+  'Divider',
+  'List',
+  'Tabs',
+  'Icon',
+  'Button',
+  'CheckBox',
+  'ChoicePicker',
+  'TextField',
+  'DateTimeInput',
+};

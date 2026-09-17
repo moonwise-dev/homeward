@@ -343,9 +343,13 @@ the A2UI error shape, with at most two correction rounds per turn.
 3. **Ownership.** Surface ID matches the turn namespace; `board` is refused.
 4. **Allow-list.** Component is in the agent-visible catalog subset.
    `a2ui_core` does not check this, so the pass does.
-5. **Schema.** Component properties validate against the component's
-   `ComponentApi.schema` from `common/catalog`. Schemas set
-   `additionalProperties: false`, so misspelled properties fail.
+5. **Schema.** Components validate against the Homeward catalog document from
+   `homewardCatalogDocument()` through `CatalogValidator` in `common/a2ui`.
+   The document composes the agent-visible basic components and functions of
+   the A2UI v0.9 basic catalog, vendored from the spec repository at a pinned
+   commit (D67), with the Homeward components and functions. Function calls
+   therefore resolve against every function the catalog declares, and unknown
+   or misspelled properties fail.
 6. **Bound numbers.** Money, rate, and percentage properties are typed as
    `CommonSchemas.dataBinding` or a function call in the schema, so a literal
    fails pass 5. This pass exists as a separate test fixture, not separate

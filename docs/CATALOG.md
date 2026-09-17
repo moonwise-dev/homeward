@@ -347,7 +347,11 @@ interface genui uses internally for its catalog items. It carries:
   `markets/packs/SE.json`, which a tool test keeps in step with the pack.
 - A usage note for the model.
 
-From these declarations `tool` generates:
+`homewardCatalogDocument()` builds the catalog document from these
+declarations and the vendored A2UI v0.9 basic catalog: the agent-visible basic
+components, every basic function, and the Homeward components and functions,
+with `anyComponent` and `anyFunction` rebuilt over all of them. The server
+validates against it. From the same declarations `tool` generates:
 
 - `common/lib/catalog/generated/catalog.json`, the catalog document.
 - `server/prompts/generated/catalog_skill.md`, the model-facing skill.
