@@ -109,6 +109,7 @@ export 'wire/a2a/task_state.dart';
 export 'wire/a2a/task_status.dart';
 export 'wire/a2ui_extension.dart';
 export 'wire/decode_sse.dart';
+export 'wire/homeward_error_code.dart';
 export 'wire/inline_surfaces.dart';
 export 'wire/sse_event.dart';
 export 'wire/surface_action.dart';

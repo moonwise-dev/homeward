@@ -29,7 +29,11 @@ final class LoadMarketTool extends AgentTool {
   };
 
   @override
-  bool get preRunnable => true;
+  Map<String, Object?>? settledArguments(ToolContext context) =>
+      switch (context.plan.marketId) {
+        final id? => {'marketId': id.code},
+        null => null,
+      };
 
   @override
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {

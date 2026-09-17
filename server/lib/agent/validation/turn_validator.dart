@@ -18,7 +18,7 @@ final class TurnValidator {
   final int turn;
   final CatalogValidator catalog;
   final MessageProcessor<ComponentApi> shadow;
-  final Map<String, Object?> seeds;
+  Map<String, Object?> seeds;
   final RegExp _surfacePattern;
   final _components = <String, Map<String, Map<String, Object?>>>{};
 

@@ -18,7 +18,15 @@ final class ComputeAffordabilityTool extends AgentTool {
   Map<String, Object?> get parameters => {'type': 'object', 'properties': {}};
 
   @override
-  bool get preRunnable => true;
+  Map<String, Object?>? settledArguments(ToolContext context) {
+    final plan = context.plan;
+    final id = plan.marketId;
+    final covered =
+        id != null && context.markets.coverageOf(id) == Coverage.curated;
+    return covered && (plan.scenario ?? plan.scenarioDraft) != null
+        ? const {}
+        : null;
+  }
 
   @override
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {

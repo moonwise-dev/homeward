@@ -32,7 +32,7 @@ abstract class AgentTool {
 
   Map<String, Object?> get parameters;
 
-  bool get preRunnable;
+  Map<String, Object?>? settledArguments(ToolContext context) => null;
 
   ToolResult run(Map<String, Object?> arguments, ToolContext context);
 

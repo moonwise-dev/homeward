@@ -3,11 +3,7 @@ import 'dart:io';
 
 import 'package:common/common.dart';
 import 'package:homeward_server/agent/prompt/prompt_assembler.dart';
-import 'package:homeward_server/tools/compute_affordability_tool.dart';
-import 'package:homeward_server/tools/load_market_tool.dart';
-import 'package:homeward_server/tools/propose_profile_tool.dart';
-import 'package:homeward_server/tools/propose_scenario_tool.dart';
-import 'package:homeward_server/tools/resolve_market_tool.dart';
+import 'package:homeward_server/tools/homeward_tools.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -49,16 +45,7 @@ void main() {
 
   test('hand-written prompts name only tools, actions, components, and '
       'decisions that exist', () {
-    final tools = {
-      for (final tool in const [
-        ResolveMarketTool(),
-        LoadMarketTool(),
-        ProposeProfileTool(),
-        ProposeScenarioTool(),
-        ComputeAffordabilityTool(),
-      ])
-        tool.name,
-    };
+    final tools = {for (final tool in homewardTools) tool.name};
     final functions = {for (final function in homewardFunctions) function.name};
     final components = {
       ...agentVisibleBasicComponents,

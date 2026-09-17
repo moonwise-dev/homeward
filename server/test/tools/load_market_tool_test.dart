@@ -74,6 +74,12 @@ void main() {
   });
 
   test('is pre-runnable because its input comes from the plan', () {
-    expect(tool.preRunnable, isTrue);
+    expect(tool.settledArguments(contextWith()), isNull);
+    expect(
+      tool.settledArguments(
+        contextWith(plan: Plan(marketId: MarketId.parse('SE'))),
+      ),
+      {'marketId': 'SE'},
+    );
   });
 }

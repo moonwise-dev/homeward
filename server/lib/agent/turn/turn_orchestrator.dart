@@ -1,0 +1,63 @@
+import 'package:common/common.dart';
+
+import '../../data/repository/session_repository.dart';
+import '../prompt/prompt_assembler.dart';
+import 'create_interaction.dart';
+import 'tool_belt.dart';
+import 'turn_event.dart';
+import 'turn_failure.dart';
+import 'turn_run.dart';
+import 'turn_settings.dart';
+
+final class TurnOrchestrator {
+  TurnOrchestrator({
+    required this.sessions,
+    required this.createInteraction,
+    required this.prompts,
+    required this.tools,
+    required this.catalog,
+    this.settings = const TurnSettings(),
+    DateTime Function()? now,
+  }) : now = now ?? DateTime.now;
+
+  final SessionRepository sessions;
+  final CreateInteraction createInteraction;
+  final PromptAssembler prompts;
+  final ToolBelt tools;
+  final CatalogValidator catalog;
+  final TurnSettings settings;
+  final DateTime Function() now;
+
+  Stream<TurnEvent> run({
+    required String sessionId,
+    required String uid,
+    required String text,
+    required String apiKey,
+  }) async* {
+    final session = await sessions.find(sessionId);
+    if (session == null || session.ownerUid != uid) {
+      yield const TurnEvent.failed(TurnFailure.sessionNotFound);
+      return;
+    }
+    if (!await sessions.lease(sessionId)) {
+      yield const TurnEvent.failed(TurnFailure.turnInProgress);
+      return;
+    }
+    final run = TurnRun(
+      session: session,
+      createInteraction: createInteraction,
+      prompts: prompts,
+      tools: tools,
+      catalog: catalog,
+      settings: settings,
+      now: now,
+    );
+    try {
+      yield const TurnEvent.working();
+      yield* run.execute(text: text, apiKey: apiKey);
+    } finally {
+      await sessions.save(run.session);
+      await sessions.release(sessionId);
+    }
+  }
+}

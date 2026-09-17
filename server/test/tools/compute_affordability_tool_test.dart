@@ -70,4 +70,30 @@ void main() {
       {'status': 'needsScenario'},
     );
   });
+
+  test('runs without the model once a covered market has a scenario', () {
+    expect(
+      tool.settledArguments(contextWith(plan: Plan(marketId: sweden))),
+      isNull,
+    );
+    expect(
+      tool.settledArguments(
+        contextWith(
+          plan: Plan(
+            marketId: MarketId.parse('PT-30'),
+            scenarioDraft: stockholmScenario,
+          ),
+        ),
+      ),
+      isNull,
+    );
+    expect(
+      tool.settledArguments(
+        contextWith(
+          plan: Plan(marketId: sweden, scenarioDraft: stockholmScenario),
+        ),
+      ),
+      <String, Object?>{},
+    );
+  });
 }

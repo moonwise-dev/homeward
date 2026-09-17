@@ -26,9 +26,6 @@ final class ProposeProfileTool extends AgentTool {
   Map<String, Object?> get parameters => sliceParameters(profileSlice);
 
   @override
-  bool get preRunnable => false;
-
-  @override
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {
     final plan = context.plan;
     final currency = switch (plan.marketId) {

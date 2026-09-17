@@ -152,6 +152,11 @@ void main() {
 
   test('is declared for the model and never pre-run', () {
     expect(tool.declaration.toJson()['name'], 'resolve_market');
-    expect(tool.preRunnable, isFalse);
+    expect(
+      tool.settledArguments(
+        contextWith(plan: Plan(marketId: MarketId.parse('SE'))),
+      ),
+      isNull,
+    );
   });
 }

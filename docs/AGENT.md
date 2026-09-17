@@ -17,6 +17,7 @@ It has no hard-coded stages; the open decisions of the plan decide the step.
 | Validation correction rounds | 2 | `HOMEWARD_MAX_CORRECTIONS` |
 | Model rounds per turn, target | ≤ 2 | measured in evals |
 | Inline surfaces per turn | 2 | fixed |
+| Tool rounds per turn, cap | 4 | fixed |
 
 Spike S2 found every listed model available on a free-tier key, but
 `gemini-3.8-flash` overloaded on the day: `generateContent` answered 503, and
@@ -171,32 +172,47 @@ validates is worth more than a short prompt.
 
 ## Turn Orchestrator
 
-`server/lib/agent/turn_orchestrator.dart`:
+`server/lib/agent/turn/turn_orchestrator.dart` finds the session, checks its
+owner, and leases it; `turn_run.dart` runs one turn:
 
-1. Lease the session turn in a Firestore transaction.
+1. Lease the session turn. A second turn while one runs fails with
+   `turn_in_progress`; a missing or foreign session fails with
+   `session_not_found`. M1 keeps sessions in `InMemorySessionRepository`
+   behind `SessionRepository`; Firestore with a transactional lease replaces it
+   in M2.
 2. If the input is an action the server can complete, apply it to the plan. If
    it needs no model, recompile the board, finish.
-3. Derive open decisions.
-4. **Pre-run the predictable steps.** Every tool whose inputs are already
-   settled in the plan runs now, without the model: loading the selected market,
-   computing affordability for a committed profile, costs for a committed
-   scenario, obstacles, process. Their model results go into the turn context
-   and their seeds are staged for surfaces created this turn.
-5. Assemble prompt, the pre-run results, and declarations for only the tools
-   that still need interpretation: resolving a free-text place, proposing values
-   the buyer stated, releasing a decision.
-6. Call `interactions.create` with streaming, `previous_interaction_id` when
+3. Replay the session's stored A2UI messages into the shadow processor.
+4. Before every model request, not only the first:
+   - Run every tool whose `settledArguments` the current plan provides, such as
+     `load_market` once a market is selected and `compute_affordability` once a
+     covered market has a scenario. Their model results become `preRun` in the
+     turn context, and they are left out of the declarations.
+   - Rebuild the seeds: an empty `/selection`, seeds from tools called this
+     turn, seeds from the settled tools, and `/profile` and `/scenario` from the
+     plan's drafts or saved values.
+   - Assemble the system instruction with a fresh turn context.
+5. Call `interactions.create` with streaming, `previous_interaction_id` when
    present, `store: true`, through model selection.
-7. Stream: forward the full text so far; buffer `a2ui` fenced blocks line by
-   line; run tools on function calls, run any predictable steps they unlock, and
-   continue the interaction with all results at once.
-8. Validate each A2UI message against a shadow `MessageProcessor` rebuilt from
-   the session's stored messages; on failure send a correction and continue.
-9. Seed and forward valid messages.
-10. Persist the turn, the new `lastInteractionId`, the models used, the number
-    of model rounds, and plan patches.
-11. Recompile and forward the board if the plan changed.
-12. Release the lease, emit `completed`.
+6. Stream: forward the full text so far as it grows; validate each line of an
+   `a2ui` block as it completes; collect function calls.
+7. Forward accepted messages through the seeder: a `createSurface` is held
+   until its first valid `updateComponents`, then sent with
+   `sendDataModel: true`, followed by one `updateDataModel` for each seeded
+   slice its components bind, then the components. A surface whose tree never
+   validates never reaches the buyer.
+8. When the round ended with function calls, run them, which may change the
+   plan, and continue the interaction with all results at once, at most four
+   tool rounds per turn.
+9. When messages were rejected, continue with one text input listing each
+   `VALIDATION_FAILED` error, at most `HOMEWARD_MAX_CORRECTIONS` rounds. After
+   the last, a server-drawn `t{turn}-retry` surface asks the buyer to send the
+   message again.
+10. Save the plan, the turn number, the last completed interaction ID, and every
+    forwarded message, also when the turn fails or is cancelled, then release
+    the lease and emit `completed`.
+
+The turn number advances even when a turn fails, so surface IDs never repeat.
 
 A turn that commits a profile or scenario therefore usually needs one model
 round: the numbers are already computed, and the model only writes and lays
@@ -220,8 +236,9 @@ progressively while the model is still writing.
 Interaction history is a cache. When a request carrying
 `previous_interaction_id` fails with 404 `not_found` (deleted or expired) or
 400 `invalid_request` (unknown to this key, or never stored), the orchestrator
-retries once without it, starting a fresh interaction from the plan summary and
-the last few turns' text. Nothing is lost because the plan record holds every
+retries once without it, starting a fresh interaction whose turn context
+carries the plan state. Replaying the last few turns' text joins with
+persistence in M2. Nothing is lost because the plan record holds every
 decision.
 
 ### Interactions API Client

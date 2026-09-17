@@ -161,14 +161,19 @@ server/
     middleware/     request context, request logging, internal errors;
                     later auth, app check, gemini key, redaction, rate limit, cors
     a2a/            agent card, json-rpc dispatch, sse writer, task registry
-    agent/          turn orchestrator, prompt assembly, stream parser,
-                    validation passes, surface seeding, board compiler
+    agent/          stream parser; board compiler
+      prompt/       prompt assembler, turn context
+      turn/         turn orchestrator and run, tool belt, seeds, surface
+                    seeder, corrections
+      validation/   validation passes
     gemini/         interactions client, live client, request/response models
     tools/          one file per tool, each a thin adapter over common + repositories
     markets/        pack loader, overlay resolver, coverage
+    ids/            random identifiers
     data/
+      models/       session record
       providers/    composition root: builds every dependency once
-      repository/   sessions, turns, plans
+      repository/   sessions, turns, plans; in memory in M1
   prompts/
     role.md
     flow.md

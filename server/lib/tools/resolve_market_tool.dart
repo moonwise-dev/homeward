@@ -37,9 +37,6 @@ final class ResolveMarketTool extends AgentTool {
   };
 
   @override
-  bool get preRunnable => false;
-
-  @override
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {
     final markets = context.markets;
     final named = markets.marketsNamed(

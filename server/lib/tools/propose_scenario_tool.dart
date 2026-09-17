@@ -33,9 +33,6 @@ final class ProposeScenarioTool extends AgentTool {
   );
 
   @override
-  bool get preRunnable => false;
-
-  @override
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {
     final plan = context.plan;
     final market = switch (plan.marketId) {
