@@ -79,10 +79,16 @@ Model selection is tested with a fake clock and a fake transport.
 
 ### `app`
 
-One test only, and not a widget test: `genui_a2a` compatibility. Server streams
-recorded by the server tests are replayed through `genui_a2a`'s
-`A2uiAgentConnector` against a local fake, proving any A2A client built on the
-Flutter team's connector renders Homeward's turns.
+One test only, and not a widget test: `genui_a2a` compatibility. A turn the
+server streamed, a resolved market and the profile form, is recorded in
+`app/test/fixtures/recorded_turn.sse` by `server/test/a2a/recorded_turn_test.dart`,
+which fails when the wire changes and rewrites the file when run with
+`RECORD=1`. The app test serves that recording from a local HTTP fake and
+replays it through `genui_a2a`'s `A2uiAgentConnector` into a `SurfaceController`
+holding the Homeward catalog, proving any A2A client built on the Flutter team's
+connector renders Homeward's turns: the capabilities go out with the catalog id,
+the text arrives, the four A2UI messages arrive in order, the seeded data model
+resolves, and every component of the form is in the catalog.
 
 ## Performance Check
 

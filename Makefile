@@ -68,6 +68,8 @@ test:
 			(cd $$dir && dart test); \
 		fi; \
 	done
+	@echo "==> flutter test app"
+	@cd app && flutter test
 
 .PHONY: check
 check: format-check analyze test markets-check catalog-check
