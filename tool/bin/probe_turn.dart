@@ -2,14 +2,17 @@ import 'dart:io';
 
 import 'package:homeward_tool/probe/describe_event.dart';
 import 'package:homeward_tool/probe/firebase_web_api_key.dart';
+import 'package:homeward_tool/probe/probe_gemini_key.dart';
 import 'package:homeward_tool/probe/probe_client.dart';
 import 'package:http/http.dart' as http;
 
 Future<void> main(List<String> arguments) async {
-  final geminiKey = Platform.environment['HOMEWARD_EVAL_GEMINI_KEY'];
-  if (geminiKey == null || geminiKey.isEmpty || arguments.length < 2) {
+  final geminiKey = probeGeminiKey(Platform.environment);
+  if (geminiKey == null || arguments.length < 2) {
     stderr.writeln(
-      'Usage: HOMEWARD_EVAL_GEMINI_KEY=… probe_turn <server url> <message>…',
+      'Usage: probe_turn <server url> <message>…\n'
+      'The Gemini key comes from HOMEWARD_EVAL_GEMINI_KEY or '
+      '~/.config/homeward/gemini_key.',
     );
     exitCode = 64;
     return;

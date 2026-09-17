@@ -59,11 +59,17 @@ GeminiException geminiHttpError({
 GeminiException geminiStreamError({
   required Map<String, Object?> error,
   required String model,
+  required DateTime now,
 }) {
   final message = error['message'] as String? ?? 'Gemini stream error';
-  return error['code'] == 'api_error'
-      ? GeminiUnavailable(message, model: model)
-      : GeminiRequestInvalid(message);
+  return switch (error['code']) {
+    'api_error' => GeminiUnavailable(message, model: model),
+    'quota_exceeded' || 'too_many_requests' => GeminiQuotaExhausted(
+      message,
+      resetsAt: nextPacificMidnight(now),
+    ),
+    _ => GeminiRequestInvalid(message),
+  };
 }
 
 (Object?, String, Set<String>) _errorOf(String body) {

@@ -104,7 +104,8 @@ catalog-check. `eval` joins as its milestone lands; `make eval` needs
 `make probe SERVER=http://localhost:8080 MESSAGE="…"` signs in anonymously,
 creates a session, and streams one live turn against a running server,
 printing text, surfaces, and timings. It reads the key from
-`HOMEWARD_EVAL_GEMINI_KEY` and never prints it.
+`HOMEWARD_EVAL_GEMINI_KEY`, or else `~/.config/homeward/gemini_key`, and never
+prints it.
 
 `make hooks` is run once per clone; it points git at `tool/githooks`, whose
 `pre-push` runs `make check`.

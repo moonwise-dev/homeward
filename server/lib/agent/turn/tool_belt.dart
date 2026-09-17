@@ -31,6 +31,11 @@ final class ToolBelt {
     ];
   }
 
+  int orderOf(String name) {
+    final index = tools.indexWhere((tool) => tool.name == name);
+    return index == -1 ? tools.length : index;
+  }
+
   ToolResult call(String name, Map<String, Object?> arguments, Plan plan) {
     final context = ToolContext(markets: markets, plan: plan);
     for (final tool in tools) {

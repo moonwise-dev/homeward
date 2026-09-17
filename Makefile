@@ -29,7 +29,7 @@ help:
 	@echo "  make a2ui-schemas  Vendor the pinned A2UI v0.9 basic catalog and common types"
 	@echo "  make territories   Regenerate country and subdivision names from CLDR"
 	@echo "  make server-dev    Run the server locally with hot reload"
-	@echo "  make probe         Send MESSAGE as a live turn to SERVER; needs HOMEWARD_EVAL_GEMINI_KEY"
+	@echo "  make probe         Send MESSAGE as a live turn to SERVER with the key from ~/.config/homeward/gemini_key"
 	@echo "  make server-build  Cross-compile the server for linux/x64"
 	@echo "  make server-image  Build the server container image"
 	@echo "  make server-image-run  Run the server container image on port 8080"
@@ -111,7 +111,7 @@ server-dev:
 
 .PHONY: probe
 probe:
-	@dart run tool/bin/probe_turn.dart $(or $(SERVER),http://localhost:8080) "$(MESSAGE)"
+	@dart run tool/bin/probe_turn.dart $(or $(SERVER),http://localhost:8080) "$(or $(MESSAGE),We are a couple in Stockholm looking at a 3-room flat in Södermalm for about 4.5 million kronor)"
 
 .PHONY: server-build
 server-build:

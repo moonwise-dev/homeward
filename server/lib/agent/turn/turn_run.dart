@@ -91,6 +91,8 @@ final class TurnRun {
       final parser = StreamParser();
       _separateRound = _text.isNotEmpty;
       _rounds++;
+      final roundClock = Stopwatch()..start();
+      String? status;
       try {
         await for (final event in createInteraction(
           apiKey: apiKey,
@@ -106,6 +108,7 @@ final class TurnRun {
               calls.add(event);
             case InteractionCompleted(:final interactionId):
               _interactionId = interactionId;
+              status = event.status;
             case ModelFailed(:final model, :final reason):
               _log.warning(
                 LogEntry(
@@ -118,7 +121,8 @@ final class TurnRun {
         }
       } on InteractionCancelled {
         return;
-      } on GeminiHistoryMissing {
+      } on GeminiHistoryMissing catch (error) {
+        _logFailure(error);
         if (mayRebuildHistory) {
           mayRebuildHistory = false;
           _interactionId = null;
@@ -127,17 +131,38 @@ final class TurnRun {
         yield const TurnEvent.failed(HomewardFailure.internal);
         return;
       } on GeminiException catch (error) {
+        _logFailure(error);
         yield TurnEvent.failed(HomewardFailure.fromGemini(error, now()));
         return;
       }
       mayRebuildHistory = false;
+      _log.info(
+        LogEntry(
+          'Model round $_rounds of turn $turn',
+          fields: {
+            'turn': turn,
+            'round': _rounds,
+            'status': status,
+            'functionCalls': [for (final call in calls) call.name],
+            'durationMs': roundClock.elapsedMilliseconds,
+          },
+        ),
+      );
       for (final output in parser.close()) {
         yield* _emit(output);
       }
       if (calls.isNotEmpty && toolRounds < settings.maxToolRounds) {
         toolRounds++;
+        final results = {
+          for (final call
+              in [...calls]..sort(
+                (a, b) =>
+                    tools.orderOf(a.name).compareTo(tools.orderOf(b.name)),
+              ))
+            call.callId: _runCall(call),
+        };
         input = InteractionInput.functionResults([
-          for (final call in calls) _runCall(call),
+          for (final call in calls) results[call.callId]!,
         ]);
         continue;
       }
@@ -185,6 +210,18 @@ final class TurnRun {
         return actionInput(outcome.summary);
     }
   }
+
+  void _logFailure(GeminiException error) => _log.warning(
+    LogEntry(
+      'Gemini request failed in turn $turn',
+      fields: {
+        'turn': turn,
+        'round': _rounds,
+        'error': error.runtimeType.toString(),
+        'message': error.message,
+      },
+    ),
+  );
 
   InteractionRequest _request(InteractionInput input) {
     final settled = tools.runSettled(_plan);

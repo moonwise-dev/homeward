@@ -160,6 +160,51 @@ void main() {
     },
   );
 
+  test(
+    'runs tool calls in dependency order and answers in call order',
+    () async {
+      await sessions.create('uid-1');
+      final script = ScriptedInteractions([
+        reply(
+          'i1',
+          calls: const [
+            FunctionCall(
+              callId: 'profile',
+              name: 'propose_profile',
+              arguments: {
+                'netMonthlyIncome': {'amount': 62000},
+              },
+            ),
+            FunctionCall(
+              callId: 'market',
+              name: 'resolve_market',
+              arguments: {'placeName': 'Södermalm', 'countryCode': 'SE'},
+            ),
+          ],
+        ),
+        reply('i2', text: 'Noted.'),
+      ]);
+
+      await send(orchestrator(script)).drain<void>();
+
+      final results =
+          (script.requests[1].input as FunctionResultsInput).results;
+      expect(results.map((result) => result.callId), ['profile', 'market']);
+      expect(results.first.result, {
+        'accepted': ['netMonthlyIncome'],
+        'rejected': <Object?>[],
+      });
+      expect(
+        (await sessions.find('s-1'))!
+            .plan
+            .profileDraft
+            ?.netMonthlyIncome
+            ?.currency,
+        Currency.parse('SEK'),
+      );
+    },
+  );
+
   test('sends rejections back and forwards the corrected surface once', () async {
     await sessionWith(Plan(marketId: MarketId.parse('SE')));
     final script = ScriptedInteractions([

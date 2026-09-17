@@ -171,6 +171,12 @@ void main() {
         isA<GeminiUnavailable>().having((error) => error.model, 'model', model),
       ),
       (
+        'a quota event mid-stream',
+        fixture('stream_error_quota_exceeded.sse'),
+        request,
+        isA<GeminiQuotaExhausted>(),
+      ),
+      (
         'an overload event mid-stream',
         fixture('stream_error_high_demand.sse'),
         request,

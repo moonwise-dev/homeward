@@ -179,7 +179,7 @@ final class InteractionsClient {
           usage: interaction['usage'] as Map<String, Object?>?,
         );
       case {'event_type': 'error', 'error': final Map<String, Object?> error}:
-        throw geminiStreamError(error: error, model: model);
+        throw geminiStreamError(error: error, model: model, now: _now());
     }
     return null;
   }
