@@ -184,4 +184,5 @@ genui.
 - Local terms appear with an English gloss on first use in a surface, for
   example "bostadsrätt (housing cooperative flat)".
 - Money is formatted in the market currency with the market's conventional
-  grouping; amounts in a second currency show both.
+  grouping, from the `locale` in `/market` (D77); amounts in a second currency
+  show both.

@@ -12,12 +12,13 @@ packs; nothing else knows a market.
 - A regional pack declares `parent` and overlays only what differs.
 
 `resolvePackChain` in `common/markets/pack_overlay.dart` merges parent then
-child: the child's identity and scalar fields win, the currency is inherited,
+child: the child's identity and scalar fields win, the currency and locale are
+inherited,
 lists merge by entry `id` with replacements kept in the parent's order, and
 `removedRuleIds` drops parent entries. The merged pack takes the newest
 `effectiveFrom` and the oldest `reviewedAt`, so it expires with its oldest part.
 Removing an ID the parent lacks, a missing parent, a cycle, and a root pack
-without a currency are errors.
+without a currency or a locale are errors.
 
 ## Rule Pack Schema
 
@@ -48,6 +49,8 @@ MarketRulePack
   parent                PT
   name                  Madeira
   currency              EUR; required on country packs, inherited by regions
+  locale                pt-PT; BCP 47 language and region that formats amounts
+                        for this market; required on country packs, inherited
   version               integer, bumped on every change
   effectiveFrom         date the newest rule took effect
   reviewedAt            date a curator last verified every rule

@@ -1,3 +1,6 @@
+import 'locale_tag.dart';
+import 'locale_tag_json_converter.dart';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../money/currency.dart';
@@ -27,6 +30,7 @@ abstract class ResolvedMarket with _$ResolvedMarket {
     @MarketIdJsonConverter() required MarketId id,
     required String name,
     @CurrencyJsonConverter() required Currency currency,
+    @LocaleTagJsonConverter() required LocaleTag locale,
     required LendingRules lending,
     required List<CostRule> purchaseCosts,
     required List<CostRule> recurringCosts,
@@ -68,7 +72,8 @@ ResolvedMarket resolveForBuyer(
   LivingCosts? livingCosts,
 }) {
   final currency = pack.currency;
-  if (pack.parent != null || currency == null) {
+  final locale = pack.locale;
+  if (pack.parent != null || currency == null || locale == null) {
     throw ArgumentError.value(
       pack.id.code,
       'pack',
@@ -122,6 +127,7 @@ ResolvedMarket resolveForBuyer(
     id: pack.id,
     name: pack.name,
     currency: currency,
+    locale: locale,
     lending: resolvedLending,
     purchaseCosts: purchaseCosts,
     recurringCosts: recurringCosts,

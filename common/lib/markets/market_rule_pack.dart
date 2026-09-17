@@ -8,6 +8,8 @@ import 'cost_rule.dart';
 import 'identified.dart';
 import 'lending_rules.dart';
 import 'loan_type.dart';
+import 'locale_tag.dart';
+import 'locale_tag_json_converter.dart';
 import 'market_id.dart';
 import 'market_id_json_converter.dart';
 import 'profile_field_requirement.dart';
@@ -23,6 +25,7 @@ abstract class MarketRulePack with _$MarketRulePack {
     @MarketIdJsonConverter() MarketId? parent,
     required String name,
     @CurrencyJsonConverter() Currency? currency,
+    @LocaleTagJsonConverter() LocaleTag? locale,
     required int version,
     @CalendarDateJsonConverter() required CalendarDate effectiveFrom,
     @CalendarDateJsonConverter() CalendarDate? reviewedAt,

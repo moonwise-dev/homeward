@@ -15,6 +15,7 @@ _ResolvedMarket _$ResolvedMarketFromJson(
       'id',
       'name',
       'currency',
+      'locale',
       'lending',
       'purchaseCosts',
       'recurringCosts',
@@ -36,6 +37,10 @@ _ResolvedMarket _$ResolvedMarketFromJson(
     currency: $checkedConvert(
       'currency',
       (v) => const CurrencyJsonConverter().fromJson(v as String),
+    ),
+    locale: $checkedConvert(
+      'locale',
+      (v) => const LocaleTagJsonConverter().fromJson(v as String),
     ),
     lending: $checkedConvert(
       'lending',
@@ -111,6 +116,7 @@ Map<String, dynamic> _$ResolvedMarketToJson(
   'id': const MarketIdJsonConverter().toJson(instance.id),
   'name': instance.name,
   'currency': const CurrencyJsonConverter().toJson(instance.currency),
+  'locale': const LocaleTagJsonConverter().toJson(instance.locale),
   'lending': instance.lending.toJson(),
   'purchaseCosts': instance.purchaseCosts.map((e) => e.toJson()).toList(),
   'recurringCosts': instance.recurringCosts.map((e) => e.toJson()).toList(),

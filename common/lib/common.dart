@@ -53,6 +53,7 @@ export 'markets/lending_rules.dart';
 export 'markets/living_costs.dart';
 export 'markets/loan_predicate.dart';
 export 'markets/loan_type.dart';
+export 'markets/locale_tag.dart';
 export 'markets/market_id.dart';
 export 'markets/market_id_json_converter.dart';
 export 'markets/market_rule_pack.dart';

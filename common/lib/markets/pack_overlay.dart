@@ -36,6 +36,7 @@ MarketRulePack overlayPack(MarketRulePack parent, MarketRulePack child) {
   return child.copyWith(
     parent: null,
     currency: child.currency ?? parent.currency,
+    locale: child.locale ?? parent.locale,
     effectiveFrom: parent.effectiveFrom.isBefore(child.effectiveFrom)
         ? child.effectiveFrom
         : parent.effectiveFrom,
@@ -89,8 +90,12 @@ MarketRulePack _resolve(
   }
   final parentId = pack.parent;
   if (parentId == null) {
-    if (pack.currency == null) {
-      throw ArgumentError.value(id.code, 'id', 'A root pack needs a currency');
+    if (pack.currency == null || pack.locale == null) {
+      throw ArgumentError.value(
+        id.code,
+        'id',
+        'A root pack needs a currency and a locale',
+      );
     }
     return pack;
   }

@@ -2,6 +2,7 @@
   "id": "SE",
   "name": "Sweden",
   "currency": "SEK",
+  "locale": "sv-SE",
   "version": 1,
   "effectiveFrom": "2026-04-01",
   "profileFields": [

@@ -3,6 +3,7 @@ const stockholmMarketJson = r'''
   "id": "SE",
   "name": "Sweden",
   "currency": "SEK",
+  "locale": "sv-SE",
   "lending": {
     "maxLtv": [
       {

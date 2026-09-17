@@ -3,6 +3,7 @@ const portugalPackJson = r'''
   "id": "PT",
   "name": "Portugal",
   "currency": "EUR",
+  "locale": "pt-PT",
   "version": 3,
   "effectiveFrom": "2026-08-01",
   "reviewedAt": "2026-09-16",

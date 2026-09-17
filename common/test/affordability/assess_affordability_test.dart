@@ -19,6 +19,7 @@ void main() {
       id: MarketId.parse('SE'),
       name: 'Sweden',
       currency: Currency.parse('SEK'),
+      locale: LocaleTag.parse('sv-SE'),
       version: 1,
       effectiveFrom: CalendarDate.parse('2026-04-01'),
       lending: LendingRules.fromJson(

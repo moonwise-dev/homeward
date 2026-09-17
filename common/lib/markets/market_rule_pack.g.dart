@@ -16,6 +16,7 @@ _MarketRulePack _$MarketRulePackFromJson(
       'parent',
       'name',
       'currency',
+      'locale',
       'version',
       'effectiveFrom',
       'reviewedAt',
@@ -47,6 +48,13 @@ _MarketRulePack _$MarketRulePackFromJson(
       (v) => _$JsonConverterFromJson<String, Currency>(
         v,
         const CurrencyJsonConverter().fromJson,
+      ),
+    ),
+    locale: $checkedConvert(
+      'locale',
+      (v) => _$JsonConverterFromJson<String, LocaleTag>(
+        v,
+        const LocaleTagJsonConverter().fromJson,
       ),
     ),
     version: $checkedConvert('version', (v) => (v as num).toInt()),
@@ -131,6 +139,10 @@ Map<String, dynamic> _$MarketRulePackToJson(_MarketRulePack instance) =>
       'currency': ?_$JsonConverterToJson<String, Currency>(
         instance.currency,
         const CurrencyJsonConverter().toJson,
+      ),
+      'locale': ?_$JsonConverterToJson<String, LocaleTag>(
+        instance.locale,
+        const LocaleTagJsonConverter().toJson,
       ),
       'version': instance.version,
       'effectiveFrom': const CalendarDateJsonConverter().toJson(
