@@ -43,7 +43,7 @@ void main() {
   });
 
   test('omits required when nothing is required', () {
-    expect(sliceParameters(selectionSlice), {
+    expect(sliceParameters(selectionSlice, only: {'marketId'}), {
       'type': 'object',
       'properties': {
         'marketId': {

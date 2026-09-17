@@ -56,6 +56,7 @@ What the buyer is picking before it is saved.
 | Path | Value | Meaning |
 | --- | --- | --- |
 | `/selection/marketId` | ISO 3166 code of a country or subdivision, such as SE or PT-30 | The market picked in a LocationPicker in market mode. |
+| `/selection/candidates` | object read by Homeward components | Markets that match the place the buyer named, with coverage. |
 
 ### `/profile`
 

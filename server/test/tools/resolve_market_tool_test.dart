@@ -1,3 +1,4 @@
+import 'package:common/common.dart';
 import 'package:homeward_server/tools/resolve_market_tool.dart';
 import 'package:test/test.dart';
 
@@ -73,7 +74,7 @@ void main() {
     ),
   ];
 
-  for (final (name, arguments, expected, confirmed) in cases) {
+  for (final (name, arguments, expected, selected) in cases) {
     test('resolves $name', () {
       final result = tool.run(arguments, contextWith());
       final candidates = (result.modelResult['candidates']! as List<Object?>)
@@ -86,13 +87,49 @@ void main() {
         ],
         expected,
       );
-      expect(result.modelResult['confirmed'], confirmed);
+      expect(result.modelResult['selected'], selected);
+      expect(
+        result.plan?.marketId?.code,
+        selected ? expected.single.$1 : isNull,
+      );
       expect(
         (result.seeds['selection']! as Map<String, Object?>)['marketId'],
         expected.first.$1,
       );
     });
   }
+
+  test('selecting another market releases the scenario and keeps the '
+      'profile', () {
+    final sek = Money(minorUnits: 100, currency: Currency.parse('SEK'));
+    final scenario = Scenario(
+      price: sek,
+      downPayment: sek,
+      termYears: 30,
+      loanTypeId: 'variable-3m',
+      rateSpread: Rate.zero,
+    );
+    final plan = Plan(
+      marketId: MarketId.parse('PT-30'),
+      profile: const BuyerProfile(age: 40),
+      scenario: scenario,
+      scenarioDraft: scenario,
+    );
+
+    final moved = tool.run({
+      'placeName': 'Stockholm',
+      'countryCode': 'SE',
+    }, contextWith(plan: plan)).plan!;
+    final unchanged = tool.run({
+      'placeName': 'Funchal',
+    }, contextWith(plan: plan));
+
+    expect(moved.marketId, MarketId.parse('SE'));
+    expect(moved.profile, plan.profile);
+    expect(moved.scenario, isNull);
+    expect(moved.scenarioDraft, isNull);
+    expect(unchanged.plan, isNull);
+  });
 
   test('names regions with their country', () {
     final result = tool.run({'placeName': 'Funchal'}, contextWith());

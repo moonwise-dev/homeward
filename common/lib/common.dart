@@ -79,6 +79,8 @@ export 'money/ppm_json_converter.dart';
 export 'money/rate.dart';
 export 'money/rounding.dart';
 export 'money/rounding_mode.dart';
+export 'plan/open_decision.dart';
+export 'plan/open_decisions.dart';
 export 'plan/plan.dart';
 export 'plan/scenario.dart';
 export 'profile/buyer_profile.dart';

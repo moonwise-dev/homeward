@@ -63,34 +63,45 @@ buyer's free key covers roughly ten turns a day on the first model.
 
 ## Open Decisions
 
-`common/plan/open_decisions.dart` derives, from the plan and the resolved rule
-pack, an ordered list of what is still open. It is the agent's map and the
+`common/lib/plan/open_decisions.dart` derives, from the plan and the resolved
+rule pack, an ordered list of what is still open. It is the agent's map and the
 server's source for the board. It is pure and unit tested.
 
 | Open decision | Opens when |
 | --- | --- |
-| `target_market` | No market selected |
-| `market_coverage` | Market selected that has no curated pack |
-| `profile_fields` | Any field the pack requires for this buyer is missing |
-| `scenario` | Profile committed, no scenario |
-| `scenario_commit` | Scenario drafted, not committed |
-| `obstacles_review` | Buyer faces obstacles with severity `blocker` or `effort` |
-| `process` | Scenario committed |
+| `targetMarket` | No market selected |
+| `marketCoverage` | Market selected that has no curated pack |
+| `profileFields` | Any field the resolved market requires is missing from the saved profile; a field counts as answered when every profile key it names has a value |
+| `scenario` | No scenario saved |
+| `scenarioCommit` | No scenario saved; the buyer is trying a draft |
+| `obstaclesReview` | Buyer faces obstacles with severity `blocker` or `effort`; from M2 |
+| `process` | Scenario committed; from M2 |
+
+With no market selected, every decision except `marketCoverage` is open. An
+uncovered market leaves only `marketCoverage` open.
 
 ## Flow
 
 | Open decision | Tools | Components |
 | --- | --- | --- |
-| `target_market` | `resolve_market` | `LocationPicker` in `market` mode |
-| `market_coverage` | — | `MarketSnapshotCard` in its uncovered state |
-| `profile_fields` | `load_market`, `propose_profile` | `LocationPicker` in `country` mode, `MoneyInput`, `ChoicePicker`, commit `Button` |
+| `targetMarket` | `resolve_market` | `LocationPicker` in `market` mode |
+| `marketCoverage` | — | `MarketSnapshotCard` in its uncovered state |
+| `profileFields` | `load_market`, `propose_profile` | `LocationPicker` in `country` mode, `MoneyInput`, `ChoicePicker`, commit `Button` |
 | `scenario` | `propose_scenario`, `compute_affordability` | `AffordabilitySummary`, `AmountSlider`, `PaymentBreakdown`, commit `Button` with checks |
-| `scenario_commit` | `estimate_purchase_costs` | `PurchaseCostsTable`, `StressTestChart`, `EligibilityChecklist` |
-| `obstacles_review` | `get_obstacles` | `ForeignBuyerObstacles` |
+| `scenarioCommit` | `estimate_purchase_costs` | `PurchaseCostsTable`, `StressTestChart`, `EligibilityChecklist` |
+| `obstaclesReview` | `get_obstacles` | `ForeignBuyerObstacles` |
 | `process` | `get_process` | `BuyingProcessTimeline`, `DocumentChecklist` |
 
-The first turn with nothing known draws one surface that asks for the market and
-the buyer's basic situation together, with one commit button.
+The first turn with nothing known draws one surface that asks where the buyer
+is buying and where they pay tax, with one button sending `select_market`. The
+server selects the market from the action context and keeps the profile facts
+from the surface's data model as the profile draft.
+
+When `resolve_market` finds exactly one market for the place the buyer typed, it
+selects that market for the plan in the same model round, so `load_market` runs
+and the profile form is drawn in that turn (D71). Selecting a different market
+releases the scenario and keeps the profile. Several matches get a
+`LocationPicker` and `select_market`.
 
 The tools column lists what a step needs, not who calls it. When a step's inputs
 are settled in the plan, the orchestrator pre-runs its tools before the model is
@@ -102,9 +113,9 @@ Tools are Dart classes in `server/lib/tools`, one per file, each an adapter over
 `common` and repositories. A tool returns three things:
 
 - `modelResult`: compact JSON the model reasons over.
-- `plan`: the updated plan record, only for `propose_*`, which store drafts
-  (`profileDraft`, `scenarioDraft`) that the buyer later commits, and
-  `release_decision`.
+- `plan`: the updated plan record, only for `resolve_market` when it selects a
+  single market, `propose_*`, which store drafts (`profileDraft`,
+  `scenarioDraft`) that the buyer later commits, and `release_decision`.
 - `seeds`: data model slices the server injects into surfaces created this turn.
 
 Each tool declares whether it can be pre-run: `load_market`,
@@ -115,7 +126,7 @@ cannot, because their inputs come from what the buyer wrote.
 
 | Tool | Input | Model result | Seeds |
 | --- | --- | --- | --- |
-| `resolve_market` | `placeName`, and the model's `countryCode` and `subdivisionCode` | Candidate markets with name and coverage, whether one is confirmed, curated markets when none resolve | `/selection` |
+| `resolve_market` | `placeName`, and the model's `countryCode` and `subdivisionCode` | Candidate markets with name and coverage, whether exactly one was selected for the plan, curated markets when none resolve | `/selection` |
 | `load_market` | `marketId` | Coverage, currency, profile fields with the profile paths that answer them and reasons, kinds of lending rule, never rule values | `/market` |
 | `propose_profile` | Facts the buyer stated: countries as ISO codes, enums, amounts as `{ amount, currency? }` in major units | Accepted and rejected facts with reasons | `/profile` from the plan's profile draft |
 | `propose_scenario` | Price, and any down payment, term, loan type, or association fee the buyer stated | Accepted, defaulted, and rejected fields; unstated values come from the market: the smallest down payment the loan-to-value limit allows, the first loan type and its default spread, the shortest maximum term or 30 years | `/scenario` from the plan's scenario draft |
@@ -131,7 +142,8 @@ compute.
 
 ## Prompt Assembly
 
-`server/lib/agent/prompt_assembler.dart` joins, in order:
+`server/lib/agent/prompt/prompt_assembler.dart` loads, once at startup, and
+joins in order:
 
 1. `prompts/role.md`: who Homeward is, what it will and will not do.
 2. `prompts/flow.md`: open decisions, the flow table, the principles above.
@@ -139,8 +151,11 @@ compute.
 4. `prompts/style.md`: tone, the estimates-not-advice line, how to reference
    components instead of restating figures.
 5. `prompts/generated/catalog_skill.md`: the agent-visible catalog, generated.
-6. A per-turn context block: turn number, open decisions, plan summary,
-   coverage, surface IDs already used. No rule values.
+6. A per-turn context block from `server/lib/agent/prompt/turn_context.dart`:
+   turn number, open decisions, the selected market with its coverage, saved
+   profile facts without amounts, which amounts were given, missing fields with
+   the profile paths that answer them, whether drafts are waiting, surface IDs
+   already used, and pre-run tool results. No rule values.
 
 Everything, the context block included, is sent as `system_instruction`, which
 goes out again with every request of the turn, tool-result rounds included, and

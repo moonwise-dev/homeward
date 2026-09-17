@@ -1,6 +1,7 @@
 import 'package:common/common.dart';
 
 import 'agent_tool.dart';
+import 'profile_field_paths.dart';
 
 final class LoadMarketTool extends AgentTool {
   const LoadMarketTool();
@@ -84,7 +85,7 @@ final class LoadMarketTool extends AgentTool {
 
   Map<String, Object?> _profileField(ProfileField field, String reason) => {
     'field': field.name,
-    'paths': [for (final key in field.profileKeys) profileSlice.pathOf(key)],
+    'paths': profileFieldPaths(field),
     'reason': reason,
   };
 }

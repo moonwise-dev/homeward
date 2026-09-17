@@ -318,7 +318,7 @@ and `/market` through `common/finance` when the buyer changes a bound input.
 | Action | Context | Server behavior before the model runs |
 | --- | --- | --- |
 | `commit_profile` | `profilePath` | Validate and write profile to plan |
-| `select_market` | `marketId` | Resolve market, write to plan |
+| `select_market` | `marketId` | Resolve market, write to plan; profile facts on the surface become the profile draft |
 | `commit_scenario` | `scenarioPath` | Validate against rules, write scenario to plan |
 | `toggle_document` | `documentId` | Toggle checklist state, recompile board, no model call |
 | `change` | `section` | Release the decision in the plan, then run the model |

@@ -47,7 +47,12 @@ final stockholmDataModel = _jsonShaped({
       profile: stockholmProfile,
     ) as AssessedAffordability).downPaymentBounds.toJson(),
   },
-  'selection': {'marketId': 'SE'},
+  'selection': {
+    'marketId': 'SE',
+    'candidates': [
+      {'marketId': 'SE', 'name': 'Sweden', 'coverage': 'curated'},
+    ],
+  },
 });
 
 Money _sek(int kronor) =>

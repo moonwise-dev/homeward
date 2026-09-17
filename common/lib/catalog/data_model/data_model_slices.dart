@@ -14,6 +14,11 @@ const selectionSlice = DataSlice(
       FieldKind.market,
       'The market picked in a LocationPicker in market mode.',
     ),
+    SliceField(
+      'candidates',
+      FieldKind.record,
+      'Markets that match the place the buyer named, with coverage.',
+    ),
   ],
 );
 

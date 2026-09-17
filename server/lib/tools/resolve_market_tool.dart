@@ -12,8 +12,9 @@ final class ResolveMarketTool extends AgentTool {
   String get description =>
       'Resolve a place the buyer named to a market Homeward can talk about. '
       'Pass the place as written and your best ISO 3166 codes for it. The '
-      'result lists candidate markets with coverage; confirm with a '
-      'LocationPicker when there is more than one.';
+      'result lists candidate markets with coverage. When exactly one '
+      'matches, it becomes the market of the plan; when several match, let '
+      'the buyer pick with a LocationPicker in market mode.';
 
   @override
   Map<String, Object?> get parameters => {
@@ -60,10 +61,12 @@ final class ResolveMarketTool extends AgentTool {
           'coverage': markets.coverageOf(id).name,
         },
     ];
+    final selected = ids.length == 1 ? ids.single : null;
+    final plan = context.plan;
     return ToolResult(
       modelResult: {
         'candidates': candidates,
-        'confirmed': candidates.length == 1,
+        'selected': selected != null,
         if (candidates.isEmpty)
           'curatedMarkets': markets.curatedMarketNames.toList(),
       },
@@ -74,6 +77,13 @@ final class ResolveMarketTool extends AgentTool {
             'candidates': candidates,
           },
       },
+      plan: selected == null || selected == plan.marketId
+          ? null
+          : plan.copyWith(
+              marketId: selected,
+              scenario: null,
+              scenarioDraft: null,
+            ),
     );
   }
 

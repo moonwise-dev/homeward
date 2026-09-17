@@ -8,7 +8,7 @@ enum ProfileField {
   employment(['employment']),
   netMonthlyIncome(['netMonthlyIncome']),
   grossMonthlyIncome(['grossMonthlyIncome']),
-  incomeCurrency(['netMonthlyIncome', 'grossMonthlyIncome']),
+  incomeCurrency(['netMonthlyIncome']),
   savings(['savings']),
   monthlyDebtPayments(['monthlyDebtPayments']),
   age(['age']),
