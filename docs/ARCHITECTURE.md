@@ -79,7 +79,8 @@ common/lib/
   money/          Money, Currency, Rate (parts per million), Rounding, ISO 4217 table
   finance/        payments, amortization tiers, shares and limits, brackets
   affordability/  maximum loan per lending rule, binding constraint, payment,
-                  interest deduction, down payment bounds
+                  interest deduction, down payment bounds, the monthly payment
+                  each rule tolerates, the stress curve
   costs/          what each cost rule charges, upfront costs with their
                   refundable part, cash needed
   markets/        MarketRulePack models, buyer predicates, overlay resolution

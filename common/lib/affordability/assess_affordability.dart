@@ -1,18 +1,14 @@
 import '../finance/monthly_payment.dart';
-import '../markets/applicability.dart';
 import '../markets/income_basis.dart';
 import '../markets/lending_limits.dart';
 import '../markets/lending_rules.dart';
-import '../markets/loan_type.dart';
 import '../markets/resolved_market.dart';
 import '../markets/rule_section.dart';
-import '../markets/stress_kind.dart';
 import '../money/money.dart';
 import '../money/rate.dart';
 import '../money/rounding.dart';
 import '../plan/scenario.dart';
 import '../profile/buyer_profile.dart';
-import '../profile/employment.dart';
 import '../profile/profile_field.dart';
 import 'affordability.dart';
 import 'constraint_check.dart';
@@ -20,6 +16,8 @@ import 'constraint_kind.dart';
 import 'down_payment_bounds.dart';
 import 'interest_deduction.dart';
 import 'largest_loan.dart';
+import 'monthly_ceiling.dart';
+import 'stress_rate.dart';
 import 'scenario_payment.dart';
 
 Affordability assessAffordability({
@@ -60,8 +58,8 @@ Affordability assessAffordability({
   if (lending.leftToLiveOn.isNotEmpty && livingCosts == null) {
     throw ArgumentError.notNull('market.livingCosts');
   }
-  final loanType = loanTypeOf(scenario, market);
   final annualRate = scenarioRate(scenario, market);
+  final stressedRate = stressedRateFor(scenario, market);
   final loan = scenario.loan;
   final zero = Money.zero(currency);
 
@@ -84,6 +82,14 @@ Affordability assessAffordability({
   );
 
   final payment = paymentAt(loan, annualRate);
+  final ceilings = {
+    for (final ceiling in monthlyCeilings(
+      market: market,
+      profile: profile,
+      scenario: scenario,
+    ))
+      ceiling.ruleId: ceiling.amount,
+  };
   final checks = [
     for (final rule in lending.maxLtv)
       ConstraintCheck(
@@ -104,17 +110,7 @@ Affordability assessAffordability({
         maxLoan: largestLoanWhere(
           upper: scenario.price,
           allows: (principal) =>
-              paymentAt(
-                principal,
-                _stressedRate(annualRate, lending, loanType, scenario),
-              ).total <=
-              _adjustedIncome(
-                    _incomeFor(rule.incomeBasis, profile),
-                    lending,
-                    profile,
-                    scenario,
-                  ).applyRate(rule.rate, rounding: Rounding.down) -
-                  profile.monthlyDebtPayments!,
+              paymentAt(principal, stressedRate).total <= ceilings[rule.id]!,
         ),
       ),
     for (final rule in lending.leftToLiveOn)
@@ -128,20 +124,8 @@ Affordability assessAffordability({
               principal,
               annualRate > rule.stressRate ? annualRate : rule.stressRate,
             );
-            final leftOver =
-                profile.netMonthlyIncome! -
-                profile.monthlyDebtPayments! -
-                livingCosts!.monthlyFor(
-                  adultAge: profile.age!,
-                  adults: profile.adults!,
-                  childAges: profile.childAges!,
-                ) -
-                (scenario.associationFee ?? zero) -
-                rule.runningCostsMonthly.toMoney(currency) -
-                rule.transportMonthlyPerAdult.toMoney(currency) *
-                    profile.adults! -
-                (stressed.total - deductionOn(stressed.interest));
-            return !leftOver.isNegative;
+            return stressed.total - deductionOn(stressed.interest) <=
+                ceilings[rule.id]!;
           },
         ),
       ),
@@ -225,51 +209,3 @@ Money _yearlyMultiple(Money monthlyIncome, LtiLimit rule) =>
         100,
       ),
     );
-
-Rate _stressedRate(
-  Rate annualRate,
-  LendingRules lending,
-  LoanType loanType,
-  Scenario scenario,
-) => lending.stress
-    .where(
-      (rule) => matchesLoan(
-        rule.appliesToLoan,
-        rateType: loanType.rateType,
-        termYears: scenario.termYears,
-      ),
-    )
-    .map(
-      (rule) => switch (rule.kind) {
-        StressKind.shock => annualRate + rule.rate,
-        StressKind.fixedRate => annualRate > rule.rate ? annualRate : rule.rate,
-      },
-    )
-    .fold(annualRate, (highest, rate) => rate > highest ? rate : highest);
-
-Money _adjustedIncome(
-  Money income,
-  LendingRules lending,
-  BuyerProfile profile,
-  Scenario scenario,
-) {
-  final reductionPpm = lending.incomeAdjustments
-      .where(
-        (rule) =>
-            profile.age! + scenario.termYears > rule.whenAgeAtMaturityAbove &&
-            !(rule.exceptRetired && profile.employment == Employment.retired),
-      )
-      .map((rule) {
-        final yearsAbove =
-            profile.age! + scenario.termYears - rule.whenAgeAtMaturityAbove;
-        final share = yearsAbove < scenario.termYears
-            ? yearsAbove
-            : scenario.termYears;
-        return rule.weightedByTermShare
-            ? rule.reduction.partsPerMillion * share ~/ scenario.termYears
-            : rule.reduction.partsPerMillion;
-      })
-      .fold(0, (highest, ppm) => ppm > highest ? ppm : highest);
-  return income -
-      income.applyRate(Rate.ppm(reductionPpm), rounding: Rounding.down);
-}

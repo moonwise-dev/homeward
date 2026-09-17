@@ -79,11 +79,17 @@ Model selection is tested with a fake clock and a fake transport.
 
 ### `app`
 
-One test only, and not a widget test: `genui_a2a` compatibility. A turn the
+Two tests. The first pumps every catalog example, component and surface alike,
+through the gallery repository and the real `Surface` widget at phone width and
+fails on any exception, which is what catches a chart or a table that throws on
+the figures a market actually produces. It also fails when a component has no
+example in the gallery.
+
+The second is the `genui_a2a` compatibility test. A turn the
 server streamed, a resolved market and the profile form, is recorded in
 `app/test/fixtures/recorded_turn.sse` by `server/test/a2a/recorded_turn_test.dart`,
 which fails when the wire changes and rewrites the file when run with
-`RECORD=1`. The app test serves that recording from a local HTTP fake and
+`RECORD=1`. It serves that recording from a local HTTP fake and
 replays it through `genui_a2a`'s `A2uiAgentConnector` into a `SurfaceController`
 holding the Homeward catalog, proving any A2A client built on the Flutter team's
 connector renders Homeward's turns: the capabilities go out with the catalog id,

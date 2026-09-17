@@ -16,6 +16,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `AffordabilitySummary` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple |
 | `PaymentBreakdown` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple |
 | `PurchaseCostsTable` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Funchal non-resident |
+| `StressTestChart` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple, Funchal non-resident |
 
 ### LocationPicker
 
@@ -48,6 +49,10 @@ The first monthly payment split into interest and amortization, with fees, the t
 ### PurchaseCostsTable
 
 Every upfront cost this buyer owes on the day, the total, and the cash needed with the down payment. A charge that is partly refunded shows what comes back and what earns it.
+
+### StressTestChart
+
+Monthly cost from today's rate up past the rate the lender tests, against the most this buyer can pay each month, with today and the stress rate marked.
 
 ## Basic Components
 
