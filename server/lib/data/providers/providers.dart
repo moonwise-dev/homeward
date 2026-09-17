@@ -18,6 +18,8 @@ import '../../config/server_config.dart';
 import '../../gemini/create_with_fallback.dart';
 import '../../gemini/interactions_client.dart';
 import '../../gemini/model_circuits.dart';
+import '../../gemini/models_client.dart';
+import '../../keys/verify_gemini_key.dart';
 import '../../markets/finding.dart';
 import '../../markets/load_markets.dart';
 import '../../markets/market_directory.dart';
@@ -32,6 +34,7 @@ final class Providers {
     required IdentityVerifier identity,
     required AppCheckVerifier appCheck,
     required CreateInteraction createInteraction,
+    required VerifyGeminiKey verifyKey,
     required MarketDirectory markets,
     required PromptAssembler prompts,
     SessionRepository? sessions,
@@ -42,6 +45,7 @@ final class Providers {
       config: config,
       identity: identity,
       appCheck: appCheck,
+      verifyKey: verifyKey,
       sessions: repository,
       tasks: TaskRegistry(),
       turnLimiter: FixedWindowLimiter(
@@ -68,6 +72,7 @@ final class Providers {
     required this.config,
     required this.identity,
     required this.appCheck,
+    required this.verifyKey,
     required this.sessions,
     required this.tasks,
     required this.turnLimiter,
@@ -92,6 +97,10 @@ final class Providers {
       headersDeadline: config.headersDeadline,
       firstStepDeadline: config.firstStepDeadline,
     );
+    final models = ModelsClient(
+      httpClient: httpClient,
+      deadline: config.headersDeadline,
+    );
     final circuits = ModelCircuits(
       models: config.turnModels,
       cooldown: config.modelCooldown,
@@ -114,6 +123,10 @@ final class Providers {
             canFallBack: canFallBack,
             cancellation: cancellation,
           ),
+      verifyKey: (apiKey) => models.ensureAvailable(
+        apiKey: apiKey,
+        model: config.turnModels.first,
+      ),
       markets: MarketDirectory(marketsData),
       prompts: PromptAssembler.load(Directory(config.promptsDirectory)),
     );
@@ -122,6 +135,7 @@ final class Providers {
   final ServerConfig config;
   final IdentityVerifier identity;
   final AppCheckVerifier appCheck;
+  final VerifyGeminiKey verifyKey;
   final SessionRepository sessions;
   final TaskRegistry tasks;
   final FixedWindowLimiter turnLimiter;

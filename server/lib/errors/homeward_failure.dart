@@ -7,6 +7,8 @@ part 'homeward_failure.freezed.dart';
 
 @freezed
 abstract class HomewardFailure with _$HomewardFailure {
+  const HomewardFailure._();
+
   const factory HomewardFailure({
     required HomewardErrorCode code,
     required String message,
@@ -30,6 +32,11 @@ abstract class HomewardFailure with _$HomewardFailure {
         ),
         GeminiHistoryMissing() || GeminiRequestInvalid() => internal,
       };
+
+  int? get retryAfterSeconds => switch (retryAfter) {
+    final retryAfter? => (retryAfter.inMilliseconds / 1000).ceil(),
+    null => null,
+  };
 
   static const internal = HomewardFailure(
     code: HomewardErrorCode.internal,

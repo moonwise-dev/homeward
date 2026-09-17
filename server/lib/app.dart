@@ -5,6 +5,7 @@ import 'a2a/a2a_handler.dart';
 import 'a2a/homeward_agent_card.dart';
 import 'data/providers/providers.dart';
 import 'health/health_handler.dart';
+import 'keys/keys_handler.dart';
 import 'http/json_response.dart';
 import 'middleware/app_check_middleware.dart';
 import 'middleware/authentication_middleware.dart';
@@ -21,6 +22,7 @@ Handler buildApp(Providers providers) {
   final agentCard = homewardAgentCard(config.publicUrl);
   final a2a = A2aHandler(turns: providers.turns, tasks: providers.tasks);
   final sessions = SessionsHandler(providers.sessions);
+  final keys = KeysHandler(providers.verifyKey);
   final verified = const Pipeline()
       .addMiddleware(authenticationMiddleware(providers.identity))
       .addMiddleware(
@@ -41,6 +43,10 @@ Handler buildApp(Providers providers) {
           .addMiddleware(geminiKeyMiddleware())
           .addMiddleware(rateLimitMiddleware(providers.turnLimiter))
           .addHandler(a2a.call),
+    )
+    ..post(
+      '/api/keys/verify',
+      verified.addMiddleware(geminiKeyMiddleware()).addHandler(keys.verify),
     )
     ..post('/api/sessions', verified.addHandler(sessions.create));
   return const Pipeline()

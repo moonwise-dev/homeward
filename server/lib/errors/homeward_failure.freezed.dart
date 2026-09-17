@@ -213,8 +213,8 @@ return $default(_that.code,_that.message,_that.retryAfter);case _:
 /// @nodoc
 
 
-class _HomewardFailure implements HomewardFailure {
-  const _HomewardFailure({required this.code, required this.message, this.retryAfter});
+class _HomewardFailure extends HomewardFailure {
+  const _HomewardFailure({required this.code, required this.message, this.retryAfter}): super._();
   
 
 @override final  HomewardErrorCode code;

@@ -5,6 +5,7 @@ import 'package:homeward_server/auth/app_check_verifier.dart';
 import 'package:homeward_server/auth/identity_verifier.dart';
 import 'package:homeward_server/config/server_config.dart';
 import 'package:homeward_server/data/providers/providers.dart';
+import 'package:homeward_server/gemini/gemini_exception.dart';
 
 import '../agent/turn/scripted_interactions.dart';
 import '../tools/tool_fixtures.dart';
@@ -38,6 +39,11 @@ Providers testProviders({
   identity: const TokenIdentityVerifier({'id-token-1': 'uid-1'}),
   appCheck: const TokenAppCheckVerifier({'app-check-1'}),
   createInteraction: (script ?? ScriptedInteractions([])).call,
+  verifyKey: (apiKey) async {
+    if (apiKey != 'gemini-key-1') {
+      throw const GeminiKeyInvalid('API key not valid');
+    }
+  },
   markets: realMarkets,
   prompts: PromptAssembler.load(Directory('prompts')),
 );

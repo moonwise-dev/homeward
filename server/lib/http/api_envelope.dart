@@ -9,5 +9,9 @@ Response apiOk(int statusCode, Object data) =>
 Response apiError(int statusCode, HomewardFailure failure) =>
     jsonResponse(statusCode, {
       'ok': false,
-      'error': {'code': failure.code.wireName, 'message': failure.message},
+      'error': {
+        'code': failure.code.wireName,
+        'message': failure.message,
+        'retryAfterSeconds': ?failure.retryAfterSeconds,
+      },
     });

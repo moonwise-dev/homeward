@@ -143,6 +143,38 @@ void main() {
     );
   });
 
+  test('verifies Gemini keys only for verified callers', () async {
+    final handler = app();
+
+    Future<Response> verify(Map<String, String> headers) =>
+        send(handler, 'POST', '/api/keys/verify', headers: headers);
+
+    final anonymous = await verify({'x-homeward-gemini-key': 'gemini-key-1'});
+    final missing = await verify(verifiedHeaders);
+    final valid = await verify({
+      ...verifiedHeaders,
+      'x-homeward-gemini-key': 'gemini-key-1',
+    });
+    final invalid = await verify({
+      ...verifiedHeaders,
+      'x-homeward-gemini-key': 'AQ.wrong',
+    });
+
+    expect(anonymous.statusCode, 401);
+    expect(missing.statusCode, 400);
+    expect(
+      (await json(missing))['error'],
+      containsPair('code', 'gemini_key_missing'),
+    );
+    expect(valid.statusCode, 200);
+    expect(await json(valid), {'ok': true, 'data': <String, Object?>{}});
+    expect(invalid.statusCode, 422);
+    expect(
+      (await json(invalid))['error'],
+      containsPair('code', 'gemini_key_invalid'),
+    );
+  });
+
   test('skips App Check when it is not enforced', () async {
     final response = await send(
       app(environment: {'HOMEWARD_APP_CHECK_ENFORCED': 'false'}),

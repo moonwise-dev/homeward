@@ -11,7 +11,7 @@ validation, plan state, and the board. It holds no Gemini key of its own.
 | --- | --- | --- | --- |
 | GET | `/.well-known/agent-card.json` | none | A2A agent card |
 | POST | `/a2a` | Firebase ID token, App Check, Gemini key | A2A JSON-RPC: `message/stream`, `tasks/get`, `tasks/cancel` |
-| POST | `/api/keys/verify` | Firebase ID token, App Check, Gemini key | Checks the key can use the configured turn model |
+| POST | `/api/keys/verify` | Firebase ID token, App Check, Gemini key | Looks up the first turn model with the key, which spends no generate request: 200, or 422 `gemini_key_invalid` |
 | POST | `/api/sessions` | Firebase ID token, App Check | Creates a session and an empty plan |
 | DELETE | `/api/sessions/:id` | Firebase ID token, App Check | Deletes session, turns, plan |
 | DELETE | `/api/me` | Firebase ID token, App Check | Deletes every session of the caller |
@@ -20,7 +20,8 @@ validation, plan state, and the board. It holds no Gemini key of its own.
 | GET | `/live` | Phase 2 | Voice WebSocket door |
 
 `/api/*` routes use the envelope `{ "ok": true, "data": {} }` and
-`{ "ok": false, "error": { "code": "", "message": "" } }`. `/a2a` uses JSON-RPC
+`{ "ok": false, "error": { "code": "", "message": "", "retryAfterSeconds": 0 } }`,
+where `retryAfterSeconds` appears only when waiting helps. `/a2a` uses JSON-RPC
 errors with the same codes in `error.data.code`.
 
 ## Middleware Order

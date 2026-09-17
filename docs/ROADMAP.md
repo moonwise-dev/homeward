@@ -164,6 +164,8 @@ Decisions from the planning session on 2026-09-16.
 | D71 | A single resolved market | `resolve_market` selects it for the plan in the same model round, and the surface offers a change | The buyer confirms every market in a picker first, one extra turn per plan; a market draft committed with the profile |
 | D72 | Turn model order | `gemini-3.5-flash` first and `gemini-3.8-flash` as fallback, after live turns found 3.8 stalling or failing mid-stream in every turn; quality compared again in the recording week | 3.8 first; 3.5 only |
 | D73 | A model failing after its text streamed | Take the round back and retry it on the next model while no A2UI message of the round was accepted, since clients replace the full text | Fail the turn once any text streamed |
+| D74 | Plans list in M1 | Plans started during this app run, held in app memory, while the server keeps sessions in memory; the Firestore list replaces it in M2 | A server list route over in-memory sessions; no plans screen until M2 |
+| D75 | Gemini key verification | `POST /api/keys/verify` looks up the first turn model with the key, which spends none of the free daily generate requests | Save the key unchecked and let the first turn report `gemini_key_invalid` |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.
