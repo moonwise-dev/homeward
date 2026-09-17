@@ -276,7 +276,11 @@ final class TurnRun {
             _log.info(
               LogEntry(
                 'A2UI message rejected',
-                fields: {'turn': turn, 'path': failure.path},
+                fields: {
+                  'turn': turn,
+                  'path': failure.path,
+                  'reason': failure.message,
+                },
               ),
             );
             _pendingFailures.add(failure);

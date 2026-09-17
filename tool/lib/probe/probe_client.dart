@@ -33,7 +33,8 @@ final class ProbeClient {
     required String idToken,
     required String geminiKey,
     required String sessionId,
-    required String text,
+    required List<A2aPart> parts,
+    Map<String, Object?>? metadata,
   }) async* {
     final request = http.Request('POST', server.resolve('a2a'))
       ..headers.addAll({
@@ -51,7 +52,8 @@ final class ProbeClient {
           params: MessageSendParams(
             message: A2aMessage(
               role: A2aRole.user,
-              parts: [A2aPart.text(text: text)],
+              parts: parts,
+              metadata: metadata,
               messageId: DateTime.now().microsecondsSinceEpoch.toString(),
               contextId: sessionId,
             ),

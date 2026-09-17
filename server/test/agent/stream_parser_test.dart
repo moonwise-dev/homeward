@@ -72,6 +72,20 @@ void main() {
     expect(parser.add('\n'), [const ParsedOutput.a2uiLine('{"a":1}')]);
   });
 
+  test('ends a block whose closing fence is the last output', () {
+    final parser = StreamParser();
+    final outputs = [
+      ...parser.add('Fill this in.\n```a2ui\n$createSurface\n``'),
+      ...parser.add('`'),
+      ...parser.close(),
+    ];
+
+    expect(outputs, [
+      const ParsedOutput.prose('Fill this in.\n'),
+      const ParsedOutput.a2uiLine(createSurface),
+    ]);
+  });
+
   test('flushes an unterminated block and trailing prose on close', () {
     final block = StreamParser()..add('```a2ui\n{"a":1}');
     expect(block.close(), [const ParsedOutput.a2uiLine('{"a":1}')]);

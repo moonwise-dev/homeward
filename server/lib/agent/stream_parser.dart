@@ -23,8 +23,11 @@ final class StreamParser {
     final rest = _pending.toString();
     _pending.clear();
     if (_insideBlock) {
+      _insideBlock = false;
+      final line = rest.trim();
       return [
-        if (rest.trim().isNotEmpty) ParsedOutput.a2uiLine(rest.trim()),
+        if (line.isNotEmpty && line != _closingFence)
+          ParsedOutput.a2uiLine(line),
       ];
     }
     return [if (rest.isNotEmpty) ParsedOutput.prose(rest)];
