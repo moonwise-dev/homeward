@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Plan {
 
-@MarketIdJsonConverter() MarketId? get marketId; BuyerProfile get profile; Scenario? get scenario;
+@MarketIdJsonConverter() MarketId? get marketId; BuyerProfile get profile; BuyerProfile? get profileDraft; Scenario? get scenario; Scenario? get scenarioDraft;
 /// Create a copy of Plan
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $PlanCopyWith<Plan> get copyWith => _$PlanCopyWithImpl<Plan>(this as Plan, _$ide
 @override
 bool operator ==(Object other) {
   final _this = this as Plan;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Plan&&(identical(other.marketId, _this.marketId) || other.marketId == _this.marketId)&&(identical(other.profile, _this.profile) || other.profile == _this.profile)&&(identical(other.scenario, _this.scenario) || other.scenario == _this.scenario));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Plan&&(identical(other.marketId, _this.marketId) || other.marketId == _this.marketId)&&(identical(other.profile, _this.profile) || other.profile == _this.profile)&&(identical(other.profileDraft, _this.profileDraft) || other.profileDraft == _this.profileDraft)&&(identical(other.scenario, _this.scenario) || other.scenario == _this.scenario)&&(identical(other.scenarioDraft, _this.scenarioDraft) || other.scenarioDraft == _this.scenarioDraft));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Plan;
-  return Object.hash(runtimeType,_this.marketId,_this.profile,_this.scenario);
+  return Object.hash(runtimeType,_this.marketId,_this.profile,_this.profileDraft,_this.scenario,_this.scenarioDraft);
 }
 
 @override
 String toString() {
   final _this = this as Plan;
-  return 'Plan(marketId: ${_this.marketId}, profile: ${_this.profile}, scenario: ${_this.scenario})';
+  return 'Plan(marketId: ${_this.marketId}, profile: ${_this.profile}, profileDraft: ${_this.profileDraft}, scenario: ${_this.scenario}, scenarioDraft: ${_this.scenarioDraft})';
 }
 
 
@@ -54,11 +54,11 @@ abstract mixin class $PlanCopyWith<$Res>  {
   factory $PlanCopyWith(Plan value, $Res Function(Plan) _then) = _$PlanCopyWithImpl;
 @useResult
 $Res call({
-@MarketIdJsonConverter() MarketId? marketId, BuyerProfile profile, Scenario? scenario
+@MarketIdJsonConverter() MarketId? marketId, BuyerProfile profile, BuyerProfile? profileDraft, Scenario? scenario, Scenario? scenarioDraft
 });
 
 
-$BuyerProfileCopyWith<$Res> get profile;$ScenarioCopyWith<$Res>? get scenario;
+$BuyerProfileCopyWith<$Res> get profile;$BuyerProfileCopyWith<$Res>? get profileDraft;$ScenarioCopyWith<$Res>? get scenario;$ScenarioCopyWith<$Res>? get scenarioDraft;
 
 }
 /// @nodoc
@@ -71,11 +71,13 @@ class _$PlanCopyWithImpl<$Res>
 
 /// Create a copy of Plan
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? marketId = freezed,Object? profile = null,Object? scenario = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? marketId = freezed,Object? profile = null,Object? profileDraft = freezed,Object? scenario = freezed,Object? scenarioDraft = freezed,}) {
   return _then(Plan(
 marketId: freezed == marketId ? _self.marketId : marketId // ignore: cast_nullable_to_non_nullable
 as MarketId?,profile: null == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
-as BuyerProfile,scenario: freezed == scenario ? _self.scenario : scenario // ignore: cast_nullable_to_non_nullable
+as BuyerProfile,profileDraft: freezed == profileDraft ? _self.profileDraft : profileDraft // ignore: cast_nullable_to_non_nullable
+as BuyerProfile?,scenario: freezed == scenario ? _self.scenario : scenario // ignore: cast_nullable_to_non_nullable
+as Scenario?,scenarioDraft: freezed == scenarioDraft ? _self.scenarioDraft : scenarioDraft // ignore: cast_nullable_to_non_nullable
 as Scenario?,
   ));
 }
@@ -92,6 +94,18 @@ $BuyerProfileCopyWith<$Res> get profile {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
+$BuyerProfileCopyWith<$Res>? get profileDraft {
+    if (_self.profileDraft == null) {
+    return null;
+  }
+
+  return $BuyerProfileCopyWith<$Res>(_self.profileDraft!, (value) {
+    return _then(_self.copyWith(profileDraft: value));
+  });
+}/// Create a copy of Plan
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
 $ScenarioCopyWith<$Res>? get scenario {
     if (_self.scenario == null) {
     return null;
@@ -99,6 +113,18 @@ $ScenarioCopyWith<$Res>? get scenario {
 
   return $ScenarioCopyWith<$Res>(_self.scenario!, (value) {
     return _then(_self.copyWith(scenario: value));
+  });
+}/// Create a copy of Plan
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ScenarioCopyWith<$Res>? get scenarioDraft {
+    if (_self.scenarioDraft == null) {
+    return null;
+  }
+
+  return $ScenarioCopyWith<$Res>(_self.scenarioDraft!, (value) {
+    return _then(_self.copyWith(scenarioDraft: value));
   });
 }
 }
@@ -182,10 +208,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@MarketIdJsonConverter()  MarketId? marketId,  BuyerProfile profile,  Scenario? scenario)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@MarketIdJsonConverter()  MarketId? marketId,  BuyerProfile profile,  BuyerProfile? profileDraft,  Scenario? scenario,  Scenario? scenarioDraft)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Plan() when $default != null:
-return $default(_that.marketId,_that.profile,_that.scenario);case _:
+return $default(_that.marketId,_that.profile,_that.profileDraft,_that.scenario,_that.scenarioDraft);case _:
   return orElse();
 
 }
@@ -203,10 +229,10 @@ return $default(_that.marketId,_that.profile,_that.scenario);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@MarketIdJsonConverter()  MarketId? marketId,  BuyerProfile profile,  Scenario? scenario)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@MarketIdJsonConverter()  MarketId? marketId,  BuyerProfile profile,  BuyerProfile? profileDraft,  Scenario? scenario,  Scenario? scenarioDraft)  $default,) {final _that = this;
 switch (_that) {
 case _Plan():
-return $default(_that.marketId,_that.profile,_that.scenario);case _:
+return $default(_that.marketId,_that.profile,_that.profileDraft,_that.scenario,_that.scenarioDraft);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -223,10 +249,10 @@ return $default(_that.marketId,_that.profile,_that.scenario);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@MarketIdJsonConverter()  MarketId? marketId,  BuyerProfile profile,  Scenario? scenario)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@MarketIdJsonConverter()  MarketId? marketId,  BuyerProfile profile,  BuyerProfile? profileDraft,  Scenario? scenario,  Scenario? scenarioDraft)?  $default,) {final _that = this;
 switch (_that) {
 case _Plan() when $default != null:
-return $default(_that.marketId,_that.profile,_that.scenario);case _:
+return $default(_that.marketId,_that.profile,_that.profileDraft,_that.scenario,_that.scenarioDraft);case _:
   return null;
 
 }
@@ -238,12 +264,14 @@ return $default(_that.marketId,_that.profile,_that.scenario);case _:
 @JsonSerializable()
 
 class _Plan implements Plan {
-  const _Plan({@MarketIdJsonConverter() this.marketId, this.profile = const BuyerProfile(), this.scenario});
+  const _Plan({@MarketIdJsonConverter() this.marketId, this.profile = const BuyerProfile(), this.profileDraft, this.scenario, this.scenarioDraft});
   factory _Plan.fromJson(Map<String, dynamic> json) => _$PlanFromJson(json);
 
 @override@MarketIdJsonConverter() final  MarketId? marketId;
 @override@JsonKey() final  BuyerProfile profile;
+@override final  BuyerProfile? profileDraft;
 @override final  Scenario? scenario;
+@override final  Scenario? scenarioDraft;
 
 /// Create a copy of Plan
 /// with the given fields replaced by the non-null parameter values.
@@ -258,18 +286,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Plan&&(identical(other.marketId, marketId) || other.marketId == marketId)&&(identical(other.profile, profile) || other.profile == profile)&&(identical(other.scenario, scenario) || other.scenario == scenario));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Plan&&(identical(other.marketId, marketId) || other.marketId == marketId)&&(identical(other.profile, profile) || other.profile == profile)&&(identical(other.profileDraft, profileDraft) || other.profileDraft == profileDraft)&&(identical(other.scenario, scenario) || other.scenario == scenario)&&(identical(other.scenarioDraft, scenarioDraft) || other.scenarioDraft == scenarioDraft));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,marketId,profile,scenario);
+    return Object.hash(runtimeType,marketId,profile,profileDraft,scenario,scenarioDraft);
 }
 
 @override
 String toString() {
-    return 'Plan(marketId: $marketId, profile: $profile, scenario: $scenario)';
+    return 'Plan(marketId: $marketId, profile: $profile, profileDraft: $profileDraft, scenario: $scenario, scenarioDraft: $scenarioDraft)';
 }
 
 
@@ -280,11 +308,11 @@ abstract mixin class _$PlanCopyWith<$Res> implements $PlanCopyWith<$Res> {
   factory _$PlanCopyWith(_Plan value, $Res Function(_Plan) _then) = __$PlanCopyWithImpl;
 @override @useResult
 $Res call({
-@MarketIdJsonConverter() MarketId? marketId, BuyerProfile profile, Scenario? scenario
+@MarketIdJsonConverter() MarketId? marketId, BuyerProfile profile, BuyerProfile? profileDraft, Scenario? scenario, Scenario? scenarioDraft
 });
 
 
-@override $BuyerProfileCopyWith<$Res> get profile;@override $ScenarioCopyWith<$Res>? get scenario;
+@override $BuyerProfileCopyWith<$Res> get profile;@override $BuyerProfileCopyWith<$Res>? get profileDraft;@override $ScenarioCopyWith<$Res>? get scenario;@override $ScenarioCopyWith<$Res>? get scenarioDraft;
 
 }
 /// @nodoc
@@ -297,11 +325,13 @@ class __$PlanCopyWithImpl<$Res>
 
 /// Create a copy of Plan
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? marketId = freezed,Object? profile = null,Object? scenario = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? marketId = freezed,Object? profile = null,Object? profileDraft = freezed,Object? scenario = freezed,Object? scenarioDraft = freezed,}) {
   return _then(_Plan(
 marketId: freezed == marketId ? _self.marketId : marketId // ignore: cast_nullable_to_non_nullable
 as MarketId?,profile: null == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
-as BuyerProfile,scenario: freezed == scenario ? _self.scenario : scenario // ignore: cast_nullable_to_non_nullable
+as BuyerProfile,profileDraft: freezed == profileDraft ? _self.profileDraft : profileDraft // ignore: cast_nullable_to_non_nullable
+as BuyerProfile?,scenario: freezed == scenario ? _self.scenario : scenario // ignore: cast_nullable_to_non_nullable
+as Scenario?,scenarioDraft: freezed == scenarioDraft ? _self.scenarioDraft : scenarioDraft // ignore: cast_nullable_to_non_nullable
 as Scenario?,
   ));
 }
@@ -319,6 +349,18 @@ $BuyerProfileCopyWith<$Res> get profile {
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
+$BuyerProfileCopyWith<$Res>? get profileDraft {
+    if (_self.profileDraft == null) {
+    return null;
+  }
+
+  return $BuyerProfileCopyWith<$Res>(_self.profileDraft!, (value) {
+    return _then(_self.copyWith(profileDraft: value));
+  });
+}/// Create a copy of Plan
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
 $ScenarioCopyWith<$Res>? get scenario {
     if (_self.scenario == null) {
     return null;
@@ -326,6 +368,18 @@ $ScenarioCopyWith<$Res>? get scenario {
 
   return $ScenarioCopyWith<$Res>(_self.scenario!, (value) {
     return _then(_self.copyWith(scenario: value));
+  });
+}/// Create a copy of Plan
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ScenarioCopyWith<$Res>? get scenarioDraft {
+    if (_self.scenarioDraft == null) {
+    return null;
+  }
+
+  return $ScenarioCopyWith<$Res>(_self.scenarioDraft!, (value) {
+    return _then(_self.copyWith(scenarioDraft: value));
   });
 }
 }

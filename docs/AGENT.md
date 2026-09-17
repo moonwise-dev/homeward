@@ -102,7 +102,8 @@ Tools are Dart classes in `server/lib/tools`, one per file, each an adapter over
 `common` and repositories. A tool returns three things:
 
 - `modelResult`: compact JSON the model reasons over.
-- `planPatch`: changes to the plan record, only for `propose_*` and
+- `plan`: the updated plan record, only for `propose_*`, which store drafts
+  (`profileDraft`, `scenarioDraft`) that the buyer later commits, and
   `release_decision`.
 - `seeds`: data model slices the server injects into surfaces created this turn.
 
@@ -116,9 +117,9 @@ cannot, because their inputs come from what the buyer wrote.
 | --- | --- | --- | --- |
 | `resolve_market` | `placeName`, and the model's `countryCode` and `subdivisionCode` | Candidate markets with name and coverage, whether one is confirmed, curated markets when none resolve | `/selection` |
 | `load_market` | `marketId` | Coverage, currency, profile fields with reasons, kinds of lending rule, never rule values | `/market` |
-| `propose_profile` | Profile fields stated by the buyer | Accepted and rejected fields | `/profile` draft |
-| `propose_scenario` | Price, down payment, term, loan type stated by the buyer | Accepted fields | `/scenario` draft |
-| `compute_affordability` | — | Binding constraint, headroom category | `/derived/affordability`, `/derived/downPaymentBounds`, `/derived/payment` |
+| `propose_profile` | Facts the buyer stated: countries as ISO codes, enums, amounts as `{ amount, currency? }` in major units | Accepted and rejected facts with reasons | `/profile` from the plan's profile draft |
+| `propose_scenario` | Price, and any down payment, term, loan type, or association fee the buyer stated | Accepted, defaulted, and rejected fields; unstated values come from the market: the smallest down payment the loan-to-value limit allows, the first loan type and its default spread, the shortest maximum term or 30 years | `/scenario` from the plan's scenario draft |
+| `compute_affordability` | — | `assessed` with the binding limit and headroom `comfortable`, `atLimit`, or `overLimit`; `incomplete` with missing facts; or what it needs first. Never amounts | `/derived/affordability`, `/derived/downPaymentBounds`, `/derived/payment` |
 | `estimate_purchase_costs` | — | Cost item names and which dominate | `/derived/costs`, `/derived/cashNeeded` |
 | `get_obstacles` | — | Obstacle IDs and severities | `/market/obstacles` |
 | `get_process` | — | Step IDs | `/market/process` |

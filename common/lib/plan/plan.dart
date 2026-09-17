@@ -13,7 +13,9 @@ abstract class Plan with _$Plan {
   const factory Plan({
     @MarketIdJsonConverter() MarketId? marketId,
     @Default(BuyerProfile()) BuyerProfile profile,
+    BuyerProfile? profileDraft,
     Scenario? scenario,
+    Scenario? scenarioDraft,
   }) = _Plan;
 
   factory Plan.fromJson(Map<String, Object?> json) => _$PlanFromJson(json);
