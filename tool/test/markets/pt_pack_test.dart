@@ -92,6 +92,7 @@ void main() {
     );
 
     expect(refund.recomputeAs.residency, Residency.resident);
+    expect(refund.recomputeAs.use, PropertyUse.primary);
     expect(refund.deadline, Period.parse('P2Y'));
     expect(refund.claimWindow, Period.parse('P6M'));
     expect(
@@ -115,6 +116,51 @@ void main() {
     expect(
       market.lending.maxLtv.map((rule) => rule.id),
       ['ltv-secondary-home', 'ltv-nonresident-lender-norm'],
+    );
+  });
+
+  test('the cash the buyer needs includes every charge', () {
+    final market = resolve(buyer(taxResidence: 'SE'));
+
+    final costs = estimatePurchaseCosts(
+      scenario: scenario,
+      market: market,
+    ) as EstimatedPurchaseCosts;
+
+    expect(costs.charges.map((charge) => charge.amount), [
+      euro(26250),
+      euro(2800),
+      euro(1470),
+    ]);
+    expect(costs.total, euro(30520));
+    expect(costs.refundable, euro(14822, 48));
+    expect(costs.cashNeeded, euro(135520));
+  });
+
+  test('a resident pays no refundable part', () {
+    final costs = estimatePurchaseCosts(
+      scenario: scenario,
+      market: resolve(
+        buyer(taxResidence: 'PT', use: PropertyUse.primary),
+      ),
+    ) as EstimatedPurchaseCosts;
+
+    expect(costs.charges.first.refundable, isNull);
+    expect(costs.total, euro(15697, 52));
+  });
+
+  test('costs wait for the facts that pick the table', () {
+    final market = resolve(
+      buyer(taxResidence: 'SE').copyWith(use: null),
+    );
+
+    expect(
+      estimatePurchaseCosts(scenario: scenario, market: market),
+      isA<IncompletePurchaseCosts>().having(
+        (costs) => costs.missing,
+        'missing',
+        {ProfileField.use},
+      ),
     );
   });
 

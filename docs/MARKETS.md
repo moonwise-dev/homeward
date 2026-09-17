@@ -193,8 +193,16 @@ may omit `upTo`.
 A `refund` returns part of a charge when the buyer later meets a condition.
 `when` is a buyer predicate on intent, such as `residencyIntent: becomeResident`.
 The refundable amount is the charge minus the same group recomputed for the
-profile overridden by `recomputeAs`, such as `residency: resident`. `deadline`
-and `claimWindow` are durations that `ForeignBuyerObstacles` shows with dates.
+profile overridden by `recomputeAs`, such as `residency: resident, use: primary`
+for a buyer who moves into the home they bought. `deadline` and `claimWindow`
+are durations that `ForeignBuyerObstacles` shows with dates.
+
+Because the app recomputes costs while the buyer drags a slider, the rule the
+refund is measured against travels in the resolved market rather than being
+re-resolved per keystroke: when the `when` predicate applies, `resolveForBuyer`
+puts the rule that would win under `recomputeAs` in `refundBaselines`, keyed by
+the charged rule (D88). A buyer not claiming the refund carries none, and their
+charge shows no refundable part.
 
 ### Loan Types
 

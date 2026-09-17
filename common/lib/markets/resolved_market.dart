@@ -1,25 +1,26 @@
-import 'locale_tag.dart';
-import 'locale_tag_json_converter.dart';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'cost_precedence.dart';
-import 'coverage.dart';
 import '../money/currency.dart';
 import '../money/currency_json_converter.dart';
 import '../profile/buyer_profile.dart';
 import '../profile/profile_field.dart';
 import 'applicability.dart';
+import 'cost_precedence.dart';
 import 'cost_rule.dart';
+import 'coverage.dart';
 import 'identified.dart';
 import 'lending_rules.dart';
 import 'living_costs.dart';
 import 'loan_type.dart';
+import 'locale_tag.dart';
+import 'locale_tag_json_converter.dart';
 import 'market_id.dart';
 import 'market_id_json_converter.dart';
 import 'market_rule_pack.dart';
+import 'predicate_profile.dart';
 import 'profile_field_requirement.dart';
 import 'reference_rate.dart';
+import 'refund_rule.dart';
 import 'rule_section.dart';
 import 'source.dart';
 
@@ -38,6 +39,7 @@ abstract class ResolvedMarket with _$ResolvedMarket {
     required List<CostRule> purchaseCosts,
     required List<CostRule> recurringCosts,
     required List<LoanType> loanTypes,
+    @Default({}) Map<String, CostRule> refundBaselines,
     @Default([]) List<ProfileFieldRequirement> profileFields,
     @Default({}) Map<String, ReferenceRate> referenceRates,
     LivingCosts? livingCosts,
@@ -127,6 +129,16 @@ ResolvedMarket resolveForBuyer(
     keep(pack.recurringCosts, RuleSection.recurringCosts),
   );
   final profileFields = keep(pack.profileFields, RuleSection.profileFields);
+  final refundBaselines = <String, CostRule>{};
+  for (final rule in purchaseCosts) {
+    if (rule.refund case final refund?
+        when applicabilityOf(refund.when, profile: profile, market: pack.id)
+            is Applies) {
+      if (_baselineFor(rule, refund, pack, profile) case final baseline?) {
+        refundBaselines[rule.id] = baseline;
+      }
+    }
+  }
   return ResolvedMarket(
     id: pack.id,
     name: pack.name,
@@ -136,6 +148,7 @@ ResolvedMarket resolveForBuyer(
     purchaseCosts: purchaseCosts,
     recurringCosts: recurringCosts,
     loanTypes: pack.loanTypes,
+    refundBaselines: refundBaselines,
     profileFields: profileFields,
     referenceRates: {
       for (final loanType in pack.loanTypes)
@@ -149,4 +162,30 @@ ResolvedMarket resolveForBuyer(
       for (final pending in pendingRules.values) ...pending.missing,
     },
   );
+}
+
+CostRule? _baselineFor(
+  CostRule rule,
+  RefundRule refund,
+  MarketRulePack pack,
+  BuyerProfile profile,
+) {
+  final asRefunded = profileMeeting(
+    refund.recomputeAs,
+    profile: profile,
+    market: pack.id,
+  );
+  final baseline = costsByPrecedence([
+    for (final candidate in pack.purchaseCosts)
+      if (candidate.group == rule.group &&
+          applicabilityOf(
+            candidate.appliesTo,
+            profile: asRefunded,
+            market: pack.id,
+          ) is Applies)
+        candidate,
+  ]);
+  return baseline.length == 1 && baseline.single.id != rule.id
+      ? baseline.single
+      : null;
 }

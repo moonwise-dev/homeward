@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ResolvedMarket {
 
-@MarketIdJsonConverter() MarketId get id; String get name; Coverage get coverage;@CurrencyJsonConverter() Currency get currency;@LocaleTagJsonConverter() LocaleTag get locale; LendingRules get lending; List<CostRule> get purchaseCosts; List<CostRule> get recurringCosts; List<LoanType> get loanTypes; List<ProfileFieldRequirement> get profileFields; Map<String, ReferenceRate> get referenceRates; LivingCosts? get livingCosts; List<Source> get sources; Map<String, PendingRule> get pendingRules; Set<ProfileField> get requiredFields;
+@MarketIdJsonConverter() MarketId get id; String get name; Coverage get coverage;@CurrencyJsonConverter() Currency get currency;@LocaleTagJsonConverter() LocaleTag get locale; LendingRules get lending; List<CostRule> get purchaseCosts; List<CostRule> get recurringCosts; List<LoanType> get loanTypes; Map<String, CostRule> get refundBaselines; List<ProfileFieldRequirement> get profileFields; Map<String, ReferenceRate> get referenceRates; LivingCosts? get livingCosts; List<Source> get sources; Map<String, PendingRule> get pendingRules; Set<ProfileField> get requiredFields;
 /// Create a copy of ResolvedMarket
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $ResolvedMarketCopyWith<ResolvedMarket> get copyWith => _$ResolvedMarketCopyWith
 @override
 bool operator ==(Object other) {
   final _this = this as ResolvedMarket;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResolvedMarket&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.coverage, _this.coverage) || other.coverage == _this.coverage)&&(identical(other.currency, _this.currency) || other.currency == _this.currency)&&(identical(other.locale, _this.locale) || other.locale == _this.locale)&&(identical(other.lending, _this.lending) || other.lending == _this.lending)&&const DeepCollectionEquality().equals(other.purchaseCosts, _this.purchaseCosts)&&const DeepCollectionEquality().equals(other.recurringCosts, _this.recurringCosts)&&const DeepCollectionEquality().equals(other.loanTypes, _this.loanTypes)&&const DeepCollectionEquality().equals(other.profileFields, _this.profileFields)&&const DeepCollectionEquality().equals(other.referenceRates, _this.referenceRates)&&(identical(other.livingCosts, _this.livingCosts) || other.livingCosts == _this.livingCosts)&&const DeepCollectionEquality().equals(other.sources, _this.sources)&&const DeepCollectionEquality().equals(other.pendingRules, _this.pendingRules)&&const DeepCollectionEquality().equals(other.requiredFields, _this.requiredFields));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResolvedMarket&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.coverage, _this.coverage) || other.coverage == _this.coverage)&&(identical(other.currency, _this.currency) || other.currency == _this.currency)&&(identical(other.locale, _this.locale) || other.locale == _this.locale)&&(identical(other.lending, _this.lending) || other.lending == _this.lending)&&const DeepCollectionEquality().equals(other.purchaseCosts, _this.purchaseCosts)&&const DeepCollectionEquality().equals(other.recurringCosts, _this.recurringCosts)&&const DeepCollectionEquality().equals(other.loanTypes, _this.loanTypes)&&const DeepCollectionEquality().equals(other.refundBaselines, _this.refundBaselines)&&const DeepCollectionEquality().equals(other.profileFields, _this.profileFields)&&const DeepCollectionEquality().equals(other.referenceRates, _this.referenceRates)&&(identical(other.livingCosts, _this.livingCosts) || other.livingCosts == _this.livingCosts)&&const DeepCollectionEquality().equals(other.sources, _this.sources)&&const DeepCollectionEquality().equals(other.pendingRules, _this.pendingRules)&&const DeepCollectionEquality().equals(other.requiredFields, _this.requiredFields));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as ResolvedMarket;
-  return Object.hash(runtimeType,_this.id,_this.name,_this.coverage,_this.currency,_this.locale,_this.lending,const DeepCollectionEquality().hash(_this.purchaseCosts),const DeepCollectionEquality().hash(_this.recurringCosts),const DeepCollectionEquality().hash(_this.loanTypes),const DeepCollectionEquality().hash(_this.profileFields),const DeepCollectionEquality().hash(_this.referenceRates),_this.livingCosts,const DeepCollectionEquality().hash(_this.sources),const DeepCollectionEquality().hash(_this.pendingRules),const DeepCollectionEquality().hash(_this.requiredFields));
+  return Object.hash(runtimeType,_this.id,_this.name,_this.coverage,_this.currency,_this.locale,_this.lending,const DeepCollectionEquality().hash(_this.purchaseCosts),const DeepCollectionEquality().hash(_this.recurringCosts),const DeepCollectionEquality().hash(_this.loanTypes),const DeepCollectionEquality().hash(_this.refundBaselines),const DeepCollectionEquality().hash(_this.profileFields),const DeepCollectionEquality().hash(_this.referenceRates),_this.livingCosts,const DeepCollectionEquality().hash(_this.sources),const DeepCollectionEquality().hash(_this.pendingRules),const DeepCollectionEquality().hash(_this.requiredFields));
 }
 
 @override
 String toString() {
   final _this = this as ResolvedMarket;
-  return 'ResolvedMarket(id: ${_this.id}, name: ${_this.name}, coverage: ${_this.coverage}, currency: ${_this.currency}, locale: ${_this.locale}, lending: ${_this.lending}, purchaseCosts: ${_this.purchaseCosts}, recurringCosts: ${_this.recurringCosts}, loanTypes: ${_this.loanTypes}, profileFields: ${_this.profileFields}, referenceRates: ${_this.referenceRates}, livingCosts: ${_this.livingCosts}, sources: ${_this.sources}, pendingRules: ${_this.pendingRules}, requiredFields: ${_this.requiredFields})';
+  return 'ResolvedMarket(id: ${_this.id}, name: ${_this.name}, coverage: ${_this.coverage}, currency: ${_this.currency}, locale: ${_this.locale}, lending: ${_this.lending}, purchaseCosts: ${_this.purchaseCosts}, recurringCosts: ${_this.recurringCosts}, loanTypes: ${_this.loanTypes}, refundBaselines: ${_this.refundBaselines}, profileFields: ${_this.profileFields}, referenceRates: ${_this.referenceRates}, livingCosts: ${_this.livingCosts}, sources: ${_this.sources}, pendingRules: ${_this.pendingRules}, requiredFields: ${_this.requiredFields})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $ResolvedMarketCopyWith<$Res>  {
   factory $ResolvedMarketCopyWith(ResolvedMarket value, $Res Function(ResolvedMarket) _then) = _$ResolvedMarketCopyWithImpl;
 @useResult
 $Res call({
-@MarketIdJsonConverter() MarketId id, String name, Coverage coverage,@CurrencyJsonConverter() Currency currency,@LocaleTagJsonConverter() LocaleTag locale, LendingRules lending, List<CostRule> purchaseCosts, List<CostRule> recurringCosts, List<LoanType> loanTypes, List<ProfileFieldRequirement> profileFields, Map<String, ReferenceRate> referenceRates, LivingCosts? livingCosts, List<Source> sources, Map<String, PendingRule> pendingRules, Set<ProfileField> requiredFields
+@MarketIdJsonConverter() MarketId id, String name, Coverage coverage,@CurrencyJsonConverter() Currency currency,@LocaleTagJsonConverter() LocaleTag locale, LendingRules lending, List<CostRule> purchaseCosts, List<CostRule> recurringCosts, List<LoanType> loanTypes, Map<String, CostRule> refundBaselines, List<ProfileFieldRequirement> profileFields, Map<String, ReferenceRate> referenceRates, LivingCosts? livingCosts, List<Source> sources, Map<String, PendingRule> pendingRules, Set<ProfileField> requiredFields
 });
 
 
@@ -71,7 +71,7 @@ class _$ResolvedMarketCopyWithImpl<$Res>
 
 /// Create a copy of ResolvedMarket
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? coverage = null,Object? currency = null,Object? locale = null,Object? lending = null,Object? purchaseCosts = null,Object? recurringCosts = null,Object? loanTypes = null,Object? profileFields = null,Object? referenceRates = null,Object? livingCosts = freezed,Object? sources = null,Object? pendingRules = null,Object? requiredFields = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? coverage = null,Object? currency = null,Object? locale = null,Object? lending = null,Object? purchaseCosts = null,Object? recurringCosts = null,Object? loanTypes = null,Object? refundBaselines = null,Object? profileFields = null,Object? referenceRates = null,Object? livingCosts = freezed,Object? sources = null,Object? pendingRules = null,Object? requiredFields = null,}) {
   return _then(ResolvedMarket(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as MarketId,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -82,7 +82,8 @@ as LocaleTag,lending: null == lending ? _self.lending : lending // ignore: cast_
 as LendingRules,purchaseCosts: null == purchaseCosts ? _self.purchaseCosts : purchaseCosts // ignore: cast_nullable_to_non_nullable
 as List<CostRule>,recurringCosts: null == recurringCosts ? _self.recurringCosts : recurringCosts // ignore: cast_nullable_to_non_nullable
 as List<CostRule>,loanTypes: null == loanTypes ? _self.loanTypes : loanTypes // ignore: cast_nullable_to_non_nullable
-as List<LoanType>,profileFields: null == profileFields ? _self.profileFields : profileFields // ignore: cast_nullable_to_non_nullable
+as List<LoanType>,refundBaselines: null == refundBaselines ? _self.refundBaselines : refundBaselines // ignore: cast_nullable_to_non_nullable
+as Map<String, CostRule>,profileFields: null == profileFields ? _self.profileFields : profileFields // ignore: cast_nullable_to_non_nullable
 as List<ProfileFieldRequirement>,referenceRates: null == referenceRates ? _self.referenceRates : referenceRates // ignore: cast_nullable_to_non_nullable
 as Map<String, ReferenceRate>,livingCosts: freezed == livingCosts ? _self.livingCosts : livingCosts // ignore: cast_nullable_to_non_nullable
 as LivingCosts?,sources: null == sources ? _self.sources : sources // ignore: cast_nullable_to_non_nullable
@@ -194,10 +195,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@MarketIdJsonConverter()  MarketId id,  String name,  Coverage coverage, @CurrencyJsonConverter()  Currency currency, @LocaleTagJsonConverter()  LocaleTag locale,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<ProfileFieldRequirement> profileFields,  Map<String, ReferenceRate> referenceRates,  LivingCosts? livingCosts,  List<Source> sources,  Map<String, PendingRule> pendingRules,  Set<ProfileField> requiredFields)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@MarketIdJsonConverter()  MarketId id,  String name,  Coverage coverage, @CurrencyJsonConverter()  Currency currency, @LocaleTagJsonConverter()  LocaleTag locale,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  Map<String, CostRule> refundBaselines,  List<ProfileFieldRequirement> profileFields,  Map<String, ReferenceRate> referenceRates,  LivingCosts? livingCosts,  List<Source> sources,  Map<String, PendingRule> pendingRules,  Set<ProfileField> requiredFields)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ResolvedMarket() when $default != null:
-return $default(_that.id,_that.name,_that.coverage,_that.currency,_that.locale,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.profileFields,_that.referenceRates,_that.livingCosts,_that.sources,_that.pendingRules,_that.requiredFields);case _:
+return $default(_that.id,_that.name,_that.coverage,_that.currency,_that.locale,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.refundBaselines,_that.profileFields,_that.referenceRates,_that.livingCosts,_that.sources,_that.pendingRules,_that.requiredFields);case _:
   return orElse();
 
 }
@@ -215,10 +216,10 @@ return $default(_that.id,_that.name,_that.coverage,_that.currency,_that.locale,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@MarketIdJsonConverter()  MarketId id,  String name,  Coverage coverage, @CurrencyJsonConverter()  Currency currency, @LocaleTagJsonConverter()  LocaleTag locale,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<ProfileFieldRequirement> profileFields,  Map<String, ReferenceRate> referenceRates,  LivingCosts? livingCosts,  List<Source> sources,  Map<String, PendingRule> pendingRules,  Set<ProfileField> requiredFields)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@MarketIdJsonConverter()  MarketId id,  String name,  Coverage coverage, @CurrencyJsonConverter()  Currency currency, @LocaleTagJsonConverter()  LocaleTag locale,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  Map<String, CostRule> refundBaselines,  List<ProfileFieldRequirement> profileFields,  Map<String, ReferenceRate> referenceRates,  LivingCosts? livingCosts,  List<Source> sources,  Map<String, PendingRule> pendingRules,  Set<ProfileField> requiredFields)  $default,) {final _that = this;
 switch (_that) {
 case _ResolvedMarket():
-return $default(_that.id,_that.name,_that.coverage,_that.currency,_that.locale,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.profileFields,_that.referenceRates,_that.livingCosts,_that.sources,_that.pendingRules,_that.requiredFields);case _:
+return $default(_that.id,_that.name,_that.coverage,_that.currency,_that.locale,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.refundBaselines,_that.profileFields,_that.referenceRates,_that.livingCosts,_that.sources,_that.pendingRules,_that.requiredFields);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -235,10 +236,10 @@ return $default(_that.id,_that.name,_that.coverage,_that.currency,_that.locale,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@MarketIdJsonConverter()  MarketId id,  String name,  Coverage coverage, @CurrencyJsonConverter()  Currency currency, @LocaleTagJsonConverter()  LocaleTag locale,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<ProfileFieldRequirement> profileFields,  Map<String, ReferenceRate> referenceRates,  LivingCosts? livingCosts,  List<Source> sources,  Map<String, PendingRule> pendingRules,  Set<ProfileField> requiredFields)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@MarketIdJsonConverter()  MarketId id,  String name,  Coverage coverage, @CurrencyJsonConverter()  Currency currency, @LocaleTagJsonConverter()  LocaleTag locale,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  Map<String, CostRule> refundBaselines,  List<ProfileFieldRequirement> profileFields,  Map<String, ReferenceRate> referenceRates,  LivingCosts? livingCosts,  List<Source> sources,  Map<String, PendingRule> pendingRules,  Set<ProfileField> requiredFields)?  $default,) {final _that = this;
 switch (_that) {
 case _ResolvedMarket() when $default != null:
-return $default(_that.id,_that.name,_that.coverage,_that.currency,_that.locale,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.profileFields,_that.referenceRates,_that.livingCosts,_that.sources,_that.pendingRules,_that.requiredFields);case _:
+return $default(_that.id,_that.name,_that.coverage,_that.currency,_that.locale,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.refundBaselines,_that.profileFields,_that.referenceRates,_that.livingCosts,_that.sources,_that.pendingRules,_that.requiredFields);case _:
   return null;
 
 }
@@ -250,7 +251,7 @@ return $default(_that.id,_that.name,_that.coverage,_that.currency,_that.locale,_
 @JsonSerializable()
 
 class _ResolvedMarket extends ResolvedMarket {
-  const _ResolvedMarket({@MarketIdJsonConverter() required this.id, required this.name, this.coverage = Coverage.curated, @CurrencyJsonConverter() required this.currency, @LocaleTagJsonConverter() required this.locale, required this.lending, required  List<CostRule> purchaseCosts, required  List<CostRule> recurringCosts, required  List<LoanType> loanTypes,  List<ProfileFieldRequirement> profileFields = const [],  Map<String, ReferenceRate> referenceRates = const {}, this.livingCosts, required  List<Source> sources, required  Map<String, PendingRule> pendingRules, required  Set<ProfileField> requiredFields}): _purchaseCosts = purchaseCosts,_recurringCosts = recurringCosts,_loanTypes = loanTypes,_profileFields = profileFields,_referenceRates = referenceRates,_sources = sources,_pendingRules = pendingRules,_requiredFields = requiredFields,super._();
+  const _ResolvedMarket({@MarketIdJsonConverter() required this.id, required this.name, this.coverage = Coverage.curated, @CurrencyJsonConverter() required this.currency, @LocaleTagJsonConverter() required this.locale, required this.lending, required  List<CostRule> purchaseCosts, required  List<CostRule> recurringCosts, required  List<LoanType> loanTypes,  Map<String, CostRule> refundBaselines = const {},  List<ProfileFieldRequirement> profileFields = const [],  Map<String, ReferenceRate> referenceRates = const {}, this.livingCosts, required  List<Source> sources, required  Map<String, PendingRule> pendingRules, required  Set<ProfileField> requiredFields}): _purchaseCosts = purchaseCosts,_recurringCosts = recurringCosts,_loanTypes = loanTypes,_refundBaselines = refundBaselines,_profileFields = profileFields,_referenceRates = referenceRates,_sources = sources,_pendingRules = pendingRules,_requiredFields = requiredFields,super._();
   factory _ResolvedMarket.fromJson(Map<String, dynamic> json) => _$ResolvedMarketFromJson(json);
 
 @override@MarketIdJsonConverter() final  MarketId id;
@@ -278,6 +279,13 @@ class _ResolvedMarket extends ResolvedMarket {
   if (_loanTypes is EqualUnmodifiableListView) return _loanTypes;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_loanTypes);
+}
+
+ final  Map<String, CostRule> _refundBaselines;
+@override@JsonKey() Map<String, CostRule> get refundBaselines {
+  if (_refundBaselines is EqualUnmodifiableMapView) return _refundBaselines;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_refundBaselines);
 }
 
  final  List<ProfileFieldRequirement> _profileFields;
@@ -330,18 +338,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ResolvedMarket&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.coverage, coverage) || other.coverage == coverage)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.lending, lending) || other.lending == lending)&&const DeepCollectionEquality().equals(other.purchaseCosts, _purchaseCosts)&&const DeepCollectionEquality().equals(other.recurringCosts, _recurringCosts)&&const DeepCollectionEquality().equals(other.loanTypes, _loanTypes)&&const DeepCollectionEquality().equals(other.profileFields, _profileFields)&&const DeepCollectionEquality().equals(other.referenceRates, _referenceRates)&&(identical(other.livingCosts, livingCosts) || other.livingCosts == livingCosts)&&const DeepCollectionEquality().equals(other.sources, _sources)&&const DeepCollectionEquality().equals(other.pendingRules, _pendingRules)&&const DeepCollectionEquality().equals(other.requiredFields, _requiredFields));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ResolvedMarket&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.coverage, coverage) || other.coverage == coverage)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.lending, lending) || other.lending == lending)&&const DeepCollectionEquality().equals(other.purchaseCosts, _purchaseCosts)&&const DeepCollectionEquality().equals(other.recurringCosts, _recurringCosts)&&const DeepCollectionEquality().equals(other.loanTypes, _loanTypes)&&const DeepCollectionEquality().equals(other.refundBaselines, _refundBaselines)&&const DeepCollectionEquality().equals(other.profileFields, _profileFields)&&const DeepCollectionEquality().equals(other.referenceRates, _referenceRates)&&(identical(other.livingCosts, livingCosts) || other.livingCosts == livingCosts)&&const DeepCollectionEquality().equals(other.sources, _sources)&&const DeepCollectionEquality().equals(other.pendingRules, _pendingRules)&&const DeepCollectionEquality().equals(other.requiredFields, _requiredFields));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,name,coverage,currency,locale,lending,const DeepCollectionEquality().hash(_purchaseCosts),const DeepCollectionEquality().hash(_recurringCosts),const DeepCollectionEquality().hash(_loanTypes),const DeepCollectionEquality().hash(_profileFields),const DeepCollectionEquality().hash(_referenceRates),livingCosts,const DeepCollectionEquality().hash(_sources),const DeepCollectionEquality().hash(_pendingRules),const DeepCollectionEquality().hash(_requiredFields));
+    return Object.hash(runtimeType,id,name,coverage,currency,locale,lending,const DeepCollectionEquality().hash(_purchaseCosts),const DeepCollectionEquality().hash(_recurringCosts),const DeepCollectionEquality().hash(_loanTypes),const DeepCollectionEquality().hash(_refundBaselines),const DeepCollectionEquality().hash(_profileFields),const DeepCollectionEquality().hash(_referenceRates),livingCosts,const DeepCollectionEquality().hash(_sources),const DeepCollectionEquality().hash(_pendingRules),const DeepCollectionEquality().hash(_requiredFields));
 }
 
 @override
 String toString() {
-    return 'ResolvedMarket(id: $id, name: $name, coverage: $coverage, currency: $currency, locale: $locale, lending: $lending, purchaseCosts: $purchaseCosts, recurringCosts: $recurringCosts, loanTypes: $loanTypes, profileFields: $profileFields, referenceRates: $referenceRates, livingCosts: $livingCosts, sources: $sources, pendingRules: $pendingRules, requiredFields: $requiredFields)';
+    return 'ResolvedMarket(id: $id, name: $name, coverage: $coverage, currency: $currency, locale: $locale, lending: $lending, purchaseCosts: $purchaseCosts, recurringCosts: $recurringCosts, loanTypes: $loanTypes, refundBaselines: $refundBaselines, profileFields: $profileFields, referenceRates: $referenceRates, livingCosts: $livingCosts, sources: $sources, pendingRules: $pendingRules, requiredFields: $requiredFields)';
 }
 
 
@@ -352,7 +360,7 @@ abstract mixin class _$ResolvedMarketCopyWith<$Res> implements $ResolvedMarketCo
   factory _$ResolvedMarketCopyWith(_ResolvedMarket value, $Res Function(_ResolvedMarket) _then) = __$ResolvedMarketCopyWithImpl;
 @override @useResult
 $Res call({
-@MarketIdJsonConverter() MarketId id, String name, Coverage coverage,@CurrencyJsonConverter() Currency currency,@LocaleTagJsonConverter() LocaleTag locale, LendingRules lending, List<CostRule> purchaseCosts, List<CostRule> recurringCosts, List<LoanType> loanTypes, List<ProfileFieldRequirement> profileFields, Map<String, ReferenceRate> referenceRates, LivingCosts? livingCosts, List<Source> sources, Map<String, PendingRule> pendingRules, Set<ProfileField> requiredFields
+@MarketIdJsonConverter() MarketId id, String name, Coverage coverage,@CurrencyJsonConverter() Currency currency,@LocaleTagJsonConverter() LocaleTag locale, LendingRules lending, List<CostRule> purchaseCosts, List<CostRule> recurringCosts, List<LoanType> loanTypes, Map<String, CostRule> refundBaselines, List<ProfileFieldRequirement> profileFields, Map<String, ReferenceRate> referenceRates, LivingCosts? livingCosts, List<Source> sources, Map<String, PendingRule> pendingRules, Set<ProfileField> requiredFields
 });
 
 
@@ -369,7 +377,7 @@ class __$ResolvedMarketCopyWithImpl<$Res>
 
 /// Create a copy of ResolvedMarket
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? coverage = null,Object? currency = null,Object? locale = null,Object? lending = null,Object? purchaseCosts = null,Object? recurringCosts = null,Object? loanTypes = null,Object? profileFields = null,Object? referenceRates = null,Object? livingCosts = freezed,Object? sources = null,Object? pendingRules = null,Object? requiredFields = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? coverage = null,Object? currency = null,Object? locale = null,Object? lending = null,Object? purchaseCosts = null,Object? recurringCosts = null,Object? loanTypes = null,Object? refundBaselines = null,Object? profileFields = null,Object? referenceRates = null,Object? livingCosts = freezed,Object? sources = null,Object? pendingRules = null,Object? requiredFields = null,}) {
   return _then(_ResolvedMarket(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as MarketId,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -380,7 +388,8 @@ as LocaleTag,lending: null == lending ? _self.lending : lending // ignore: cast_
 as LendingRules,purchaseCosts: null == purchaseCosts ? _self._purchaseCosts : purchaseCosts // ignore: cast_nullable_to_non_nullable
 as List<CostRule>,recurringCosts: null == recurringCosts ? _self._recurringCosts : recurringCosts // ignore: cast_nullable_to_non_nullable
 as List<CostRule>,loanTypes: null == loanTypes ? _self._loanTypes : loanTypes // ignore: cast_nullable_to_non_nullable
-as List<LoanType>,profileFields: null == profileFields ? _self._profileFields : profileFields // ignore: cast_nullable_to_non_nullable
+as List<LoanType>,refundBaselines: null == refundBaselines ? _self._refundBaselines : refundBaselines // ignore: cast_nullable_to_non_nullable
+as Map<String, CostRule>,profileFields: null == profileFields ? _self._profileFields : profileFields // ignore: cast_nullable_to_non_nullable
 as List<ProfileFieldRequirement>,referenceRates: null == referenceRates ? _self._referenceRates : referenceRates // ignore: cast_nullable_to_non_nullable
 as Map<String, ReferenceRate>,livingCosts: freezed == livingCosts ? _self.livingCosts : livingCosts // ignore: cast_nullable_to_non_nullable
 as LivingCosts?,sources: null == sources ? _self._sources : sources // ignore: cast_nullable_to_non_nullable

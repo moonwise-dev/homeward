@@ -21,6 +21,7 @@ _ResolvedMarket _$ResolvedMarketFromJson(
       'purchaseCosts',
       'recurringCosts',
       'loanTypes',
+      'refundBaselines',
       'profileFields',
       'referenceRates',
       'livingCosts',
@@ -68,6 +69,14 @@ _ResolvedMarket _$ResolvedMarketFromJson(
       (v) => (v as List<dynamic>)
           .map((e) => LoanType.fromJson(e as Map<String, dynamic>))
           .toList(),
+    ),
+    refundBaselines: $checkedConvert(
+      'refundBaselines',
+      (v) =>
+          (v as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k, CostRule.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
     ),
     profileFields: $checkedConvert(
       'profileFields',
@@ -127,6 +136,9 @@ Map<String, dynamic> _$ResolvedMarketToJson(
   'purchaseCosts': instance.purchaseCosts.map((e) => e.toJson()).toList(),
   'recurringCosts': instance.recurringCosts.map((e) => e.toJson()).toList(),
   'loanTypes': instance.loanTypes.map((e) => e.toJson()).toList(),
+  'refundBaselines': instance.refundBaselines.map(
+    (k, e) => MapEntry(k, e.toJson()),
+  ),
   'profileFields': instance.profileFields.map((e) => e.toJson()).toList(),
   'referenceRates': instance.referenceRates.map(
     (k, e) => MapEntry(k, e.toJson()),

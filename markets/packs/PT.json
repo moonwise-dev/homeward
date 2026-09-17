@@ -198,7 +198,7 @@
       "recurrence": "once",
       "refund": {
         "when": { "residencyIntent": "becomeResident" },
-        "recomputeAs": { "residency": "resident" },
+        "recomputeAs": { "residency": "resident", "use": "primary" },
         "deadline": "P2Y",
         "claimWindow": "P6M",
         "sourceId": "cimt-artigo-17"

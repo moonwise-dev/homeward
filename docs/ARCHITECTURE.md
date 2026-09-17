@@ -80,6 +80,8 @@ common/lib/
   finance/        payments, amortization tiers, shares and limits, brackets
   affordability/  maximum loan per lending rule, binding constraint, payment,
                   interest deduction, down payment bounds
+  costs/          what each cost rule charges, upfront costs with their
+                  refundable part, cash needed
   markets/        MarketRulePack models, buyer predicates, overlay resolution
   profile/        BuyerProfile, Residency, Citizenship, Employment
   plan/           Plan, Scenario, ChecklistState
