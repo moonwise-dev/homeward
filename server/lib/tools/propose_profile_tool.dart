@@ -5,7 +5,7 @@ import 'agent_tool.dart';
 import 'amount_arguments.dart';
 import 'slice_parameters.dart';
 
-final class ProposeProfileTool extends AgentTool {
+final class ProposeProfileTool extends ModelTool {
   const ProposeProfileTool();
 
   static final _moneyFields = {

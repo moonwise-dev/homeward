@@ -2,7 +2,7 @@ import 'package:common/common.dart';
 
 import 'agent_tool.dart';
 
-final class ResolveMarketTool extends AgentTool {
+final class ResolveMarketTool extends ModelTool {
   const ResolveMarketTool();
 
   @override

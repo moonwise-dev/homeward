@@ -4,7 +4,7 @@ import 'agent_tool.dart';
 import 'amount_arguments.dart';
 import 'slice_parameters.dart';
 
-final class ProposeScenarioTool extends AgentTool {
+final class ProposeScenarioTool extends ModelTool {
   const ProposeScenarioTool();
 
   static const defaultTermYears = 30;

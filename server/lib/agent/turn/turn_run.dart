@@ -100,7 +100,10 @@ final class TurnRun {
       try {
         await for (final event in createInteraction(
           apiKey: apiKey,
-          request: _request(input),
+          request: _request(
+            input,
+            offerTools: toolRounds < settings.maxToolRounds,
+          ),
           canFallBack: () => _acceptedInRound == 0,
           cancellation: cancellation,
         )) {
@@ -239,7 +242,10 @@ final class TurnRun {
     ),
   );
 
-  InteractionRequest _request(InteractionInput input) {
+  InteractionRequest _request(
+    InteractionInput input, {
+    required bool offerTools,
+  }) {
     final settled = tools.runSettled(_plan);
     _validator.seeds = turnSeeds(_plan, [
       ..._calledSeeds,
@@ -262,7 +268,7 @@ final class TurnRun {
           },
         ),
       ),
-      tools: tools.declarationsFor(_plan),
+      tools: offerTools ? tools.declarationsFor(_plan) : const [],
       thinkingLevel: settings.thinkingLevel,
       previousInteractionId: _interactionId,
     );

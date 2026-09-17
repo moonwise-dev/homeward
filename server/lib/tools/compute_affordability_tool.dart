@@ -9,15 +9,6 @@ final class ComputeAffordabilityTool extends AgentTool {
   String get name => 'compute_affordability';
 
   @override
-  String get description =>
-      'Compute affordability for the committed profile and the current '
-      'scenario. The result names the binding limit and a headroom category, '
-      'or the facts still missing. Figures appear only in components.';
-
-  @override
-  Map<String, Object?> get parameters => {'type': 'object', 'properties': {}};
-
-  @override
   Map<String, Object?>? settledArguments(ToolContext context) {
     final plan = context.plan;
     final id = plan.marketId;

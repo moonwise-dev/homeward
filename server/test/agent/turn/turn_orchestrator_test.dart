@@ -142,12 +142,14 @@ void main() {
 
       final [first, second] = script.requests;
       expect(first.previousInteractionId, isNull);
-      expect(first.tools.map((tool) => tool.name), contains('load_market'));
+      expect(first.tools.map((tool) => tool.name), [
+        'resolve_market',
+        'load_market',
+        'propose_profile',
+        'propose_scenario',
+      ]);
       expect(second.previousInteractionId, 'i1');
-      expect(
-        second.tools.map((tool) => tool.name),
-        isNot(contains('load_market')),
-      );
+      expect(second.tools, isEmpty);
       expect(second.systemInstruction, contains('"load_market": {'));
       final results = (second.input as FunctionResultsInput).results;
       expect(results.single.result, containsPair('selected', true));
@@ -201,6 +203,48 @@ void main() {
             ?.netMonthlyIncome
             ?.currency,
         Currency.parse('SEK'),
+      );
+    },
+  );
+
+  test(
+    'offers tools for one round and pre-runs affordability for a proposal',
+    () async {
+      await sessionWith(
+        Plan(marketId: MarketId.parse('SE'), profile: stockholmProfile),
+      );
+      FunctionCall proposal(String callId, int price) => FunctionCall(
+        callId: callId,
+        name: 'propose_scenario',
+        arguments: {
+          'price': {'amount': price},
+        },
+      );
+      final script = ScriptedInteractions([
+        reply('i1', calls: [proposal('first', 4500000)]),
+        reply(
+          'i2',
+          text: 'Here is what that price means.',
+          calls: [proposal('second', 3000000)],
+        ),
+      ]);
+
+      final events = await send(orchestrator(script)).toList();
+
+      final [first, second] = script.requests;
+      expect(
+        first.tools.map((tool) => tool.name),
+        isNot(contains('compute_affordability')),
+      );
+      expect(second.tools, isEmpty);
+      expect(second.systemInstruction, contains('"compute_affordability": {'));
+      expect(
+        events.last,
+        const TurnEvent.completed('Here is what that price means.'),
+      );
+      expect(
+        (await sessions.find('s-1'))!.plan.scenarioDraft?.price,
+        stockholmScenario.price,
       );
     },
   );

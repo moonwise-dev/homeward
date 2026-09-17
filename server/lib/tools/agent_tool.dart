@@ -28,13 +28,17 @@ abstract class AgentTool {
 
   String get name;
 
-  String get description;
-
-  Map<String, Object?> get parameters;
-
   Map<String, Object?>? settledArguments(ToolContext context) => null;
 
   ToolResult run(Map<String, Object?> arguments, ToolContext context);
+}
+
+abstract class ModelTool extends AgentTool {
+  const ModelTool();
+
+  String get description;
+
+  Map<String, Object?> get parameters;
 
   FunctionDeclaration get declaration => FunctionDeclaration(
     name: name,

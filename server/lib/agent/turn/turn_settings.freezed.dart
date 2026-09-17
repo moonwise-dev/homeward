@@ -214,7 +214,7 @@ return $default(_that.maxCorrections,_that.maxToolRounds,_that.thinkingLevel);ca
 
 
 class _TurnSettings implements TurnSettings {
-  const _TurnSettings({this.maxCorrections = 2, this.maxToolRounds = 4, this.thinkingLevel = 'low'});
+  const _TurnSettings({this.maxCorrections = 2, this.maxToolRounds = 1, this.thinkingLevel = 'low'});
   
 
 @override@JsonKey() final  int maxCorrections;

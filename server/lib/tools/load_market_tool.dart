@@ -3,7 +3,7 @@ import 'package:common/common.dart';
 import 'agent_tool.dart';
 import 'profile_field_paths.dart';
 
-final class LoadMarketTool extends AgentTool {
+final class LoadMarketTool extends ModelTool {
   const LoadMarketTool();
 
   @override

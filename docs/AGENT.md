@@ -15,9 +15,9 @@ It has no hard-coded stages; the open decisions of the plan decide the step.
 | Unhealthy model cool-down | 5 min | `HOMEWARD_MODEL_COOLDOWN` |
 | Store interactions | `true` | fixed |
 | Validation correction rounds | 2 | `HOMEWARD_MAX_CORRECTIONS` |
-| Model rounds per turn, target | ≤ 2 | measured in evals |
+| Model rounds per turn | ≤ 2, plus correction rounds | enforced by the tool round cap |
 | Inline surfaces per turn | 2 | fixed |
-| Tool rounds per turn, cap | 4 | fixed |
+| Tool rounds per turn, cap | 1 | fixed (D78) |
 
 Spike S2 found every listed model available on a free-tier key, but
 `gemini-3.8-flash` overloaded on the day: `generateContent` answered 503, and
@@ -136,6 +136,14 @@ Each tool declares whether it can be pre-run: `load_market`,
 `resolve_market`, `propose_profile`, `propose_scenario`, and `release_decision`
 cannot, because their inputs come from what the buyer wrote.
 
+Tools that take no input, `compute_affordability`, `estimate_purchase_costs`,
+`get_obstacles`, `get_process`, and `get_loan_types`, are server steps
+(`AgentTool`): never offered to the model, run whenever the plan settles them,
+and read by the model in `preRun`. The others are `ModelTool`s with a function
+declaration; `load_market` is offered until a market is selected and pre-run
+after (D78). A model that could call an input-free tool used it to probe the
+plan, one request at a time.
+
 | Tool | Input | Model result | Seeds |
 | --- | --- | --- | --- |
 | `resolve_market` | `placeName`, and the model's `countryCode` and `subdivisionCode` | Candidate markets with name and coverage, whether exactly one was selected for the plan, curated markets when none resolve | `/selection` |
@@ -215,9 +223,12 @@ owner, and leases it; `turn_run.dart` runs one turn:
 8. When the round ended with function calls, run them in the order of the tool
    list, so `resolve_market` selects the market before a profile proposal in
    the same round converts amounts into its currency, and continue the
-   interaction with all results at once, in the order the model called them,
-   at most four tool rounds per turn. Every round is logged with its status,
-   the names of the tools called, and its duration.
+   interaction with all results at once, in the order the model called them.
+   A turn has one tool round: the request carrying the results, and every
+   request after it, offers no tools, so the model writes its text and
+   surfaces with what it has. Function calls it sends anyway are dropped (D78). Every round
+   is logged with its status, the names of the tools called, and its
+   duration.
 9. When messages were rejected, continue with one text input listing each
    `VALIDATION_FAILED` error, at most `HOMEWARD_MAX_CORRECTIONS` rounds. After
    the last, a server-drawn `t{turn}-retry` surface asks the buyer to send the
@@ -230,7 +241,10 @@ The turn number advances even when a turn fails, so surface IDs never repeat.
 
 A turn that commits a profile or scenario therefore usually needs one model
 round: the numbers are already computed, and the model only writes and lays
-out. A turn that starts from free text usually needs two.
+out. A turn that starts from free text needs two, and never more apart from
+correction rounds. Before D78, live turns on 2026-09-17 took three and four
+rounds, the model calling `compute_affordability` and `propose_profile` in
+separate requests.
 
 ### Stream Parser
 

@@ -26,7 +26,7 @@ final class ToolBelt {
   List<FunctionDeclaration> declarationsFor(Plan plan) {
     final context = ToolContext(markets: markets, plan: plan);
     return [
-      for (final tool in tools)
+      for (final tool in tools.whereType<ModelTool>())
         if (tool.settledArguments(context) == null) tool.declaration,
     ];
   }
@@ -38,7 +38,7 @@ final class ToolBelt {
 
   ToolResult call(String name, Map<String, Object?> arguments, Plan plan) {
     final context = ToolContext(markets: markets, plan: plan);
-    for (final tool in tools) {
+    for (final tool in tools.whereType<ModelTool>()) {
       if (tool.name == name) {
         return _run(tool, arguments, context);
       }
