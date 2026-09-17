@@ -19,6 +19,20 @@ Money? moneyOf(Object? value) => jsonModelOf(value, Money.fromJson);
 
 Currency? currencyOf(Object? value) => _parsed(value, Currency.parse);
 
+int? integerOf(Object? value) => switch (value) {
+  final int number => number,
+  final double number when number == number.truncateToDouble() =>
+    number.toInt(),
+  _ => null,
+};
+
+List<int>? integersOf(Object? value) => switch (value) {
+  final List<Object?> items
+      when items.every((item) => integerOf(item) != null) =>
+    [for (final item in items) integerOf(item)!],
+  _ => null,
+};
+
 LocaleTag? localeOf(Object? value) => _parsed(value, LocaleTag.parse);
 
 T? _parsed<T>(Object? value, T Function(String text) parse) {

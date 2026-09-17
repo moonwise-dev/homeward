@@ -3,6 +3,7 @@ import 'package:a2ui_core/a2ui_core.dart';
 import 'catalog_component.dart';
 import 'components/affordability_summary.dart';
 import 'components/amount_slider.dart';
+import 'components/household_input.dart';
 import 'components/location_picker.dart';
 import 'components/money_input.dart';
 import 'components/payment_breakdown.dart';
@@ -16,6 +17,7 @@ const homewardCatalogId =
 const homewardComponents = <CatalogComponent>[
   LocationPicker(),
   MoneyInput(),
+  HouseholdInput(),
   AmountSlider(),
   AffordabilitySummary(),
   PaymentBreakdown(),

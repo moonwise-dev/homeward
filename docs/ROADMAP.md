@@ -31,14 +31,15 @@ Deliverables:
 
 - `common`: money, finance core (payment, LTV, DSTI, maximum loan, binding
   constraint, amortization tiers), rule pack models, overlay, applicability,
-  open decisions, catalog declarations for five components.
+  open decisions, catalog declarations for six components.
 - `markets/packs/SE.json` drafted from Tier 1 notes, review pending.
 - Server: A2A subset, turn orchestrator, stream parser, validation passes 1 to
   8, seeding, Interactions client, tools `resolve_market`, `load_market`,
   `propose_profile`, `propose_scenario`, `compute_affordability`.
 - App: key screen, plans, plan chat with inline surfaces, catalog items
-  `LocationPicker`, `MoneyInput`, `AmountSlider`, `AffordabilitySummary`,
-  `PaymentBreakdown`, client functions `withinMaxLtv` and `monthlyPayment`.
+  `LocationPicker`, `MoneyInput`, `HouseholdInput`, `AmountSlider`,
+  `AffordabilitySummary`, `PaymentBreakdown`, client functions `withinMaxLtv`
+  and `monthlyPayment`.
 - An uncovered market gets `MarketSnapshotCard` in its uncovered state.
 - Latency re-measured with the S2 probe at two different times of day; model
   order confirmed.
@@ -183,6 +184,7 @@ Decisions from the planning session on 2026-09-16.
 | D79 | A model at its free request limit | The round moves to the next model, and the refused model is skipped for that key for a minute, since per-minute and daily refusals read the same, which roughly doubles a free key's turns; other quota errors and depleted credits still stop the turn. Replaces D41 for this cap after a live session hit the cap on its fifth turn | Keep D41 and stop at the first model's cap |
 | D80 | Models and APIs beside Gemini | Later fallback models on the same key before the recording, `gemini-3.5-flash-lite` once its limits and the hero script check out, Gemma 4 ruled out by its free-tier token limit; an OpenAI-compatible provider choice after the livestream | Gemini models only; the provider choice before the recording; no change until after it |
 | D81 | Turn model order | `gemini-3.5-flash-lite` first, then `gemini-3.5-flash` and `gemini-3.8-flash`: 500 free requests a day and 15 a minute against 20 and 5, the hero script in four requests and 16 s; replaces D72 | Flash first and Flash-Lite last, about ten turns a day on Flash; Flash only |
+| D82 | Household input | `HouseholdInput`, a domain component with an adults stepper, a child age list, and a one-tap no children answer, bound to `/profile/adults` and `/profile/childAges`; it takes the `LoanTermPicker` slot, since the term uses the basic `ChoicePicker`, making 11 components for the recording and 20 in total | A comma-separated `TextField` parsed by the server; a children count priced at one age band; a 21st component |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

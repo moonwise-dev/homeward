@@ -10,6 +10,7 @@ void main() {
     expect(homewardCatalog.components.keys, [
       'LocationPicker',
       'MoneyInput',
+      'HouseholdInput',
       'AmountSlider',
       'AffordabilitySummary',
       'PaymentBreakdown',

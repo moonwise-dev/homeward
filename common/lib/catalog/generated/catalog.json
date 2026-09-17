@@ -877,6 +877,65 @@
       ],
       "additionalProperties": false
     },
+    "HouseholdInput": {
+      "type": "object",
+      "description": "Asks who lives in the home: how many adults and the age of each child, with a one-tap answer for no children. Use it for the household fact, bound to /profile/adults and /profile/childAges.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "HouseholdInput"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "label": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString",
+          "description": "Represents a string"
+        },
+        "adults": {
+          "type": "object",
+          "description": "Where the number of adults is written, /profile/adults.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "childAges": {
+          "type": "object",
+          "description": "Where the list of child ages is written, /profile/childAges.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "label",
+        "adults",
+        "childAges"
+      ],
+      "additionalProperties": false
+    },
     "AmountSlider": {
       "type": "object",
       "description": "A money slider between bounds computed from the rules, showing the value and its share of another amount. Use it for the down payment, bound to /derived/downPaymentBounds.",
@@ -1821,6 +1880,9 @@
         },
         {
           "$ref": "#/components/MoneyInput"
+        },
+        {
+          "$ref": "#/components/HouseholdInput"
         },
         {
           "$ref": "#/components/AmountSlider"

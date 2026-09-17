@@ -27,7 +27,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 ## Size And Phasing
 
-20 Homeward components: 10 for the video recording, 10 after.
+20 Homeward components: 11 for the video recording, 9 after.
 
 | # | Component | Kind | Phase |
 | --- | --- | --- | --- |
@@ -41,7 +41,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | 8 | `PurchaseCostsTable` | Insight | MVP |
 | 9 | `EligibilityChecklist` | Insight | MVP |
 | 10 | `ForeignBuyerObstacles` | Insight | MVP |
-| 11 | `LoanTermPicker` | Input | Phase 2 |
+| 11 | `HouseholdInput` | Input | MVP |
 | 12 | `LoanTypePicker` | Input | Phase 2 |
 | 13 | `RateShockStepper` | Input | Phase 2 |
 | 14 | `LoanTypeComparison` | Insight | Phase 2 |
@@ -52,8 +52,9 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | 19 | `SourceList` | Insight | Phase 2 |
 | 20 | `PlanSection` | Layout, board only | Phase 2 |
 
-In MVP, the loan term and loan type use the basic `ChoicePicker`, and the board
-is compiled from basic layout components plus MVP insights.
+The loan term uses the basic `ChoicePicker`, which is why `HouseholdInput`
+took the `LoanTermPicker` slot (D82). In MVP the loan type uses it too, and the
+board is compiled from basic layout components plus MVP insights.
 
 ## Basic Components
 
@@ -200,13 +201,18 @@ typical duration.
 | `profile` | `ProfileRef` | yes |
 | `explain` | `Action` | no |
 
-### 11. `LoanTermPicker`
+### 11. `HouseholdInput`
+
+Who lives in the home: an adults stepper, a child list with an age for each
+child, and a one-tap answer for no children. It answers the `household` profile
+fact, which living costs price by each person's age. Added in M1 after a live
+turn could not ask for children's ages with any basic component (D82).
 
 | Property | Type | Required | Notes |
 | --- | --- | --- | --- |
-| `value` | path | yes | Writes years |
-| `market` | `MarketRef` | yes | Limits from `lending.maxTermYears` and maximum age at maturity |
-| `profile` | `ProfileRef` | yes | |
+| `label` | `Label` | yes | |
+| `adults` | path | yes | Writes an integer, usually `/profile/adults` |
+| `childAges` | path | yes | Writes a list of integers, usually `/profile/childAges`; `[]` means no children |
 
 ### 12. `LoanTypePicker`
 

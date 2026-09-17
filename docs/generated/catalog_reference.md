@@ -10,6 +10,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | --- | --- | --- | --- | --- | --- |
 | `LocationPicker` | mvp | yes | `label`, `value`, `mode` | `value` | Target market, Tax residence |
 | `MoneyInput` | mvp | yes | `label`, `value`, `currency` | `value` | Monthly net income |
+| `HouseholdInput` | mvp | yes | `label`, `adults`, `childAges` | `adults`, `childAges` | A couple without children, A family with two children |
 | `AmountSlider` | mvp | yes | `label`, `value`, `bounds`, `currency` | `value`, `bounds`, `shareOf`, `currency` | Down payment |
 | `AffordabilitySummary` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple |
 | `PaymentBreakdown` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple |
@@ -21,6 +22,10 @@ Chooses a market or a country and writes its ISO 3166 code. Use mode market for 
 ### MoneyInput
 
 An amount field that writes a money object to the bound path. Use it for incomes, savings, debts, and fees; never write amounts yourself.
+
+### HouseholdInput
+
+Asks who lives in the home: how many adults and the age of each child, with a one-tap answer for no children. Use it for the household fact, bound to /profile/adults and /profile/childAges.
 
 ### AmountSlider
 

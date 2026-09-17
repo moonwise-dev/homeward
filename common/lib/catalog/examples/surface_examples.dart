@@ -6,7 +6,7 @@ final surfaceExamples = [
     name: 'Profile form',
     componentsJson: '''
 [
-  { "id": "root", "component": "Column", "children": ["title", "residence", "use", "income", "savings", "commit"] },
+  { "id": "root", "component": "Column", "children": ["title", "residence", "use", "household", "income", "savings", "commit"] },
   { "id": "title", "component": "Text", "text": "About you", "variant": "h3" },
   { "id": "residence", "component": "LocationPicker", "label": "Where do you pay tax?", "value": { "path": "/profile/taxResidence" }, "mode": "country" },
   {
@@ -21,6 +21,7 @@ final surfaceExamples = [
     ],
     "value": { "path": "/profile/use" }
   },
+  { "id": "household", "component": "HouseholdInput", "label": "Who lives in the home?", "adults": { "path": "/profile/adults" }, "childAges": { "path": "/profile/childAges" } },
   { "id": "income", "component": "MoneyInput", "label": "Household net income", "value": { "path": "/profile/netMonthlyIncome" }, "currency": { "path": "/market/currency" }, "period": "monthly" },
   { "id": "savings", "component": "MoneyInput", "label": "Savings for the purchase", "value": { "path": "/profile/savings" }, "currency": { "path": "/market/currency" } },
   { "id": "commit", "component": "Button", "child": "commit_label", "variant": "primary", "action": { "event": { "name": "commit_profile", "context": { "profilePath": "/profile" } } } },

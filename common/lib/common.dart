@@ -13,6 +13,7 @@ export 'catalog/catalog_component.dart';
 export 'catalog/catalog_schemas.dart';
 export 'catalog/components/affordability_summary.dart';
 export 'catalog/components/amount_slider.dart';
+export 'catalog/components/household_input.dart';
 export 'catalog/components/location_picker.dart';
 export 'catalog/components/money_input.dart';
 export 'catalog/components/payment_breakdown.dart';
