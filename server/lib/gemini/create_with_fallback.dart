@@ -9,6 +9,7 @@ Stream<InteractionEvent> createWithFallback({
   required ModelCircuits circuits,
   required String apiKey,
   required InteractionRequest request,
+  required bool Function() canFallBack,
   Future<void>? cancellation,
 }) async* {
   final candidates = circuits.healthyModels.take(2).toList();
@@ -16,7 +17,6 @@ Stream<InteractionEvent> createWithFallback({
     throw const GeminiUnavailable('Every model is cooling down');
   }
   for (final (attempt, model) in candidates.indexed) {
-    var reachedBuyer = false;
     try {
       await for (final event in client.create(
         apiKey: apiKey,
@@ -24,13 +24,12 @@ Stream<InteractionEvent> createWithFallback({
         request: request,
         cancellation: cancellation,
       )) {
-        reachedBuyer = reachedBuyer || event is! InteractionCreated;
         yield event;
       }
       return;
     } on GeminiUnavailable catch (reason) {
       circuits.open(model);
-      if (reachedBuyer || attempt == candidates.length - 1) {
+      if (attempt == candidates.length - 1 || !canFallBack()) {
         rethrow;
       }
       yield InteractionEvent.modelFailed(model: model, reason: reason);

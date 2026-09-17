@@ -43,7 +43,7 @@ abstract class ServerConfig with _$ServerConfig {
       projectId: environment['GOOGLE_CLOUD_PROJECT'],
       turnModels: list(
         'HOMEWARD_TURN_MODELS',
-        'gemini-3.8-flash,gemini-3.5-flash',
+        'gemini-3.5-flash,gemini-3.8-flash',
       ),
       thinkingLevel: read('HOMEWARD_THINKING_LEVEL', 'low'),
       headersDeadline: seconds('HOMEWARD_HEADERS_DEADLINE', 10),

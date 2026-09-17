@@ -69,6 +69,7 @@ final class TurnRun {
   var _emittedText = '';
   var _separateRound = false;
   var _rounds = 0;
+  var _acceptedInRound = 0;
 
   Session get session => _session.copyWith(
     plan: _plan,
@@ -88,7 +89,10 @@ final class TurnRun {
     var mayRebuildHistory = _interactionId != null;
     while (true) {
       final calls = <FunctionCall>[];
-      final parser = StreamParser();
+      var parser = StreamParser();
+      final textBeforeRound = _text.toString();
+      final failuresBeforeRound = _pendingFailures.length;
+      _acceptedInRound = 0;
       _separateRound = _text.isNotEmpty;
       _rounds++;
       final roundClock = Stopwatch()..start();
@@ -97,6 +101,7 @@ final class TurnRun {
         await for (final event in createInteraction(
           apiKey: apiKey,
           request: _request(input),
+          canFallBack: () => _acceptedInRound == 0,
           cancellation: cancellation,
         )) {
           switch (event) {
@@ -116,6 +121,17 @@ final class TurnRun {
                   fields: {'model': model, 'reason': reason.message},
                 ),
               );
+              calls.clear();
+              parser = StreamParser();
+              _pendingFailures.removeRange(
+                failuresBeforeRound,
+                _pendingFailures.length,
+              );
+              _text
+                ..clear()
+                ..write(textBeforeRound);
+              _separateRound = _text.isNotEmpty;
+              yield* _emitText();
             case InteractionCreated():
           }
         }
@@ -260,14 +276,11 @@ final class TurnRun {
           _separateRound = false;
         }
         _text.write(text);
-        final visible = _text.toString().trim();
-        if (visible != _emittedText) {
-          _emittedText = visible;
-          yield TurnEvent.text(visible);
-        }
+        yield* _emitText();
       case A2uiLineOutput(:final line):
         switch (_validator.validate(line)) {
           case Accepted(:final message):
+            _acceptedInRound++;
             for (final json in _seeder.forward(message, _validator.seeds)) {
               _forwarded.add(json);
               yield TurnEvent.message(json);
@@ -285,6 +298,14 @@ final class TurnRun {
             );
             _pendingFailures.add(failure);
         }
+    }
+  }
+
+  Stream<TurnEvent> _emitText() async* {
+    final visible = _text.toString().trim();
+    if (visible != _emittedText) {
+      _emittedText = visible;
+      yield TurnEvent.text(visible);
     }
   }
 

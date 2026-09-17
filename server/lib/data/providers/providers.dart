@@ -101,14 +101,19 @@ final class Providers {
       identity: FirebaseIdentityVerifier(firebase.auth()),
       appCheck: FirebaseAppCheckVerifier(firebase.appCheck()),
       createInteraction:
-          ({required apiKey, required request, Future<void>? cancellation}) =>
-              createWithFallback(
-                client: client,
-                circuits: circuits,
-                apiKey: apiKey,
-                request: request,
-                cancellation: cancellation,
-              ),
+          ({
+            required apiKey,
+            required request,
+            required canFallBack,
+            Future<void>? cancellation,
+          }) => createWithFallback(
+            client: client,
+            circuits: circuits,
+            apiKey: apiKey,
+            request: request,
+            canFallBack: canFallBack,
+            cancellation: cancellation,
+          ),
       markets: MarketDirectory(marketsData),
       prompts: PromptAssembler.load(Directory(config.promptsDirectory)),
     );

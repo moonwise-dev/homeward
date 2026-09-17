@@ -17,6 +17,7 @@ final class ScriptedInteractions {
   Stream<InteractionEvent> call({
     required String apiKey,
     required InteractionRequest request,
+    required bool Function() canFallBack,
     Future<void>? cancellation,
   }) {
     requests.add(request);

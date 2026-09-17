@@ -29,6 +29,7 @@ void main() {
     ModelCircuits modelCircuits, {
     List<RecordedRequest>? recorded,
     Future<void>? cancellation,
+    bool Function()? canFallBack,
   }) => createWithFallback(
     client: InteractionsClient(
       httpClient: fixtureClient(
@@ -41,6 +42,7 @@ void main() {
     circuits: modelCircuits,
     apiKey: 'AQ.test',
     request: request,
+    canFallBack: canFallBack ?? () => true,
     cancellation: cancellation,
   );
 
@@ -65,7 +67,30 @@ void main() {
     expect(modelCircuits.healthyModels, [preferred, fallback]);
   });
 
-  test('does not fall back once output has reached the buyer', () async {
+  test('falls back mid-stream while the caller can take output back', () async {
+    final recorded = <RecordedRequest>[];
+    final events = await run(
+      {
+        preferred: sse(
+          'event: step.delta\ndata: {"index":1,"delta":{"type":"text","text":"Hi"},"event_type":"step.delta"}\n\n'
+          'event: error\ndata: {"error":{"code":"api_error","message":"overloaded"},"event_type":"error"}\n\n',
+        ),
+        fallback: fixture('stream_text.sse'),
+      },
+      circuits(),
+      recorded: recorded,
+    ).toList();
+
+    expect(recorded.map((request) => request.body['model']), [
+      preferred,
+      fallback,
+    ]);
+    expect(events.first, const InteractionEvent.textDelta('Hi'));
+    expect(events.whereType<ModelFailed>().single.model, preferred);
+    expect(events.last, isA<InteractionCompleted>());
+  });
+
+  test('does not fall back once the caller has committed output', () async {
     final recorded = <RecordedRequest>[];
     await expectLater(
       run(
@@ -78,6 +103,7 @@ void main() {
         },
         circuits(),
         recorded: recorded,
+        canFallBack: () => false,
       ).drain<void>(),
       throwsA(isA<GeminiUnavailable>()),
     );

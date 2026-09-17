@@ -205,6 +205,43 @@ void main() {
     },
   );
 
+  test(
+    'takes back a failed model\'s draft and continues on the fallback',
+    () async {
+      await sessions.create('uid-1');
+      final script = ScriptedInteractions([
+        (_) => Stream.fromIterable([
+          const InteractionEvent.textDelta('Draft that will vanish\n'),
+          const FunctionCall(
+            callId: 'c1',
+            name: 'resolve_market',
+            arguments: {'placeName': 'Atlantis'},
+          ),
+          const InteractionEvent.modelFailed(
+            model: 'gemini-3.5-flash',
+            reason: GeminiUnavailable('overloaded'),
+          ),
+          const InteractionEvent.textDelta('Where are you buying?'),
+          const InteractionEvent.completed(
+            interactionId: 'i1',
+            status: 'completed',
+          ),
+        ]),
+      ]);
+
+      final events = await send(orchestrator(script)).toList();
+
+      expect(events, [
+        const TurnEvent.working(),
+        const TurnEvent.text('Draft that will vanish'),
+        const TurnEvent.text(''),
+        const TurnEvent.text('Where are you buying?'),
+        const TurnEvent.completed('Where are you buying?'),
+      ]);
+      expect(script.requests, hasLength(1));
+    },
+  );
+
   test('sends rejections back and forwards the corrected surface once', () async {
     await sessionWith(Plan(marketId: MarketId.parse('SE')));
     final script = ScriptedInteractions([

@@ -8,7 +8,7 @@ It has no hard-coded stages; the open decisions of the plan decide the step.
 
 | Setting | Default | Config key |
 | --- | --- | --- |
-| Turn models, in preference order | `gemini-3.8-flash,gemini-3.5-flash` | `HOMEWARD_TURN_MODELS` |
+| Turn models, in preference order | `gemini-3.5-flash,gemini-3.8-flash` | `HOMEWARD_TURN_MODELS` |
 | Thinking level | `low` | `HOMEWARD_THINKING_LEVEL` |
 | Deadline to response headers | 10 s | `HOMEWARD_HEADERS_DEADLINE` |
 | Deadline to first step | 20 s | `HOMEWARD_FIRST_STEP_DEADLINE` |
@@ -25,6 +25,13 @@ Interactions requests hung before headers or after `interaction.created`, one
 for over 15 minutes, some ending in an in-stream `api_error`.
 `gemini-3.5-flash` answered in 7–18 s per round.
 
+Live turns on 2026-09-17 with `gemini-3.8-flash` first repeated it: of four
+turns none finished on it alone. Twice it sent no step within 20 s, and twice
+it failed with high demand after its text had streamed; its completed rounds
+took 5–20 s, while `gemini-3.5-flash` rounds took 4–10 s. `gemini-3.5-flash`
+therefore goes first (D72), and the order is compared again for quality in the
+recording week.
+
 On the free tier each model allows about 20 requests a day per Google Cloud
 project, resetting at midnight Pacific (spike S3). A turn uses up to two, so a
 buyer's free key covers roughly ten turns a day on the first model.
@@ -34,11 +41,13 @@ buyer's free key covers roughly ten turns a day on the first model.
 - Each request goes to the first model in the list whose circuit is closed.
 - A request that misses a deadline, receives HTTP 500 or 503 with a high-demand
   message, or receives an in-stream `api_error` is aborted by closing the
-  connection. That model's circuit opens for the cool-down, and the request is
-  retried once on the next model, but only while nothing beyond
-  `interaction.created` has reached the buyer; after text or a function call
-  has streamed, the turn fails with `gemini_unavailable` instead of repeating
-  output.
+  connection. That model's circuit opens for the cool-down, and the round is
+  retried once on the next model while no A2UI message of that round has been
+  accepted (D73). The turn takes the round back first: its text returns to what
+  it was before the round, which clients show by replacing the full text, and
+  its function calls and rejections are dropped, because tools run only after a
+  round completes. Once a message of the round has been accepted, the turn
+  fails with `gemini_unavailable` instead of repeating output.
 - Circuits live in memory per instance; a cold instance relearns within one
   request.
 - A key or quota error never falls back; it is the buyer's to fix. This holds
