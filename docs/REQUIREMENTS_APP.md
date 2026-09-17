@@ -65,9 +65,11 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
   interactions under the buyer's key according to Google's terms.
 - States that a free key allows a limited number of requests per day, about ten
   Homeward turns, resetting at midnight Pacific.
-- States that Google's terms for unpaid Gemini API use allow Google to use
-  prompts and responses to improve its products. The wording is checked against
-  the current terms before this screen ships.
+- States that on a free key Google may use conversations to improve its
+  products and people may review them, as the Gemini API terms last modified
+  2026-04-28 say, and suggests round figures or a key from a project with
+  billing, whose conversations Google does not use (D76). The wording is checked
+  against the current terms again before recording.
 - Remove key is available here and in settings.
 
 ### Plans

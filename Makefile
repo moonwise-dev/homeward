@@ -1,6 +1,7 @@
 PACKAGES := app common server tool
 DART_PACKAGES := common server tool
-CODEGEN_PACKAGES := common server
+CODEGEN_PACKAGES := app common server
+SOURCE_DIRS := $(wildcard $(foreach package,$(PACKAGES),$(package)/lib $(package)/bin $(package)/test $(package)/tool))
 SERVER_BINARY := server/build/server
 SERVER_IMAGE := homeward-server
 FIREBASE_PROJECT := homeward-genui
@@ -53,11 +54,11 @@ analyze:
 
 .PHONY: format
 format:
-	@dart format $(PACKAGES)
+	@dart format $(SOURCE_DIRS)
 
 .PHONY: format-check
 format-check:
-	@dart format --output=none --set-exit-if-changed $(PACKAGES)
+	@dart format --output=none --set-exit-if-changed $(SOURCE_DIRS)
 
 .PHONY: test
 test:

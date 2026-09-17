@@ -221,6 +221,9 @@ implementation rules follow the Moonwise conventions used in Purrtrait.
 ```text
 app/lib/
   main.dart
+  errors/           AppError and its human message
+  messages/         transient message bus shown as toasts
+  riverpod/         SafeNotifierState
   catalog/
     homeward_catalog.dart
     items/          one CatalogItem per component, builder only
