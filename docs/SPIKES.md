@@ -585,6 +585,7 @@ server, the app, and the free-key promise?
 | Model | Result |
 | --- | --- |
 | `gemini-3.5-flash-lite` | Two requests: `resolve_market`, `propose_profile`, and `propose_scenario` together, then text and a valid profile form with five inputs and a commit button, no correction. First text after 5.0 s, done after 7.9 s. |
+| `gemini-3.5-flash-lite`, hero script | Three runs of the first message: twice the profile form, once a market picker asking the buyer to select the Sweden it had already selected, an extra turn. The run through: first message in two requests and 7.9 s; `commit_profile` in one request and 4.3 s, drawing `AffordabilitySummary`, `AmountSlider` bound to the seeded bounds, `PaymentBreakdown`, and a `commit_scenario` button; `commit_scenario` in one request and 3.3 s. Four requests for the script, no correction. |
 | `gemini-3.1-flash-lite` | Called `resolve_market` alone, then `propose_profile` and `propose_scenario` in the second request although no tools were offered, and again under `tool_choice: none`: the turn ended with no text and no surface. With a note after the tool results that tools are done, it wrote text and a valid form in the second request, without proposing the household or the price. First text after 15.2 s. |
 | `gemma-4-26b-a4b-it`, `gemma-4-31b-it` | `thinking_level: low` is refused; only `high` and `minimal` are accepted. With `high`, 26B answered HTTP 500 and 31B sent no step within 20 s. Then both refused with `generate_content_free_tier_input_token_count, limit: 16000`, retry in about 15 s: 16k input tokens a minute on the free tier, less than two Homeward requests. |
 
@@ -592,6 +593,13 @@ server, the app, and the free-key promise?
 refused with `Unknown parameter 'tool_choice'`. A per-minute token quota is
 reported like the daily cap and would be shown to a buyer as a daily limit;
 no Gemini Flash model reached it.
+
+AI Studio's rate limit page for the Homeward project, read on 2026-09-17: Flash
+models 5 requests a minute, 250K input tokens a minute, 20 requests a day;
+Flash-Lite models 15, 250K, and 500; Gemma 4 30, 16K, and 14,400. The page
+counts refused requests. Per-minute and daily request refusals share the metric
+`generate_content_free_tier_requests`, so D79 skips a refused model for a
+minute rather than until midnight.
 
 ### Options
 

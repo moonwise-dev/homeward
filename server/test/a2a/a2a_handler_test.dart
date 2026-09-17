@@ -205,7 +205,7 @@ void main() {
         'id': 7,
         'error': {
           'code': -32000,
-          'message': 'Your Gemini key has used up its requests for today',
+          'message': 'Your Gemini key has reached a request limit',
           'data': {'code': 'gemini_quota_exhausted', 'retryAfterSeconds': 3600},
         },
       });

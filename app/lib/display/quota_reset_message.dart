@@ -1,10 +1,12 @@
 import 'package:intl/intl.dart';
 
 String quotaResetMessage(Duration? retryAfter, DateTime now) {
-  const exhausted = 'Your free Gemini key has reached its daily limit.';
+  const limited =
+      'Your free Gemini key has hit a request limit. Try again in a minute; '
+      'if it persists, the daily limit';
   if (retryAfter == null) {
-    return '$exhausted It resets at midnight Pacific time.';
+    return '$limited resets at midnight Pacific time.';
   }
   final resetsAt = DateFormat.jm().format(now.add(retryAfter));
-  return '$exhausted It resets at $resetsAt.';
+  return '$limited resets at $resetsAt.';
 }

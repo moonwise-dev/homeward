@@ -240,7 +240,7 @@ void main() {
           id: 1,
           error: JsonRpcError(
             code: A2aErrorCodes.homeward,
-            message: 'Your Gemini key has used up its requests for today',
+            message: 'Your Gemini key has reached a request limit',
             data: {'code': 'gemini_quota_exhausted', 'retryAfterSeconds': 40},
           ),
         ),
@@ -259,7 +259,7 @@ void main() {
       throwsA(
         const HomewardApiException(
           code: HomewardErrorCode.geminiQuotaExhausted,
-          message: 'Your Gemini key has used up its requests for today',
+          message: 'Your Gemini key has reached a request limit',
           retryAfter: Duration(seconds: 40),
         ),
       ),

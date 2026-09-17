@@ -33,8 +33,8 @@ Stream<InteractionEvent> createWithFallback({
       switch (reason) {
         case GeminiUnavailable():
           circuits.open(model);
-        case GeminiQuotaExhausted(perModel: true, :final resetsAt):
-          caps.cap(apiKey, model, until: resetsAt);
+        case GeminiQuotaExhausted(perModel: true):
+          caps.cap(apiKey, model);
         case _:
           rethrow;
       }

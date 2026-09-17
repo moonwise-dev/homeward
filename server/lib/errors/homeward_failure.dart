@@ -23,7 +23,7 @@ abstract class HomewardFailure with _$HomewardFailure {
         ),
         GeminiQuotaExhausted(:final resetsAt) => HomewardFailure(
           code: HomewardErrorCode.geminiQuotaExhausted,
-          message: 'Your Gemini key has used up its requests for today',
+          message: 'Your Gemini key has reached a request limit',
           retryAfter: resetsAt.difference(now),
         ),
         GeminiCreditsDepleted() => const HomewardFailure(

@@ -148,8 +148,8 @@ void main() {
   );
 
   test(
-    'a model at its free daily cap falls back and is skipped for that key '
-    'until midnight Pacific',
+    'a model at its free request limit falls back and is skipped for that key '
+    'for a minute',
     () async {
       final caps = ModelCaps(now: () => clock);
       final recorded = <RecordedRequest>[];
@@ -186,7 +186,7 @@ void main() {
         apiKey: 'AQ.other',
         recorded: recorded,
       ).drain<void>();
-      clock = DateTime.utc(2026, 9, 18, 7);
+      clock = clock.add(const Duration(minutes: 1));
       await run(
         byModel,
         circuits(),
@@ -208,8 +208,8 @@ void main() {
 
   test('asks the capped model again when every model is capped', () async {
     final caps = ModelCaps(now: () => clock)
-      ..cap('AQ.test', preferred, until: DateTime.utc(2026, 9, 18, 7))
-      ..cap('AQ.test', fallback, until: DateTime.utc(2026, 9, 18, 7));
+      ..cap('AQ.test', preferred)
+      ..cap('AQ.test', fallback);
     final recorded = <RecordedRequest>[];
 
     await expectLater(

@@ -214,7 +214,7 @@ A failed turn ends with a JSON-RPC error event instead of a status, then the
 stream closes:
 
 ```json
-{ "jsonrpc": "2.0", "id": 7, "error": { "code": -32000, "message": "Your Gemini key has used up its requests for today", "data": { "code": "gemini_quota_exhausted", "retryAfterSeconds": 40 } } }
+{ "jsonrpc": "2.0", "id": 7, "error": { "code": -32000, "message": "Your Gemini key has reached a request limit", "data": { "code": "gemini_quota_exhausted", "retryAfterSeconds": 40 } } }
 ```
 
 `error.data.code` is a Homeward error code from `docs/REQUIREMENTS_SERVER.md`,

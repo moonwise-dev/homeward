@@ -32,11 +32,21 @@ took 5–20 s, while `gemini-3.5-flash` rounds took 4–10 s. `gemini-3.5-flash`
 therefore goes first (D72), and the order is compared again for quality in the
 recording week.
 
-On the free tier each model allows about 20 requests a day per Google Cloud
-project, resetting at midnight Pacific (spike S3). A turn uses up to two, and a
-model at its cap hands the turn to the next (D79), so a buyer's free key covers
-roughly twenty turns a day across both models. The cap is per project, so every
-key in the project, and AI Studio, share it.
+Free-tier limits, read in AI Studio for the Homeward project on 2026-09-17.
+They apply per Google Cloud project, so every key in the project and AI Studio
+share them, and daily limits reset at midnight Pacific:
+
+| Models | Requests a minute | Input tokens a minute | Requests a day |
+| --- | --- | --- | --- |
+| `gemini-3.8-flash`, `gemini-3.7-flash`, `gemini-3.5-flash` | 5 | 250K | 20 |
+| `gemini-3.5-flash-lite`, `gemini-3.1-flash-lite` | 15 | 250K | 500 |
+| `gemma-4-26b-a4b-it`, `gemma-4-31b-it` | 30 | 16K | 14,400 |
+
+A turn uses up to two requests, and a model at a limit hands the turn to the
+next (D79), so a buyer's free key covers roughly twenty turns a day on the two
+Flash models. Two or three quick turns in a minute can reach a Flash model's
+per-minute limit. AI Studio counts refused requests too: it showed 7 of 5 a
+minute and 24 of 20 a day.
 
 ### Model Selection
 
@@ -55,13 +65,15 @@ key in the project, and AI Studio, share it.
 - Circuits live in memory per instance; a cold instance relearns within one
   request.
 - A key error, a quota that is not per model, and depleted prepaid credits
-  never fall back; they are the buyer's to fix. The free tier's per-model daily
-  cap does (D79, replacing D41 for that cap): the round moves to the next model
-  under the same rule as an overload, and the capped model is skipped for that
-  key until midnight Pacific. Caps live in memory per instance, keyed by a
-  SHA-256 digest of the key that is never logged or stored. When every model is
-  capped for a key, the request asks them again, so a key whose project gained
-  billing recovers at once.
+  never fall back; they are the buyer's to fix. The free tier's per-model
+  request limits do (D79, replacing D41 for them): the round moves to the next
+  model under the same rule as an overload, and the refused model is skipped
+  for that key for one minute. A per-minute and a daily refusal carry the same
+  metric and differ only in the limit number, so the server cannot tell them
+  apart; after a daily refusal, the model is asked again once a minute and
+  refuses within a second. Skips live in memory per instance, keyed by a
+  SHA-256 digest of the key that is never logged or stored. When every model
+  is skipped for a key, the request asks them again.
 - Every turn logs the model used and, when it fell back, the model and reason
   it fell back from, which the client streams as a `modelFailed` event.
 
@@ -376,8 +388,8 @@ takes this shape:
 | Failure | Behavior |
 | --- | --- |
 | Invalid Gemini key (HTTP 401 or 403, or 400 with `API_KEY_INVALID`) | Turn fails with `gemini_key_invalid`; app routes to the key screen |
-| A model's free daily cap reached | The round moves to the next model, which the key then uses until midnight Pacific |
-| Key quota exhausted (HTTP 429) | Turn fails with `gemini_quota_exhausted` and the next midnight Pacific as reset time; app explains the free key's daily cap |
+| A model's free request limit reached | The round moves to the next model; the refused model is asked again after a minute |
+| Key quota exhausted (HTTP 429) | Turn fails with `gemini_quota_exhausted` and the next midnight Pacific as reset time; app asks to try again in a minute and names when the daily limit resets |
 | Prepaid credits depleted | Turn fails with `gemini_credits_depleted`; app offers to change the key |
 | Model overloaded or stalled | Model selection falls back once; if every model is unhealthy, the turn fails with `gemini_unavailable` |
 | Unknown or expired previous interaction | Retry once with rebuilt history |

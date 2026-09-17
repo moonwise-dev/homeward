@@ -73,7 +73,7 @@ void main() {
     expect(quotaStatus, 429);
     expect(quota['error'], {
       'code': 'gemini_quota_exhausted',
-      'message': 'Your Gemini key has used up its requests for today',
+      'message': 'Your Gemini key has reached a request limit',
       'retryAfterSeconds': 68400,
     });
     expect((await verifyWith(const GeminiCreditsDepleted('prepaid'))).$1, 402);
