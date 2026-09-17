@@ -189,8 +189,9 @@ The quota and overload bodies are committed as fixtures in
 
 - **Coverage:** only curated markets get rules. The "any location" idea becomes
   "any curated location", and Tier 3 breadth depends on curation speed.
-- **Headroom:** about ten turns a day per buyer on a free key; about one full hero
-  run a day per key for rehearsal and recording; live evals run as daily subsets
+- **Headroom:** about ten turns a day per buyer on a free key, twenty since D79
+  lets the second model take over at a cap; about one full hero run a day per
+  key for rehearsal and recording; live evals run as daily subsets
   with replay covering the rest.
 - **Privacy wording:** unpaid Gemini API use lets Google use prompts and responses
   to improve its products, so the key screen discloses it.
@@ -532,3 +533,74 @@ assumed, through Firebase Hosting rewrites?
 - `docs/PROTOCOL.md`: the agent card points at the Cloud Run URL.
 - `docs/ROADMAP.md`: S6 answered; D50 to D52; the isolation header risk
   replaced by a reCAPTCHA cost risk.
+
+## S8 — Other Models And APIs Beside Gemini
+
+**Researched 2026-09-17; decision pending.**
+
+### Question
+
+Can a buyer run Homeward on more than one model or API, offered as a choice
+next to Gemini rather than replacing it, and what would each route cost the
+server, the app, and the free-key promise?
+
+### Method
+
+- Desk research only; no request was sent to any model. Read the Gemini API
+  rate limit, pricing, models, Interactions API, Gemma on Gemini API, and
+  OpenAI compatibility pages; the rate limit pages of OpenRouter, Groq, and
+  Cerebras; the pub.dev pages of `dartantic_ai` and packages matching `genui`.
+- Third-party summaries were used only where a provider page did not load, and
+  are marked. Blog tables of Gemini free limits disagreed with each other and
+  with what S3 measured, so none is quoted.
+- Sized each route against one Homeward request: a system instruction of about
+  12k tokens (D69) plus the turn, sent at most twice a turn (D78).
+
+### Findings
+
+| Area | Result |
+| --- | --- |
+| Gemini free limits | Applied per project, not per key; daily limits reset at midnight Pacific; the numbers are published only in AI Studio's rate limit page for the signed-in project. S3 and a live session measured 20 requests a day on `gemini-3.8-flash` and `gemini-3.5-flash`, and in S3 `gemini-3.1-flash-lite` still answered while `gemini-3.8-flash` was capped. |
+| Gemini models with a free tier | `gemini-3.8-flash`, `gemini-3.7-flash`, `gemini-3.6-flash`, `gemini-3.5-flash`, `gemini-3.5-flash-lite`, `gemini-3.1-flash-lite`, `gemini-2.5-flash`, `gemini-2.5-flash-lite`; not `gemini-3.1-pro-preview`. Free-tier content is used to improve Google's products on all of them. |
+| Paid Gemini prices per 1M tokens, input and output | `gemini-3.8-flash`, 3.7, and 3.6: $0.75 and $3.75. `gemini-3.5-flash`: $1.50 and $9.00. `gemini-3.5-flash-lite`: $0.30 and $2.50. `gemini-3.1-flash-lite`: $0.25 and $1.50. |
+| Interactions API models | Every Gemini model above plus `gemma-4-31b-it` and `gemma-4-26b-a4b-it`. Free-tier interactions are kept one day. |
+| Gemma 4 on the Gemini API | Same key and endpoint; system instructions, function calling, and a thinking level are supported. Free limits are not published. |
+| Gemini OpenAI compatibility | `https://generativelanguage.googleapis.com/v1beta/openai/` serves Chat Completions with streaming, tools, and JSON schema output, in beta; unlisted parameters are silently ignored. Same key and limits. |
+| Vertex AI express mode | A 90-day trial for new Google Cloud users with an API key and low per-model limits (third-party summary; Google's page did not render). Not a lasting choice. |
+| OpenRouter | One OpenAI-style API over many providers, Gemma 4 included. `:free` models allow 20 requests a minute and 50 a day, or 1,000 a day once $10 of credits were ever bought. Requests with a buyer's own provider key are not held to those limits. Streams report errors as SSE events. |
+| Groq free plan | `openai/gpt-oss-120b`, `openai/gpt-oss-20b`, `qwen/qwen3.8-27b`: 30 requests a minute, 1,000 a day, 8K tokens a minute, 200K a day. One Homeward request is larger than the per-minute token limit. |
+| Cerebras free trial | `gpt-oss-120b`, `qwen-3.8-27b`: 5 requests a minute, 30K uncached tokens a minute, 1M tokens a day, about 60 Homeward requests a day. |
+| Mistral free Experiment plan | 1 request a second, 500K tokens a minute, 1B tokens a month per model, meant for evaluation (third-party summary; Mistral's page did not load). |
+| Dart libraries | `dartantic_ai` 3.4.2, verified publisher, runs on the Dart VM with streaming and tool calling over OpenAI, Google, Anthropic, Mistral, Cohere, Ollama, OpenRouter, xAI, and OpenAI-compatible APIs. `genui_x` 0.1.0, unverified, connects models to genui on the client, which Homeward's server agent does not use. `flutter_local_ai` 0.0.16 wraps on-device models, Apple Foundation Models, ML Kit GenAI with Gemini Nano, and Windows AI; not sized against a 12k-token prompt. |
+| Fit with the server | Model access sits behind one function, `CreateInteraction`, which takes an `InteractionRequest` and streams `InteractionEvent`s, so a second API is one more implementation. The Interactions API keeps the conversation on Google's side through `previous_interaction_id`; a Chat Completions API does not, so the session must store the model conversation, buyer inputs, model text, function calls, and results, and resend it on every request. |
+| Fit with the app | The key screen takes one Gemini key. A choice needs a provider picker, verification per provider, and data use terms per provider, as D76 quotes for Gemini. |
+| Fit with quality | Prompts and the catalog skill were written and checked on Gemini. Every added model needs the hero script and evals before a buyer can pick it. |
+
+### Options
+
+1. **More Gemini API models on the same key.** Add a flash-lite model or Gemma
+   4 to `HOMEWARD_TURN_MODELS` after their limits are read in AI Studio and the
+   hero script passes on them. No new API, key, or screen; stays Google; only
+   helps when those models have limits of their own.
+2. **An OpenAI-compatible provider choice.** One `CreateInteraction`
+   implementation for Chat Completions with tools, a stored model
+   conversation, and a provider picker on the key screen. It covers OpenRouter,
+   Cerebras, Mistral, OpenAI, and a local Ollama with Gemma, and Gemini itself
+   through its compatibility endpoint. Free tiers fit poorly: Groq's token
+   limit is below one request, OpenRouter's free limit is 50 requests a day.
+3. **Both, in order:** option 1 before the recording, option 2 after the
+   livestream.
+
+### Sources
+
+- https://ai.google.dev/gemini-api/docs/rate-limits
+- https://ai.google.dev/gemini-api/docs/pricing
+- https://ai.google.dev/gemini-api/docs/models
+- https://ai.google.dev/gemini-api/docs/interactions
+- https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api
+- https://ai.google.dev/gemini-api/docs/openai
+- https://openrouter.ai/docs/api-reference/limits
+- https://console.groq.com/docs/rate-limits
+- https://inference-docs.cerebras.ai/support/rate-limits
+- https://pub.dev/packages/dartantic_ai
+- https://pub.dev/packages?q=genui
