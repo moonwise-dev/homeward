@@ -119,9 +119,14 @@ A money slider with the value, its share of a reference, and bounds from rules.
 
 ### 4. `MarketSnapshotCard`
 
-The market at a glance for this buyer: name, currency, coverage badge, the
-three rules that matter most for this buyer, the headline reference rate with
-its date.
+The market at a glance for this buyer. Curated: name, coverage badge,
+currency, the headline reference rate with its date, the first three kinds of
+rule that apply, and a note when more rules wait on missing facts. Uncovered:
+name, coverage badge, that Homeward has no rules there, and the markets it
+covers, read from `/selection/candidates` as the market `LocationPicker` does.
+
+The card reads whichever shape `/market` holds: the full rules of a curated
+market, or `{ id, name, coverage }` for an uncovered one (D86).
 
 | Property | Type | Required |
 | --- | --- | --- |

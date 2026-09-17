@@ -1,7 +1,11 @@
 import 'package:common/common.dart';
+import 'package:logging/logging.dart';
 
+import '../logging/log_entry.dart';
 import 'agent_tool.dart';
 import 'profile_field_paths.dart';
+
+final _log = Logger('markets');
 
 final class LoadMarketTool extends ModelTool {
   const LoadMarketTool();
@@ -49,12 +53,26 @@ final class LoadMarketTool extends ModelTool {
     }
     final market = markets.resolveFor(id, context.plan.profile);
     if (market == null) {
+      _log.info(
+        LogEntry(
+          'Uncovered market asked for',
+          fields: {'marketId': id.code},
+        ),
+      );
       return ToolResult(
         modelResult: {
           'marketId': id.code,
           'name': markets.nameOf(id),
           'coverage': Coverage.uncovered.name,
           'curatedMarkets': markets.curatedMarketNames.toList(),
+        },
+        seeds: {
+          'market': MarketSnapshot(
+            id: id,
+            name: markets.nameOf(id),
+            coverage: Coverage.uncovered,
+          ).toJson(),
+          'selection': {'candidates': markets.curatedCandidates},
         },
       );
     }

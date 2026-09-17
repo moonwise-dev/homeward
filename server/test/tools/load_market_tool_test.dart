@@ -52,7 +52,7 @@ void main() {
     expect(market.livingCosts?.year, 2026);
   });
 
-  test('says an uncovered market is not covered and seeds no rules', () {
+  test('seeds an uncovered market as a snapshot with the curated ones', () {
     final result = tool.run({'marketId': 'PT-30'}, contextWith());
 
     expect(result.modelResult, {
@@ -61,7 +61,18 @@ void main() {
       'coverage': 'uncovered',
       'curatedMarkets': ['Sweden'],
     });
-    expect(result.seeds, isEmpty);
+    expect(result.seeds, {
+      'market': {
+        'id': 'PT-30',
+        'name': 'Madeira, Portugal',
+        'coverage': 'uncovered',
+      },
+      'selection': {
+        'candidates': [
+          {'marketId': 'SE', 'name': 'Sweden', 'coverage': 'curated'},
+        ],
+      },
+    });
   });
 
   test('refuses ids that are malformed or unknown', () {

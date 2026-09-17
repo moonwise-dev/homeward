@@ -12,6 +12,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `MoneyInput` | mvp | yes | `label`, `value`, `currency` | `value` | Monthly net income |
 | `HouseholdInput` | mvp | yes | `label`, `adults`, `childAges` | `adults`, `childAges` | A couple without children, A family with two children |
 | `AmountSlider` | mvp | yes | `label`, `value`, `bounds`, `currency` | `value`, `bounds`, `shareOf`, `currency` | Down payment |
+| `MarketSnapshotCard` | mvp | yes | `market`, `profile` | `market`, `profile` | A curated market, A market without rules |
 | `AffordabilitySummary` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple |
 | `PaymentBreakdown` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple |
 
@@ -30,6 +31,10 @@ Asks who lives in the home: how many adults and the age of each child, with a on
 ### AmountSlider
 
 A money slider between bounds computed from the rules, showing the value and its share of another amount. Use it for the down payment, bound to /derived/downPaymentBounds.
+
+### MarketSnapshotCard
+
+The selected market at a glance for this buyer: its name, whether Homeward has curated rules there, the kinds of rule that apply, and the reference rate behind the payment. In an uncovered market it says so and names the markets Homeward covers. Draw it when the market is new to the buyer.
 
 ### AffordabilitySummary
 
@@ -107,6 +112,7 @@ The rules of the selected market that apply to this buyer, read-only. Insights b
 | --- | --- | --- |
 | `/market/id` | ISO 3166 code of a country or subdivision, such as SE or PT-30 | The market. |
 | `/market/name` | string | Market name in English. |
+| `/market/coverage` | one of curated, uncovered | Whether Homeward has curated rules here. An uncovered market carries only the market, its name, and this field. |
 | `/market/currency` | ISO 4217 currency code | Currency of prices and loans; bind it as the currency of money inputs. |
 
 ### `/derived`

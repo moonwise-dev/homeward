@@ -17,6 +17,17 @@ T? jsonModelOf<T>(
 
 Money? moneyOf(Object? value) => jsonModelOf(value, Money.fromJson);
 
+MarketSnapshot? marketSnapshotOf(Object? value) {
+  if (value is! Map<String, Object?>) {
+    return null;
+  }
+  try {
+    return MarketSnapshot.ofMarket(value);
+  } on FormatException {
+    return null;
+  }
+}
+
 Currency? currencyOf(Object? value) => _parsed(value, Currency.parse);
 
 int? integerOf(Object? value) => switch (value) {

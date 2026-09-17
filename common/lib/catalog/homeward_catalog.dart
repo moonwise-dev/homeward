@@ -5,6 +5,7 @@ import 'components/affordability_summary.dart';
 import 'components/amount_slider.dart';
 import 'components/household_input.dart';
 import 'components/location_picker.dart';
+import 'components/market_snapshot_card.dart';
 import 'components/money_input.dart';
 import 'components/payment_breakdown.dart';
 import 'functions/catalog_function.dart';
@@ -19,6 +20,7 @@ const homewardComponents = <CatalogComponent>[
   MoneyInput(),
   HouseholdInput(),
   AmountSlider(),
+  MarketSnapshotCard(),
   AffordabilitySummary(),
   PaymentBreakdown(),
 ];

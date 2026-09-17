@@ -1022,6 +1022,65 @@
       ],
       "additionalProperties": false
     },
+    "MarketSnapshotCard": {
+      "type": "object",
+      "description": "The selected market at a glance for this buyer: its name, whether Homeward has curated rules there, the kinds of rule that apply, and the reference rate behind the payment. In an uncovered market it says so and names the markets Homeward covers. Draw it when the market is new to the buyer.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "MarketSnapshotCard"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "market": {
+          "type": "object",
+          "description": "Always { \"path\": \"/market\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/market"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "profile": {
+          "type": "object",
+          "description": "Always { \"path\": \"/profile\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/profile"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "explain": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "market",
+        "profile"
+      ],
+      "additionalProperties": false
+    },
     "AffordabilitySummary": {
       "type": "object",
       "description": "The maximum loan, the rule that limits it, and headroom against the current scenario, computed from the rules. Show it after the profile is committed; never restate its figures in text.",
@@ -1886,6 +1945,9 @@
         },
         {
           "$ref": "#/components/AmountSlider"
+        },
+        {
+          "$ref": "#/components/MarketSnapshotCard"
         },
         {
           "$ref": "#/components/AffordabilitySummary"

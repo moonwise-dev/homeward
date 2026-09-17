@@ -12,6 +12,7 @@ void main() {
       'MoneyInput',
       'HouseholdInput',
       'AmountSlider',
+      'MarketSnapshotCard',
       'AffordabilitySummary',
       'PaymentBreakdown',
     ]);

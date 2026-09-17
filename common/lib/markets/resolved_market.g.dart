@@ -14,6 +14,7 @@ _ResolvedMarket _$ResolvedMarketFromJson(
     allowedKeys: const [
       'id',
       'name',
+      'coverage',
       'currency',
       'locale',
       'lending',
@@ -34,6 +35,10 @@ _ResolvedMarket _$ResolvedMarketFromJson(
       (v) => const MarketIdJsonConverter().fromJson(v as String),
     ),
     name: $checkedConvert('name', (v) => v as String),
+    coverage: $checkedConvert(
+      'coverage',
+      (v) => $enumDecodeNullable(_$CoverageEnumMap, v) ?? Coverage.curated,
+    ),
     currency: $checkedConvert(
       'currency',
       (v) => const CurrencyJsonConverter().fromJson(v as String),
@@ -115,6 +120,7 @@ Map<String, dynamic> _$ResolvedMarketToJson(
 ) => <String, dynamic>{
   'id': const MarketIdJsonConverter().toJson(instance.id),
   'name': instance.name,
+  'coverage': _$CoverageEnumMap[instance.coverage]!,
   'currency': const CurrencyJsonConverter().toJson(instance.currency),
   'locale': const LocaleTagJsonConverter().toJson(instance.locale),
   'lending': instance.lending.toJson(),
@@ -131,6 +137,11 @@ Map<String, dynamic> _$ResolvedMarketToJson(
   'requiredFields': instance.requiredFields
       .map((e) => _$ProfileFieldEnumMap[e]!)
       .toList(),
+};
+
+const _$CoverageEnumMap = {
+  Coverage.curated: 'curated',
+  Coverage.uncovered: 'uncovered',
 };
 
 const _$ProfileFieldEnumMap = {

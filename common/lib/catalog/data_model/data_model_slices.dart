@@ -1,3 +1,4 @@
+import '../../markets/coverage.dart';
 import '../../profile/employment.dart';
 import '../../profile/property_use.dart';
 import '../../profile/residency_intent.dart';
@@ -118,6 +119,13 @@ const marketSlice = DataSlice(
   [
     SliceField('id', FieldKind.market, 'The market.'),
     SliceField('name', FieldKind.text, 'Market name in English.'),
+    SliceField(
+      'coverage',
+      FieldKind.choice,
+      'Whether Homeward has curated rules here. An uncovered market carries '
+          'only the market, its name, and this field.',
+      choices: Coverage.values,
+    ),
     SliceField(
       'currency',
       FieldKind.currency,

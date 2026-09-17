@@ -41,6 +41,15 @@ final class MarketDirectory {
   Iterable<String> get curatedMarketNames =>
       _packsById.values.map((pack) => pack.name);
 
+  List<Map<String, Object?>> get curatedCandidates => [
+    for (final MapEntry(key: id, value: pack) in _packsById.entries)
+      {
+        'marketId': id.code,
+        'name': pack.name,
+        'coverage': Coverage.curated.name,
+      },
+  ];
+
   ResolvedMarket? resolveFor(MarketId id, BuyerProfile profile) {
     if (!_packsById.containsKey(id)) {
       return null;

@@ -3,6 +3,7 @@ import 'locale_tag_json_converter.dart';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'coverage.dart';
 import '../money/currency.dart';
 import '../money/currency_json_converter.dart';
 import '../profile/buyer_profile.dart';
@@ -29,6 +30,7 @@ abstract class ResolvedMarket with _$ResolvedMarket {
   const factory ResolvedMarket({
     @MarketIdJsonConverter() required MarketId id,
     required String name,
+    @Default(Coverage.curated) Coverage coverage,
     @CurrencyJsonConverter() required Currency currency,
     @LocaleTagJsonConverter() required LocaleTag locale,
     required LendingRules lending,

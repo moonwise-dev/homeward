@@ -189,7 +189,7 @@ plan, one request at a time.
 | Tool | Input | Model result | Seeds |
 | --- | --- | --- | --- |
 | `resolve_market` | `placeName` and the model's `countryCode`, both required, and its `subdivisionCode` | `selectedMarket` with name and coverage when exactly one matches, already the plan's market; otherwise `candidates`, with the curated markets when none resolve | `/selection` when several match |
-| `load_market` | `marketId` | Coverage, currency, profile fields with the profile paths that answer them and reasons, kinds of lending rule, never rule values | `/market` |
+| `load_market` | `marketId` | Coverage, currency, profile fields with the profile paths that answer them and reasons, kinds of lending rule, never rule values | `/market`, the rules when curated and `{ id, name, coverage }` when not, with `/selection` holding the curated markets (D86) |
 | `propose_profile` | Facts the buyer stated: countries as ISO codes, enums, amounts as `{ amount, currency? }` in major units | Accepted and rejected facts with reasons | `/profile` from the plan's profile draft |
 | `propose_scenario` | Price, and any down payment, term, loan type, or association fee the buyer stated | Accepted, defaulted, and rejected fields; unstated values come from the market: the smallest down payment the loan-to-value limit allows, the first loan type and its default spread, the shortest maximum term or 30 years | `/scenario` from the plan's scenario draft |
 | `compute_affordability` | — | `assessed` with the binding limit and headroom `comfortable`, `atLimit`, or `overLimit`; `incomplete` with missing facts; or what it needs first. Never amounts | `/derived/affordability`, `/derived/downPaymentBounds`, `/derived/payment`; while `incomplete`, only `/derived/downPaymentBounds` from the loan-to-value cap, so the what-if slider still works (D83) |
@@ -379,9 +379,10 @@ decision.
 ## Uncovered Markets
 
 When the buyer names a place with no curated pack, `resolve_market` reports it
-as uncovered. The agent says so plainly and shows `MarketSnapshotCard` in its
-uncovered state with the market's name and the curated markets Homeward can
-help with. It never states lending limits, taxes, costs, or obstacles for an
+as uncovered. `load_market`, pre-run once that market is selected, seeds
+`/market` with the market, its name, and `coverage: uncovered`, and `/selection`
+with the curated markets. The agent says so plainly and shows
+`MarketSnapshotCard`, which reads both, beside a `LocationPicker` for switching. It never states lending limits, taxes, costs, or obstacles for an
 uncovered market, whether from a tool or from the model's own knowledge.
 
 Every uncovered request is logged with its market identifier so curation
