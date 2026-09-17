@@ -379,9 +379,9 @@ From the same declarations `make catalog` generates:
 - `docs/generated/catalog_reference.md`, a human reference.
 
 `make catalog-check` fails if generated files are stale or if any component or
-surface example is rejected by the server's `TurnValidator`. Once the app's
-catalog items land, it also fails if an item exists without a declaration or
-the reverse.
+surface example is rejected by the server's `TurnValidator`, or if an item in
+`app/lib/catalog/items` built with `catalogItemFor(const X(), …)` has no
+declaration, or a declaration has no item.
 
 ## Implementing A Component
 

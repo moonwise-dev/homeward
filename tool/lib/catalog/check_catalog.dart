@@ -14,7 +14,33 @@ List<Finding> checkCatalog(Directory root) => [
     if (!_matches(File('${root.path}/$path'), content))
       findingError(path, 'Stale; run make catalog'),
   ...checkCatalogExamples(),
+  ...checkAppCatalogItems(Directory('${root.path}/app/lib/catalog/items')),
 ];
+
+List<Finding> checkAppCatalogItems(
+  Directory items, {
+  List<CatalogComponent> components = homewardComponents,
+}) {
+  final implemented = {
+    for (final file in [
+      if (items.existsSync()) ...items.listSync().whereType<File>(),
+    ])
+      if (file.path.endsWith('.dart'))
+        for (final match in _catalogItemPattern.allMatches(
+          file.readAsStringSync(),
+        ))
+          match.group(1)!,
+  };
+  final declared = {for (final component in components) component.name};
+  return [
+    for (final name in implemented.difference(declared))
+      findingError(name, 'App catalog item without a declaration in common'),
+    for (final name in declared.difference(implemented))
+      findingError(name, 'Declared in common without an app catalog item'),
+  ];
+}
+
+final _catalogItemPattern = RegExp(r'catalogItemFor\(\s*const\s+(\w+)\(\)');
 
 List<Finding> checkCatalogExamples({
   List<CatalogComponent> components = homewardComponents,

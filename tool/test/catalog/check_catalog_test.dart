@@ -35,6 +35,37 @@ void main() {
     ]);
   });
 
+  test('every declared component has an app catalog item', () {
+    expect(
+      messages(checkAppCatalogItems(Directory('../app/lib/catalog/items'))),
+      isEmpty,
+    );
+  });
+
+  test('app items and declarations that do not pair up are reported', () {
+    final items = Directory.systemTemp.createTempSync('catalog_items');
+    addTearDown(() => items.deleteSync(recursive: true));
+    File('${items.path}/amount_slider_item.dart').writeAsStringSync(
+      'final amountSliderItem = catalogItemFor(const AmountSlider(), build);',
+    );
+    File('${items.path}/stress_item.dart').writeAsStringSync(
+      'final stressItem = catalogItemFor(\n  const StressTestChart(),\n  build,\n);',
+    );
+
+    expect(
+      messages(
+        checkAppCatalogItems(
+          items,
+          components: const [AmountSlider(), MoneyInput()],
+        ),
+      ),
+      [
+        'StressTestChart: App catalog item without a declaration in common',
+        'MoneyInput: Declared in common without an app catalog item',
+      ],
+    );
+  });
+
   test('outputs that differ from the generated text are stale', () {
     final root = Directory.systemTemp.createTempSync('catalog_check');
     addTearDown(() => root.deleteSync(recursive: true));
@@ -43,6 +74,11 @@ void main() {
       File('${root.path}/$path')
         ..parent.createSync(recursive: true)
         ..writeAsStringSync(content);
+    }
+    final items = Directory('${root.path}/app/lib/catalog/items')
+      ..createSync(recursive: true);
+    for (final item in Directory('../app/lib/catalog/items').listSync()) {
+      (item as File).copySync('${items.path}/${item.uri.pathSegments.last}');
     }
     File('${root.path}/$catalogSkillPath').writeAsStringSync('edited');
 
