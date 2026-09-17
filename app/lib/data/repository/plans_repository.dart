@@ -9,6 +9,8 @@ abstract interface class PlansRepository {
   Stream<List<PlanSummary>> watchPlans();
 
   Future<PlanSummary> create();
+
+  void recordActivity(String id, {required String buyerText});
 }
 
 class SessionPlansRepository with RepositoryGuard implements PlansRepository {
@@ -39,6 +41,19 @@ class SessionPlansRepository with RepositoryGuard implements PlansRepository {
     _changes.add(null);
     return plan;
   });
+
+  @override
+  void recordActivity(String id, {required String buyerText}) {
+    final plan = _plans[id];
+    if (plan == null) {
+      return;
+    }
+    _plans[id] = plan.copyWith(
+      lastActivityAt: _now(),
+      title: plan.title ?? buyerText,
+    );
+    _changes.add(null);
+  }
 
   List<PlanSummary> _newestFirst() =>
       _plans.values.toList()

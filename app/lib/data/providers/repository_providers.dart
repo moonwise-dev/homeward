@@ -2,6 +2,8 @@ import 'package:common/common.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../catalog/homeward_genui_catalog.dart';
+import '../repository/agent_repository.dart';
 import '../repository/app_check_repository.dart';
 import '../repository/auth_repository.dart';
 import '../repository/gemini_key_repository.dart';
@@ -44,3 +46,10 @@ KeyVerificationRepository keyVerificationRepository(Ref ref) =>
 @Riverpod(keepAlive: true)
 PlansRepository plansRepository(Ref ref) =>
     SessionPlansRepository(ref.watch(homewardClientProvider));
+
+@Riverpod(keepAlive: true)
+AgentRepository agentRepository(Ref ref) => GenUiAgentRepository(
+  ref.watch(homewardClientProvider),
+  ref.watch(geminiKeyRepositoryProvider),
+  homewardGenuiCatalog(),
+);

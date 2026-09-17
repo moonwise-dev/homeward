@@ -141,7 +141,7 @@ final class SecureStorageProvider
   }
 }
 
-String _$secureStorageHash() => r'bfc128a8e8c6c30d4db84985fcb579df0123a8f9';
+String _$secureStorageHash() => r'5198d77a96071c6b91ed870fcef9b267295e5bbe';
 
 @ProviderFor(httpClient)
 final httpClientProvider = HttpClientProvider._();

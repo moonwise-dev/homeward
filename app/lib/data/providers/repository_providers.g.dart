@@ -276,3 +276,45 @@ final class PlansRepositoryProvider
 }
 
 String _$plansRepositoryHash() => r'f2254446a2e5325cc389c7c862109f4c036d2008';
+
+@ProviderFor(agentRepository)
+final agentRepositoryProvider = AgentRepositoryProvider._();
+
+final class AgentRepositoryProvider
+    extends
+        $FunctionalProvider<AgentRepository, AgentRepository, AgentRepository>
+    with $Provider<AgentRepository> {
+  AgentRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'agentRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$agentRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<AgentRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AgentRepository create(Ref ref) {
+    return agentRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AgentRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AgentRepository>(value),
+    );
+  }
+}
+
+String _$agentRepositoryHash() => r'669273834f02b6e029dc0695fd5993519cf25a13';

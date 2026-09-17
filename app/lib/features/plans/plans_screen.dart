@@ -36,7 +36,12 @@ class PlansScreen extends ConsumerWidget {
             icon: Icons.add,
             isLoading: state.isCreating,
             fullWidth: true,
-            onPressed: controller.create,
+            onPressed: () async {
+              if (await controller.create() case final plan?
+                  when context.mounted) {
+                await context.push(AppRoutes.planOf(plan.id));
+              }
+            },
           ),
           const SizedBox(height: AppSpacing.lg),
           if (state.plans.isEmpty)
@@ -48,6 +53,7 @@ class PlansScreen extends ConsumerWidget {
             PlanTile(
               title: plan.title ?? 'New plan',
               subtitle: relativeTime(plan.lastActivityAt, now),
+              onTap: () => context.push(AppRoutes.planOf(plan.id)),
             ),
         ],
       ),
