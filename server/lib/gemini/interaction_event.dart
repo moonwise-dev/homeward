@@ -27,6 +27,6 @@ sealed class InteractionEvent with _$InteractionEvent {
 
   const factory InteractionEvent.modelFailed({
     required String model,
-    required GeminiUnavailable reason,
+    required GeminiException reason,
   }) = ModelFailed;
 }

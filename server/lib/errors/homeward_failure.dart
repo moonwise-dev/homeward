@@ -26,6 +26,12 @@ abstract class HomewardFailure with _$HomewardFailure {
           message: 'Your Gemini key has used up its requests for today',
           retryAfter: resetsAt.difference(now),
         ),
+        GeminiCreditsDepleted() => const HomewardFailure(
+          code: HomewardErrorCode.geminiCreditsDepleted,
+          message:
+              'The project behind your Gemini key has run out of prepaid '
+              'credits',
+        ),
         GeminiUnavailable() => const HomewardFailure(
           code: HomewardErrorCode.geminiUnavailable,
           message: 'Gemini is overloaded right now; try again shortly',

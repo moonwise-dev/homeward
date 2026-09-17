@@ -85,7 +85,8 @@ window, and the session limit joins with Firestore in M2.
 | `app_check_failed` | Missing or invalid App Check token |
 | `gemini_key_missing` | Key header absent |
 | `gemini_key_invalid` | Gemini rejected the key |
-| `gemini_quota_exhausted` | Gemini returned a quota error; includes the next reset, midnight Pacific |
+| `gemini_quota_exhausted` | Gemini returned a quota error on every model it could try; includes the next reset, midnight Pacific |
+| `gemini_credits_depleted` | The project behind the key has run out of prepaid credits |
 | `gemini_unavailable` | Every configured model is overloaded, stalled, or returned a server error |
 | `rate_limited` | Homeward limit reached |
 | `turn_in_progress` | Another turn is running in this session |

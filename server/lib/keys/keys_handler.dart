@@ -31,6 +31,7 @@ final class KeysHandler {
   int _statusOf(HomewardErrorCode code) => switch (code) {
     HomewardErrorCode.geminiKeyInvalid => 422,
     HomewardErrorCode.geminiQuotaExhausted => 429,
+    HomewardErrorCode.geminiCreditsDepleted => 402,
     HomewardErrorCode.geminiUnavailable => 503,
     _ => 500,
   };

@@ -7,6 +7,7 @@ import 'package:homeward_server/gemini/interaction_event.dart';
 import 'package:homeward_server/gemini/interaction_input.dart';
 import 'package:homeward_server/gemini/interaction_request.dart';
 import 'package:homeward_server/gemini/interactions_client.dart';
+import 'package:homeward_server/gemini/model_caps.dart';
 import 'package:homeward_server/gemini/model_circuits.dart';
 import 'package:test/test.dart';
 
@@ -27,6 +28,8 @@ void main() {
   Stream<InteractionEvent> run(
     Map<String, FixtureResponse> byModel,
     ModelCircuits modelCircuits, {
+    ModelCaps? caps,
+    String apiKey = 'AQ.test',
     List<RecordedRequest>? recorded,
     Future<void>? cancellation,
     bool Function()? canFallBack,
@@ -40,7 +43,8 @@ void main() {
       firstStepDeadline: const Duration(seconds: 5),
     ),
     circuits: modelCircuits,
-    apiKey: 'AQ.test',
+    caps: caps ?? ModelCaps(now: () => clock),
+    apiKey: apiKey,
     request: request,
     canFallBack: canFallBack ?? () => true,
     cancellation: cancellation,
@@ -143,8 +147,71 @@ void main() {
     },
   );
 
-  test('never falls back on a key or quota error', () async {
+  test(
+    'a model at its free daily cap falls back and is skipped for that key '
+    'until midnight Pacific',
+    () async {
+      final caps = ModelCaps(now: () => clock);
+      final recorded = <RecordedRequest>[];
+      final byModel = {
+        preferred: fixture(
+          'error_free_tier_request_quota_429.json',
+          status: 429,
+        ),
+        fallback: fixture('stream_text.sse'),
+      };
+      List<Object?> modelsTried() => [
+        for (final request in recorded) request.body['model'],
+      ];
+
+      final events = await run(
+        byModel,
+        circuits(),
+        caps: caps,
+        recorded: recorded,
+      ).toList();
+      expect(events.whereType<ModelFailed>().single.model, preferred);
+      expect(events.last, isA<InteractionCompleted>());
+
+      await run(
+        byModel,
+        circuits(),
+        caps: caps,
+        recorded: recorded,
+      ).drain<void>();
+      await run(
+        byModel,
+        circuits(),
+        caps: caps,
+        apiKey: 'AQ.other',
+        recorded: recorded,
+      ).drain<void>();
+      clock = DateTime.utc(2026, 9, 18, 7);
+      await run(
+        byModel,
+        circuits(),
+        caps: caps,
+        recorded: recorded,
+      ).drain<void>();
+
+      expect(modelsTried(), [
+        preferred,
+        fallback,
+        fallback,
+        preferred,
+        fallback,
+        preferred,
+        fallback,
+      ]);
+    },
+  );
+
+  test('asks the capped model again when every model is capped', () async {
+    final caps = ModelCaps(now: () => clock)
+      ..cap('AQ.test', preferred, until: DateTime.utc(2026, 9, 18, 7))
+      ..cap('AQ.test', fallback, until: DateTime.utc(2026, 9, 18, 7));
     final recorded = <RecordedRequest>[];
+
     await expectLater(
       run(
         {
@@ -152,15 +219,50 @@ void main() {
             'error_free_tier_request_quota_429.json',
             status: 429,
           ),
-          fallback: fixture('stream_text.sse'),
+          fallback: fixture(
+            'error_free_tier_request_quota_429.json',
+            status: 429,
+          ),
         },
         circuits(),
+        caps: caps,
         recorded: recorded,
       ).drain<void>(),
       throwsA(isA<GeminiQuotaExhausted>()),
     );
-    expect(recorded, hasLength(1));
+    expect(
+      [for (final request in recorded) request.body['model']],
+      [
+        preferred,
+        fallback,
+      ],
+    );
   });
+
+  for (final (name, response) in [
+    ('an invalid key', fixture('error_invalid_key_401.json', status: 401)),
+    (
+      'a quota that is not per model',
+      fixture('error_search_grounding_quota_429.json', status: 429),
+    ),
+    (
+      'depleted prepaid credits',
+      fixture('error_prepayment_credits_depleted_429.json', status: 429),
+    ),
+  ]) {
+    test('never falls back on $name', () async {
+      final recorded = <RecordedRequest>[];
+      await expectLater(
+        run(
+          {preferred: response, fallback: fixture('stream_text.sse')},
+          circuits(),
+          recorded: recorded,
+        ).drain<void>(),
+        throwsA(isA<GeminiException>()),
+      );
+      expect(recorded, hasLength(1));
+    });
+  }
 
   test('fails when the last healthy model fails', () async {
     final modelCircuits = circuits()..open(preferred);

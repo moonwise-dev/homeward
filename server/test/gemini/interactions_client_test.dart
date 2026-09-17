@@ -134,11 +134,29 @@ void main() {
         'the free-tier daily cap',
         fixture('error_free_tier_request_quota_429.json', status: 429),
         request,
+        isA<GeminiQuotaExhausted>()
+            .having(
+              (error) => error.resetsAt,
+              'resetsAt',
+              nextPacificMidnight(now),
+            )
+            .having((error) => error.perModel, 'perModel', isTrue),
+      ),
+      (
+        'a quota that is not per model',
+        fixture('error_search_grounding_quota_429.json', status: 429),
+        request,
         isA<GeminiQuotaExhausted>().having(
-          (error) => error.resetsAt,
-          'resetsAt',
-          nextPacificMidnight(now),
+          (error) => error.perModel,
+          'perModel',
+          isFalse,
         ),
+      ),
+      (
+        'depleted prepaid credits',
+        fixture('error_prepayment_credits_depleted_429.json', status: 429),
+        request,
+        isA<GeminiCreditsDepleted>(),
       ),
       (
         'a deleted previous interaction',
@@ -174,7 +192,11 @@ void main() {
         'a quota event mid-stream',
         fixture('stream_error_quota_exceeded.sse'),
         request,
-        isA<GeminiQuotaExhausted>(),
+        isA<GeminiQuotaExhausted>().having(
+          (error) => error.perModel,
+          'perModel',
+          isTrue,
+        ),
       ),
       (
         'an overload event mid-stream',

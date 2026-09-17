@@ -4,6 +4,7 @@ enum HomewardErrorCode {
   geminiKeyMissing('gemini_key_missing'),
   geminiKeyInvalid('gemini_key_invalid'),
   geminiQuotaExhausted('gemini_quota_exhausted'),
+  geminiCreditsDepleted('gemini_credits_depleted'),
   geminiUnavailable('gemini_unavailable'),
   rateLimited('rate_limited'),
   turnInProgress('turn_in_progress'),

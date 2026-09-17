@@ -177,7 +177,8 @@ The quota and overload bodies are committed as fixtures in
   `docs/AGENT.md` and was chosen without measurement: search and extraction as
   two interactions, with every figure tied to a `url_citation`.
 - **D41:** Buyers bring their own free keys, and a quota error never falls back
-  to another model, even though each model has its own daily cap.
+  to another model, even though each model has its own daily cap. Replaced for
+  the per-model free daily cap by D79 on 2026-09-17.
 - **D42:** Billing is attached to the project only because Cloud Run, Artifact
   Registry, Cloud Scheduler, and Hosting rewrites require it; everything is
   sized to stay at €0 with a €1 budget alert.

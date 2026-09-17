@@ -76,6 +76,7 @@ void main() {
       'message': 'Your Gemini key has used up its requests for today',
       'retryAfterSeconds': 68400,
     });
+    expect((await verifyWith(const GeminiCreditsDepleted('prepaid'))).$1, 402);
     expect((await verifyWith(const GeminiUnavailable('busy'))).$1, 503);
     expect((await verifyWith(const GeminiRequestInvalid('404'))).$1, 500);
   });

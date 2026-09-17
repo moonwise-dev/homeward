@@ -7,6 +7,8 @@ import '../../data/providers/repository_providers.dart';
 import '../../display/quota_reset_message.dart';
 import '../../errors/app_error.dart';
 import '../../messages/app_message_action.dart';
+import '../../navigation/app_router.dart';
+import '../../navigation/app_routes.dart';
 import '../../riverpod/safe_notifier_state.dart';
 import 'plan_chat_state.dart';
 
@@ -66,6 +68,15 @@ class PlanChatController extends _$PlanChatController
       ):
         showInfoMessage(
           message: quotaResetMessage(retryAfter, DateTime.now()),
+        );
+      case ServerAppError(code: HomewardErrorCode.geminiCreditsDepleted):
+        showErrorMessage(
+          error: failure.error,
+          action: AppMessageAction(
+            label: 'Change key',
+            onPressed: () =>
+                ref.read(appRouterProvider).push(AppRoutes.geminiKey),
+          ),
         );
       case final error:
         showErrorMessage(

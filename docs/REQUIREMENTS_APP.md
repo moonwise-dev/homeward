@@ -94,6 +94,8 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 - Turn failures show a toast and a retry affordance on the failed turn.
 - `gemini_key_invalid` routes to `/key`. `gemini_quota_exhausted` explains that
   the buyer's free key has reached its daily cap and shows when it resets.
+  `gemini_credits_depleted` shows the server message with a change key action,
+  since waiting does not help.
 
 ### Plan Board
 

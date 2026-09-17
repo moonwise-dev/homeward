@@ -129,7 +129,7 @@ return modelFailed(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String interactionId,  String model)?  created,TResult Function( String text)?  textDelta,TResult Function( String callId,  String name,  Map<String, Object?> arguments)?  functionCall,TResult Function( String interactionId,  String status,  Map<String, Object?>? usage)?  completed,TResult Function( String model,  GeminiUnavailable reason)?  modelFailed,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String interactionId,  String model)?  created,TResult Function( String text)?  textDelta,TResult Function( String callId,  String name,  Map<String, Object?> arguments)?  functionCall,TResult Function( String interactionId,  String status,  Map<String, Object?>? usage)?  completed,TResult Function( String model,  GeminiException reason)?  modelFailed,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case InteractionCreated() when created != null:
 return created(_that.interactionId,_that.model);case TextDelta() when textDelta != null:
@@ -154,7 +154,7 @@ return modelFailed(_that.model,_that.reason);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String interactionId,  String model)  created,required TResult Function( String text)  textDelta,required TResult Function( String callId,  String name,  Map<String, Object?> arguments)  functionCall,required TResult Function( String interactionId,  String status,  Map<String, Object?>? usage)  completed,required TResult Function( String model,  GeminiUnavailable reason)  modelFailed,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String interactionId,  String model)  created,required TResult Function( String text)  textDelta,required TResult Function( String callId,  String name,  Map<String, Object?> arguments)  functionCall,required TResult Function( String interactionId,  String status,  Map<String, Object?>? usage)  completed,required TResult Function( String model,  GeminiException reason)  modelFailed,}) {final _that = this;
 switch (_that) {
 case InteractionCreated():
 return created(_that.interactionId,_that.model);case TextDelta():
@@ -175,7 +175,7 @@ return modelFailed(_that.model,_that.reason);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String interactionId,  String model)?  created,TResult? Function( String text)?  textDelta,TResult? Function( String callId,  String name,  Map<String, Object?> arguments)?  functionCall,TResult? Function( String interactionId,  String status,  Map<String, Object?>? usage)?  completed,TResult? Function( String model,  GeminiUnavailable reason)?  modelFailed,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String interactionId,  String model)?  created,TResult? Function( String text)?  textDelta,TResult? Function( String callId,  String name,  Map<String, Object?> arguments)?  functionCall,TResult? Function( String interactionId,  String status,  Map<String, Object?>? usage)?  completed,TResult? Function( String model,  GeminiException reason)?  modelFailed,}) {final _that = this;
 switch (_that) {
 case InteractionCreated() when created != null:
 return created(_that.interactionId,_that.model);case TextDelta() when textDelta != null:
@@ -494,7 +494,7 @@ class ModelFailed implements InteractionEvent {
   
 
  final  String model;
- final  GeminiUnavailable reason;
+ final  GeminiException reason;
 
 /// Create a copy of InteractionEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -528,7 +528,7 @@ abstract mixin class $ModelFailedCopyWith<$Res> implements $InteractionEventCopy
   factory $ModelFailedCopyWith(ModelFailed value, $Res Function(ModelFailed) _then) = _$ModelFailedCopyWithImpl;
 @useResult
 $Res call({
- String model, GeminiUnavailable reason
+ String model, GeminiException reason
 });
 
 
@@ -549,7 +549,7 @@ class _$ModelFailedCopyWithImpl<$Res>
   return _then(ModelFailed(
 model: null == model ? _self.model : model // ignore: cast_nullable_to_non_nullable
 as String,reason: null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
-as GeminiUnavailable,
+as GeminiException,
   ));
 }
 

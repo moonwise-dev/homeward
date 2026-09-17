@@ -16,9 +16,18 @@ final class GeminiKeyInvalid extends GeminiException {
 }
 
 final class GeminiQuotaExhausted extends GeminiException {
-  const GeminiQuotaExhausted(super.message, {required this.resetsAt});
+  const GeminiQuotaExhausted(
+    super.message, {
+    required this.resetsAt,
+    this.perModel = false,
+  });
 
   final DateTime resetsAt;
+  final bool perModel;
+}
+
+final class GeminiCreditsDepleted extends GeminiException {
+  const GeminiCreditsDepleted(super.message);
 }
 
 final class GeminiUnavailable extends GeminiException {
@@ -46,7 +55,7 @@ GeminiException geminiHttpError({
   return switch (statusCode) {
     401 || 403 => GeminiKeyInvalid(message),
     400 when reasons.contains('API_KEY_INVALID') => GeminiKeyInvalid(message),
-    429 => GeminiQuotaExhausted(message, resetsAt: nextPacificMidnight(now)),
+    429 => _quotaError(message, now),
     400 || 404
         when continuesHistory &&
             (code == 'not_found' || code == 'invalid_request') =>
@@ -64,13 +73,19 @@ GeminiException geminiStreamError({
   final message = error['message'] as String? ?? 'Gemini stream error';
   return switch (error['code']) {
     'api_error' => GeminiUnavailable(message, model: model),
-    'quota_exceeded' || 'too_many_requests' => GeminiQuotaExhausted(
-      message,
-      resetsAt: nextPacificMidnight(now),
-    ),
+    'quota_exceeded' || 'too_many_requests' => _quotaError(message, now),
     _ => GeminiRequestInvalid(message),
   };
 }
+
+GeminiException _quotaError(String message, DateTime now) =>
+    message.contains('prepayment credits are depleted')
+    ? GeminiCreditsDepleted(message)
+    : GeminiQuotaExhausted(
+        message,
+        resetsAt: nextPacificMidnight(now),
+        perModel: message.contains('generate_content_free_tier_requests'),
+      );
 
 (Object?, String, Set<String>) _errorOf(String body) {
   try {

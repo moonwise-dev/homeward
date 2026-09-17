@@ -33,8 +33,10 @@ therefore goes first (D72), and the order is compared again for quality in the
 recording week.
 
 On the free tier each model allows about 20 requests a day per Google Cloud
-project, resetting at midnight Pacific (spike S3). A turn uses up to two, so a
-buyer's free key covers roughly ten turns a day on the first model.
+project, resetting at midnight Pacific (spike S3). A turn uses up to two, and a
+model at its cap hands the turn to the next (D79), so a buyer's free key covers
+roughly twenty turns a day across both models. The cap is per project, so every
+key in the project, and AI Studio, share it.
 
 ### Model Selection
 
@@ -52,9 +54,14 @@ buyer's free key covers roughly ten turns a day on the first model.
   fails with `gemini_unavailable` instead of repeating output.
 - Circuits live in memory per instance; a cold instance relearns within one
   request.
-- A key or quota error never falls back; it is the buyer's to fix. This holds
-  for the free tier's per-model daily cap too, although another model has its
-  own cap (D41).
+- A key error, a quota that is not per model, and depleted prepaid credits
+  never fall back; they are the buyer's to fix. The free tier's per-model daily
+  cap does (D79, replacing D41 for that cap): the round moves to the next model
+  under the same rule as an overload, and the capped model is skipped for that
+  key until midnight Pacific. Caps live in memory per instance, keyed by a
+  SHA-256 digest of the key that is never logged or stored. When every model is
+  capped for a key, the request asks them again, so a key whose project gained
+  billing recovers at once.
 - Every turn logs the model used and, when it fell back, the model and reason
   it fell back from, which the client streams as a `modelFailed` event.
 
@@ -311,8 +318,13 @@ decision.
   `modelFailed`. Thought steps and signatures are dropped. SSE framing comes
   from `decodeSse` in `common/wire`, a stream transformer, so cancelling a turn
   cancels the connection even while the stream is silent.
-- A 429 is always `gemini_quota_exhausted` with the next midnight Pacific as
-  its reset, computed from the US daylight saving rules.
+- A quota error, a 429 or an in-stream `quota_exceeded` or `too_many_requests`,
+  is read by its `message`: `prepayment credits are depleted` means the key's
+  project ran out of prepaid credits, recorded from a live turn on 2026-09-17,
+  and maps to `gemini_credits_depleted`; any other is `gemini_quota_exhausted`
+  with the next midnight Pacific as its reset, computed from the US daylight
+  saving rules, and is per model when it names
+  `generate_content_free_tier_requests`.
 - Recorded streams and error bodies live in
   `server/test/fixtures/interactions/`.
 
@@ -360,7 +372,9 @@ takes this shape:
 | Failure | Behavior |
 | --- | --- |
 | Invalid Gemini key (HTTP 401 or 403, or 400 with `API_KEY_INVALID`) | Turn fails with `gemini_key_invalid`; app routes to the key screen |
+| A model's free daily cap reached | The round moves to the next model, which the key then uses until midnight Pacific |
 | Key quota exhausted (HTTP 429) | Turn fails with `gemini_quota_exhausted` and the next midnight Pacific as reset time; app explains the free key's daily cap |
+| Prepaid credits depleted | Turn fails with `gemini_credits_depleted`; app offers to change the key |
 | Model overloaded or stalled | Model selection falls back once; if every model is unhealthy, the turn fails with `gemini_unavailable` |
 | Unknown or expired previous interaction | Retry once with rebuilt history |
 | Model output invalid after corrections | Model text plus a retry surface |

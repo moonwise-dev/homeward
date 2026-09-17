@@ -17,6 +17,7 @@ import '../../auth/identity_verifier.dart';
 import '../../config/server_config.dart';
 import '../../gemini/create_with_fallback.dart';
 import '../../gemini/interactions_client.dart';
+import '../../gemini/model_caps.dart';
 import '../../gemini/model_circuits.dart';
 import '../../gemini/models_client.dart';
 import '../../keys/verify_gemini_key.dart';
@@ -105,6 +106,7 @@ final class Providers {
       models: config.turnModels,
       cooldown: config.modelCooldown,
     );
+    final caps = ModelCaps();
     return Providers(
       config: config,
       identity: FirebaseIdentityVerifier(firebase.auth()),
@@ -118,6 +120,7 @@ final class Providers {
           }) => createWithFallback(
             client: client,
             circuits: circuits,
+            caps: caps,
             apiKey: apiKey,
             request: request,
             canFallBack: canFallBack,
