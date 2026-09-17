@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:common/common.dart';
 import 'package:homeward_tool/markets_check/check_markets.dart';
-import 'package:homeward_tool/markets_check/finding.dart';
-import 'package:homeward_tool/markets_check/load_markets.dart';
+import 'package:homeward_server/markets/finding.dart';
+import 'package:homeward_server/markets/load_markets.dart';
 import 'package:test/test.dart';
 
 void main() {

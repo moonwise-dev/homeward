@@ -90,6 +90,43 @@ const stockholmMarketJson = r'''
       "sourceId": "sbab-list-rates"
     }
   ],
+  "profileFields": [
+    {
+      "id": "net-monthly-income",
+      "field": "netMonthlyIncome",
+      "reason": "Banks check what is left to live on after housing costs"
+    },
+    {
+      "id": "gross-monthly-income",
+      "field": "grossMonthlyIncome",
+      "reason": "Banks cap debt at a multiple of gross income"
+    },
+    {
+      "id": "monthly-debt-payments",
+      "field": "monthlyDebtPayments",
+      "reason": "Other loans reduce what is left to live on"
+    },
+    {
+      "id": "age",
+      "field": "age",
+      "reason": "Living costs depend on age"
+    },
+    {
+      "id": "household",
+      "field": "household",
+      "reason": "Living costs depend on who lives in the home"
+    },
+    {
+      "id": "borrowers",
+      "field": "borrowers",
+      "reason": "The interest deduction threshold applies to each borrower"
+    },
+    {
+      "id": "savings",
+      "field": "savings",
+      "reason": "The down payment comes from savings"
+    }
+  ],
   "referenceRates": {
     "SE.AVG_VARIABLE_3M": {
       "id": "SE.AVG_VARIABLE_3M",

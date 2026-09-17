@@ -114,8 +114,8 @@ cannot, because their inputs come from what the buyer wrote.
 
 | Tool | Input | Model result | Seeds |
 | --- | --- | --- | --- |
-| `resolve_market` | `query` | Candidate markets with coverage | — |
-| `load_market` | `marketId` | Coverage, required profile fields for this buyer, headline rules | `/market` |
+| `resolve_market` | `placeName`, and the model's `countryCode` and `subdivisionCode` | Candidate markets with name and coverage, whether one is confirmed, curated markets when none resolve | `/selection` |
+| `load_market` | `marketId` | Coverage, currency, profile fields with reasons, kinds of lending rule, never rule values | `/market` |
 | `propose_profile` | Profile fields stated by the buyer | Accepted and rejected fields | `/profile` draft |
 | `propose_scenario` | Price, down payment, term, loan type stated by the buyer | Accepted fields | `/scenario` draft |
 | `compute_affordability` | — | Binding constraint, headroom category | `/derived/affordability`, `/derived/downPaymentBounds`, `/derived/payment` |

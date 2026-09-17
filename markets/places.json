@@ -1,0 +1,304 @@
+{
+  "source": {
+    "id": "dgt-caop-2025",
+    "publisher": "Direção-Geral do Território",
+    "title": "Carta Administrativa Oficial de Portugal, CAOP 2025",
+    "url": "https://www.dgterritorio.gov.pt/carta-administrativa-oficial-de-portugal-caop-2025",
+    "kind": "officialStatistics",
+    "retrievedAt": "2026-09-17"
+  },
+  "places": [
+    {
+      "name": "Madeira",
+      "kind": "region",
+      "marketIds": [
+        "PT-30"
+      ]
+    },
+    {
+      "name": "Azores",
+      "aliases": [
+        "Açores"
+      ],
+      "kind": "region",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Porto Santo",
+      "kind": "island",
+      "marketIds": [
+        "PT-30"
+      ]
+    },
+    {
+      "name": "São Miguel",
+      "kind": "island",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Santa Maria",
+      "kind": "island",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Terceira",
+      "kind": "island",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Graciosa",
+      "kind": "island",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "São Jorge",
+      "kind": "island",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Pico",
+      "kind": "island",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Faial",
+      "kind": "island",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Flores",
+      "kind": "island",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Corvo",
+      "kind": "island",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Calheta",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-30",
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Câmara de Lobos",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-30"
+      ]
+    },
+    {
+      "name": "Funchal",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-30"
+      ]
+    },
+    {
+      "name": "Machico",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-30"
+      ]
+    },
+    {
+      "name": "Ponta do Sol",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-30"
+      ]
+    },
+    {
+      "name": "Porto Moniz",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-30"
+      ]
+    },
+    {
+      "name": "Porto Santo",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-30"
+      ]
+    },
+    {
+      "name": "Ribeira Brava",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-30"
+      ]
+    },
+    {
+      "name": "Santa Cruz",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-30"
+      ]
+    },
+    {
+      "name": "Santana",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-30"
+      ]
+    },
+    {
+      "name": "São Vicente",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-30"
+      ]
+    },
+    {
+      "name": "Angra do Heroísmo",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Corvo",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Horta",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Lagoa",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20",
+        "PT"
+      ]
+    },
+    {
+      "name": "Lajes das Flores",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Lajes do Pico",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Madalena",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Nordeste",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Ponta Delgada",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Povoação",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Praia da Vitória",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Ribeira Grande",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Santa Cruz da Graciosa",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Santa Cruz das Flores",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "São Roque do Pico",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Velas",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Vila do Porto",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    },
+    {
+      "name": "Vila Franca do Campo",
+      "kind": "municipality",
+      "marketIds": [
+        "PT-20"
+      ]
+    }
+  ]
+}

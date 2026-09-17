@@ -116,5 +116,7 @@ Generated files are committed and never edited by hand:
 - `common/lib/money/generated/*`, from `make iso-4217`
 - `common/lib/a2ui/generated/*`, from `make a2ui-schemas`, pinned to an A2UI spec
   commit
+- `common/lib/geo/generated/*` and `server/lib/markets/generated/*`, from
+  `make territories`, pinned to a CLDR release
 - `common/lib/catalog/generated/*`
 - `server/prompts/generated/*`

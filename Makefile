@@ -24,6 +24,7 @@ help:
 	@echo "  make codegen       Run build_runner in common and server"
 	@echo "  make iso-4217      Regenerate the ISO 4217 currency table from SIX"
 	@echo "  make a2ui-schemas  Vendor the pinned A2UI v0.9 basic catalog and common types"
+	@echo "  make territories   Regenerate country and subdivision names from CLDR"
 	@echo "  make server-dev    Run the server locally with hot reload"
 	@echo "  make server-build  Cross-compile the server for linux/x64"
 	@echo "  make server-image  Build the server container image"
@@ -86,6 +87,11 @@ iso-4217:
 a2ui-schemas:
 	@dart run tool/bin/vendor_a2ui_schemas.dart common/lib/a2ui/generated/a2ui_v09_schemas.dart
 	@dart format common/lib/a2ui/generated/a2ui_v09_schemas.dart
+
+.PHONY: territories
+territories:
+	@dart run tool/bin/generate_territories.dart common/lib/geo/generated/country_names.dart server/lib/markets/generated/subdivision_names.dart
+	@dart format common/lib/geo/generated/country_names.dart server/lib/markets/generated/subdivision_names.dart
 
 .PHONY: server-dev
 server-dev:

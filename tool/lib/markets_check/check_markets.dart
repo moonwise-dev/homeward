@@ -1,7 +1,8 @@
 import 'package:common/common.dart';
 
-import 'finding.dart';
-import 'markets_data.dart';
+import 'package:homeward_server/markets/finding.dart';
+import 'package:homeward_server/markets/generated/subdivision_names.dart';
+import 'package:homeward_server/markets/markets_data.dart';
 
 const maxRateAgeDays = 75;
 const expiryWarningDays = 30;
@@ -14,7 +15,31 @@ List<Finding> checkMarkets(MarketsData data, {required CalendarDate today}) {
     ...data.loadFindings,
     for (final MapEntry(key: file, value: pack) in data.packsByFile.entries)
       ..._checkPack(file, pack, packsById, data, today),
+    ..._checkPlaces(data, packsById),
   ];
+}
+
+Iterable<Finding> _checkPlaces(
+  MarketsData data,
+  Map<MarketId, MarketRulePack> packsById,
+) sync* {
+  final places = data.places;
+  if (places == null) {
+    yield findingError('places.json', 'Missing place directory');
+    return;
+  }
+  for (final place in places.places) {
+    for (final marketId in place.marketIds) {
+      if (!packsById.containsKey(marketId) &&
+          !subdivisionNames.containsKey(marketId.code) &&
+          !countryNames.containsKey(marketId.code)) {
+        yield findingError(
+          'places.json',
+          '${place.name} points at unknown market ${marketId.code}',
+        );
+      }
+    }
+  }
 }
 
 Iterable<Finding> _checkPack(

@@ -77,10 +77,19 @@ MarketsData loadMarkets(Directory root) {
     }
   }
 
+  final placesFile = File('${root.path}/places.json');
+  final places = placesFile.existsSync()
+      ? parse(
+          placesFile,
+          (json) => PlaceDirectory.fromJson(json! as Map<String, Object?>),
+        )
+      : null;
+
   return (
     packsByFile: packsByFile,
     rates: rates,
     livingCosts: livingCosts,
+    places: places,
     loadFindings: findings,
   );
 }

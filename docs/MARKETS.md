@@ -294,7 +294,28 @@ or an expired pack, and warns when a pack expires within 30 days.
 A market with no pack in `markets/packs` is uncovered. Resolution returns its
 identifier and name and nothing else; no rule is guessed or researched at
 runtime. See `docs/AGENT.md`. Every pack in `markets/` is curated, so coverage
-is a property of resolution, not a field of the pack.
+is a property of resolution, not a field of the pack. A region without a pack is
+uncovered even when its country is curated, because its rules differ.
+
+## Resolving Places
+
+Homeward resolves free text without paid geocoding (D68). The model extracts the
+place and proposes ISO 3166 codes from its own knowledge; `resolve_market`
+keeps only codes that exist in the country and subdivision tables generated
+from Unicode CLDR (`make territories`). A subdivision is kept only when it has
+distinct rules, that is a pack or an entry in `markets/places.json`; otherwise
+the market is its country.
+
+`markets/places.json` lists the regions, islands, and municipalities of regions
+with their own rules, from the official administrative map (CAOP 2025): Madeira
+and the Azores. A curated place overrides the model when the model proposed the
+region's country, so Funchal is `PT-30` even when the model says `PT`. Names
+shared across markets resolve to every market they name, such as Calheta in
+Madeira and the Azores and Lagoa in the Azores and the Algarve, and a model
+proposal in another country is added as a candidate. More than one candidate
+means the buyer confirms with a `LocationPicker`. Matching ignores case,
+spacing, and accents. `make markets-check` fails on a place that points at an
+unknown market.
 
 ## Tier 1 Curation Notes
 

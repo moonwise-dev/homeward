@@ -13,6 +13,7 @@ import 'loan_type.dart';
 import 'market_id.dart';
 import 'market_id_json_converter.dart';
 import 'market_rule_pack.dart';
+import 'profile_field_requirement.dart';
 import 'reference_rate.dart';
 import 'rule_section.dart';
 import 'source.dart';
@@ -30,6 +31,7 @@ abstract class ResolvedMarket with _$ResolvedMarket {
     required List<CostRule> purchaseCosts,
     required List<CostRule> recurringCosts,
     required List<LoanType> loanTypes,
+    @Default([]) List<ProfileFieldRequirement> profileFields,
     @Default({}) Map<String, ReferenceRate> referenceRates,
     LivingCosts? livingCosts,
     required List<Source> sources,
@@ -124,6 +126,7 @@ ResolvedMarket resolveForBuyer(
     purchaseCosts: purchaseCosts,
     recurringCosts: recurringCosts,
     loanTypes: pack.loanTypes,
+    profileFields: profileFields,
     referenceRates: {
       for (final loanType in pack.loanTypes)
         loanType.referenceRateId: ?referenceRates[loanType.referenceRateId],

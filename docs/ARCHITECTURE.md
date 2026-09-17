@@ -134,6 +134,7 @@ markets/
     EUR.json
   living_costs/
     SE.json
+  places.json
 ```
 
 Packs parse strictly into the `common/markets` models, and `make markets-check`

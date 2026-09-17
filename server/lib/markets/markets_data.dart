@@ -6,5 +6,6 @@ typedef MarketsData = ({
   Map<String, MarketRulePack> packsByFile,
   Map<String, ReferenceRate> rates,
   Map<CountryCode, LivingCosts> livingCosts,
+  PlaceDirectory? places,
   List<Finding> loadFindings,
 });
