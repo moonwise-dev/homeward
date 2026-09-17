@@ -9,6 +9,7 @@ import '../../gemini/interaction_input.dart';
 import '../../gemini/interaction_request.dart';
 import '../../gemini/tool_choice.dart';
 import '../../logging/log_entry.dart';
+import '../../tools/profile_field_paths.dart';
 import '../actions/action_input.dart';
 import '../actions/apply_action.dart';
 import '../parsed_output.dart';
@@ -250,10 +251,12 @@ final class TurnRun {
     required bool allowToolCalls,
   }) {
     final settled = tools.runSettled(_plan);
-    _validator.seeds = turnSeeds(_plan, [
-      ..._calledSeeds,
-      for (final result in settled.values) result.seeds,
-    ]);
+    _validator
+      ..seeds = turnSeeds(_plan, [
+        ..._calledSeeds,
+        for (final result in settled.values) result.seeds,
+      ])
+      ..requiredProfilePaths = _requiredProfilePaths();
     return InteractionRequest(
       input: input,
       systemInstruction: prompts.systemInstruction(
@@ -276,6 +279,18 @@ final class TurnRun {
       thinkingLevel: settings.thinkingLevel,
       previousInteractionId: _interactionId,
     );
+  }
+
+  Set<String> _requiredProfilePaths() {
+    final marketId = _plan.marketId;
+    final market = marketId == null
+        ? null
+        : tools.markets.resolveFor(marketId, _plan.profile);
+    return {
+      if (market != null)
+        for (final field in missingProfileFields(_plan.profile, market))
+          ...profileFieldPaths(field),
+    };
   }
 
   Stream<TurnEvent> _emit(ParsedOutput output) async* {
@@ -307,6 +322,7 @@ final class TurnRun {
               ),
             );
             _pendingFailures.add(failure);
+          case Unchanged():
         }
     }
   }

@@ -96,12 +96,7 @@ final class ProposeScenarioTool extends ModelTool {
       () => market.loanTypes.first,
     );
     final minimumDownPayment =
-        price -
-        market.lending.maxLtv
-            .map(
-              (limit) => price.applyRate(limit.rate, rounding: Rounding.down),
-            )
-            .fold(price, (lowest, cap) => cap < lowest ? cap : lowest);
+        price - loanToValueLimit(price: price, lending: market.lending);
     final downPayment = valueOr(
       'downPayment',
       () {

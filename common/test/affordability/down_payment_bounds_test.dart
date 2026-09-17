@@ -17,4 +17,18 @@ void main() {
       expect(downPaymentStep(price), step);
     });
   }
+
+  test('bounds a down payment by the loan-to-value cap alone', () {
+    expect(
+      loanToValueBounds(
+        price: stockholmScenario.price,
+        lending: stockholmMarket.lending,
+      ),
+      DownPaymentBounds(
+        min: sek(45000000),
+        max: sek(450000000),
+        step: sek(2000000),
+      ),
+    );
+  });
 }

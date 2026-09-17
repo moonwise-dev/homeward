@@ -398,12 +398,16 @@ pass rejects it.
    catalog defines them.
 8. **Paths.** The session's stored messages are replayed into an `a2ui_core`
    `MessageProcessor` at the start of the turn. Each candidate message goes
-   through that shadow processor: an update to an unknown surface or a duplicate
-   `createSurface` fails, and every bound absolute path must resolve in the data
-   model the server will seed. An input may bind to a missing field of an
+   through that shadow processor: an update to an unknown surface fails, and
+   every bound absolute path must resolve in the data model the server will
+   seed. A `createSurface` repeating one accepted earlier in the turn changes
+   nothing and is not forwarded, since models resend it when correcting. An input may bind to a missing field of an
    existing object, which it will write; relative template paths are skipped.
 9. **Actions.** Action names are in the action table.
-10. **Seed.** The server prepends `createSurface` with `sendDataModel: true` if
+10. **Forms.** A surface with a `commit_profile` action binds an input to every
+    profile path the market still needs for this buyer, the same paths the
+    turn context lists as missing (D83).
+11. **Seed.** The server prepends `createSurface` with `sendDataModel: true` if
     the model omitted it, and emits `updateDataModel` for the slices the
     components bind to.
 

@@ -19,6 +19,7 @@ final class TurnValidator {
   final CatalogValidator catalog;
   final MessageProcessor<ComponentApi> shadow;
   Map<String, Object?> seeds;
+  Set<String> requiredProfilePaths = const {};
   final RegExp _surfacePattern;
   final _components = <String, Map<String, Map<String, Object?>>>{};
 
@@ -75,6 +76,9 @@ final class TurnValidator {
         'Use catalogId $homewardCatalogId',
       );
     }
+    if (_components.containsKey(surfaceId)) {
+      return const Unchanged();
+    }
     if (_components.length >= InlineSurfaces.maxPerTurn) {
       return _reject(
         surfaceId,
@@ -130,10 +134,29 @@ final class TurnValidator {
       }
       merged[component['id']! as String] = component;
     }
-    if (structureProblem(merged) case final problem?) {
+    if (structureProblem(merged) ?? _formProblem(merged) case final problem?) {
       return _reject(surfaceId, '/updateComponents/components', problem);
     }
     return _apply(message, () => _components[surfaceId] = merged);
+  }
+
+  String? _formProblem(Map<String, Map<String, Object?>> components) {
+    final commitsProfile = components.values.any(
+      (component) => actionNames(
+        component,
+      ).contains(SurfaceAction.commitProfile.wireName),
+    );
+    if (!commitsProfile) {
+      return null;
+    }
+    final bound = {
+      for (final component in components.values) ...boundPaths(component),
+    };
+    final unbound = requiredProfilePaths.difference(bound);
+    return unbound.isEmpty
+        ? null
+        : 'A form sending ${SurfaceAction.commitProfile.wireName} needs '
+              'inputs bound to ${unbound.join(', ')}';
   }
 
   String? _ownershipProblem(String surfaceId) => switch (surfaceId) {

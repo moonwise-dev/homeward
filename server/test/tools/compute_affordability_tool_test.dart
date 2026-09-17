@@ -58,7 +58,14 @@ void main() {
       result.modelResult['missingFacts'],
       containsAll(['netMonthlyIncome', 'household']),
     );
-    expect(result.seeds, isEmpty);
+    expect(result.seeds, {
+      'derived': {
+        'downPaymentBounds': loanToValueBounds(
+          price: stockholmScenario.price,
+          lending: stockholmMarket.lending,
+        ).toJson(),
+      },
+    });
   });
 
   test('needs a covered market and a scenario first', () {

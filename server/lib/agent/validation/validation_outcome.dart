@@ -12,6 +12,10 @@ final class Accepted extends ValidationOutcome {
   final A2uiMessage message;
 }
 
+final class Unchanged extends ValidationOutcome {
+  const Unchanged();
+}
+
 final class Rejected extends ValidationOutcome {
   const Rejected(this.failure);
 

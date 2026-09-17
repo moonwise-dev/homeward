@@ -319,6 +319,44 @@ void main() {
     expect(events.last, isA<TurnCompleted>());
   });
 
+  test(
+    'asks for a form that covers every fact the market still needs',
+    () async {
+      await sessionWith(Plan(marketId: MarketId.parse('SE')));
+      final incomeOnly = [
+        {
+          'id': 'root',
+          'component': 'Column',
+          'children': ['income', 'save'],
+        },
+        {...incomeForm().single, 'id': 'income'},
+        {
+          'id': 'save',
+          'component': 'Button',
+          'child': 'save_label',
+          'action': {
+            'event': {
+              'name': 'commit_profile',
+              'context': {'profilePath': '/profile'},
+            },
+          },
+        },
+        {'id': 'save_label', 'component': 'Text', 'text': 'Save'},
+      ];
+      final script = ScriptedInteractions([
+        reply('i1', text: a2ui('t1-income', incomeOnly)),
+        reply('i2', text: 'Here is the full form.'),
+      ]);
+
+      await send(orchestrator(script)).drain<void>();
+
+      final correction = (script.requests[1].input as TextInput).text;
+      expect(correction, contains('needs inputs bound to'));
+      expect(correction, contains('/profile/childAges'));
+      expect(correction, isNot(contains('/profile/netMonthlyIncome')));
+    },
+  );
+
   test('ends with a retry surface when corrections run out', () async {
     await sessionWith(Plan(marketId: MarketId.parse('SE')));
     final invalid = reply('i1', text: a2ui('t1-income', incomeForm(value: 1)));

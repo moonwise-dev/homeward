@@ -96,6 +96,7 @@ void main() {
       switch (validator.validate(line)) {
         Rejected(:final failure) => '${failure.path} ${failure.message}',
         Accepted() => 'accepted',
+        Unchanged() => 'unchanged',
       };
 
   test('accepts a surface and its component tree', () {
@@ -296,11 +297,6 @@ void main() {
       ],
       'Unknown action buy_now',
     ),
-    (
-      'shadow: duplicate surface',
-      () => [create('t1-a'), create('t1-a')],
-      'already exists',
-    ),
   ];
 
   for (final (name, lines, expected) in cases) {
@@ -331,5 +327,82 @@ void main() {
       ),
       isA<Accepted>(),
     );
+  });
+
+  test('a repeated createSurface in the same turn changes nothing', () {
+    final validator = validatorForTurn(1);
+
+    expect(validator.validate(create('t1-a')), isA<Accepted>());
+    expect(validator.validate(update('t1-a', validTree)), isA<Accepted>());
+    expect(validator.validate(create('t1-a')), isA<Unchanged>());
+    expect(validator.validate(update('t1-a', validTree)), isA<Accepted>());
+  });
+
+  group('a form sending commit_profile', () {
+    List<Map<String, Object?>> form(List<Map<String, Object?>> inputs) => [
+      {
+        'id': 'root',
+        'component': 'Column',
+        'children': [for (final input in inputs) input['id'], 'save'],
+      },
+      ...inputs,
+      {
+        'id': 'save',
+        'component': 'Button',
+        'child': 'save_label',
+        'action': {
+          'event': {
+            'name': 'commit_profile',
+            'context': {'profilePath': '/profile'},
+          },
+        },
+      },
+      {'id': 'save_label', 'component': 'Text', 'text': 'Save'},
+    ];
+    const income = {
+      'id': 'income',
+      'component': 'MoneyInput',
+      'label': 'Net income',
+      'value': {'path': '/profile/netMonthlyIncome'},
+      'currency': {'path': '/market/currency'},
+    };
+    const household = {
+      'id': 'household',
+      'component': 'HouseholdInput',
+      'label': 'Who lives in the home?',
+      'adults': {'path': '/profile/adults'},
+      'childAges': {'path': '/profile/childAges'},
+    };
+
+    TurnValidator validatorNeeding(Set<String> paths) => validatorForTurn(1)
+      ..requiredProfilePaths = paths
+      ..validate(create('t1-profile'));
+
+    test('needs an input for every missing profile path', () {
+      final validator = validatorNeeding({
+        '/profile/netMonthlyIncome',
+        '/profile/adults',
+        '/profile/childAges',
+      });
+
+      expect(
+        rejection(validator, update('t1-profile', form([income]))),
+        '/updateComponents/components A form sending commit_profile needs '
+        'inputs bound to /profile/adults, /profile/childAges',
+      );
+      expect(
+        validator.validate(update('t1-profile', form([income, household]))),
+        isA<Accepted>(),
+      );
+    });
+
+    test('is not checked on surfaces without the action', () {
+      expect(
+        validatorNeeding({'/profile/adults'}).validate(
+          update('t1-profile', validTree),
+        ),
+        isA<Accepted>(),
+      );
+    });
   });
 }

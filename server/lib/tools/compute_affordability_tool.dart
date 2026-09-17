@@ -48,6 +48,14 @@ final class ComputeAffordabilityTool extends AgentTool {
               for (final currency in unconvertedCurrencies) currency.code,
             ],
           },
+          seeds: {
+            'derived': {
+              'downPaymentBounds': loanToValueBounds(
+                price: scenario.price,
+                lending: market.lending,
+              ).toJson(),
+            },
+          },
         ),
       final AssessedAffordability assessed => ToolResult(
         modelResult: {
