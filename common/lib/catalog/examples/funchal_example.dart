@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import '../../costs/purchase_costs.dart';
 import '../../markets/resolved_market.dart';
 import '../../money/currency.dart';
 import '../../money/money.dart';
@@ -42,12 +41,6 @@ final funchalDataModel = _jsonShaped({
   'profile': funchalProfile.toJson(),
   'market': funchalMarket.toJson(),
   'scenario': funchalScenario.toJson(),
-  'derived': {
-    'cashNeeded': (estimatePurchaseCosts(
-      scenario: funchalScenario,
-      market: funchalMarket,
-    ) as EstimatedPurchaseCosts).cashNeeded.toJson(),
-  },
   'selection': {
     'marketId': 'PT-30',
     'candidates': [
