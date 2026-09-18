@@ -7,6 +7,8 @@ import 'package:homeward_server/markets/markets_data.dart';
 import 'check_cost_groups.dart';
 
 const maxRateAgeDays = 75;
+const staleExchangeRateDays = 7;
+const maxExchangeRateAgeDays = 30;
 const expiryWarningDays = 30;
 
 List<Finding> checkMarkets(MarketsData data, {required CalendarDate today}) {
@@ -18,6 +20,7 @@ List<Finding> checkMarkets(MarketsData data, {required CalendarDate today}) {
     for (final MapEntry(key: file, value: pack) in data.packsByFile.entries)
       ..._checkPack(file, pack, packsById, data, today),
     ..._checkPlaces(data, packsById),
+    ..._checkExchangeRates(data, today),
   ];
 }
 
@@ -40,6 +43,39 @@ Iterable<Finding> _checkPlaces(
           '${place.name} points at unknown market ${marketId.code}',
         );
       }
+    }
+  }
+}
+
+Iterable<Finding> _checkExchangeRates(
+  MarketsData data,
+  CalendarDate today,
+) sync* {
+  final currencies = {
+    for (final pack in data.packsByFile.values) ?pack.currency,
+  };
+  for (final table in data.exchangeRates) {
+    final subject = 'fx/${table.base.code}';
+    if (table.asOf.plusDays(maxExchangeRateAgeDays).isBefore(today)) {
+      yield findingError(
+        subject,
+        'Rates are from ${table.asOf.isoDate}, older than '
+        '$maxExchangeRateAgeDays days',
+      );
+    } else if (table.asOf.plusDays(staleExchangeRateDays).isBefore(today)) {
+      yield findingWarning(
+        subject,
+        'Rates are from ${table.asOf.isoDate}; refresh before recording',
+      );
+    }
+  }
+  for (final currency in currencies) {
+    if (!data.exchangeRates.any((table) => table.holds(currency))) {
+      yield findingError(
+        'fx',
+        'No table holds ${currency.code}, so income in another currency '
+            'cannot be converted',
+      );
     }
   }
 }

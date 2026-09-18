@@ -24,9 +24,9 @@ final funchalProfile = BuyerProfile(
   use: PropertyUse.secondary,
   age: 42,
   employment: Employment.employed,
-  netMonthlyIncome: _euro(5200),
-  monthlyDebtPayments: _euro(0),
-  savings: _euro(150000),
+  netMonthlyIncome: _krona(60000),
+  monthlyDebtPayments: _krona(0),
+  savings: _krona(1700000),
 );
 
 final funchalScenario = Scenario(
@@ -55,6 +55,9 @@ final funchalDataModel = _jsonShaped({
 
 Money _euro(int units) =>
     Money(minorUnits: units * 100, currency: Currency.parse('EUR'));
+
+Money _krona(int units) =>
+    Money(minorUnits: units * 100, currency: Currency.parse('SEK'));
 
 Map<String, Object?> _jsonShaped(Map<String, Object?> json) =>
     jsonDecode(jsonEncode(json)) as Map<String, Object?>;

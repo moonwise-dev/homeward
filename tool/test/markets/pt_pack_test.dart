@@ -2,15 +2,19 @@ import 'dart:io';
 
 import 'package:common/common.dart';
 import 'package:homeward_server/markets/load_markets.dart';
+import 'package:homeward_server/markets/market_directory.dart';
 import 'package:test/test.dart';
 
 void main() {
   final markets = loadMarkets(Directory('../markets'));
+  final directory = MarketDirectory(markets);
   final packs = {for (final pack in markets.packsByFile.values) pack.id: pack};
   final madeira = resolvePackChain(MarketId.parse('PT-30'), packs);
   final currency = Currency.parse('EUR');
   Money euro(int units, [int cents = 0]) =>
       Money(minorUnits: units * 100 + cents, currency: currency);
+  Money krona(int units) =>
+      Money(minorUnits: units * 100, currency: Currency.parse('SEK'));
 
   final scenario = Scenario(
     price: euro(350000),
@@ -33,13 +37,13 @@ void main() {
     use: use,
     age: age,
     employment: Employment.employed,
-    netMonthlyIncome: euro(9000),
-    monthlyDebtPayments: euro(0),
-    savings: euro(150000),
+    netMonthlyIncome: krona(100000),
+    monthlyDebtPayments: krona(0),
+    savings: krona(1700000),
   );
 
   ResolvedMarket resolve(BuyerProfile profile) =>
-      resolveForBuyer(madeira, profile, referenceRates: markets.rates);
+      directory.resolveFor(madeira.id, profile)!;
 
   CostRule transferTax(ResolvedMarket market) =>
       market.purchaseCosts.singleWhere((rule) => rule.group == 'imt');
@@ -166,9 +170,23 @@ void main() {
 
   test('the catalog sample market matches the Madeira pack', () {
     expect(
-      resolveForBuyer(madeira, funchalProfile, referenceRates: markets.rates),
+      resolve(funchalProfile),
       funchalMarket,
       reason: 'Regenerate common/lib/catalog/examples/funchal_market_json.dart',
+    );
+  });
+
+  test('a Swedish income is counted at the reference rate', () {
+    final market = resolve(buyer(taxResidence: 'SE'));
+
+    expect(market.exchangeRates['SEK']?.rate.text, '0.08871934');
+    expect(
+      market.converted(krona(100000)),
+      euro(8871, 93),
+    );
+    expect(
+      market.exchangeRates['SEK']?.source.publisher,
+      'European Central Bank',
     );
   });
 

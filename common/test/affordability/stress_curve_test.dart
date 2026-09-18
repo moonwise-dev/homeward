@@ -78,7 +78,7 @@ void main() {
       expect(curve.limitKind, ConstraintKind.debtServiceToIncome);
       expect(
         curve.limit,
-        Money(minorUnits: 230880, currency: Currency.parse('EUR')),
+        Money(minorUnits: 236348, currency: Currency.parse('EUR')),
       );
     });
 

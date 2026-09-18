@@ -2,6 +2,7 @@ import 'package:common/common.dart';
 import 'package:flutter/material.dart';
 
 import '../../display/constraint_kind_label.dart';
+import '../../display/exchange_rate_format.dart';
 import '../../display/money_format.dart';
 import '../../display/profile_field_label.dart';
 import '../../ui/app_colors.dart';
@@ -16,12 +17,14 @@ class AffordabilitySummaryView extends StatelessWidget {
   const AffordabilitySummaryView({
     required this.affordability,
     required this.locale,
+    this.exchangeRates = const [],
     this.onExplain,
     super.key,
   });
 
   final Affordability affordability;
   final LocaleTag locale;
+  final List<ExchangeRate> exchangeRates;
   final VoidCallback? onExplain;
 
   @override
@@ -51,6 +54,15 @@ class AffordabilitySummaryView extends StatelessWidget {
         AssessedAffordability(:final loan, :final maxLoan, :final binding) =>
           _assessed(loan, maxLoan, binding),
       },
+      for (final rate in exchangeRates)
+        Padding(
+          padding: const EdgeInsets.only(top: AppSpacing.xxs),
+          child: Text(
+            'Your ${rate.from.code} counted at '
+            '${formatExchangeRate(rate, locale)}.',
+            style: AppTextStyles.caption,
+          ),
+        ),
     ],
   );
 

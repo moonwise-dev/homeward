@@ -30,16 +30,17 @@ List<MonthlyCeiling> monthlyCeilings({
   required Scenario scenario,
 }) {
   final lending = market.lending;
-  final debts = profile.monthlyDebtPayments;
+  final buyer = market.inMarketCurrency(profile);
+  final debts = buyer.monthlyDebtPayments;
   if (debts == null) {
     return const [];
   }
   return [
     for (final rule in lending.maxDsti)
       if (adjustedIncome(
-            incomeFor(rule.incomeBasis, profile),
+            incomeFor(rule.incomeBasis, buyer),
             lending: lending,
-            profile: profile,
+            profile: buyer,
             scenario: scenario,
           )
           case final income?)
@@ -50,7 +51,7 @@ List<MonthlyCeiling> monthlyCeilings({
           afterDeduction: false,
         ),
     for (final rule in lending.leftToLiveOn)
-      if (_leftToLiveOn(rule, market, profile, scenario) case final amount?)
+      if (_leftToLiveOn(rule, market, buyer, scenario) case final amount?)
         MonthlyCeiling(
           kind: ConstraintKind.leftToLiveOn,
           ruleId: rule.id,

@@ -83,7 +83,8 @@ common/lib/
                   each rule tolerates, the stress curve
   costs/          what each cost rule charges, upfront costs with their
                   refundable part, cash needed
-  markets/        MarketRulePack models, buyer predicates, overlay resolution
+  markets/        MarketRulePack models, buyer predicates, overlay resolution,
+                  obstacles, exchange rate tables and conversion
   profile/        BuyerProfile, Residency, Citizenship, Employment
   plan/           Plan, Scenario, ChecklistState
   catalog/        ComponentApi declarations: names, schemas, function signatures,

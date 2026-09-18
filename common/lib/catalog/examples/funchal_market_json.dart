@@ -318,6 +318,14 @@ const funchalMarketJson = r'''
       "reason": "The debt-service limit is a share of net monthly income"
     },
     {
+      "id": "income-currency",
+      "field": "incomeCurrency",
+      "appliesTo": {
+        "residency": "nonResident"
+      },
+      "reason": "Income in another currency is counted at the European Central Bank reference rate"
+    },
+    {
       "id": "monthly-debt-payments",
       "field": "monthlyDebtPayments",
       "reason": "Payments on other loans count towards the debt-service limit"
@@ -340,6 +348,22 @@ const funchalMarketJson = r'''
         "url": "https://www.bancobpi.pt/contentservice/getContent?documentName=PP_WCS01_UCM01002197",
         "kind": "lenderNorm",
         "retrievedAt": "2026-09-17"
+      }
+    }
+  },
+  "exchangeRates": {
+    "SEK": {
+      "from": "SEK",
+      "to": "EUR",
+      "rate": "0.08871934",
+      "asOf": "2026-09-17",
+      "source": {
+        "id": "ecb-eurofxref-2026-09-17",
+        "publisher": "European Central Bank",
+        "title": "Euro foreign exchange reference rates, 17 September 2026",
+        "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml",
+        "kind": "officialStatistics",
+        "retrievedAt": "2026-09-18"
       }
     }
   },
@@ -434,6 +458,7 @@ const funchalMarketJson = r'''
     "age",
     "employment",
     "netMonthlyIncome",
+    "incomeCurrency",
     "monthlyDebtPayments",
     "savings"
   ]

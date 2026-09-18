@@ -25,6 +25,7 @@ _ResolvedMarket _$ResolvedMarketFromJson(
       'refundBaselines',
       'profileFields',
       'referenceRates',
+      'exchangeRates',
       'livingCosts',
       'sources',
       'pendingRules',
@@ -107,6 +108,15 @@ _ResolvedMarket _$ResolvedMarketFromJson(
           ) ??
           const {},
     ),
+    exchangeRates: $checkedConvert(
+      'exchangeRates',
+      (v) =>
+          (v as Map<String, dynamic>?)?.map(
+            (k, e) =>
+                MapEntry(k, ExchangeRate.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
+    ),
     livingCosts: $checkedConvert(
       'livingCosts',
       (v) => v == null ? null : LivingCosts.fromJson(v as Map<String, dynamic>),
@@ -151,6 +161,9 @@ Map<String, dynamic> _$ResolvedMarketToJson(
   ),
   'profileFields': instance.profileFields.map((e) => e.toJson()).toList(),
   'referenceRates': instance.referenceRates.map(
+    (k, e) => MapEntry(k, e.toJson()),
+  ),
+  'exchangeRates': instance.exchangeRates.map(
     (k, e) => MapEntry(k, e.toJson()),
   ),
   'livingCosts': ?instance.livingCosts?.toJson(),

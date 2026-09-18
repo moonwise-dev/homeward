@@ -292,6 +292,25 @@ A scenario's rate is the loan type's reference rate plus its spread. The spread
 starts at the loan type's `defaultSpread` and the buyer can change it
 in `/scenario/rateSpreadPpm` to try an actual offer (D57).
 
+## Exchange Rates
+
+`markets/fx/` holds one file per publisher: a base currency, a date, a rate for
+each currency against that base, and the source. `markets/fx/ECB.json` carries
+the European Central Bank's daily euro reference rates.
+
+When a buyer's income, debts, or savings are in another currency,
+`resolveForBuyer` puts the rate from that currency into the market's own in
+`ResolvedMarket.exchangeRates`, so `/market` carries everything the app needs
+to convert while the buyer drags the slider, and every figure can name the rate
+and the day it was published (D89). A market whose buyer has no foreign amount
+carries none.
+
+Rates are derived through the base, rounded to eight decimal places, which
+keeps a monthly income exact to the cent. `make markets-check` warns when a
+table is more than a week old, fails at 30 days, and fails when a curated
+market's currency is in no table at all, because then a foreign income could
+not be converted.
+
 ## Living Costs
 
 `markets/living_costs/*.json` hold yearly snapshots of official household living

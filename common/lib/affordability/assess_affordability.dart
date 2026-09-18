@@ -35,16 +35,17 @@ Affordability assessAffordability({
     );
   }
   final lending = market.lending;
+  final buyer = market.inMarketCurrency(profile);
   final missing = {
     ...market.missingFor(RuleSection.lending),
-    ..._missingFacts(lending, profile),
+    ..._missingFacts(lending, buyer),
   };
   final unconvertedCurrencies = {
     for (final amount in [
-      profile.netMonthlyIncome,
-      profile.grossMonthlyIncome,
-      profile.monthlyDebtPayments,
-      profile.savings,
+      buyer.netMonthlyIncome,
+      buyer.grossMonthlyIncome,
+      buyer.monthlyDebtPayments,
+      buyer.savings,
     ].nonNulls)
       if (amount.currency != currency) amount.currency,
   };
@@ -77,7 +78,7 @@ Affordability assessAffordability({
         monthlyInterestDeduction(
           monthlyInterest: monthlyInterest,
           rule: rule,
-          borrowers: profile.borrowers!,
+          borrowers: buyer.borrowers!,
         ),
   );
 
@@ -85,7 +86,7 @@ Affordability assessAffordability({
   final ceilings = {
     for (final ceiling in monthlyCeilings(
       market: market,
-      profile: profile,
+      profile: buyer,
       scenario: scenario,
     ))
       ceiling.ruleId: ceiling.amount,
@@ -103,7 +104,7 @@ Affordability assessAffordability({
         kind: ConstraintKind.loanToIncome,
         ruleId: rule.id,
         sourceId: rule.sourceId,
-        maxLoan: _yearlyMultiple(_incomeFor(rule.incomeBasis, profile), rule),
+        maxLoan: _yearlyMultiple(_incomeFor(rule.incomeBasis, buyer), rule),
       ),
     for (final rule in lending.maxDsti)
       ConstraintCheck(

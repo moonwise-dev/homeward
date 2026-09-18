@@ -1,0 +1,21 @@
+{
+  "base": "EUR",
+  "asOf": "2026-09-17",
+  "rates": {
+    "BRL": "5.8905",
+    "CHF": "0.9466",
+    "DKK": "7.4753",
+    "GBP": "0.85830",
+    "NOK": "10.8250",
+    "SEK": "11.2715",
+    "USD": "1.1481"
+  },
+  "source": {
+    "id": "ecb-eurofxref-2026-09-17",
+    "publisher": "European Central Bank",
+    "title": "Euro foreign exchange reference rates, 17 September 2026",
+    "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml",
+    "kind": "officialStatistics",
+    "retrievedAt": "2026-09-18"
+  }
+}

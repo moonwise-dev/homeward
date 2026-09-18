@@ -124,6 +124,8 @@ same sweep runs with `flutter run --profile` and prints its report.
 - Every loan type has a reference rate snapshot at most 75 days old.
 - Every pack with a left-to-live-on rule has a living cost table in its
   currency from this year or last.
+- Exchange rate tables are no more than a week old, warning past that and
+  failing at 30 days, and every curated market's currency is in one.
 - A pack without `reviewedAt` warns that review is pending; a reviewed pack
   needs `reviewedBy`, fails once expired, and warns within 30 days of expiry.
 - `tool/test/markets/<id>_pack_test.dart` pins worked examples on the real files.

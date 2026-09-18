@@ -50,6 +50,28 @@ final class MarketDirectory {
       },
   ];
 
+  ExchangeRateTable? _tableFor(Currency currency, BuyerProfile profile) {
+    final wanted = {
+      for (final amount in [
+        profile.netMonthlyIncome,
+        profile.grossMonthlyIncome,
+        profile.monthlyDebtPayments,
+        profile.savings,
+      ].nonNulls)
+        if (amount.currency != currency) amount.currency,
+    };
+    if (wanted.isEmpty) {
+      return null;
+    }
+    return _data.exchangeRates
+        .where(
+          (table) =>
+              table.holds(currency) &&
+              wanted.every((other) => table.holds(other)),
+        )
+        .firstOrNull;
+  }
+
   ResolvedMarket? resolveFor(MarketId id, BuyerProfile profile) {
     if (!_packsById.containsKey(id)) {
       return null;
@@ -59,6 +81,7 @@ final class MarketDirectory {
       pack,
       profile,
       referenceRates: _data.rates,
+      exchangeRates: _tableFor(pack.currency!, profile),
       livingCosts: _data.livingCosts[id.countryCode],
     );
   }

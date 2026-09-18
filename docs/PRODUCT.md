@@ -214,6 +214,9 @@ checked again in the recording week:
 | Maximum loan at the 70% non-resident limit | €245,000.00 |
 | Down payment at that limit | €105,000.00 |
 
+The Stockholm buyer earns in kronor, counted at the European Central Bank's
+euro reference rate of the day, which the summary names beside the figures.
+
 ## Non-Goals For v1
 
 - Property listing search.

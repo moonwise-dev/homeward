@@ -37,6 +37,7 @@ void main() {
       'PT-30: euribor-6m: PT.EURIBOR6M_MONTHLY_AVERAGE is from 2026-09-16, older than 75 days',
       'PT: euribor-6m: PT.EURIBOR6M_MONTHLY_AVERAGE is from 2026-09-16, older than 75 days',
       'SE: variable-3m: SE.AVG_VARIABLE_3M is from 2026-07-31, older than 75 days',
+      'fx/EUR: Rates are from 2026-09-17, older than 30 days',
     ]);
   });
 

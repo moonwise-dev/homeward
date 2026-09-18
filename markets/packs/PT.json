@@ -44,6 +44,12 @@
       "reason": "The debt-service limit is a share of net monthly income"
     },
     {
+      "id": "income-currency",
+      "field": "incomeCurrency",
+      "appliesTo": { "residency": "nonResident" },
+      "reason": "Income in another currency is counted at the European Central Bank reference rate"
+    },
+    {
       "id": "monthly-debt-payments",
       "field": "monthlyDebtPayments",
       "reason": "Payments on other loans count towards the debt-service limit"

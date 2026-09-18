@@ -57,6 +57,17 @@ MarketsData loadMarkets(Directory root) {
     }
   }
 
+  final exchangeRates = <ExchangeRateTable>[];
+  for (final file in _jsonFiles(Directory('${root.path}/fx'))) {
+    final table = parse(
+      file,
+      (json) => ExchangeRateTable.fromJson(json! as Map<String, Object?>),
+    );
+    if (table != null) {
+      exchangeRates.add(table);
+    }
+  }
+
   final livingCosts = <CountryCode, LivingCosts>{};
   for (final file in _jsonFiles(Directory('${root.path}/living_costs'))) {
     final costs = parse(
@@ -88,6 +99,7 @@ MarketsData loadMarkets(Directory root) {
   return (
     packsByFile: packsByFile,
     rates: rates,
+    exchangeRates: exchangeRates,
     livingCosts: livingCosts,
     places: places,
     loadFindings: findings,

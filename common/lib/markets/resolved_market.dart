@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../money/currency.dart';
+import '../money/money.dart';
 import '../money/currency_json_converter.dart';
 import '../profile/buyer_profile.dart';
 import '../profile/profile_field.dart';
@@ -8,6 +9,7 @@ import 'applicability.dart';
 import 'cost_precedence.dart';
 import 'cost_rule.dart';
 import 'coverage.dart';
+import 'exchange_rate.dart';
 import 'identified.dart';
 import 'lending_rules.dart';
 import 'living_costs.dart';
@@ -44,6 +46,7 @@ abstract class ResolvedMarket with _$ResolvedMarket {
     @Default({}) Map<String, CostRule> refundBaselines,
     @Default([]) List<ProfileFieldRequirement> profileFields,
     @Default({}) Map<String, ReferenceRate> referenceRates,
+    @Default({}) Map<String, ExchangeRate> exchangeRates,
     LivingCosts? livingCosts,
     required List<Source> sources,
     required Map<String, PendingRule> pendingRules,
@@ -54,6 +57,20 @@ abstract class ResolvedMarket with _$ResolvedMarket {
 
   factory ResolvedMarket.fromJson(Map<String, Object?> json) =>
       _$ResolvedMarketFromJson(json);
+
+  Money? converted(Money? amount) => switch (amount) {
+    null => null,
+    final amount when amount.currency == currency => amount,
+    final amount =>
+      exchangeRates[amount.currency.code]?.convert(amount) ?? amount,
+  };
+
+  BuyerProfile inMarketCurrency(BuyerProfile profile) => profile.copyWith(
+    netMonthlyIncome: converted(profile.netMonthlyIncome),
+    grossMonthlyIncome: converted(profile.grossMonthlyIncome),
+    monthlyDebtPayments: converted(profile.monthlyDebtPayments),
+    savings: converted(profile.savings),
+  );
 
   Source? sourceOf(String id) =>
       sources.where((source) => source.id == id).firstOrNull;
@@ -79,6 +96,7 @@ ResolvedMarket resolveForBuyer(
   MarketRulePack pack,
   BuyerProfile profile, {
   Map<String, ReferenceRate> referenceRates = const {},
+  ExchangeRateTable? exchangeRates,
   LivingCosts? livingCosts,
 }) {
   final currency = pack.currency;
@@ -160,6 +178,19 @@ ResolvedMarket resolveForBuyer(
     referenceRates: {
       for (final loanType in pack.loanTypes)
         loanType.referenceRateId: ?referenceRates[loanType.referenceRateId],
+    },
+    exchangeRates: {
+      for (final amount in [
+        profile.netMonthlyIncome,
+        profile.grossMonthlyIncome,
+        profile.monthlyDebtPayments,
+        profile.savings,
+      ].nonNulls)
+        if (amount.currency != currency)
+          amount.currency.code: ?exchangeRates?.between(
+            amount.currency,
+            currency,
+          ),
     },
     livingCosts: resolvedLending.leftToLiveOn.isEmpty ? null : livingCosts,
     sources: pack.sources,

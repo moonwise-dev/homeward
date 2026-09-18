@@ -61,6 +61,7 @@ export 'markets/cost_precedence.dart';
 export 'markets/cost_rule.dart';
 export 'markets/coverage.dart';
 export 'markets/european_economic_area.dart';
+export 'markets/exchange_rate.dart';
 export 'markets/household_rules.dart';
 export 'markets/identified.dart';
 export 'markets/income_basis.dart';
