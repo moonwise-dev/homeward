@@ -64,19 +64,19 @@ void main() {
     ),
     (
       'an EEA citizen is regional in an EEA market',
-      const BuyerPredicate(citizenship: Citizenship.regional),
+      const BuyerPredicate(citizenship: Region.regional),
       BuyerProfile(citizenship: sweden),
       const Applicability.applies(),
     ),
     (
       'a US citizen is foreign in an EEA market',
-      const BuyerPredicate(citizenship: Citizenship.foreign),
+      const BuyerPredicate(citizenship: Region.foreign),
       BuyerProfile(citizenship: unitedStates),
       const Applicability.applies(),
     ),
     (
       'a Portuguese citizen is domestic',
-      const BuyerPredicate(citizenship: Citizenship.domestic),
+      const BuyerPredicate(citizenship: Region.domestic),
       BuyerProfile(citizenship: portugal),
       const Applicability.applies(),
     ),
@@ -122,6 +122,35 @@ void main() {
       );
     });
   }
+
+  test('a residency region reads the tax residence, not the passport', () {
+    const inTheRegion = BuyerPredicate(residencyRegion: Region.regional);
+    final swede = BuyerProfile(
+      citizenship: CountryCode.parse('US'),
+      taxResidence: CountryCode.parse('SE'),
+    );
+
+    expect(
+      applicabilityOf(inTheRegion, profile: swede, market: madeira),
+      const Applies(),
+    );
+    expect(
+      applicabilityOf(
+        const BuyerPredicate(residencyRegion: Region.foreign),
+        profile: swede,
+        market: madeira,
+      ),
+      const DoesNotApply(),
+    );
+    expect(
+      applicabilityOf(
+        inTheRegion,
+        profile: const BuyerProfile(),
+        market: madeira,
+      ),
+      const Pending({ProfileField.residency}),
+    );
+  });
 
   group('matchesLoan', () {
     const predicate = LoanPredicate(

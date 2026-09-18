@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../profile/citizenship.dart';
+import '../profile/region.dart';
 import '../profile/employment.dart';
 import '../profile/property_use.dart';
 import '../profile/residency.dart';
@@ -16,7 +16,8 @@ abstract class BuyerPredicate with _$BuyerPredicate {
     Residency? residency,
     bool? formerResident,
     ResidencyIntent? residencyIntent,
-    Citizenship? citizenship,
+    Region? citizenship,
+    Region? residencyRegion,
     PropertyUse? use,
     bool? firstTime,
     Employment? employment,

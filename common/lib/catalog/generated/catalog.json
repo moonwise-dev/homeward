@@ -1450,6 +1450,79 @@
         "profile"
       ],
       "additionalProperties": false
+    },
+    "ForeignBuyerObstacles": {
+      "type": "object",
+      "description": "What stands between this buyer and the keys beyond the money: the steps a foreign buyer owes, what each one takes, and the deadlines on any tax the buyer can claim back. Grouped by how much they block.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "ForeignBuyerObstacles"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "market": {
+          "type": "object",
+          "description": "Always { \"path\": \"/market\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/market"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "profile": {
+          "type": "object",
+          "description": "Always { \"path\": \"/profile\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/profile"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "scenario": {
+          "type": "object",
+          "description": "Always { \"path\": \"/scenario\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/scenario"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "explain": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "market",
+        "profile"
+      ],
+      "additionalProperties": false
     }
   },
   "functions": {
@@ -2240,6 +2313,9 @@
         },
         {
           "$ref": "#/components/EligibilityChecklist"
+        },
+        {
+          "$ref": "#/components/ForeignBuyerObstacles"
         }
       ]
     },

@@ -18,6 +18,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `PurchaseCostsTable` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Funchal non-resident |
 | `StressTestChart` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple, Funchal non-resident |
 | `EligibilityChecklist` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Funchal non-resident, Stockholm couple |
+| `ForeignBuyerObstacles` | mvp | yes | `market`, `profile` | `market`, `profile`, `scenario` | Funchal non-resident |
 
 ### LocationPicker
 
@@ -58,6 +59,10 @@ Monthly cost from today's rate up past the rate the lender tests, against the mo
 ### EligibilityChecklist
 
 Every lending rule this buyer is measured against, each passing, warning, or failing, with what would settle it and what facts are still missing.
+
+### ForeignBuyerObstacles
+
+What stands between this buyer and the keys beyond the money: the steps a foreign buyer owes, what each one takes, and the deadlines on any tax the buyer can claim back. Grouped by how much they block.
 
 ## Basic Components
 

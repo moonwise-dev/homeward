@@ -76,6 +76,7 @@ Every rule may carry `appliesTo`. A rule without it applies to everyone.
 ```text
 BuyerPredicate
   residency             resident | nonResident                tax residency in this market
+  residencyRegion       domestic | regional | foreign         where the buyer pays tax
   formerResident        true | false                          ever tax resident in this market
   residencyIntent       stay | becomeResident
   citizenship           domestic | regional | foreign         regional = EU/EEA for EU markets
@@ -90,7 +91,10 @@ The profile holds facts, not answers relative to a market: citizenship and tax
 residence are country codes. `residency` compares tax residence with the
 market's country; `citizenship` is `domestic` for the market's country,
 `regional` when both countries are in the European Economic Area, and
-`foreign` otherwise.
+`foreign` otherwise. `residencyRegion` reads the same three values off tax
+residence rather than the passport, which is what rules such as Portugal's
+fiscal representative turn on: a Swedish tax resident is `regional` there and
+free of it, a Brazilian one is `foreign` and is not.
 
 Each rule applies, does not apply, or is pending (D60). A known mismatch makes a
 rule not apply even when other facts are unknown. A rule is pending when no
@@ -218,18 +222,32 @@ LoanType
   sourceId
 ```
 
-### Ownership Restrictions, Obstacles, Process
+### Obstacles, Ownership Restrictions, Process
 
-Modelled in M2 with the components that show them.
+```text
+Obstacle
+  id                    fiscal-representative
+  appliesTo
+  title                 Fiscal representative in Portugal
+  severity              blocker | effort | info
+  mitigation            what the buyer does about it
+  typicalDuration       ISO 8601 period, optional
+  sourceId
+```
+
+Obstacles are pack entries like any other: they resolve against the buyer, so a
+buyer sees only what stands in their way. `blocker` stops the purchase until it
+is done, `effort` costs time or money, `info` corrects an expectation.
+`ForeignBuyerObstacles` groups them by severity and adds the claim deadlines of
+any refundable charge, which are obstacles in the same sense.
+
+Ownership restrictions and the process steps are still to model, with the
+components that show them:
 
 ```text
 OwnershipRestriction
   id, appliesTo, kind: none | approvalRequired | landProhibited | leaseholdOnly | quota | restrictedZone
   detail, sourceId
-
-Obstacle
-  id, appliesTo, title, severity: blocker | effort | info
-  mitigation, typicalDuration, sourceId
 
 ProcessStep
   id, order, title, typicalDuration, appliesTo
@@ -384,13 +402,14 @@ including the second-person review, before it becomes a pack field.
 | Buyers 35 or younger pay no IMT on a primary residence up to €330,539, €413,174 in the regions | Tables II and V verified, conditions to verify; left out of the packs, so a young buyer is charged the ordinary table | CIMT arts. 9 and 17; Ofício Circulado 40129/2026 tables II and V |
 | Stamp duty 0.6% on loans of five years or more and 4% on interest | Verba 17.1 verified; the 0.6% is in `PT.json`, the 4% on interest is not a purchase cost | Banco BPI price list; Tabela Geral do Imposto do Selo |
 | Stamp duty 0.8% on the purchase price, verba 1.1 | In `PT.json` | Código do Imposto do Selo |
-| Tax number (NIF) required before purchase; fiscal representative for some non-residents | To verify | Portal das Finanças |
-| Real estate no longer qualifies for the Golden Visa | To verify | AIMA |
+| Tax number (NIF) required before purchase; a fiscal representative within 15 days for buyers taxed outside the EU, Norway, Iceland and Liechtenstein, or electronic notifications instead | In `PT.json` as obstacles | Autoridade Tributária, NIF leaflet and fiscal representation FAQ |
+| Real estate no longer qualifies for the golden visa | In `PT.json` as an obstacle for non-EEA citizens | Lei n.º 56/2023 |
 
 Portugal changed its lending limits and non-resident taxes within four months
 of 2026. The PT sources are re-read in the recording week.
 
-`PT` and `PT-30` still need, before the recording: the youth IMT tables with
+`PT` and `PT-30` still need, before the recording: ownership restrictions and
+the buying process, which no MVP component shows yet; the youth IMT tables with
 their conditions; a second lender beside BPI, to turn the 70% non-resident norm
 into a range (D48); IMI and condominium as recurring costs; fixed and mixed loan
 types, which the price list carries and `LoanTypeComparison` will need; and an

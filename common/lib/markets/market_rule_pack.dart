@@ -12,6 +12,7 @@ import 'locale_tag.dart';
 import 'locale_tag_json_converter.dart';
 import 'market_id.dart';
 import 'market_id_json_converter.dart';
+import 'obstacle.dart';
 import 'profile_field_requirement.dart';
 import 'source.dart';
 
@@ -35,6 +36,7 @@ abstract class MarketRulePack with _$MarketRulePack {
     @Default([]) List<CostRule> purchaseCosts,
     @Default([]) List<CostRule> recurringCosts,
     @Default([]) List<LoanType> loanTypes,
+    @Default([]) List<Obstacle> obstacles,
     @Default([]) List<String> removedRuleIds,
     @Default([]) List<Source> sources,
   }) = _MarketRulePack;
@@ -63,6 +65,7 @@ abstract class MarketRulePack with _$MarketRulePack {
     ...purchaseCosts,
     ...recurringCosts,
     ...loanTypes,
+    ...obstacles,
     ...sources,
   ];
 }

@@ -71,6 +71,7 @@ MarketRulePack overlayPack(MarketRulePack parent, MarketRulePack child) {
     purchaseCosts: merge(parent.purchaseCosts, child.purchaseCosts),
     recurringCosts: merge(parent.recurringCosts, child.recurringCosts),
     loanTypes: merge(parent.loanTypes, child.loanTypes),
+    obstacles: merge(parent.obstacles, child.obstacles),
     removedRuleIds: const [],
     sources: merge(parent.sources, child.sources),
   );

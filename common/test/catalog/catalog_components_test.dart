@@ -18,6 +18,7 @@ void main() {
       'PurchaseCostsTable',
       'StressTestChart',
       'EligibilityChecklist',
+      'ForeignBuyerObstacles',
     ]);
   });
 

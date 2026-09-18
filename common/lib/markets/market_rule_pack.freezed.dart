@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MarketRulePack {
 
-@MarketIdJsonConverter() MarketId get id;@MarketIdJsonConverter() MarketId? get parent; String get name;@CurrencyJsonConverter() Currency? get currency;@LocaleTagJsonConverter() LocaleTag? get locale; int get version;@CalendarDateJsonConverter() CalendarDate get effectiveFrom;@CalendarDateJsonConverter() CalendarDate? get reviewedAt; String? get reviewedBy; List<ProfileFieldRequirement> get profileFields; LendingRules get lending; List<CostRule> get purchaseCosts; List<CostRule> get recurringCosts; List<LoanType> get loanTypes; List<String> get removedRuleIds; List<Source> get sources;
+@MarketIdJsonConverter() MarketId get id;@MarketIdJsonConverter() MarketId? get parent; String get name;@CurrencyJsonConverter() Currency? get currency;@LocaleTagJsonConverter() LocaleTag? get locale; int get version;@CalendarDateJsonConverter() CalendarDate get effectiveFrom;@CalendarDateJsonConverter() CalendarDate? get reviewedAt; String? get reviewedBy; List<ProfileFieldRequirement> get profileFields; LendingRules get lending; List<CostRule> get purchaseCosts; List<CostRule> get recurringCosts; List<LoanType> get loanTypes; List<Obstacle> get obstacles; List<String> get removedRuleIds; List<Source> get sources;
 /// Create a copy of MarketRulePack
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $MarketRulePackCopyWith<MarketRulePack> get copyWith => _$MarketRulePackCopyWith
 @override
 bool operator ==(Object other) {
   final _this = this as MarketRulePack;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MarketRulePack&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.parent, _this.parent) || other.parent == _this.parent)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.currency, _this.currency) || other.currency == _this.currency)&&(identical(other.locale, _this.locale) || other.locale == _this.locale)&&(identical(other.version, _this.version) || other.version == _this.version)&&(identical(other.effectiveFrom, _this.effectiveFrom) || other.effectiveFrom == _this.effectiveFrom)&&(identical(other.reviewedAt, _this.reviewedAt) || other.reviewedAt == _this.reviewedAt)&&(identical(other.reviewedBy, _this.reviewedBy) || other.reviewedBy == _this.reviewedBy)&&const DeepCollectionEquality().equals(other.profileFields, _this.profileFields)&&(identical(other.lending, _this.lending) || other.lending == _this.lending)&&const DeepCollectionEquality().equals(other.purchaseCosts, _this.purchaseCosts)&&const DeepCollectionEquality().equals(other.recurringCosts, _this.recurringCosts)&&const DeepCollectionEquality().equals(other.loanTypes, _this.loanTypes)&&const DeepCollectionEquality().equals(other.removedRuleIds, _this.removedRuleIds)&&const DeepCollectionEquality().equals(other.sources, _this.sources));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MarketRulePack&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.parent, _this.parent) || other.parent == _this.parent)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.currency, _this.currency) || other.currency == _this.currency)&&(identical(other.locale, _this.locale) || other.locale == _this.locale)&&(identical(other.version, _this.version) || other.version == _this.version)&&(identical(other.effectiveFrom, _this.effectiveFrom) || other.effectiveFrom == _this.effectiveFrom)&&(identical(other.reviewedAt, _this.reviewedAt) || other.reviewedAt == _this.reviewedAt)&&(identical(other.reviewedBy, _this.reviewedBy) || other.reviewedBy == _this.reviewedBy)&&const DeepCollectionEquality().equals(other.profileFields, _this.profileFields)&&(identical(other.lending, _this.lending) || other.lending == _this.lending)&&const DeepCollectionEquality().equals(other.purchaseCosts, _this.purchaseCosts)&&const DeepCollectionEquality().equals(other.recurringCosts, _this.recurringCosts)&&const DeepCollectionEquality().equals(other.loanTypes, _this.loanTypes)&&const DeepCollectionEquality().equals(other.obstacles, _this.obstacles)&&const DeepCollectionEquality().equals(other.removedRuleIds, _this.removedRuleIds)&&const DeepCollectionEquality().equals(other.sources, _this.sources));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as MarketRulePack;
-  return Object.hash(runtimeType,_this.id,_this.parent,_this.name,_this.currency,_this.locale,_this.version,_this.effectiveFrom,_this.reviewedAt,_this.reviewedBy,const DeepCollectionEquality().hash(_this.profileFields),_this.lending,const DeepCollectionEquality().hash(_this.purchaseCosts),const DeepCollectionEquality().hash(_this.recurringCosts),const DeepCollectionEquality().hash(_this.loanTypes),const DeepCollectionEquality().hash(_this.removedRuleIds),const DeepCollectionEquality().hash(_this.sources));
+  return Object.hash(runtimeType,_this.id,_this.parent,_this.name,_this.currency,_this.locale,_this.version,_this.effectiveFrom,_this.reviewedAt,_this.reviewedBy,const DeepCollectionEquality().hash(_this.profileFields),_this.lending,const DeepCollectionEquality().hash(_this.purchaseCosts),const DeepCollectionEquality().hash(_this.recurringCosts),const DeepCollectionEquality().hash(_this.loanTypes),const DeepCollectionEquality().hash(_this.obstacles),const DeepCollectionEquality().hash(_this.removedRuleIds),const DeepCollectionEquality().hash(_this.sources));
 }
 
 @override
 String toString() {
   final _this = this as MarketRulePack;
-  return 'MarketRulePack(id: ${_this.id}, parent: ${_this.parent}, name: ${_this.name}, currency: ${_this.currency}, locale: ${_this.locale}, version: ${_this.version}, effectiveFrom: ${_this.effectiveFrom}, reviewedAt: ${_this.reviewedAt}, reviewedBy: ${_this.reviewedBy}, profileFields: ${_this.profileFields}, lending: ${_this.lending}, purchaseCosts: ${_this.purchaseCosts}, recurringCosts: ${_this.recurringCosts}, loanTypes: ${_this.loanTypes}, removedRuleIds: ${_this.removedRuleIds}, sources: ${_this.sources})';
+  return 'MarketRulePack(id: ${_this.id}, parent: ${_this.parent}, name: ${_this.name}, currency: ${_this.currency}, locale: ${_this.locale}, version: ${_this.version}, effectiveFrom: ${_this.effectiveFrom}, reviewedAt: ${_this.reviewedAt}, reviewedBy: ${_this.reviewedBy}, profileFields: ${_this.profileFields}, lending: ${_this.lending}, purchaseCosts: ${_this.purchaseCosts}, recurringCosts: ${_this.recurringCosts}, loanTypes: ${_this.loanTypes}, obstacles: ${_this.obstacles}, removedRuleIds: ${_this.removedRuleIds}, sources: ${_this.sources})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $MarketRulePackCopyWith<$Res>  {
   factory $MarketRulePackCopyWith(MarketRulePack value, $Res Function(MarketRulePack) _then) = _$MarketRulePackCopyWithImpl;
 @useResult
 $Res call({
-@MarketIdJsonConverter() MarketId id,@MarketIdJsonConverter() MarketId? parent, String name,@CurrencyJsonConverter() Currency? currency,@LocaleTagJsonConverter() LocaleTag? locale, int version,@CalendarDateJsonConverter() CalendarDate effectiveFrom,@CalendarDateJsonConverter() CalendarDate? reviewedAt, String? reviewedBy, List<ProfileFieldRequirement> profileFields, LendingRules lending, List<CostRule> purchaseCosts, List<CostRule> recurringCosts, List<LoanType> loanTypes, List<String> removedRuleIds, List<Source> sources
+@MarketIdJsonConverter() MarketId id,@MarketIdJsonConverter() MarketId? parent, String name,@CurrencyJsonConverter() Currency? currency,@LocaleTagJsonConverter() LocaleTag? locale, int version,@CalendarDateJsonConverter() CalendarDate effectiveFrom,@CalendarDateJsonConverter() CalendarDate? reviewedAt, String? reviewedBy, List<ProfileFieldRequirement> profileFields, LendingRules lending, List<CostRule> purchaseCosts, List<CostRule> recurringCosts, List<LoanType> loanTypes, List<Obstacle> obstacles, List<String> removedRuleIds, List<Source> sources
 });
 
 
@@ -71,7 +71,7 @@ class _$MarketRulePackCopyWithImpl<$Res>
 
 /// Create a copy of MarketRulePack
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? parent = freezed,Object? name = null,Object? currency = freezed,Object? locale = freezed,Object? version = null,Object? effectiveFrom = null,Object? reviewedAt = freezed,Object? reviewedBy = freezed,Object? profileFields = null,Object? lending = null,Object? purchaseCosts = null,Object? recurringCosts = null,Object? loanTypes = null,Object? removedRuleIds = null,Object? sources = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? parent = freezed,Object? name = null,Object? currency = freezed,Object? locale = freezed,Object? version = null,Object? effectiveFrom = null,Object? reviewedAt = freezed,Object? reviewedBy = freezed,Object? profileFields = null,Object? lending = null,Object? purchaseCosts = null,Object? recurringCosts = null,Object? loanTypes = null,Object? obstacles = null,Object? removedRuleIds = null,Object? sources = null,}) {
   return _then(MarketRulePack(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as MarketId,parent: freezed == parent ? _self.parent : parent // ignore: cast_nullable_to_non_nullable
@@ -87,7 +87,8 @@ as List<ProfileFieldRequirement>,lending: null == lending ? _self.lending : lend
 as LendingRules,purchaseCosts: null == purchaseCosts ? _self.purchaseCosts : purchaseCosts // ignore: cast_nullable_to_non_nullable
 as List<CostRule>,recurringCosts: null == recurringCosts ? _self.recurringCosts : recurringCosts // ignore: cast_nullable_to_non_nullable
 as List<CostRule>,loanTypes: null == loanTypes ? _self.loanTypes : loanTypes // ignore: cast_nullable_to_non_nullable
-as List<LoanType>,removedRuleIds: null == removedRuleIds ? _self.removedRuleIds : removedRuleIds // ignore: cast_nullable_to_non_nullable
+as List<LoanType>,obstacles: null == obstacles ? _self.obstacles : obstacles // ignore: cast_nullable_to_non_nullable
+as List<Obstacle>,removedRuleIds: null == removedRuleIds ? _self.removedRuleIds : removedRuleIds // ignore: cast_nullable_to_non_nullable
 as List<String>,sources: null == sources ? _self.sources : sources // ignore: cast_nullable_to_non_nullable
 as List<Source>,
   ));
@@ -183,10 +184,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@MarketIdJsonConverter()  MarketId id, @MarketIdJsonConverter()  MarketId? parent,  String name, @CurrencyJsonConverter()  Currency? currency, @LocaleTagJsonConverter()  LocaleTag? locale,  int version, @CalendarDateJsonConverter()  CalendarDate effectiveFrom, @CalendarDateJsonConverter()  CalendarDate? reviewedAt,  String? reviewedBy,  List<ProfileFieldRequirement> profileFields,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<String> removedRuleIds,  List<Source> sources)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@MarketIdJsonConverter()  MarketId id, @MarketIdJsonConverter()  MarketId? parent,  String name, @CurrencyJsonConverter()  Currency? currency, @LocaleTagJsonConverter()  LocaleTag? locale,  int version, @CalendarDateJsonConverter()  CalendarDate effectiveFrom, @CalendarDateJsonConverter()  CalendarDate? reviewedAt,  String? reviewedBy,  List<ProfileFieldRequirement> profileFields,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<Obstacle> obstacles,  List<String> removedRuleIds,  List<Source> sources)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MarketRulePack() when $default != null:
-return $default(_that.id,_that.parent,_that.name,_that.currency,_that.locale,_that.version,_that.effectiveFrom,_that.reviewedAt,_that.reviewedBy,_that.profileFields,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.removedRuleIds,_that.sources);case _:
+return $default(_that.id,_that.parent,_that.name,_that.currency,_that.locale,_that.version,_that.effectiveFrom,_that.reviewedAt,_that.reviewedBy,_that.profileFields,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.obstacles,_that.removedRuleIds,_that.sources);case _:
   return orElse();
 
 }
@@ -204,10 +205,10 @@ return $default(_that.id,_that.parent,_that.name,_that.currency,_that.locale,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@MarketIdJsonConverter()  MarketId id, @MarketIdJsonConverter()  MarketId? parent,  String name, @CurrencyJsonConverter()  Currency? currency, @LocaleTagJsonConverter()  LocaleTag? locale,  int version, @CalendarDateJsonConverter()  CalendarDate effectiveFrom, @CalendarDateJsonConverter()  CalendarDate? reviewedAt,  String? reviewedBy,  List<ProfileFieldRequirement> profileFields,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<String> removedRuleIds,  List<Source> sources)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@MarketIdJsonConverter()  MarketId id, @MarketIdJsonConverter()  MarketId? parent,  String name, @CurrencyJsonConverter()  Currency? currency, @LocaleTagJsonConverter()  LocaleTag? locale,  int version, @CalendarDateJsonConverter()  CalendarDate effectiveFrom, @CalendarDateJsonConverter()  CalendarDate? reviewedAt,  String? reviewedBy,  List<ProfileFieldRequirement> profileFields,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<Obstacle> obstacles,  List<String> removedRuleIds,  List<Source> sources)  $default,) {final _that = this;
 switch (_that) {
 case _MarketRulePack():
-return $default(_that.id,_that.parent,_that.name,_that.currency,_that.locale,_that.version,_that.effectiveFrom,_that.reviewedAt,_that.reviewedBy,_that.profileFields,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.removedRuleIds,_that.sources);case _:
+return $default(_that.id,_that.parent,_that.name,_that.currency,_that.locale,_that.version,_that.effectiveFrom,_that.reviewedAt,_that.reviewedBy,_that.profileFields,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.obstacles,_that.removedRuleIds,_that.sources);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -224,10 +225,10 @@ return $default(_that.id,_that.parent,_that.name,_that.currency,_that.locale,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@MarketIdJsonConverter()  MarketId id, @MarketIdJsonConverter()  MarketId? parent,  String name, @CurrencyJsonConverter()  Currency? currency, @LocaleTagJsonConverter()  LocaleTag? locale,  int version, @CalendarDateJsonConverter()  CalendarDate effectiveFrom, @CalendarDateJsonConverter()  CalendarDate? reviewedAt,  String? reviewedBy,  List<ProfileFieldRequirement> profileFields,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<String> removedRuleIds,  List<Source> sources)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@MarketIdJsonConverter()  MarketId id, @MarketIdJsonConverter()  MarketId? parent,  String name, @CurrencyJsonConverter()  Currency? currency, @LocaleTagJsonConverter()  LocaleTag? locale,  int version, @CalendarDateJsonConverter()  CalendarDate effectiveFrom, @CalendarDateJsonConverter()  CalendarDate? reviewedAt,  String? reviewedBy,  List<ProfileFieldRequirement> profileFields,  LendingRules lending,  List<CostRule> purchaseCosts,  List<CostRule> recurringCosts,  List<LoanType> loanTypes,  List<Obstacle> obstacles,  List<String> removedRuleIds,  List<Source> sources)?  $default,) {final _that = this;
 switch (_that) {
 case _MarketRulePack() when $default != null:
-return $default(_that.id,_that.parent,_that.name,_that.currency,_that.locale,_that.version,_that.effectiveFrom,_that.reviewedAt,_that.reviewedBy,_that.profileFields,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.removedRuleIds,_that.sources);case _:
+return $default(_that.id,_that.parent,_that.name,_that.currency,_that.locale,_that.version,_that.effectiveFrom,_that.reviewedAt,_that.reviewedBy,_that.profileFields,_that.lending,_that.purchaseCosts,_that.recurringCosts,_that.loanTypes,_that.obstacles,_that.removedRuleIds,_that.sources);case _:
   return null;
 
 }
@@ -239,7 +240,7 @@ return $default(_that.id,_that.parent,_that.name,_that.currency,_that.locale,_th
 @JsonSerializable()
 
 class _MarketRulePack extends MarketRulePack {
-  const _MarketRulePack({@MarketIdJsonConverter() required this.id, @MarketIdJsonConverter() this.parent, required this.name, @CurrencyJsonConverter() this.currency, @LocaleTagJsonConverter() this.locale, required this.version, @CalendarDateJsonConverter() required this.effectiveFrom, @CalendarDateJsonConverter() this.reviewedAt, this.reviewedBy,  List<ProfileFieldRequirement> profileFields = const [], this.lending = const LendingRules(),  List<CostRule> purchaseCosts = const [],  List<CostRule> recurringCosts = const [],  List<LoanType> loanTypes = const [],  List<String> removedRuleIds = const [],  List<Source> sources = const []}): _profileFields = profileFields,_purchaseCosts = purchaseCosts,_recurringCosts = recurringCosts,_loanTypes = loanTypes,_removedRuleIds = removedRuleIds,_sources = sources,super._();
+  const _MarketRulePack({@MarketIdJsonConverter() required this.id, @MarketIdJsonConverter() this.parent, required this.name, @CurrencyJsonConverter() this.currency, @LocaleTagJsonConverter() this.locale, required this.version, @CalendarDateJsonConverter() required this.effectiveFrom, @CalendarDateJsonConverter() this.reviewedAt, this.reviewedBy,  List<ProfileFieldRequirement> profileFields = const [], this.lending = const LendingRules(),  List<CostRule> purchaseCosts = const [],  List<CostRule> recurringCosts = const [],  List<LoanType> loanTypes = const [],  List<Obstacle> obstacles = const [],  List<String> removedRuleIds = const [],  List<Source> sources = const []}): _profileFields = profileFields,_purchaseCosts = purchaseCosts,_recurringCosts = recurringCosts,_loanTypes = loanTypes,_obstacles = obstacles,_removedRuleIds = removedRuleIds,_sources = sources,super._();
   factory _MarketRulePack.fromJson(Map<String, dynamic> json) => _$MarketRulePackFromJson(json);
 
 @override@MarketIdJsonConverter() final  MarketId id;
@@ -280,6 +281,13 @@ class _MarketRulePack extends MarketRulePack {
   return EqualUnmodifiableListView(_loanTypes);
 }
 
+ final  List<Obstacle> _obstacles;
+@override@JsonKey() List<Obstacle> get obstacles {
+  if (_obstacles is EqualUnmodifiableListView) return _obstacles;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_obstacles);
+}
+
  final  List<String> _removedRuleIds;
 @override@JsonKey() List<String> get removedRuleIds {
   if (_removedRuleIds is EqualUnmodifiableListView) return _removedRuleIds;
@@ -308,18 +316,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MarketRulePack&&(identical(other.id, id) || other.id == id)&&(identical(other.parent, parent) || other.parent == parent)&&(identical(other.name, name) || other.name == name)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.version, version) || other.version == version)&&(identical(other.effectiveFrom, effectiveFrom) || other.effectiveFrom == effectiveFrom)&&(identical(other.reviewedAt, reviewedAt) || other.reviewedAt == reviewedAt)&&(identical(other.reviewedBy, reviewedBy) || other.reviewedBy == reviewedBy)&&const DeepCollectionEquality().equals(other.profileFields, _profileFields)&&(identical(other.lending, lending) || other.lending == lending)&&const DeepCollectionEquality().equals(other.purchaseCosts, _purchaseCosts)&&const DeepCollectionEquality().equals(other.recurringCosts, _recurringCosts)&&const DeepCollectionEquality().equals(other.loanTypes, _loanTypes)&&const DeepCollectionEquality().equals(other.removedRuleIds, _removedRuleIds)&&const DeepCollectionEquality().equals(other.sources, _sources));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MarketRulePack&&(identical(other.id, id) || other.id == id)&&(identical(other.parent, parent) || other.parent == parent)&&(identical(other.name, name) || other.name == name)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.locale, locale) || other.locale == locale)&&(identical(other.version, version) || other.version == version)&&(identical(other.effectiveFrom, effectiveFrom) || other.effectiveFrom == effectiveFrom)&&(identical(other.reviewedAt, reviewedAt) || other.reviewedAt == reviewedAt)&&(identical(other.reviewedBy, reviewedBy) || other.reviewedBy == reviewedBy)&&const DeepCollectionEquality().equals(other.profileFields, _profileFields)&&(identical(other.lending, lending) || other.lending == lending)&&const DeepCollectionEquality().equals(other.purchaseCosts, _purchaseCosts)&&const DeepCollectionEquality().equals(other.recurringCosts, _recurringCosts)&&const DeepCollectionEquality().equals(other.loanTypes, _loanTypes)&&const DeepCollectionEquality().equals(other.obstacles, _obstacles)&&const DeepCollectionEquality().equals(other.removedRuleIds, _removedRuleIds)&&const DeepCollectionEquality().equals(other.sources, _sources));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,parent,name,currency,locale,version,effectiveFrom,reviewedAt,reviewedBy,const DeepCollectionEquality().hash(_profileFields),lending,const DeepCollectionEquality().hash(_purchaseCosts),const DeepCollectionEquality().hash(_recurringCosts),const DeepCollectionEquality().hash(_loanTypes),const DeepCollectionEquality().hash(_removedRuleIds),const DeepCollectionEquality().hash(_sources));
+    return Object.hash(runtimeType,id,parent,name,currency,locale,version,effectiveFrom,reviewedAt,reviewedBy,const DeepCollectionEquality().hash(_profileFields),lending,const DeepCollectionEquality().hash(_purchaseCosts),const DeepCollectionEquality().hash(_recurringCosts),const DeepCollectionEquality().hash(_loanTypes),const DeepCollectionEquality().hash(_obstacles),const DeepCollectionEquality().hash(_removedRuleIds),const DeepCollectionEquality().hash(_sources));
 }
 
 @override
 String toString() {
-    return 'MarketRulePack(id: $id, parent: $parent, name: $name, currency: $currency, locale: $locale, version: $version, effectiveFrom: $effectiveFrom, reviewedAt: $reviewedAt, reviewedBy: $reviewedBy, profileFields: $profileFields, lending: $lending, purchaseCosts: $purchaseCosts, recurringCosts: $recurringCosts, loanTypes: $loanTypes, removedRuleIds: $removedRuleIds, sources: $sources)';
+    return 'MarketRulePack(id: $id, parent: $parent, name: $name, currency: $currency, locale: $locale, version: $version, effectiveFrom: $effectiveFrom, reviewedAt: $reviewedAt, reviewedBy: $reviewedBy, profileFields: $profileFields, lending: $lending, purchaseCosts: $purchaseCosts, recurringCosts: $recurringCosts, loanTypes: $loanTypes, obstacles: $obstacles, removedRuleIds: $removedRuleIds, sources: $sources)';
 }
 
 
@@ -330,7 +338,7 @@ abstract mixin class _$MarketRulePackCopyWith<$Res> implements $MarketRulePackCo
   factory _$MarketRulePackCopyWith(_MarketRulePack value, $Res Function(_MarketRulePack) _then) = __$MarketRulePackCopyWithImpl;
 @override @useResult
 $Res call({
-@MarketIdJsonConverter() MarketId id,@MarketIdJsonConverter() MarketId? parent, String name,@CurrencyJsonConverter() Currency? currency,@LocaleTagJsonConverter() LocaleTag? locale, int version,@CalendarDateJsonConverter() CalendarDate effectiveFrom,@CalendarDateJsonConverter() CalendarDate? reviewedAt, String? reviewedBy, List<ProfileFieldRequirement> profileFields, LendingRules lending, List<CostRule> purchaseCosts, List<CostRule> recurringCosts, List<LoanType> loanTypes, List<String> removedRuleIds, List<Source> sources
+@MarketIdJsonConverter() MarketId id,@MarketIdJsonConverter() MarketId? parent, String name,@CurrencyJsonConverter() Currency? currency,@LocaleTagJsonConverter() LocaleTag? locale, int version,@CalendarDateJsonConverter() CalendarDate effectiveFrom,@CalendarDateJsonConverter() CalendarDate? reviewedAt, String? reviewedBy, List<ProfileFieldRequirement> profileFields, LendingRules lending, List<CostRule> purchaseCosts, List<CostRule> recurringCosts, List<LoanType> loanTypes, List<Obstacle> obstacles, List<String> removedRuleIds, List<Source> sources
 });
 
 
@@ -347,7 +355,7 @@ class __$MarketRulePackCopyWithImpl<$Res>
 
 /// Create a copy of MarketRulePack
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? parent = freezed,Object? name = null,Object? currency = freezed,Object? locale = freezed,Object? version = null,Object? effectiveFrom = null,Object? reviewedAt = freezed,Object? reviewedBy = freezed,Object? profileFields = null,Object? lending = null,Object? purchaseCosts = null,Object? recurringCosts = null,Object? loanTypes = null,Object? removedRuleIds = null,Object? sources = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? parent = freezed,Object? name = null,Object? currency = freezed,Object? locale = freezed,Object? version = null,Object? effectiveFrom = null,Object? reviewedAt = freezed,Object? reviewedBy = freezed,Object? profileFields = null,Object? lending = null,Object? purchaseCosts = null,Object? recurringCosts = null,Object? loanTypes = null,Object? obstacles = null,Object? removedRuleIds = null,Object? sources = null,}) {
   return _then(_MarketRulePack(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as MarketId,parent: freezed == parent ? _self.parent : parent // ignore: cast_nullable_to_non_nullable
@@ -363,7 +371,8 @@ as List<ProfileFieldRequirement>,lending: null == lending ? _self.lending : lend
 as LendingRules,purchaseCosts: null == purchaseCosts ? _self._purchaseCosts : purchaseCosts // ignore: cast_nullable_to_non_nullable
 as List<CostRule>,recurringCosts: null == recurringCosts ? _self._recurringCosts : recurringCosts // ignore: cast_nullable_to_non_nullable
 as List<CostRule>,loanTypes: null == loanTypes ? _self._loanTypes : loanTypes // ignore: cast_nullable_to_non_nullable
-as List<LoanType>,removedRuleIds: null == removedRuleIds ? _self._removedRuleIds : removedRuleIds // ignore: cast_nullable_to_non_nullable
+as List<LoanType>,obstacles: null == obstacles ? _self._obstacles : obstacles // ignore: cast_nullable_to_non_nullable
+as List<Obstacle>,removedRuleIds: null == removedRuleIds ? _self._removedRuleIds : removedRuleIds // ignore: cast_nullable_to_non_nullable
 as List<String>,sources: null == sources ? _self._sources : sources // ignore: cast_nullable_to_non_nullable
 as List<Source>,
   ));

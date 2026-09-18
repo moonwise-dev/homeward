@@ -196,6 +196,29 @@ const funchalMarketJson = r'''
       "sourceId": "bpi-price-list"
     }
   ],
+  "obstacles": [
+    {
+      "id": "tax-number",
+      "appliesTo": {
+        "residency": "nonResident"
+      },
+      "title": "Portuguese tax number",
+      "severity": "blocker",
+      "mitigation": "Apply for a NIF online or at a tax office before the deed; a lawyer or a fiscal representative can apply for you.",
+      "typicalDuration": "P2W",
+      "sourceId": "at-nif-nao-residentes"
+    },
+    {
+      "id": "account-with-the-lender",
+      "appliesTo": {
+        "residency": "nonResident"
+      },
+      "title": "An account with the lender",
+      "severity": "effort",
+      "mitigation": "Published rates assume you hold an account with the bank lending to you, and the payment is taken from it.",
+      "sourceId": "bpi-price-list"
+    }
+  ],
   "refundBaselines": {
     "imt-nonresident": {
       "id": "imt-own-permanent-residence",
@@ -367,6 +390,30 @@ const funchalMarketJson = r'''
       "title": "Tabela Geral do Imposto do Selo, verbas 1.1 e 17",
       "url": "https://info.portaldasfinancas.gov.pt/pt/informacao_fiscal/codigos_tributarios/selo/Pages/ccod-selo-tabgiselo.aspx",
       "kind": "taxAuthority",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "at-nif-nao-residentes",
+      "publisher": "Autoridade Tributária e Aduaneira",
+      "title": "Atribuição de NIF a cidadãos estrangeiros não residentes",
+      "url": "https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/Folhetos_informativos/Documents/Atribuicao_de_NIF_a_cidadaos_estrangeiros_nao_residentes.pdf",
+      "kind": "taxAuthority",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "at-representacao-fiscal",
+      "publisher": "Autoridade Tributária e Aduaneira",
+      "title": "Registo de contribuinte: representação fiscal, perguntas frequentes",
+      "url": "https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/questoes_frequentes/pages/faqs-00307.aspx",
+      "kind": "taxAuthority",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "lei-56-2023",
+      "publisher": "Diário da República",
+      "title": "Lei n.º 56/2023, de 6 de outubro (Mais Habitação), que revoga a autorização de residência para investimento em imóveis",
+      "url": "https://diariodarepublica.pt/dr/detalhe/lei/56-2023-222477692",
+      "kind": "law",
       "retrievedAt": "2026-09-17"
     },
     {

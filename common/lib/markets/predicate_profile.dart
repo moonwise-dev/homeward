@@ -1,5 +1,5 @@
 import '../profile/buyer_profile.dart';
-import '../profile/citizenship.dart';
+import '../profile/region.dart';
 import '../profile/country_code.dart';
 import '../profile/residency.dart';
 import 'buyer_predicate.dart';
@@ -13,12 +13,13 @@ BuyerProfile profileMeeting(
 }) => profile.copyWith(
   citizenship: switch (predicate.citizenship) {
     null => profile.citizenship,
-    final citizenship => passportIn(market, citizenship),
+    final region => countryIn(market, region),
   },
-  taxResidence: switch (predicate.residency) {
-    null => profile.taxResidence,
-    Residency.resident => market.countryCode,
-    Residency.nonResident => abroadFrom(market),
+  taxResidence: switch ((predicate.residency, predicate.residencyRegion)) {
+    (null, null) => profile.taxResidence,
+    (_, final region?) => countryIn(market, region),
+    (Residency.resident, _) => market.countryCode,
+    (Residency.nonResident, _) => abroadFrom(market),
   },
   formerResident: predicate.formerResident ?? profile.formerResident,
   residencyIntent: predicate.residencyIntent ?? profile.residencyIntent,
@@ -31,13 +32,12 @@ BuyerProfile profileMeeting(
 CountryCode abroadFrom(MarketId market) =>
     CountryCode.parse(market.countryCode.code == 'US' ? 'JP' : 'US');
 
-CountryCode passportIn(MarketId market, Citizenship citizenship) =>
-    switch (citizenship) {
-      Citizenship.domestic => market.countryCode,
-      Citizenship.regional => CountryCode.parse(
-        europeanEconomicAreaCountryCodes.firstWhere(
-          (code) => code != market.countryCode.code,
-        ),
-      ),
-      Citizenship.foreign => abroadFrom(market),
-    };
+CountryCode countryIn(MarketId market, Region region) => switch (region) {
+  Region.domestic => market.countryCode,
+  Region.regional => CountryCode.parse(
+    europeanEconomicAreaCountryCodes.firstWhere(
+      (code) => code != market.countryCode.code,
+    ),
+  ),
+  Region.foreign => abroadFrom(market),
+};

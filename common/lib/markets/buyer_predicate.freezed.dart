@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BuyerPredicate {
 
- Residency? get residency; bool? get formerResident; ResidencyIntent? get residencyIntent; Citizenship? get citizenship; PropertyUse? get use; bool? get firstTime; Employment? get employment; YearRange? get age;
+ Residency? get residency; bool? get formerResident; ResidencyIntent? get residencyIntent; Region? get citizenship; Region? get residencyRegion; PropertyUse? get use; bool? get firstTime; Employment? get employment; YearRange? get age;
 /// Create a copy of BuyerPredicate
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $BuyerPredicateCopyWith<BuyerPredicate> get copyWith => _$BuyerPredicateCopyWith
 @override
 bool operator ==(Object other) {
   final _this = this as BuyerPredicate;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BuyerPredicate&&(identical(other.residency, _this.residency) || other.residency == _this.residency)&&(identical(other.formerResident, _this.formerResident) || other.formerResident == _this.formerResident)&&(identical(other.residencyIntent, _this.residencyIntent) || other.residencyIntent == _this.residencyIntent)&&(identical(other.citizenship, _this.citizenship) || other.citizenship == _this.citizenship)&&(identical(other.use, _this.use) || other.use == _this.use)&&(identical(other.firstTime, _this.firstTime) || other.firstTime == _this.firstTime)&&(identical(other.employment, _this.employment) || other.employment == _this.employment)&&(identical(other.age, _this.age) || other.age == _this.age));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BuyerPredicate&&(identical(other.residency, _this.residency) || other.residency == _this.residency)&&(identical(other.formerResident, _this.formerResident) || other.formerResident == _this.formerResident)&&(identical(other.residencyIntent, _this.residencyIntent) || other.residencyIntent == _this.residencyIntent)&&(identical(other.citizenship, _this.citizenship) || other.citizenship == _this.citizenship)&&(identical(other.residencyRegion, _this.residencyRegion) || other.residencyRegion == _this.residencyRegion)&&(identical(other.use, _this.use) || other.use == _this.use)&&(identical(other.firstTime, _this.firstTime) || other.firstTime == _this.firstTime)&&(identical(other.employment, _this.employment) || other.employment == _this.employment)&&(identical(other.age, _this.age) || other.age == _this.age));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as BuyerPredicate;
-  return Object.hash(runtimeType,_this.residency,_this.formerResident,_this.residencyIntent,_this.citizenship,_this.use,_this.firstTime,_this.employment,_this.age);
+  return Object.hash(runtimeType,_this.residency,_this.formerResident,_this.residencyIntent,_this.citizenship,_this.residencyRegion,_this.use,_this.firstTime,_this.employment,_this.age);
 }
 
 @override
 String toString() {
   final _this = this as BuyerPredicate;
-  return 'BuyerPredicate(residency: ${_this.residency}, formerResident: ${_this.formerResident}, residencyIntent: ${_this.residencyIntent}, citizenship: ${_this.citizenship}, use: ${_this.use}, firstTime: ${_this.firstTime}, employment: ${_this.employment}, age: ${_this.age})';
+  return 'BuyerPredicate(residency: ${_this.residency}, formerResident: ${_this.formerResident}, residencyIntent: ${_this.residencyIntent}, citizenship: ${_this.citizenship}, residencyRegion: ${_this.residencyRegion}, use: ${_this.use}, firstTime: ${_this.firstTime}, employment: ${_this.employment}, age: ${_this.age})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $BuyerPredicateCopyWith<$Res>  {
   factory $BuyerPredicateCopyWith(BuyerPredicate value, $Res Function(BuyerPredicate) _then) = _$BuyerPredicateCopyWithImpl;
 @useResult
 $Res call({
- Residency? residency, bool? formerResident, ResidencyIntent? residencyIntent, Citizenship? citizenship, PropertyUse? use, bool? firstTime, Employment? employment, YearRange? age
+ Residency? residency, bool? formerResident, ResidencyIntent? residencyIntent, Region? citizenship, Region? residencyRegion, PropertyUse? use, bool? firstTime, Employment? employment, YearRange? age
 });
 
 
@@ -71,13 +71,14 @@ class _$BuyerPredicateCopyWithImpl<$Res>
 
 /// Create a copy of BuyerPredicate
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? residency = freezed,Object? formerResident = freezed,Object? residencyIntent = freezed,Object? citizenship = freezed,Object? use = freezed,Object? firstTime = freezed,Object? employment = freezed,Object? age = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? residency = freezed,Object? formerResident = freezed,Object? residencyIntent = freezed,Object? citizenship = freezed,Object? residencyRegion = freezed,Object? use = freezed,Object? firstTime = freezed,Object? employment = freezed,Object? age = freezed,}) {
   return _then(BuyerPredicate(
 residency: freezed == residency ? _self.residency : residency // ignore: cast_nullable_to_non_nullable
 as Residency?,formerResident: freezed == formerResident ? _self.formerResident : formerResident // ignore: cast_nullable_to_non_nullable
 as bool?,residencyIntent: freezed == residencyIntent ? _self.residencyIntent : residencyIntent // ignore: cast_nullable_to_non_nullable
 as ResidencyIntent?,citizenship: freezed == citizenship ? _self.citizenship : citizenship // ignore: cast_nullable_to_non_nullable
-as Citizenship?,use: freezed == use ? _self.use : use // ignore: cast_nullable_to_non_nullable
+as Region?,residencyRegion: freezed == residencyRegion ? _self.residencyRegion : residencyRegion // ignore: cast_nullable_to_non_nullable
+as Region?,use: freezed == use ? _self.use : use // ignore: cast_nullable_to_non_nullable
 as PropertyUse?,firstTime: freezed == firstTime ? _self.firstTime : firstTime // ignore: cast_nullable_to_non_nullable
 as bool?,employment: freezed == employment ? _self.employment : employment // ignore: cast_nullable_to_non_nullable
 as Employment?,age: freezed == age ? _self.age : age // ignore: cast_nullable_to_non_nullable
@@ -178,10 +179,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Residency? residency,  bool? formerResident,  ResidencyIntent? residencyIntent,  Citizenship? citizenship,  PropertyUse? use,  bool? firstTime,  Employment? employment,  YearRange? age)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Residency? residency,  bool? formerResident,  ResidencyIntent? residencyIntent,  Region? citizenship,  Region? residencyRegion,  PropertyUse? use,  bool? firstTime,  Employment? employment,  YearRange? age)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BuyerPredicate() when $default != null:
-return $default(_that.residency,_that.formerResident,_that.residencyIntent,_that.citizenship,_that.use,_that.firstTime,_that.employment,_that.age);case _:
+return $default(_that.residency,_that.formerResident,_that.residencyIntent,_that.citizenship,_that.residencyRegion,_that.use,_that.firstTime,_that.employment,_that.age);case _:
   return orElse();
 
 }
@@ -199,10 +200,10 @@ return $default(_that.residency,_that.formerResident,_that.residencyIntent,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Residency? residency,  bool? formerResident,  ResidencyIntent? residencyIntent,  Citizenship? citizenship,  PropertyUse? use,  bool? firstTime,  Employment? employment,  YearRange? age)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Residency? residency,  bool? formerResident,  ResidencyIntent? residencyIntent,  Region? citizenship,  Region? residencyRegion,  PropertyUse? use,  bool? firstTime,  Employment? employment,  YearRange? age)  $default,) {final _that = this;
 switch (_that) {
 case _BuyerPredicate():
-return $default(_that.residency,_that.formerResident,_that.residencyIntent,_that.citizenship,_that.use,_that.firstTime,_that.employment,_that.age);case _:
+return $default(_that.residency,_that.formerResident,_that.residencyIntent,_that.citizenship,_that.residencyRegion,_that.use,_that.firstTime,_that.employment,_that.age);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -219,10 +220,10 @@ return $default(_that.residency,_that.formerResident,_that.residencyIntent,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Residency? residency,  bool? formerResident,  ResidencyIntent? residencyIntent,  Citizenship? citizenship,  PropertyUse? use,  bool? firstTime,  Employment? employment,  YearRange? age)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Residency? residency,  bool? formerResident,  ResidencyIntent? residencyIntent,  Region? citizenship,  Region? residencyRegion,  PropertyUse? use,  bool? firstTime,  Employment? employment,  YearRange? age)?  $default,) {final _that = this;
 switch (_that) {
 case _BuyerPredicate() when $default != null:
-return $default(_that.residency,_that.formerResident,_that.residencyIntent,_that.citizenship,_that.use,_that.firstTime,_that.employment,_that.age);case _:
+return $default(_that.residency,_that.formerResident,_that.residencyIntent,_that.citizenship,_that.residencyRegion,_that.use,_that.firstTime,_that.employment,_that.age);case _:
   return null;
 
 }
@@ -234,13 +235,14 @@ return $default(_that.residency,_that.formerResident,_that.residencyIntent,_that
 @JsonSerializable()
 
 class _BuyerPredicate implements BuyerPredicate {
-  const _BuyerPredicate({this.residency, this.formerResident, this.residencyIntent, this.citizenship, this.use, this.firstTime, this.employment, this.age});
+  const _BuyerPredicate({this.residency, this.formerResident, this.residencyIntent, this.citizenship, this.residencyRegion, this.use, this.firstTime, this.employment, this.age});
   factory _BuyerPredicate.fromJson(Map<String, dynamic> json) => _$BuyerPredicateFromJson(json);
 
 @override final  Residency? residency;
 @override final  bool? formerResident;
 @override final  ResidencyIntent? residencyIntent;
-@override final  Citizenship? citizenship;
+@override final  Region? citizenship;
+@override final  Region? residencyRegion;
 @override final  PropertyUse? use;
 @override final  bool? firstTime;
 @override final  Employment? employment;
@@ -259,18 +261,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BuyerPredicate&&(identical(other.residency, residency) || other.residency == residency)&&(identical(other.formerResident, formerResident) || other.formerResident == formerResident)&&(identical(other.residencyIntent, residencyIntent) || other.residencyIntent == residencyIntent)&&(identical(other.citizenship, citizenship) || other.citizenship == citizenship)&&(identical(other.use, use) || other.use == use)&&(identical(other.firstTime, firstTime) || other.firstTime == firstTime)&&(identical(other.employment, employment) || other.employment == employment)&&(identical(other.age, age) || other.age == age));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BuyerPredicate&&(identical(other.residency, residency) || other.residency == residency)&&(identical(other.formerResident, formerResident) || other.formerResident == formerResident)&&(identical(other.residencyIntent, residencyIntent) || other.residencyIntent == residencyIntent)&&(identical(other.citizenship, citizenship) || other.citizenship == citizenship)&&(identical(other.residencyRegion, residencyRegion) || other.residencyRegion == residencyRegion)&&(identical(other.use, use) || other.use == use)&&(identical(other.firstTime, firstTime) || other.firstTime == firstTime)&&(identical(other.employment, employment) || other.employment == employment)&&(identical(other.age, age) || other.age == age));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,residency,formerResident,residencyIntent,citizenship,use,firstTime,employment,age);
+    return Object.hash(runtimeType,residency,formerResident,residencyIntent,citizenship,residencyRegion,use,firstTime,employment,age);
 }
 
 @override
 String toString() {
-    return 'BuyerPredicate(residency: $residency, formerResident: $formerResident, residencyIntent: $residencyIntent, citizenship: $citizenship, use: $use, firstTime: $firstTime, employment: $employment, age: $age)';
+    return 'BuyerPredicate(residency: $residency, formerResident: $formerResident, residencyIntent: $residencyIntent, citizenship: $citizenship, residencyRegion: $residencyRegion, use: $use, firstTime: $firstTime, employment: $employment, age: $age)';
 }
 
 
@@ -281,7 +283,7 @@ abstract mixin class _$BuyerPredicateCopyWith<$Res> implements $BuyerPredicateCo
   factory _$BuyerPredicateCopyWith(_BuyerPredicate value, $Res Function(_BuyerPredicate) _then) = __$BuyerPredicateCopyWithImpl;
 @override @useResult
 $Res call({
- Residency? residency, bool? formerResident, ResidencyIntent? residencyIntent, Citizenship? citizenship, PropertyUse? use, bool? firstTime, Employment? employment, YearRange? age
+ Residency? residency, bool? formerResident, ResidencyIntent? residencyIntent, Region? citizenship, Region? residencyRegion, PropertyUse? use, bool? firstTime, Employment? employment, YearRange? age
 });
 
 
@@ -298,13 +300,14 @@ class __$BuyerPredicateCopyWithImpl<$Res>
 
 /// Create a copy of BuyerPredicate
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? residency = freezed,Object? formerResident = freezed,Object? residencyIntent = freezed,Object? citizenship = freezed,Object? use = freezed,Object? firstTime = freezed,Object? employment = freezed,Object? age = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? residency = freezed,Object? formerResident = freezed,Object? residencyIntent = freezed,Object? citizenship = freezed,Object? residencyRegion = freezed,Object? use = freezed,Object? firstTime = freezed,Object? employment = freezed,Object? age = freezed,}) {
   return _then(_BuyerPredicate(
 residency: freezed == residency ? _self.residency : residency // ignore: cast_nullable_to_non_nullable
 as Residency?,formerResident: freezed == formerResident ? _self.formerResident : formerResident // ignore: cast_nullable_to_non_nullable
 as bool?,residencyIntent: freezed == residencyIntent ? _self.residencyIntent : residencyIntent // ignore: cast_nullable_to_non_nullable
 as ResidencyIntent?,citizenship: freezed == citizenship ? _self.citizenship : citizenship // ignore: cast_nullable_to_non_nullable
-as Citizenship?,use: freezed == use ? _self.use : use // ignore: cast_nullable_to_non_nullable
+as Region?,residencyRegion: freezed == residencyRegion ? _self.residencyRegion : residencyRegion // ignore: cast_nullable_to_non_nullable
+as Region?,use: freezed == use ? _self.use : use // ignore: cast_nullable_to_non_nullable
 as PropertyUse?,firstTime: freezed == firstTime ? _self.firstTime : firstTime // ignore: cast_nullable_to_non_nullable
 as bool?,employment: freezed == employment ? _self.employment : employment // ignore: cast_nullable_to_non_nullable
 as Employment?,age: freezed == age ? _self.age : age // ignore: cast_nullable_to_non_nullable

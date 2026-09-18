@@ -84,7 +84,7 @@ List<List<_Fact>> _dimensions(List<CostRule> rules, MarketId market) {
             set: (profile) => profile.copyWith(
               taxResidence: switch (residency) {
                 Residency.resident => market.countryCode,
-                Residency.nonResident => _abroad(market),
+                Residency.nonResident => abroadFrom(market),
               },
             ),
           ),
@@ -105,14 +105,22 @@ List<List<_Fact>> _dimensions(List<CostRule> rules, MarketId market) {
             set: (profile) => profile.copyWith(residencyIntent: intent),
           ),
       ],
+    if (predicates.any((predicate) => predicate.residencyRegion != null))
+      [
+        for (final region in Region.values)
+          (
+            label: 'tax resident ${region.name}',
+            set: (profile) =>
+                profile.copyWith(taxResidence: countryIn(market, region)),
+          ),
+      ],
     if (predicates.any((predicate) => predicate.citizenship != null))
       [
-        for (final citizenship in Citizenship.values)
+        for (final region in Region.values)
           (
-            label: '${citizenship.name} citizen',
-            set: (profile) => profile.copyWith(
-              citizenship: _passport(citizenship, market),
-            ),
+            label: '${region.name} citizen',
+            set: (profile) =>
+                profile.copyWith(citizenship: countryIn(market, region)),
           ),
       ],
     if (predicates.any((predicate) => predicate.use != null))
@@ -143,17 +151,3 @@ List<List<_Fact>> _dimensions(List<CostRule> rules, MarketId market) {
       ],
   ];
 }
-
-CountryCode _abroad(MarketId market) =>
-    CountryCode.parse(market.countryCode.code == 'US' ? 'JP' : 'US');
-
-CountryCode _passport(Citizenship citizenship, MarketId market) =>
-    switch (citizenship) {
-      Citizenship.domestic => market.countryCode,
-      Citizenship.regional => CountryCode.parse(
-        europeanEconomicAreaCountryCodes.firstWhere(
-          (code) => code != market.countryCode.code,
-        ),
-      ),
-      Citizenship.foreign => _abroad(market),
-    };

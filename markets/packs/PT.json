@@ -235,6 +235,42 @@
       "sourceId": "bpi-price-list"
     }
   ],
+  "obstacles": [
+    {
+      "id": "tax-number",
+      "appliesTo": { "residency": "nonResident" },
+      "title": "Portuguese tax number",
+      "severity": "blocker",
+      "mitigation": "Apply for a NIF online or at a tax office before the deed; a lawyer or a fiscal representative can apply for you.",
+      "typicalDuration": "P2W",
+      "sourceId": "at-nif-nao-residentes"
+    },
+    {
+      "id": "fiscal-representative",
+      "appliesTo": { "residency": "nonResident", "residencyRegion": "foreign" },
+      "title": "Fiscal representative in Portugal",
+      "severity": "effort",
+      "mitigation": "Owning a home here is a tax relationship, so appoint any person or company resident in Portugal within 15 days, or opt into electronic notifications from the tax authority instead. Residents of the EU, Norway, Iceland and Liechtenstein are free of this.",
+      "typicalDuration": "P15D",
+      "sourceId": "at-representacao-fiscal"
+    },
+    {
+      "id": "golden-visa-not-for-housing",
+      "appliesTo": { "citizenship": "foreign" },
+      "title": "Buying a home no longer earns a golden visa",
+      "severity": "info",
+      "mitigation": "The residence permit for investment dropped property in 2023. Buying gives you no right to stay; a residence visa is a separate route.",
+      "sourceId": "lei-56-2023"
+    },
+    {
+      "id": "account-with-the-lender",
+      "appliesTo": { "residency": "nonResident" },
+      "title": "An account with the lender",
+      "severity": "effort",
+      "mitigation": "Published rates assume you hold an account with the bank lending to you, and the payment is taken from it.",
+      "sourceId": "bpi-price-list"
+    }
+  ],
   "sources": [
     {
       "id": "bdp-recomendacao-1-2026",
@@ -285,12 +321,73 @@
       "retrievedAt": "2026-09-17"
     },
     {
+      "id": "at-nif-nao-residentes",
+      "publisher": "Autoridade Tributária e Aduaneira",
+      "title": "Atribuição de NIF a cidadãos estrangeiros não residentes",
+      "url": "https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/Folhetos_informativos/Documents/Atribuicao_de_NIF_a_cidadaos_estrangeiros_nao_residentes.pdf",
+      "kind": "taxAuthority",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "at-representacao-fiscal",
+      "publisher": "Autoridade Tributária e Aduaneira",
+      "title": "Registo de contribuinte: representação fiscal, perguntas frequentes",
+      "url": "https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/questoes_frequentes/pages/faqs-00307.aspx",
+      "kind": "taxAuthority",
+      "retrievedAt": "2026-09-17"
+    },
+    {
+      "id": "lei-56-2023",
+      "publisher": "Diário da República",
+      "title": "Lei n.º 56/2023, de 6 de outubro (Mais Habitação), que revoga a autorização de residência para investimento em imóveis",
+      "url": "https://diariodarepublica.pt/dr/detalhe/lei/56-2023-222477692",
+      "kind": "law",
+      "retrievedAt": "2026-09-17"
+    },
+    {
       "id": "bpi-price-list",
       "publisher": "Banco BPI",
       "title": "Preçário 18: operações de crédito a particulares, em vigor desde 16 de setembro de 2026",
       "url": "https://www.bancobpi.pt/contentservice/getContent?documentName=PP_WCS01_UCM01002197",
       "kind": "lenderNorm",
       "retrievedAt": "2026-09-17"
+
+    }
+  ],
+  "obstacles": [
+    {
+      "id": "tax-number",
+      "appliesTo": { "residency": "nonResident" },
+      "title": "Portuguese tax number",
+      "severity": "blocker",
+      "mitigation": "Apply for a NIF online or at a tax office before the deed; a lawyer or a fiscal representative can apply for you.",
+      "typicalDuration": "P2W",
+      "sourceId": "at-nif-nao-residentes"
+    },
+    {
+      "id": "fiscal-representative",
+      "appliesTo": { "residency": "nonResident", "residencyRegion": "foreign" },
+      "title": "Fiscal representative in Portugal",
+      "severity": "effort",
+      "mitigation": "Owning a home here is a tax relationship, so appoint any person or company resident in Portugal within 15 days, or opt into electronic notifications from the tax authority instead.",
+      "typicalDuration": "P15D",
+      "sourceId": "at-representacao-fiscal"
+    },
+    {
+      "id": "account-with-the-lender",
+      "appliesTo": { "residency": "nonResident" },
+      "title": "An account with the lender",
+      "severity": "effort",
+      "mitigation": "Published rates assume you hold an account with the bank lending to you, and the payment is taken from it.",
+      "sourceId": "bpi-price-list"
+    },
+    {
+      "id": "golden-visa-not-for-housing",
+      "appliesTo": { "citizenship": "foreign" },
+      "title": "Buying a home no longer earns a golden visa",
+      "severity": "info",
+      "mitigation": "The residence permit for investment dropped property in 2023. Buying gives you no right to stay; a residence visa is a separate route.",
+      "sourceId": "lei-56-2023"
     }
   ]
 }

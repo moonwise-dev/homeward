@@ -21,6 +21,7 @@ _ResolvedMarket _$ResolvedMarketFromJson(
       'purchaseCosts',
       'recurringCosts',
       'loanTypes',
+      'obstacles',
       'refundBaselines',
       'profileFields',
       'referenceRates',
@@ -69,6 +70,14 @@ _ResolvedMarket _$ResolvedMarketFromJson(
       (v) => (v as List<dynamic>)
           .map((e) => LoanType.fromJson(e as Map<String, dynamic>))
           .toList(),
+    ),
+    obstacles: $checkedConvert(
+      'obstacles',
+      (v) =>
+          (v as List<dynamic>?)
+              ?.map((e) => Obstacle.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     ),
     refundBaselines: $checkedConvert(
       'refundBaselines',
@@ -136,6 +145,7 @@ Map<String, dynamic> _$ResolvedMarketToJson(
   'purchaseCosts': instance.purchaseCosts.map((e) => e.toJson()).toList(),
   'recurringCosts': instance.recurringCosts.map((e) => e.toJson()).toList(),
   'loanTypes': instance.loanTypes.map((e) => e.toJson()).toList(),
+  'obstacles': instance.obstacles.map((e) => e.toJson()).toList(),
   'refundBaselines': instance.refundBaselines.map(
     (k, e) => MapEntry(k, e.toJson()),
   ),
@@ -204,4 +214,5 @@ const _$RuleSectionEnumMap = {
   RuleSection.lending: 'lending',
   RuleSection.purchaseCosts: 'purchaseCosts',
   RuleSection.recurringCosts: 'recurringCosts',
+  RuleSection.obstacles: 'obstacles',
 };

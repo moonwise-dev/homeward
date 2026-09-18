@@ -2,7 +2,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../finance/rate_type.dart';
 import '../profile/buyer_profile.dart';
-import '../profile/citizenship.dart';
+import '../profile/country_code.dart';
+import '../profile/region.dart';
 import '../profile/profile_field.dart';
 import '../profile/residency.dart';
 import 'buyer_predicate.dart';
@@ -48,7 +49,12 @@ Applicability applicabilityOf(
     _condition(
       ProfileField.citizenship,
       predicate.citizenship,
-      _citizenshipIn(market, profile),
+      regionIn(market, profile.citizenship),
+    ),
+    _condition(
+      ProfileField.residency,
+      predicate.residencyRegion,
+      regionIn(market, profile.taxResidence),
     ),
     _condition(ProfileField.use, predicate.use, profile.use),
     _condition(ProfileField.firstTime, predicate.firstTime, profile.firstTime),
@@ -102,15 +108,12 @@ Residency? _residencyIn(MarketId market, BuyerProfile profile) =>
       _ => Residency.nonResident,
     };
 
-Citizenship? _citizenshipIn(MarketId market, BuyerProfile profile) =>
-    switch (profile.citizenship) {
-      null => null,
-      final country when country == market.countryCode => Citizenship.domestic,
-      final country
-          when europeanEconomicAreaCountryCodes.contains(country.code) &&
-              europeanEconomicAreaCountryCodes.contains(
-                market.countryCode.code,
-              ) =>
-        Citizenship.regional,
-      _ => Citizenship.foreign,
-    };
+Region? regionIn(MarketId market, CountryCode? country) => switch (country) {
+  null => null,
+  final country when country == market.countryCode => Region.domestic,
+  final country
+      when europeanEconomicAreaCountryCodes.contains(country.code) &&
+          europeanEconomicAreaCountryCodes.contains(market.countryCode.code) =>
+    Region.regional,
+  _ => Region.foreign,
+};

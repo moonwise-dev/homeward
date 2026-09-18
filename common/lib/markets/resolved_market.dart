@@ -17,6 +17,7 @@ import 'locale_tag_json_converter.dart';
 import 'market_id.dart';
 import 'market_id_json_converter.dart';
 import 'market_rule_pack.dart';
+import 'obstacle.dart';
 import 'predicate_profile.dart';
 import 'profile_field_requirement.dart';
 import 'reference_rate.dart';
@@ -39,6 +40,7 @@ abstract class ResolvedMarket with _$ResolvedMarket {
     required List<CostRule> purchaseCosts,
     required List<CostRule> recurringCosts,
     required List<LoanType> loanTypes,
+    @Default([]) List<Obstacle> obstacles,
     @Default({}) Map<String, CostRule> refundBaselines,
     @Default([]) List<ProfileFieldRequirement> profileFields,
     @Default({}) Map<String, ReferenceRate> referenceRates,
@@ -132,6 +134,7 @@ ResolvedMarket resolveForBuyer(
     keep(pack.recurringCosts, RuleSection.recurringCosts),
   );
   final profileFields = keep(pack.profileFields, RuleSection.profileFields);
+  final obstacles = keep(pack.obstacles, RuleSection.obstacles);
   final refundBaselines = <String, CostRule>{};
   for (final rule in purchaseCosts) {
     if (rule.refund case final refund?
@@ -151,6 +154,7 @@ ResolvedMarket resolveForBuyer(
     purchaseCosts: purchaseCosts,
     recurringCosts: recurringCosts,
     loanTypes: pack.loanTypes,
+    obstacles: obstacles,
     refundBaselines: refundBaselines,
     profileFields: profileFields,
     referenceRates: {

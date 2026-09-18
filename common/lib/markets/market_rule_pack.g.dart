@@ -26,6 +26,7 @@ _MarketRulePack _$MarketRulePackFromJson(
       'purchaseCosts',
       'recurringCosts',
       'loanTypes',
+      'obstacles',
       'removedRuleIds',
       'sources',
     ],
@@ -111,6 +112,14 @@ _MarketRulePack _$MarketRulePackFromJson(
               .toList() ??
           const [],
     ),
+    obstacles: $checkedConvert(
+      'obstacles',
+      (v) =>
+          (v as List<dynamic>?)
+              ?.map((e) => Obstacle.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    ),
     removedRuleIds: $checkedConvert(
       'removedRuleIds',
       (v) =>
@@ -158,6 +167,7 @@ Map<String, dynamic> _$MarketRulePackToJson(_MarketRulePack instance) =>
       'purchaseCosts': instance.purchaseCosts.map((e) => e.toJson()).toList(),
       'recurringCosts': instance.recurringCosts.map((e) => e.toJson()).toList(),
       'loanTypes': instance.loanTypes.map((e) => e.toJson()).toList(),
+      'obstacles': instance.obstacles.map((e) => e.toJson()).toList(),
       'removedRuleIds': instance.removedRuleIds,
       'sources': instance.sources.map((e) => e.toJson()).toList(),
     };

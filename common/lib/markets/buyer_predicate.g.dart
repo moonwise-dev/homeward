@@ -15,6 +15,7 @@ _BuyerPredicate _$BuyerPredicateFromJson(Map<String, dynamic> json) =>
           'formerResident',
           'residencyIntent',
           'citizenship',
+          'residencyRegion',
           'use',
           'firstTime',
           'employment',
@@ -33,7 +34,11 @@ _BuyerPredicate _$BuyerPredicateFromJson(Map<String, dynamic> json) =>
         ),
         citizenship: $checkedConvert(
           'citizenship',
-          (v) => $enumDecodeNullable(_$CitizenshipEnumMap, v),
+          (v) => $enumDecodeNullable(_$RegionEnumMap, v),
+        ),
+        residencyRegion: $checkedConvert(
+          'residencyRegion',
+          (v) => $enumDecodeNullable(_$RegionEnumMap, v),
         ),
         use: $checkedConvert(
           'use',
@@ -58,7 +63,8 @@ Map<String, dynamic> _$BuyerPredicateToJson(_BuyerPredicate instance) =>
       'residency': ?_$ResidencyEnumMap[instance.residency],
       'formerResident': ?instance.formerResident,
       'residencyIntent': ?_$ResidencyIntentEnumMap[instance.residencyIntent],
-      'citizenship': ?_$CitizenshipEnumMap[instance.citizenship],
+      'citizenship': ?_$RegionEnumMap[instance.citizenship],
+      'residencyRegion': ?_$RegionEnumMap[instance.residencyRegion],
       'use': ?_$PropertyUseEnumMap[instance.use],
       'firstTime': ?instance.firstTime,
       'employment': ?_$EmploymentEnumMap[instance.employment],
@@ -75,10 +81,10 @@ const _$ResidencyIntentEnumMap = {
   ResidencyIntent.becomeResident: 'becomeResident',
 };
 
-const _$CitizenshipEnumMap = {
-  Citizenship.domestic: 'domestic',
-  Citizenship.regional: 'regional',
-  Citizenship.foreign: 'foreign',
+const _$RegionEnumMap = {
+  Region.domestic: 'domestic',
+  Region.regional: 'regional',
+  Region.foreign: 'foreign',
 };
 
 const _$PropertyUseEnumMap = {
