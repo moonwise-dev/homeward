@@ -54,7 +54,9 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 The loan term uses the basic `ChoicePicker`, which is why `HouseholdInput`
 took the `LoanTermPicker` slot (D82). In MVP the loan type uses it too, and the
-board is compiled from basic layout components plus MVP insights.
+board is compiled from basic layout components plus MVP insights: a `Column` of
+`Card`s, each holding one insight bound to `/market`, `/profile`, and
+`/scenario`, and a `Button` where a decision can be reopened.
 
 ## Basic Components
 

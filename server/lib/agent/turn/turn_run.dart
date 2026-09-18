@@ -12,6 +12,7 @@ import '../../logging/log_entry.dart';
 import '../../tools/profile_field_paths.dart';
 import '../actions/action_input.dart';
 import '../actions/apply_action.dart';
+import '../board/compile_board.dart';
 import '../parsed_output.dart';
 import '../prompt/prompt_assembler.dart';
 import '../prompt/turn_context.dart';
@@ -211,6 +212,9 @@ final class TurnRun {
           _forwarded.add(message);
           yield TurnEvent.message(message);
         }
+      }
+      for (final message in compileBoard(plan: _plan, markets: tools.markets)) {
+        yield TurnEvent.message(message);
       }
       _log.info(
         LogEntry(

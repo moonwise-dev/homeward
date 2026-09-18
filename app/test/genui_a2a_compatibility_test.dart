@@ -76,6 +76,11 @@ void main() {
         'UpdateDataModelMessage',
         'UpdateDataModelMessage',
         'UpdateComponentsMessage',
+        'CreateSurfaceMessage',
+        'UpdateDataModelMessage',
+        'UpdateDataModelMessage',
+        'UpdateDataModelMessage',
+        'UpdateComponentsMessage',
       ],
     );
     final surface = surfaces.contextFor('t1-profile');
@@ -90,6 +95,16 @@ void main() {
     expect(
       _componentNames(surfaceExamples.first.components),
       everyElement(isIn([for (final item in catalog.items) item.name])),
+    );
+
+    final board = surfaces.contextFor(InlineSurfaces.boardId);
+    expect(
+      board.definition.value!.components['market']?.type,
+      'MarketSnapshotCard',
+    );
+    expect(
+      board.dataModel.getValue<Object?>(DataPath(marketSlice.pathOf('name'))),
+      'Sweden',
     );
   });
 }

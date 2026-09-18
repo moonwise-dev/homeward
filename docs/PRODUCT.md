@@ -167,10 +167,12 @@ documents this buyer needs at each step, tickable and saved to the plan.
 
 ### Plan Board
 
-A persistent summary of what has been decided: target market, profile,
-committed scenarios, costs, obstacles, and document progress. It is drawn by
-the server from the plan record, never by the model, and every section offers a
-"change" action that reopens the decision in chat.
+A persistent summary of what has been decided: the market, the committed
+scenario and what follows from it, the costs, and the obstacles. It is drawn by
+the server from the plan record, never by the model, out of the same catalog
+components the chat uses. A section that holds a decision offers a "change"
+action that reopens it in chat; the sections that only follow from a decision
+carry none, so the board never shows the same button twice.
 
 ### Explain
 

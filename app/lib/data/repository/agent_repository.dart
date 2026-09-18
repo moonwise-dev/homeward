@@ -184,16 +184,20 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
       case AgentA2ui(:final message):
         final normalized = _normalized(message)! as Map<String, dynamic>;
         plan.surfaces.handleMessage(a2ui.A2uiMessage.fromJson(normalized));
-        if (normalized
-            case {
-              'createSurface': {'surfaceId': final String surfaceId},
-            }
-            when surfaceId != InlineSurfaces.boardId) {
-          plan.updateAgent(
-            entryId,
-            (entry) =>
-                entry.copyWith(surfaceIds: [...entry.surfaceIds, surfaceId]),
-          );
+        if (normalized case {
+          'createSurface': {'surfaceId': final String surfaceId},
+        }) {
+          if (surfaceId == InlineSurfaces.boardId) {
+            plan
+              ..hasBoard = true
+              ..emit();
+          } else {
+            plan.updateAgent(
+              entryId,
+              (entry) =>
+                  entry.copyWith(surfaceIds: [...entry.surfaceIds, surfaceId]),
+            );
+          }
         }
       case AgentCompleted(:final text):
         plan.updateAgent(
@@ -224,10 +228,12 @@ class _PlanSession {
   StreamSubscription<ChatMessage>? submissions;
   String? taskId;
   var isRunning = false;
+  var hasBoard = false;
 
   PlanConversation get conversation => PlanConversation(
     entries: List.unmodifiable(entries),
     isRunning: isRunning,
+    hasBoard: hasBoard,
   );
 
   TranscriptEntry? entry(String id) =>

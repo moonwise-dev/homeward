@@ -9,5 +9,6 @@ abstract class PlanConversation with _$PlanConversation {
   const factory PlanConversation({
     @Default([]) List<TranscriptEntry> entries,
     @Default(false) bool isRunning,
+    @Default(false) bool hasBoard,
   }) = _PlanConversation;
 }

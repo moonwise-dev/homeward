@@ -279,14 +279,18 @@ Placement is encoded in the surface ID so it survives any connector.
 - When a later commit supersedes it, the server writes `/ui/locked: true` into
   its data model. Interactive Homeward components render read-only when locked.
 - `deleteSurface` is used only when a turn is canceled mid-stream.
-- `board` is created once per session and replaced wholesale with
-  `updateComponents` and `updateDataModel` after every plan change.
+- `board` is sent whole after every turn that has anything to show:
+  `createSurface`, the slices it reads, then `updateComponents`. The client
+  replaces whatever it had, so a client that joins mid-session gets a complete
+  board.
 
 ### Replay
 
 Every A2UI message the server forwards is stored with its turn. Opening a plan
 replays them in order into a fresh `SurfaceController`. Uncommitted what-if
-changes are not stored and are not replayed.
+changes are not stored and are not replayed. The board is not stored with the
+turn, because it repeats the whole market each time and would outgrow the
+session record; it is compiled again from the plan record.
 
 ## Data Model
 

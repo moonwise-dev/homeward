@@ -59,7 +59,7 @@ final class PlanChatControllerProvider
 }
 
 String _$planChatControllerHash() =>
-    r'35b42349f81315104d0e0e57e289cf96075c7b4c';
+    r'44949c8fbbd55a22d8049aefb03ae56817ef9211';
 
 final class PlanChatControllerFamily extends $Family
     with
