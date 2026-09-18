@@ -18,7 +18,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `PurchaseCostsTable` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Funchal non-resident |
 | `StressTestChart` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple, Funchal non-resident |
 | `EligibilityChecklist` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Funchal non-resident, Stockholm couple |
-| `ForeignBuyerObstacles` | mvp | yes | `market`, `profile` | `market`, `profile`, `scenario` | Funchal non-resident |
+| `ForeignBuyerObstacles` | mvp | yes | `market`, `profile` | `market`, `profile` | Funchal non-resident |
 
 ### LocationPicker
 
@@ -62,7 +62,7 @@ Every lending rule this buyer is measured against, each passing, warning, or fai
 
 ### ForeignBuyerObstacles
 
-What stands between this buyer and the keys beyond the money: the steps a foreign buyer owes, what each one takes, and the deadlines on any tax the buyer can claim back. Grouped by how much they block.
+What stands between this buyer and the deed, grouped by whether it blocks the purchase, costs effort, or only corrects an expectation, each with what to do about it and how long it takes, and the deadline of any tax a refund depends on.
 
 ## Basic Components
 

@@ -1,10 +1,7 @@
 import 'package:common/common.dart';
 import 'package:flutter/material.dart';
 
-import '../../display/money_format.dart';
-import '../../display/obstacle_status.dart';
 import '../../display/period_format.dart';
-import '../../display/profile_field_label.dart';
 import '../../display/refund_terms.dart';
 import '../../ui/app_section_title.dart';
 import '../../ui/app_spacing.dart';
@@ -15,17 +12,13 @@ import '../../ui/app_text_styles.dart';
 class ForeignBuyerObstaclesView extends StatelessWidget {
   const ForeignBuyerObstaclesView({
     required this.obstacles,
-    required this.locale,
-    this.refunds = const [],
-    this.missing = const {},
+    required this.refundable,
     this.onExplain,
     super.key,
   });
 
   final List<Obstacle> obstacles;
-  final LocaleTag locale;
-  final List<PurchaseCharge> refunds;
-  final Set<ProfileField> missing;
+  final List<CostRule> refundable;
   final VoidCallback? onExplain;
 
   @override
@@ -35,33 +28,32 @@ class ForeignBuyerObstaclesView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppSectionTitle(title: 'Before you get the keys', onExplain: onExplain),
+        AppSectionTitle(title: 'What stands in the way', onExplain: onExplain),
         const SizedBox(height: AppSpacing.xs),
-        if (sorted.isEmpty && refunds.isEmpty)
+        if (sorted.isEmpty && refundable.isEmpty)
           const AppStatusTag(
             status: AppStatus.pass,
-            text: 'Nothing extra stands in your way here',
+            text: 'Nothing in this market stands in your way',
           ),
         for (final obstacle in sorted)
           ..._entry(
-            status: obstacleStatus(obstacle.severity),
-            title: obstacle.title,
-            detail: obstacleDetail(obstacle, formatPeriod),
+            status: switch (obstacle.severity) {
+              ObstacleSeverity.blocker => AppStatus.fail,
+              ObstacleSeverity.effort => AppStatus.warn,
+              ObstacleSeverity.info => AppStatus.info,
+            },
+            title: switch (obstacle.typicalDuration) {
+              final duration? =>
+                '${obstacle.title} — ${formatPeriod(duration)}',
+              null => obstacle.title,
+            },
+            detail: obstacle.mitigation,
           ),
-        for (final charge in refunds)
+        for (final charge in refundable)
           ..._entry(
-            status: AppStatus.info,
-            title:
-                '${formatMoney(charge.refundable!, locale)} back from the '
-                '${charge.label.toLowerCase()}',
+            status: AppStatus.warn,
+            title: 'Claim back part of the ${charge.localTerm ?? charge.label}',
             detail: refundTerms(charge.refund!),
-          ),
-        if (missing.isNotEmpty)
-          AppStatusTag(
-            status: AppStatus.info,
-            text:
-                'More may apply once you say '
-                '${missing.map(profileFieldLabel).join(', ')}',
           ),
       ],
     );

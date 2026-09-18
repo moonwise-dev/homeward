@@ -194,7 +194,7 @@ plan, one request at a time.
 | `propose_scenario` | Price, and any down payment, term, loan type, or association fee the buyer stated | Accepted, defaulted, and rejected fields; unstated values come from the market: the smallest down payment the loan-to-value limit allows, the first loan type and its default spread, the shortest maximum term or 30 years | `/scenario` from the plan's scenario draft |
 | `compute_affordability` | — | `assessed` with the binding limit and headroom `comfortable`, `atLimit`, or `overLimit`; `incomplete` with missing facts; or what it needs first. Never amounts | `/derived/affordability`, `/derived/downPaymentBounds`, `/derived/payment`; while `incomplete`, only `/derived/downPaymentBounds` from the loan-to-value cap, so the what-if slider still works (D83) |
 | `estimate_purchase_costs` | — | The charges that apply with their local terms, and the deadline and claim window of any refund the buyer is on course for; `incomplete` with missing facts; or what it needs first. Never amounts | — : `PurchaseCostsTable` and `cashNeeded` compute from `/market` and `/scenario`, so the figures follow the down payment slider |
-| `get_obstacles` | — | Obstacle IDs and severities | `/market/obstacles` |
+| `get_obstacles` | — | Obstacle IDs, severities, and titles, with the facts that would settle a pending one | — : the obstacles that apply are already in `/market`, resolved with the rest of the pack |
 | `get_process` | — | Step IDs | `/market/process` |
 | `get_loan_types` | — | Loan type IDs | `/market/loanTypes` |
 | `release_decision` | `section` | Released decisions | — |

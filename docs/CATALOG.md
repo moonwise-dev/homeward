@@ -185,8 +185,11 @@ that earns it.
 
 ### 9. `EligibilityChecklist`
 
-Pass, warn, or fail for each lending rule and each blocking obstacle, with the
-reason and what would change it.
+Pass, warn, or fail for each lending rule, with what would settle a rule the
+buyer is outside: the down payment that fits, or the term that does. Breaking a
+lender's norm warns where breaking the law fails, since another lender may
+lend. Obstacles are left to `ForeignBuyerObstacles` rather than listed in both
+components when a plan shows them side by side.
 
 | Property | Type | Required |
 | --- | --- | --- |
@@ -198,7 +201,8 @@ reason and what would change it.
 ### 10. `ForeignBuyerObstacles`
 
 Obstacles grouped by severity (`blocker`, `effort`, `info`) with mitigation and
-typical duration.
+typical duration, and the claim terms of any charge this buyer is on course to
+have partly refunded.
 
 | Property | Type | Required |
 | --- | --- | --- |

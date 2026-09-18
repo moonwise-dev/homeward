@@ -12,9 +12,10 @@ final class ForeignBuyerObstacles extends CatalogComponent {
 
   @override
   String get description =>
-      'What stands between this buyer and the keys beyond the money: the '
-      'steps a foreign buyer owes, what each one takes, and the deadlines on '
-      'any tax the buyer can claim back. Grouped by how much they block.';
+      'What stands between this buyer and the deed, grouped by whether it '
+      'blocks the purchase, costs effort, or only corrects an expectation, '
+      'each with what to do about it and how long it takes, and the deadline '
+      'of any tax a refund depends on.';
 
   @override
   CatalogPhase get phase => CatalogPhase.mvp;
@@ -26,7 +27,6 @@ final class ForeignBuyerObstacles extends CatalogComponent {
   Map<String, Schema> get properties => {
     'market': CatalogSchemas.market,
     'profile': CatalogSchemas.profile,
-    'scenario': CatalogSchemas.scenario,
     'explain': CatalogSchemas.action,
   };
 
@@ -34,7 +34,7 @@ final class ForeignBuyerObstacles extends CatalogComponent {
   List<String> get requiredProperties => ['market', 'profile'];
 
   @override
-  List<String> get boundProperties => ['market', 'profile', 'scenario'];
+  List<String> get boundProperties => ['market', 'profile'];
 
   @override
   List<CatalogExample> get examples => [
@@ -53,10 +53,7 @@ const _componentsJson = '''
     "component": "ForeignBuyerObstacles",
     "market": { "path": "/market" },
     "profile": { "path": "/profile" },
-    "scenario": { "path": "/scenario" },
-    "explain": {
-      "event": { "name": "explain", "context": { "topic": "obstacles" } }
-    }
+    "explain": { "event": { "name": "explain", "context": { "topic": "obstacles" } } }
   }
 ]
 ''';

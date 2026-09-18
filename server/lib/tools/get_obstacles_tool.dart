@@ -28,16 +28,20 @@ final class GetObstaclesTool extends AgentTool {
         modelResult: {'status': 'needsCoveredMarket'},
       );
     }
-    final missing = market.missingFor(RuleSection.obstacles);
     return ToolResult(
       modelResult: {
-        'status': 'found',
         'obstacles': [
           for (final obstacle in market.obstacles)
-            {'id': obstacle.id, 'severity': obstacle.severity.name},
+            {
+              'id': obstacle.id,
+              'severity': obstacle.severity.name,
+              'title': obstacle.title,
+            },
         ],
-        if (missing.isNotEmpty)
-          'missingFacts': [for (final field in missing) field.name],
+        'pendingFacts': [
+          for (final field in market.missingFor(RuleSection.obstacles))
+            field.name,
+        ],
       },
     );
   }
