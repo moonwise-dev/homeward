@@ -89,6 +89,22 @@ ActionOutcome applyAction({
         plan: plan.copyWith(scenario: scenario, scenarioDraft: null),
         summary: {...summary, 'applied': true},
       );
+    case SurfaceAction.change:
+      return switch (action.context['section']) {
+        'market' => ActionOutcome(
+          plan: plan.copyWith(
+            marketId: null,
+            scenario: null,
+            scenarioDraft: null,
+          ),
+          summary: {...summary, 'applied': true, 'section': 'market'},
+        ),
+        'scenario' => ActionOutcome(
+          plan: plan.copyWith(scenario: null, scenarioDraft: null),
+          summary: {...summary, 'applied': true, 'section': 'scenario'},
+        ),
+        _ => refused('The board reopens the market or the scenario'),
+      };
     case _:
       return ActionOutcome(
         plan: plan,

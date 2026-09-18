@@ -114,6 +114,38 @@ void main() {
     expect(committed({'price': stockholmScenario.price.toJson()}), isNull);
   });
 
+  test('a change on the board reopens what it names', () {
+    final planned = Plan(
+      marketId: MarketId.parse('SE'),
+      profile: stockholmProfile,
+      scenario: stockholmScenario,
+      scenarioDraft: stockholmScenario,
+    );
+    Plan reopened(String section) => applyAction(
+      action: action('change', {'section': section}),
+      surfaceData: const {},
+      plan: planned,
+      markets: realMarkets,
+    ).plan;
+
+    expect(reopened('scenario').scenario, isNull);
+    expect(reopened('scenario').scenarioDraft, isNull);
+    expect(reopened('scenario').marketId, MarketId.parse('SE'));
+    expect(reopened('scenario').profile, stockholmProfile);
+    expect(reopened('market').marketId, isNull);
+    expect(reopened('market').scenario, isNull);
+    expect(reopened('market').profile, stockholmProfile);
+    expect(
+      applyAction(
+        action: action('change', {'section': 'costs'}),
+        surfaceData: const {},
+        plan: planned,
+        markets: realMarkets,
+      ).summary,
+      containsPair('applied', false),
+    );
+  });
+
   test('passes other actions to the model with their context', () {
     final outcome = applyAction(
       action: action('explain', {
