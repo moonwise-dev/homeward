@@ -31,6 +31,11 @@ final affordabilitySummaryItem = catalogItemFor(const AffordabilitySummary(), (
       return AffordabilitySummaryView(
         affordability: affordability,
         locale: market.locale,
+        maxPrice: maximumPrice(
+          scenario: scenario,
+          market: market,
+          profile: profile,
+        ),
         exchangeRates: market.exchangeRates.values.toList(),
         onExplain: data['explain'] == null
             ? null

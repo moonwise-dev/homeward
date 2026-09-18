@@ -96,6 +96,12 @@ connector renders Homeward's turns: the capabilities go out with the catalog id,
 the text arrives, the four A2UI messages arrive in order, the seeded data model
 resolves, and every component of the form is in the catalog.
 
+Searching for the highest price a buyer's savings reach runs the whole
+assessment at each candidate price, which costs about 1.5 ms, so the search
+keeps its last answer and returns it while only the down payment moves: 4 µs a
+frame during a drag. Any figure that does change with the down payment is
+computed outright.
+
 ## Performance Check
 
 `make perf` builds the app's catalog gallery for web in profile mode, JS and Wasm,

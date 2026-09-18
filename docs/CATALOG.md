@@ -136,8 +136,9 @@ market, or `{ id, name, coverage }` for an uncovered one (D86).
 
 ### 5. `AffordabilitySummary`
 
-Maximum price and loan, the binding constraint in words, and headroom against
-the current scenario.
+The largest loan at this price, the highest price the buyer's savings reach
+once every upfront charge is paid, the binding constraint in words, headroom
+against the current scenario, and the rate a foreign income was counted at.
 
 | Property | Type | Required |
 | --- | --- | --- |

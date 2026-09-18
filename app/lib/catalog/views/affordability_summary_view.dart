@@ -17,6 +17,7 @@ class AffordabilitySummaryView extends StatelessWidget {
   const AffordabilitySummaryView({
     required this.affordability,
     required this.locale,
+    this.maxPrice,
     this.exchangeRates = const [],
     this.onExplain,
     super.key,
@@ -24,6 +25,7 @@ class AffordabilitySummaryView extends StatelessWidget {
 
   final Affordability affordability;
   final LocaleTag locale;
+  final Money? maxPrice;
   final List<ExchangeRate> exchangeRates;
   final VoidCallback? onExplain;
 
@@ -69,10 +71,16 @@ class AffordabilitySummaryView extends StatelessWidget {
   List<Widget> _assessed(Money loan, Money maxLoan, ConstraintCheck? binding) {
     final headroom = maxLoan - loan;
     final limit = binding == null ? null : constraintKindLabel(binding.kind);
+    final reach = maxPrice;
     return [
       Text(formatMoney(maxLoan, locale), style: AppTextStyles.figureLarge),
       Text('Largest loan at this price', style: AppTextStyles.caption),
       const SizedBox(height: AppSpacing.sm),
+      if (reach != null)
+        AppFigureRow(
+          label: 'Highest price your savings reach',
+          figure: formatMoney(reach, locale),
+        ),
       AppFigureRow(label: 'Your loan', figure: formatMoney(loan, locale)),
       AppFigureRow(
         label: headroom.isNegative ? 'Over the limit by' : 'Room to spare',

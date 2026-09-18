@@ -80,7 +80,8 @@ common/lib/
   finance/        payments, amortization tiers, shares and limits, brackets
   affordability/  maximum loan per lending rule, binding constraint, payment,
                   interest deduction, down payment bounds, the monthly payment
-                  each rule tolerates, the stress curve
+                  each rule tolerates, the stress curve, eligibility, the
+                  highest price savings reach
   costs/          what each cost rule charges, upfront costs with their
                   refundable part, cash needed
   markets/        MarketRulePack models, buyer predicates, overlay resolution,

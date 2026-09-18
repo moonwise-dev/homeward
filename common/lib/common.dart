@@ -8,6 +8,7 @@ export 'affordability/down_payment_bounds.dart';
 export 'affordability/eligibility.dart';
 export 'affordability/interest_deduction.dart';
 export 'affordability/largest_loan.dart';
+export 'affordability/maximum_price.dart';
 export 'affordability/monthly_ceiling.dart';
 export 'affordability/scenario_payment.dart';
 export 'affordability/stress_curve.dart';
