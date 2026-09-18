@@ -29,6 +29,7 @@ help:
 	@echo "  make iso-4217      Regenerate the ISO 4217 currency table from SIX"
 	@echo "  make a2ui-schemas  Vendor the pinned A2UI v0.9 basic catalog and common types"
 	@echo "  make territories   Regenerate country and subdivision names from CLDR"
+	@echo "  make emulator      Run the Firestore emulator on port 8081"
 	@echo "  make server-dev    Run the server locally with hot reload"
 	@echo "  make probe         Send MESSAGE as a live turn to SERVER with the key from ~/.config/homeward/gemini_key"
 	@echo "  make server-build  Cross-compile the server for linux/x64"
@@ -107,6 +108,10 @@ a2ui-schemas:
 territories:
 	@dart run tool/bin/generate_territories.dart common/lib/geo/generated/country_names.dart server/lib/markets/generated/subdivision_names.dart
 	@dart format common/lib/geo/generated/country_names.dart server/lib/markets/generated/subdivision_names.dart
+
+.PHONY: emulator
+emulator:
+	@firebase emulators:start --only firestore --project $(FIREBASE_PROJECT)
 
 .PHONY: server-dev
 server-dev:

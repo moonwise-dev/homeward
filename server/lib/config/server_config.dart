@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'log_format.dart';
+import 'session_store.dart';
 
 part 'server_config.freezed.dart';
 
@@ -21,6 +22,7 @@ abstract class ServerConfig with _$ServerConfig {
     required bool appCheckEnforced,
     required String promptsDirectory,
     required String marketsDirectory,
+    required SessionStore sessionStore,
   }) = _ServerConfig;
 
   factory ServerConfig.fromEnvironment(Map<String, String> environment) {
@@ -59,6 +61,15 @@ abstract class ServerConfig with _$ServerConfig {
       appCheckEnforced: read('HOMEWARD_APP_CHECK_ENFORCED', 'true') == 'true',
       promptsDirectory: read('HOMEWARD_PROMPTS_DIR', 'server/prompts'),
       marketsDirectory: read('HOMEWARD_MARKETS_DIR', 'markets'),
+      sessionStore: SessionStore.values.byName(
+        read('HOMEWARD_SESSION_STORE', _storeFor(environment).name),
+      ),
     );
   }
 }
+
+SessionStore _storeFor(Map<String, String> environment) =>
+    environment.containsKey('FIRESTORE_EMULATOR_HOST') ||
+        environment.containsKey('K_SERVICE')
+    ? SessionStore.firestore
+    : SessionStore.memory;

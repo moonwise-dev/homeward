@@ -98,10 +98,13 @@ window, and the session limit joins with Firestore in M2.
 
 - A session is created by `/api/sessions` and used as the A2A `contextId`.
 - A turn takes a lease on the session in a Firestore transaction with a
-  two-minute expiry, released on completion.
+  five-minute expiry, which outlasts the request timeout, released on
+  completion.
+- A session keeps every turn: the input, the text, the A2UI messages forwarded,
+  and how it ended. `docs/FIRESTORE.md` has the documents.
 - Tasks are held in memory for streaming and in Firestore for `tasks/get`
-  resumption for 10 minutes. In M1 both sessions and tasks live in memory,
-  which holds only while one instance serves the plan.
+  resumption for 10 minutes. Tasks still live in memory, which holds only while
+  one instance serves the plan.
 - Instances are stateless between requests. Any instance can serve any turn.
 
 ## Board Compiler
@@ -125,6 +128,7 @@ runs after every plan change and on session open when the board is missing.
 | `HOMEWARD_PUBLIC_URL` | Base URL clients call, used for the agent card's `url` |
 | `HOMEWARD_PROMPTS_DIR` | Prompt files; `/app/prompts` in the image |
 | `HOMEWARD_MARKETS_DIR` | Rule packs, rates, living costs, and places; `/app/markets` in the image |
+| `HOMEWARD_SESSION_STORE` | `firestore` or `memory`; Firestore by default on Cloud Run and with the emulator |
 | `GOOGLE_CLOUD_PROJECT` | Firebase project |
 
 No secrets are required in production. Credentials come from the Cloud Run
@@ -165,8 +169,7 @@ service account through Application Default Credentials.
   signal watcher so the process can end.
 - Cloud Run `europe-north1`, concurrency 40, request timeout 300 s, minimum
   instances 0, maximum 2, to stay within the free allowance; maximum 1 while
-  sessions and tasks live in memory in M1; cold starts are
-  accepted.
+  tasks live in memory; cold starts are accepted.
 - Artifact Registry Docker repository `homeward` in `europe-north1`, with a
   cleanup policy keeping the three most recent images and deleting the rest.
 - Cloud Run runs as `homeward-server@homeward-genui.iam.gserviceaccount.com`
@@ -184,15 +187,20 @@ service account through Application Default Credentials.
 - `make deploy-server` refuses a dirty working tree, tags the image with the
   commit, pushes it, and deploys the service with the flags above.
   `make deploy-web` builds the Wasm web app and deploys Hosting with the
-  headers and a single-page fallback from the root `firebase.json`. Both run
-  only when explicitly asked.
+  headers and a single-page fallback from the root `firebase.json`.
+  `firebase deploy --only firestore` sends the rules and the one index. All
+  three run only when explicitly asked.
 
 ## Local Development
 
 - `make server-dev` runs `server/tool/dev.dart` with the VM service and
   `hotreloader`: saved changes in `server` and `common` reload in place. New
-  routes need a restart. Firebase emulators for Auth and Firestore join when
-  those features land, with App Check not enforced.
+  routes need a restart. App Check is not enforced.
+- `make emulator` runs the Firestore emulator on port 8081. With
+  `FIRESTORE_EMULATOR_HOST` set, the server and its tests keep sessions there;
+  without it, sessions stay in memory. Application Default Credentials from
+  `gcloud auth application-default login` cannot reach Firestore (S6), so the
+  emulator is the only local store.
 - `make server-image-run` builds and runs the production image on port 8080.
 - `make app-dev` runs the app against the local server.
 - The Gemini key is entered in the app like in production.

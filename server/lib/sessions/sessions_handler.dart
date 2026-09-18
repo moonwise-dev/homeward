@@ -2,7 +2,6 @@ import 'package:common/common.dart';
 import 'package:shelf/shelf.dart';
 
 import '../agent/board/compile_board.dart';
-import '../data/models/session.dart';
 import '../data/repository/session_repository.dart';
 import '../errors/homeward_failure.dart';
 import '../http/api_envelope.dart';
@@ -29,32 +28,23 @@ final class SessionsHandler {
     if (uid == null) {
       return apiError(401, HomewardFailure.unauthenticated);
     }
-    final owned = await sessions.ownedBy(uid);
+    final listings = await sessions.listingsOf(uid);
     return apiOk(200, {
       'sessions': [
-        for (final session in owned)
+        for (final listing in listings)
           PlanListing(
-            sessionId: session.id,
-            turnCount: session.turnCount,
-            title: _titleOf(session),
-            marketId: session.plan.marketId?.code,
-            marketName: switch (session.plan.marketId) {
-              final id? => markets.nameOf(id),
+            sessionId: listing.id,
+            turnCount: listing.turnCount,
+            title: listing.title,
+            marketId: listing.marketId,
+            marketName: switch (listing.marketId) {
+              final code? => markets.nameOf(MarketId.parse(code)),
               null => null,
             },
-            updatedAt: session.updatedAt,
+            updatedAt: listing.updatedAt,
           ).toJson(),
       ],
     });
-  }
-
-  String? _titleOf(Session session) {
-    for (final turn in session.turns) {
-      if (turn.input case RecordedText(:final text) when text.isNotEmpty) {
-        return text;
-      }
-    }
-    return null;
   }
 
   Future<Response> transcript(Request request, String sessionId) async {

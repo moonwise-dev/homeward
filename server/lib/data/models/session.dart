@@ -1,6 +1,8 @@
 import 'package:common/common.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'session_listing.dart';
+
 part 'session.freezed.dart';
 
 @freezed
@@ -20,4 +22,21 @@ abstract class Session with _$Session {
   List<Map<String, Object?>> get messages => [
     for (final turn in turns) ...turn.messages,
   ];
+
+  String? get title {
+    for (final turn in turns) {
+      if (turn.input case RecordedText(:final text) when text.isNotEmpty) {
+        return text;
+      }
+    }
+    return null;
+  }
+
+  SessionListing get listing => SessionListing(
+    id: id,
+    turnCount: turnCount,
+    title: title,
+    marketId: plan.marketId?.code,
+    updatedAt: updatedAt,
+  );
 }

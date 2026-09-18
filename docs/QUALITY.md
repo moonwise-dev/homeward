@@ -66,6 +66,12 @@ official calculator or a tax authority worked example.
 | Key verification | Model lookup request, invalid key, unknown model, and deadline to typed errors; the route's statuses and envelope |
 | Gemini client | Recorded streams and error bodies to typed events and errors, request JSON, headers and first-step deadlines, fallback only before output, circuits, no key in any error, the next midnight Pacific across daylight saving changes |
 | Actions | Server-completed actions produce the expected plan patches |
+| Session documents | A session with its plan and turns survives the round trip through the documents Firestore holds |
+| Firestore sessions | Against the emulator: a plan outlives the server, a later turn joins the ones kept, the plans list order and owner, and the lease that one turn at a time takes |
+
+The Firestore tests skip unless `FIRESTORE_EMULATOR_HOST` is set, so `make check`
+passes without the emulator; run `make emulator` beside them to cover the store
+the recording depends on.
 
 Gemini is never called in `make test`. The Interactions client is exercised
 against the streams and error bodies recorded in spike S2 under

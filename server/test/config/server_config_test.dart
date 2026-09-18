@@ -1,5 +1,6 @@
 import 'package:homeward_server/config/log_format.dart';
 import 'package:homeward_server/config/server_config.dart';
+import 'package:homeward_server/config/session_store.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -28,7 +29,29 @@ void main() {
         appCheckEnforced: true,
         promptsDirectory: 'server/prompts',
         marketsDirectory: 'markets',
+        sessionStore: SessionStore.memory,
       ),
+    );
+  });
+
+  test('keeps sessions where the environment can hold them', () {
+    expect(
+      ServerConfig.fromEnvironment({'K_SERVICE': 'homeward-server'})
+          .sessionStore,
+      SessionStore.firestore,
+    );
+    expect(
+      ServerConfig.fromEnvironment({
+        'FIRESTORE_EMULATOR_HOST': 'localhost:8081',
+      }).sessionStore,
+      SessionStore.firestore,
+    );
+    expect(
+      ServerConfig.fromEnvironment({
+        'K_SERVICE': 'homeward-server',
+        'HOMEWARD_SESSION_STORE': 'memory',
+      }).sessionStore,
+      SessionStore.memory,
     );
   });
 

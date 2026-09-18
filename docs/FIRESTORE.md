@@ -1,7 +1,12 @@
 # Homeward Firestore
 
-Top-level collections only. The server writes everything. The app reads the
-caller's own sessions, plans, and turns.
+Top-level collections only. The server writes and reads everything through the
+Admin SDK; clients never read Firestore, they call the server (D51). What a
+turn produced is kept as JSON in one field, because Firestore refuses nested
+arrays and an A2UI message is full of them.
+
+Sessions live in Firestore when `HOMEWARD_SESSION_STORE` says so, which is the
+default on Cloud Run and against the emulator, and in memory otherwise.
 
 ## Collections
 
@@ -10,52 +15,39 @@ caller's own sessions, plans, and turns.
 | Field | Type | Notes |
 | --- | --- | --- |
 | `ownerUid` | string | |
-| `title` | string | Derived from market and first request |
+| `title` | string? | The first thing the buyer wrote |
 | `marketId` | string? | |
-| `coverage` | `curated` \| `uncovered` \| null | |
-| `status` | `idle` \| `running` | |
-| `lease` | map? | `{ turnId, expiresAt }` |
+| `turnCount` | int | Also how many turn documents there are |
 | `lastInteractionId` | string? | Cache only; may be unusable with a different key |
-| `nextTurnIndex` | int | |
-| `a2uiVersion` | string | `v0.9` |
-| `catalogVersion` | string | `v1` |
+| `leaseUntil` | timestamp? | Absent unless a turn is running |
 | `createdAt` | timestamp | |
 | `updatedAt` | timestamp | |
 
-### `turns/{turnId}`
+### `turns/{sessionId}-{index}`
 
 | Field | Type | Notes |
 | --- | --- | --- |
 | `sessionId` | string | |
 | `ownerUid` | string | |
-| `index` | int | |
-| `input` | map | `{ kind: text, text }` or `{ kind: action, action }` |
-| `outputText` | string | |
-| `messages` | array | Forwarded A2UI messages in order, for replay |
-| `toolCalls` | array | `{ name, durationMs, ok }`, no arguments |
-| `corrections` | int | Validation correction rounds used |
+| `index` | int | From 1 |
 | `status` | `completed` \| `failed` \| `canceled` | |
-| `errorCode` | string? | |
-| `model` | string | |
-| `usage` | map | Token counts |
-| `createdAt` | timestamp | |
+| `recordJson` | string | The whole `TurnRecord`: input, text, forwarded A2UI messages, error code |
+
+A turn document is written once, under an id derived from the session and the
+index, so saving a session again costs one write for the turn it just added.
 
 ### `plans/{sessionId}`
 
 | Field | Type | Notes |
 | --- | --- | --- |
 | `ownerUid` | string | |
-| `marketId` | string? | |
-| `profile` | map | `BuyerProfile`, committed values only |
-| `profileDraft` | map | Proposed by the model, not yet committed |
-| `scenarios` | array | Committed scenarios `{ id, label, price, downPayment, termYears, loanTypeId, rateShockPpm, committedAt }` |
-| `activeScenarioId` | string? | |
-| `scenarioDraft` | map? | |
-| `checklist` | map | `{ documentId: bool }` |
-| `acknowledgedObstacles` | array | Obstacle IDs |
+| `planJson` | string | The whole `Plan`: market, profile, drafts, scenarios |
 | `updatedAt` | timestamp | |
 
 ### `rateLimits/{uid_window}`
+
+Planned. Turn limits are counted in memory while one instance serves every
+turn.
 
 | Field | Type |
 | --- | --- |
@@ -67,19 +59,31 @@ caller's own sessions, plans, and turns.
 
 TTL policy on `expiresAt`.
 
+## Reads And Writes
+
+- `find` reads the session document, then the plan and every turn by id in one
+  `getAll`, so replay needs no query and no index.
+- `save` merges the session document, writes the plan, and adds the turns past
+  the stored `turnCount`. A field that is no longer set is deleted, not left
+  behind.
+- `lease` is a transaction over the session document: it refuses while
+  `leaseUntil` is in the future, and takes it for five minutes otherwise, which
+  outlasts Cloud Run's 300-second request timeout by margin. `release` deletes
+  the field.
+- The plans list queries `ownerUid` and orders by `updatedAt` descending.
+
 ## Rules
+
+Nothing is readable from a client, so the rules refuse everything. The Admin
+SDK is not subject to them.
 
 ```text
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() { return request.auth != null; }
-    function owns() { return signedIn() && resource.data.ownerUid == request.auth.uid; }
-
-    match /sessions/{id} { allow read: if owns(); allow write: if false; }
-    match /plans/{id}    { allow read: if owns(); allow write: if false; }
-    match /turns/{id}    { allow read: if owns(); allow write: if false; }
-    match /rateLimits/{id}      { allow read, write: if false; }
+    match /{document=**} {
+      allow read, write: if false;
+    }
   }
 }
 ```
@@ -89,10 +93,11 @@ service cloud.firestore {
 | Collection | Fields | Query |
 | --- | --- | --- |
 | `sessions` | `ownerUid` asc, `updatedAt` desc | Plans list |
-| `turns` | `sessionId` asc, `ownerUid` asc, `index` asc | Replay |
+
+`firestore.indexes.json` holds it; the emulator needs no index.
 
 ## TTL And Cleanup
 
-- `rateLimits.expiresAt` TTL policy.
+- `rateLimits.expiresAt` TTL policy, when rate limits move to Firestore.
 - `/internal/cleanup` daily: sessions with `updatedAt` older than 90 days and
   their turns and plans.

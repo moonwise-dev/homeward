@@ -15,6 +15,7 @@ import '../../auth/firebase_app_check_verifier.dart';
 import '../../auth/firebase_identity_verifier.dart';
 import '../../auth/identity_verifier.dart';
 import '../../config/server_config.dart';
+import '../../config/session_store.dart';
 import '../../gemini/create_with_fallback.dart';
 import '../../gemini/interactions_client.dart';
 import '../../gemini/model_caps.dart';
@@ -26,6 +27,7 @@ import '../../markets/load_markets.dart';
 import '../../markets/market_directory.dart';
 import '../../rate_limit/fixed_window_limiter.dart';
 import '../../tools/homeward_tools.dart';
+import '../repository/firestore_session_repository.dart';
 import '../repository/in_memory_session_repository.dart';
 import '../repository/session_repository.dart';
 
@@ -111,6 +113,12 @@ final class Providers {
     final caps = ModelCaps();
     return Providers(
       config: config,
+      sessions: switch (config.sessionStore) {
+        SessionStore.firestore => FirestoreSessionRepository(
+          firebase.firestore(),
+        ),
+        SessionStore.memory => null,
+      },
       identity: FirebaseIdentityVerifier(firebase.auth()),
       appCheck: FirebaseAppCheckVerifier(firebase.appCheck()),
       createInteraction:

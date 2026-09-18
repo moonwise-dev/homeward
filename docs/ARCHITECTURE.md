@@ -178,7 +178,8 @@ server/
     data/
       models/       session record
       providers/    composition root: builds every dependency once
-      repository/   sessions, turns, plans; in memory in M1
+      firestore/    session, plan, and turn documents
+      repository/   sessions, turns, plans; Firestore or in memory
   prompts/
     role.md
     flow.md

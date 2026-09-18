@@ -1,5 +1,6 @@
 import '../../ids/random_hex.dart';
 import '../models/session.dart';
+import '../models/session_listing.dart';
 import 'session_repository.dart';
 
 final class InMemorySessionRepository implements SessionRepository {
@@ -21,10 +22,12 @@ final class InMemorySessionRepository implements SessionRepository {
   Future<Session?> find(String id) async => _sessions[id];
 
   @override
-  Future<List<Session>> ownedBy(String ownerUid) async => [
+  Future<List<SessionListing>> listingsOf(String ownerUid) async => [
     for (final session in _sessions.values)
-      if (session.ownerUid == ownerUid) session,
-  ];
+      if (session.ownerUid == ownerUid) session.listing,
+  ]..sort((a, b) => _at(b.updatedAt).compareTo(_at(a.updatedAt)));
+
+  int _at(DateTime? moment) => moment?.millisecondsSinceEpoch ?? 0;
 
   @override
   Future<void> save(Session session) async => _sessions[session.id] = session;

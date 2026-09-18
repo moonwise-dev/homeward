@@ -12,5 +12,14 @@
       }
     ],
     "rewrites": [{ "source": "**", "destination": "/index.html" }]
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "emulators": {
+    "firestore": { "port": 8081 },
+    "ui": { "enabled": false },
+    "singleProjectMode": true
   }
 }
