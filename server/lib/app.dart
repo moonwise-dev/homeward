@@ -21,7 +21,7 @@ Handler buildApp(Providers providers) {
   final config = providers.config;
   final agentCard = homewardAgentCard(config.publicUrl);
   final a2a = A2aHandler(turns: providers.turns, tasks: providers.tasks);
-  final sessions = SessionsHandler(providers.sessions);
+  final sessions = SessionsHandler(providers.sessions, providers.markets);
   final keys = KeysHandler(providers.verifyKey);
   final verified = const Pipeline()
       .addMiddleware(authenticationMiddleware(providers.identity))
@@ -48,7 +48,14 @@ Handler buildApp(Providers providers) {
       '/api/keys/verify',
       verified.addMiddleware(geminiKeyMiddleware()).addHandler(keys.verify),
     )
-    ..post('/api/sessions', verified.addHandler(sessions.create));
+    ..post('/api/sessions', verified.addHandler(sessions.create))
+    ..get('/api/sessions', verified.addHandler(sessions.list))
+    ..get(
+      '/api/sessions/<sessionId>',
+      (Request request, String sessionId) => verified.addHandler(
+        (request) => sessions.transcript(request, sessionId),
+      )(request),
+    );
   return const Pipeline()
       .addMiddleware(requestContextMiddleware())
       .addMiddleware(requestLoggingMiddleware())

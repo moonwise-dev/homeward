@@ -85,7 +85,10 @@ fails on any exception, which is what catches a chart or a table that throws on
 the figures a market actually produces. It also fails when a component has no
 example in the gallery.
 
-The second is the `genui_a2a` compatibility test. A turn the
+The second is the `genui_a2a` compatibility test.
+
+A third covers the wire log the inspector reads: what the device recomputed
+since the last frame, the ring buffer, and the stream a watcher sees. A turn the
 server streamed, a resolved market and the profile form, is recorded in
 `app/test/fixtures/recorded_turn.sse` by `server/test/a2a/recorded_turn_test.dart`,
 which fails when the wire changes and rewrites the file when run with

@@ -13,9 +13,12 @@ import '../models/transcript_entry.dart';
 import '../models/turn_failure.dart';
 import 'gemini_key_repository.dart';
 import 'repository_guard.dart';
+import 'wire_log.dart';
 
 abstract interface class AgentRepository {
   Stream<PlanConversation> watchConversation(String sessionId);
+
+  Future<void> open(String sessionId);
 
   Stream<TurnFailure> watchFailures(String sessionId);
 
@@ -56,6 +59,80 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
   @override
   SurfaceContext surfaceContext(String sessionId, String surfaceId) =>
       _plan(sessionId).surfaces.contextFor(surfaceId);
+
+  @override
+  Future<void> open(String sessionId) => guard(() async {
+    final plan = _plan(sessionId);
+    if (plan.isOpened) {
+      return;
+    }
+    plan.isOpened = true;
+    final transcript = await _client.transcript(sessionId);
+    for (final turn in transcript.turns) {
+      plan.put(_buyerEntry(turn.input));
+      plan.put(_agentEntry(turn));
+      for (final message in turn.messages) {
+        plan.surfaces.handleMessage(a2ui.A2uiMessage.fromJson(message));
+      }
+    }
+    for (final message in transcript.board) {
+      plan.surfaces.handleMessage(a2ui.A2uiMessage.fromJson(message));
+      plan.hasBoard = true;
+    }
+    plan.emit();
+  });
+
+  TranscriptEntry _buyerEntry(RecordedInput input) => switch (input) {
+    RecordedText(:final text) => TranscriptEntry.buyer(
+      id: _newEntryId(),
+      text: text,
+    ),
+    RecordedAction(:final name) => TranscriptEntry.buyerAction(
+      id: _newEntryId(),
+      actionName: name,
+    ),
+  };
+
+  TranscriptEntry _agentEntry(TurnRecord turn) => TranscriptEntry.agent(
+    id: _newEntryId(),
+    request: switch (turn.input) {
+      RecordedText(:final text) => TurnRequest.text(text),
+      RecordedAction(
+        :final name,
+        :final surfaceId,
+        :final sourceComponentId,
+        :final context,
+      ) =>
+        TurnRequest.action(
+          ClientAction(
+            name: name,
+            surfaceId: surfaceId,
+            sourceComponentId: sourceComponentId,
+            context: context,
+          ),
+          surfaceData: const {},
+        ),
+    },
+    status: switch (turn.status) {
+      TurnStatus.completed => AgentTurnStatus.completed,
+      TurnStatus.failed => AgentTurnStatus.failed,
+      TurnStatus.canceled => AgentTurnStatus.canceled,
+    },
+    text: turn.outputText,
+    surfaceIds: [
+      for (final message in turn.messages)
+        if (message case {
+          'createSurface': {'surfaceId': final String surfaceId},
+        })
+          if (surfaceId != InlineSurfaces.boardId) surfaceId,
+    ],
+    error: turn.errorCode == null
+        ? null
+        : AppError.server(
+            code: HomewardErrorCode.fromWire(turn.errorCode),
+            message: 'That turn did not finish',
+          ),
+  );
 
   @override
   Future<void> sendText(String sessionId, String text) {
@@ -152,11 +229,16 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
           message: 'Add your Gemini API key to continue',
         );
       }
+      wireLogInstance.sent('message/stream', detail: _requestLabel(request));
       await for (final event in _client.send(
         sessionId: sessionId,
         geminiKey: geminiKey,
         request: request,
       )) {
+        wireLogInstance.received(
+          _eventLabel(event),
+          detail: _eventDetail(event),
+        );
         _apply(plan, entryId, event);
       }
     } on Object catch (error) {
@@ -215,6 +297,36 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
 
   Object? _normalized(Object? json) => jsonDecode(jsonEncode(json));
 
+  String _requestLabel(TurnRequest request) => switch (request) {
+    TextTurnRequest(:final text) => 'text, ${text.length} characters',
+    ActionTurnRequest(:final action) => 'action ${action.name}',
+  };
+
+  String _eventLabel(AgentEvent event) => switch (event) {
+    AgentStarted() => 'task',
+    AgentText() => 'status-update, text',
+    AgentA2ui() => 'data, A2UI',
+    AgentCompleted() => 'status-update, completed',
+    AgentCanceled() => 'status-update, canceled',
+  };
+
+  String? _eventDetail(AgentEvent event) => switch (event) {
+    AgentStarted(:final taskId) => taskId,
+    AgentText() => null,
+    AgentA2ui(:final message) => _a2uiDetail(message),
+    AgentCompleted() => null,
+    AgentCanceled() => null,
+  };
+
+  String? _a2uiDetail(Map<String, Object?> message) {
+    for (final MapEntry(:key, :value) in message.entries) {
+      if (value case {'surfaceId': final String surfaceId}) {
+        return '$key $surfaceId';
+      }
+    }
+    return null;
+  }
+
   String _newEntryId() => 'e${++_lastEntryId}';
 }
 
@@ -229,6 +341,7 @@ class _PlanSession {
   String? taskId;
   var isRunning = false;
   var hasBoard = false;
+  var isOpened = false;
 
   PlanConversation get conversation => PlanConversation(
     entries: List.unmodifiable(entries),

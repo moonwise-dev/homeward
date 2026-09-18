@@ -14,6 +14,7 @@ import '../a2a/task_state.dart';
 import '../a2ui_extension.dart';
 import '../decode_sse.dart';
 import '../homeward_headers.dart';
+import '../plan_transcript.dart';
 import 'agent_event.dart';
 import 'homeward_api_exception.dart';
 import 'request_credentials.dart';
@@ -40,6 +41,19 @@ final class HomewardClient {
     final data = await _api('api/sessions');
     return data['sessionId']! as String;
   }
+
+  Future<List<PlanListing>> plans() async {
+    final data = await _api('api/sessions', method: 'GET');
+    return [
+      for (final listing in data['sessions']! as List<Object?>)
+        PlanListing.fromJson(listing! as Map<String, Object?>),
+    ];
+  }
+
+  Future<PlanTranscript> transcript(String sessionId) async =>
+      PlanTranscript.fromJson(
+        await _api('api/sessions/$sessionId', method: 'GET'),
+      );
 
   Future<void> verifyKey(String geminiKey) =>
       _api('api/keys/verify', geminiKey: geminiKey);
@@ -178,11 +192,16 @@ final class HomewardClient {
     }
   }
 
-  Future<Map<String, Object?>> _api(String path, {String? geminiKey}) async {
-    final response = await httpClient.post(
-      server.resolve(path),
-      headers: await _headers(geminiKey: geminiKey),
-    );
+  Future<Map<String, Object?>> _api(
+    String path, {
+    String method = 'POST',
+    String? geminiKey,
+  }) async {
+    final uri = server.resolve(path);
+    final headers = await _headers(geminiKey: geminiKey);
+    final response = method == 'GET'
+        ? await httpClient.get(uri, headers: headers)
+        : await httpClient.post(uri, headers: headers);
     return switch (jsonDecode(response.body)) {
       {'ok': true, 'data': final Map<String, Object?> data} => data,
       {'ok': false, 'error': final Map<String, Object?> error} =>

@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:common/common.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/models/turn_failure.dart';
+import '../../data/repository/agent_repository.dart';
 import '../../data/providers/gemini_key_providers.dart';
 import '../../data/providers/repository_providers.dart';
 import '../../display/quota_reset_message.dart';
@@ -26,7 +29,16 @@ class PlanChatController extends _$PlanChatController
           setState((current) => current.copyWith(conversation: conversation)),
     );
     subscribe(agent.watchFailures(sessionId), _onFailure);
+    unawaited(_open(agent));
     return const PlanChatState();
+  }
+
+  Future<void> _open(AgentRepository agent) async {
+    try {
+      await agent.open(sessionId);
+    } on Object catch (error, stackTrace) {
+      logError(error, stackTrace);
+    }
   }
 
   void updateDraft(String draft) =>

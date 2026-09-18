@@ -48,6 +48,7 @@ final class Providers {
       appCheck: appCheck,
       verifyKey: verifyKey,
       sessions: repository,
+      markets: markets,
       tasks: TaskRegistry(),
       turnLimiter: FixedWindowLimiter(
         limit: 30,
@@ -75,6 +76,7 @@ final class Providers {
     required this.appCheck,
     required this.verifyKey,
     required this.sessions,
+    required this.markets,
     required this.tasks,
     required this.turnLimiter,
     required this.turns,
@@ -140,6 +142,7 @@ final class Providers {
   final AppCheckVerifier appCheck;
   final VerifyGeminiKey verifyKey;
   final SessionRepository sessions;
+  final MarketDirectory markets;
   final TaskRegistry tasks;
   final FixedWindowLimiter turnLimiter;
   final TurnOrchestrator turns;

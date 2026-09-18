@@ -74,12 +74,26 @@ final class TurnRun {
   var _separateRound = false;
   var _rounds = 0;
   var _acceptedInRound = 0;
+  RecordedInput _turnRequest = const RecordedInput.text('');
+  var _status = TurnStatus.canceled;
+  String? _errorCode;
 
   Session get session => _session.copyWith(
     plan: _plan,
     turnCount: turn,
     lastInteractionId: _interactionId,
-    messages: [..._session.messages, ..._forwarded],
+    updatedAt: now(),
+    turns: [
+      ..._session.turns,
+      TurnRecord(
+        index: turn,
+        input: _turnRequest,
+        outputText: _text.toString().trim(),
+        messages: _forwarded,
+        status: _status,
+        errorCode: _errorCode,
+      ),
+    ],
   );
 
   Stream<TurnEvent> execute({
@@ -87,6 +101,10 @@ final class TurnRun {
     required String apiKey,
     Future<void>? cancellation,
   }) async* {
+    _turnRequest = switch (turnInput) {
+      TextTurnInput(:final text) => RecordedInput.text(text),
+      ActionTurnInput(:final action) => recordedInputOf(action),
+    };
     InteractionInput input = InteractionInput.text(_modelText(turnInput));
     var toolRounds = 0;
     var corrections = 0;
@@ -151,11 +169,14 @@ final class TurnRun {
           _interactionId = null;
           continue;
         }
+        _failed(HomewardFailure.internal);
         yield const TurnEvent.failed(HomewardFailure.internal);
         return;
       } on GeminiException catch (error) {
         _logFailure(error);
-        yield TurnEvent.failed(HomewardFailure.fromGemini(error, now()));
+        final failure = HomewardFailure.fromGemini(error, now());
+        _failed(failure);
+        yield TurnEvent.failed(failure);
         return;
       }
       mayRebuildHistory = false;
@@ -228,9 +249,15 @@ final class TurnRun {
           },
         ),
       );
+      _status = TurnStatus.completed;
       yield TurnEvent.completed(_text.toString().trim());
       return;
     }
+  }
+
+  void _failed(HomewardFailure failure) {
+    _status = TurnStatus.failed;
+    _errorCode = failure.code.wireName;
   }
 
   String _modelText(TurnInput turnInput) {

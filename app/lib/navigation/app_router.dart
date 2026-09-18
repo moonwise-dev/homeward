@@ -8,6 +8,7 @@ import '../features/api_key/api_key_screen.dart';
 import '../features/catalog_gallery/catalog_gallery_screen.dart';
 import '../features/plan_chat/plan_chat_screen.dart';
 import '../features/plans/plans_screen.dart';
+import '../features/wire_inspector/wire_inspector_screen.dart';
 import '../features/startup/startup_screen.dart';
 import 'app_routes.dart';
 
@@ -40,6 +41,10 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.gallery,
         builder: (context, state) => const CatalogGalleryScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.wire,
+        builder: (context, state) => const WireInspectorScreen(),
       ),
       GoRoute(
         path: AppRoutes.plan,

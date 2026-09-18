@@ -11,6 +11,13 @@ abstract class Session with _$Session {
     @Default(Plan()) Plan plan,
     @Default(0) int turnCount,
     String? lastInteractionId,
-    @Default([]) List<Map<String, Object?>> messages,
+    DateTime? updatedAt,
+    @Default([]) List<TurnRecord> turns,
   }) = _Session;
+
+  const Session._();
+
+  List<Map<String, Object?>> get messages => [
+    for (final turn in turns) ...turn.messages,
+  ];
 }

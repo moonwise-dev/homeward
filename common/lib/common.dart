@@ -142,5 +142,6 @@ export 'wire/decode_sse.dart';
 export 'wire/homeward_error_code.dart';
 export 'wire/homeward_headers.dart';
 export 'wire/inline_surfaces.dart';
+export 'wire/plan_transcript.dart';
 export 'wire/sse_event.dart';
 export 'wire/surface_action.dart';

@@ -9,7 +9,9 @@ import '../repository/auth_repository.dart';
 import '../repository/gallery_repository.dart';
 import '../repository/gemini_key_repository.dart';
 import '../repository/key_verification_repository.dart';
+import '../models/wire_entry.dart';
 import '../repository/plans_repository.dart';
+import '../repository/wire_log.dart';
 import 'dependency_providers.dart';
 
 part 'repository_providers.g.dart';
@@ -58,3 +60,10 @@ AgentRepository agentRepository(Ref ref) => GenUiAgentRepository(
 @Riverpod(keepAlive: true)
 GalleryRepository galleryRepository(Ref ref) =>
     GenUiGalleryRepository(homewardGenuiCatalog());
+
+@Riverpod(keepAlive: true)
+WireLog wireLog(Ref ref) => wireLogInstance;
+
+@riverpod
+Stream<List<WireEntry>> wireEntries(Ref ref) =>
+    ref.watch(wireLogProvider).watch();

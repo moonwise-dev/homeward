@@ -21,6 +21,12 @@ final class InMemorySessionRepository implements SessionRepository {
   Future<Session?> find(String id) async => _sessions[id];
 
   @override
+  Future<List<Session>> ownedBy(String ownerUid) async => [
+    for (final session in _sessions.values)
+      if (session.ownerUid == ownerUid) session,
+  ];
+
+  @override
   Future<void> save(Session session) async => _sessions[session.id] = session;
 
   @override

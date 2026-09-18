@@ -5,6 +5,8 @@ abstract interface class SessionRepository {
 
   Future<Session?> find(String id);
 
+  Future<List<Session>> ownedBy(String ownerUid);
+
   Future<void> save(Session session);
 
   Future<bool> lease(String id);

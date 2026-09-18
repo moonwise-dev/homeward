@@ -94,6 +94,62 @@ void main() {
     expect(request.headers[HomewardHeaders.geminiKey], isNull);
   });
 
+  test('reads the plan list and a plan transcript back', () async {
+    final listing = clientFor(
+      (_) async => json(200, {
+        'ok': true,
+        'data': {
+          'sessions': [
+            {
+              'sessionId': 's-1',
+              'turnCount': 2,
+              'marketId': 'PT-30',
+              'marketName': 'Madeira, Portugal',
+            },
+          ],
+        },
+      }),
+    );
+
+    expect(await listing.plans(), [
+      const PlanListing(
+        sessionId: 's-1',
+        turnCount: 2,
+        marketId: 'PT-30',
+        marketName: 'Madeira, Portugal',
+      ),
+    ]);
+    expect(requests.single.method, 'GET');
+    expect(requests.single.url, server.resolve('api/sessions'));
+
+    requests.clear();
+    final transcript = clientFor(
+      (_) async => json(200, {
+        'ok': true,
+        'data': {
+          'sessionId': 's-1',
+          'turns': [
+            {
+              'index': 1,
+              'input': {'runtimeType': 'text', 'text': 'Hi'},
+              'outputText': 'Sweden it is.',
+              'status': 'completed',
+              'messages': [createSurface],
+            },
+          ],
+          'board': [createSurface],
+        },
+      }),
+    );
+
+    final plan = await transcript.transcript('s-1');
+
+    expect(plan.turns.single.input, const RecordedInput.text('Hi'));
+    expect(plan.turns.single.messages, [createSurface]);
+    expect(plan.board, [createSurface]);
+    expect(requests.single.url, server.resolve('api/sessions/s-1'));
+  });
+
   test('verifies a key and reports the server error code', () async {
     final client = clientFor(
       (_) async => json(422, {

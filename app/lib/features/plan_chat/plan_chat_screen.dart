@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../ui/app_sizes.dart';
 import '../../ui/app_spacing.dart';
+import '../../navigation/app_routes.dart';
 import '../plan_board/plan_board_pane.dart';
 import 'plan_chat_controller.dart';
 import 'widgets/chat_composer.dart';
@@ -61,6 +63,11 @@ class PlanChatScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Plan'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.swap_vert_outlined),
+            tooltip: 'Wire inspector',
+            onPressed: () => context.push(AppRoutes.wire),
+          ),
           if (hasBoard && !sideBySide)
             IconButton(
               icon: const Icon(Icons.dashboard_outlined),
