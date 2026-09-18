@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PlansState {
 
- List<PlanSummary> get plans; bool get isCreating;
+ List<PlanSummary> get plans; bool get isCreating; bool get isLoading;
 /// Create a copy of PlansState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $PlansStateCopyWith<PlansState> get copyWith => _$PlansStateCopyWithImpl<PlansSt
 @override
 bool operator ==(Object other) {
   final _this = this as PlansState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlansState&&const DeepCollectionEquality().equals(other.plans, _this.plans)&&(identical(other.isCreating, _this.isCreating) || other.isCreating == _this.isCreating));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlansState&&const DeepCollectionEquality().equals(other.plans, _this.plans)&&(identical(other.isCreating, _this.isCreating) || other.isCreating == _this.isCreating)&&(identical(other.isLoading, _this.isLoading) || other.isLoading == _this.isLoading));
 }
 
 
 @override
 int get hashCode {
   final _this = this as PlansState;
-  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.plans),_this.isCreating);
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.plans),_this.isCreating,_this.isLoading);
 }
 
 @override
 String toString() {
   final _this = this as PlansState;
-  return 'PlansState(plans: ${_this.plans}, isCreating: ${_this.isCreating})';
+  return 'PlansState(plans: ${_this.plans}, isCreating: ${_this.isCreating}, isLoading: ${_this.isLoading})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $PlansStateCopyWith<$Res>  {
   factory $PlansStateCopyWith(PlansState value, $Res Function(PlansState) _then) = _$PlansStateCopyWithImpl;
 @useResult
 $Res call({
- List<PlanSummary> plans, bool isCreating
+ List<PlanSummary> plans, bool isCreating, bool isLoading
 });
 
 
@@ -68,10 +68,11 @@ class _$PlansStateCopyWithImpl<$Res>
 
 /// Create a copy of PlansState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? plans = null,Object? isCreating = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? plans = null,Object? isCreating = null,Object? isLoading = null,}) {
   return _then(PlansState(
 plans: null == plans ? _self.plans : plans // ignore: cast_nullable_to_non_nullable
 as List<PlanSummary>,isCreating: null == isCreating ? _self.isCreating : isCreating // ignore: cast_nullable_to_non_nullable
+as bool,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<PlanSummary> plans,  bool isCreating)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<PlanSummary> plans,  bool isCreating,  bool isLoading)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlansState() when $default != null:
-return $default(_that.plans,_that.isCreating);case _:
+return $default(_that.plans,_that.isCreating,_that.isLoading);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.plans,_that.isCreating);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<PlanSummary> plans,  bool isCreating)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<PlanSummary> plans,  bool isCreating,  bool isLoading)  $default,) {final _that = this;
 switch (_that) {
 case _PlansState():
-return $default(_that.plans,_that.isCreating);case _:
+return $default(_that.plans,_that.isCreating,_that.isLoading);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.plans,_that.isCreating);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<PlanSummary> plans,  bool isCreating)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<PlanSummary> plans,  bool isCreating,  bool isLoading)?  $default,) {final _that = this;
 switch (_that) {
 case _PlansState() when $default != null:
-return $default(_that.plans,_that.isCreating);case _:
+return $default(_that.plans,_that.isCreating,_that.isLoading);case _:
   return null;
 
 }
@@ -213,7 +214,7 @@ return $default(_that.plans,_that.isCreating);case _:
 
 
 class _PlansState implements PlansState {
-  const _PlansState({ List<PlanSummary> plans = const [], this.isCreating = false}): _plans = plans;
+  const _PlansState({ List<PlanSummary> plans = const [], this.isCreating = false, this.isLoading = false}): _plans = plans;
   
 
  final  List<PlanSummary> _plans;
@@ -224,6 +225,7 @@ class _PlansState implements PlansState {
 }
 
 @override@JsonKey() final  bool isCreating;
+@override@JsonKey() final  bool isLoading;
 
 /// Create a copy of PlansState
 /// with the given fields replaced by the non-null parameter values.
@@ -235,18 +237,18 @@ _$PlansStateCopyWith<_PlansState> get copyWith => __$PlansStateCopyWithImpl<_Pla
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlansState&&const DeepCollectionEquality().equals(other.plans, _plans)&&(identical(other.isCreating, isCreating) || other.isCreating == isCreating));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlansState&&const DeepCollectionEquality().equals(other.plans, _plans)&&(identical(other.isCreating, isCreating) || other.isCreating == isCreating)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_plans),isCreating);
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_plans),isCreating,isLoading);
 }
 
 @override
 String toString() {
-    return 'PlansState(plans: $plans, isCreating: $isCreating)';
+    return 'PlansState(plans: $plans, isCreating: $isCreating, isLoading: $isLoading)';
 }
 
 
@@ -257,7 +259,7 @@ abstract mixin class _$PlansStateCopyWith<$Res> implements $PlansStateCopyWith<$
   factory _$PlansStateCopyWith(_PlansState value, $Res Function(_PlansState) _then) = __$PlansStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<PlanSummary> plans, bool isCreating
+ List<PlanSummary> plans, bool isCreating, bool isLoading
 });
 
 
@@ -274,10 +276,11 @@ class __$PlansStateCopyWithImpl<$Res>
 
 /// Create a copy of PlansState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? plans = null,Object? isCreating = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? plans = null,Object? isCreating = null,Object? isLoading = null,}) {
   return _then(_PlansState(
 plans: null == plans ? _self._plans : plans // ignore: cast_nullable_to_non_nullable
 as List<PlanSummary>,isCreating: null == isCreating ? _self.isCreating : isCreating // ignore: cast_nullable_to_non_nullable
+as bool,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

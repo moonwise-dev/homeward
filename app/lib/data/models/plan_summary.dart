@@ -8,5 +8,6 @@ abstract class PlanSummary with _$PlanSummary {
     required String id,
     required DateTime lastActivityAt,
     String? title,
+    String? marketName,
   }) = _PlanSummary;
 }

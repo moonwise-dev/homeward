@@ -9,5 +9,6 @@ abstract class PlansState with _$PlansState {
   const factory PlansState({
     @Default([]) List<PlanSummary> plans,
     @Default(false) bool isCreating,
+    @Default(false) bool isLoading,
   }) = _PlansState;
 }

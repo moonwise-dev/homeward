@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../display/relative_time.dart';
 import '../../navigation/app_routes.dart';
 import '../../ui/app_button.dart';
+import '../../ui/app_loading_indicator.dart';
 import '../../ui/app_page.dart';
 import '../../ui/app_spacing.dart';
 import '../../ui/app_text_styles.dart';
@@ -50,14 +51,20 @@ class PlansScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
           if (state.plans.isEmpty)
-            Text(
-              'Plans you start appear here until you close the app.',
-              style: AppTextStyles.caption,
-            ),
+            if (state.isLoading)
+              const Center(child: AppLoadingIndicator())
+            else
+              Text(
+                'Plans you start appear here.',
+                style: AppTextStyles.caption,
+              ),
           for (final plan in state.plans)
             PlanTile(
               title: plan.title ?? 'New plan',
-              subtitle: relativeTime(plan.lastActivityAt, now),
+              subtitle: [
+                ?plan.marketName,
+                relativeTime(plan.lastActivityAt, now),
+              ].join(' · '),
               onTap: () => context.push(AppRoutes.planOf(plan.id)),
             ),
         ],

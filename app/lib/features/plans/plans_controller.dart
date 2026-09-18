@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/models/plan_summary.dart';
@@ -16,7 +18,21 @@ class PlansController extends _$PlansController
       ref.watch(plansRepositoryProvider).watchPlans(),
       (plans) => setState((current) => current.copyWith(plans: plans)),
     );
-    return const PlansState();
+    unawaited(refresh());
+    return const PlansState(isLoading: true);
+  }
+
+  Future<void> refresh() async {
+    final plans = ref.read(plansRepositoryProvider);
+    setState((current) => current.copyWith(isLoading: true));
+    try {
+      await plans.refresh();
+    } on Object catch (error, stackTrace) {
+      logError(error, stackTrace);
+      showErrorMessage(error: error);
+    } finally {
+      setState((current) => current.copyWith(isLoading: false));
+    }
   }
 
   Future<PlanSummary?> create() async {

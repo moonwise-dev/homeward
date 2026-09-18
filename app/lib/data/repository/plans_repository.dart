@@ -8,6 +8,8 @@ import 'repository_guard.dart';
 abstract interface class PlansRepository {
   Stream<List<PlanSummary>> watchPlans();
 
+  Future<void> refresh();
+
   Future<PlanSummary> create();
 
   void recordActivity(String id, {required String buyerText});
@@ -32,6 +34,14 @@ class SessionPlansRepository with RepositoryGuard implements PlansRepository {
   });
 
   @override
+  Future<void> refresh() => guard(() async {
+    for (final listing in await _client.plans()) {
+      _plans[listing.sessionId] = _merged(listing, _plans[listing.sessionId]);
+    }
+    _changes.add(null);
+  });
+
+  @override
   Future<PlanSummary> create() => guard(() async {
     final plan = PlanSummary(
       id: await _client.createSession(),
@@ -53,6 +63,20 @@ class SessionPlansRepository with RepositoryGuard implements PlansRepository {
       title: plan.title ?? buyerText,
     );
     _changes.add(null);
+  }
+
+  PlanSummary _merged(PlanListing listing, PlanSummary? known) => PlanSummary(
+    id: listing.sessionId,
+    lastActivityAt: _laterOf(listing.updatedAt, known?.lastActivityAt),
+    title: known?.title ?? listing.title,
+    marketName: listing.marketName ?? known?.marketName,
+  );
+
+  DateTime _laterOf(DateTime? one, DateTime? other) {
+    if (one == null || (other != null && other.isAfter(one))) {
+      return other ?? _now();
+    }
+    return one;
   }
 
   List<PlanSummary> _newestFirst() =>
