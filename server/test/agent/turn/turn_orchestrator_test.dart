@@ -57,6 +57,21 @@ void main() {
         apiKey: 'key',
       );
 
+  Stream<TurnEvent> sendAction(TurnOrchestrator agent) => agent.run(
+    sessionId: 's-1',
+    uid: 'uid-1',
+    input: const TurnInput.action(
+      ClientAction(
+        name: 'commit_profile',
+        surfaceId: 't0-profile',
+        sourceComponentId: 'save',
+        context: {'profilePath': '/profile'},
+      ),
+      surfaceData: {},
+    ),
+    apiKey: 'key',
+  );
+
   String a2ui(String surfaceId, List<Map<String, Object?>> components) => [
     '```a2ui',
     jsonEncode({
@@ -522,6 +537,30 @@ void main() {
       expect(
         (components.last['children']! as List<Object?>).last,
         'save',
+      );
+      expect(events.last, isA<TurnCompleted>());
+    },
+  );
+
+  test(
+    'asks again when an action is answered with text and no surface',
+    () async {
+      await sessionWith(Plan(marketId: MarketId.parse('SE')));
+      final script = ScriptedInteractions([
+        reply('i1', text: 'Here is what that means for you.'),
+        reply('i2', text: a2ui('t1-income', incomeForm())),
+      ]);
+
+      final events = await sendAction(orchestrator(script)).toList();
+
+      expect(script.requests, hasLength(2));
+      expect(
+        (script.requests[1].input as TextInput).text,
+        contains('profileFields still open'),
+      );
+      expect(
+        messagesIn(events).map((message) => message.keys.last),
+        contains('updateComponents'),
       );
       expect(events.last, isA<TurnCompleted>());
     },

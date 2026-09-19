@@ -29,6 +29,7 @@ final class TurnReport {
       'toolsCalled': observed.toolsCalled,
       'toolsRun': observed.toolsRun.toList(),
       'rejections': observed.rejections,
+      'failure': ?observed.failure,
       'components': observed.components,
       'profileFieldsAsked': observed.profileFieldsAsked.toList(),
       'modelRounds': observed.modelRounds,

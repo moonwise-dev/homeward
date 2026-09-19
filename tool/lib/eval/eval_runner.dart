@@ -9,10 +9,13 @@ import 'turn_log.dart';
 import 'turn_observation.dart';
 
 final class EvalRunner {
-  EvalRunner(this.server, this.log);
+  EvalRunner(this.server, this.log, {this.betweenTurns = _betweenTurns});
+
+  static const _betweenTurns = Duration(seconds: 12);
 
   final EvalServer server;
   final TurnLog log;
+  final Duration betweenTurns;
 
   Future<List<TurnObservation>> run(
     EvalCase evalCase, {
@@ -22,6 +25,9 @@ final class EvalRunner {
     final surfaces = ProbeSurfaces();
     final observations = <TurnObservation>[];
     for (final (index, turn) in evalCase.turns.indexed) {
+      if (index > 0) {
+        await Future<void>.delayed(betweenTurns);
+      }
       final input = _inputFor(turn.input, surfaces);
       if (input == null) {
         observations.add(_unoffered(index + 1, turn.input));
@@ -78,6 +84,7 @@ final class EvalRunner {
       toolsCalled: log.toolsCalled,
       toolsRun: log.toolsRun,
       rejections: log.rejections,
+      failure: log.failures.firstOrNull,
       modelRounds: log.modelRounds,
       corrections: log.corrections,
       elapsed: clock.elapsed,

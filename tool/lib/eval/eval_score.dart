@@ -40,7 +40,7 @@ List<Score> scoreTurn(EvalExpectations expect, TurnObservation observed) {
     Score(
       'the turn finished',
       passed: observed.errorCode == null,
-      detail: observed.errorCode,
+      detail: [?observed.errorCode, ?observed.failure].join(': '),
     ),
     Score(
       'validated without a correction',

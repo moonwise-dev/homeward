@@ -35,6 +35,9 @@ Future<void> main(List<String> arguments) async {
   try {
     for (final evalCase in cases) {
       stdout.writeln('==> ${evalCase.id}');
+      if (reports.isNotEmpty) {
+        await Future<void>.delayed(const Duration(seconds: 20));
+      }
       final observations = await runner.run(evalCase, apiKey: apiKey);
       reports.add(
         CaseReport(

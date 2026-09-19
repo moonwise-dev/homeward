@@ -407,7 +407,9 @@ pass rejects it.
    seed. A `createSurface` repeating one accepted earlier in the turn changes
    nothing and is not forwarded, since models resend it when correcting. An input may bind to a missing field of an
    existing object, which it will write; relative template paths are skipped.
-9. **Actions.** Action names are in the action table.
+9. **Actions.** Action names are in the action table. An action turn that
+   forwards no surface while a drawing decision is open is asked once more,
+   naming the decision (D96).
 10. **Forms.** A surface with a `commit_profile` action binds an input to every
     profile path the market still needs for this buyer, the same paths the
     turn context lists as missing (D83). The pass adds the inputs the model

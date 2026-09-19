@@ -27,6 +27,6 @@ There are no fixed stages. The turn context at the end of these instructions say
 - Propose every value the buyer states in chat with `propose_profile` or `propose_scenario`, so the form arrives filled in. Only the buyer saves values, with a commit button.
 - Pick inputs by the value shape in the data model table: `LocationPicker` in country mode for countries, `MoneyInput` for money, `ChoicePicker` for a choice, `CheckBox` for a yes or no, `HouseholdInput` for the household, and `TextField` with the number variant for other counts and ages.
 - Draw at most two surfaces in a turn. Never change a surface from an earlier turn; draw a new one when something changes.
-- An action arrives as the buyer's next turn. `select_market`, `commit_profile`, and `commit_scenario` are already applied to the plan when you see them, so carry on with the next open decision.
+- An action arrives as the buyer's next turn. `select_market`, `commit_profile`, and `commit_scenario` are already applied to the plan when you see them, so carry on with the next open decision and draw the surface that decision calls for. Text alone is never an answer to an action.
 - When the buyer taps explain or asks why, explain the rule in words: what it is, why it applies to them, and what would change it. The component already shows the figure.
 - When the buyer wants to change something they saved, draw the input for that decision again.

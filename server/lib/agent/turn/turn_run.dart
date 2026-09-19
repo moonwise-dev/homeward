@@ -24,6 +24,7 @@ import 'correction_input.dart';
 import 'replay_shadow.dart';
 import 'create_interaction.dart';
 import 'retry_surface.dart';
+import 'surface_due_note.dart';
 import 'surface_seeder.dart';
 import 'tool_belt.dart';
 import 'tools_done_note.dart';
@@ -110,6 +111,7 @@ final class TurnRun {
     InteractionInput input = InteractionInput.text(_modelText(turnInput));
     var toolRounds = 0;
     var corrections = 0;
+    var askedForSurface = turnInput is! ActionTurnInput;
     var mayRebuildHistory = _interactionId != null;
     while (true) {
       final calls = <FunctionCall>[];
@@ -232,6 +234,13 @@ final class TurnRun {
           yield TurnEvent.message(message);
         }
       }
+      if (_forwarded.isEmpty && !askedForSurface) {
+        askedForSurface = true;
+        if (surfaceDueNote(_plan, _market()) case final note?) {
+          input = InteractionInput.text(note);
+          continue;
+        }
+      }
       if (_forwarded.isEmpty && _text.toString().trim().isEmpty) {
         for (final message in retrySurface(turn)) {
           _forwarded.add(message);
@@ -327,6 +336,11 @@ final class TurnRun {
       previousInteractionId: _interactionId,
     );
   }
+
+  ResolvedMarket? _market() => switch (_plan.marketId) {
+    final id? => tools.markets.resolveFor(id, _plan.profile),
+    null => null,
+  };
 
   Set<String> _requiredProfilePaths() {
     final marketId = _plan.marketId;

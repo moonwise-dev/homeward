@@ -177,7 +177,7 @@ void main() {
       final plan = (await sessions.find('s-1'))!.plan;
       expect(plan.marketId, MarketId.parse('SE'));
       expect(plan.profileDraft?.taxResidence, CountryCode.parse('SE'));
-      final input = script.requests.single.input;
+      final input = script.requests.first.input;
       expect(jsonEncode(input.toJson()), contains('select_market'));
     },
   );

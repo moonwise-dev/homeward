@@ -13,6 +13,7 @@ final class TurnLog {
   final _toolsCalled = <String>[];
   final _toolsRun = <String>{};
   final _rejections = <String>[];
+  final _failures = <String>[];
   var _modelRounds = 0;
   var _corrections = 0;
 
@@ -22,6 +23,8 @@ final class TurnLog {
 
   List<String> get rejections => List.unmodifiable(_rejections);
 
+  List<String> get failures => List.unmodifiable(_failures);
+
   int get modelRounds => _modelRounds;
 
   int get corrections => _corrections;
@@ -30,6 +33,7 @@ final class TurnLog {
     _toolsCalled.clear();
     _toolsRun.clear();
     _rejections.clear();
+    _failures.clear();
     _modelRounds = 0;
     _corrections = 0;
   }
@@ -46,6 +50,9 @@ final class TurnLog {
       }
       if (fields case {'path': final String path, 'reason': final String why}) {
         _rejections.add('$path: $why');
+      }
+      if (fields case {'error': final String _, 'message': final String why}) {
+        _failures.add(why);
       }
       if (fields['modelRounds'] case final int rounds) {
         _modelRounds = rounds;

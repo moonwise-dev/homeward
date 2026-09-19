@@ -1,0 +1,763 @@
+{
+  "at": "2026-09-19T11:29:29.913499",
+  "passed": false,
+  "cases": [
+    {
+      "id": "azores-uncovered",
+      "passed": true,
+      "turns": [
+        {
+          "turn": 1,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "called the tools the turn needs",
+              "passed": true
+            },
+            {
+              "name": "called no tool it did not need",
+              "passed": true
+            },
+            {
+              "name": "landed on PT-20",
+              "passed": true,
+              "detail": "PT-20"
+            },
+            {
+              "name": "reported the market as uncovered",
+              "passed": true,
+              "detail": "uncovered"
+            },
+            {
+              "name": "drew the components the turn calls for",
+              "passed": true
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "resolve_market"
+            ],
+            "toolsRun": [
+              "resolve_market",
+              "load_market"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "MarketSnapshotCard",
+              "LocationPicker",
+              "Column",
+              "Card",
+              "Column",
+              "MarketSnapshotCard",
+              "Button",
+              "Text"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 2,
+            "corrections": 0,
+            "latencyMs": 8245,
+            "marketId": "PT-20",
+            "bindingConstraint": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "change-down-payment",
+      "passed": true,
+      "turns": [
+        {
+          "turn": 1,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "called the tools the turn needs",
+              "passed": true
+            },
+            {
+              "name": "called no tool it did not need",
+              "passed": true
+            },
+            {
+              "name": "landed on PT-30",
+              "passed": true,
+              "detail": "PT-30"
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "resolve_market",
+              "propose_profile",
+              "propose_scenario"
+            ],
+            "toolsRun": [
+              "resolve_market",
+              "propose_profile",
+              "propose_scenario",
+              "load_market",
+              "compute_affordability",
+              "estimate_purchase_costs",
+              "get_obstacles"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "MarketSnapshotCard",
+              "Text",
+              "LocationPicker",
+              "LocationPicker",
+              "ChoicePicker",
+              "ChoicePicker",
+              "CheckBox",
+              "TextField",
+              "MoneyInput",
+              "MoneyInput",
+              "MoneyInput",
+              "Button",
+              "Text",
+              "Column",
+              "Card",
+              "Column",
+              "MarketSnapshotCard",
+              "Button",
+              "Text"
+            ],
+            "profileFieldsAsked": [
+              "taxResidence",
+              "citizenship",
+              "use",
+              "employment",
+              "formerResident",
+              "age",
+              "netMonthlyIncome",
+              "monthlyDebtPayments",
+              "savings"
+            ],
+            "modelRounds": 2,
+            "corrections": 0,
+            "latencyMs": 10364,
+            "marketId": "PT-30",
+            "bindingConstraint": null
+          }
+        },
+        {
+          "turn": 2,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "drew the components the turn calls for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "1 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [],
+            "toolsRun": [
+              "load_market",
+              "compute_affordability",
+              "estimate_purchase_costs",
+              "get_obstacles"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "AffordabilitySummary",
+              "AmountSlider",
+              "PaymentBreakdown",
+              "PurchaseCostsTable",
+              "ForeignBuyerObstacles",
+              "EligibilityChecklist",
+              "Button",
+              "Text",
+              "Column",
+              "Card",
+              "Column",
+              "MarketSnapshotCard",
+              "Button",
+              "Text",
+              "Card",
+              "Column",
+              "ForeignBuyerObstacles"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 1,
+            "corrections": 0,
+            "latencyMs": 4981,
+            "marketId": "PT-30",
+            "bindingConstraint": null
+          }
+        },
+        {
+          "turn": 3,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "the binding constraint is loanToValue",
+              "passed": true,
+              "detail": "loanToValue"
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "1 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [],
+            "toolsRun": [
+              "load_market",
+              "compute_affordability",
+              "estimate_purchase_costs",
+              "get_obstacles"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "Card",
+              "Column",
+              "MarketSnapshotCard",
+              "Button",
+              "Text",
+              "Card",
+              "Column",
+              "AffordabilitySummary",
+              "Button",
+              "Text",
+              "Card",
+              "Column",
+              "PaymentBreakdown",
+              "Card",
+              "Column",
+              "PurchaseCostsTable",
+              "Card",
+              "Column",
+              "EligibilityChecklist",
+              "Card",
+              "Column",
+              "ForeignBuyerObstacles"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 1,
+            "corrections": 0,
+            "latencyMs": 2814,
+            "marketId": "PT-30",
+            "bindingConstraint": "loanToValue"
+          }
+        }
+      ]
+    },
+    {
+      "id": "madeira-nonresident",
+      "passed": false,
+      "turns": [
+        {
+          "turn": 1,
+          "passed": false,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": false,
+              "detail": "/createSurface/surfaceId: Surface ids in turn 1 look like t1-budget"
+            },
+            {
+              "name": "called the tools the turn needs",
+              "passed": true
+            },
+            {
+              "name": "called no tool it did not need",
+              "passed": true
+            },
+            {
+              "name": "landed on PT-30",
+              "passed": true,
+              "detail": "PT-30"
+            },
+            {
+              "name": "reported the market as curated",
+              "passed": true,
+              "detail": "curated"
+            },
+            {
+              "name": "drew the components the turn calls for",
+              "passed": true
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "asked for the facts the rules need",
+              "passed": true,
+              "detail": "adults, childAges, use, taxResidence, citizenship, formerResident, employment, age, netMonthlyIncome, monthlyDebtPayments, savings"
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "3 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "resolve_market",
+              "propose_profile",
+              "propose_scenario"
+            ],
+            "toolsRun": [
+              "resolve_market",
+              "propose_profile",
+              "propose_scenario",
+              "load_market",
+              "compute_affordability",
+              "estimate_purchase_costs",
+              "get_obstacles"
+            ],
+            "rejections": [
+              "/createSurface/surfaceId: Surface ids in turn 1 look like t1-budget",
+              "/updateComponents/surfaceId: Surface ids in turn 1 look like t1-budget"
+            ],
+            "components": [
+              "Column",
+              "MarketSnapshotCard",
+              "Text",
+              "HouseholdInput",
+              "ChoicePicker",
+              "LocationPicker",
+              "LocationPicker",
+              "CheckBox",
+              "ChoicePicker",
+              "TextField",
+              "MoneyInput",
+              "MoneyInput",
+              "MoneyInput",
+              "Button",
+              "Text",
+              "Column",
+              "Card",
+              "Column",
+              "MarketSnapshotCard",
+              "Button",
+              "Text"
+            ],
+            "profileFieldsAsked": [
+              "adults",
+              "childAges",
+              "use",
+              "taxResidence",
+              "citizenship",
+              "formerResident",
+              "employment",
+              "age",
+              "netMonthlyIncome",
+              "monthlyDebtPayments",
+              "savings"
+            ],
+            "modelRounds": 3,
+            "corrections": 1,
+            "latencyMs": 14487,
+            "marketId": "PT-30",
+            "bindingConstraint": null
+          }
+        },
+        {
+          "turn": 2,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "landed on PT-30",
+              "passed": true,
+              "detail": "PT-30"
+            },
+            {
+              "name": "drew the components the turn calls for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "propose_scenario"
+            ],
+            "toolsRun": [
+              "load_market",
+              "compute_affordability",
+              "estimate_purchase_costs",
+              "get_obstacles",
+              "propose_scenario"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "AffordabilitySummary",
+              "AmountSlider",
+              "PaymentBreakdown",
+              "Button",
+              "Text",
+              "Column",
+              "Card",
+              "Column",
+              "MarketSnapshotCard",
+              "Button",
+              "Text",
+              "Card",
+              "Column",
+              "ForeignBuyerObstacles"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 2,
+            "corrections": 0,
+            "latencyMs": 7887,
+            "marketId": "PT-30",
+            "bindingConstraint": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "madeira-resident-contrast",
+      "passed": false,
+      "turns": [
+        {
+          "turn": 1,
+          "passed": false,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": false,
+              "detail": "internal"
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "called the tools the turn needs",
+              "passed": true
+            },
+            {
+              "name": "called no tool it did not need",
+              "passed": true
+            },
+            {
+              "name": "landed on PT-30",
+              "passed": true,
+              "detail": "PT-30"
+            },
+            {
+              "name": "reported the market as curated",
+              "passed": true,
+              "detail": "curated"
+            },
+            {
+              "name": "drew the components the turn calls for",
+              "passed": false,
+              "detail": "MarketSnapshotCard"
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "0 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "resolve_market",
+              "propose_profile",
+              "propose_scenario"
+            ],
+            "toolsRun": [
+              "resolve_market",
+              "propose_profile",
+              "propose_scenario",
+              "load_market",
+              "compute_affordability",
+              "estimate_purchase_costs",
+              "get_obstacles"
+            ],
+            "rejections": [],
+            "components": [],
+            "profileFieldsAsked": [],
+            "modelRounds": 0,
+            "corrections": 0,
+            "latencyMs": 4172,
+            "marketId": "PT-30",
+            "bindingConstraint": null
+          }
+        },
+        {
+          "turn": 2,
+          "passed": false,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": false,
+              "detail": "no surface offers commit_profile"
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "landed on PT-30",
+              "passed": false
+            },
+            {
+              "name": "drew the components the turn calls for",
+              "passed": false,
+              "detail": "AffordabilitySummary, AmountSlider"
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "0 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [],
+            "toolsRun": [],
+            "rejections": [],
+            "components": [],
+            "profileFieldsAsked": [],
+            "modelRounds": 0,
+            "corrections": 0,
+            "latencyMs": 0,
+            "marketId": null,
+            "bindingConstraint": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "stockholm-first-time",
+      "passed": false,
+      "turns": [
+        {
+          "turn": 1,
+          "passed": false,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": false,
+              "detail": "internal"
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "called the tools the turn needs",
+              "passed": false,
+              "detail": "resolve_market, load_market"
+            },
+            {
+              "name": "called no tool it did not need",
+              "passed": true
+            },
+            {
+              "name": "landed on SE",
+              "passed": false
+            },
+            {
+              "name": "reported the market as curated",
+              "passed": false
+            },
+            {
+              "name": "drew the components the turn calls for",
+              "passed": false,
+              "detail": "MarketSnapshotCard"
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "asked for the facts the rules need",
+              "passed": false
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "0 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [],
+            "toolsRun": [],
+            "rejections": [],
+            "components": [],
+            "profileFieldsAsked": [],
+            "modelRounds": 0,
+            "corrections": 0,
+            "latencyMs": 698,
+            "marketId": null,
+            "bindingConstraint": null
+          }
+        },
+        {
+          "turn": 2,
+          "passed": false,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": false,
+              "detail": "no surface offers commit_profile"
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "landed on SE",
+              "passed": false
+            },
+            {
+              "name": "drew the components the turn calls for",
+              "passed": false,
+              "detail": "AffordabilitySummary, AmountSlider, PaymentBreakdown"
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "0 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [],
+            "toolsRun": [],
+            "rejections": [],
+            "components": [],
+            "profileFieldsAsked": [],
+            "modelRounds": 0,
+            "corrections": 0,
+            "latencyMs": 0,
+            "marketId": null,
+            "bindingConstraint": null
+          }
+        }
+      ]
+    }
+  ]
+}

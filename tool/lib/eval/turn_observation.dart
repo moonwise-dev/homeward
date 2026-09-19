@@ -6,6 +6,7 @@ final class TurnObservation {
     required this.toolsCalled,
     required this.toolsRun,
     required this.rejections,
+    this.failure,
     required this.modelRounds,
     required this.corrections,
     required this.elapsed,
@@ -21,6 +22,7 @@ final class TurnObservation {
   final List<String> toolsCalled;
   final Set<String> toolsRun;
   final List<String> rejections;
+  final String? failure;
   final int modelRounds;
   final int corrections;
   final Duration elapsed;
