@@ -171,9 +171,15 @@ process, with the real prompts, tools, catalog, and rule packs, and a real
 Gemini key from `HOMEWARD_EVAL_GEMINI_KEY` or `~/.config/homeward/gemini_key`.
 There is no HTTP, no auth, and no Firebase: a case is a plan, not a request.
 
-The key is a free key, capped at about 20 requests a day per model, and the full
-case set needs well over that. `make eval CASES="stockholm-first-time"` runs a
-subset per day; replay mode checks everything else without a key.
+The key is a free key: `gemini-3.5-flash-lite` allows about 500 requests a day
+and 15 a minute, the Flash models about 20 a day. A turn costs one to four
+requests, so a run waits twelve seconds between turns and twenty between cases;
+without the wait a five-case run trips the per-minute limit, which arrives as
+`internal` on a turn that never started. Runs back to back still degrade: after
+half an hour of them, streams came back truncated and three turns in a row paid
+a correction for invalid JSON. A verdict is worth reading when the key is
+rested. `make eval CASES="stockholm-first-time"` runs a subset; replay mode
+checks everything else without a key.
 
 ### Case Format
 
