@@ -32,6 +32,7 @@ help:
 	@echo "  make emulator      Run the Firestore emulator on port 8081"
 	@echo "  make server-dev    Run the server locally with hot reload"
 	@echo "  make probe         Send MESSAGE as a live turn to SERVER with the key from ~/.config/homeward/gemini_key"
+	@echo "  make eval          Run eval CASES against Gemini in process, and write a report"
 	@echo "  make server-build  Cross-compile the server for linux/x64"
 	@echo "  make server-image  Build the server container image"
 	@echo "  make server-image-run  Run the server container image on port 8080"
@@ -116,6 +117,10 @@ emulator:
 .PHONY: server-dev
 server-dev:
 	@HOMEWARD_APP_CHECK_ENFORCED=false GOOGLE_CLOUD_PROJECT=$(FIREBASE_PROJECT) dart run --enable-vm-service server/tool/dev.dart
+
+.PHONY: eval
+eval:
+	@dart run tool/bin/eval.dart $(CASES)
 
 .PHONY: probe
 probe:

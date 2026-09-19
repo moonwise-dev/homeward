@@ -1,0 +1,33 @@
+id: stockholm-first-time
+persona: local
+turns:
+  - text: >-
+      We are a couple in Stockholm looking at a 3-room flat in Södermalm for
+      about 4.5 million kronor
+    expect:
+      tools_called: [resolve_market, load_market]
+      tools_allowed: [propose_profile, propose_scenario]
+      market: SE
+      coverage: curated
+      components_include: [MarketSnapshotCard]
+      components_exclude: [StressTestChart, PurchaseCostsTable]
+      profile_fields_asked: [netMonthlyIncome, savings, age]
+  - action: commit_profile
+    data:
+      profile:
+        adults: 2
+        childAges: []
+        age: 34
+        borrowers: 2
+        employment: employed
+        citizenship: SE
+        taxResidence: SE
+        use: primary
+        firstTime: true
+        netMonthlyIncome: { minorUnits: 6200000, currency: SEK }
+        monthlyDebtPayments: { minorUnits: 0, currency: SEK }
+        savings: { minorUnits: 90000000, currency: SEK }
+    expect:
+      tools_allowed: [compute_affordability, propose_scenario, load_market]
+      market: SE
+      components_include: [AffordabilitySummary, AmountSlider, PaymentBreakdown]

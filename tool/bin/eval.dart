@@ -1,0 +1,67 @@
+import 'dart:io';
+
+import 'package:homeward_server/config/server_config.dart';
+import 'package:homeward_tool/eval/eval_report.dart';
+import 'package:homeward_tool/eval/eval_runner.dart';
+import 'package:homeward_tool/eval/eval_score.dart';
+import 'package:homeward_tool/eval/eval_server.dart';
+import 'package:homeward_tool/eval/load_cases.dart';
+import 'package:homeward_tool/eval/turn_log.dart';
+import 'package:homeward_tool/probe/probe_gemini_key.dart';
+
+Future<void> main(List<String> arguments) async {
+  final apiKey = probeGeminiKey(Platform.environment);
+  if (apiKey == null) {
+    stderr.writeln(
+      'Usage: eval [case id]…\n'
+      'The Gemini key comes from HOMEWARD_EVAL_GEMINI_KEY or '
+      '~/.config/homeward/gemini_key.',
+    );
+    exitCode = 64;
+    return;
+  }
+  final cases = loadCases(Directory('tool/eval/cases'), only: arguments);
+  if (cases.isEmpty) {
+    stderr.writeln('No cases matched ${arguments.join(', ')}');
+    exitCode = 64;
+    return;
+  }
+  final server = EvalServer.start(ServerConfig.fromEnvironment({}));
+  final log = TurnLog();
+  final runner = EvalRunner(server, log);
+  final reports = <CaseReport>[];
+  try {
+    for (final evalCase in cases) {
+      stdout.writeln('==> ${evalCase.id}');
+      final observations = await runner.run(evalCase, apiKey: apiKey);
+      reports.add(
+        CaseReport(
+          evalCase: evalCase,
+          turns: [
+            for (final (index, observed) in observations.indexed)
+              TurnReport(
+                observed: observed,
+                scores: scoreTurn(evalCase.turns[index].expect, observed),
+              ),
+          ],
+        ),
+      );
+    }
+  } finally {
+    await log.close();
+    server.close();
+  }
+  final directory = Directory('tool/eval/reports');
+  final previous = lastReport(directory);
+  final report = EvalReport(at: DateTime.now(), cases: reports);
+  final file = writeReport(directory, report);
+  stdout
+    ..writeln(report.summary)
+    ..writeln('Report ${file.path}');
+  if (previous != null) {
+    for (final change in report.changesFrom(previous)) {
+      stdout.writeln('Changed since the last report: $change');
+    }
+  }
+  exitCode = report.passed ? 0 : 1;
+}

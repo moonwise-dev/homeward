@@ -1,0 +1,36 @@
+id: madeira-nonresident
+persona: cross-border
+turns:
+  - text: >-
+      I live in Stockholm and want a two-bedroom flat in Funchal, around
+      350 000 euro
+    expect:
+      tools_called: [resolve_market, load_market]
+      tools_allowed: [propose_profile, propose_scenario, get_obstacles]
+      market: PT-30
+      coverage: curated
+      components_include: [MarketSnapshotCard]
+      components_exclude: [StressTestChart, EligibilityChecklist]
+      profile_fields_asked: [age, residencyIntent, formerResident]
+  - action: commit_profile
+    data:
+      profile:
+        age: 42
+        borrowers: 1
+        adults: 2
+        childAges: []
+        employment: employed
+        citizenship: SE
+        taxResidence: SE
+        formerResident: false
+        residencyIntent: becomeResident
+        use: secondary
+        netMonthlyIncome: { minorUnits: 6000000, currency: SEK }
+        monthlyDebtPayments: { minorUnits: 0, currency: SEK }
+        savings: { minorUnits: 170000000, currency: SEK }
+    expect:
+      tools_allowed:
+        [compute_affordability, propose_scenario, estimate_purchase_costs, get_obstacles, load_market]
+      market: PT-30
+      components_include: [AffordabilitySummary, AmountSlider]
+      binding_constraint: loanToValue

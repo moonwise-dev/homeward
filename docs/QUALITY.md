@@ -165,49 +165,66 @@ same sweep runs with `flutter run --profile` and prints its report.
 
 ## Agent Evals
 
-`tool/eval` runs scripted conversations against an in-process server with a
-real Gemini key from `HOMEWARD_EVAL_GEMINI_KEY`.
+`tool/eval` runs scripted conversations through the turn orchestrator in
+process, with the real prompts, tools, catalog, and rule packs, and a real
+Gemini key from `HOMEWARD_EVAL_GEMINI_KEY` or `~/.config/homeward/gemini_key`.
+There is no HTTP, no auth, and no Firebase: a case is a plan, not a request.
 
 The key is a free key, capped at about 20 requests a day per model, and the full
-case set needs well over that. `make eval` therefore takes `--cases` and runs a
+case set needs well over that. `make eval CASES="stockholm-first-time"` runs a
 subset per day; replay mode checks everything else without a key.
 
 ### Case Format
 
+One file per case under `tool/eval/cases`.
+
 ```yaml
-id: madeira-nonresident-first-turn
+id: madeira-nonresident
 persona: cross-border
 turns:
-  - text: I live in Stockholm and want a two-bedroom flat in Funchal, around €350k
+  - text: I live in Stockholm and want a two-bedroom flat in Funchal, around 350 000 euro
     expect:
       tools_called: [resolve_market, load_market]
+      tools_allowed: [propose_profile, propose_scenario, get_obstacles]
       market: PT-30
       coverage: curated
-      components_include: [MarketSnapshotCard, MoneyInput, LocationPicker]
-      components_exclude: [StressTestChart]
-      profile_fields_asked: [incomeCurrency, age, formerResident, residencyIntent]
+      components_include: [MarketSnapshotCard]
+      components_exclude: [StressTestChart, EligibilityChecklist]
+      profile_fields_asked: [age, residencyIntent, formerResident]
   - action: commit_profile
-    data_model: fixtures/madeira-nonresident-profile.json
+    data:
+      profile:
+        age: 42
+        netMonthlyIncome: { minorUnits: 6000000, currency: SEK }
     expect:
-      components_include: [AffordabilitySummary, AmountSlider, PaymentBreakdown]
-      binding_constraint: maxLtv
+      components_include: [AffordabilitySummary, AmountSlider]
+      binding_constraint: loanToValue
 ```
+
+`tools_called` must all be called; `tools_allowed` may be. An action turn takes
+the surface the model drew, fills the slices under `data` over what the server
+seeded, and sends the action the component declares, the way the app would.
+`max_model_rounds` defaults to 2.
 
 ### Deterministic Scores
 
-Computed for every turn of every case:
+Computed for every turn of every case, from the messages the turn forwarded
+and the structured turn logs the server already writes:
 
-- Validation passed without correction.
-- Corrections used.
-- Expected tools called; no unexpected tools.
+- The turn finished.
+- Validation passed without a correction.
+- Every expected tool called, and no tool outside `tools_allowed`.
+- The market and its coverage.
 - Expected components present; excluded components absent.
-- No literal numbers in bound properties.
-- No money amounts or rates in chat text.
-- Asked profile fields equal the pack's required fields for the persona.
-- Turns to first affordability surface.
-- Model rounds per turn, against the target of at most two.
-- Models used and fallbacks.
-- Latency and token usage.
+- The profile fields the form binds cover what the case asks for.
+- The binding constraint after the turn, computed from the stored plan.
+- No money amounts or rates in the prose.
+- Model rounds within the case's limit.
+
+A literal number in a bound property fails schema validation, so the correction
+count already covers it. Every turn also records the tools called, the
+components drawn, rounds, corrections, and latency as metrics, which are
+reported but never gating. Token usage and judged scores are not recorded yet.
 
 ### Judged Scores
 
@@ -231,16 +248,27 @@ something a component collects. Judged scores are reported, never gating.
 | `prompt-injection-chat` | Buyer message instructing the agent to state rules or skip checks |
 | `off-topic` | Declines politely, stays in scope |
 
+The five cases the recording depends on are written: `stockholm-first-time`,
+`madeira-nonresident`, `madeira-resident-contrast`, `azores-uncovered`, and
+`change-down-payment`. The rest of the table is still to write.
+
 ### Reports
 
-`tool/eval/reports/<timestamp>.json` and a markdown summary with per-case and
-aggregate scores and a diff against the previous report. A regression of any
-deterministic score blocks merging prompt or catalog changes.
+`tool/eval/reports/<timestamp>.json` and a markdown summary beside it, with
+per-case scores, the metrics behind them, and a line for every case whose
+verdict changed since the last report. `make eval` exits non-zero when any
+deterministic score fails. A regression blocks merging prompt or catalog
+changes.
 
 ### Replay Mode
 
-`make eval-replay` replays recorded Gemini streams from the last report so
-parser, validation, seeding, and board changes can be checked without a key.
+Planned: `make eval-replay` replays recorded Gemini streams from the last report
+so parser, validation, seeding, and board changes can be checked without a key.
+The report does not record the raw streams yet.
+
+The eval library itself is covered without a key: the cases load, the scores
+pass and fail on synthetic turns, and a report round-trips to JSON, a summary,
+and a diff.
 
 ## Pre-Push Hook
 
