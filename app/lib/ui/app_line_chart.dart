@@ -24,6 +24,7 @@ class ChartMarker {
 class AppLineChart extends StatelessWidget {
   const AppLineChart({
     required this.points,
+    required this.summary,
     this.markers = const [],
     this.limit,
     this.height = 160,
@@ -31,20 +32,27 @@ class AppLineChart extends StatelessWidget {
   });
 
   final List<ChartPoint> points;
+  final String summary;
   final List<ChartMarker> markers;
   final double? limit;
   final double height;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    height: height,
-    child: CustomPaint(
-      size: Size.infinite,
-      painter: _LineChartPainter(
-        points: points,
-        markers: markers,
-        limit: limit,
-        textDirection: Directionality.of(context),
+  Widget build(BuildContext context) => Semantics(
+    label: summary,
+    image: true,
+    child: SizedBox(
+      height: height,
+      child: RepaintBoundary(
+        child: CustomPaint(
+          size: Size.infinite,
+          painter: _LineChartPainter(
+            points: points,
+            markers: markers,
+            limit: limit,
+            textDirection: Directionality.of(context),
+          ),
+        ),
       ),
     ),
   );

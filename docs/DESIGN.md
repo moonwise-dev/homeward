@@ -35,8 +35,7 @@ settled them.
 | `warning` | `#A86B12` | Warn, uncovered badge, stress marker |
 | `danger` | `#B3261E` | Fail, limit lines |
 
-Dark tokens are defined alongside from the start and shipped after the
-recording.
+Dark tokens come after the recording; the light set above is what ships.
 
 ## Typography (`AppTextStyles`)
 
@@ -61,8 +60,9 @@ Fonts ship through `google_fonts` with bundled fallbacks for offline web.
 - `AppSpacing`: 4, 8, 12, 16, 24, 32, 48.
 - `AppRadii`: `sm` 8, `md` 12, `lg` 16, `pill` 999.
 - Cards: `surface`, 1 px `border`, radius `md`, no shadow.
-- Sheets and the wide board pane: `surface`, radius `lg` on the leading edge,
-  one soft shadow.
+- Sheets: the page background with a drag handle, and the board pane beside the
+  chat is separated by a divider rather than a shadow, so a surface the model
+  drew reads the same in both.
 - Fields: `surface` fill, 1 px `border`, radius `sm`, height 48.
 - Primary button: `accent` fill, pill, height 48, `onAccent` label.
 
@@ -99,28 +99,31 @@ reduced motion.
 
 ## Status
 
-| Status | Colour | Icon | Word |
-| --- | --- | --- | --- |
-| Pass | `positive` | check | Within limit |
-| Warn | `warning` | alert | Close to limit |
-| Fail | `danger` | cross | Over limit |
-| Blocker | `danger` | block | Blocker |
-| Effort | `warning` | clock | Takes time |
-| Info | `info` | info | Good to know |
+`AppStatus` has four: `pass`, `warn`, `fail`, `info`.
 
-Colour is never the only signal.
+| Status | Colour | Icon | Used for |
+| --- | --- | --- | --- |
+| `pass` | `positive` | check | Within a limit, a document already held |
+| `warn` | `warning` | alert | Close to a limit, an obstacle that takes time |
+| `fail` | `danger` | cross | Over a limit, a blocker |
+| `info` | `info` | info | Facts still needed, good to know |
+
+An obstacle's severity maps onto these, so there is one vocabulary of colour
+and icon rather than two. Colour is never the only signal: every tag carries an
+icon and words.
 
 ## Charts
 
-- `AppLineChart` and `AppStackedBar` are Homeward's own `CustomPainter` widgets
-  inside a `RepaintBoundary`, repainting only when their series change. Catalog
-  items pass typed series. No chart package: in spike S4, `fl_chart` redrawn on
-  every frame of a drag cut a throttled JS build to about 23 fps, and a
-  `CustomPainter` with the same series held about 57.
+- `AppLineChart` is Homeward's own `CustomPainter` inside a `RepaintBoundary`,
+  repainting only when its series change. Catalog items pass typed series. No
+  chart package: in spike S4, `fl_chart` redrawn on every frame of a drag cut a
+  throttled JS build to about 23 fps, and a `CustomPainter` with the same series
+  held about 57. A stacked bar arrives if a component needs one.
 - Series 1 `accent`, series 2 `info`, limit lines `danger` dashed, markers
   `warning`.
 - Axis labels in `caption`, gridlines in `border`.
-- Every chart exposes a text summary for semantics.
+- Every chart takes a `summary` and exposes it as its semantics label, so a
+  screen reader hears the figures the line draws.
 
 ## Primitives (`app/lib/ui`)
 

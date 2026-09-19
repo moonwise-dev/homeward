@@ -33,6 +33,7 @@ class StressTestChartView extends StatelessWidget {
         AppSectionTitle(title: 'If rates rise', onExplain: onExplain),
         const SizedBox(height: AppSpacing.xs),
         AppLineChart(
+          summary: _summary(stressed, limit),
           points: [
             for (final point in curve.points)
               ChartPoint(
@@ -91,6 +92,13 @@ class StressTestChartView extends StatelessWidget {
       ],
     );
   }
+
+  String _summary(Money stressed, Money? limit) => [
+    'Monthly cost from ${formatMoney(curve.points.first.cost, locale)} at '
+        '${formatRate(curve.todayRate)} to ${formatMoney(stressed, locale)} at '
+        '${formatRate(curve.stressRate)}',
+    if (limit != null) 'with a limit of ${formatMoney(limit, locale)} a month',
+  ].join(', ');
 
   Money _costAt(Rate rate) => curve.points
       .reduce(
