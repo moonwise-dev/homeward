@@ -25,8 +25,8 @@ settled them.
 | `border` | `#DDD8CD` | Card and field borders |
 | `borderStrong` | `#C5BFB1` | Focus-adjacent, dividers in tables |
 | `text` | `#17212B` | Primary text and figures |
-| `textSecondary` | `#17212B` @ 68% | Supporting copy |
-| `textTertiary` | `#17212B` @ 45% | Captions, units |
+| `textSecondary` | `#17212B` @ 77% | Supporting copy |
+| `textTertiary` | `#17212B` @ 63% | Captions, units |
 | `accent` | `#1D5C4D` | Primary actions, curated badge, series 1 |
 | `onAccent` | `#FFFFFF` | |
 | `accentSoft` | `#1D5C4D` @ 10% | Selected states |
@@ -34,6 +34,11 @@ settled them.
 | `positive` | `#2E7D5B` | Pass |
 | `warning` | `#A86B12` | Warn, uncovered badge, stress marker |
 | `danger` | `#B3261E` | Fail, limit lines |
+
+Every grey clears WCAG AA against the page, a card and the muted fill: `text`
+at 15.6:1, `textSecondary` at 7.2:1, `textTertiary` at 4.6:1. Captions carry
+sentences a buyer has to read — what a refund depends on, what sets a limit —
+so the lightest grey is held to the same bar as the rest.
 
 Dark tokens come after the recording; the light set above is what ships.
 
@@ -100,6 +105,9 @@ reduced motion.
 
 - All money formatting goes through `formatMoney(Money, locale)` in
   `app/lib/display`, which `AppAnimatedFigure` uses while a figure travels.
+- `AppMoneyField` groups digits in the market's own separator while the buyer
+  types, through `digitGroupingFor(locale)`, so an amount reads the same being
+  entered as it does being shown back.
 - Rates show two decimals, percentages of price show one.
 - Units and currency codes use `textTertiary`.
 

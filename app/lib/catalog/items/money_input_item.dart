@@ -36,6 +36,7 @@ final moneyInputItem = catalogItemFor(const MoneyInput(), (itemContext) {
               return AppMoneyField(
                 label: label ?? '',
                 majorUnits: money == null ? null : majorUnitsOf(money).round(),
+                locale: locale,
                 unitLabel: [
                   if (unit != null) moneyFormatFor(unit, locale).currencySymbol,
                   ?amountPeriodLabel(data['period'] as String?),

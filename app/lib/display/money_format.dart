@@ -17,6 +17,18 @@ NumberFormat moneyFormatFor(Currency currency, LocaleTag? locale) {
   );
 }
 
+String Function(String digits) digitGroupingFor(LocaleTag? locale) {
+  final format = NumberFormat.decimalPattern(
+    Intl.canonicalizedLocale(locale?.tag ?? 'en'),
+  );
+  return (digits) => switch (int.tryParse(digits)) {
+    null => digits,
+    final value => format.format(value),
+  };
+}
+
+String digitsOf(String text) => text.replaceAll(RegExp('[^0-9]'), '');
+
 double majorUnitsOf(Money money) {
   var divisor = 1;
   for (var digit = 0; digit < money.currency.minorDigits; digit++) {

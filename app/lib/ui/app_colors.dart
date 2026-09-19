@@ -7,8 +7,8 @@ abstract final class AppColors {
   static const border = Color(0xFFDDD8CD);
   static const borderStrong = Color(0xFFC5BFB1);
   static const text = Color(0xFF17212B);
-  static const textSecondary = Color(0xAD17212B);
-  static const textTertiary = Color(0x7317212B);
+  static const textSecondary = Color(0xC417212B);
+  static const textTertiary = Color(0xA017212B);
   static const accent = Color(0xFF1D5C4D);
   static const onAccent = Color(0xFFFFFFFF);
   static const accentSoft = Color(0x1A1D5C4D);
