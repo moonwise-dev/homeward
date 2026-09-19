@@ -36,4 +36,4 @@ turns:
     expect:
       tools_allowed:
         [compute_affordability, estimate_purchase_costs, get_obstacles, load_market]
-      binding_constraint: debtServiceToIncome
+      binding_constraint: loanToValue

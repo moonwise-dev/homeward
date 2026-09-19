@@ -163,7 +163,7 @@ void main() {
     final scored = marks(
       scoreTurn(
         const EvalExpectations(),
-        observed(corrections: 1, modelRounds: 5, errorCode: 'internal'),
+        observed(corrections: 1, modelRounds: 6, errorCode: 'internal'),
       ),
     );
 

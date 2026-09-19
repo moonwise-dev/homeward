@@ -30,6 +30,7 @@ final class TurnReport {
       'toolsRun': observed.toolsRun.toList(),
       'rejections': observed.rejections,
       'components': observed.components,
+      'profileFieldsAsked': observed.profileFieldsAsked.toList(),
       'modelRounds': observed.modelRounds,
       'corrections': observed.corrections,
       'latencyMs': observed.elapsed.inMilliseconds,

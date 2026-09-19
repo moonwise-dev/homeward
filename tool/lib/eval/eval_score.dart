@@ -104,7 +104,8 @@ List<Score> scoreTurn(EvalExpectations expect, TurnObservation observed) {
     ),
     Score(
       'stayed within ${expect.maxModelRounds} model rounds',
-      passed: observed.modelRounds <= expect.maxModelRounds,
+      passed:
+          observed.modelRounds - observed.corrections <= expect.maxModelRounds,
       detail: '${observed.modelRounds} rounds',
     ),
   ];

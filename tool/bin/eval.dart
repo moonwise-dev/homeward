@@ -26,7 +26,9 @@ Future<void> main(List<String> arguments) async {
     exitCode = 64;
     return;
   }
-  final server = EvalServer.start(ServerConfig.fromEnvironment({}));
+  final server = EvalServer.start(
+    ServerConfig.fromEnvironment(Platform.environment),
+  );
   final log = TurnLog();
   final runner = EvalRunner(server, log);
   final reports = <CaseReport>[];
