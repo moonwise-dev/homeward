@@ -4,6 +4,8 @@ final class TurnObservation {
     required this.messages,
     required this.text,
     required this.toolsCalled,
+    required this.toolsRun,
+    required this.rejections,
     required this.modelRounds,
     required this.corrections,
     required this.elapsed,
@@ -17,6 +19,8 @@ final class TurnObservation {
   final List<Map<String, Object?>> messages;
   final String text;
   final List<String> toolsCalled;
+  final Set<String> toolsRun;
+  final List<String> rejections;
   final int modelRounds;
   final int corrections;
   final Duration elapsed;

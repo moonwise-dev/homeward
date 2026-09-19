@@ -27,6 +27,8 @@ final class TurnReport {
     ],
     'metrics': {
       'toolsCalled': observed.toolsCalled,
+      'toolsRun': observed.toolsRun.toList(),
+      'rejections': observed.rejections,
       'components': observed.components,
       'modelRounds': observed.modelRounds,
       'corrections': observed.corrections,

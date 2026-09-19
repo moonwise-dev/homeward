@@ -352,6 +352,41 @@ void main() {
     },
   );
 
+  test(
+    'a round that asks again for what it has ends the tool rounds',
+    () async {
+      await sessions.create('uid-1');
+      final calling = reply(
+        'i1',
+        calls: const [
+          FunctionCall(
+            callId: 'c',
+            name: 'resolve_market',
+            arguments: {'placeName': 'Sodermalm', 'countryCode': 'SE'},
+          ),
+        ],
+      );
+      final script = ScriptedInteractions([
+        calling,
+        calling,
+        reply('i3', text: 'Tell me about your household.'),
+      ]);
+
+      final events = await send(orchestrator(script)).toList();
+
+      expect(script.requests, hasLength(3));
+      expect(script.requests[2].toolChoice, ToolChoice.none);
+      expect(
+        (script.requests[2].input as FunctionResultsInput).note,
+        toolsDoneNote,
+      );
+      expect(
+        events.last,
+        const TurnEvent.completed('Tell me about your household.'),
+      );
+    },
+  );
+
   test('offers a retry surface when a turn draws nothing at all', () async {
     await sessions.create('uid-1');
     final calling = reply(
@@ -364,16 +399,11 @@ void main() {
         ),
       ],
     );
-    final script = ScriptedInteractions([
-      calling,
-      calling,
-      calling,
-      reply('i4'),
-    ]);
+    final script = ScriptedInteractions([calling, calling, reply('i3')]);
 
     final events = await send(orchestrator(script)).toList();
 
-    expect(script.requests, hasLength(4));
+    expect(script.requests, hasLength(3));
     expect(
       [for (final message in messagesIn(events)) jsonEncode(message)],
       [contains('"t1-retry"'), contains('"t1-retry"')],

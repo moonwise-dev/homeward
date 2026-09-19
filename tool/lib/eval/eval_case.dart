@@ -25,7 +25,7 @@ final class EvalExpectations {
     this.componentsExclude = const [],
     this.profileFieldsAsked,
     this.bindingConstraint,
-    this.maxModelRounds = 2,
+    this.maxModelRounds = 4,
   });
 
   final List<String> toolsCalled;

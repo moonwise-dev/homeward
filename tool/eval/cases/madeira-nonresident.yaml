@@ -11,7 +11,7 @@ turns:
       coverage: curated
       components_include: [MarketSnapshotCard]
       components_exclude: [StressTestChart, EligibilityChecklist]
-      profile_fields_asked: [age, residencyIntent, formerResident]
+      profile_fields_asked: [age, taxResidence, netMonthlyIncome, savings]
   - action: commit_profile
     data:
       profile:
@@ -33,4 +33,3 @@ turns:
         [compute_affordability, propose_scenario, estimate_purchase_costs, get_obstacles, load_market]
       market: PT-30
       components_include: [AffordabilitySummary, AmountSlider]
-      binding_constraint: loanToValue

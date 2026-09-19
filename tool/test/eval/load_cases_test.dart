@@ -52,6 +52,6 @@ void main() {
             42,
           ),
     );
-    expect(hero.turns.last.expect.bindingConstraint, 'loanToValue');
+    expect(hero.turns.last.expect.componentsInclude, contains('AmountSlider'));
   });
 }

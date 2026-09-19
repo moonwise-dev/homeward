@@ -18,7 +18,9 @@ List<Score> scoreTurn(EvalExpectations expect, TurnObservation observed) {
   final components = observed.components;
   final missingTools = [
     for (final tool in expect.toolsCalled)
-      if (!observed.toolsCalled.contains(tool)) tool,
+      if (!observed.toolsRun.contains(tool) &&
+          !observed.toolsCalled.contains(tool))
+        tool,
   ];
   final allowedTools = {...expect.toolsCalled, ...expect.toolsAllowed};
   final extraTools = [
@@ -43,7 +45,9 @@ List<Score> scoreTurn(EvalExpectations expect, TurnObservation observed) {
     Score(
       'validated without a correction',
       passed: observed.corrections == 0,
-      detail: '${observed.corrections} corrections',
+      detail: observed.rejections.isEmpty
+          ? '${observed.corrections} corrections'
+          : observed.rejections.first,
     ),
     if (expect.toolsCalled.isNotEmpty) ...[
       Score(

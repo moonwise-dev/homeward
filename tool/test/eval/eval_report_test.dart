@@ -30,6 +30,8 @@ void main() {
               messages: const [],
               text: 'Madeira it is.',
               toolsCalled: const ['resolve_market'],
+              toolsRun: const {'resolve_market', 'load_market'},
+              rejections: const [],
               modelRounds: 1,
               corrections: 0,
               elapsed: const Duration(milliseconds: 4200),

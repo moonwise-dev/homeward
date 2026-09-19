@@ -1,0 +1,79 @@
+{
+  "at": "2026-09-19T10:38:48.578779",
+  "passed": false,
+  "cases": [
+    {
+      "id": "change-down-payment",
+      "passed": false,
+      "turns": [
+        {
+          "turn": 1,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "called the tools the turn needs",
+              "passed": true
+            },
+            {
+              "name": "called no tool it did not need",
+              "passed": true
+            },
+            {
+              "name": "landed on PT-30",
+              "passed": true,
+              "detail": "PT-30"
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 2 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "resolve_market",
+              "propose_profile",
+              "propose_scenario"
+            ],
+            "toolsRun": [
+              "resolve_market",
+              "propose_profile",
+              "propose_scenario",
+              "load_market",
+              "compute_affordability",
+              "estimate_purchase_costs",
+              "get_obstacles"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "Card",
+              "Column",
+              "MarketSnapshotCard",
+              "Button",
+              "Text"
+            ],
+            "modelRounds": 2,
+            "corrections": 0,
+            "latencyMs": 7359,
+            "marketId": "PT-30",
+            "bindingConstraint": null
+          }
+        }
+      ]
+    }
+  ]
+}

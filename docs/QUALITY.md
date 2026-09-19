@@ -219,10 +219,12 @@ and the structured turn logs the server already writes:
 - The profile fields the form binds cover what the case asks for.
 - The binding constraint after the turn, computed from the stored plan.
 - No money amounts or rates in the prose.
-- Model rounds within the case's limit.
+- Model rounds within the case's limit, which defaults to the four D85 allows.
 
-A literal number in a bound property fails schema validation, so the correction
-count already covers it. Every turn also records the tools called, the
+A tool the server settled counts as called, since the model cannot call what is
+already in `preRun`. A correction score carries the rejection that caused it,
+which is what turns a failing case into a fix. A literal number in a bound
+property fails schema validation, so the correction count already covers it. Every turn also records the tools called, the
 components drawn, rounds, corrections, and latency as metrics, which are
 reported but never gating. Token usage and judged scores are not recorded yet.
 

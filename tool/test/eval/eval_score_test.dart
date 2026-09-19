@@ -8,6 +8,8 @@ void main() {
     List<Map<String, Object?>> messages = const [],
     String text = '',
     List<String> toolsCalled = const [],
+    Set<String> toolsRun = const {},
+    List<String> rejections = const [],
     int modelRounds = 1,
     int corrections = 0,
     String? marketId,
@@ -19,6 +21,8 @@ void main() {
     messages: messages,
     text: text,
     toolsCalled: toolsCalled,
+    toolsRun: toolsRun,
+    rejections: rejections,
     modelRounds: modelRounds,
     corrections: corrections,
     elapsed: const Duration(seconds: 4),
@@ -72,12 +76,47 @@ void main() {
           toolsCalled: ['resolve_market'],
           toolsAllowed: ['propose_profile'],
         ),
-        observed(toolsCalled: ['propose_profile', 'get_obstacles']),
+        observed(
+          toolsCalled: ['propose_profile', 'get_obstacles'],
+          toolsRun: const {'propose_profile', 'get_obstacles'},
+        ),
       ),
     );
 
     expect(scored['called the tools the turn needs'], isFalse);
     expect(scored['called no tool it did not need'], isFalse);
+  });
+
+  test('a tool the server settled counts as called', () {
+    final scored = marks(
+      scoreTurn(
+        const EvalExpectations(toolsCalled: ['resolve_market', 'load_market']),
+        observed(
+          toolsCalled: ['resolve_market'],
+          toolsRun: const {'resolve_market', 'load_market'},
+        ),
+      ),
+    );
+
+    expect(scored['called the tools the turn needs'], isTrue);
+    expect(scored['called no tool it did not need'], isTrue);
+  });
+
+  test('a rejection says why the turn needed a correction', () {
+    final scores = scoreTurn(
+      const EvalExpectations(),
+      observed(
+        corrections: 1,
+        rejections: const ['/components/2: AmountSlider needs bounds'],
+      ),
+    );
+
+    expect(
+      scores
+          .firstWhere((score) => score.name == 'validated without a correction')
+          .detail,
+      '/components/2: AmountSlider needs bounds',
+    );
   });
 
   test('a component the buyer has no facts for fails the turn', () {
@@ -124,13 +163,13 @@ void main() {
     final scored = marks(
       scoreTurn(
         const EvalExpectations(),
-        observed(corrections: 1, modelRounds: 4, errorCode: 'internal'),
+        observed(corrections: 1, modelRounds: 5, errorCode: 'internal'),
       ),
     );
 
     expect(scored['the turn finished'], isFalse);
     expect(scored['validated without a correction'], isFalse);
-    expect(scored['stayed within 2 model rounds'], isFalse);
+    expect(scored['stayed within 4 model rounds'], isFalse);
   });
 
   test('the profile fields a form binds are the ones it asked for', () {

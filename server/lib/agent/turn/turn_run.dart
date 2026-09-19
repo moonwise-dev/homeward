@@ -66,6 +66,8 @@ final class TurnRun {
   final _seeder = SurfaceSeeder();
   final _forwarded = <Map<String, Object?>>[];
   final _calledSeeds = <Map<String, Object?>>[];
+  final _calledNames = <String>{};
+  final _settledNames = <String>{};
   final _pendingFailures = <ValidationFailure>[];
   final _text = StringBuffer();
   Plan _plan;
@@ -201,7 +203,9 @@ final class TurnRun {
       if (calls.isNotEmpty &&
           toolRounds < settings.maxToolRounds &&
           (toolRounds == 0 || drewNothing)) {
-        toolRounds++;
+        toolRounds = calls.every(_isKnown)
+            ? settings.maxToolRounds
+            : toolRounds + 1;
         final results = {
           for (final call
               in [...calls]..sort(
@@ -293,6 +297,7 @@ final class TurnRun {
     required bool allowToolCalls,
   }) {
     final settled = tools.runSettled(_plan);
+    _settledNames.addAll(settled.keys);
     _validator
       ..seeds = turnSeeds(_plan, [
         ..._calledSeeds,
@@ -377,7 +382,11 @@ final class TurnRun {
     }
   }
 
+  bool _isKnown(FunctionCall call) =>
+      _settledNames.contains(call.name) || _calledNames.contains(call.name);
+
   FunctionResult _runCall(FunctionCall call) {
+    _calledNames.add(call.name);
     final result = tools.call(call.name, call.arguments, _plan);
     _plan = result.plan ?? _plan;
     _calledSeeds.add(result.seeds);

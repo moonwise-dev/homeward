@@ -64,7 +64,7 @@ EvalExpectations _expectations(Map<String, Object?> expect) => EvalExpectations(
       ? _strings(expect['profile_fields_asked'])
       : null,
   bindingConstraint: expect['binding_constraint'] as String?,
-  maxModelRounds: (expect['max_model_rounds'] as int?) ?? 2,
+  maxModelRounds: (expect['max_model_rounds'] as int?) ?? 4,
 );
 
 List<String> _strings(Object? value) => [

@@ -24,6 +24,7 @@ final class EvalRunner {
     for (final (index, turn) in evalCase.turns.indexed) {
       final input = _inputFor(turn.input, surfaces);
       if (input == null) {
+        observations.add(_unoffered(index + 1, turn.input));
         break;
       }
       observations.add(
@@ -75,6 +76,8 @@ final class EvalRunner {
       messages: messages,
       text: text,
       toolsCalled: log.toolsCalled,
+      toolsRun: log.toolsRun,
+      rejections: log.rejections,
       modelRounds: log.modelRounds,
       corrections: log.corrections,
       elapsed: clock.elapsed,
@@ -87,6 +90,25 @@ final class EvalRunner {
       errorCode: errorCode,
     );
   }
+
+  TurnObservation _unoffered(int index, EvalInput input) => TurnObservation(
+    index: index,
+    messages: const [],
+    text: '',
+    toolsCalled: const [],
+    toolsRun: const {},
+    rejections: const [],
+    modelRounds: 0,
+    corrections: 0,
+    elapsed: Duration.zero,
+    marketId: null,
+    coverage: null,
+    bindingConstraint: null,
+    errorCode: switch (input) {
+      EvalText() => 'no turn ran',
+      EvalAction(:final name) => 'no surface offers $name',
+    },
+  );
 
   TurnInput? _inputFor(EvalInput input, ProbeSurfaces surfaces) =>
       switch (input) {
