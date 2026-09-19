@@ -53,7 +53,22 @@ tabular numerals so columns and animated values never jitter.
 | `figure` | Inter | 17 / 500, tabular | Table and breakdown amounts |
 | `code` | Roboto Mono | 12 / 400 | A2UI messages and data models in the wire inspector |
 
-Fonts ship through `google_fonts` with bundled fallbacks for offline web.
+The five faces ship as assets under `app/assets/fonts`, vendored by `make fonts`
+against the checksums `google_fonts` pins, and `allowRuntimeFetching` is off, so
+a recording never waits on a font server and never flashes a fallback face.
+`tool/test/fonts` fails if a file is missing or no longer matches.
+
+A surface the model draws reaches type through Material rather than through
+`AppTextStyles`, so every slot of the `TextTheme` maps onto a style above and a
+slot left unset would render in the platform's own face.
+
+| A2UI `Text` variant | Material slot | Style |
+| --- | --- | --- |
+| `h1` | `headlineLarge` | `display` |
+| `h2`, `h3`, `h4` | `headlineMedium`, `headlineSmall`, `titleLarge` | `title` |
+| `h5` | `titleMedium` | `body` at 600 |
+| `caption` | `bodySmall` | `caption` |
+| `body` | `bodyMedium` | `body` |
 
 ## Space And Shape
 

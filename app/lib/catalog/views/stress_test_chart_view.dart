@@ -55,6 +55,7 @@ class StressTestChartView extends StatelessWidget {
               ),
           ],
           limit: limit == null ? null : majorUnitsOf(limit),
+          limitLabel: limit == null ? null : 'Most you can pay',
         ),
         const SizedBox(height: AppSpacing.sm),
         AppFigureRow.amount(
@@ -72,7 +73,7 @@ class StressTestChartView extends StatelessWidget {
             label: 'Most you can pay a month',
             amount: limit,
             locale: locale,
-            color: AppColors.danger,
+            color: stressed <= limit ? AppColors.text : AppColors.danger,
           ),
           const SizedBox(height: AppSpacing.xxs),
           Text(

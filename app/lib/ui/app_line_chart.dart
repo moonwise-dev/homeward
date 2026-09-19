@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
+import 'app_text_styles.dart';
 
 class ChartPoint {
   const ChartPoint({required this.x, required this.y});
@@ -27,6 +28,7 @@ class AppLineChart extends StatelessWidget {
     required this.summary,
     this.markers = const [],
     this.limit,
+    this.limitLabel,
     this.height = 160,
     super.key,
   });
@@ -35,6 +37,7 @@ class AppLineChart extends StatelessWidget {
   final String summary;
   final List<ChartMarker> markers;
   final double? limit;
+  final String? limitLabel;
   final double height;
 
   @override
@@ -50,6 +53,7 @@ class AppLineChart extends StatelessWidget {
             points: points,
             markers: markers,
             limit: limit,
+            limitLabel: limitLabel,
             textDirection: Directionality.of(context),
           ),
         ),
@@ -63,6 +67,7 @@ class _LineChartPainter extends CustomPainter {
     required this.points,
     required this.markers,
     required this.limit,
+    required this.limitLabel,
     required this.textDirection,
   });
 
@@ -72,6 +77,7 @@ class _LineChartPainter extends CustomPainter {
   final List<ChartPoint> points;
   final List<ChartMarker> markers;
   final double? limit;
+  final String? limitLabel;
   final TextDirection textDirection;
 
   @override
@@ -137,6 +143,13 @@ class _LineChartPainter extends CustomPainter {
           dashes,
         );
       }
+      if (limitLabel case final label?) {
+        final painter = _painter(label, AppColors.danger);
+        painter.paint(
+          canvas,
+          Offset(plot.right - painter.width, y - painter.height - 3),
+        );
+      }
     }
 
     for (final marker in markers) {
@@ -165,13 +178,7 @@ class _LineChartPainter extends CustomPainter {
     Rect plot,
     Color color,
   ) {
-    final painter = TextPainter(
-      text: TextSpan(
-        text: text,
-        style: TextStyle(color: color, fontSize: 11, height: 1.2),
-      ),
-      textDirection: textDirection,
-    )..layout();
+    final painter = _painter(text, color);
     painter.paint(
       canvas,
       Offset(
@@ -181,7 +188,18 @@ class _LineChartPainter extends CustomPainter {
     );
   }
 
+  TextPainter _painter(String text, Color color) => TextPainter(
+    text: TextSpan(
+      text: text,
+      style: AppTextStyles.caption.copyWith(color: color, fontSize: 11),
+    ),
+    textDirection: textDirection,
+  )..layout();
+
   @override
   bool shouldRepaint(_LineChartPainter old) =>
-      old.points != points || old.markers != markers || old.limit != limit;
+      old.points != points ||
+      old.markers != markers ||
+      old.limit != limit ||
+      old.limitLabel != limitLabel;
 }
