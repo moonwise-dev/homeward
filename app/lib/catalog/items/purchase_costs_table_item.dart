@@ -29,6 +29,7 @@ final purchaseCostsTableItem = catalogItemFor(const PurchaseCostsTable(), (
         EstimatedPurchaseCosts() => PurchaseCostsTableView(
           costs: costs,
           locale: market.locale,
+          sources: market.sources,
           onExplain: data['explain'] == null
               ? null
               : () => dispatchAction(itemContext, data['explain']),

@@ -7,6 +7,7 @@ import '../../../ui/app_card.dart';
 import '../../../ui/app_colors.dart';
 import '../../../ui/app_spacing.dart';
 import '../../../ui/app_status_line.dart';
+import '../../../ui/app_surface_entry.dart';
 import '../../../ui/app_text_styles.dart';
 
 class AgentMessage extends StatelessWidget {
@@ -33,7 +34,7 @@ class AgentMessage extends StatelessWidget {
       for (final surface in surfaces)
         Padding(
           padding: const EdgeInsets.only(top: AppSpacing.sm),
-          child: AppCard(child: surface),
+          child: AppSurfaceEntry(child: AppCard(child: surface)),
         ),
       Padding(
         padding: const EdgeInsets.only(top: AppSpacing.xs),

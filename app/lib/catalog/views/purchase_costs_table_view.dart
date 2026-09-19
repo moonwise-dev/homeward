@@ -5,6 +5,7 @@ import '../../display/money_format.dart';
 import '../../display/refund_terms.dart';
 import '../../ui/app_figure_row.dart';
 import '../../ui/app_section_title.dart';
+import '../../ui/app_source_dot.dart';
 import '../../ui/app_spacing.dart';
 import '../../ui/app_text_styles.dart';
 
@@ -12,30 +13,55 @@ class PurchaseCostsTableView extends StatelessWidget {
   const PurchaseCostsTableView({
     required this.costs,
     required this.locale,
+    this.sources = const [],
     this.onExplain,
     super.key,
   });
 
   final EstimatedPurchaseCosts costs;
   final LocaleTag locale;
+  final List<Source> sources;
   final VoidCallback? onExplain;
+
+  List<Source> get _chargeSources {
+    final ids = {for (final charge in costs.charges) charge.sourceId};
+    return [
+      for (final source in sources)
+        if (ids.contains(source.id)) source,
+    ];
+  }
 
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      AppSectionTitle(title: 'Costs on the day', onExplain: onExplain),
+      Row(
+        children: [
+          Expanded(
+            child: AppSectionTitle(
+              title: 'Costs on the day',
+              onExplain: onExplain,
+            ),
+          ),
+          AppSourceDot(
+            title: 'Where these costs come from',
+            sources: _chargeSources,
+          ),
+        ],
+      ),
       const SizedBox(height: AppSpacing.xs),
       for (final charge in costs.charges) ..._charge(charge),
       const Divider(height: AppSpacing.md),
-      AppFigureRow(
+      AppFigureRow.amount(
         label: 'Costs on the day',
-        figure: formatMoney(costs.total, locale),
+        amount: costs.total,
+        locale: locale,
         isTotal: true,
       ),
-      AppFigureRow(
+      AppFigureRow.amount(
         label: 'Cash needed with the down payment',
-        figure: formatMoney(costs.cashNeeded, locale),
+        amount: costs.cashNeeded,
+        locale: locale,
         isTotal: true,
       ),
     ],
@@ -45,11 +71,12 @@ class PurchaseCostsTableView extends StatelessWidget {
     final refundable = charge.refundable;
     final refund = charge.refund;
     return [
-      AppFigureRow(
+      AppFigureRow.amount(
         label: charge.localTerm == null
             ? charge.label
             : '${charge.label} (${charge.localTerm})',
-        figure: formatMoney(charge.amount, locale),
+        amount: charge.amount,
+        locale: locale,
       ),
       if (refundable != null && !refundable.isZero && refund != null)
         Padding(

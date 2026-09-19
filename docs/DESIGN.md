@@ -12,8 +12,8 @@ Generated UI must look native. Because every catalog item is built from the
 same primitives, a surface the model composed and a screen a developer built
 are visually indistinguishable.
 
-The values below are the starting proposal and are finalised in the design pass
-of milestone M2.
+The values below were the starting proposal; the design pass of milestone M2
+settled them.
 
 ## Colour (`AppColors`)
 
@@ -52,6 +52,7 @@ tabular numerals so columns and animated values never jitter.
 | `caption` | Inter | 12 / 400 | Sources, units, dates |
 | `figureLarge` | Inter | 32 / 600, tabular | Headline amounts |
 | `figure` | Inter | 17 / 500, tabular | Table and breakdown amounts |
+| `code` | Roboto Mono | 12 / 400 | A2UI messages and data models in the wire inspector |
 
 Fonts ship through `google_fonts` with bundled fallbacks for offline web.
 
@@ -67,15 +68,23 @@ Fonts ship through `google_fonts` with bundled fallbacks for offline web.
 
 ## Motion
 
-- Figures animate between values over 180 ms with an ease-out curve through
-  `AppAnimatedFigure`. This is what makes instant what-if visible on video.
+Durations and the curve are tokens in `AppMotion`; `AppMotion.of` returns zero
+whenever the device asks for stillness, so every animation below is off under
+reduced motion.
+
+- Figures travel to their new value over 180 ms with an ease-out curve through
+  `AppAnimatedFigure`, which every money figure goes through, including
+  `AppFigureRow.amount`. This is what makes instant what-if visible on video:
+  drag the down payment and the payment, the costs, and the cash needed all
+  move.
+- Surfaces fade in and rise 8 dp over 200 ms as they arrive, through
+  `AppSurfaceEntry` around each surface in the transcript.
 - Charts interpolate series over 180 ms.
-- Surfaces fade and rise 8 dp over 200 ms as they stream in.
-- Reduced motion settings disable all of the above.
 
 ## Figures
 
-- All money formatting goes through `AppFormats.money(Money, locale)`.
+- All money formatting goes through `formatMoney(Money, locale)` in
+  `app/lib/display`, which `AppAnimatedFigure` uses while a figure travels.
 - Rates show two decimals, percentages of price show one.
 - Units and currency codes use `textTertiary`.
 
@@ -83,8 +92,10 @@ Fonts ship through `google_fonts` with bundled fallbacks for offline web.
 
 - `AppCoverageBadge`: curated is an `accent` outline with a check; uncovered is
   a `warning` outline with the words "not covered yet".
-- Tapping any badge or source dot opens `AppSourcesSheet`: rule, value, source
-  publisher and title, link, retrieved or reviewed date.
+- `AppSourceDot` sits beside what a source backs: the market badge, the binding
+  constraint, the costs table. Tapping it opens `AppSourcesSheet`, which lists
+  each source as publisher, kind, and the date it was read, and opens the
+  document itself when tapped.
 
 ## Status
 
@@ -113,12 +124,24 @@ Colour is never the only signal.
 
 ## Primitives (`app/lib/ui`)
 
-`AppTheme`, `AppScaffold`, `AppTwoPane`, `AppSheet`, `AppCard`, `AppButton`,
-`AppMoneyField`, `AppAmountSlider`, `AppChoiceChips`, `AppSegmented`,
-`AppAnimatedFigure`, `AppFigureRow`, `AppTable`, `AppChecklistRow`,
-`AppStatusTag`, `AppCoverageBadge`, `AppSourcesSheet`, `AppLineChart`,
-`AppStackedBar`, `AppTimeline`, `AppEmptyState`, `AppDisclaimer`,
-`AppMessageOverlay`, `AppToast`, `AppLoadingIndicator`.
+Tokens: `AppColors`, `AppTextStyles`, `AppSpacing`, `AppRadii`, `AppSizes`,
+`AppMotion`, `AppTheme`.
+
+Layout and text: `AppPage`, `AppCard`, `AppSectionTitle`, `AppBulletList`,
+`AppChatBubble`, `AppSuggestion`, `AppSurfaceEntry`.
+
+Input: `AppButton`, `AppTextField`, `AppMoneyField`, `AppAmountSlider`,
+`AppSelectField`, `AppStepper`.
+
+Figures and status: `AppFigureRow`, `AppAnimatedFigure`, `AppStatusTag`,
+`AppStatusLine`, `AppCoverageBadge`, `AppSourceDot`, `AppSourcesSheet`,
+`AppLineChart`.
+
+Feedback: `AppMessageOverlay`, `AppToast`, `AppLoadingIndicator`.
+
+A table is `AppFigureRow`s under an `AppSectionTitle`; a two-pane screen is a
+`Row` of the chat and one pane, since only plan chat has one; a sheet is
+`showModalBottomSheet` behind a named helper, as in `showPlanBoardSheet`.
 
 ## Messages
 

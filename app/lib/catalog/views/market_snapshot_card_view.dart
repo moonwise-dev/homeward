@@ -7,6 +7,7 @@ import '../../ui/app_bullet_list.dart';
 import '../../ui/app_coverage_badge.dart';
 import '../../ui/app_figure_row.dart';
 import '../../ui/app_section_title.dart';
+import '../../ui/app_source_dot.dart';
 import '../../ui/app_spacing.dart';
 import '../../ui/app_status.dart';
 import '../../ui/app_status_tag.dart';
@@ -36,11 +37,16 @@ class MarketSnapshotCardView extends StatelessWidget {
       children: [
         AppSectionTitle(title: snapshot.name, onExplain: onExplain),
         const SizedBox(height: AppSpacing.xs),
-        Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: AppCoverageBadge(
-            isCurated: snapshot.coverage == Coverage.curated,
-          ),
+        Row(
+          children: [
+            AppCoverageBadge(
+              isCurated: snapshot.coverage == Coverage.curated,
+            ),
+            AppSourceDot(
+              title: 'Where ${snapshot.name} comes from',
+              sources: market?.sources ?? const [],
+            ),
+          ],
         ),
         const SizedBox(height: AppSpacing.sm),
         if (market == null) ..._uncovered() else ..._curated(market),

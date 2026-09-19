@@ -1,7 +1,6 @@
 import 'package:common/common.dart';
 import 'package:flutter/material.dart';
 
-import '../../display/money_format.dart';
 import '../../display/rate_format.dart';
 import '../../ui/app_figure_row.dart';
 import '../../ui/app_section_title.dart';
@@ -35,29 +34,34 @@ class PaymentBreakdownView extends StatelessWidget {
       children: [
         AppSectionTitle(title: 'Monthly payment', onExplain: onExplain),
         const SizedBox(height: AppSpacing.xs),
-        AppFigureRow(
+        AppFigureRow.amount(
           label: 'Interest at ${formatRate(annualRate)}',
-          figure: formatMoney(payment.interest, locale),
+          amount: payment.interest,
+          locale: locale,
         ),
-        AppFigureRow(
+        AppFigureRow.amount(
           label: 'Amortization',
-          figure: formatMoney(payment.amortization, locale),
+          amount: payment.amortization,
+          locale: locale,
         ),
         if (fee != null)
-          AppFigureRow(
+          AppFigureRow.amount(
             label: 'Association fee',
-            figure: formatMoney(fee, locale),
+            amount: fee,
+            locale: locale,
           ),
         const Divider(height: AppSpacing.md),
-        AppFigureRow(
+        AppFigureRow.amount(
           label: 'Total a month',
-          figure: formatMoney(withFee(payment.total), locale),
+          amount: withFee(payment.total),
+          locale: locale,
           isTotal: true,
         ),
         if (deducted != null)
-          AppFigureRow(
+          AppFigureRow.amount(
             label: 'After the interest deduction',
-            figure: formatMoney(withFee(deducted), locale),
+            amount: withFee(deducted),
+            locale: locale,
           ),
       ],
     );

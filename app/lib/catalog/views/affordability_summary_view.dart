@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 import '../../display/constraint_kind_label.dart';
 import '../../display/exchange_rate_format.dart';
-import '../../display/money_format.dart';
 import '../../display/profile_field_label.dart';
+import '../../ui/app_animated_figure.dart';
 import '../../ui/app_colors.dart';
 import '../../ui/app_figure_row.dart';
 import '../../ui/app_section_title.dart';
+import '../../ui/app_source_dot.dart';
 import '../../ui/app_spacing.dart';
 import '../../ui/app_status.dart';
 import '../../ui/app_status_tag.dart';
@@ -18,6 +19,7 @@ class AffordabilitySummaryView extends StatelessWidget {
     required this.affordability,
     required this.locale,
     this.maxPrice,
+    this.sources = const [],
     this.exchangeRates = const [],
     this.onExplain,
     super.key,
@@ -26,6 +28,7 @@ class AffordabilitySummaryView extends StatelessWidget {
   final Affordability affordability;
   final LocaleTag locale;
   final Money? maxPrice;
+  final List<Source> sources;
   final List<ExchangeRate> exchangeRates;
   final VoidCallback? onExplain;
 
@@ -68,32 +71,57 @@ class AffordabilitySummaryView extends StatelessWidget {
     ],
   );
 
+  List<Source> _sourcesFor(ConstraintCheck? binding) => [
+    for (final source in sources)
+      if (source.id == binding?.sourceId) source,
+  ];
+
   List<Widget> _assessed(Money loan, Money maxLoan, ConstraintCheck? binding) {
     final headroom = maxLoan - loan;
     final limit = binding == null ? null : constraintKindLabel(binding.kind);
     final reach = maxPrice;
     return [
-      Text(formatMoney(maxLoan, locale), style: AppTextStyles.figureLarge),
+      AppAnimatedFigure(
+        amount: maxLoan,
+        locale: locale,
+        style: AppTextStyles.figureLarge,
+      ),
       Text('Largest loan at this price', style: AppTextStyles.caption),
       const SizedBox(height: AppSpacing.sm),
       if (reach != null)
-        AppFigureRow(
+        AppFigureRow.amount(
           label: 'Highest price your savings reach',
-          figure: formatMoney(reach, locale),
+          amount: reach,
+          locale: locale,
         ),
-      AppFigureRow(label: 'Your loan', figure: formatMoney(loan, locale)),
-      AppFigureRow(
+      AppFigureRow.amount(
+        label: 'Your loan',
+        amount: loan,
+        locale: locale,
+      ),
+      AppFigureRow.amount(
         label: headroom.isNegative ? 'Over the limit by' : 'Room to spare',
-        figure: formatMoney(headroom.isNegative ? -headroom : headroom, locale),
+        amount: headroom.isNegative ? -headroom : headroom,
+        locale: locale,
         color: headroom.isNegative ? AppColors.danger : AppColors.text,
       ),
       if (limit != null) ...[
         const SizedBox(height: AppSpacing.xs),
-        AppStatusTag(
-          status: headroom.isNegative ? AppStatus.fail : AppStatus.pass,
-          text: headroom.isNegative
-              ? 'Over the $limit'
-              : 'Within the $limit, which sets your limit',
+        Row(
+          children: [
+            Flexible(
+              child: AppStatusTag(
+                status: headroom.isNegative ? AppStatus.fail : AppStatus.pass,
+                text: headroom.isNegative
+                    ? 'Over the $limit'
+                    : 'Within the $limit, which sets your limit',
+              ),
+            ),
+            AppSourceDot(
+              title: 'Where the $limit comes from',
+              sources: _sourcesFor(binding),
+            ),
+          ],
         ),
       ],
     ];

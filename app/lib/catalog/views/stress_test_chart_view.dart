@@ -56,18 +56,21 @@ class StressTestChartView extends StatelessWidget {
           limit: limit == null ? null : majorUnitsOf(limit),
         ),
         const SizedBox(height: AppSpacing.sm),
-        AppFigureRow(
+        AppFigureRow.amount(
           label: 'A month today',
-          figure: formatMoney(curve.points.first.cost, locale),
+          amount: curve.points.first.cost,
+          locale: locale,
         ),
-        AppFigureRow(
+        AppFigureRow.amount(
           label: 'A month at ${formatRate(curve.stressRate)}',
-          figure: formatMoney(stressed, locale),
+          amount: stressed,
+          locale: locale,
         ),
         if (limit != null) ...[
-          AppFigureRow(
+          AppFigureRow.amount(
             label: 'Most you can pay a month',
-            figure: formatMoney(limit, locale),
+            amount: limit,
+            locale: locale,
             color: AppColors.danger,
           ),
           const SizedBox(height: AppSpacing.xxs),

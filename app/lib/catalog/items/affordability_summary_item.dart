@@ -37,6 +37,7 @@ final affordabilitySummaryItem = catalogItemFor(const AffordabilitySummary(), (
           profile: profile,
         ),
         exchangeRates: market.exchangeRates.values.toList(),
+        sources: market.sources,
         onExplain: data['explain'] == null
             ? null
             : () => dispatchAction(itemContext, data['explain']),
