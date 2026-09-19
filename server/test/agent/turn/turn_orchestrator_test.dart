@@ -503,15 +503,27 @@ void main() {
       ];
       final script = ScriptedInteractions([
         reply('i1', text: a2ui('t1-income', incomeOnly)),
-        reply('i2', text: 'Here is the full form.'),
       ]);
 
-      await send(orchestrator(script)).drain<void>();
+      final events = await send(orchestrator(script)).toList();
 
-      final correction = (script.requests[1].input as TextInput).text;
-      expect(correction, contains('needs inputs bound to'));
-      expect(correction, contains('/profile/childAges'));
-      expect(correction, isNot(contains('/profile/netMonthlyIncome')));
+      expect(script.requests, hasLength(1));
+      final drawn = messagesIn(events).firstWhere(
+        (message) => message.containsKey('updateComponents'),
+      );
+      final components =
+          ((drawn['updateComponents']! as Map<String, Object?>)['components']!
+                  as List<Object?>)
+              .cast<Map<String, Object?>>();
+      expect(
+        components.map((component) => component['id']),
+        containsAll(['asked-household', 'asked-savings']),
+      );
+      expect(
+        (components.last['children']! as List<Object?>).last,
+        'save',
+      );
+      expect(events.last, isA<TurnCompleted>());
     },
   );
 

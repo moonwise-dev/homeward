@@ -410,7 +410,14 @@ pass rejects it.
 9. **Actions.** Action names are in the action table.
 10. **Forms.** A surface with a `commit_profile` action binds an input to every
     profile path the market still needs for this buyer, the same paths the
-    turn context lists as missing (D83).
+    turn context lists as missing (D83). The pass adds the inputs the model
+    left out, in the order the profile slice declares them, above the button
+    that sends the action, and picks each one by the field's value shape: a
+    `MoneyInput` for money, a `LocationPicker` in country mode for a country,
+    a `ChoicePicker` for a choice, a `CheckBox` for a yes or no, a
+    `HouseholdInput` for the household, and a number `TextField` for the rest
+    (D95). The message is rejected only when there is nowhere to put them,
+    such as a button with no container.
 11. **Seed.** The server prepends `createSurface` with `sendDataModel: true` if
     the model omitted it, and emits `updateDataModel` for the slices the
     components bind to.

@@ -4,6 +4,7 @@ import 'package:a2ui_core/a2ui_core.dart';
 import 'package:common/common.dart';
 
 import 'component_tree.dart';
+import 'form_completion.dart';
 import 'validation_failure.dart';
 import 'validation_outcome.dart';
 
@@ -134,11 +135,30 @@ final class TurnValidator {
       }
       merged[component['id']! as String] = component;
     }
+    final completing = completingComponents(
+      components: merged,
+      requiredPaths: requiredProfilePaths,
+    );
+    for (final component in completing) {
+      merged[component['id']! as String] = component;
+    }
     if (structureProblem(merged) ?? _formProblem(merged) case final problem?) {
       return _reject(surfaceId, '/updateComponents/components', problem);
     }
-    return _apply(message, () => _components[surfaceId] = merged);
+    return _apply(
+      completing.isEmpty ? message : _completed(message, completing),
+      () => _components[surfaceId] = merged,
+    );
   }
+
+  UpdateComponentsMessage _completed(
+    UpdateComponentsMessage message,
+    List<Map<String, Object?>> completing,
+  ) => UpdateComponentsMessage(
+    version: message.version,
+    surfaceId: message.surfaceId,
+    components: [...message.components, ...completing],
+  );
 
   String? _formProblem(Map<String, Map<String, Object?>> components) {
     final commitsProfile = components.values.any(

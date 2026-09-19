@@ -66,6 +66,7 @@ official calculator or a tax authority worked example.
 | Key verification | Model lookup request, invalid key, unknown model, and deadline to typed errors; the route's statuses and envelope |
 | Gemini client | Recorded streams and error bodies to typed events and errors, request JSON, headers and first-step deadlines, fallback only before output, circuits, no key in any error, the next midnight Pacific across daylight saving changes |
 | Actions | Server-completed actions produce the expected plan patches |
+| Form completion | Every input the server can add for a missing profile field is in the catalog and valid, ordered as the slice declares, above the commit button |
 | Session documents | A session with its plan and turns survives the round trip through the documents Firestore holds |
 | Firestore sessions | Against the emulator: a plan outlives the server, a later turn joins the ones kept, the plans list order and owner, and the lease that one turn at a time takes |
 

@@ -378,21 +378,86 @@ void main() {
       ..requiredProfilePaths = paths
       ..validate(create('t1-profile'));
 
-    test('needs an input for every missing profile path', () {
-      final validator = validatorNeeding({
-        '/profile/netMonthlyIncome',
-        '/profile/adults',
-        '/profile/childAges',
-      });
+    List<Map<String, dynamic>> accepted(
+      TurnValidator validator,
+      String source,
+    ) =>
+        ((validator.validate(source) as Accepted).message
+                as UpdateComponentsMessage)
+            .components;
+
+    test('asks for the paths the form left out', () {
+      final components = accepted(
+        validatorNeeding({
+          '/profile/netMonthlyIncome',
+          '/profile/adults',
+          '/profile/childAges',
+          '/profile/employment',
+        }),
+        update('t1-profile', form([income])),
+      );
 
       expect(
-        rejection(validator, update('t1-profile', form([income]))),
-        '/updateComponents/components A form sending commit_profile needs '
-        'inputs bound to /profile/adults, /profile/childAges',
+        components.map((component) => component['id']),
+        containsAll(['asked-employment', 'asked-household']),
       );
       expect(
-        validator.validate(update('t1-profile', form([income, household]))),
-        isA<Accepted>(),
+        components.lastWhere(
+          (component) => component['id'] == 'root',
+        )['children'],
+        ['income', 'asked-employment', 'asked-household', 'save'],
+      );
+      expect(
+        components.firstWhere(
+          (component) => component['id'] == 'asked-employment',
+        ),
+        containsPair('options', [
+          {'label': 'Employed', 'value': 'employed'},
+          {'label': 'Self-employed', 'value': 'selfEmployed'},
+          {'label': 'Retired', 'value': 'retired'},
+        ]),
+      );
+    });
+
+    test('leaves a form that asks for everything alone', () {
+      final components = accepted(
+        validatorNeeding({
+          '/profile/netMonthlyIncome',
+          '/profile/adults',
+          '/profile/childAges',
+        }),
+        update('t1-profile', form([income, household])),
+      );
+
+      expect(
+        components.map((component) => component['id']),
+        ['root', 'income', 'household', 'save', 'save_label'],
+      );
+    });
+
+    test('says so when there is nowhere to put the input', () {
+      final validator = validatorNeeding({'/profile/employment'});
+
+      expect(
+        rejection(
+          validator,
+          update('t1-profile', [
+            {
+              'id': 'root',
+              'component': 'Button',
+              'child': 'save_label',
+              'action': {
+                'event': {
+                  'name': 'commit_profile',
+                  'context': {'profilePath': '/profile'},
+                },
+              },
+            },
+            {'id': 'save_label', 'component': 'Text', 'text': 'Save'},
+          ]),
+        ),
+        '/updateComponents/components A form sending commit_profile needs '
+        'inputs bound to /profile/employment',
       );
     });
 
