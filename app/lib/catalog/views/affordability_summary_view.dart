@@ -107,21 +107,15 @@ class AffordabilitySummaryView extends StatelessWidget {
       ),
       if (limit != null) ...[
         const SizedBox(height: AppSpacing.xs),
-        Row(
-          children: [
-            Flexible(
-              child: AppStatusTag(
-                status: headroom.isNegative ? AppStatus.fail : AppStatus.pass,
-                text: headroom.isNegative
-                    ? 'Over the $limit'
-                    : 'Within the $limit, which sets your limit',
-              ),
-            ),
-            AppSourceDot(
-              title: 'Where the $limit comes from',
-              sources: _sourcesFor(binding),
-            ),
-          ],
+        AppStatusTag(
+          status: headroom.isNegative ? AppStatus.fail : AppStatus.pass,
+          text: headroom.isNegative
+              ? 'Over the $limit'
+              : 'Within the $limit, which sets your limit',
+          trailing: AppSourceDot(
+            title: 'Where the $limit comes from',
+            sources: _sourcesFor(binding),
+          ),
         ),
       ],
     ];

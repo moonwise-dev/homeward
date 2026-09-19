@@ -5,10 +5,16 @@ import 'app_status.dart';
 import 'app_status_line.dart';
 
 class AppStatusTag extends StatelessWidget {
-  const AppStatusTag({required this.status, required this.text, super.key});
+  const AppStatusTag({
+    required this.status,
+    required this.text,
+    this.trailing,
+    super.key,
+  });
 
   final AppStatus status;
   final String text;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +24,11 @@ class AppStatusTag extends StatelessWidget {
       AppStatus.fail => (AppColors.danger, Icons.cancel_outlined),
       AppStatus.info => (AppColors.info, Icons.info_outline),
     };
-    return AppStatusLine(text: text, icon: icon, color: color);
+    return AppStatusLine(
+      text: text,
+      icon: icon,
+      color: color,
+      trailing: trailing,
+    );
   }
 }

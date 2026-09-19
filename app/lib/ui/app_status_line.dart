@@ -11,6 +11,7 @@ class AppStatusLine extends StatelessWidget {
     this.icon,
     this.isBusy = false,
     this.color = AppColors.textTertiary,
+    this.trailing,
     super.key,
   });
 
@@ -18,6 +19,7 @@ class AppStatusLine extends StatelessWidget {
   final IconData? icon;
   final bool isBusy;
   final Color color;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +33,17 @@ class AppStatusLine extends StatelessWidget {
           Icon(icon, size: 16, color: color),
         const SizedBox(width: AppSpacing.xs),
         Flexible(
-          child: Text(
-            text,
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(text: text),
+                if (trailing case final trailing?)
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.middle,
+                    child: trailing,
+                  ),
+              ],
+            ),
             style: AppTextStyles.caption.copyWith(color: color),
           ),
         ),
