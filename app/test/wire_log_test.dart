@@ -25,6 +25,40 @@ void main() {
     );
   });
 
+  test('counts frames and recomputes for a panel opened mid-plan', () {
+    final log = WireLog(now: () => DateTime.utc(2026, 9, 18))
+      ..sent('message/stream')
+      ..received('data, A2UI');
+    final opened = (frames: log.frames, recomputes: log.recomputes);
+
+    log
+      ..recomputed('drag')
+      ..recomputed('drag')
+      ..received('status-update, completed');
+
+    expect(log.frames - opened.frames, 1);
+    expect(log.recomputes - opened.recomputes, 2);
+    log.clear();
+    expect((log.frames, log.recomputes), (0, 0));
+  });
+
+  test('a frame carries its size, its surface, and what it said', () {
+    final log = WireLog(now: () => DateTime.utc(2026, 9, 18))
+      ..received(
+        'data, A2UI',
+        detail: 'createSurface',
+        surfaceId: 't1-market',
+        bytes: 2480,
+        payload: const {
+          'createSurface': {'surfaceId': 't1-market'},
+        },
+      );
+
+    expect(log.entries.single.bytes, 2480);
+    expect(log.entries.single.surfaceId, 't1-market');
+    expect(log.entries.single.payload, isNotNull);
+  });
+
   test('keeps only the last entries', () {
     final log = WireLog(capacity: 3, now: () => DateTime.utc(2026, 9, 18));
 

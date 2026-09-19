@@ -315,7 +315,7 @@ headers.
 | `plan_chat` | Transcript, composer, inline surfaces, turn streaming |
 | `plan_board` | Board surface placement: side pane on wide screens, sheet on phones |
 | `catalog_gallery` | Every catalog item with example data |
-| `wire_inspector` | A2A frames, A2UI messages, local recompute counter; every write a bound input makes is counted where the app writes it |
+| `wire_inspector` | A2A frames with their sizes, the A2UI message each carried, the live data model of a surface, and the counters; every write a bound input makes is counted where the app writes it |
 | `settings` | Key, disclaimer, about, reset |
 
 The rules from Purrtrait apply unchanged: lean screens, generated Riverpod

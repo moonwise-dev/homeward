@@ -116,12 +116,18 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 
 ### Wire Inspector
 
-- A panel inside plan chat, toggled when developer tools are enabled.
-- Timeline of A2A frames sent and received with sizes and timings.
-- Pretty-printed A2UI messages per surface.
-- Live data model viewer per surface.
-- Two counters: network requests and local recomputes since the panel opened.
-  These are the video's proof that what-if never leaves the device.
+- A panel inside plan chat: the second pane beside the chat where the board
+  would be, and a sheet on a narrow window, toggled from the app bar.
+- Timeline of A2A frames sent and received, each with its size and the gap
+  since the frame before it, newest first.
+- A frame opens to the pretty-printed A2UI message it carried, named by the
+  surface it belongs to.
+- Live data model viewer: a surface picker and the model as it stands, which
+  moves while a bound input moves.
+- Two counters: frames over the network and local recomputes since the panel
+  opened. These are the video's proof that what-if never leaves the device.
+- Sizes are measured where the app encodes and decodes, so they are the JSON
+  bytes of the frame, not the compressed transfer.
 
 ### Settings
 
@@ -141,7 +147,7 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 | `plan_chat` | Send text, send action, stop, stream turn events, replay, retry |
 | `plan_board` | Board surface presence and sheet state |
 | `catalog_gallery` | Selected component, example, toggles |
-| `wire_inspector` | Frame buffer view, counters |
+| `wire_inspector` | Frame timeline with sizes, A2UI messages, live data model, counters |
 | `settings` | Developer tools flag, delete all data |
 
 ## Repositories

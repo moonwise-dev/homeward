@@ -11,5 +11,8 @@ abstract class WireEntry with _$WireEntry {
     required WireDirection direction,
     required String label,
     String? detail,
+    String? surfaceId,
+    int? bytes,
+    Map<String, Object?>? payload,
   }) = _WireEntry;
 }

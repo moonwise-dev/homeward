@@ -11,10 +11,16 @@ class WireLog {
   final _entries = <WireEntry>[];
   final _changes = StreamController<void>.broadcast(sync: true);
   var _localSinceNetwork = 0;
+  var _frames = 0;
+  var _recomputes = 0;
 
   List<WireEntry> get entries => List.unmodifiable(_entries);
 
   int get localSinceNetwork => _localSinceNetwork;
+
+  int get frames => _frames;
+
+  int get recomputes => _recomputes;
 
   Stream<List<WireEntry>> watch() => Stream.multi((listener) {
     listener.add(entries);
@@ -22,29 +28,72 @@ class WireLog {
     listener.onCancel = subscription.cancel;
   });
 
-  void sent(String label, {String? detail}) =>
-      _add(WireDirection.sent, label, detail);
+  void sent(
+    String label, {
+    String? detail,
+    String? surfaceId,
+    int? bytes,
+    Map<String, Object?>? payload,
+  }) => _add(
+    WireDirection.sent,
+    label,
+    detail: detail,
+    surfaceId: surfaceId,
+    bytes: bytes,
+    payload: payload,
+  );
 
-  void received(String label, {String? detail}) =>
-      _add(WireDirection.received, label, detail);
+  void received(
+    String label, {
+    String? detail,
+    String? surfaceId,
+    int? bytes,
+    Map<String, Object?>? payload,
+  }) => _add(
+    WireDirection.received,
+    label,
+    detail: detail,
+    surfaceId: surfaceId,
+    bytes: bytes,
+    payload: payload,
+  );
 
   void recomputed(String label, {String? detail}) =>
-      _add(WireDirection.local, label, detail);
+      _add(WireDirection.local, label, detail: detail);
 
   void clear() {
     _entries.clear();
     _localSinceNetwork = 0;
+    _frames = 0;
+    _recomputes = 0;
     _changes.add(null);
   }
 
-  void _add(WireDirection direction, String label, String? detail) {
+  void _add(
+    WireDirection direction,
+    String label, {
+    String? detail,
+    String? surfaceId,
+    int? bytes,
+    Map<String, Object?>? payload,
+  }) {
     if (direction == WireDirection.local) {
       _localSinceNetwork++;
+      _recomputes++;
     } else {
       _localSinceNetwork = 0;
+      _frames++;
     }
     _entries.add(
-      WireEntry(at: _now(), direction: direction, label: label, detail: detail),
+      WireEntry(
+        at: _now(),
+        direction: direction,
+        label: label,
+        detail: detail,
+        surfaceId: surfaceId,
+        bytes: bytes,
+        payload: payload,
+      ),
     );
     if (_entries.length > capacity) {
       _entries.removeRange(0, _entries.length - capacity);

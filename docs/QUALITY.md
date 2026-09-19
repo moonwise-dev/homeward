@@ -94,7 +94,12 @@ example in the gallery.
 The second is the `genui_a2a` compatibility test.
 
 A third covers the wire log the inspector reads: what the device recomputed
-since the last frame, the ring buffer, and the stream a watcher sees. A turn the
+since the last frame, the counters a panel opened mid-plan subtracts from, the
+size and surface a frame carries, the ring buffer, and the stream a watcher
+sees. A fourth pumps the inspector pane itself against a still repository: the
+counters move as frames arrive, a frame opens to its message, and the data tab
+shows the live model of a surface. Frame sizes and the gaps between them are
+pinned where they are formatted. A turn the
 server streamed, a resolved market and the profile form, is recorded in
 `app/test/fixtures/recorded_turn.sse` by `server/test/a2a/recorded_turn_test.dart`,
 which fails when the wire changes and rewrites the file when run with

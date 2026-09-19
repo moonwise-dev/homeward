@@ -229,7 +229,17 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
           message: 'Add your Gemini API key to continue',
         );
       }
-      wireLogInstance.sent('message/stream', detail: _requestLabel(request));
+      wireLogInstance.sent(
+        'message/stream',
+        detail: _requestLabel(request),
+        surfaceId: switch (request) {
+          TextTurnRequest() => null,
+          ActionTurnRequest(:final action) => action.surfaceId,
+        },
+        bytes: _bytesOf(
+          request.message(sessionId: sessionId, messageId: entryId).toJson(),
+        ),
+      );
       await for (final event in _client.send(
         sessionId: sessionId,
         geminiKey: geminiKey,
@@ -238,6 +248,12 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
         wireLogInstance.received(
           _eventLabel(event),
           detail: _eventDetail(event),
+          surfaceId: _eventSurfaceId(event),
+          bytes: _eventBytes(event),
+          payload: switch (event) {
+            AgentA2ui(:final message) => message,
+            _ => null,
+          },
         );
         _apply(plan, entryId, event);
       }
@@ -320,12 +336,35 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
 
   String? _a2uiDetail(Map<String, Object?> message) {
     for (final MapEntry(:key, :value) in message.entries) {
-      if (value case {'surfaceId': final String surfaceId}) {
-        return '$key $surfaceId';
+      if (value case {'surfaceId': final String _}) {
+        return key;
       }
     }
     return null;
   }
+
+  String? _eventSurfaceId(AgentEvent event) => switch (event) {
+    AgentA2ui(:final message) => _a2uiSurfaceId(message),
+    _ => null,
+  };
+
+  String? _a2uiSurfaceId(Map<String, Object?> message) {
+    for (final value in message.values) {
+      if (value case {'surfaceId': final String surfaceId}) {
+        return surfaceId;
+      }
+    }
+    return null;
+  }
+
+  int? _eventBytes(AgentEvent event) => switch (event) {
+    AgentA2ui(:final message) => _bytesOf(message),
+    AgentText(:final text) => _bytesOf(text),
+    AgentCompleted(:final text) => _bytesOf(text),
+    _ => null,
+  };
+
+  int _bytesOf(Object? json) => utf8.encode(jsonEncode(json)).length;
 
   String _newEntryId() => 'e${++_lastEntryId}';
 }

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../ui/app_sizes.dart';
 import '../../ui/app_spacing.dart';
-import '../../navigation/app_routes.dart';
 import '../plan_board/plan_board_pane.dart';
+import '../wire_inspector/wire_inspector_pane.dart';
 import 'plan_chat_controller.dart';
 import 'widgets/chat_composer.dart';
 import 'widgets/starter_prompts.dart';
 import 'widgets/transcript_view.dart';
 
-class PlanChatScreen extends ConsumerWidget {
+class PlanChatScreen extends HookConsumerWidget {
   const PlanChatScreen({required this.sessionId, super.key});
 
   final String sessionId;
@@ -23,8 +23,13 @@ class PlanChatScreen extends ConsumerWidget {
     final controller = ref.read(provider.notifier);
     final entries = state.conversation.entries;
     final hasBoard = state.conversation.hasBoard;
-    final sideBySide =
-        hasBoard && MediaQuery.sizeOf(context).width >= AppSizes.twoPane;
+    final isWide = MediaQuery.sizeOf(context).width >= AppSizes.twoPane;
+    final showsWire = useState(false);
+    final pane = switch ((isWide, showsWire.value, hasBoard)) {
+      (true, true, _) => WireInspectorPane(sessionId: sessionId),
+      (true, false, true) => PlanBoardPane(sessionId: sessionId),
+      _ => null,
+    };
     final chat = Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: AppSizes.contentWidth),
@@ -66,30 +71,32 @@ class PlanChatScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.swap_vert_outlined),
             tooltip: 'Wire inspector',
-            onPressed: () => context.push(AppRoutes.wire),
+            isSelected: pane is WireInspectorPane,
+            onPressed: () => isWide
+                ? showsWire.value = !showsWire.value
+                : showWireInspectorSheet(context, sessionId),
           ),
-          if (hasBoard && !sideBySide)
+          if (hasBoard && pane is! PlanBoardPane)
             IconButton(
               icon: const Icon(Icons.dashboard_outlined),
               tooltip: 'Your plan',
-              onPressed: () => showPlanBoardSheet(context, sessionId),
+              onPressed: () => isWide
+                  ? showsWire.value = false
+                  : showPlanBoardSheet(context, sessionId),
             ),
         ],
       ),
       body: SafeArea(
-        child: sideBySide
-            ? Row(
+        child: pane == null
+            ? chat
+            : Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(child: chat),
                   const VerticalDivider(width: 1),
-                  SizedBox(
-                    width: AppSizes.boardPane,
-                    child: PlanBoardPane(sessionId: sessionId),
-                  ),
+                  SizedBox(width: AppSizes.boardPane, child: pane),
                 ],
-              )
-            : chat,
+              ),
       ),
     );
   }

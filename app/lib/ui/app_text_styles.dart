@@ -47,6 +47,13 @@ abstract final class AppTextStyles {
     height: 1.2,
   );
 
+  static TextStyle get code => GoogleFonts.robotoMono(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    height: 1.4,
+    color: AppColors.textSecondary,
+  );
+
   static TextStyle get figureLarge => GoogleFonts.inter(
     fontSize: 32,
     fontWeight: FontWeight.w600,
