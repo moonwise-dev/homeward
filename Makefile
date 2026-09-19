@@ -28,6 +28,7 @@ help:
 	@echo "  make codegen       Run build_runner in common and server"
 	@echo "  make iso-4217      Regenerate the ISO 4217 currency table from SIX"
 	@echo "  make a2ui-schemas  Vendor the pinned A2UI v0.9 basic catalog and common types"
+	@echo "  make fonts         Vendor the pinned font faces the app draws with"
 	@echo "  make territories   Regenerate country and subdivision names from CLDR"
 	@echo "  make emulator      Run the Firestore emulator on port 8081"
 	@echo "  make server-dev    Run the server locally with hot reload"
@@ -104,6 +105,10 @@ iso-4217:
 a2ui-schemas:
 	@dart run tool/bin/vendor_a2ui_schemas.dart common/lib/a2ui/generated/a2ui_v09_schemas.dart
 	@dart format common/lib/a2ui/generated/a2ui_v09_schemas.dart
+
+.PHONY: fonts
+fonts:
+	@dart run tool/bin/vendor_fonts.dart app/assets/fonts
 
 .PHONY: territories
 territories:
