@@ -6,7 +6,7 @@ import '../data/providers/app_session_providers.dart';
 import '../data/providers/gemini_key_providers.dart';
 import '../features/api_key/api_key_screen.dart';
 import '../features/catalog_gallery/catalog_gallery_screen.dart';
-import '../features/plan_chat/plan_chat_screen.dart';
+import '../features/journey/journey_screen.dart';
 import '../features/plans/plans_screen.dart';
 import '../features/startup/startup_screen.dart';
 import 'app_routes.dart';
@@ -44,7 +44,7 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.plan,
         builder: (context, state) =>
-            PlanChatScreen(sessionId: state.pathParameters['sessionId']!),
+            JourneyScreen(sessionId: state.pathParameters['sessionId']!),
       ),
     ],
     redirect: (context, state) => _redirect(

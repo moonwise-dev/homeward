@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:common/common.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../data/models/plan_conversation.dart';
 import '../../data/models/turn_failure.dart';
 import '../../data/repository/agent_repository.dart';
 import '../../data/providers/gemini_key_providers.dart';
@@ -13,25 +14,30 @@ import '../../messages/app_message_action.dart';
 import '../../navigation/app_router.dart';
 import '../../navigation/app_routes.dart';
 import '../../riverpod/safe_notifier_state.dart';
-import 'plan_chat_state.dart';
+import 'journey_state.dart';
+import 'opening_example.dart';
+import 'opening_message.dart';
 
-part 'plan_chat_controller.g.dart';
+part 'journey_controller.g.dart';
 
 @riverpod
-class PlanChatController extends _$PlanChatController
-    with SafeNotifierState<PlanChatState, PlanChatState> {
+class JourneyController extends _$JourneyController
+    with SafeNotifierState<JourneyState, JourneyState> {
   @override
-  PlanChatState build(String sessionId) {
+  JourneyState build(String sessionId) {
     final agent = ref.watch(agentRepositoryProvider);
-    subscribe(
-      agent.watchConversation(sessionId),
-      (conversation) =>
-          setState((current) => current.copyWith(conversation: conversation)),
-    );
+    subscribe(agent.watchConversation(sessionId), _onConversation);
     subscribe(agent.watchFailures(sessionId), _onFailure);
     unawaited(_open(agent));
-    return const PlanChatState();
+    return const JourneyState();
   }
+
+  void _onConversation(PlanConversation conversation) => setState((current) {
+    final next = current.copyWith(conversation: conversation);
+    return next.pages.length > current.pages.length
+        ? next.copyWith(chosenPage: null)
+        : next;
+  });
 
   Future<void> _open(AgentRepository agent) async {
     try {
@@ -44,16 +50,52 @@ class PlanChatController extends _$PlanChatController
   void updateDraft(String draft) =>
       setState((current) => current.copyWith(draft: draft));
 
-  Future<void> send([String? starter]) async {
-    final text = (starter ?? state.draft).trim();
-    final agent = ref.read(agentRepositoryProvider);
-    final plans = ref.read(plansRepositoryProvider);
+  void pickReason(StoryReason? reason) =>
+      setState((current) => current.copyWith(reason: reason));
+
+  void updateOwnReason(String ownReason) =>
+      setState((current) => current.copyWith(ownReason: ownReason));
+
+  void updateStory(String story) =>
+      setState((current) => current.copyWith(story: story));
+
+  void useExample(OpeningExample example) => setState(
+    (current) => current.copyWith(reason: example.reason, story: example.story),
+  );
+
+  void showPage(int page) =>
+      setState((current) => current.copyWith(chosenPage: page));
+
+  Future<void> start() async {
+    if (!state.canStart) {
+      return;
+    }
+    await _sendText(
+      openingMessage(
+        reason: state.reason,
+        ownReason: state.ownReason,
+        story: state.story,
+      ),
+      reason: state.reason,
+    );
+  }
+
+  Future<void> send() async {
+    final text = state.draft.trim();
     if (text.isEmpty || state.conversation.isRunning) {
       return;
     }
     setState((current) => current.copyWith(draft: ''));
-    plans.recordActivity(sessionId, buyerText: text);
-    await agent.sendText(sessionId, text);
+    await _sendText(text);
+  }
+
+  Future<void> _sendText(String text, {StoryReason? reason}) async {
+    ref
+        .read(plansRepositoryProvider)
+        .recordActivity(sessionId, buyerText: text);
+    await ref
+        .read(agentRepositoryProvider)
+        .sendText(sessionId, text, reason: reason);
   }
 
   Future<void> stop() async {

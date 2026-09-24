@@ -1,0 +1,1 @@
+enum JourneySide { board, wire }

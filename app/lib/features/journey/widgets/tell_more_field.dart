@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../ui/app_spacing.dart';
 import '../../../ui/app_text_field.dart';
 
-class ChatComposer extends StatelessWidget {
-  const ChatComposer({
+class TellMoreField extends StatelessWidget {
+  const TellMoreField({
     required this.draft,
     required this.isRunning,
     required this.onChanged,
@@ -25,12 +25,12 @@ class ChatComposer extends StatelessWidget {
     children: [
       Expanded(
         child: AppTextField(
-          label: 'Message',
-          hintText: 'Where and what are you buying?',
+          label: 'Tell Homeward more',
+          hintText: 'Ask a question or add to your story',
           value: draft,
           onChanged: onChanged,
           minLines: 1,
-          maxLines: 5,
+          maxLines: 3,
           textInputAction: TextInputAction.send,
           onSubmitted: (_) => onSend(),
         ),

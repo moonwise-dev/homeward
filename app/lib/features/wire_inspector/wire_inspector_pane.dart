@@ -14,7 +14,7 @@ import '../../ui/app_select_option.dart';
 import '../../ui/app_spacing.dart';
 import '../../ui/app_status_line.dart';
 import '../../ui/app_text_styles.dart';
-import '../plan_chat/plan_chat_controller.dart';
+import '../journey/journey_controller.dart';
 import 'widgets/surface_data_view.dart';
 import 'widgets/wire_frame_row.dart';
 
@@ -31,7 +31,7 @@ class WireInspectorPane extends HookConsumerWidget {
       () => (frames: log.frames, recomputes: log.recomputes),
     );
     final surfaces = _surfacesOf(
-      ref.watch(planChatControllerProvider(sessionId)).conversation,
+      ref.watch(journeyControllerProvider(sessionId)).conversation,
     );
     final surfaceId = useState<String?>(null);
     final selected = surfaces.contains(surfaceId.value)
