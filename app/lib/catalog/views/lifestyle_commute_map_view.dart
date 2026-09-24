@@ -19,6 +19,8 @@ class LifestyleCommuteMapView extends StatelessWidget {
   });
 
   static const height = 320.0;
+  static const _pinWidth = 216.0;
+  static const _pinSize = 28.0;
 
   final List<MapMarker> markers;
   final List<MapRoute> routes;
@@ -51,6 +53,8 @@ class LifestyleCommuteMapView extends StatelessWidget {
         ),
       );
     }
+    final timesOnPins =
+        {for (final route in shownRoutes) route.anchorId}.length == 1;
     final points = [
       for (final marker in shown) LatLng(marker.lat, marker.lng),
       for (final route in shownRoutes)
@@ -71,7 +75,7 @@ class LifestyleCommuteMapView extends StatelessWidget {
                     ? null
                     : CameraFit.coordinates(
                         coordinates: points,
-                        padding: const EdgeInsets.fromLTRB(40, 40, 120, 48),
+                        padding: const EdgeInsets.fromLTRB(40, 40, 160, 48),
                         maxZoom: 16,
                       ),
                 interactionOptions: const InteractionOptions(
@@ -108,7 +112,7 @@ class LifestyleCommuteMapView extends StatelessWidget {
                           child: _PlaceDot(marker: marker),
                         ),
                     for (final route in shownRoutes)
-                      if (route.path.isNotEmpty)
+                      if (route.path.isNotEmpty && !timesOnPins)
                         Marker(
                           point: _badgePoint(route.path, shown),
                           width: 92,
@@ -123,10 +127,24 @@ class LifestyleCommuteMapView extends StatelessWidget {
                         if (marker.kind == kind)
                           Marker(
                             point: LatLng(marker.lat, marker.lng),
-                            width: 176,
+                            width: _pinWidth,
                             height: 32,
-                            alignment: const Alignment(0.84, 0),
-                            child: _Pin(marker: marker),
+                            alignment: const Alignment(
+                              1 - _pinSize / _pinWidth,
+                              0,
+                            ),
+                            child: _Pin(
+                              marker: marker,
+                              size: _pinSize,
+                              route: timesOnPins
+                                  ? shownRoutes
+                                        .where(
+                                          (route) =>
+                                              route.candidateId == marker.id,
+                                        )
+                                        .firstOrNull
+                                  : null,
+                            ),
                           ),
                   ],
                 ),
@@ -173,9 +191,11 @@ class LifestyleCommuteMapView extends StatelessWidget {
 }
 
 class _Pin extends StatelessWidget {
-  const _Pin({required this.marker});
+  const _Pin({required this.marker, required this.size, this.route});
 
   final MapMarker marker;
+  final double size;
+  final MapRoute? route;
 
   @override
   Widget build(BuildContext context) {
@@ -184,8 +204,8 @@ class _Pin extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: 28,
-          height: 28,
+          width: size,
+          height: size,
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.circle,
@@ -209,11 +229,27 @@ class _Pin extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadii.pill),
               border: Border.all(color: color, width: 1.5),
             ),
-            child: Text(
-              marker.label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.label.copyWith(color: AppColors.text),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: Text(
+                    marker.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.label.copyWith(color: AppColors.text),
+                  ),
+                ),
+                if (route case final route?) ...[
+                  const SizedBox(width: AppSpacing.xxs),
+                  Icon(travelModeIcon(route.mode), size: 14, color: color),
+                  const SizedBox(width: 2),
+                  Text(
+                    route.label,
+                    style: AppTextStyles.label.copyWith(color: color),
+                  ),
+                ],
+              ],
             ),
           ),
         ),
