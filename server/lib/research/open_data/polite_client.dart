@@ -12,6 +12,7 @@ final class PoliteClient {
     this.cacheFor = const Duration(hours: 6),
     this.timeout = const Duration(seconds: 25),
     this.maxEntries = 2000,
+    this.failFor = const Duration(minutes: 1),
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now;
 
@@ -20,7 +21,9 @@ final class PoliteClient {
   final Duration cacheFor;
   final Duration timeout;
   final int maxEntries;
+  final Duration failFor;
   final DateTime Function() _now;
+  final _failures = <String, (DateTime, OpenDataUnavailable)>{};
   final _queues = <String, Future<void>>{};
   final _cache = <String, (DateTime, Object?)>{};
 
@@ -53,6 +56,26 @@ final class PoliteClient {
         when expires.isAfter(_now())) {
       return value;
     }
+    if (_failures[key] case (final until, final failure)
+        when until.isAfter(_now())) {
+      throw failure;
+    }
+    try {
+      return await _fetch(key, uri, gap, send);
+    } on OpenDataUnavailable catch (failure) {
+      if (!failure.isBusy) {
+        _failures[key] = (_now().add(failFor), failure);
+      }
+      rethrow;
+    }
+  }
+
+  Future<Object?> _fetch(
+    String key,
+    Uri uri,
+    Duration gap,
+    Future<http.Response> Function() send,
+  ) async {
     final response = await _serial(
       uri.host,
       gap,

@@ -70,7 +70,10 @@ final class ProposeStoryTool extends ModelTool {
       'candidates': {
         'type': 'array',
         'maxItems': maxCandidates,
-        'description': 'Homes or areas the buyer is weighing, at most three.',
+        'description':
+            'Homes or areas the buyer is weighing, at most three. When the '
+            'buyer named only a city, pass up to three areas of it that suit '
+            'what they said, so there is something to compare.',
         'items': {
           'type': 'object',
           'properties': {

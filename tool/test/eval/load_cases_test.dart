@@ -11,6 +11,7 @@ void main() {
     expect(cases.map((evalCase) => evalCase.id), [
       'azores-uncovered',
       'change-down-payment',
+      'lisbon-city-only',
       'madeira-nonresident',
       'madeira-resident-contrast',
       'stockholm-family',

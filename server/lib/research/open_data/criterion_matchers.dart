@@ -37,8 +37,10 @@ const criterionMatchers = <CriterionKind, List<OsmMatcher>>{
     OsmMatcher('leisure', ['playground']),
   ],
   CriterionKind.water: [
-    OsmMatcher('natural', ['water', 'beach']),
-    OsmMatcher('leisure', ['beach_resort', 'marina']),
+    OsmMatcher('natural', ['beach'], elements: 'nw'),
+    OsmMatcher('leisure', ['beach_resort', 'marina'], elements: 'nw'),
+    OsmMatcher('natural', ['coastline'], lines: true),
+    OsmMatcher('waterway', ['river'], lines: true),
   ],
   CriterionKind.restaurants: [
     OsmMatcher('amenity', ['restaurant']),
@@ -61,8 +63,8 @@ const criterionMatchers = <CriterionKind, List<OsmMatcher>>{
 };
 
 const noiseMatchers = [
-  OsmMatcher('highway', ['motorway', 'trunk', 'primary']),
-  OsmMatcher('railway', ['rail']),
+  OsmMatcher('highway', ['motorway', 'trunk', 'primary'], lines: true),
+  OsmMatcher('railway', ['rail'], lines: true),
 ];
 
 final _notForChildren = RegExp(

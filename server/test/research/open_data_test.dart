@@ -107,9 +107,8 @@ void main() {
           (
             matcher: criterionMatchers[CriterionKind.schools]!.single,
             radius: 2000,
-            lines: false,
           ),
-          (matcher: noiseMatchers.first, radius: 200, lines: true),
+          (matcher: noiseMatchers.first, radius: 200),
         ],
       );
 
@@ -118,6 +117,27 @@ void main() {
       expect(bodies.last, contains('around:2000,59.3498,18.0707'));
       expect(bodies.last, contains('out geom tags'));
       expect(features.map((feature) => feature.points.length), [1, 1, 2]);
+    },
+  );
+
+  test(
+    'a failed call is remembered for a minute, not paid for again',
+    () async {
+      var calls = 0;
+      final nominatim = Nominatim(
+        client((_) async {
+          calls++;
+          return http.Response('down', 500);
+        }),
+      );
+
+      for (var attempt = 0; attempt < 2; attempt++) {
+        await expectLater(
+          nominatim.locate('KTH'),
+          throwsA(isA<OpenDataUnavailable>()),
+        );
+      }
+      expect(calls, 1);
     },
   );
 

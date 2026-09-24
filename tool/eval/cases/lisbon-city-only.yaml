@@ -1,0 +1,24 @@
+id: lisbon-city-only
+persona: lifestyle-mover
+turns:
+  - text: >-
+      I work remotely and I'm moving to Lisbon. I surf most mornings, I like
+      cafés, and I want quiet evenings. No car.
+    expect:
+      tools_called: [propose_story]
+      tools_allowed: [resolve_market, propose_profile, load_market]
+      market: PT
+      coverage: curated
+      components_include: [LifestyleCommuteMap, ChoicePicker]
+      components_exclude: [ComparisonTable, AffordabilitySummary]
+  - action: commit_story
+    data:
+      story:
+        picks:
+          activities: [water]
+          evenings: [cafes, quiet]
+          gettingAround: [transit]
+        mustHaves: [water]
+    expect:
+      tools_allowed: [propose_story, load_market, propose_profile]
+      components_include: [LifestyleCommuteMap, ComparisonTable]

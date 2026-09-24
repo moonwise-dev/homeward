@@ -41,11 +41,12 @@ final class TurnValidator {
       message = A2uiMessage.fromJson(json);
     } on A2uiValidationError catch (error) {
       return _reject(_surfaceIdIn(json), '', error.message);
-    } on TypeError {
+    } on TypeError catch (error) {
       return _reject(
         _surfaceIdIn(json),
         '',
-        'A field has the wrong type; check surfaceId, catalogId, and components',
+        'A field has the wrong type ($error); check surfaceId, catalogId, '
+            'and that components is a list of objects',
       );
     }
     return switch (message) {

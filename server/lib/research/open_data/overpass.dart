@@ -5,7 +5,7 @@ import 'osm_feature.dart';
 import 'osm_matcher.dart';
 import 'polite_client.dart';
 
-typedef OverpassQuery = ({OsmMatcher matcher, int radius, bool lines});
+typedef OverpassQuery = ({OsmMatcher matcher, int radius});
 
 final class Overpass {
   Overpass(
@@ -55,8 +55,10 @@ final class Overpass {
   static String queryFor(List<GeoPoint> points, List<OverpassQuery> queries) {
     String block(bool lines) => [
       for (final point in points)
-        for (final query in queries.where((query) => query.lines == lines))
-          '${lines ? 'way' : 'nwr'}(around:${query.radius},'
+        for (final query in queries.where(
+          (query) => query.matcher.lines == lines,
+        ))
+          '${lines ? 'way' : query.matcher.elements}(around:${query.radius},'
               '${point.lat},${point.lng})${query.matcher.selector};',
     ].join();
     return '[out:json][timeout:25];'

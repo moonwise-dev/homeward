@@ -17,6 +17,7 @@ import '../parsed_output.dart';
 import '../prompt/prompt_assembler.dart';
 import '../prompt/turn_context.dart';
 import '../stream_parser.dart';
+import '../validation/split_batched_messages.dart';
 import '../validation/turn_validator.dart';
 import '../validation/validation_failure.dart';
 import '../validation/validation_outcome.dart';
@@ -364,27 +365,36 @@ final class TurnRun {
         _text.write(text);
         yield* _emitText();
       case A2uiMessageOutput(:final source):
-        switch (_validator.validate(source)) {
-          case Accepted(:final message):
-            _acceptedInRound++;
-            for (final json in _seeder.forward(message, _validator.seeds)) {
-              _forwarded.add(json);
-              yield TurnEvent.message(json);
-            }
-          case Rejected(:final failure):
-            _log.info(
-              LogEntry(
-                'A2UI message rejected',
-                fields: {
-                  'turn': turn,
-                  'path': failure.path,
-                  'reason': failure.message,
-                },
-              ),
-            );
-            _pendingFailures.add(failure);
-          case Unchanged():
+        for (final part in splitBatchedMessages(
+          source,
+          lastSurfaceId: _validator.surfacesCreated.lastOrNull,
+        )) {
+          yield* _validated(part);
         }
+    }
+  }
+
+  Stream<TurnEvent> _validated(String source) async* {
+    switch (_validator.validate(source)) {
+      case Accepted(:final message):
+        _acceptedInRound++;
+        for (final json in _seeder.forward(message, _validator.seeds)) {
+          _forwarded.add(json);
+          yield TurnEvent.message(json);
+        }
+      case Rejected(:final failure):
+        _log.info(
+          LogEntry(
+            'A2UI message rejected',
+            fields: {
+              'turn': turn,
+              'path': failure.path,
+              'reason': failure.message,
+            },
+          ),
+        );
+        _pendingFailures.add(failure);
+      case Unchanged():
     }
   }
 

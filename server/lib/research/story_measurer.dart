@@ -63,7 +63,6 @@ final class StoryMeasurer {
           '${matcher.selector} ${_searchRadius(criterion)}': (
             matcher: matcher,
             radius: _searchRadius(criterion),
-            lines: criterion.kind == CriterionKind.noise,
           ),
     };
     try {
