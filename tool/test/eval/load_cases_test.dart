@@ -13,8 +13,20 @@ void main() {
       'change-down-payment',
       'madeira-nonresident',
       'madeira-resident-contrast',
+      'stockholm-family',
       'stockholm-first-time',
     ]);
+  });
+
+  test('a tapped home travels with the action', () {
+    final choose = cases
+        .singleWhere((evalCase) => evalCase.id == 'stockholm-family')
+        .turns
+        .last
+        .input;
+
+    expect(choose, isA<EvalAction>());
+    expect((choose as EvalAction).tapped, {'candidateId': 'c1'});
   });
 
   test('a case runs to only the ids it names', () {
