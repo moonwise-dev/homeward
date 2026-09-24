@@ -1,0 +1,36 @@
+id: stockholm-family
+persona: relocating-family
+turns:
+  - text: >-
+      We're moving to Stockholm, I start at KTH in January. Two kids, six and
+      nine. We're looking at a flat on Odengatan and one in Solna.
+    expect:
+      tools_called: [propose_story]
+      tools_allowed: [resolve_market, propose_profile, load_market]
+      market: SE
+      coverage: curated
+      components_include: [LifestyleCommuteMap, ChoicePicker]
+      components_exclude: [ComparisonTable, AffordabilitySummary]
+  - action: commit_story
+    data:
+      story:
+        mode: [bike]
+        maxMinutes: 20
+        picks:
+          schools: [schools]
+          activities: [parks, gym]
+          evenings: [quiet]
+          gettingAround: [transit]
+          downsides: [noise]
+        mustHaves: [commute, schools]
+    expect:
+      tools_allowed: [propose_story, load_market, propose_profile]
+      components_include:
+        [LifestyleCommuteMap, ComparisonTable, DynamicRecommendationStack]
+  - action: choose_home
+    tapped:
+      candidateId: c1
+    expect:
+      tools_allowed: [load_market, propose_profile, propose_scenario]
+      market: SE
+      components_exclude: [ComparisonTable]

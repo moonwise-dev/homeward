@@ -9,10 +9,15 @@ final class EvalText extends EvalInput {
 }
 
 final class EvalAction extends EvalInput {
-  const EvalAction(this.name, {this.overrides = const {}});
+  const EvalAction(
+    this.name, {
+    this.overrides = const {},
+    this.tapped = const {},
+  });
 
   final String name;
   final Map<String, Object?> overrides;
+  final Map<String, Object?> tapped;
 }
 
 final class EvalExpectations {

@@ -120,16 +120,14 @@ final class EvalRunner {
   TurnInput? _inputFor(EvalInput input, ProbeSurfaces surfaces) =>
       switch (input) {
         EvalText(:final text) => TurnInput.text(text),
-        EvalAction(:final name, :final overrides) => switch (surfaces.actionFor(
-          name,
-          overrides,
-        )) {
-          (:final action, :final surfaceData) => TurnInput.action(
-            action,
-            surfaceData: surfaceData,
-          ),
-          null => null,
-        },
+        EvalAction(:final name, :final overrides, :final tapped) =>
+          switch (surfaces.actionFor(name, overrides, tapped: tapped)) {
+            (:final action, :final surfaceData) => TurnInput.action(
+              action,
+              surfaceData: surfaceData,
+            ),
+            null => null,
+          },
       };
 
   String? _bindingOf(Plan plan) {

@@ -47,6 +47,7 @@ EvalTurn _turn(Map<String, Object?> turn) => EvalTurn(
     {'action': final String action} => EvalAction(
       action,
       overrides: _map(turn['data'] ?? const <String, Object?>{}),
+      tapped: _map(turn['tapped'] ?? const <String, Object?>{}),
     ),
     _ => throw FormatException('A turn needs text or an action: $turn'),
   },

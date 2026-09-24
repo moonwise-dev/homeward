@@ -29,10 +29,14 @@ final class ProbeSurfaces {
     }
   }
 
-  ProbeAction? actionFor(String name, Map<String, Object?> overrides) {
+  ProbeAction? actionFor(
+    String name,
+    Map<String, Object?> overrides, {
+    Map<String, Object?> tapped = const {},
+  }) {
     for (final surfaceId in _components.keys.toList().reversed) {
       for (final component in _components[surfaceId]!) {
-        if (component['action']
+        if (component['action'] ?? component['choose']
             case {
               'event':
                   {'name': final String eventName} &&
@@ -68,6 +72,7 @@ final class ProbeSurfaces {
                     {'path': final String path} => _resolve(data, path),
                     _ => value,
                   },
+                ...tapped,
               },
             ),
             surfaceData: data,
