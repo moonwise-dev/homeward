@@ -8,7 +8,8 @@ const openingExamples = <OpeningExample>[
     reason: StoryReason.study,
     story:
         "We're moving to Stockholm, I start at KTH in January. Two kids, six "
-        "and nine. We're looking at a flat on Odengatan and one in Solna.",
+        "and nine. We're looking at a flat on Odengatan for 7.4 million and one "
+        'in Solna for 5.2 million.',
   ),
   (
     title: 'Lisbon surfer',

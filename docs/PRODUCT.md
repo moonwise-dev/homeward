@@ -119,7 +119,8 @@ The flow the video segment is built around. The story is the point.
 
 1. A buyer opens a new plan, picks *studies* as why they are moving, and
    writes: *"We're moving to Stockholm, I start at KTH in January. Two kids,
-   six and nine. We're looking at a flat on Odengatan and one in Solna."*
+   six and nine. We're looking at a flat on Odengatan for 7.4 million and one
+   in Solna for 5.2 million."*
 2. Homeward infers a relocation for work, an anchor at KTH, children who need
    schools, and two candidates. It pins both flats and asks the gaps in one
    card: how they will get to work, the longest commute they accept, what kind
@@ -134,10 +135,13 @@ The flow the video segment is built around. The story is the point.
    international schools within a kilometre.*
 4. The buyer asks for well-rated schools near Odengatan; Homeward adds Google
    Maps ratings to that row only.
-5. The buyer picks Odengatan. The deal opens with the listing's price and the
-   association fee: what they can borrow under Sweden's verified rules, a down
-   payment slider that moves payment, stress test, and cash needed on the
-   device with no network traffic, and the association's finances.
+5. The buyer picks Odengatan. One short page asks the money facts the rules
+   need, filled in from the story where it can. Then the deal sheet: the
+   listing's price and the association fee, what they can borrow under
+   Sweden's verified rules and the rule that limits it, a down payment slider
+   that moves the payment, the bank's stress test, and the cash needed, all
+   recomputed on the device with no network traffic, beside the rules that
+   apply and the association's finances.
 6. Contrast: a remote worker types only *"Lisbon, I surf and I want quiet."*
    Homeward suggests areas, ranks them on the map, and the chosen area opens a
    deal under Portugal's verified rules. A buyer in a city Homeward never

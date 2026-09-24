@@ -6,7 +6,8 @@ turns:
       Reason for the move: studies.
 
       We're moving to Stockholm, I start at KTH in January. Two kids, six and
-      nine. We're looking at a flat on Odengatan and one in Solna.
+      nine. We're looking at a flat on Odengatan for 7.4 million and one in
+      Solna for 5.2 million.
     expect:
       tools_called: [propose_story]
       tools_allowed: [resolve_market, propose_profile, load_market]
@@ -36,4 +37,30 @@ turns:
     expect:
       tools_allowed: [load_market, propose_profile, propose_scenario]
       market: SE
-      components_exclude: [ComparisonTable]
+      components_exclude: [ComparisonTable, MarketSnapshotCard]
+  - action: commit_profile
+    data:
+      profile:
+        adults: 2
+        childAges: [6, 9]
+        age: 38
+        borrowers: 2
+        employment: employed
+        citizenship: SE
+        taxResidence: SE
+        use: primary
+        firstTime: true
+        netMonthlyIncome: { minorUnits: 8400000, currency: SEK }
+        monthlyDebtPayments: { minorUnits: 0, currency: SEK }
+        savings: { minorUnits: 120000000, currency: SEK }
+    expect:
+      tools_allowed: [compute_affordability, propose_scenario, load_market]
+      market: SE
+      components_include:
+        [
+          AffordabilitySummary,
+          AmountSlider,
+          PaymentBreakdown,
+          StressTestChart,
+          PurchaseCostsTable,
+        ]

@@ -23,11 +23,11 @@ void main() {
     final choose = cases
         .singleWhere((evalCase) => evalCase.id == 'stockholm-family')
         .turns
-        .last
-        .input;
+        .map((turn) => turn.input)
+        .whereType<EvalAction>()
+        .singleWhere((action) => action.name == 'choose_home');
 
-    expect(choose, isA<EvalAction>());
-    expect((choose as EvalAction).tapped, {'candidateId': 'c1'});
+    expect(choose.tapped, {'candidateId': 'c1'});
   });
 
   test('a case runs to only the ids it names', () {

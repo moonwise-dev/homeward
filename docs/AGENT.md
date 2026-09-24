@@ -144,9 +144,9 @@ An uncovered market leaves only `marketCoverage` open among them.
 | `homeChoice` | `assess_story`, pre-run | `LifestyleCommuteMap`, `DynamicRecommendationStack` sending `choose_home`, `ComparisonTable` |
 | `targetMarket` | `resolve_market` | `LocationPicker` in `market` mode |
 | `marketCoverage` | — | `MarketSnapshotCard` in its uncovered state |
-| `profileFields` | `load_market`, `propose_profile` | `LocationPicker` in `country` mode, `MoneyInput`, `ChoicePicker`, commit `Button` |
-| `scenario` | `propose_scenario`, `compute_affordability`, `estimate_purchase_costs` | `AffordabilitySummary`, `AmountSlider`, `PaymentBreakdown`, `PurchaseCostsTable`, commit `Button` with checks |
-| `scenarioCommit` | `estimate_purchase_costs` | `PurchaseCostsTable`, `StressTestChart`, `EligibilityChecklist` |
+| `profileFields` | `load_market`, `propose_profile` | The facts page: `HouseholdInput`, `MoneyInput`, `LocationPicker` in `country` mode, `ChoicePicker`, commit `Button`; no market card |
+| `scenario` | `propose_scenario`, `compute_affordability`, `estimate_purchase_costs` | The deal sheet, one surface (D113): the chosen home's name, `AffordabilitySummary`, `AmountSlider` for the down payment, `PaymentBreakdown`, `StressTestChart`, `PurchaseCostsTable`, `MarketSnapshotCard` for the rules, commit `Button` with checks |
+| `scenarioCommit` | — | Nothing new unless the buyer asks for an input the deal sheet lacks |
 | `obstaclesReview` | `get_obstacles` | `ForeignBuyerObstacles` |
 | `process` | `get_process` | `BuyingProcessTimeline`, `DocumentChecklist` |
 
