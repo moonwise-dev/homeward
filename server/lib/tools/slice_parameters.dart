@@ -31,6 +31,14 @@ Map<String, Object?> fieldParameter(SliceField field) => switch (field.kind) {
     'enum': field.choiceValues,
     'description': field.description,
   },
+  FieldKind.criteria => {
+    'type': 'array',
+    'items': {
+      'type': 'string',
+      'enum': [for (final kind in CriterionKind.values) kind.name],
+    },
+    'description': field.description,
+  },
   FieldKind.country ||
   FieldKind.market ||
   FieldKind.currency ||

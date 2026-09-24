@@ -80,6 +80,39 @@ Every function of the A2UI v0.9 basic catalog is available too.
 
 ## Data Model
 
+### `/story`
+
+Why and where the buyer is moving, what they care about, and the homes or areas they are weighing. A question card writes the answer fields; commit_story folds them into the story. anchors, candidates, and criteria are read-only and placed by the server.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/story/reason` | one of work, study, family, lifestyle, retirement, investment, other | Why the buyer is moving. |
+| `/story/city` | string | Where they are moving to. |
+| `/story/mode` | one of walk, bike, car, transit | How they will travel to their anchors. |
+| `/story/maxMinutes` | integer | The longest trip to an anchor they accept, in minutes. |
+| `/story/picks/schools` | list of criterion kinds, such as ["schools", "parks"] | Criteria picked for schools and care. |
+| `/story/picks/everyday` | list of criterion kinds, such as ["schools", "parks"] | Criteria picked for everyday. |
+| `/story/picks/activities` | list of criterion kinds, such as ["schools", "parks"] | Criteria picked for activities. |
+| `/story/picks/evenings` | list of criterion kinds, such as ["schools", "parks"] | Criteria picked for evenings. |
+| `/story/picks/gettingAround` | list of criterion kinds, such as ["schools", "parks"] | Criteria picked for getting around. |
+| `/story/picks/downsides` | list of criterion kinds, such as ["schools", "parks"] | Criteria picked for downsides. |
+| `/story/mustHaves` | list of criterion kinds, such as ["schools", "parks"] | Criteria the buyer will not give up. |
+| `/story/note` | string | Anything else the buyer wants weighed, in their own words. |
+| `/story/anchors` | object read by Homeward components | Places the buyer travels to: id, label, mode, maxMinutes, point. |
+| `/story/candidates` | object read by Homeward components | Homes or areas being weighed: id, label, point, price. |
+| `/story/criteria` | object read by Homeward components | What is weighed: kind, anchorId, mustHave. |
+
+### `/assessment`
+
+How each home fits each criterion, measured by the server, read-only. Bind building blocks to its lists.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/assessment/candidates` | object read by Homeward components | Each home with rank, score, missesMustHave, and pros, cons, and close as ready sentences. |
+| `/assessment/rows` | object read by Homeward components | One row per criterion: label, group, mustHave, and a cell per home with status fits, close, misses, or unknown, text, and detail. |
+| `/assessment/markers` | object read by Homeward components | Map markers for anchors, homes, and the nearest places found. |
+| `/assessment/routes` | object read by Homeward components | A route from each home to each anchor with its minutes and path. |
+
 ### `/selection`
 
 What the buyer is picking before it is saved.

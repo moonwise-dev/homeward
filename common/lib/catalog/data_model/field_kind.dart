@@ -9,6 +9,7 @@ enum FieldKind {
   integer('integer'),
   integers('list of integers'),
   choice('one of'),
+  criteria('list of criterion kinds, such as ["schools", "parks"]'),
   ppm('integer parts per million; 10000 is 1%'),
   record('object read by Homeward components');
 

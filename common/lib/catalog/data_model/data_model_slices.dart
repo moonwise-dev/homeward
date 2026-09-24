@@ -2,6 +2,9 @@ import '../../markets/coverage.dart';
 import '../../profile/employment.dart';
 import '../../profile/property_use.dart';
 import '../../profile/residency_intent.dart';
+import '../../story/criterion_group.dart';
+import '../../story/story_reason.dart';
+import '../../story/travel_mode.dart';
 import 'data_slice.dart';
 import 'field_kind.dart';
 import 'slice_field.dart';
@@ -156,7 +159,99 @@ const derivedSlice = DataSlice(
   ],
 );
 
-const dataModelSlices = [
+final storySlice = DataSlice(
+  'story',
+  'Why and where the buyer is moving, what they care about, and the homes or '
+      'areas they are weighing. A question card writes the answer fields; '
+      'commit_story folds them into the story. anchors, candidates, and '
+      'criteria are read-only and placed by the server.',
+  [
+    const SliceField(
+      'reason',
+      FieldKind.choice,
+      'Why the buyer is moving.',
+      choices: StoryReason.values,
+    ),
+    const SliceField('city', FieldKind.text, 'Where they are moving to.'),
+    const SliceField(
+      'mode',
+      FieldKind.choice,
+      'How they will travel to their anchors.',
+      choices: TravelMode.values,
+    ),
+    const SliceField(
+      'maxMinutes',
+      FieldKind.integer,
+      'The longest trip to an anchor they accept, in minutes.',
+    ),
+    for (final group in CriterionGroup.values)
+      if (group != CriterionGroup.anchors)
+        SliceField(
+          'picks/${group.name}',
+          FieldKind.criteria,
+          'Criteria picked for ${group.label.toLowerCase()}.',
+        ),
+    const SliceField(
+      'mustHaves',
+      FieldKind.criteria,
+      'Criteria the buyer will not give up.',
+    ),
+    const SliceField(
+      'note',
+      FieldKind.text,
+      'Anything else the buyer wants weighed, in their own words.',
+    ),
+    const SliceField(
+      'anchors',
+      FieldKind.record,
+      'Places the buyer travels to: id, label, mode, maxMinutes, point.',
+    ),
+    const SliceField(
+      'candidates',
+      FieldKind.record,
+      'Homes or areas being weighed: id, label, point, price.',
+    ),
+    const SliceField(
+      'criteria',
+      FieldKind.record,
+      'What is weighed: kind, anchorId, mustHave.',
+    ),
+  ],
+);
+
+const assessmentSlice = DataSlice(
+  'assessment',
+  'How each home fits each criterion, measured by the server, read-only. '
+      'Bind building blocks to its lists.',
+  [
+    SliceField(
+      'candidates',
+      FieldKind.record,
+      'Each home with rank, score, missesMustHave, and pros, cons, and close '
+          'as ready sentences.',
+    ),
+    SliceField(
+      'rows',
+      FieldKind.record,
+      'One row per criterion: label, group, mustHave, and a cell per home '
+          'with status fits, close, misses, or unknown, text, and detail.',
+    ),
+    SliceField(
+      'markers',
+      FieldKind.record,
+      'Map markers for anchors, homes, and the nearest places found.',
+    ),
+    SliceField(
+      'routes',
+      FieldKind.record,
+      'A route from each home to each anchor with its minutes and path.',
+    ),
+  ],
+);
+
+final dataModelSlices = [
+  storySlice,
+  assessmentSlice,
   selectionSlice,
   profileSlice,
   scenarioSlice,

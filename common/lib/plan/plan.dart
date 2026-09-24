@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../markets/market_id.dart';
 import '../markets/market_id_json_converter.dart';
 import '../profile/buyer_profile.dart';
+import '../story/story.dart';
 import 'scenario.dart';
 
 part 'plan.freezed.dart';
@@ -16,6 +17,7 @@ abstract class Plan with _$Plan {
     BuyerProfile? profileDraft,
     Scenario? scenario,
     Scenario? scenarioDraft,
+    @Default(Story()) Story story,
   }) = _Plan;
 
   factory Plan.fromJson(Map<String, Object?> json) => _$PlanFromJson(json);

@@ -9,7 +9,10 @@ void main() {
   };
 
   test('slice names and field names are unique', () {
-    expect(dataModelSlices.map((slice) => slice.name).toSet(), hasLength(5));
+    expect(
+      dataModelSlices.map((slice) => slice.name).toSet(),
+      hasLength(dataModelSlices.length),
+    );
     for (final slice in dataModelSlices) {
       expect(names(slice), hasLength(slice.fields.length), reason: slice.name);
     }
