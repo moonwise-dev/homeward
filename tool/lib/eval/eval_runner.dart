@@ -1,6 +1,7 @@
 import 'package:common/common.dart';
 import 'package:homeward_server/agent/turn/turn_event.dart';
 import 'package:homeward_server/agent/turn/turn_input.dart';
+import 'package:homeward_tool/probe/gemini_keys.dart';
 import 'package:homeward_tool/probe/probe_surfaces.dart';
 
 import 'eval_case.dart';
@@ -19,7 +20,7 @@ final class EvalRunner {
 
   Future<List<TurnObservation>> run(
     EvalCase evalCase, {
-    required String apiKey,
+    required GeminiKeys keys,
   }) async {
     final session = await server.sessions.create('eval');
     final surfaces = ProbeSurfaces();
@@ -38,7 +39,7 @@ final class EvalRunner {
           index: index + 1,
           sessionId: session.id,
           input: input,
-          apiKey: apiKey,
+          keys: keys,
           surfaces: surfaces,
         ),
       );
@@ -50,7 +51,32 @@ final class EvalRunner {
     required int index,
     required String sessionId,
     required TurnInput input,
-    required String apiKey,
+    required GeminiKeys keys,
+    required ProbeSurfaces surfaces,
+  }) async {
+    final observed = await _runTurnOn(
+      keys.current,
+      index: index,
+      sessionId: sessionId,
+      input: input,
+      surfaces: surfaces,
+    );
+    return keys.moveOnAfter(observed.errorCode)
+        ? _runTurn(
+            index: index,
+            sessionId: sessionId,
+            input: input,
+            keys: keys,
+            surfaces: surfaces,
+          )
+        : observed;
+  }
+
+  Future<TurnObservation> _runTurnOn(
+    String apiKey, {
+    required int index,
+    required String sessionId,
+    required TurnInput input,
     required ProbeSurfaces surfaces,
   }) async {
     log.reset();

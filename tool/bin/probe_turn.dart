@@ -5,18 +5,18 @@ import 'package:common/common.dart';
 import 'package:homeward_tool/probe/anonymous_id_token.dart';
 import 'package:homeward_tool/probe/describe_event.dart';
 import 'package:homeward_tool/probe/firebase_web_api_key.dart';
-import 'package:homeward_tool/probe/probe_gemini_key.dart';
+import 'package:homeward_tool/probe/gemini_keys.dart';
 import 'package:homeward_tool/probe/probe_surfaces.dart';
 import 'package:http/http.dart' as http;
 
 Future<void> main(List<String> arguments) async {
-  final geminiKey = probeGeminiKey(Platform.environment);
-  if (geminiKey == null || arguments.length < 2) {
+  final keys = GeminiKeys.fromEnvironment(Platform.environment);
+  if (keys == null || arguments.length < 2) {
     stderr.writeln(
       'Usage: probe_turn <server url> '
       '<message, #reason message, or @action {slice overrides}>…\n'
-      'The Gemini key comes from HOMEWARD_EVAL_GEMINI_KEY or '
-      '~/.config/homeward/gemini_key.',
+      'Gemini keys come from ${GeminiKeys.names.join(' and ')}, '
+      'which make reads from .env.',
     );
     exitCode = 64;
     return;
@@ -42,7 +42,11 @@ Future<void> main(List<String> arguments) async {
         return;
       }
       stdout.writeln('\n> $input');
-      await _probeTurn(client, sessionId, geminiKey, request, surfaces);
+      while (keys.moveOnAfter(
+        await _probeTurn(client, sessionId, keys.current, request, surfaces),
+      )) {
+        stdout.writeln('That Gemini key hit its limit; trying the next key');
+      }
     }
   } finally {
     httpClient.close();
@@ -73,7 +77,7 @@ TurnRequest? _requestFor(String input, ProbeSurfaces surfaces) {
   };
 }
 
-Future<void> _probeTurn(
+Future<String?> _probeTurn(
   HomewardClient client,
   String sessionId,
   String geminiKey,
@@ -118,8 +122,10 @@ Future<void> _probeTurn(
     }
   } on HomewardApiException catch (error) {
     log('error ${error.code.wireName}: ${error.message}');
+    return error.code.wireName;
   }
   stdout
     ..writeln('First text after ${firstText?.inMilliseconds} ms')
     ..writeln('Text: $text');
+  return null;
 }

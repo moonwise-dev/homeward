@@ -1,3 +1,8 @@
+ifneq ($(wildcard .env),)
+include .env
+export $(shell sed -n 's/^\([A-Za-z_][A-Za-z0-9_]*\)=.*/\1/p' .env)
+endif
+
 PACKAGES := app common server tool
 DART_PACKAGES := common server tool
 CODEGEN_PACKAGES := app common server
@@ -11,6 +16,7 @@ SERVER_SERVICE := homeward-server
 SERVER_ACCOUNT := $(SERVER_SERVICE)@$(FIREBASE_PROJECT).iam.gserviceaccount.com
 SERVER_URL := https://homeward-server-1065509330520.europe-north1.run.app
 SERVER_REGISTRY_IMAGE := $(REGION)-docker.pkg.dev/$(FIREBASE_PROJECT)/homeward/server:$(shell git rev-parse --short HEAD)
+APP_DEFINES := $(CURDIR)/app/.dart_tool/homeward_defines.json
 
 .PHONY: help
 help:
@@ -34,13 +40,14 @@ help:
 	@echo "  make territories   Regenerate country and subdivision names from CLDR"
 	@echo "  make emulator      Run the Firestore emulator on port 8081"
 	@echo "  make server-dev    Run the server locally with hot reload"
-	@echo "  make probe         Send MESSAGE as a live turn to SERVER with the key from ~/.config/homeward/gemini_key"
+	@echo "  make probe         Send MESSAGE as a live turn to SERVER with the Gemini keys from .env"
 	@echo "  make eval          Run eval CASES against Gemini in process, and write a report"
 	@echo "  make server-build  Cross-compile the server for linux/x64"
 	@echo "  make server-image  Build the server container image"
 	@echo "  make server-image-run  Run the server container image on port 8080"
 	@echo "  make deploy-server  Push the image tagged with the commit and deploy Cloud Run"
 	@echo "  make deploy-web     Build the Wasm web app and deploy Firebase Hosting"
+	@echo "  make app-defines   Write the app's development defines from .env, for make and IDE launches"
 	@echo "  make app-web       Run the app in Chrome"
 	@echo "  make app-macos     Run the app on macOS"
 	@echo "  make clean         Remove build outputs and resolved packages"
@@ -168,16 +175,23 @@ deploy-server: clean-tree server-image
 
 .PHONY: deploy-web
 deploy-web:
-	@cd app && flutter build web --wasm
+	@cd app && flutter build web --wasm --dart-define=HOMEWARD_SERVER_URL=$(SERVER_URL)
 	@firebase deploy --only hosting --project $(FIREBASE_PROJECT)
 
+.PHONY: app-defines
+app-defines:
+	@mkdir -p $(dir $(APP_DEFINES))
+	@umask 077; printf '{"HOMEWARD_DEV_GEMINI_KEYS": "%s", "HOMEWARD_APP_CHECK_DEBUG_TOKEN": "%s"}\n' \
+		'$(HOMEWARD_EVAL_GEMINI_KEY),$(HOMEWARD_EVAL_GEMINI_MOON_KEY)' \
+		'$(HOMEWARD_APP_CHECK_DEBUG_TOKEN)' > $(APP_DEFINES)
+
 .PHONY: app-web
-app-web:
-	@cd app && flutter run -d chrome
+app-web: app-defines
+	@cd app && flutter run -d chrome --dart-define-from-file=$(APP_DEFINES)
 
 .PHONY: app-macos
-app-macos:
-	@cd app && flutter run -d macos
+app-macos: app-defines
+	@cd app && flutter run -d macos --dart-define-from-file=$(APP_DEFINES)
 
 .PHONY: clean
 clean:

@@ -170,7 +170,9 @@ same sweep runs with `flutter run --profile` and prints its report.
 
 `tool/eval` runs scripted conversations through the turn orchestrator in
 process, with the real prompts, tools, catalog, and rule packs, and a real
-Gemini key from `HOMEWARD_EVAL_GEMINI_KEY` or `~/.config/homeward/gemini_key`.
+Gemini key from `HOMEWARD_EVAL_GEMINI_KEY`, which make reads from `.env`. A
+turn refused with `gemini_quota_exhausted` runs again on
+`HOMEWARD_EVAL_GEMINI_MOON_KEY`, a key from a second account, when it is set.
 There is no HTTP, no auth, and no Firebase: a case is a plan, not a request.
 
 The key is a free key: `gemini-3.5-flash-lite` allows about 500 requests a day

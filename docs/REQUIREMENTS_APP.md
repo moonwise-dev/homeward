@@ -14,7 +14,8 @@ logic.
 - Web on desktop and mobile browsers, served from Firebase Hosting as a Wasm
   build with a JS fallback.
 - Every platform calls the server at its Cloud Run URL, a build-time value that
-  points at a local server in development.
+  points at a local server in development; `make deploy-web` passes it as
+  `HOMEWARD_SERVER_URL`.
 - macOS for development only, never released.
 - No store distribution: web, simulators, sideloaded Android APKs, and
   personally provisioned iPhones with seven-day profiles.
@@ -74,6 +75,13 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
   billing, whose conversations Google does not use (D76). The wording is checked
   against the current terms again before recording.
 - Remove key is available here and in settings.
+- Development runs skip this screen. `make app-defines` writes the developer's
+  Gemini keys from `.env` as `HOMEWARD_DEV_GEMINI_KEYS`, with the App Check
+  debug token, into the git-ignored `app/.dart_tool/homeward_defines.json`.
+  `make app-web`, `make app-macos`, and the VS Code launch "Homeward app" write
+  it and pass it with `--dart-define-from-file`, and the app uses those keys
+  while no key is saved. Server secrets never enter it. Release builds ignore
+  the keys, and `make deploy-web` never passes them.
 
 ### Plans
 
@@ -114,7 +122,8 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 - Turn failures show a toast, and the failed page offers retry.
 - `gemini_key_invalid` routes to `/key`. `gemini_quota_exhausted` explains that
   the buyer's free key has hit a request limit, asks them to try again in a
-  minute, and shows when the daily limit resets.
+  minute, and shows when the daily limit resets. In a development run with
+  another key left, the app moves to that key and retries the turn instead.
   `gemini_credits_depleted` shows the server message with a change key action,
   since waiting does not help.
 

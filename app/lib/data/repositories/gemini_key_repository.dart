@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../config/dependencies.dart';
+import '../../config/environment.dart';
 import 'repository_guard.dart';
 
 part 'gemini_key_repository.g.dart';
@@ -15,6 +16,8 @@ abstract interface class GeminiKeyRepository {
   Future<void> save(String key, {required bool remember});
 
   Future<void> remove();
+
+  Future<bool> useNextKey();
 }
 
 class SecureGeminiKeyRepository
@@ -53,6 +56,39 @@ class SecureGeminiKeyRepository
     await _storage.delete(key: _name, webOptions: _tab);
     await _storage.delete(key: _name, webOptions: _device);
   });
+
+  @override
+  Future<bool> useNextKey() async => false;
+}
+
+class DevelopmentGeminiKeyRepository implements GeminiKeyRepository {
+  DevelopmentGeminiKeyRepository(this._saved, this._keys);
+
+  final GeminiKeyRepository _saved;
+  final List<String> _keys;
+  var _current = 0;
+
+  @override
+  bool get canForget => _saved.canForget;
+
+  @override
+  Future<String?> read() async => await _saved.read() ?? _keys[_current];
+
+  @override
+  Future<void> save(String key, {required bool remember}) =>
+      _saved.save(key, remember: remember);
+
+  @override
+  Future<void> remove() => _saved.remove();
+
+  @override
+  Future<bool> useNextKey() async {
+    if (await _saved.read() != null || _current == _keys.length - 1) {
+      return false;
+    }
+    _current++;
+    return true;
+  }
 }
 
 @Riverpod(keepAlive: true)
@@ -72,7 +108,16 @@ class GeminiKey extends _$GeminiKey {
 }
 
 @Riverpod(keepAlive: true)
-GeminiKeyRepository geminiKeyRepository(Ref ref) => SecureGeminiKeyRepository(
-  ref.watch(secureStorageProvider),
-  canForget: kIsWeb,
-);
+GeminiKeyRepository geminiKeyRepository(Ref ref) {
+  final saved = SecureGeminiKeyRepository(
+    ref.watch(secureStorageProvider),
+    canForget: kIsWeb,
+  );
+  final developmentKeys = {
+    for (final key in kDevelopmentGeminiKeys.split(','))
+      if (key.trim() case final trimmed when trimmed.isNotEmpty) trimmed,
+  }.toList();
+  return developmentKeys.isEmpty
+      ? saved
+      : DevelopmentGeminiKeyRepository(saved, developmentKeys);
+}

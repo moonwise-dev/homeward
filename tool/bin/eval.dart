@@ -7,15 +7,15 @@ import 'package:homeward_tool/eval/eval_score.dart';
 import 'package:homeward_tool/eval/eval_server.dart';
 import 'package:homeward_tool/eval/load_cases.dart';
 import 'package:homeward_tool/eval/turn_log.dart';
-import 'package:homeward_tool/probe/probe_gemini_key.dart';
+import 'package:homeward_tool/probe/gemini_keys.dart';
 
 Future<void> main(List<String> arguments) async {
-  final apiKey = probeGeminiKey(Platform.environment);
-  if (apiKey == null) {
+  final keys = GeminiKeys.fromEnvironment(Platform.environment);
+  if (keys == null) {
     stderr.writeln(
       'Usage: eval [case id]…\n'
-      'The Gemini key comes from HOMEWARD_EVAL_GEMINI_KEY or '
-      '~/.config/homeward/gemini_key.',
+      'Gemini keys come from ${GeminiKeys.names.join(' and ')}, '
+      'which make reads from .env.',
     );
     exitCode = 64;
     return;
@@ -38,7 +38,7 @@ Future<void> main(List<String> arguments) async {
       if (reports.isNotEmpty) {
         await Future<void>.delayed(const Duration(seconds: 20));
       }
-      final observations = await runner.run(evalCase, apiKey: apiKey);
+      final observations = await runner.run(evalCase, keys: keys);
       reports.add(
         CaseReport(
           evalCase: evalCase,

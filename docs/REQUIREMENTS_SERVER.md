@@ -62,6 +62,30 @@ route: the envelope for `/api/*`, a JSON-RPC error without an ID for `/a2a`.
 - Never accepted in a query string.
 - Phase 2 voice receives it in the first WebSocket frame.
 
+## Server Secrets
+
+The research model's keys are the server's own (D100). Each reaches the server
+as an environment variable, like the rest of its configuration (D115).
+
+| Variable | Secret Manager secret | Purpose |
+| --- | --- | --- |
+| `CEREBRAS_API_KEY` | `cerebras-api-key` | The research model on Cerebras, from M3 |
+| `GROQ_API_KEY` | `groq-api-key` | The research model on Groq, from M3 |
+
+- On Cloud Run, `--set-secrets` maps each variable onto the `latest` version of
+  its secret when an instance starts. Neither the image nor the deploy command
+  holds a value.
+- The service account may access each secret it needs, not every secret in the
+  project.
+- Locally the variables come from `.env`; see Local Development.
+- Read into `ServerConfig` at startup; never logged, included in errors, or sent
+  anywhere except the provider it belongs to. An empty variable means that
+  provider is not configured.
+- A secret joins `make deploy-server` once the server reads it; deploying with a
+  secret that does not exist fails.
+- Rotation adds a version, redeploys, then destroys the old version. A disabled
+  version still counts as active for billing.
+
 ## Rate Limits
 
 Keys are the buyer's, so limits protect server compute and Firestore rather
@@ -125,8 +149,9 @@ window, and the session limit joins with Firestore in M2.
 | `HOMEWARD_SESSION_STORE` | `firestore` or `memory`; Firestore by default on Cloud Run and with the emulator |
 | `GOOGLE_CLOUD_PROJECT` | Firebase project |
 
-No secrets are required in production. Credentials come from the Cloud Run
-service account through Application Default Credentials.
+Google APIs are reached as the Cloud Run service account through Application
+Default Credentials, never with a key. Keys the server holds are under Server
+Secrets.
 
 ## Observability
 
@@ -168,7 +193,23 @@ service account through Application Default Credentials.
   cleanup policy keeping the three most recent images and deleting the rest.
 - Cloud Run runs as `homeward-server@homeward-genui.iam.gserviceaccount.com`
   with Cloud Datastore User, Firebase Authentication Viewer, Firebase App Check
-  Token Verifier, and Logs Writer.
+  Token Verifier, and Logs Writer, plus Secret Manager Secret Accessor on each
+  server secret.
+- A server secret is created once from the developer's `.env`, with automatic
+  replication, which is billed as one location:
+
+  ```sh
+  sed -n 's/^CEREBRAS_API_KEY=//p' .env | tr -d '\n' |
+    gcloud secrets create cerebras-api-key --project homeward-genui \
+      --replication-policy automatic --data-file=-
+  gcloud secrets add-iam-policy-binding cerebras-api-key \
+    --project homeward-genui \
+    --member serviceAccount:homeward-server@homeward-genui.iam.gserviceaccount.com \
+    --role roles/secretmanager.secretAccessor
+  ```
+
+  `make deploy-server` then passes
+  `--set-secrets CEREBRAS_API_KEY=cerebras-api-key:latest`.
 - Cloud Run deploys with `--no-invoker-iam-check`. With the check on, Cloud Run
   answers 401 to any `Authorization` bearer token that is not a Google identity
   token, including Firebase ID tokens, before the request reaches the server.
@@ -196,5 +237,19 @@ service account through Application Default Credentials.
   `gcloud auth application-default login` cannot reach Firestore (S6), so the
   emulator is the only local store.
 - `make server-image-run` builds and runs the production image on port 8080.
-- `make app-dev` runs the app against the local server.
+- `make app-web` and `make app-macos` run the app against the local server.
 - The Gemini key is entered in the app like in production.
+- A developer's keys live in `.env` at the root, copied from `.env.example` and
+  ignored by git. The Makefile loads it and exports its variables to every
+  target, one `NAME=value` per line without quotes; a variable given on the
+  make command line wins.
+
+| Variable | Read by |
+| --- | --- |
+| `HOMEWARD_EVAL_GEMINI_KEY`, `HOMEWARD_EVAL_GEMINI_MOON_KEY` | `make probe`, `make eval`, and the app's development runs, never the server. Two keys from two Google accounts, two free quotas: each moves to the next key when a turn fails with `gemini_quota_exhausted` |
+| `CEREBRAS_API_KEY`, `GROQ_API_KEY` | The server, as in production |
+| `HOMEWARD_APP_CHECK_DEBUG_TOKEN` | The app's development runs, to reach a server that enforces App Check |
+
+The app's development runs, `make app-web`, `make app-macos`, and the VS Code
+launch "Homeward app", receive only their own values through
+`make app-defines`; `docs/REQUIREMENTS_APP.md` has the details.

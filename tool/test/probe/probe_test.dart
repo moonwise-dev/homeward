@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:homeward_tool/probe/describe_event.dart';
 import 'package:homeward_tool/probe/firebase_web_api_key.dart';
-import 'package:homeward_tool/probe/probe_gemini_key.dart';
+import 'package:homeward_tool/probe/gemini_keys.dart';
 import 'package:homeward_tool/probe/probe_surfaces.dart';
 import 'package:test/test.dart';
 
@@ -60,22 +60,34 @@ void main() {
     expect(firebaseWebApiKey(file), 'web-key');
   });
 
-  test('takes the key from the environment, else the key file, trimmed', () {
-    final home = Directory.systemTemp.createTempSync('probe_home');
-    addTearDown(() => home.deleteSync(recursive: true));
-
-    expect(probeGeminiKey({'HOME': home.path}), isNull);
-
-    File('${home.path}/.config/homeward/gemini_key')
-      ..parent.createSync(recursive: true)
-      ..writeAsStringSync('from-file\n');
-
-    expect(probeGeminiKey({'HOME': home.path}), 'from-file');
+  test('takes the keys from the environment, trimmed', () {
+    expect(GeminiKeys.fromEnvironment({}), isNull);
     expect(
-      probeGeminiKey({'HOME': home.path, 'HOMEWARD_EVAL_GEMINI_KEY': ' env '}),
-      'env',
+      GeminiKeys.fromEnvironment({'HOMEWARD_EVAL_GEMINI_KEY': ' '}),
+      isNull,
     );
-    expect(probeGeminiKey({'HOMEWARD_EVAL_GEMINI_KEY': ''}), isNull);
+    expect(
+      GeminiKeys.fromEnvironment({
+        'HOMEWARD_EVAL_GEMINI_MOON_KEY': ' moon ',
+      })?.current,
+      'moon',
+    );
+  });
+
+  test('moves to the next key only when a quota is exhausted', () {
+    final keys = GeminiKeys.fromEnvironment({
+      'HOMEWARD_EVAL_GEMINI_KEY': 'first',
+      'HOMEWARD_EVAL_GEMINI_MOON_KEY': 'moon',
+    })!;
+    const exhausted = 'gemini_quota_exhausted';
+
+    expect(keys.moveOnAfter(null), isFalse);
+    expect(keys.moveOnAfter('gemini_key_invalid'), isFalse);
+    expect(keys.current, 'first');
+    expect(keys.moveOnAfter(exhausted), isTrue);
+    expect(keys.current, 'moon');
+    expect(keys.moveOnAfter(exhausted), isFalse);
+    expect(keys.current, 'moon');
   });
 
   test('builds an action from the last surface that offers it', () {

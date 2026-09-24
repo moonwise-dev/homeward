@@ -78,6 +78,9 @@ first.
   accounts. A feature that needs payment is not built.
 - The Gemini API key belongs to the user. Never log, persist, or echo it. Keys
   the server holds live in Secret Manager and are never logged either.
+- Every key reaches code as an environment variable. A developer's keys live in
+  the git-ignored `.env`, copied from `.env.example`; never commit, print, or
+  paste a value.
 - Write no code comments. Names, small functions, and types carry the meaning.
 - Prefer composition and small reusable units over copy and paste; prefer
   waiting for a second use over speculative abstraction.
@@ -114,9 +117,15 @@ and catalog-check. `eval` joins as its milestone lands; `make eval` needs
 
 `make probe SERVER=http://localhost:8080 MESSAGE="…"` signs in anonymously,
 creates a session, and streams one live turn against a running server,
-printing text, surfaces, and timings. It reads the key from
-`HOMEWARD_EVAL_GEMINI_KEY`, or else `~/.config/homeward/gemini_key`, and never
-prints it.
+printing text, surfaces, and timings. It reads Gemini keys from
+`HOMEWARD_EVAL_GEMINI_KEY` and `HOMEWARD_EVAL_GEMINI_MOON_KEY`, moves to the
+second when the first hits its quota, and never prints them.
+
+The Makefile loads `.env` from the root and exports its variables to every
+target. Copy `.env.example` to `.env` once per clone and fill in the keys you
+use; `docs/REQUIREMENTS_SERVER.md` lists what reads each one. Launch the app
+with `make app-web`, `make app-macos`, or the VS Code launch "Homeward app", so
+it gets its development keys and skips the key screen.
 
 `make hooks` is run once per clone; it points git at `tool/githooks`, whose
 `pre-push` runs `make check`.

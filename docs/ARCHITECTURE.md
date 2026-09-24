@@ -387,6 +387,9 @@ sees the turn.
   them.
 - No Gemini key is stored in the project. Keys are bring-your-own; see
   `docs/REQUIREMENTS_SERVER.md`.
+- Keys the server holds, the research model's, live in Secret Manager and reach
+  the server as environment variables at deploy (D115); locally they live in
+  the git-ignored `.env`.
 
 ### Cost
 
@@ -402,7 +405,10 @@ Homeward is designed to cost nothing to run (D40, D42, D43):
 - reCAPTCHA Enterprise stays within its free 10,000 assessments a month: each
   App Check token exchange is one assessment, and tokens last a day. Above that
   it costs a flat $8 a month up to 100,000.
-- No Secret Manager, no paid Gemini features such as Google Search grounding.
+- Secret Manager stays within its free 6 active secret versions and 10,000
+  accesses a month: one version per key with automatic replication, one access
+  per instance start.
+- No paid Gemini features such as Google Search grounding.
 - No paid store accounts: builds reach devices as web, simulators, sideloaded
   Android APKs, and personally provisioned iPhones.
 

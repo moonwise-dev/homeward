@@ -119,9 +119,7 @@ class JourneyViewModel extends _$JourneyViewModel
         code: HomewardErrorCode.geminiQuotaExhausted,
         :final retryAfter,
       ):
-        showInfoMessage(
-          message: _quotaResetMessage(retryAfter, DateTime.now()),
-        );
+        unawaited(_onQuotaExhausted(failure.entryId, retryAfter));
       case ServerAppError(code: HomewardErrorCode.geminiCreditsDepleted):
         showErrorMessage(
           error: failure.error,
@@ -140,6 +138,18 @@ class JourneyViewModel extends _$JourneyViewModel
           ),
         );
     }
+  }
+
+  Future<void> _onQuotaExhausted(String entryId, Duration? retryAfter) async {
+    final agent = ref.read(agentRepositoryProvider);
+    if (await ref.read(geminiKeyRepositoryProvider).useNextKey()) {
+      showInfoMessage(
+        message: 'That Gemini key hit its limit; trying your next key.',
+      );
+      await agent.retry(sessionId, entryId);
+      return;
+    }
+    showInfoMessage(message: _quotaResetMessage(retryAfter, DateTime.now()));
   }
 }
 
