@@ -64,7 +64,6 @@ official calculator or a tax authority worked example.
 | Stream parser | Prose and fenced blocks split correctly across arbitrary delta boundaries |
 | Validation passes | One fixture per rule in `docs/PROTOCOL.md`, valid and invalid |
 | Surface seeding | Seeds contain exactly the slices bound components need |
-| Board compiler | Plan fixtures to expected A2UI messages |
 | A2A | JSON-RPC dispatch and SSE framing against recorded frame fixtures; the app's `HomewardClient` from `common/wire` reads a scripted turn and its failures through the real app handler; an unexpected error ends a turn with `internal` |
 | Key verification | Model lookup request, invalid key, unknown model, and deadline to typed errors; the route's statuses and envelope |
 | Gemini client | Recorded streams and error bodies to typed events and errors, request JSON, headers and first-step deadlines, fallback only before output, circuits, no key in any error, the next midnight Pacific across daylight saving changes |
@@ -275,7 +274,7 @@ changes.
 ### Replay Mode
 
 Planned: `make eval-replay` replays recorded Gemini streams from the last report
-so parser, validation, seeding, and board changes can be checked without a key.
+so parser, validation, and seeding changes can be checked without a key.
 The report does not record the raw streams yet.
 
 The eval library itself is covered without a key: the cases load, the scores

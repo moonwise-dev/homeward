@@ -21,12 +21,12 @@ enum SurfaceAction {
     ['scenarioPath'],
     'The buyer keeps a scenario; the server checks it against the rules.',
   ),
-  toggleDocument(
-    'toggle_document',
-    ['documentId'],
-    'The buyer ticks a document off the checklist.',
+  change(
+    'change',
+    ['section'],
+    'The buyer reopens a decision: the story, the home, the market, or the '
+        'scenario.',
   ),
-  change('change', ['section'], 'The buyer reopens a decision on the board.'),
   explain(
     'explain',
     ['topic', 'path'],

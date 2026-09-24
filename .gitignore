@@ -23,3 +23,9 @@ app.*.map.json
 
 .firebase/
 firebase-debug.log
+
+**/doc/api/
+**/ios/Flutter/.last_build_id
+app/android/app/debug
+app/android/app/profile
+app/android/app/release

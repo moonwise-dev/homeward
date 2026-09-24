@@ -107,53 +107,8 @@ void main() {
       if (event case TurnMessage(:final message)) message,
   ];
 
-  bool drawsTheBoard(Map<String, Object?> message) => message.values
-      .whereType<Map<String, Object?>>()
-      .any((body) => body['surfaceId'] == InlineSurfaces.boardId);
-
-  List<Map<String, Object?>> messagesIn(List<TurnEvent> events) => [
-    for (final message in allMessagesIn(events))
-      if (!drawsTheBoard(message)) message,
-  ];
-
-  List<Map<String, Object?>> boardIn(List<TurnEvent> events) => [
-    for (final message in allMessagesIn(events))
-      if (drawsTheBoard(message)) message,
-  ];
-
-  test('the board follows the turn, drawn by the server', () async {
-    await sessions.create('uid-1');
-    final script = ScriptedInteractions([
-      reply(
-        'i1',
-        calls: const [
-          FunctionCall(
-            callId: 'c1',
-            name: 'resolve_market',
-            arguments: {'placeName': 'Stockholm', 'countryCode': 'SE'},
-          ),
-        ],
-      ),
-      reply('i2', text: 'Sweden it is.'),
-    ]);
-
-    final board = boardIn(await send(orchestrator(script)).toList());
-
-    expect(
-      [for (final message in board) message.keys.last],
-      [
-        'createSurface',
-        'updateDataModel',
-        'updateDataModel',
-        'updateDataModel',
-        'updateComponents',
-      ],
-    );
-    expect(
-      jsonEncode(board.last),
-      contains('"component":"MarketSnapshotCard"'),
-    );
-  });
+  List<Map<String, Object?>> messagesIn(List<TurnEvent> events) =>
+      allMessagesIn(events);
 
   test(
     'resolves the market, pre-runs its rules, and draws a seeded form',

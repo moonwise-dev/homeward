@@ -107,6 +107,11 @@ class OpeningPage extends StatelessWidget {
               icon: Icons.arrow_forward,
               onPressed: canStart ? onStart : null,
             ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              'Homeward estimates and explains. It is not financial advice.',
+              style: AppTextStyles.caption,
+            ),
           ],
         ),
       ),

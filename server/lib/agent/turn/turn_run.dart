@@ -14,7 +14,6 @@ import '../../logging/log_entry.dart';
 import '../../tools/profile_field_paths.dart';
 import '../actions/action_input.dart';
 import '../actions/apply_action.dart';
-import '../board/compile_board.dart';
 import '../json_reply_parser.dart';
 import '../output_parser.dart';
 import '../parsed_output.dart';
@@ -269,9 +268,6 @@ final class TurnRun {
           (_text.toString().trim().isEmpty ||
               (turnInput is ActionTurnInput && _homesReady))) {
         yield* _fallback();
-      }
-      for (final message in compileBoard(plan: _plan, markets: tools.markets)) {
-        yield TurnEvent.message(message);
       }
       _log.info(
         LogEntry(

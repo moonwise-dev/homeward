@@ -147,7 +147,6 @@ String _surfaceActionLabel(String wireName) =>
       SurfaceAction.selectMarket => 'Chose the market',
       SurfaceAction.commitProfile => 'Saved my details',
       SurfaceAction.commitScenario => 'Kept this scenario',
-      SurfaceAction.toggleDocument => 'Updated the checklist',
       SurfaceAction.change => 'Reopened a decision',
       SurfaceAction.explain => 'Asked why',
       SurfaceAction.compareLoanTypes => 'Asked to compare loan types',

@@ -87,7 +87,7 @@ void main() {
     );
   });
 
-  test('gives back the turns of a plan with a freshly drawn board', () async {
+  test('gives back the turns of a plan', () async {
     final session = await sessions.create('uid-1');
     await sessions.save(
       session.copyWith(
@@ -118,7 +118,6 @@ void main() {
       transcript.turns.single.input,
       const RecordedInput.text('I am buying in Stockholm'),
     );
-    expect(jsonEncode(transcript.board), contains('"surfaceId":"board"'));
   });
 
   test('hides a plan owned by somebody else', () async {

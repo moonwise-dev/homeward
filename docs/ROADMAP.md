@@ -237,6 +237,7 @@ Decisions from the planning session on 2026-09-16.
 | D111 | The app's layout | Flutter's guide to app architecture: `ui/<feature>/view_model` and `widgets`, `ui/core` for themes and shared widgets, `data/repositories` and `services`, `domain/models`, `routing`, `config`, and one folder per catalog component holding its item and view. Riverpod stays, its notifiers named view models. A file keeps the small things only it uses, which replaces one public type per file. The Purrtrait layout had spread one component over two folders and one-function files over `display/` | Feature folders with a design system package, as Very Good Ventures does; keeping the layout and only consolidating; plain `ChangeNotifier` view models |
 | D112 | Open data that is slow | Every open-data answer is kept in Firestore for a week, keyed by the SHA-256 of its request and gzipped, behind the six-hour memory cache, whenever sessions are in Firestore. On 2026-09-24 one Overpass query took 25 s and every public Overpass instance was timing out, which made the board wait 37 to 53 s; a rehearsed city now answers at once after a Cloud Run restart. A Firestore failure is a cache miss, never a failed turn | A warm-up run before recording, which a restart undoes; accepting the wait behind the measuring overlay |
 | D113 | The deal after a home is chosen | Two pages. The facts page asks only what the rules need, filled in from the story. The deal sheet is one surface with the affordability, the down payment slider, the payment, the stress test, the purchase costs, and the rules, all recomputed on the device. It replaces a market card on the form and separate affordability and stress-test turns, and matches the pitch's deal workspace | One page where figures fill in while the buyer types, the riskiest change before Sep 28; polishing the step-by-step deal, four waits after choosing |
+| D114 | The plan board | Removed. It was a server-compiled summary pane from the chat design, and after D113 it only repeated what the journey pages and the deal sheet show. Its compiler, the `board` surface, the `toggle_document` action, and the app's pane go with it, and the disclaimer moves to the opening page. `change` stays as an action Gemini can put on any page | Keeping it as a "Your plan" pane beside the journey |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.
@@ -248,7 +249,7 @@ them before M0 ends.
 | P3 | Server uses `shelf`, `shelf_router`, `firebase_admin_sdk`, no DI framework | Minimal, official where available |
 | P4 | Model emits A2UI as JSONL in fenced blocks, validated server-side | Prompt-first is the A2UI v0.9 and genui direction and streams progressively |
 | P5 | Homeward components take coarse slice bindings; client functions serve basic components and checks | The model cannot mis-wire formulas it never writes |
-| P6 | The board is compiled by the server without the model | Consistent, instant, cheap |
+| P6 | The board is compiled by the server without the model; superseded by D114 | Consistent, instant, cheap |
 | P7 | Placement by surface ID namespace | Survives any connector |
 | P8 | Reference rates from dated snapshots, never fetched per request | Deterministic demos and tests |
 | P9 | Chat text never states money amounts or rates | Figures stay in code-computed components |

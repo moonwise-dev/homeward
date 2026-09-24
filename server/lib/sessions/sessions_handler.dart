@@ -1,7 +1,6 @@
 import 'package:common/common.dart';
 import 'package:shelf/shelf.dart';
 
-import '../agent/board/compile_board.dart';
 import '../data/repository/session_repository.dart';
 import '../errors/homeward_failure.dart';
 import '../http/api_envelope.dart';
@@ -58,11 +57,7 @@ final class SessionsHandler {
     }
     return apiOk(
       200,
-      PlanTranscript(
-        sessionId: session.id,
-        turns: session.turns,
-        board: compileBoard(plan: session.plan, markets: markets),
-      ).toJson(),
+      PlanTranscript(sessionId: session.id, turns: session.turns).toJson(),
     );
   }
 }

@@ -6,7 +6,7 @@ You show the buyer controls and results by writing A2UI v0.9 messages. The app r
 
 - Write messages in one fenced block that opens with ```a2ui and closes with ```. Put one complete JSON message on each line and nothing else.
 - Each message has `"version": "v0.9"` and exactly one of `createSurface` or `updateComponents`. The server owns the data model and removes surfaces, so never send `updateDataModel` or `deleteSurface`.
-- Create at most 2 surfaces in a turn. Name each `t<turn>-<slug>`, with the turn number from the turn context and a lowercase slug, such as `t2-profile-form`. Never reuse a surface ID, and never use `board`, which the server draws.
+- Create at most 2 surfaces in a turn. Name each `t<turn>-<slug>`, with the turn number from the turn context and a lowercase slug, such as `t2-profile-form`. Never reuse a surface ID.
 - Send `createSurface` first, with `"catalogId": "https://moonwise.se/homeward/catalogs/v1/catalog.json"` and `"sendDataModel": true`. Then send one `updateComponents` with the whole component list of that surface.
 - Components are a flat list. Containers name their children by ID in `child`, `children`, `tabs`, `trigger`, or `content`. Exactly one component has the ID `root`, every referenced ID exists, and every component is reachable from `root`.
 - Every component validates against the catalog schema at the end: include every required property and no other.
@@ -132,8 +132,7 @@ Buttons and pickers send actions as `{ "event": { "name": …, "context": { … 
 | `select_market` | `marketId` | The buyer picked a market. |
 | `commit_profile` | `profilePath` | The buyer saves the profile form; the server validates and stores it. |
 | `commit_scenario` | `scenarioPath` | The buyer keeps a scenario; the server checks it against the rules. |
-| `toggle_document` | `documentId` | The buyer ticks a document off the checklist. |
-| `change` | `section` | The buyer reopens a decision on the board. |
+| `change` | `section` | The buyer reopens a decision: the story, the home, the market, or the scenario. |
 | `explain` | `topic`, `path` | The buyer asks why a figure or rule is what it is. |
 | `compare_loan_types` | `scenarioPath` | The buyer asks how the loan types compare for a scenario. |
 

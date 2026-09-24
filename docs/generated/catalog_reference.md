@@ -204,7 +204,6 @@ Figures the server computed for the scenario, read-only.
 | `select_market` | `marketId` | The buyer picked a market. |
 | `commit_profile` | `profilePath` | The buyer saves the profile form; the server validates and stores it. |
 | `commit_scenario` | `scenarioPath` | The buyer keeps a scenario; the server checks it against the rules. |
-| `toggle_document` | `documentId` | The buyer ticks a document off the checklist. |
-| `change` | `section` | The buyer reopens a decision on the board. |
+| `change` | `section` | The buyer reopens a decision: the story, the home, the market, or the scenario. |
 | `explain` | `topic`, `path` | The buyer asks why a figure or rule is what it is. |
 | `compare_loan_types` | `scenarioPath` | The buyer asks how the loan types compare for a scenario. |

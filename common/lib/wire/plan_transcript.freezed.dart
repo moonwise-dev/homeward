@@ -958,7 +958,7 @@ as DateTime?,
 /// @nodoc
 mixin _$PlanTranscript {
 
- String get sessionId; List<TurnRecord> get turns; List<Map<String, Object?>> get board;
+ String get sessionId; List<TurnRecord> get turns;
 /// Create a copy of PlanTranscript
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -972,20 +972,20 @@ $PlanTranscriptCopyWith<PlanTranscript> get copyWith => _$PlanTranscriptCopyWith
 @override
 bool operator ==(Object other) {
   final _this = this as PlanTranscript;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlanTranscript&&(identical(other.sessionId, _this.sessionId) || other.sessionId == _this.sessionId)&&const DeepCollectionEquality().equals(other.turns, _this.turns)&&const DeepCollectionEquality().equals(other.board, _this.board));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlanTranscript&&(identical(other.sessionId, _this.sessionId) || other.sessionId == _this.sessionId)&&const DeepCollectionEquality().equals(other.turns, _this.turns));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as PlanTranscript;
-  return Object.hash(runtimeType,_this.sessionId,const DeepCollectionEquality().hash(_this.turns),const DeepCollectionEquality().hash(_this.board));
+  return Object.hash(runtimeType,_this.sessionId,const DeepCollectionEquality().hash(_this.turns));
 }
 
 @override
 String toString() {
   final _this = this as PlanTranscript;
-  return 'PlanTranscript(sessionId: ${_this.sessionId}, turns: ${_this.turns}, board: ${_this.board})';
+  return 'PlanTranscript(sessionId: ${_this.sessionId}, turns: ${_this.turns})';
 }
 
 
@@ -996,7 +996,7 @@ abstract mixin class $PlanTranscriptCopyWith<$Res>  {
   factory $PlanTranscriptCopyWith(PlanTranscript value, $Res Function(PlanTranscript) _then) = _$PlanTranscriptCopyWithImpl;
 @useResult
 $Res call({
- String sessionId, List<TurnRecord> turns, List<Map<String, Object?>> board
+ String sessionId, List<TurnRecord> turns
 });
 
 
@@ -1013,12 +1013,11 @@ class _$PlanTranscriptCopyWithImpl<$Res>
 
 /// Create a copy of PlanTranscript
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? sessionId = null,Object? turns = null,Object? board = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? sessionId = null,Object? turns = null,}) {
   return _then(PlanTranscript(
 sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as String,turns: null == turns ? _self.turns : turns // ignore: cast_nullable_to_non_nullable
-as List<TurnRecord>,board: null == board ? _self.board : board // ignore: cast_nullable_to_non_nullable
-as List<Map<String, Object?>>,
+as List<TurnRecord>,
   ));
 }
 
@@ -1103,10 +1102,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String sessionId,  List<TurnRecord> turns,  List<Map<String, Object?>> board)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String sessionId,  List<TurnRecord> turns)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlanTranscript() when $default != null:
-return $default(_that.sessionId,_that.turns,_that.board);case _:
+return $default(_that.sessionId,_that.turns);case _:
   return orElse();
 
 }
@@ -1124,10 +1123,10 @@ return $default(_that.sessionId,_that.turns,_that.board);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String sessionId,  List<TurnRecord> turns,  List<Map<String, Object?>> board)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String sessionId,  List<TurnRecord> turns)  $default,) {final _that = this;
 switch (_that) {
 case _PlanTranscript():
-return $default(_that.sessionId,_that.turns,_that.board);case _:
+return $default(_that.sessionId,_that.turns);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1144,10 +1143,10 @@ return $default(_that.sessionId,_that.turns,_that.board);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String sessionId,  List<TurnRecord> turns,  List<Map<String, Object?>> board)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String sessionId,  List<TurnRecord> turns)?  $default,) {final _that = this;
 switch (_that) {
 case _PlanTranscript() when $default != null:
-return $default(_that.sessionId,_that.turns,_that.board);case _:
+return $default(_that.sessionId,_that.turns);case _:
   return null;
 
 }
@@ -1159,7 +1158,7 @@ return $default(_that.sessionId,_that.turns,_that.board);case _:
 @JsonSerializable()
 
 class _PlanTranscript implements PlanTranscript {
-  const _PlanTranscript({required this.sessionId,  List<TurnRecord> turns = const [],  List<Map<String, Object?>> board = const []}): _turns = turns,_board = board;
+  const _PlanTranscript({required this.sessionId,  List<TurnRecord> turns = const []}): _turns = turns;
   factory _PlanTranscript.fromJson(Map<String, dynamic> json) => _$PlanTranscriptFromJson(json);
 
 @override final  String sessionId;
@@ -1168,13 +1167,6 @@ class _PlanTranscript implements PlanTranscript {
   if (_turns is EqualUnmodifiableListView) return _turns;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_turns);
-}
-
- final  List<Map<String, Object?>> _board;
-@override@JsonKey() List<Map<String, Object?>> get board {
-  if (_board is EqualUnmodifiableListView) return _board;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_board);
 }
 
 
@@ -1191,18 +1183,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlanTranscript&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&const DeepCollectionEquality().equals(other.turns, _turns)&&const DeepCollectionEquality().equals(other.board, _board));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlanTranscript&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&const DeepCollectionEquality().equals(other.turns, _turns));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,sessionId,const DeepCollectionEquality().hash(_turns),const DeepCollectionEquality().hash(_board));
+    return Object.hash(runtimeType,sessionId,const DeepCollectionEquality().hash(_turns));
 }
 
 @override
 String toString() {
-    return 'PlanTranscript(sessionId: $sessionId, turns: $turns, board: $board)';
+    return 'PlanTranscript(sessionId: $sessionId, turns: $turns)';
 }
 
 
@@ -1213,7 +1205,7 @@ abstract mixin class _$PlanTranscriptCopyWith<$Res> implements $PlanTranscriptCo
   factory _$PlanTranscriptCopyWith(_PlanTranscript value, $Res Function(_PlanTranscript) _then) = __$PlanTranscriptCopyWithImpl;
 @override @useResult
 $Res call({
- String sessionId, List<TurnRecord> turns, List<Map<String, Object?>> board
+ String sessionId, List<TurnRecord> turns
 });
 
 
@@ -1230,12 +1222,11 @@ class __$PlanTranscriptCopyWithImpl<$Res>
 
 /// Create a copy of PlanTranscript
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? sessionId = null,Object? turns = null,Object? board = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? sessionId = null,Object? turns = null,}) {
   return _then(_PlanTranscript(
 sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as String,turns: null == turns ? _self._turns : turns // ignore: cast_nullable_to_non_nullable
-as List<TurnRecord>,board: null == board ? _self._board : board // ignore: cast_nullable_to_non_nullable
-as List<Map<String, Object?>>,
+as List<TurnRecord>,
   ));
 }
 

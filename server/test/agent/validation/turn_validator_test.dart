@@ -115,15 +115,15 @@ void main() {
   });
 
   test('rejections are A2UI VALIDATION_FAILED errors', () {
-    final outcome = validatorForTurn(1).validate(create('board')) as Rejected;
+    final outcome = validatorForTurn(1).validate(create('plan')) as Rejected;
 
     expect(outcome.failure.toJson(), {
       'version': 'v0.9',
       'error': {
         'code': 'VALIDATION_FAILED',
-        'surfaceId': 'board',
+        'surfaceId': 'plan',
         'path': '/createSurface/surfaceId',
-        'message': 'The board is compiled by the server',
+        'message': 'Surface ids in turn 1 look like t1-budget',
       },
     });
   });

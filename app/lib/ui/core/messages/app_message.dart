@@ -32,4 +32,4 @@ abstract class AppMessageAction with _$AppMessageAction {
   }) = _AppMessageAction;
 }
 
-enum AppMessageType { info, success, error }
+enum AppMessageType { info, error }

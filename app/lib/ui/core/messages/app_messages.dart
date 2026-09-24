@@ -17,13 +17,6 @@ class AppMessages extends _$AppMessages {
         action: action,
       );
 
-  void showSuccess({required String message, AppMessageAction? action}) =>
-      state = AppMessage.create(
-        type: AppMessageType.success,
-        message: message,
-        action: action,
-      );
-
   void showError({required Object error, AppMessageAction? action}) =>
       state = AppMessage.create(
         type: AppMessageType.error,

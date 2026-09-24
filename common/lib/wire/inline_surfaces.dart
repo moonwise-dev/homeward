@@ -1,6 +1,4 @@
 abstract final class InlineSurfaces {
-  static const boardId = 'board';
-
   static const maxPerTurn = 2;
 
   static RegExp idPattern(int turn) =>

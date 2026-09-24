@@ -77,10 +77,6 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
         plan.surfaces.handleMessage(a2ui.A2uiMessage.fromJson(message));
       }
     }
-    for (final message in transcript.board) {
-      plan.surfaces.handleMessage(a2ui.A2uiMessage.fromJson(message));
-      plan.hasBoard = true;
-    }
     plan.emit();
   });
 
@@ -126,7 +122,7 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
         if (message case {
           'createSurface': {'surfaceId': final String surfaceId},
         })
-          if (surfaceId != InlineSurfaces.boardId) surfaceId,
+          surfaceId,
     ],
     error: turn.errorCode == null
         ? null
@@ -291,17 +287,11 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
         if (normalized case {
           'createSurface': {'surfaceId': final String surfaceId},
         }) {
-          if (surfaceId == InlineSurfaces.boardId) {
-            plan
-              ..hasBoard = true
-              ..emit();
-          } else {
-            plan.updateAgent(
-              entryId,
-              (entry) =>
-                  entry.copyWith(surfaceIds: [...entry.surfaceIds, surfaceId]),
-            );
-          }
+          plan.updateAgent(
+            entryId,
+            (entry) =>
+                entry.copyWith(surfaceIds: [...entry.surfaceIds, surfaceId]),
+          );
         }
       case AgentProgress(:final progress):
         plan.updateAgent(
@@ -393,13 +383,11 @@ class _PlanSession {
   StreamSubscription<ChatMessage>? submissions;
   String? taskId;
   var isRunning = false;
-  var hasBoard = false;
   var isOpened = false;
 
   PlanConversation get conversation => PlanConversation(
     entries: List.unmodifiable(entries),
     isRunning: isRunning,
-    hasBoard: hasBoard,
   );
 
   TranscriptEntry? entry(String id) =>

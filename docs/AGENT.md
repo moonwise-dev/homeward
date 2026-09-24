@@ -113,8 +113,8 @@ minute and 24 of 20 a day.
 ## Open Decisions
 
 `common/lib/plan/open_decisions.dart` derives, from the plan and the resolved
-rule pack, an ordered list of what is still open. It is the agent's map and the
-server's source for the board. It is pure and unit tested.
+rule pack, an ordered list of what is still open. It is the agent's map. It is
+pure and unit tested.
 
 | Open decision | Opens when |
 | --- | --- |
@@ -254,8 +254,7 @@ owner, and leases it; `turn_run.dart` runs one turn:
    `session_not_found`. M1 keeps sessions in `InMemorySessionRepository`
    behind `SessionRepository`; Firestore with a transactional lease replaces it
    in M2.
-2. If the input is an action the server can complete, apply it to the plan. If
-   it needs no model, recompile the board, finish.
+2. If the input is an action the server can complete, apply it to the plan.
 3. Replay the session's stored A2UI messages into the shadow processor.
 4. Before every model request, not only the first:
    - Run every tool whose `settledArguments` the current plan provides, such as
@@ -447,7 +446,7 @@ and Google Maps grounding for ratings when the buyer asks.
 - Homeward estimates and explains. It does not recommend a lender, a product, or
   a decision to buy.
 - Every surface that shows a rule-derived figure shows coverage.
-- The disclaimer is part of the board and the first surface of every plan.
+- The disclaimer is on the opening page of every plan.
 - Chat text containing money amounts or rates is flagged by evals.
 - Tool errors become a short explanation and a retry surface, never invented
   figures.

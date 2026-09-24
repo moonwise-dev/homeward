@@ -57,7 +57,6 @@ abstract class PlanTranscript with _$PlanTranscript {
   const factory PlanTranscript({
     required String sessionId,
     @Default([]) List<TurnRecord> turns,
-    @Default([]) List<Map<String, Object?>> board,
   }) = _PlanTranscript;
 
   factory PlanTranscript.fromJson(Map<String, Object?> json) =>

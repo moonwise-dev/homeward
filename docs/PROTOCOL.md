@@ -292,11 +292,9 @@ Placement is encoded in the surface ID so it survives any connector.
 
 | Surface ID | Placement | Author |
 | --- | --- | --- |
-| `board` | Plan board: side pane on wide screens, sheet on phones | Server, compiled from the plan record |
 | `t{turn}-{slug}` | On the journey page of turn `{turn}` | Model, validated by server; `t{turn}-homes` and `t{turn}-retry` are server-drawn fallbacks (D109) |
 
 - At most two inline surfaces per turn.
-- The model never creates, updates, or deletes `board`.
 - Surface IDs are unique per session.
 
 ### Lifecycle
@@ -305,18 +303,12 @@ Placement is encoded in the surface ID so it survives any connector.
 - When a later commit supersedes it, the server writes `/ui/locked: true` into
   its data model. Interactive Homeward components render read-only when locked.
 - `deleteSurface` is used only when a turn is canceled mid-stream.
-- `board` is sent whole after every turn that has anything to show:
-  `createSurface`, the slices it reads, then `updateComponents`. The client
-  replaces whatever it had, so a client that joins mid-session gets a complete
-  board.
 
 ### Replay
 
 Every A2UI message the server forwards is stored with its turn. Opening a plan
 replays them in order into a fresh `SurfaceController`. Uncommitted what-if
-changes are not stored and are not replayed. The board is not stored with the
-turn, because it repeats the whole market each time and would outgrow the
-session record; it is compiled again from the plan record.
+changes are not stored and are not replayed.
 
 ## Data Model
 
@@ -346,7 +338,6 @@ The model binds to these paths and never writes values.
   costs                  itemized upfront costs and total
   cashNeeded
   eligibility            checks with status and reason
-/plan                    committed decisions, board only
 /ui                      locked
 ```
 
@@ -370,7 +361,6 @@ and `/market` through `common/finance` when the buyer changes a bound input.
 | `commit_profile` | `profilePath` | Save every valid field from the surface's `/profile` over the saved profile, clear the draft, and report invalid fields |
 | `select_market` | `marketId` | Resolve market, write to plan; profile facts on the surface become the profile draft |
 | `commit_scenario` | `scenarioPath` | Parse `/scenario`, refuse it unless amounts are in the market currency and `withinMaxLtv` holds, then save it and clear the draft |
-| `toggle_document` | `documentId` | Toggle checklist state, recompile board, no model call |
 | `change` | `section` | Release the decision in the plan, then run the model |
 | `explain` | `topic`, `path` | Run the model with the resolved value and its source attached |
 | `compare_loan_types` | `scenarioPath` | Run the model with loan types attached |
@@ -403,7 +393,7 @@ pass rejects it.
 2. **Envelope.** `A2uiMessage.fromJson` from `a2ui_core`: exactly one message
    type, `version` is `v0.9`. It reports wrong field types as raw cast errors,
    so the pass maps any `TypeError` to a `VALIDATION_FAILED` error.
-3. **Ownership.** Surface ID matches the turn namespace; `board` is refused.
+3. **Ownership.** Surface ID matches the turn namespace.
    The model may send only `createSurface`, with the Homeward catalog ID and at
    most two per turn, and `updateComponents` for a surface it created in this
    turn. `updateDataModel` and `deleteSurface` are the server's.

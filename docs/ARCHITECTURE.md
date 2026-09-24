@@ -166,7 +166,7 @@ server/
     middleware/     request context, request logging, internal errors;
                     later auth, app check, gemini key, redaction, rate limit, cors
     a2a/            agent card, json-rpc dispatch, sse writer, task registry
-    agent/          stream parser; board compiler
+    agent/          stream parser, turn run, validation
       prompt/       prompt assembler, turn context
       turn/         turn orchestrator and run, tool belt, seeds, surface
                     seeder, corrections
@@ -256,8 +256,8 @@ app/lib/
     <component>/          <component>_item.dart and <component>_view.dart
 ```
 
-Features are `startup`, `api_key`, `plans`, `journey`, `plan_board`,
-`gallery`, and `wire_inspector`. A file holds a widget or type together with
+Features are `startup`, `api_key`, `plans`, `journey`, `gallery`, and
+`wire_inspector`. A file holds a widget or type together with
 the small things only it uses: its enum, its labels, its formats. Something
 two files use moves to the nearest folder both can see.
 
@@ -303,7 +303,7 @@ common/finance/payment.dart                             the numbers
 ```
 
 The widget a catalog item builds takes plain typed values and callbacks, so it
-renders identically in the catalog gallery, in a surface, and on the plan board.
+renders identically in the catalog gallery and on a journey page.
 
 ### Web Build
 
@@ -324,7 +324,6 @@ headers.
 | `api_key` | Entering, verifying, and removing the Gemini key |
 | `plans` | Plan list and creating a plan |
 | `journey` | The opening page, one page per turn, the measuring overlay, history, turn streaming |
-| `plan_board` | Board surface placement: side pane on wide screens, sheet on phones |
 | `gallery` | Every catalog item with example data |
 | `wire_inspector` | A2A frames with their sizes, the A2UI message each carried, the live data model of a surface, and the counters; every write a bound input makes is counted where the app writes it |
 | `settings` | Key, disclaimer, about, reset |
@@ -352,8 +351,7 @@ app                         server                                 gemini
  │                            │◄──────── ```a2ui JSONL ───────────────┤
  │                            │ parse → validate → seed → forward     │
  │◄── data part (A2UI) ───────┤                                       │
- │                            │ persist turn, update plan, compile board
- │◄── data part (board A2UI) ─┤                                       │
+ │                            │ persist turn, update plan             │
  │◄── status-update completed ┤                                       │
 ```
 

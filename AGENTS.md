@@ -127,7 +127,8 @@ Always resolve dependencies from the root with `make get`. Running
 Generated files are committed and never edited by hand:
 
 - `*.g.dart` and `*.freezed.dart`, from `make codegen`; `make codegen-check`
-  fails when they are stale
+  fails when they are stale. `.vscode/settings.json` nests them under their
+  source file and hides build caches, so folders show what people write
 - `app/lib/firebase_options.dart`, `app/firebase.json`,
   `app/android/app/google-services.json`, and both
   `GoogleService-Info.plist` files, from `flutterfire configure`

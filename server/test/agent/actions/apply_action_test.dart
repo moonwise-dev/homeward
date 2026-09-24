@@ -114,7 +114,7 @@ void main() {
     expect(committed({'price': stockholmScenario.price.toJson()}), isNull);
   });
 
-  test('a change on the board reopens what it names', () {
+  test('a change reopens what it names', () {
     final planned = Plan(
       marketId: MarketId.parse('SE'),
       profile: stockholmProfile,

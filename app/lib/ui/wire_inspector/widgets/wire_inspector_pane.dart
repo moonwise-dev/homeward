@@ -1,4 +1,3 @@
-import 'package:common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -107,7 +106,6 @@ class WireInspectorPane extends HookConsumerWidget {
   }
 
   List<String> _surfacesOf(PlanConversation conversation) => [
-    if (conversation.hasBoard) InlineSurfaces.boardId,
     for (final entry in conversation.entries)
       if (entry case AgentEntry(:final surfaceIds)) ...surfaceIds,
   ];

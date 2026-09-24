@@ -34,7 +34,7 @@ void main() {
         index: 2,
         input: RecordedInput.action(
           name: 'change_down_payment',
-          surfaceId: 'board',
+          surfaceId: 't1-profile',
           sourceComponentId: 'costs-change',
         ),
         status: TurnStatus.failed,

@@ -151,7 +151,7 @@ Map<String, dynamic> _$PlanListingToJson(_PlanListing instance) =>
 
 _PlanTranscript _$PlanTranscriptFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_PlanTranscript', json, ($checkedConvert) {
-      $checkKeys(json, allowedKeys: const ['sessionId', 'turns', 'board']);
+      $checkKeys(json, allowedKeys: const ['sessionId', 'turns']);
       final val = _PlanTranscript(
         sessionId: $checkedConvert('sessionId', (v) => v as String),
         turns: $checkedConvert(
@@ -159,14 +159,6 @@ _PlanTranscript _$PlanTranscriptFromJson(Map<String, dynamic> json) =>
           (v) =>
               (v as List<dynamic>?)
                   ?.map((e) => TurnRecord.fromJson(e as Map<String, dynamic>))
-                  .toList() ??
-              const [],
-        ),
-        board: $checkedConvert(
-          'board',
-          (v) =>
-              (v as List<dynamic>?)
-                  ?.map((e) => e as Map<String, dynamic>)
                   .toList() ??
               const [],
         ),
@@ -178,5 +170,4 @@ Map<String, dynamic> _$PlanTranscriptToJson(_PlanTranscript instance) =>
     <String, dynamic>{
       'sessionId': instance.sessionId,
       'turns': instance.turns.map((e) => e.toJson()).toList(),
-      'board': instance.board,
     };

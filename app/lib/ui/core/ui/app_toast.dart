@@ -25,10 +25,6 @@ class AppToast extends StatelessWidget {
   Widget build(BuildContext context) {
     final (color, icon) = switch (type) {
       AppMessageType.info => (AppColors.info, Icons.info_outline),
-      AppMessageType.success => (
-        AppColors.positive,
-        Icons.check_circle_outline,
-      ),
       AppMessageType.error => (AppColors.danger, Icons.error_outline),
     };
     final actionLabel = this.actionLabel;

@@ -20,7 +20,7 @@ settled them.
 | Token | Light | Use |
 | --- | --- | --- |
 | `background` | `#F6F4EF` | Page |
-| `surface` | `#FFFFFF` | Cards, sheets, board |
+| `surface` | `#FFFFFF` | Cards and sheets |
 | `surfaceMuted` | `#EFECE5` | Table stripes, input fills |
 | `border` | `#DDD8CD` | Card and field borders |
 | `borderStrong` | `#C5BFB1` | Focus-adjacent, dividers in tables |
@@ -49,7 +49,7 @@ tabular numerals so columns and animated values never jitter.
 
 | Style | Font | Size / weight | Use |
 | --- | --- | --- | --- |
-| `display` | Fraunces | 28 / 600 | Plan title, board heading |
+| `display` | Fraunces | 28 / 600 | Page titles |
 | `title` | Fraunces | 20 / 600 | Card titles |
 | `body` | Inter | 15 / 400 | Chat text, descriptions |
 | `label` | Inter | 13 / 500 | Field labels, table headers |
@@ -80,9 +80,8 @@ slot left unset would render in the platform's own face.
 - `AppSpacing`: 4, 8, 12, 16, 24, 32, 48.
 - `AppRadii`: `sm` 8, `md` 12, `lg` 16, `pill` 999.
 - Cards: `surface`, 1 px `border`, radius `md`, no shadow.
-- Sheets: the page background with a drag handle, and the board pane beside the
-  chat is separated by a divider rather than a shadow, so a surface the model
-  drew reads the same in both.
+- Sheets: the page background with a drag handle; a pane beside the journey is
+  separated by a divider rather than a shadow.
 - Fields: `surface` fill, 1 px `border`, radius `sm`, height 48.
 - Primary button: `accent` fill, pill, height 48, `onAccent` label.
 
@@ -167,7 +166,7 @@ Feedback: `AppMessageOverlay`, `AppToast`, `AppLoadingIndicator`.
 
 A table is `AppFigureRow`s under an `AppSectionTitle`; a two-pane screen is a
 `Row` of the chat and one pane, since only plan chat has one; a sheet is
-`showModalBottomSheet` behind a named helper, as in `showPlanBoardSheet`.
+`showModalBottomSheet` behind a named helper, as in `showHistorySheet`.
 
 ## Messages
 

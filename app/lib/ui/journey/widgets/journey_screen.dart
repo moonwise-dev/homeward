@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../core/themes/dimens.dart';
 import '../../core/themes/motion.dart';
-import '../../plan_board/widgets/plan_board_pane.dart';
 import '../../wire_inspector/widgets/wire_inspector_pane.dart';
 import '../view_model/journey_view_model.dart';
 import 'history_sheet.dart';
@@ -27,11 +26,8 @@ class JourneyScreen extends HookConsumerWidget {
     final conversation = state.conversation;
     final pages = state.pages;
     final isWide = MediaQuery.sizeOf(context).width >= AppSizes.twoPane;
-    final side = useState<_JourneySide?>(null);
-    final pane = isWide ? side.value : null;
-
-    void toggle(_JourneySide target, Future<void> Function() sheet) =>
-        isWide ? side.value = side.value == target ? null : target : sheet();
+    final showsWire = useState(false);
+    final wirePane = isWide && showsWire.value;
 
     final current = pages.isEmpty
         ? OpeningPage(
@@ -121,48 +117,31 @@ class JourneyScreen extends HookConsumerWidget {
               tooltip: 'History',
               onPressed: () => showHistorySheet(context, sessionId),
             ),
-          if (conversation.hasBoard)
-            IconButton(
-              icon: const Icon(Icons.dashboard_outlined),
-              tooltip: 'Your plan',
-              isSelected: pane == _JourneySide.board,
-              onPressed: () => toggle(
-                _JourneySide.board,
-                () => showPlanBoardSheet(context, sessionId),
-              ),
-            ),
           IconButton(
             icon: const Icon(Icons.swap_vert_outlined),
             tooltip: 'Wire inspector',
-            isSelected: pane == _JourneySide.wire,
-            onPressed: () => toggle(
-              _JourneySide.wire,
-              () => showWireInspectorSheet(context, sessionId),
-            ),
+            isSelected: wirePane,
+            onPressed: () => isWide
+                ? showsWire.value = !showsWire.value
+                : showWireInspectorSheet(context, sessionId),
           ),
         ],
       ),
       body: SafeArea(
-        child: switch (pane) {
-          null => journey,
-          final side => Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(child: journey),
-              const VerticalDivider(width: 1),
-              SizedBox(
-                width: AppSizes.boardPane,
-                child: switch (side) {
-                  _JourneySide.board => PlanBoardPane(sessionId: sessionId),
-                  _JourneySide.wire => WireInspectorPane(sessionId: sessionId),
-                },
-              ),
-            ],
-          ),
-        },
+        child: wirePane
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(child: journey),
+                  const VerticalDivider(width: 1),
+                  SizedBox(
+                    width: AppSizes.sidePane,
+                    child: WireInspectorPane(sessionId: sessionId),
+                  ),
+                ],
+              )
+            : journey,
       ),
     );
   }
 }
-
-enum _JourneySide { board, wire }

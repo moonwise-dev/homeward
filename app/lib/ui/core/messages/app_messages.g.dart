@@ -41,7 +41,7 @@ final class AppMessagesProvider
   }
 }
 
-String _$appMessagesHash() => r'944c69fd78d47d56355c79e3e6224abddee3e284';
+String _$appMessagesHash() => r'd6f28de40db134919cc0f821dee2f5b3ba12958d';
 
 abstract class _$AppMessages extends $Notifier<AppMessage?> {
   AppMessage? build();

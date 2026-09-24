@@ -144,8 +144,7 @@ ActionOutcome applyAction({
           summary: {...summary, 'applied': true, 'section': 'home'},
         ),
         _ => refused(
-          'The board reopens the story, the home, the market, or '
-          'the scenario',
+          'A change reopens the story, the home, the market, or the scenario',
         ),
       };
     case _:

@@ -188,12 +188,10 @@ final class TurnValidator {
               'inputs bound to ${unbound.join(', ')}';
   }
 
-  String? _ownershipProblem(String surfaceId) => switch (surfaceId) {
-    InlineSurfaces.boardId => 'The board is compiled by the server',
-    _ when !_surfacePattern.hasMatch(surfaceId) =>
-      'Surface ids in turn $turn look like ${InlineSurfaces.id(turn, 'budget')}',
-    _ => null,
-  };
+  String? _ownershipProblem(String surfaceId) =>
+      _surfacePattern.hasMatch(surfaceId)
+      ? null
+      : 'Surface ids in turn $turn look like ${InlineSurfaces.id(turn, 'budget')}';
 
   ValidationOutcome _apply(A2uiMessage message, void Function() record) {
     try {

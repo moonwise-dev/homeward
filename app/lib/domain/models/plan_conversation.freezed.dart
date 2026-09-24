@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PlanConversation {
 
- List<TranscriptEntry> get entries; bool get isRunning; bool get hasBoard;
+ List<TranscriptEntry> get entries; bool get isRunning;
 /// Create a copy of PlanConversation
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $PlanConversationCopyWith<PlanConversation> get copyWith => _$PlanConversationCo
 @override
 bool operator ==(Object other) {
   final _this = this as PlanConversation;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlanConversation&&const DeepCollectionEquality().equals(other.entries, _this.entries)&&(identical(other.isRunning, _this.isRunning) || other.isRunning == _this.isRunning)&&(identical(other.hasBoard, _this.hasBoard) || other.hasBoard == _this.hasBoard));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlanConversation&&const DeepCollectionEquality().equals(other.entries, _this.entries)&&(identical(other.isRunning, _this.isRunning) || other.isRunning == _this.isRunning));
 }
 
 
 @override
 int get hashCode {
   final _this = this as PlanConversation;
-  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.entries),_this.isRunning,_this.hasBoard);
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.entries),_this.isRunning);
 }
 
 @override
 String toString() {
   final _this = this as PlanConversation;
-  return 'PlanConversation(entries: ${_this.entries}, isRunning: ${_this.isRunning}, hasBoard: ${_this.hasBoard})';
+  return 'PlanConversation(entries: ${_this.entries}, isRunning: ${_this.isRunning})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $PlanConversationCopyWith<$Res>  {
   factory $PlanConversationCopyWith(PlanConversation value, $Res Function(PlanConversation) _then) = _$PlanConversationCopyWithImpl;
 @useResult
 $Res call({
- List<TranscriptEntry> entries, bool isRunning, bool hasBoard
+ List<TranscriptEntry> entries, bool isRunning
 });
 
 
@@ -68,11 +68,10 @@ class _$PlanConversationCopyWithImpl<$Res>
 
 /// Create a copy of PlanConversation
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? entries = null,Object? isRunning = null,Object? hasBoard = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? entries = null,Object? isRunning = null,}) {
   return _then(PlanConversation(
 entries: null == entries ? _self.entries : entries // ignore: cast_nullable_to_non_nullable
 as List<TranscriptEntry>,isRunning: null == isRunning ? _self.isRunning : isRunning // ignore: cast_nullable_to_non_nullable
-as bool,hasBoard: null == hasBoard ? _self.hasBoard : hasBoard // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -158,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TranscriptEntry> entries,  bool isRunning,  bool hasBoard)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TranscriptEntry> entries,  bool isRunning)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlanConversation() when $default != null:
-return $default(_that.entries,_that.isRunning,_that.hasBoard);case _:
+return $default(_that.entries,_that.isRunning);case _:
   return orElse();
 
 }
@@ -179,10 +178,10 @@ return $default(_that.entries,_that.isRunning,_that.hasBoard);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TranscriptEntry> entries,  bool isRunning,  bool hasBoard)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TranscriptEntry> entries,  bool isRunning)  $default,) {final _that = this;
 switch (_that) {
 case _PlanConversation():
-return $default(_that.entries,_that.isRunning,_that.hasBoard);case _:
+return $default(_that.entries,_that.isRunning);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +198,10 @@ return $default(_that.entries,_that.isRunning,_that.hasBoard);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TranscriptEntry> entries,  bool isRunning,  bool hasBoard)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TranscriptEntry> entries,  bool isRunning)?  $default,) {final _that = this;
 switch (_that) {
 case _PlanConversation() when $default != null:
-return $default(_that.entries,_that.isRunning,_that.hasBoard);case _:
+return $default(_that.entries,_that.isRunning);case _:
   return null;
 
 }
@@ -214,7 +213,7 @@ return $default(_that.entries,_that.isRunning,_that.hasBoard);case _:
 
 
 class _PlanConversation implements PlanConversation {
-  const _PlanConversation({ List<TranscriptEntry> entries = const [], this.isRunning = false, this.hasBoard = false}): _entries = entries;
+  const _PlanConversation({ List<TranscriptEntry> entries = const [], this.isRunning = false}): _entries = entries;
   
 
  final  List<TranscriptEntry> _entries;
@@ -225,7 +224,6 @@ class _PlanConversation implements PlanConversation {
 }
 
 @override@JsonKey() final  bool isRunning;
-@override@JsonKey() final  bool hasBoard;
 
 /// Create a copy of PlanConversation
 /// with the given fields replaced by the non-null parameter values.
@@ -237,18 +235,18 @@ _$PlanConversationCopyWith<_PlanConversation> get copyWith => __$PlanConversatio
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlanConversation&&const DeepCollectionEquality().equals(other.entries, _entries)&&(identical(other.isRunning, isRunning) || other.isRunning == isRunning)&&(identical(other.hasBoard, hasBoard) || other.hasBoard == hasBoard));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlanConversation&&const DeepCollectionEquality().equals(other.entries, _entries)&&(identical(other.isRunning, isRunning) || other.isRunning == isRunning));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_entries),isRunning,hasBoard);
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_entries),isRunning);
 }
 
 @override
 String toString() {
-    return 'PlanConversation(entries: $entries, isRunning: $isRunning, hasBoard: $hasBoard)';
+    return 'PlanConversation(entries: $entries, isRunning: $isRunning)';
 }
 
 
@@ -259,7 +257,7 @@ abstract mixin class _$PlanConversationCopyWith<$Res> implements $PlanConversati
   factory _$PlanConversationCopyWith(_PlanConversation value, $Res Function(_PlanConversation) _then) = __$PlanConversationCopyWithImpl;
 @override @useResult
 $Res call({
- List<TranscriptEntry> entries, bool isRunning, bool hasBoard
+ List<TranscriptEntry> entries, bool isRunning
 });
 
 
@@ -276,11 +274,10 @@ class __$PlanConversationCopyWithImpl<$Res>
 
 /// Create a copy of PlanConversation
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? entries = null,Object? isRunning = null,Object? hasBoard = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? entries = null,Object? isRunning = null,}) {
   return _then(_PlanConversation(
 entries: null == entries ? _self._entries : entries // ignore: cast_nullable_to_non_nullable
 as List<TranscriptEntry>,isRunning: null == isRunning ? _self.isRunning : isRunning // ignore: cast_nullable_to_non_nullable
-as bool,hasBoard: null == hasBoard ? _self.hasBoard : hasBoard // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

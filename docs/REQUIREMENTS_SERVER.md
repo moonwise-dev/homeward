@@ -3,7 +3,7 @@
 ## Scope
 
 A Dart `shelf` server on Cloud Run. It owns the agent loop, tools, rule packs,
-validation, plan state, and the board. It holds no Gemini key of its own.
+validation, and plan state. It holds no Gemini key of its own.
 
 ## Routes
 
@@ -106,12 +106,6 @@ window, and the session limit joins with Firestore in M2.
   resumption for 10 minutes. Tasks still live in memory, which holds only while
   one instance serves the plan.
 - Instances are stateless between requests. Any instance can serve any turn.
-
-## Board Compiler
-
-`server/lib/agent/board_compiler.dart` turns the plan record and resolved
-rules into the `board` surface with fixed layout rules. It uses no model. It
-runs after every plan change and on session open when the board is missing.
 
 ## Configuration
 

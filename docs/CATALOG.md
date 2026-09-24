@@ -22,12 +22,12 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
    figure shows the coverage badge and opens sources on tap.
 6. **Locked is a state, not a separate component.** Interactive components read
    `/ui/locked` and render read-only when superseded.
-7. **One widget, three places.** The widget behind each item renders the same in
-   an inline surface, on the board, and in the gallery.
+7. **One widget, two places.** The widget behind each item renders the same on
+   a journey page and in the gallery.
 
 ## Size And Phasing
 
-23 Homeward components: the three story blocks below, 11 for the deal, and 9 after the recording. The story blocks come first because the story comes first (D97, D103).
+22 Homeward components: the three story blocks below, 11 for the deal, and 8 after the recording. The story blocks come first because the story comes first (D97, D103).
 
 | # | Component | Kind | Phase |
 | --- | --- | --- | --- |
@@ -50,13 +50,9 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | 17 | `BuyingProcessTimeline` | Insight | Phase 2 |
 | 18 | `DocumentChecklist` | Input | Phase 2 |
 | 19 | `SourceList` | Insight | Phase 2 |
-| 20 | `PlanSection` | Layout, board only | Phase 2 |
 
 The loan term uses the basic `ChoicePicker`, which is why `HouseholdInput`
-took the `LoanTermPicker` slot (D82). In MVP the loan type uses it too, and the
-board is compiled from basic layout components plus MVP insights: a `Column` of
-`Card`s, each holding one insight bound to `/market`, `/profile`, and
-`/scenario`, and a `Button` where a decision can be reopened.
+took the `LoanTermPicker` slot (D82). In MVP the loan type uses it too.
 
 ## Basic Components
 
@@ -336,16 +332,6 @@ Monthly cost in the buyer's income currency today and at plus or minus 10% and
 | Property | Type | Required |
 | --- | --- | --- |
 | `market` | `MarketRef` | yes |
-
-### 20. `PlanSection`
-
-Board only; not agent-visible.
-
-| Property | Type | Required |
-| --- | --- | --- |
-| `title` | `Label` | yes |
-| `child` | ComponentId | yes |
-| `change` | `Action` | no |
 
 ## Client Functions
 

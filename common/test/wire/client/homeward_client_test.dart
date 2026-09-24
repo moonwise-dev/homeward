@@ -137,7 +137,6 @@ void main() {
               'messages': [createSurface],
             },
           ],
-          'board': [createSurface],
         },
       }),
     );
@@ -146,7 +145,6 @@ void main() {
 
     expect(plan.turns.single.input, const RecordedInput.text('Hi'));
     expect(plan.turns.single.messages, [createSurface]);
-    expect(plan.board, [createSurface]);
     expect(requests.single.url, server.resolve('api/sessions/s-1'));
   });
 

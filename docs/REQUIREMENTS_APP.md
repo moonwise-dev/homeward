@@ -28,8 +28,8 @@ component sets its own width inside the page.
 
 | Width | Layout |
 | --- | --- |
-| < 900 dp | The page fills the screen. The plan board and the wire inspector open as sheets. |
-| ≥ 900 dp | The page is centred. The plan board or the wire inspector can open as a right pane, 380–440 dp wide, from the app bar. |
+| < 900 dp | The page fills the screen. The wire inspector opens as a sheet. |
+| ≥ 900 dp | The page is centred. The wire inspector can open as a right pane, 380–440 dp wide, from the app bar. |
 
 ## Routes
 
@@ -38,7 +38,7 @@ component sets its own width inside the page.
 | `/startup` | Startup |
 | `/key` | Gemini key |
 | `/plans` | Plans |
-| `/plans/:sessionId` | Journey with board |
+| `/plans/:sessionId` | Journey |
 | `/gallery` | Catalog gallery |
 | `/settings` | Settings |
 
@@ -93,6 +93,8 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
     surfer.
   - Start builds the first message from the reason and the story, so the model
     never starts cold.
+  - The disclaimer, in one line under Start: Homeward estimates and explains;
+    it is not financial advice.
 - **Pages**: one page per turn that has text, a surface, or a failure. The
   newest page shows by default. A step pager at the top moves to earlier pages;
   their surfaces are read-only once a later commit locks them. Pages fade and
@@ -116,14 +118,6 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
   `gemini_credits_depleted` shows the server message with a change key action,
   since waiting does not help.
 
-### Plan Board
-
-- Renders the `board` surface in a pane or sheet opened from the app bar.
-- Before any decision: a short explanation of what will appear and the
-  disclaimer.
-- Every section's change action sends a `change` action and moves the journey
-  to the new page.
-
 ### Catalog Gallery
 
 - Lists every catalog component with phase and agent visibility.
@@ -134,8 +128,8 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 
 ### Wire Inspector
 
-- A panel inside the journey: the right pane where the board would be, and a
-  sheet on a narrow window, toggled from the app bar.
+- A panel inside the journey: a right pane, and a sheet on a narrow window,
+  toggled from the app bar.
 - Timeline of A2A frames sent and received, each with its size and the gap
   since the frame before it, newest first.
 - A frame opens to the pretty-printed A2UI message it carried, named by the
@@ -163,7 +157,6 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 | `api_key` | Input state, verify, save, remove |
 | `plans` | Stream plans, create, delete |
 | `journey` | Start from the opening page, send text, stop, stream turn events and progress, replay, retry, page choice |
-| `plan_board` | Board surface presence and sheet state |
 | `gallery` | Selected component, example, toggles |
 | `wire_inspector` | Frame timeline with sizes, A2UI messages, live data model, counters |
 | `settings` | Developer tools flag, delete all data |
