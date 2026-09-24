@@ -726,6 +726,160 @@
       ],
       "unevaluatedProperties": false
     },
+    "LifestyleCommuteMap": {
+      "type": "object",
+      "description": "A map of the buyer's life around the homes they weigh: the places they travel to, each home, the route from each home to each place with its minutes, and the nearest place for each criterion. Before homes are measured, bind markers to /story/markers; after, bind markers to /assessment/markers and routes to /assessment/routes.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "LifestyleCommuteMap"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "markers": {
+          "type": "object",
+          "description": "Markers: /story/markers or /assessment/markers.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "routes": {
+          "type": "object",
+          "description": "Routes: /assessment/routes.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "focus": {
+          "type": "string",
+          "description": "The id of one home, such as c1, to show on its own with its routes and nearest places."
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "markers"
+      ],
+      "additionalProperties": false
+    },
+    "ComparisonTable": {
+      "type": "object",
+      "description": "Every criterion against every home: whether it fits, comes close and misses by how much, or misses, with what was measured. Must-haves are marked. Bind rows to /assessment/rows and homes to /assessment/candidates.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "ComparisonTable"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "rows": {
+          "type": "object",
+          "description": "Always { \"path\": \"/assessment/rows\" }.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "homes": {
+          "type": "object",
+          "description": "Always { \"path\": \"/assessment/candidates\" }.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "rows",
+        "homes"
+      ],
+      "additionalProperties": false
+    },
+    "DynamicRecommendationStack": {
+      "type": "object",
+      "description": "The buyer's homes ranked by how well they fit the story, best first: what fits, what comes close and by how much, what misses, and whether a must-have is lost, each with a button to choose that home. Bind homes to /assessment/candidates. choose is sent with the chosen home added to its context as candidateId.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "DynamicRecommendationStack"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "homes": {
+          "type": "object",
+          "description": "Always { \"path\": \"/assessment/candidates\" }.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "choose": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "homes"
+      ],
+      "additionalProperties": false
+    },
     "LocationPicker": {
       "type": "object",
       "description": "Chooses a market or a country and writes its ISO 3166 code. Use mode market for where the buyer is buying, with the select_market action; use mode country for citizenship and tax residence.",
@@ -2269,6 +2423,15 @@
         },
         {
           "$ref": "#/components/DateTimeInput"
+        },
+        {
+          "$ref": "#/components/LifestyleCommuteMap"
+        },
+        {
+          "$ref": "#/components/ComparisonTable"
+        },
+        {
+          "$ref": "#/components/DynamicRecommendationStack"
         },
         {
           "$ref": "#/components/LocationPicker"

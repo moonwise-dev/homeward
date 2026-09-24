@@ -17,6 +17,13 @@ T? jsonModelOf<T>(
 
 Money? moneyOf(Object? value) => jsonModelOf(value, Money.fromJson);
 
+List<T>? jsonModelsOf<T>(
+  Object? value,
+  T Function(Map<String, Object?> json) fromJson,
+) => value is List<Object?>
+    ? [for (final item in value) ?jsonModelOf(item, fromJson)]
+    : null;
+
 MarketSnapshot? marketSnapshotOf(Object? value) {
   if (value is! Map<String, Object?>) {
     return null;

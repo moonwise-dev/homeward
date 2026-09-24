@@ -8,6 +8,9 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 | Component | Phase | Agent visible | Required | Bound | Examples |
 | --- | --- | --- | --- | --- | --- |
+| `LifestyleCommuteMap` | mvp | yes | `markers` | `markers`, `routes` | Two flats and the campus |
+| `ComparisonTable` | mvp | yes | `rows`, `homes` | `rows`, `homes` | Odengatan against Solna |
+| `DynamicRecommendationStack` | mvp | yes | `homes` | `homes` | Which flat fits the move |
 | `LocationPicker` | mvp | yes | `label`, `value`, `mode` | `value` | Target market, Tax residence |
 | `MoneyInput` | mvp | yes | `label`, `value`, `currency` | `value` | Monthly net income |
 | `HouseholdInput` | mvp | yes | `label`, `adults`, `childAges` | `adults`, `childAges` | A couple without children, A family with two children |
@@ -19,6 +22,18 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `StressTestChart` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple, Funchal non-resident |
 | `EligibilityChecklist` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Funchal non-resident, Stockholm couple |
 | `ForeignBuyerObstacles` | mvp | yes | `market`, `profile` | `market`, `profile` | Funchal non-resident |
+
+### LifestyleCommuteMap
+
+A map of the buyer's life around the homes they weigh: the places they travel to, each home, the route from each home to each place with its minutes, and the nearest place for each criterion. Before homes are measured, bind markers to /story/markers; after, bind markers to /assessment/markers and routes to /assessment/routes.
+
+### ComparisonTable
+
+Every criterion against every home: whether it fits, comes close and misses by how much, or misses, with what was measured. Must-haves are marked. Bind rows to /assessment/rows and homes to /assessment/candidates.
+
+### DynamicRecommendationStack
+
+The buyer's homes ranked by how well they fit the story, best first: what fits, what comes close and by how much, what misses, and whether a must-have is lost, each with a button to choose that home. Bind homes to /assessment/candidates. choose is sent with the chosen home added to its context as candidateId.
 
 ### LocationPicker
 
@@ -98,6 +113,7 @@ Why and where the buyer is moving, what they care about, and the homes or areas 
 | `/story/picks/downsides` | list of criterion kinds, such as ["schools", "parks"] | Criteria picked for downsides. |
 | `/story/mustHaves` | list of criterion kinds, such as ["schools", "parks"] | Criteria the buyer will not give up. |
 | `/story/note` | string | Anything else the buyer wants weighed, in their own words. |
+| `/story/markers` | object read by Homeward components | Map markers for the anchors and homes placed so far, for a Map before the assessment exists. |
 | `/story/anchors` | object read by Homeward components | Places the buyer travels to: id, label, mode, maxMinutes, point. |
 | `/story/candidates` | object read by Homeward components | Homes or areas being weighed: id, label, point, price. |
 | `/story/criteria` | object read by Homeward components | What is weighed: kind, anchorId, mustHave. |
@@ -183,6 +199,8 @@ Figures the server computed for the scenario, read-only.
 
 | Name | Context | Meaning |
 | --- | --- | --- |
+| `commit_story` | `storyPath` | The buyer confirms what matters to them; the server measures every home against it. |
+| `choose_home` | `candidateId` | The buyer picks the home to work out the deal for. |
 | `select_market` | `marketId` | The buyer picked a market. |
 | `commit_profile` | `profilePath` | The buyer saves the profile form; the server validates and stores it. |
 | `commit_scenario` | `scenarioPath` | The buyer keeps a scenario; the server checks it against the rules. |

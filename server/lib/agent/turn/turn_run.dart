@@ -126,7 +126,7 @@ final class TurnRun {
       try {
         await for (final event in createInteraction(
           apiKey: apiKey,
-          request: _request(
+          request: await _request(
             input,
             allowToolCalls: toolRounds < settings.maxToolRounds,
           ),
@@ -214,7 +214,7 @@ final class TurnRun {
                 (a, b) =>
                     tools.orderOf(a.name).compareTo(tools.orderOf(b.name)),
               ))
-            call.callId: _runCall(call),
+            call.callId: await _runCall(call),
         };
         input = InteractionInput.functionResults(
           [for (final call in calls) results[call.callId]!],
@@ -301,11 +301,11 @@ final class TurnRun {
     ),
   );
 
-  InteractionRequest _request(
+  Future<InteractionRequest> _request(
     InteractionInput input, {
     required bool allowToolCalls,
-  }) {
-    final settled = tools.runSettled(_plan);
+  }) async {
+    final settled = await tools.runSettled(_plan);
     _settledNames.addAll(settled.keys);
     _validator
       ..seeds = turnSeeds(_plan, [
@@ -399,9 +399,9 @@ final class TurnRun {
   bool _isKnown(FunctionCall call) =>
       _settledNames.contains(call.name) || _calledNames.contains(call.name);
 
-  FunctionResult _runCall(FunctionCall call) {
+  Future<FunctionResult> _runCall(FunctionCall call) async {
     _calledNames.add(call.name);
-    final result = tools.call(call.name, call.arguments, _plan);
+    final result = await tools.call(call.name, call.arguments, _plan);
     _plan = result.plan ?? _plan;
     _calledSeeds.add(result.seeds);
     return FunctionResult(

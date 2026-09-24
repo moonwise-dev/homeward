@@ -1,14 +1,29 @@
 import '../markets/resolved_market.dart';
 import '../profile/buyer_profile.dart';
 import '../profile/profile_field.dart';
+import '../story/story.dart';
 import 'open_decision.dart';
 import 'plan.dart';
 
-List<OpenDecision> openDecisions(Plan plan, ResolvedMarket? market) {
+List<OpenDecision> openDecisions(Plan plan, ResolvedMarket? market) => [
+  ...storyDecisions(plan.story),
+  ...financeDecisions(plan, market),
+];
+
+List<OpenDecision> storyDecisions(Story story) => [
+  if (story.candidates.isEmpty && story.city == null) OpenDecision.story,
+  if (!story.committed) OpenDecision.storyGaps,
+  if (story.chosen == null) OpenDecision.homeChoice,
+];
+
+List<OpenDecision> financeDecisions(Plan plan, ResolvedMarket? market) {
   if (plan.marketId == null) {
-    return OpenDecision.values
-        .where((decision) => decision != OpenDecision.marketCoverage)
-        .toList();
+    return const [
+      OpenDecision.targetMarket,
+      OpenDecision.profileFields,
+      OpenDecision.scenario,
+      OpenDecision.scenarioCommit,
+    ];
   }
   if (market == null) {
     return const [OpenDecision.marketCoverage];

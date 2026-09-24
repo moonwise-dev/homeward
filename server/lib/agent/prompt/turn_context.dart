@@ -46,6 +46,7 @@ Map<String, Object?> turnContext({
         ],
       'draftPending': plan.profileDraft != null,
     },
+    'story': _story(plan.story),
     'scenario': {
       'committed': plan.scenario != null,
       'draftPending': plan.scenarioDraft != null,
@@ -54,3 +55,39 @@ Map<String, Object?> turnContext({
     if (preRun.isNotEmpty) 'preRun': preRun,
   };
 }
+
+Map<String, Object?> _story(Story story) => {
+  'reason': ?story.reason?.name,
+  'city': ?story.city,
+  'anchors': [
+    for (final anchor in story.anchors)
+      {
+        'id': anchor.id,
+        'label': anchor.label,
+        'placed': anchor.point != null,
+        'mode': anchor.mode.name,
+        'maxMinutes': anchor.maxMinutes,
+      },
+  ],
+  'homes': [
+    for (final candidate in story.candidates)
+      {
+        'id': candidate.id,
+        'label': candidate.label,
+        'placed': candidate.point != null,
+        'priceGiven': candidate.price != null,
+      },
+  ],
+  'criteria': [for (final criterion in story.criteria) criterion.id],
+  'mustHaves': [
+    for (final criterion in story.criteria)
+      if (criterion.mustHave) criterion.id,
+  ],
+  'committed': story.committed,
+  if (story.chosen case final chosen?)
+    'chosenHome': {
+      'id': chosen.id,
+      'label': chosen.label,
+      'price': ?chosen.price?.toJson(),
+    },
+};

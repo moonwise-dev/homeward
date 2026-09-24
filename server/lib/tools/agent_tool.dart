@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:common/common.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -30,7 +32,7 @@ abstract class AgentTool {
 
   Map<String, Object?>? settledArguments(ToolContext context) => null;
 
-  ToolResult run(Map<String, Object?> arguments, ToolContext context);
+  FutureOr<ToolResult> run(Map<String, Object?> arguments, ToolContext context);
 }
 
 abstract class ModelTool extends AgentTool {

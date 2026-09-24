@@ -4,6 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 import '../../markets/market_directory.dart';
 import 'action_outcome.dart';
 import 'profile_from_form.dart';
+import 'story_from_answers.dart';
 
 ActionOutcome applyAction({
   required ClientAction action,
@@ -22,6 +23,30 @@ ActionOutcome applyAction({
   };
 
   switch (SurfaceAction.named(action.name)) {
+    case SurfaceAction.commitStory:
+      final story = storyFromAnswers(
+        plan.story,
+        form[storySlice.name] ?? const {},
+      );
+      return ActionOutcome(
+        plan: plan.copyWith(story: story),
+        summary: {
+          ...summary,
+          'applied': true,
+          'criteria': story.criteria.length,
+        },
+      );
+    case SurfaceAction.chooseHome:
+      final id = action.context['candidateId'];
+      if (id is! String || plan.story.candidateWith(id) == null) {
+        return refused('That home is not one the buyer is weighing');
+      }
+      return ActionOutcome(
+        plan: plan.copyWith(
+          story: plan.story.copyWith(chosenCandidateId: id),
+        ),
+        summary: {...summary, 'applied': true},
+      );
     case SurfaceAction.selectMarket:
       final id = _marketId(
         action.context['marketId'] ?? form[selectionSlice.name]?['marketId'],
@@ -103,7 +128,25 @@ ActionOutcome applyAction({
           plan: plan.copyWith(scenario: null, scenarioDraft: null),
           summary: {...summary, 'applied': true, 'section': 'scenario'},
         ),
-        _ => refused('The board reopens the market or the scenario'),
+        'story' => ActionOutcome(
+          plan: plan.copyWith(
+            story: plan.story.copyWith(
+              committed: false,
+              chosenCandidateId: null,
+            ),
+          ),
+          summary: {...summary, 'applied': true, 'section': 'story'},
+        ),
+        'home' => ActionOutcome(
+          plan: plan.copyWith(
+            story: plan.story.copyWith(chosenCandidateId: null),
+          ),
+          summary: {...summary, 'applied': true, 'section': 'home'},
+        ),
+        _ => refused(
+          'The board reopens the story, the home, the market, or '
+          'the scenario',
+        ),
       };
     case _:
       return ActionOutcome(

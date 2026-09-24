@@ -78,7 +78,7 @@ void main() {
     expect(solna.rank, 2);
     expect(solna.missesMustHave, isTrue);
     expect(solna.cons, ['To KTH: 40 min by bike, 15 min over your 25']);
-    expect(solna.pros, ['Schools: Solna skola · 300 m']);
+    expect(solna.pros, ['Schools: Solna skola · 300\u00a0m']);
   });
 
   test('the map carries the anchor, the homes, the places, and the routes', () {

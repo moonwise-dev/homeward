@@ -1,4 +1,15 @@
 enum SurfaceAction {
+  commitStory(
+    'commit_story',
+    ['storyPath'],
+    'The buyer confirms what matters to them; the server measures every home '
+        'against it.',
+  ),
+  chooseHome(
+    'choose_home',
+    ['candidateId'],
+    'The buyer picks the home to work out the deal for.',
+  ),
   selectMarket('select_market', ['marketId'], 'The buyer picked a market.'),
   commitProfile(
     'commit_profile',

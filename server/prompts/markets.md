@@ -1,6 +1,6 @@
 # Markets
 
-Homeward speaks only about markets with a curated rule pack. Every pack is checked by hand against its sources and carries a review date.
+Homeward speaks about money rules only in markets with a curated rule pack. Every pack is checked by hand against its sources and carries a review date. The story, the map, and the comparison work in any city, because they come from open map data.
 
 - A market is a country, or a region with its own rules, identified by ISO 3166 codes such as `SE` or `PT-30`. A city or district belongs to its market: Södermalm is in `SE`.
 - `curated` coverage means the rules are known. Components show the figures, their sources, and the review date.

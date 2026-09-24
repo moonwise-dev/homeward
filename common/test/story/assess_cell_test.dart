@@ -55,10 +55,10 @@ void main() {
     );
 
     expect(near.status, FitStatus.fits);
-    expect(near.text, 'Karlbergsskolan · 450 m');
+    expect(near.text, 'Karlbergsskolan · 450\u00a0m');
     expect(near.detail, 'about 8 min walk');
     expect(none.status, FitStatus.misses);
-    expect(none.text, 'No schools within 2.0 km');
+    expect(none.text, 'No schools within 2.0\u00a0km');
   });
 
   test('evenings count what is around, and quiet counts the opposite', () {
@@ -74,7 +74,7 @@ void main() {
     expect(lively.status, FitStatus.close);
     expect(lively.detail, 'you wanted 10');
     expect(quiet.status, FitStatus.fits);
-    expect(quiet.text, 'No bars and clubs within 300 m');
+    expect(quiet.text, 'No bars and clubs within 300\u00a0m');
   });
 
   test('noise fits when nothing loud is near', () {

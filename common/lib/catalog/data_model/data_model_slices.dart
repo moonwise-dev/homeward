@@ -202,6 +202,12 @@ final storySlice = DataSlice(
       'Anything else the buyer wants weighed, in their own words.',
     ),
     const SliceField(
+      'markers',
+      FieldKind.record,
+      'Map markers for the anchors and homes placed so far, for a Map before '
+          'the assessment exists.',
+    ),
+    const SliceField(
       'anchors',
       FieldKind.record,
       'Places the buyer travels to: id, label, mode, maxMinutes, point.',

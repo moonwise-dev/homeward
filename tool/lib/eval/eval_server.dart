@@ -6,6 +6,7 @@ import 'package:homeward_server/agent/turn/tool_belt.dart';
 import 'package:homeward_server/agent/turn/turn_orchestrator.dart';
 import 'package:homeward_server/agent/turn/turn_settings.dart';
 import 'package:homeward_server/config/server_config.dart';
+import 'package:homeward_server/data/providers/providers.dart';
 import 'package:homeward_server/data/repository/in_memory_session_repository.dart';
 import 'package:homeward_server/gemini/create_with_fallback.dart';
 import 'package:homeward_server/gemini/interactions_client.dart';
@@ -14,6 +15,7 @@ import 'package:homeward_server/gemini/model_circuits.dart';
 import 'package:homeward_server/markets/finding.dart';
 import 'package:homeward_server/markets/load_markets.dart';
 import 'package:homeward_server/markets/market_directory.dart';
+import 'package:homeward_server/research/research.dart';
 import 'package:homeward_server/tools/homeward_tools.dart';
 import 'package:http/http.dart' as http;
 
@@ -67,7 +69,12 @@ final class EvalServer {
               cancellation: cancellation,
             ),
         prompts: PromptAssembler.load(Directory(config.promptsDirectory)),
-        tools: ToolBelt(tools: homewardTools, markets: markets),
+        tools: ToolBelt(
+          tools: allTools(
+            Research.open(httpClient, userAgent: homewardUserAgent(config)),
+          ),
+          markets: markets,
+        ),
         catalog: CatalogValidator(homewardCatalogDocument()),
         settings: TurnSettings(
           maxCorrections: config.maxCorrections,

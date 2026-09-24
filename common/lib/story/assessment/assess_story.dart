@@ -33,7 +33,7 @@ Assessment assessStory(Story story, Measurements measurements) {
     ..sort((a, b) => scores[b.id]!.compareTo(scores[a.id]!));
   return Assessment(
     candidates: [
-      for (final candidate in located)
+      for (final candidate in ranked)
         _assessed(
           candidate,
           rows,

@@ -5,9 +5,12 @@ import 'package:json_schema_builder/json_schema_builder.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('the catalog declares the M1 components once under its id', () {
+  test('the catalog declares its components once under its id', () {
     expect(homewardCatalog.id, homewardCatalogId);
     expect(homewardCatalog.components.keys, [
+      'LifestyleCommuteMap',
+      'ComparisonTable',
+      'DynamicRecommendationStack',
       'LocationPicker',
       'MoneyInput',
       'HouseholdInput',

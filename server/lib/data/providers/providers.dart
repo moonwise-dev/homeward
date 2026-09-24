@@ -26,10 +26,14 @@ import '../../markets/finding.dart';
 import '../../markets/load_markets.dart';
 import '../../markets/market_directory.dart';
 import '../../rate_limit/fixed_window_limiter.dart';
+import '../../research/research.dart';
 import '../../tools/homeward_tools.dart';
 import '../repository/firestore_session_repository.dart';
 import '../repository/in_memory_session_repository.dart';
 import '../repository/session_repository.dart';
+
+String homewardUserAgent(ServerConfig config) =>
+    'Homeward/0.1 (+${config.publicUrl})';
 
 final class Providers {
   factory Providers({
@@ -41,6 +45,7 @@ final class Providers {
     required MarketDirectory markets,
     required PromptAssembler prompts,
     SessionRepository? sessions,
+    Research? research,
     DateTime Function()? now,
   }) {
     final repository = sessions ?? InMemorySessionRepository();
@@ -61,7 +66,13 @@ final class Providers {
         sessions: repository,
         createInteraction: createInteraction,
         prompts: prompts,
-        tools: ToolBelt(tools: homewardTools, markets: markets),
+        tools: ToolBelt(
+          tools: switch (research) {
+            final research? => allTools(research),
+            null => homewardTools,
+          },
+          markets: markets,
+        ),
         catalog: CatalogValidator(homewardCatalogDocument()),
         settings: TurnSettings(
           maxCorrections: config.maxCorrections,
@@ -142,6 +153,7 @@ final class Providers {
       ),
       markets: MarketDirectory(marketsData),
       prompts: PromptAssembler.load(Directory(config.promptsDirectory)),
+      research: Research.open(httpClient, userAgent: homewardUserAgent(config)),
     );
   }
 

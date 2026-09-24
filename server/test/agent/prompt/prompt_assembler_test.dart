@@ -3,7 +3,10 @@ import 'dart:io';
 
 import 'package:common/common.dart';
 import 'package:homeward_server/agent/prompt/prompt_assembler.dart';
+import 'package:homeward_server/research/research.dart';
 import 'package:homeward_server/tools/homeward_tools.dart';
+import 'package:http/testing.dart';
+import 'package:http/http.dart' as http;
 import 'package:test/test.dart';
 
 void main() {
@@ -45,7 +48,11 @@ void main() {
 
   test('hand-written prompts name only tools, actions, components, and '
       'decisions that exist', () {
-    final tools = {for (final tool in homewardTools) tool.name};
+    final research = Research.open(
+      MockClient((_) async => http.Response('[]', 200)),
+      userAgent: 'Homeward test',
+    );
+    final tools = {for (final tool in allTools(research)) tool.name};
     final functions = {for (final function in homewardFunctions) function.name};
     final components = {
       ...agentVisibleBasicComponents,

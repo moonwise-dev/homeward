@@ -14,12 +14,12 @@ final class ToolBelt {
   final List<AgentTool> tools;
   final MarketDirectory markets;
 
-  Map<String, ToolResult> runSettled(Plan plan) {
+  Future<Map<String, ToolResult>> runSettled(Plan plan) async {
     final context = ToolContext(markets: markets, plan: plan);
     return {
       for (final tool in tools)
         if (tool.settledArguments(context) case final arguments?)
-          tool.name: _run(tool, arguments, context),
+          tool.name: await _run(tool, arguments, context),
     };
   }
 
@@ -36,7 +36,11 @@ final class ToolBelt {
     return index == -1 ? tools.length : index;
   }
 
-  ToolResult call(String name, Map<String, Object?> arguments, Plan plan) {
+  Future<ToolResult> call(
+    String name,
+    Map<String, Object?> arguments,
+    Plan plan,
+  ) async {
     final context = ToolContext(markets: markets, plan: plan);
     for (final tool in tools.whereType<ModelTool>()) {
       if (tool.name == name) {
@@ -46,14 +50,14 @@ final class ToolBelt {
     return ToolResult(modelResult: {'error': 'There is no tool named $name'});
   }
 
-  ToolResult _run(
+  Future<ToolResult> _run(
     AgentTool tool,
     Map<String, Object?> arguments,
     ToolContext context,
-  ) {
+  ) async {
     final stopwatch = Stopwatch()..start();
     try {
-      return tool.run(arguments, context);
+      return await tool.run(arguments, context);
     } on Object catch (error, stackTrace) {
       _log.severe('Tool ${tool.name} failed', error, stackTrace);
       return const ToolResult(
