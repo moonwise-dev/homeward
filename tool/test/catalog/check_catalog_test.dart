@@ -37,7 +37,7 @@ void main() {
 
   test('every declared component has an app catalog item', () {
     expect(
-      messages(checkAppCatalogItems(Directory('../app/lib/catalog/items'))),
+      messages(checkAppCatalogItems(Directory('../app/lib/catalog'))),
       isEmpty,
     );
   });
@@ -75,10 +75,12 @@ void main() {
         ..parent.createSync(recursive: true)
         ..writeAsStringSync(content);
     }
-    final items = Directory('${root.path}/app/lib/catalog/items')
-      ..createSync(recursive: true);
-    for (final item in Directory('../app/lib/catalog/items').listSync()) {
-      (item as File).copySync('${items.path}/${item.uri.pathSegments.last}');
+    final source = Directory('../app/lib/catalog');
+    for (final item in source.listSync(recursive: true).whereType<File>()) {
+      final copy = File(
+        '${root.path}/app/lib/catalog/${item.path.substring(source.path.length + 1)}',
+      )..parent.createSync(recursive: true);
+      item.copySync(copy.path);
     }
     File('${root.path}/$catalogSkillPath').writeAsStringSync('edited');
 

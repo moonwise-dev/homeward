@@ -225,34 +225,41 @@ Rules:
 Flutter for iOS, Android, and Web, with macOS kept as a development target for
 fast local iteration. macOS is never a release target, and features that need
 App Check or platform integrations are not required to work there. The
-application ID and bundle identifier are `se.moonwise.homeward`. The
-implementation rules follow the Moonwise conventions used in Purrtrait.
+application ID and bundle identifier are `se.moonwise.homeward`. The layout
+follows Flutter's guide to app architecture (docs.flutter.dev/app-architecture
+and its Compass sample), with Riverpod view models (D111).
 
 ```text
 app/lib/
   main.dart
-  errors/           AppError and its human message
-  messages/         transient message bus shown as toasts
-  riverpod/         SafeNotifierState
-  catalog/
-    homeward_catalog.dart
-    items/          one CatalogItem per component, builder only
-    functions/      ClientFunction adapters over common/finance
-    bindings/       typed readers over genui DataContext
+  config/
+    environment.dart      build-time values: server URL, App Check keys
+    dependencies.dart     providers for Firebase, HTTP, secure storage, the Homeward client
+  routing/                router, routes, and guards
   data/
-    models/
-    providers/
-    repository/
-  features/<feature>/
-    <feature>_screen.dart
-    <feature>_controller.dart
-    <feature>_state.dart
-    widgets/
-  navigation/
-  ui/               App* tokens and primitives
-  widgets/          provider-bound shared widgets
-  display/          presentation helpers over common models
+    repositories/         one file per repository, its provider beside it
+    services/             the wire log the inspector reads
+  domain/models/          models the data and UI layers share
+  utils/                  SafeNotifierState
+  ui/
+    core/
+      themes/             colors, text styles, dimensions, motion, theme
+      ui/                 App* widgets every screen and catalog view composes
+      messages/           the app-wide message and its overlay
+      formats.dart        money and rate formats
+    <feature>/
+      view_model/         <feature>_view_model.dart: the notifier and its state
+      widgets/            <feature>_screen.dart and the widgets only it uses
+  catalog/
+    homeward_catalog.dart the genui catalog: every item and client function
+    bindings/             typed readers over genui DataContext
+    <component>/          <component>_item.dart and <component>_view.dart
 ```
+
+Features are `startup`, `api_key`, `plans`, `journey`, `plan_board`,
+`gallery`, and `wire_inspector`. A file holds a widget or type together with
+the small things only it uses: its enum, its labels, its formats. Something
+two files use moves to the nearest folder both can see.
 
 ### Flutter Stack
 
@@ -266,7 +273,7 @@ app/lib/
 - `go_router`.
 - `firebase_core`, `firebase_auth`, `cloud_firestore`, `firebase_app_check`.
 - `flutter_secure_storage` for the user's Gemini key.
-- Charts are drawn by Homeward's own `CustomPainter` primitives in `app/lib/ui`,
+- Charts are drawn by Homeward's own `CustomPainter` primitives in `app/lib/ui/core/ui`,
   not a chart package; see `docs/DESIGN.md` and spike S4.
 - `google_fonts`, `intl`.
 
@@ -276,7 +283,7 @@ genui is 0.x and changes shape between minor versions. Everything that touches
 its API is confined to two places:
 
 - `app/lib/catalog/` for catalog items, client functions, and data bindings.
-- `app/lib/data/repository/agent_repository.dart` and its providers for the
+- `app/lib/data/repositories/agent_repository.dart` and its provider for the
   `SurfaceController`: it submits actions from `onSubmit` through the Homeward
   A2A client, attaching capabilities and the surface data model, and feeds
   every received `a2ui_core` message to `handleMessage`.
@@ -290,9 +297,9 @@ and nothing else.
 Each catalog item is three layers, and only the first knows about genui:
 
 ```text
-items/payment_breakdown_item.dart       CatalogItem: schema from common, reads bindings, builds widget
-ui/…                                    App* primitives the widget is composed from
-common/finance/payment.dart             the numbers
+catalog/payment_breakdown/payment_breakdown_item.dart   CatalogItem: schema from common, reads bindings, builds the view
+catalog/payment_breakdown/payment_breakdown_view.dart   the widget, from typed values and App* widgets
+common/finance/payment.dart                             the numbers
 ```
 
 The widget a catalog item builds takes plain typed values and callbacks, so it
@@ -316,17 +323,17 @@ headers.
 | `startup` | Session restore, anonymous sign-in |
 | `api_key` | Entering, verifying, and removing the Gemini key |
 | `plans` | Plan list and creating a plan |
-| `plan_chat` | Transcript, composer, inline surfaces, turn streaming |
+| `journey` | The opening page, one page per turn, the measuring overlay, history, turn streaming |
 | `plan_board` | Board surface placement: side pane on wide screens, sheet on phones |
-| `catalog_gallery` | Every catalog item with example data |
+| `gallery` | Every catalog item with example data |
 | `wire_inspector` | A2A frames with their sizes, the A2UI message each carried, the live data model of a surface, and the counters; every write a bound input makes is counted where the app writes it |
 | `settings` | Key, disclaimer, about, reset |
 
-The rules from Purrtrait apply unchanged: lean screens, generated Riverpod
-controllers with Freezed state, `SafeNotifierState` for mutating controllers,
-snapshot state and dependencies before the first `await`, transient messages
-through the message bus, providers under `lib/data/providers`, `App*` prefix
-reserved for `lib/ui`.
+Lean screens; one generated Riverpod view model per feature with its Freezed
+state in the same file; `SafeNotifierState` for view models that mutate;
+snapshot state and dependencies before the first `await`; transient messages
+through `AppMessages`; a repository's provider next to the repository; `App*`
+prefix reserved for `lib/ui/core`.
 
 ## Turn Sequence
 
@@ -405,14 +412,16 @@ Homeward is designed to cost nothing to run (D40, D42, D43):
 
 - No comments of any kind, including doc comments. If code needs explaining,
   rename, extract, or introduce a type.
-- One public type per file. File name matches the type.
+- A file is named after its main type or widget and holds only what that one
+  uses: its enum, its labels, its formats. What two files share moves to the
+  nearest folder both can see.
 - Functions do one thing. Prefer early returns and pattern matching over nested
   conditionals.
 - Sealed classes and exhaustive `switch` for every closed set: coverage, buyer
   residency, cost rule kinds, tool results, wire events.
 - No `dynamic`. Strict casts, strict inference, strict raw types.
 - No hard-coded market, currency, or locale outside `markets/` and tests.
-- No raw colors, text styles, or decorations outside `app/lib/ui`.
-- Reuse before creating: check `common`, `app/lib/ui`, and `app/lib/widgets`
+- No raw colors, text styles, or decorations outside `app/lib/ui/core/themes`.
+- Reuse before creating: check `common` and `app/lib/ui/core`
   first. A second copy of anything is a reason to extract; a first copy is not.
 - Generated files are committed and never edited by hand.

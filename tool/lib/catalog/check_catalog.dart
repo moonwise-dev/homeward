@@ -14,16 +14,17 @@ List<Finding> checkCatalog(Directory root) => [
     if (!_matches(File('${root.path}/$path'), content))
       findingError(path, 'Stale; run make catalog'),
   ...checkCatalogExamples(),
-  ...checkAppCatalogItems(Directory('${root.path}/app/lib/catalog/items')),
+  ...checkAppCatalogItems(Directory('${root.path}/app/lib/catalog')),
 ];
 
 List<Finding> checkAppCatalogItems(
-  Directory items, {
+  Directory catalog, {
   List<CatalogComponent> components = homewardComponents,
 }) {
   final implemented = {
     for (final file in [
-      if (items.existsSync()) ...items.listSync().whereType<File>(),
+      if (catalog.existsSync())
+        ...catalog.listSync(recursive: true).whereType<File>(),
     ])
       if (file.path.endsWith('.dart'))
         for (final match in _catalogItemPattern.allMatches(

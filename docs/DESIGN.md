@@ -3,7 +3,7 @@
 Calm, trustworthy, editorial. Money decisions are stressful; the interface
 should feel like a patient advisor's notebook, not a trading terminal.
 
-**Rule:** styling goes through tokens in `app/lib/ui` (`AppColors`,
+**Rule:** styling goes through tokens in `app/lib/ui/core/themes` (`AppColors`,
 `AppTextStyles`, `AppSpacing`, `AppRadii`, `AppTheme`) and `App*` primitives.
 Catalog items and features never inline hex values, `TextStyle`, or ad-hoc
 decorations. A missing value is added to the tokens, not to a feature.
@@ -104,7 +104,7 @@ reduced motion.
 ## Figures
 
 - All money formatting goes through `formatMoney(Money, locale)` in
-  `app/lib/display`, which `AppAnimatedFigure` uses while a figure travels.
+  `app/lib/ui/core/formats.dart`, which `AppAnimatedFigure` uses while a figure travels.
 - `AppMoneyField` groups digits in the market's own separator while the buyer
   types, through `digitGroupingFor(locale)`, so an amount reads the same being
   entered as it does being shown back.
@@ -148,7 +148,7 @@ icon and words.
 - Every chart takes a `summary` and exposes it as its semantics label, so a
   screen reader hears the figures the line draws.
 
-## Primitives (`app/lib/ui`)
+## Primitives (`app/lib/ui/core/ui`)
 
 Tokens: `AppColors`, `AppTextStyles`, `AppSpacing`, `AppRadii`, `AppSizes`,
 `AppMotion`, `AppTheme`.

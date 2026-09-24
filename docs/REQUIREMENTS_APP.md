@@ -157,14 +157,14 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 
 ## Features And Controllers
 
-| Feature | Controller responsibilities |
+| Feature | View model responsibilities |
 | --- | --- |
 | `startup` | Session restore, App Check, key presence, initial route |
 | `api_key` | Input state, verify, save, remove |
 | `plans` | Stream plans, create, delete |
 | `journey` | Start from the opening page, send text, stop, stream turn events and progress, replay, retry, page choice |
 | `plan_board` | Board surface presence and sheet state |
-| `catalog_gallery` | Selected component, example, toggles |
+| `gallery` | Selected component, example, toggles |
 | `wire_inspector` | Frame timeline with sizes, A2UI messages, live data model, counters |
 | `settings` | Developer tools flag, delete all data |
 

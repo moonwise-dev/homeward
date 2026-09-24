@@ -32,7 +32,7 @@ constructors, super parameters, generated files excluded. Additionally:
 - Sealed classes and exhaustive switches for closed sets.
 - No `dynamic`; no `late` without a lifecycle hook that guarantees assignment.
 - No duplication across packages: shared vocabulary goes to `common`, shared
-  visuals go to `app/lib/ui`.
+  visuals go to `app/lib/ui/core`.
 
 ## Tests
 

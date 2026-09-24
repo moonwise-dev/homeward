@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:genui/genui.dart';
 
-import '../../data/repository/wire_log.dart';
+import '../../data/services/wire_log.dart';
 
 void writeBinding(DataContext dataContext, Object? binding, Object? json) {
   if (binding case {'path': final String path}) {

@@ -1,0 +1,50 @@
+import 'package:common/common.dart';
+import 'package:intl/intl.dart';
+
+String formatMoney(Money money, LocaleTag? locale) =>
+    moneyFormatFor(money.currency, locale).format(majorUnitsOf(money));
+
+NumberFormat moneyFormatFor(Currency currency, LocaleTag? locale) {
+  final localeName = Intl.canonicalizedLocale(locale?.tag ?? 'en');
+  return NumberFormat.currency(
+    locale: localeName,
+    name: currency.code,
+    symbol: NumberFormat.simpleCurrency(
+      locale: localeName,
+      name: currency.code,
+    ).currencySymbol,
+    decimalDigits: 0,
+  );
+}
+
+String Function(String digits) digitGroupingFor(LocaleTag? locale) {
+  final format = NumberFormat.decimalPattern(
+    Intl.canonicalizedLocale(locale?.tag ?? 'en'),
+  );
+  return (digits) => switch (int.tryParse(digits)) {
+    null => digits,
+    final value => format.format(value),
+  };
+}
+
+String digitsOf(String text) => text.replaceAll(RegExp('[^0-9]'), '');
+
+double majorUnitsOf(Money money) {
+  var divisor = 1;
+  for (var digit = 0; digit < money.currency.minorDigits; digit++) {
+    divisor *= 10;
+  }
+  return money.minorUnits / divisor;
+}
+
+Money moneyFromMajorUnits(int majorUnits, Currency currency) {
+  var multiplier = 1;
+  for (var digit = 0; digit < currency.minorDigits; digit++) {
+    multiplier *= 10;
+  }
+  return Money(minorUnits: majorUnits * multiplier, currency: currency);
+}
+
+final _rate = NumberFormat.decimalPercentPattern(decimalDigits: 2);
+
+String formatRate(Rate rate) => _rate.format(rate.fraction);

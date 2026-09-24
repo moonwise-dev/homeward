@@ -447,18 +447,18 @@ From the same declarations `make catalog` generates:
 
 `make catalog-check` fails if generated files are stale or if any component or
 surface example is rejected by the server's `TurnValidator`, or if an item in
-`app/lib/catalog/items` built with `catalogItemFor(const X(), …)` has no
+`app/lib/catalog/<component>/` built with `catalogItemFor(const X(), …)` has no
 declaration, or a declaration has no item.
 
 ## Implementing A Component
 
-In `app/lib/catalog/items/`, a catalog item:
+In `app/lib/catalog/<component>/<component>_item.dart`, a catalog item:
 
 1. Is a genui `CatalogItem` whose `name` and `dataSchema` come from the
    `common` declaration.
 2. Reads bindings through `app/lib/catalog/bindings/`.
 3. Calls `common/finance` for figures.
-4. Builds a plain widget from `app/lib/ui` primitives, passing typed values and
+4. Builds its view, `<component>_view.dart`, from `app/lib/ui/core` widgets, passing typed values and
    callbacks.
 
 The plain widget has no genui imports and is what the gallery renders.
