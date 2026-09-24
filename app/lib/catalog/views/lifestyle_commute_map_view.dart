@@ -71,7 +71,7 @@ class LifestyleCommuteMapView extends StatelessWidget {
                     ? null
                     : CameraFit.coordinates(
                         coordinates: points,
-                        padding: const EdgeInsets.fromLTRB(48, 72, 48, 32),
+                        padding: const EdgeInsets.fromLTRB(40, 40, 120, 48),
                         maxZoom: 16,
                       ),
                 interactionOptions: const InteractionOptions(
@@ -115,15 +115,19 @@ class LifestyleCommuteMapView extends StatelessWidget {
                           height: 26,
                           child: _RouteBadge(route: route),
                         ),
-                    for (final marker in shown)
-                      if (marker.kind != MapMarkerKind.place)
-                        Marker(
-                          point: LatLng(marker.lat, marker.lng),
-                          width: 140,
-                          height: 60,
-                          alignment: Alignment.topCenter,
-                          child: _Pin(marker: marker),
-                        ),
+                    for (final kind in const [
+                      MapMarkerKind.candidate,
+                      MapMarkerKind.anchor,
+                    ])
+                      for (final marker in shown)
+                        if (marker.kind == kind)
+                          Marker(
+                            point: LatLng(marker.lat, marker.lng),
+                            width: 176,
+                            height: 32,
+                            alignment: const Alignment(0.84, 0),
+                            child: _Pin(marker: marker),
+                          ),
                   ],
                 ),
                 const _Attribution(),
@@ -177,27 +181,8 @@ class _Pin extends StatelessWidget {
   Widget build(BuildContext context) {
     final isHome = marker.kind == MapMarkerKind.candidate;
     final color = isHome ? homeColor(marker.candidateId) : AppColors.text;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return Row(
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.xs,
-            vertical: AppSpacing.xxs,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppRadii.pill),
-            border: Border.all(color: color, width: 1.5),
-          ),
-          child: Text(
-            marker.label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.label.copyWith(color: AppColors.text),
-          ),
-        ),
-        const SizedBox(height: 2),
         Container(
           width: 28,
           height: 28,
@@ -210,6 +195,26 @@ class _Pin extends StatelessWidget {
             isHome ? Icons.home_outlined : Icons.work_outline,
             size: 16,
             color: AppColors.onAccent,
+          ),
+        ),
+        const SizedBox(width: 2),
+        Flexible(
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.xs,
+              vertical: 2,
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadii.pill),
+              border: Border.all(color: color, width: 1.5),
+            ),
+            child: Text(
+              marker.label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.label.copyWith(color: AppColors.text),
+            ),
           ),
         ),
       ],

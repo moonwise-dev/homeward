@@ -64,3 +64,19 @@ const noiseMatchers = [
   OsmMatcher('highway', ['motorway', 'trunk', 'primary']),
   OsmMatcher('railway', ['rail']),
 ];
+
+final _notForChildren = RegExp(
+  'make ?up|beauty|driving|trafikskola|körskola|dance|dans|music|musik|'
+  'language|språk|yoga|art school|konst|adult|vuxen|university|universitet|'
+  'college|folkhögskola|academy for',
+  caseSensitive: false,
+);
+
+bool excludedFeature(CriterionKind kind, Map<String, String> tags) =>
+    switch (kind) {
+      CriterionKind.schools || CriterionKind.preschool =>
+        _notForChildren.hasMatch(tags['name'] ?? '') ||
+            tags['school'] == 'driving' ||
+            tags['amenity'] == 'driving_school',
+      _ => false,
+    };

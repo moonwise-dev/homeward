@@ -40,7 +40,7 @@ AssessedCell assessCell({
     ) =>
       cell(
         _upTo(meters, radius, radius ~/ 2),
-        '${name ?? criterion.kind.noun} · ${distancePhrase(meters)}',
+        '${name ?? 'A ${criterion.kind.noun.toLowerCase()}'} · ${distancePhrase(meters)}',
         'about ${walkingMinutes(meters)} min walk',
       ),
     (CriterionMeasure.nearest, NoMeasurement()) => cell(

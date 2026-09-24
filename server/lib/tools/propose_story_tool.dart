@@ -32,7 +32,9 @@ final class ProposeStoryTool extends ModelTool {
       'reason': {
         'type': 'string',
         'enum': [for (final reason in StoryReason.values) reason.name],
-        'description': 'Why the buyer is moving.',
+        'description':
+            'Why the buyer is moving, only when they said it; leave it out '
+            'rather than guess from a place.',
       },
       'city': {
         'type': 'string',

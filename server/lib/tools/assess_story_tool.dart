@@ -42,6 +42,17 @@ final class AssessStoryTool extends AgentTool {
               'misses': candidate.cons.length,
             },
         ],
+        'criteria': [
+          for (final row in assessment.rows)
+            {
+              'criterion': row.label,
+              'mustHave': row.mustHave,
+              'byHome': {
+                for (final cell in row.cells)
+                  _labelOf(assessment, cell.candidateId): cell.status.name,
+              },
+            },
+        ],
         'unmeasured': [
           for (final row in assessment.rows)
             if (row.cells.any((cell) => cell.status == FitStatus.unknown))
@@ -51,4 +62,11 @@ final class AssessStoryTool extends AgentTool {
       seeds: {assessmentSlice.name: assessment.toJson()},
     );
   }
+
+  String _labelOf(Assessment assessment, String candidateId) =>
+      assessment.candidates
+          .where((candidate) => candidate.id == candidateId)
+          .firstOrNull
+          ?.label ??
+      candidateId;
 }

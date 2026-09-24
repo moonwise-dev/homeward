@@ -106,7 +106,8 @@ final class StoryMeasurer {
     final matchers = _matchersFor(criterion.kind);
     final found = [
       for (final feature in features)
-        if (matchers.any((matcher) => matcher.matches(feature.tags)))
+        if (matchers.any((matcher) => matcher.matches(feature.tags)) &&
+            !excludedFeature(criterion.kind, feature.tags))
           (feature: feature, nearest: _nearestPoint(home, feature.points)),
     ];
     switch (criterion.kind.measure) {
