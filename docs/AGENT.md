@@ -118,6 +118,9 @@ server's source for the board. It is pure and unit tested.
 
 | Open decision | Opens when |
 | --- | --- |
+| `story` | The story names no city and no home |
+| `storyGaps` | The buyer has not confirmed what matters |
+| `homeChoice` | No home is chosen |
 | `targetMarket` | No market selected |
 | `marketCoverage` | Market selected that has no curated pack |
 | `profileFields` | Any field the resolved market requires is missing from the saved profile; a field counts as answered when every profile key it names has a value |
@@ -126,13 +129,19 @@ server's source for the board. It is pure and unit tested.
 | `obstaclesReview` | Buyer faces obstacles with severity `blocker` or `effort`; from M2 |
 | `process` | Scenario committed; from M2 |
 
-With no market selected, every decision except `marketCoverage` is open. An
-uncovered market leaves only `marketCoverage` open.
+The story decisions come first (D97). A buyer who asks only about money can
+skip them: the money decisions follow in the same list, and the note that asks
+again for a missing surface looks at the money decisions until a story begins.
+With no market selected, every money decision except `marketCoverage` is open.
+An uncovered market leaves only `marketCoverage` open among them.
 
 ## Flow
 
 | Open decision | Tools | Components |
 | --- | --- | --- |
+| `story` | `propose_story` when the message says anything about the move | — |
+| `storyGaps` | `propose_story` | The questions card: `LifestyleCommuteMap` on `/story/markers`, `ChoicePicker`s, `TextField`s, a `Button` sending `commit_story` |
+| `homeChoice` | `assess_story`, pre-run | `LifestyleCommuteMap`, `DynamicRecommendationStack` sending `choose_home`, `ComparisonTable` |
 | `targetMarket` | `resolve_market` | `LocationPicker` in `market` mode |
 | `marketCoverage` | — | `MarketSnapshotCard` in its uncovered state |
 | `profileFields` | `load_market`, `propose_profile` | `LocationPicker` in `country` mode, `MoneyInput`, `ChoicePicker`, commit `Button` |
@@ -188,6 +197,8 @@ plan, one request at a time.
 
 | Tool | Input | Model result | Seeds |
 | --- | --- | --- | --- |
+| `propose_story` | Reason, city, anchors with a map query, mode, and longest trip, up to three homes with a map query and price, criteria, must-haves | Each anchor and home with whether it was placed and the address found; the market it selected, if any | `/story` from the plan, with the answers prefilled for the questions card and markers for what was placed |
+| `assess_story` | — | Each home's rank and whether it misses a must-have, each criterion's status per home, the criteria that could not be measured. Never figures | `/assessment` |
 | `resolve_market` | `placeName` and the model's `countryCode`, both required, and its `subdivisionCode` | `selectedMarket` with name and coverage when exactly one matches, already the plan's market; otherwise `candidates`, with the curated markets when none resolve | `/selection` when several match |
 | `load_market` | `marketId` | Coverage, currency, profile fields with the profile paths that answer them and reasons, kinds of lending rule, never rule values | `/market`, the rules when curated and `{ id, name, coverage }` when not, with `/selection` holding the curated markets (D86) |
 | `propose_profile` | Facts the buyer stated: countries as ISO codes, enums, amounts as `{ amount, currency? }` in major units | Accepted and rejected facts with reasons | `/profile` from the plan's profile draft |
@@ -388,23 +399,26 @@ uncovered market, whether from a tool or from the model's own knowledge.
 Every uncovered request is logged with its market identifier so curation
 follows demand.
 
-### Research Is Not Built
+### Research
 
-Runtime research needs Google Search grounding, which Gemini offers only on
-paid keys, and Homeward runs on buyers' free keys (D40). Spike S3 was closed by
-design rather than measured. If a paid key ever becomes available, research
-takes this shape:
+Research for any place runs on free services, measured in S9 (D100 to D102):
 
-- Two interactions: the first with the `google_search` tool writes prose with
-  `url_citation` annotations; the second, without tools, extracts a rule pack
-  through `response_format`. This works whether or not the API allows search and
-  structured output in one interaction.
-- Every numeric field must cite a URL found in the first interaction's
-  annotations; a field without one becomes unknown.
-- Search results are data. The extraction schema has no free-form field that
-  reaches a turn prompt.
-- A researched pack is never used as curated. It becomes a draft for the
-  curation workflow in `docs/MARKETS.md`.
+- `propose_story` finds the city with Nominatim, then each anchor and home
+  inside the city's box, so an English campus name cannot land in another town.
+- `assess_story` measures every home in one Overpass query for every nearby
+  criterion and a noise check against main roads and rail, and routes each
+  home to each anchor on the FOSSGIS router by car, bike, or foot and on
+  Transitous by public transport on a weekday morning.
+- Calls go one at a time per service with the gap its policy asks, under a
+  user agent naming Homeward, and are cached; a busy Overpass is waited out
+  twice; a service that fails leaves its criteria unmeasured, never missed.
+- `common` turns each measurement into fits, close, or misses with the words
+  for it, and ranks the homes, weighing must-haves three times.
+
+Still to come in M3: a researcher behind one interface, a free third-party
+model first and Gemini as its fallback, for estimated rules, area ideas for a
+city, and a pasted listing; every place it names verified against open data;
+and Google Maps grounding for ratings when the buyer asks.
 
 ## Guardrails
 

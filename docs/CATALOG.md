@@ -27,7 +27,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 ## Size And Phasing
 
-20 Homeward components: 11 for the video recording, 9 after.
+23 Homeward components: the three story blocks below, 11 for the deal, and 9 after the recording. The story blocks come first because the story comes first (D97, D103).
 
 | # | Component | Kind | Phase |
 | --- | --- | --- | --- |
@@ -80,6 +80,52 @@ sliders always use `AmountSlider`.
 | `BoundsPath` | `{ "path": "…" }` | `{ min, max, step }`, each a money object, bound |
 | `Label` | DynamicString | Literal allowed |
 | `Action` | A2UI action | Names from `docs/PROTOCOL.md` |
+
+## Story Blocks
+
+Building blocks Gemini composes the story from, beside the basic components.
+They bind to `/story` and `/assessment`, which the server fills from open data:
+the model lays them out and never writes a figure they show.
+
+### `LifestyleCommuteMap`
+
+A map of the buyer's life around the homes they weigh: anchors, homes, a route
+from each home to each anchor with its minutes and mode, and, when one home is
+in view, the nearest place for each criterion. CARTO light tiles over
+OpenStreetMap, attributed on the map.
+
+| Property | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `markers` | path | yes | `/story/markers` before measuring, `/assessment/markers` after |
+| `routes` | path | no | `/assessment/routes` |
+| `focus` | string | no | A home id; shows that home alone with its routes and places |
+
+### `ComparisonTable`
+
+Every criterion against every home, grouped as the buyer thinks about them:
+each cell fits, comes close with how much it misses by, misses, or could not be
+measured, with what was measured. Must-haves are marked. Criteria down the side
+and homes across on a wide card; one criterion at a time on a narrow one.
+
+| Property | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `rows` | path | yes | `/assessment/rows` |
+| `homes` | path | yes | `/assessment/candidates` |
+
+### `DynamicRecommendationStack`
+
+The homes ranked by how well they fit, best first: a score bar, what fits,
+what comes close, what misses, a warning when a must-have is lost, and a
+button to choose the home.
+
+| Property | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `homes` | path | yes | `/assessment/candidates`, already in rank order |
+| `choose` | `Action` | no | `choose_home`; the app adds the tapped home as `candidateId` |
+
+The questions card that comes before them uses basic components only:
+`ChoicePicker` in the chips style for the travel mode, the criteria per group,
+the must-haves, and the reason, and `TextField` for the longest trip and a note.
 
 ## Components
 

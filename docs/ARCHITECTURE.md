@@ -173,6 +173,8 @@ server/
       validation/   validation passes
     gemini/         interactions client, live client, request/response models
     tools/          one file per tool, each a thin adapter over common + repositories
+    research/       open-data clients (Nominatim, Overpass, routing), polite
+                    and cached, and the story measurer
     markets/        pack loader, overlay resolver, coverage
     ids/            random identifiers
     data/
@@ -195,8 +197,10 @@ Rules:
   write the response. No business logic in handlers.
 - Every external dependency (Firestore, Gemini, clock, id generator) is injected
   through constructors from `data/providers`. No static SDK access.
-- Tools never call Gemini and never touch HTTP. They take typed input, call
-  `common` and repositories, and return a typed result plus data model patches.
+- Tools never call Gemini. They take typed input, call `common`, repositories,
+  and `research`, and return a typed result plus data model patches. Research
+  is the only place besides the agent loop that calls out, and it reaches only
+  open-data services, through one polite client.
 - The agent loop is the only place that talks to Gemini.
 - There is no dependency injection framework on the server. `data/providers`
   is a plain composition root.
