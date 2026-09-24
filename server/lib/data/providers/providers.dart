@@ -26,8 +26,10 @@ import '../../markets/finding.dart';
 import '../../markets/load_markets.dart';
 import '../../markets/market_directory.dart';
 import '../../rate_limit/fixed_window_limiter.dart';
+import '../../research/open_data/research_cache.dart';
 import '../../research/research.dart';
 import '../../tools/homeward_tools.dart';
+import '../repository/firestore_research_cache.dart';
 import '../repository/firestore_session_repository.dart';
 import '../repository/in_memory_session_repository.dart';
 import '../repository/session_repository.dart';
@@ -122,13 +124,15 @@ final class Providers {
       cooldown: config.modelCooldown,
     );
     final caps = ModelCaps();
+    final firestore = switch (config.sessionStore) {
+      SessionStore.firestore => firebase.firestore(),
+      SessionStore.memory => null,
+    };
     return Providers(
       config: config,
-      sessions: switch (config.sessionStore) {
-        SessionStore.firestore => FirestoreSessionRepository(
-          firebase.firestore(),
-        ),
-        SessionStore.memory => null,
+      sessions: switch (firestore) {
+        final firestore? => FirestoreSessionRepository(firestore),
+        null => null,
       },
       identity: FirebaseIdentityVerifier(firebase.auth()),
       appCheck: FirebaseAppCheckVerifier(firebase.appCheck()),
@@ -153,7 +157,14 @@ final class Providers {
       ),
       markets: MarketDirectory(marketsData),
       prompts: PromptAssembler.load(Directory(config.promptsDirectory)),
-      research: Research.open(httpClient, userAgent: homewardUserAgent(config)),
+      research: Research.open(
+        httpClient,
+        userAgent: homewardUserAgent(config),
+        cache: switch (firestore) {
+          final firestore? => FirestoreResearchCache(firestore),
+          null => const NoResearchCache(),
+        },
+      ),
     );
   }
 

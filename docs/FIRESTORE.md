@@ -44,6 +44,20 @@ index, so saving a session again costs one write for the turn it just added.
 | `planJson` | string | The whole `Plan`: market, profile, drafts, scenarios |
 | `updatedAt` | timestamp | |
 
+### `researchCache/{sha256}`
+
+The answers open-data services gave the research tools, so a city already
+measured answers at once after a restart or while Overpass is slow (D112).
+Written only when sessions are in Firestore. The document ID is the SHA-256 of
+the request (method, URL, and body), so no buyer text is readable from it.
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `value` | bytes | The JSON answer, gzipped; answers over 900 KB are not kept |
+| `expiresAt` | timestamp | A week after it was fetched; older documents are ignored |
+
+TTL policy on `expiresAt`.
+
 ### `rateLimits/{uid_window}`
 
 Planned. Turn limits are counted in memory while one instance serves every
@@ -98,6 +112,8 @@ service cloud.firestore {
 
 ## TTL And Cleanup
 
+- `researchCache.expiresAt` TTL policy, set once per project with
+  `gcloud firestore fields ttls update expiresAt --collection-group=researchCache --enable-ttl`.
 - `rateLimits.expiresAt` TTL policy, when rate limits move to Firestore.
 - `/internal/cleanup` daily: sessions with `updatedAt` older than 90 days and
   their turns and plans.

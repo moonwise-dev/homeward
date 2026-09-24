@@ -7,6 +7,7 @@ import 'package:homeward_server/research/open_data/open_data_unavailable.dart';
 import 'package:homeward_server/research/open_data/overpass.dart';
 import 'package:homeward_server/research/open_data/polite_client.dart';
 import 'package:homeward_server/research/open_data/polyline.dart';
+import 'package:homeward_server/research/open_data/research_cache.dart';
 import 'package:homeward_server/research/open_data/routing.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -120,6 +121,48 @@ void main() {
     },
   );
 
+  test('an answer kept from an earlier run is not asked for again', () async {
+    final store = _KeptAnswers()
+      ..answers['q=KTH'] = [
+        {'lat': '59.3498', 'lon': '18.0707', 'display_name': 'KTH'},
+      ];
+    final nominatim = Nominatim(
+      PoliteClient(
+        MockClient((_) async => fail('The service was asked')),
+        userAgent: 'Homeward test',
+        store: store,
+      ),
+    );
+
+    expect((await nominatim.locate('KTH'))?.point, kth);
+  });
+
+  test('a fetched answer is kept for the next run', () async {
+    final store = _KeptAnswers();
+    final routing = Routing(
+      PoliteClient(
+        MockClient(
+          (_) async => json({
+            'routes': [
+              {
+                'duration': 600,
+                'distance': 2000,
+                'geometry': {'coordinates': <Object?>[]},
+              },
+            ],
+          }),
+        ),
+        userAgent: 'Homeward test',
+        store: store,
+      ),
+    );
+
+    await routing.route(odenplan, kth, TravelMode.bike);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(store.answers.keys.single, contains('routed-bike'));
+  });
+
   test(
     'a failed call is remembered for a minute, not paid for again',
     () async {
@@ -218,4 +261,17 @@ void main() {
     expect(route.minutes, 17);
     expect(route.path, hasLength(2));
   });
+}
+
+final class _KeptAnswers implements ResearchCache {
+  final answers = <String, Object>{};
+
+  @override
+  Future<Object?> read(String key) async => answers.entries
+      .where((answer) => key.contains(answer.key))
+      .firstOrNull
+      ?.value;
+
+  @override
+  Future<void> write(String key, Object value) async => answers[key] = value;
 }

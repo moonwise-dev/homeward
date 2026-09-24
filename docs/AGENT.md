@@ -426,7 +426,8 @@ Research for any place runs on free services, measured in S9 (D100 to D102):
   home to each anchor on the FOSSGIS router by car, bike, or foot and on
   Transitous by public transport on a weekday morning.
 - Calls go one at a time per service with the gap its policy asks, under a
-  user agent naming Homeward, and are cached; a busy Overpass is waited out
+  user agent naming Homeward, and are cached for six hours in memory and a
+  week in Firestore (D112); a busy Overpass is waited out
   twice; a service that fails leaves its criteria unmeasured, never missed.
 - `common` turns each measurement into fits, close, or misses with the words
   for it, and ranks the homes, weighing must-haves three times.
