@@ -1,6 +1,7 @@
 PACKAGES := app common server tool
 DART_PACKAGES := common server tool
 CODEGEN_PACKAGES := app common server
+GENERATED_DIGEST = find $(CODEGEN_PACKAGES) -path '*/.dart_tool' -prune -o \( -name '*.g.dart' -o -name '*.freezed.dart' \) -print | sort | xargs shasum | shasum
 SOURCE_DIRS := $(wildcard $(foreach package,$(PACKAGES),$(package)/lib $(package)/bin $(package)/test $(package)/tool))
 SERVER_BINARY := server/build/server
 SERVER_IMAGE := homeward-server
@@ -21,11 +22,12 @@ help:
 	@echo "  make format        Format every package"
 	@echo "  make format-check  Fail if any package is not formatted"
 	@echo "  make test          Run tests in pure Dart packages"
-	@echo "  make check         format-check, analyze, test, markets-check, catalog-check"
+	@echo "  make check         codegen-check, format-check, analyze, test, markets-check, catalog-check"
 	@echo "  make markets-check Check rule packs, rate snapshots, and living costs"
 	@echo "  make catalog       Regenerate the catalog document, model skill, and reference"
 	@echo "  make catalog-check Fail if catalog outputs are stale or an example is invalid"
-	@echo "  make codegen       Run build_runner in common and server"
+	@echo "  make codegen       Run build_runner in app, common, and server"
+	@echo "  make codegen-check Fail if build_runner changes a committed generated file"
 	@echo "  make iso-4217      Regenerate the ISO 4217 currency table from SIX"
 	@echo "  make a2ui-schemas  Vendor the pinned A2UI v0.9 basic catalog and common types"
 	@echo "  make fonts         Vendor the pinned font faces the app draws with"
@@ -75,7 +77,7 @@ test:
 	@cd app && flutter test
 
 .PHONY: check
-check: format-check analyze test markets-check catalog-check
+check: codegen-check format-check analyze test markets-check catalog-check
 
 .PHONY: markets-check
 markets-check:
@@ -93,8 +95,15 @@ catalog-check:
 codegen:
 	@set -e; for dir in $(CODEGEN_PACKAGES); do \
 		echo "==> build_runner $$dir"; \
-		(cd $$dir && dart run build_runner build --delete-conflicting-outputs); \
+		(cd $$dir && dart run build_runner build); \
 	done
+
+.PHONY: codegen-check
+codegen-check:
+	@before="$$($(GENERATED_DIGEST))"; \
+	$(MAKE) --no-print-directory codegen > /dev/null; \
+	test "$$before" = "$$($(GENERATED_DIGEST))" || \
+		(echo "Generated files were stale; build_runner rewrote them, commit the result" && exit 1)
 
 .PHONY: iso-4217
 iso-4217:

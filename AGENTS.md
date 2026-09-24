@@ -108,8 +108,8 @@ make server-build
 make server-image-run
 ```
 
-`make check` runs format-check, analyze, test, markets-check, and
-catalog-check. `eval` joins as its milestone lands; `make eval` needs
+`make check` runs codegen-check, format-check, analyze, test, markets-check,
+and catalog-check. `eval` joins as its milestone lands; `make eval` needs
 `HOMEWARD_EVAL_GEMINI_KEY` and is never part of `check`.
 
 `make probe SERVER=http://localhost:8080 MESSAGE="…"` signs in anonymously,
@@ -126,7 +126,8 @@ Always resolve dependencies from the root with `make get`. Running
 
 Generated files are committed and never edited by hand:
 
-- `*.g.dart` and `*.freezed.dart`, from `make codegen`
+- `*.g.dart` and `*.freezed.dart`, from `make codegen`; `make codegen-check`
+  fails when they are stale
 - `app/lib/firebase_options.dart`, `app/firebase.json`,
   `app/android/app/google-services.json`, and both
   `GoogleService-Info.plist` files, from `flutterfire configure`

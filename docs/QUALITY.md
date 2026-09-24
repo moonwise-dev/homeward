@@ -4,11 +4,14 @@
 
 `make check` must pass before any change is considered done:
 
-1. `dart format --set-exit-if-changed` across `app`, `server`, `common`, `tool`.
-2. `flutter analyze` / `dart analyze` with zero issues.
-3. `make test`.
-4. `make markets-check`.
-5. `make catalog-check`.
+1. `make codegen-check`: build_runner in `app`, `common`, and `server` changes
+   no generated file, so the committed `*.g.dart` and `*.freezed.dart` match
+   their sources.
+2. `dart format --set-exit-if-changed` across `app`, `server`, `common`, `tool`.
+3. `flutter analyze` / `dart analyze` with zero issues.
+4. `make test`.
+5. `make markets-check`.
+6. `make catalog-check`.
 
 `make eval` runs separately because it calls Gemini.
 
