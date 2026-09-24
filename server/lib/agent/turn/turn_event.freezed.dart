@@ -56,13 +56,14 @@ extension TurnEventPatterns on TurnEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( TurnWorking value)?  working,TResult Function( TurnText value)?  text,TResult Function( TurnMessage value)?  message,TResult Function( TurnCompleted value)?  completed,TResult Function( TurnFailed value)?  failed,TResult Function( TurnCanceled value)?  canceled,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( TurnWorking value)?  working,TResult Function( TurnText value)?  text,TResult Function( TurnMessage value)?  message,TResult Function( TurnProgress value)?  progress,TResult Function( TurnCompleted value)?  completed,TResult Function( TurnFailed value)?  failed,TResult Function( TurnCanceled value)?  canceled,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case TurnWorking() when working != null:
 return working(_that);case TurnText() when text != null:
 return text(_that);case TurnMessage() when message != null:
-return message(_that);case TurnCompleted() when completed != null:
+return message(_that);case TurnProgress() when progress != null:
+return progress(_that);case TurnCompleted() when completed != null:
 return completed(_that);case TurnFailed() when failed != null:
 return failed(_that);case TurnCanceled() when canceled != null:
 return canceled(_that);case _:
@@ -83,13 +84,14 @@ return canceled(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( TurnWorking value)  working,required TResult Function( TurnText value)  text,required TResult Function( TurnMessage value)  message,required TResult Function( TurnCompleted value)  completed,required TResult Function( TurnFailed value)  failed,required TResult Function( TurnCanceled value)  canceled,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( TurnWorking value)  working,required TResult Function( TurnText value)  text,required TResult Function( TurnMessage value)  message,required TResult Function( TurnProgress value)  progress,required TResult Function( TurnCompleted value)  completed,required TResult Function( TurnFailed value)  failed,required TResult Function( TurnCanceled value)  canceled,}){
 final _that = this;
 switch (_that) {
 case TurnWorking():
 return working(_that);case TurnText():
 return text(_that);case TurnMessage():
-return message(_that);case TurnCompleted():
+return message(_that);case TurnProgress():
+return progress(_that);case TurnCompleted():
 return completed(_that);case TurnFailed():
 return failed(_that);case TurnCanceled():
 return canceled(_that);}
@@ -106,13 +108,14 @@ return canceled(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( TurnWorking value)?  working,TResult? Function( TurnText value)?  text,TResult? Function( TurnMessage value)?  message,TResult? Function( TurnCompleted value)?  completed,TResult? Function( TurnFailed value)?  failed,TResult? Function( TurnCanceled value)?  canceled,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( TurnWorking value)?  working,TResult? Function( TurnText value)?  text,TResult? Function( TurnMessage value)?  message,TResult? Function( TurnProgress value)?  progress,TResult? Function( TurnCompleted value)?  completed,TResult? Function( TurnFailed value)?  failed,TResult? Function( TurnCanceled value)?  canceled,}){
 final _that = this;
 switch (_that) {
 case TurnWorking() when working != null:
 return working(_that);case TurnText() when text != null:
 return text(_that);case TurnMessage() when message != null:
-return message(_that);case TurnCompleted() when completed != null:
+return message(_that);case TurnProgress() when progress != null:
+return progress(_that);case TurnCompleted() when completed != null:
 return completed(_that);case TurnFailed() when failed != null:
 return failed(_that);case TurnCanceled() when canceled != null:
 return canceled(_that);case _:
@@ -132,12 +135,13 @@ return canceled(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  working,TResult Function( String text)?  text,TResult Function( Map<String, Object?> message)?  message,TResult Function( String text)?  completed,TResult Function( HomewardFailure failure)?  failed,TResult Function()?  canceled,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  working,TResult Function( String text)?  text,TResult Function( Map<String, Object?> message)?  message,TResult Function( ResearchProgress progress)?  progress,TResult Function( String text)?  completed,TResult Function( HomewardFailure failure)?  failed,TResult Function()?  canceled,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case TurnWorking() when working != null:
 return working();case TurnText() when text != null:
 return text(_that.text);case TurnMessage() when message != null:
-return message(_that.message);case TurnCompleted() when completed != null:
+return message(_that.message);case TurnProgress() when progress != null:
+return progress(_that.progress);case TurnCompleted() when completed != null:
 return completed(_that.text);case TurnFailed() when failed != null:
 return failed(_that.failure);case TurnCanceled() when canceled != null:
 return canceled();case _:
@@ -158,12 +162,13 @@ return canceled();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  working,required TResult Function( String text)  text,required TResult Function( Map<String, Object?> message)  message,required TResult Function( String text)  completed,required TResult Function( HomewardFailure failure)  failed,required TResult Function()  canceled,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  working,required TResult Function( String text)  text,required TResult Function( Map<String, Object?> message)  message,required TResult Function( ResearchProgress progress)  progress,required TResult Function( String text)  completed,required TResult Function( HomewardFailure failure)  failed,required TResult Function()  canceled,}) {final _that = this;
 switch (_that) {
 case TurnWorking():
 return working();case TurnText():
 return text(_that.text);case TurnMessage():
-return message(_that.message);case TurnCompleted():
+return message(_that.message);case TurnProgress():
+return progress(_that.progress);case TurnCompleted():
 return completed(_that.text);case TurnFailed():
 return failed(_that.failure);case TurnCanceled():
 return canceled();}
@@ -180,12 +185,13 @@ return canceled();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  working,TResult? Function( String text)?  text,TResult? Function( Map<String, Object?> message)?  message,TResult? Function( String text)?  completed,TResult? Function( HomewardFailure failure)?  failed,TResult? Function()?  canceled,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  working,TResult? Function( String text)?  text,TResult? Function( Map<String, Object?> message)?  message,TResult? Function( ResearchProgress progress)?  progress,TResult? Function( String text)?  completed,TResult? Function( HomewardFailure failure)?  failed,TResult? Function()?  canceled,}) {final _that = this;
 switch (_that) {
 case TurnWorking() when working != null:
 return working();case TurnText() when text != null:
 return text(_that.text);case TurnMessage() when message != null:
-return message(_that.message);case TurnCompleted() when completed != null:
+return message(_that.message);case TurnProgress() when progress != null:
+return progress(_that.progress);case TurnCompleted() when completed != null:
 return completed(_that.text);case TurnFailed() when failed != null:
 return failed(_that.failure);case TurnCanceled() when canceled != null:
 return canceled();case _:
@@ -368,6 +374,83 @@ as Map<String, Object?>,
 }
 
 
+}
+
+/// @nodoc
+
+
+class TurnProgress implements TurnEvent {
+  const TurnProgress(this.progress);
+  
+
+ final  ResearchProgress progress;
+
+/// Create a copy of TurnEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TurnProgressCopyWith<TurnProgress> get copyWith => _$TurnProgressCopyWithImpl<TurnProgress>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is TurnProgress&&(identical(other.progress, progress) || other.progress == progress));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,progress);
+}
+
+@override
+String toString() {
+    return 'TurnEvent.progress(progress: $progress)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TurnProgressCopyWith<$Res> implements $TurnEventCopyWith<$Res> {
+  factory $TurnProgressCopyWith(TurnProgress value, $Res Function(TurnProgress) _then) = _$TurnProgressCopyWithImpl;
+@useResult
+$Res call({
+ ResearchProgress progress
+});
+
+
+$ResearchProgressCopyWith<$Res> get progress;
+
+}
+/// @nodoc
+class _$TurnProgressCopyWithImpl<$Res>
+    implements $TurnProgressCopyWith<$Res> {
+  _$TurnProgressCopyWithImpl(this._self, this._then);
+
+  final TurnProgress _self;
+  final $Res Function(TurnProgress) _then;
+
+/// Create a copy of TurnEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? progress = null,}) {
+  return _then(TurnProgress(
+null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
+as ResearchProgress,
+  ));
+}
+
+/// Create a copy of TurnEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ResearchProgressCopyWith<$Res> get progress {
+  
+  return $ResearchProgressCopyWith<$Res>(_self.progress, (value) {
+    return _then(_self.copyWith(progress: value));
+  });
+}
 }
 
 /// @nodoc

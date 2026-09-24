@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ToolContext {
 
- MarketDirectory get markets; Plan get plan;
+ MarketDirectory get markets; Plan get plan; ResearchSteps get steps;
 /// Create a copy of ToolContext
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $ToolContextCopyWith<ToolContext> get copyWith => _$ToolContextCopyWithImpl<Tool
 @override
 bool operator ==(Object other) {
   final _this = this as ToolContext;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ToolContext&&(identical(other.markets, _this.markets) || other.markets == _this.markets)&&(identical(other.plan, _this.plan) || other.plan == _this.plan));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ToolContext&&(identical(other.markets, _this.markets) || other.markets == _this.markets)&&(identical(other.plan, _this.plan) || other.plan == _this.plan)&&(identical(other.steps, _this.steps) || other.steps == _this.steps));
 }
 
 
 @override
 int get hashCode {
   final _this = this as ToolContext;
-  return Object.hash(runtimeType,_this.markets,_this.plan);
+  return Object.hash(runtimeType,_this.markets,_this.plan,_this.steps);
 }
 
 @override
 String toString() {
   final _this = this as ToolContext;
-  return 'ToolContext(markets: ${_this.markets}, plan: ${_this.plan})';
+  return 'ToolContext(markets: ${_this.markets}, plan: ${_this.plan}, steps: ${_this.steps})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $ToolContextCopyWith<$Res>  {
   factory $ToolContextCopyWith(ToolContext value, $Res Function(ToolContext) _then) = _$ToolContextCopyWithImpl;
 @useResult
 $Res call({
- MarketDirectory markets, Plan plan
+ MarketDirectory markets, Plan plan, ResearchSteps steps
 });
 
 
@@ -68,11 +68,12 @@ class _$ToolContextCopyWithImpl<$Res>
 
 /// Create a copy of ToolContext
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? markets = null,Object? plan = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? markets = null,Object? plan = null,Object? steps = null,}) {
   return _then(ToolContext(
 markets: null == markets ? _self.markets : markets // ignore: cast_nullable_to_non_nullable
 as MarketDirectory,plan: null == plan ? _self.plan : plan // ignore: cast_nullable_to_non_nullable
-as Plan,
+as Plan,steps: null == steps ? _self.steps : steps // ignore: cast_nullable_to_non_nullable
+as ResearchSteps,
   ));
 }
 /// Create a copy of ToolContext
@@ -166,10 +167,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MarketDirectory markets,  Plan plan)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MarketDirectory markets,  Plan plan,  ResearchSteps steps)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ToolContext() when $default != null:
-return $default(_that.markets,_that.plan);case _:
+return $default(_that.markets,_that.plan,_that.steps);case _:
   return orElse();
 
 }
@@ -187,10 +188,10 @@ return $default(_that.markets,_that.plan);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MarketDirectory markets,  Plan plan)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MarketDirectory markets,  Plan plan,  ResearchSteps steps)  $default,) {final _that = this;
 switch (_that) {
 case _ToolContext():
-return $default(_that.markets,_that.plan);case _:
+return $default(_that.markets,_that.plan,_that.steps);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +208,10 @@ return $default(_that.markets,_that.plan);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MarketDirectory markets,  Plan plan)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MarketDirectory markets,  Plan plan,  ResearchSteps steps)?  $default,) {final _that = this;
 switch (_that) {
 case _ToolContext() when $default != null:
-return $default(_that.markets,_that.plan);case _:
+return $default(_that.markets,_that.plan,_that.steps);case _:
   return null;
 
 }
@@ -222,11 +223,12 @@ return $default(_that.markets,_that.plan);case _:
 
 
 class _ToolContext implements ToolContext {
-  const _ToolContext({required this.markets, required this.plan});
+  const _ToolContext({required this.markets, required this.plan, this.steps = const SilentSteps()});
   
 
 @override final  MarketDirectory markets;
 @override final  Plan plan;
+@override@JsonKey() final  ResearchSteps steps;
 
 /// Create a copy of ToolContext
 /// with the given fields replaced by the non-null parameter values.
@@ -238,18 +240,18 @@ _$ToolContextCopyWith<_ToolContext> get copyWith => __$ToolContextCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ToolContext&&(identical(other.markets, markets) || other.markets == markets)&&(identical(other.plan, plan) || other.plan == plan));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ToolContext&&(identical(other.markets, markets) || other.markets == markets)&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.steps, steps) || other.steps == steps));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,markets,plan);
+    return Object.hash(runtimeType,markets,plan,steps);
 }
 
 @override
 String toString() {
-    return 'ToolContext(markets: $markets, plan: $plan)';
+    return 'ToolContext(markets: $markets, plan: $plan, steps: $steps)';
 }
 
 
@@ -260,7 +262,7 @@ abstract mixin class _$ToolContextCopyWith<$Res> implements $ToolContextCopyWith
   factory _$ToolContextCopyWith(_ToolContext value, $Res Function(_ToolContext) _then) = __$ToolContextCopyWithImpl;
 @override @useResult
 $Res call({
- MarketDirectory markets, Plan plan
+ MarketDirectory markets, Plan plan, ResearchSteps steps
 });
 
 
@@ -277,11 +279,12 @@ class __$ToolContextCopyWithImpl<$Res>
 
 /// Create a copy of ToolContext
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? markets = null,Object? plan = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? markets = null,Object? plan = null,Object? steps = null,}) {
   return _then(_ToolContext(
 markets: null == markets ? _self.markets : markets // ignore: cast_nullable_to_non_nullable
 as MarketDirectory,plan: null == plan ? _self.plan : plan // ignore: cast_nullable_to_non_nullable
-as Plan,
+as Plan,steps: null == steps ? _self.steps : steps // ignore: cast_nullable_to_non_nullable
+as ResearchSteps,
   ));
 }
 

@@ -69,6 +69,10 @@ Deliverables:
 - Flow: infer from the first message, ask the gaps in one or two cards, show
   the board, refine on it.
 - A picked home opens the existing deal workspace with its price.
+- A journey shell: an opening page, then one page per turn, with a history
+  sheet (D106, D107).
+- Measuring steps streamed while tools run (D108).
+- A board composed by code when the model's composition fails (D109).
 - Constrained A2UI output tried against the composed catalog schema, kept or
   dropped with a decision.
 
@@ -224,6 +228,10 @@ Decisions from the planning session on 2026-09-16.
 | D103 | Building blocks | Gemini composes screens from mid-level blocks that carry Homeward's design (`Map`, `FactTile`, `StatusRow`, `ComparisonTable`, `ChoiceChips`, and others) beside the A2UI basic components and the finance components that recompute on the device | Basic components only; whole single-purpose items such as a fit matrix |
 | D104 | Tests | No widget tests; the UI is reviewed visually. Tests cover `common`, packs, the catalog contract, validation passes, research tools, and evals | Keeping the widget tests added in the design pass |
 | D105 | What a buyer brings | Either up to three candidate homes, as a listing link, an address, or a pin, or just a city, for which areas are suggested | Candidates only; a city only |
+| D106 | The app's shape | A journey: each turn is one page, holding the agent's text and the surfaces the turn created. The page stays up under an overlay while the next one is built. A "Tell Homeward more" field sits under every page, and the transcript moves to a history sheet. This follows the Very Good Ventures GenUI finance demo (Google Cloud Next 2026), whose lesson is that the best AI interfaces do not look like AI interfaces. The wire inspector keeps its pane (D92) | Keeping the chat; journey pages on phones and chat on wide screens, which is two layouts to polish before Sep 28 |
+| D107 | How a plan starts | One hand-built opening page. It has reason chips and a story box, and the first message is built from both, so the model never starts cold and never asks why the buyer is moving | Two hand-built pages, which is Very Good Ventures' exact pattern and one more tap; Gemini from the first screen with starter prompts, as before |
+| D108 | What the buyer sees while tools run | Every lookup (finding a place, looking near the homes, timing a ride) is a step. The turn streams the steps whole in a progress data part with its own media type, which other A2UI clients skip, and the page lists them as they run and finish. Labels come from server code, never from the model | A thinking spinner, which says nothing for 5–16 s; animated pins and routes, about half a day more |
+| D109 | A composition that fails validation | The server composes the homes surface itself (map, ranked homes, comparison table) from the assessment the turn already measured, and passes it through the same validation. The retry text is left only for turns with nothing measured. About one turn in ten failed after corrections on 2026-09-23; the Very Good Ventures kit calls this a deterministic fallback | Always the retry text; more correction rounds, which spend the buyer's requests |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.
@@ -256,4 +264,8 @@ them before M0 ends.
    for on 2026-09-14.
 7. Whether Google is comfortable with research on a non-Google model in a
    GenUI sample (D100); worth one line to Abdallah before the recording.
-8. The Very Good Ventures product the finish should come close to.
+8. ~~The Very Good Ventures product the finish should come close to.~~
+   Answered on 2026-09-24. It is their GenUI Kit
+   (verygood.ventures/resources/genui-kit) and the Life Goal Simulator shown
+   at Google Cloud Next 2026. There is no public repo; D106 to D109 take its
+   lessons.

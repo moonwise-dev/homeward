@@ -27,7 +27,10 @@ final class AssessStoryTool extends AgentTool {
     ToolContext context,
   ) async {
     final story = context.plan.story;
-    final assessment = assessStory(story, await _measurer.measure(story));
+    final assessment = assessStory(
+      story,
+      await _measurer.measure(story, steps: context.steps),
+    );
     return ToolResult(
       modelResult: {
         'homes': [

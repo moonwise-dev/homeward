@@ -61,6 +61,7 @@ GeminiException geminiHttpError({
             (code == 'not_found' || code == 'invalid_request') =>
       GeminiHistoryMissing(message),
     >= 500 => GeminiUnavailable(message, model: model),
+    _ when _isOverloaded(message) => GeminiUnavailable(message, model: model),
     _ => GeminiRequestInvalid(message),
   };
 }
@@ -74,9 +75,13 @@ GeminiException geminiStreamError({
   return switch (error['code']) {
     'api_error' => GeminiUnavailable(message, model: model),
     'quota_exceeded' || 'too_many_requests' => _quotaError(message, now),
+    _ when _isOverloaded(message) => GeminiUnavailable(message, model: model),
     _ => GeminiRequestInvalid(message),
   };
 }
+
+bool _isOverloaded(String message) =>
+    message.contains('high demand') || message.contains('overloaded');
 
 GeminiException _quotaError(String message, DateTime now) =>
     message.contains('prepayment credits are depleted')

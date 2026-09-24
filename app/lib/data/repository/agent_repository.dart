@@ -24,7 +24,7 @@ abstract interface class AgentRepository {
 
   SurfaceContext surfaceContext(String sessionId, String surfaceId);
 
-  Future<void> sendText(String sessionId, String text);
+  Future<void> sendText(String sessionId, String text, {StoryReason? reason});
 
   Future<void> retry(String sessionId, String entryId);
 
@@ -135,10 +135,14 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
   );
 
   @override
-  Future<void> sendText(String sessionId, String text) {
+  Future<void> sendText(
+    String sessionId,
+    String text, {
+    StoryReason? reason,
+  }) {
     final plan = _plan(sessionId);
     plan.add(TranscriptEntry.buyer(id: _newEntryId(), text: text));
-    return _run(sessionId, plan, TurnRequest.text(text));
+    return _run(sessionId, plan, TurnRequest.text(text, reason: reason));
   }
 
   @override
@@ -297,6 +301,11 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
             );
           }
         }
+      case AgentProgress(:final progress):
+        plan.updateAgent(
+          entryId,
+          (entry) => entry.copyWith(progress: progress),
+        );
       case AgentCompleted(:final text):
         plan.updateAgent(
           entryId,
@@ -322,6 +331,7 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
     AgentStarted() => 'task',
     AgentText() => 'status-update, text',
     AgentA2ui() => 'data, A2UI',
+    AgentProgress() => 'data, progress',
     AgentCompleted() => 'status-update, completed',
     AgentCanceled() => 'status-update, canceled',
   };
@@ -330,6 +340,7 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
     AgentStarted(:final taskId) => taskId,
     AgentText() => null,
     AgentA2ui(:final message) => _a2uiDetail(message),
+    AgentProgress(:final progress) => '${progress.steps.length} steps',
     AgentCompleted() => null,
     AgentCanceled() => null,
   };
@@ -360,6 +371,7 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
   int? _eventBytes(AgentEvent event) => switch (event) {
     AgentA2ui(:final message) => _bytesOf(message),
     AgentText(:final text) => _bytesOf(text),
+    AgentProgress(:final progress) => _bytesOf(progress.toJson()),
     AgentCompleted(:final text) => _bytesOf(text),
     _ => null,
   };

@@ -8,6 +8,8 @@ import 'open_data/osm_feature.dart';
 import 'open_data/osm_matcher.dart';
 import 'open_data/overpass.dart';
 import 'open_data/routing.dart';
+import 'research_steps.dart';
+import 'step_labels.dart';
 
 final _log = Logger('research');
 
@@ -17,7 +19,10 @@ final class StoryMeasurer {
   final Overpass overpass;
   final Routing routing;
 
-  Future<Measurements> measure(Story story) async {
+  Future<Measurements> measure(
+    Story story, {
+    ResearchSteps steps = const SilentSteps(),
+  }) async {
     final located = [
       for (final candidate in story.candidates)
         if (candidate.point != null) candidate,
@@ -26,13 +31,12 @@ final class StoryMeasurer {
       for (final criterion in story.criteria)
         if (criterion.kind.measure != CriterionMeasure.route) criterion,
     ];
-    final (features, routes) = await (
-      _features(located, nearby),
+    final (features, commutes) = await (
+      _features(located, nearby, steps),
       Future.wait([
-        for (final candidate in located)
-          for (final criterion in story.criteria)
-            if (criterion.kind.measure == CriterionMeasure.route)
-              _commute(candidate, criterion, story),
+        for (final criterion in story.criteria)
+          if (criterion.kind.measure == CriterionMeasure.route)
+            _commutes(located, criterion, story, steps),
       ]),
     ).wait;
     return Measurements({
@@ -46,13 +50,15 @@ final class StoryMeasurer {
             ),
             null => const Measurement.unavailable(),
           },
-      for (final (key, measurement) in routes) key: measurement,
+      for (final routes in commutes)
+        for (final (key, measurement) in routes) key: measurement,
     });
   }
 
   Future<List<OsmFeature>?> _features(
     List<Candidate> located,
     List<Criterion> criteria,
+    ResearchSteps steps,
   ) async {
     if (located.isEmpty || criteria.isEmpty) {
       return const [];
@@ -65,35 +71,60 @@ final class StoryMeasurer {
             radius: _searchRadius(criterion),
           ),
     };
-    try {
-      return await overpass.around([
-        for (final candidate in located) candidate.point!,
-      ], queries.values.toList());
-    } on OpenDataUnavailable catch (error) {
-      _unavailable(error);
-      return null;
-    }
+    return steps.track(
+      nearbyLabel([for (final criterion in criteria) criterion.kind], located),
+      () async {
+        try {
+          return await overpass.around([
+            for (final candidate in located) candidate.point!,
+          ], queries.values.toList());
+        } on OpenDataUnavailable catch (error) {
+          _unavailable(error);
+          return null;
+        }
+      },
+      measured: (found) => found != null,
+    );
   }
 
-  Future<((String, String), Measurement)> _commute(
-    Candidate candidate,
+  Future<List<((String, String), Measurement)>> _commutes(
+    List<Candidate> located,
     Criterion criterion,
     Story story,
+    ResearchSteps steps,
   ) async {
-    final key = (candidate.id, criterion.id);
     final anchor = story.anchorWith(criterion.anchorId);
     final target = anchor?.point;
-    if (anchor == null || target == null) {
-      return (key, const Measurement.unavailable());
+    if (anchor == null || target == null || located.isEmpty) {
+      return [
+        for (final candidate in located)
+          ((candidate.id, criterion.id), const Measurement.unavailable()),
+      ];
     }
+    return steps.track(
+      routeLabel(anchor),
+      () => Future.wait([
+        for (final candidate in located)
+          _commute(candidate.point!, target, anchor.mode).then(
+            (measurement) => ((candidate.id, criterion.id), measurement),
+          ),
+      ]),
+      measured: (routes) => routes.any(
+        (route) => route.$2 is! UnavailableMeasurement,
+      ),
+    );
+  }
+
+  Future<Measurement> _commute(
+    GeoPoint from,
+    GeoPoint to,
+    TravelMode mode,
+  ) async {
     try {
-      return (
-        key,
-        await routing.route(candidate.point!, target, anchor.mode),
-      );
+      return await routing.route(from, to, mode);
     } on OpenDataUnavailable catch (error) {
       _unavailable(error);
-      return (key, const Measurement.unavailable());
+      return const Measurement.unavailable();
     }
   }
 

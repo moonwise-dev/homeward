@@ -15,6 +15,7 @@ import '../a2ui_extension.dart';
 import '../decode_sse.dart';
 import '../homeward_headers.dart';
 import '../plan_transcript.dart';
+import '../progress/research_progress.dart';
 import 'agent_event.dart';
 import 'homeward_api_exception.dart';
 import 'request_credentials.dart';
@@ -185,6 +186,11 @@ final class HomewardClient {
             for (final part in parts) {
               yield switch (part) {
                 A2aTextPart(:final text) => AgentEvent.text(text),
+                A2aDataPart(
+                  :final data,
+                  metadata: {'mimeType': ResearchProgress.mimeType},
+                ) =>
+                  AgentEvent.progress(ResearchProgress.fromJson(data)),
                 A2aDataPart(:final data) => AgentEvent.a2ui(data),
               };
             }

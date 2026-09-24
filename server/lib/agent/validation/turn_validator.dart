@@ -26,6 +26,14 @@ final class TurnValidator {
 
   Set<String> get surfacesCreated => _components.keys.toSet();
 
+  bool get drewComponents =>
+      _components.values.any((components) => components.isNotEmpty);
+
+  Iterable<String> get emptySurfaces => [
+    for (final MapEntry(:key, :value) in _components.entries)
+      if (value.isEmpty) key,
+  ];
+
   ValidationOutcome validate(String source) {
     final Object? json;
     try {

@@ -212,6 +212,22 @@ void main() {
     },
   );
 
+  test('a reason picked on the opening page is on the plan', () async {
+    final handler = handlerFor(
+      ScriptedInteractions([reply('i1', text: 'Tell me more.')]),
+    );
+    final message = const TurnRequest.text(
+      'Reason for the move: studies.',
+      reason: StoryReason.study,
+    ).message(sessionId: 's-1', messageId: 'm-1');
+
+    await events(
+      await handler(rpc('message/stream', {'message': message.toJson()})),
+    );
+
+    expect((await sessions.find('s-1'))!.plan.story.reason, StoryReason.study);
+  });
+
   test('cancels a running turn and frees the session', () async {
     final gate = Completer<void>();
     final handler = handlerFor(

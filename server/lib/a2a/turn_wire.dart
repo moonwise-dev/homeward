@@ -46,6 +46,15 @@ final class TurnWire {
         TaskState.working,
         parts: [_a2uiPart(message)],
       ),
+      TurnProgress(:final progress) => status(
+        TaskState.working,
+        parts: [
+          A2aPart.data(
+            data: progress.toJson(),
+            metadata: const {'mimeType': ResearchProgress.mimeType},
+          ),
+        ],
+      ),
       TurnCompleted(:final text) => status(
         TaskState.completed,
         parts: [A2aPart.text(text: text)],

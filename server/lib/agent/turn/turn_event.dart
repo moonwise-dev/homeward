@@ -1,3 +1,4 @@
+import 'package:common/common.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../errors/homeward_failure.dart';
@@ -11,6 +12,8 @@ sealed class TurnEvent with _$TurnEvent {
   const factory TurnEvent.text(String text) = TurnText;
 
   const factory TurnEvent.message(Map<String, Object?> message) = TurnMessage;
+
+  const factory TurnEvent.progress(ResearchProgress progress) = TurnProgress;
 
   const factory TurnEvent.completed(String text) = TurnCompleted;
 

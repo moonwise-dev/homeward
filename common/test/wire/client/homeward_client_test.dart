@@ -175,12 +175,26 @@ void main() {
   });
 
   test('streams a text turn as typed agent events', () async {
+    const progress = ResearchProgress(
+      steps: [
+        ResearchStep(label: 'Finding KTH', state: ResearchStepState.done),
+      ],
+    );
     final client = clientFor(
       (_) async => events([
         submitted,
         status(TaskState.working),
         status(TaskState.working, parts: [const A2aPart.text(text: 'Swe')]),
         status(TaskState.working, parts: [const A2aPart.text(text: 'Sweden')]),
+        status(
+          TaskState.working,
+          parts: [
+            A2aPart.data(
+              data: progress.toJson(),
+              metadata: const {'mimeType': ResearchProgress.mimeType},
+            ),
+          ],
+        ),
         status(
           TaskState.working,
           parts: [
@@ -210,6 +224,7 @@ void main() {
       AgentEvent.started(taskId: 't-1'),
       AgentEvent.text('Swe'),
       AgentEvent.text('Sweden'),
+      AgentEvent.progress(progress),
       AgentEvent.a2ui(createSurface),
       AgentEvent.completed('Sweden it is.'),
     ]);

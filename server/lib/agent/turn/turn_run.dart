@@ -22,6 +22,8 @@ import '../validation/turn_validator.dart';
 import '../validation/validation_failure.dart';
 import '../validation/validation_outcome.dart';
 import 'correction_input.dart';
+import 'homes_fallback.dart';
+import 'progress_log.dart';
 import 'replay_shadow.dart';
 import 'create_interaction.dart';
 import 'retry_surface.dart';
@@ -66,6 +68,7 @@ final class TurnRun {
   final Session _session;
   final TurnValidator _validator;
   final _seeder = SurfaceSeeder();
+  final _progress = ProgressLog();
   final _forwarded = <Map<String, Object?>>[];
   final _calledSeeds = <Map<String, Object?>>[];
   final _calledNames = <String>{};
@@ -124,13 +127,17 @@ final class TurnRun {
       _rounds++;
       final roundClock = Stopwatch()..start();
       String? status;
+      late final InteractionRequest request;
+      yield* _progress.whileRunning(
+        () async => request = await _request(
+          input,
+          allowToolCalls: toolRounds < settings.maxToolRounds,
+        ),
+      );
       try {
         await for (final event in createInteraction(
           apiKey: apiKey,
-          request: await _request(
-            input,
-            allowToolCalls: toolRounds < settings.maxToolRounds,
-          ),
+          request: request,
           canFallBack: () => _acceptedInRound == 0,
           cancellation: cancellation,
         )) {
@@ -209,14 +216,16 @@ final class TurnRun {
         toolRounds = calls.every(_isKnown)
             ? settings.maxToolRounds
             : toolRounds + 1;
-        final results = {
+        final results = <String, FunctionResult>{};
+        yield* _progress.whileRunning(() async {
           for (final call
               in [...calls]..sort(
                 (a, b) =>
                     tools.orderOf(a.name).compareTo(tools.orderOf(b.name)),
-              ))
-            call.callId: await _runCall(call),
-        };
+              )) {
+            results[call.callId] = await _runCall(call);
+          }
+        });
         input = InteractionInput.functionResults(
           [for (final call in calls) results[call.callId]!],
           note: toolRounds < settings.maxToolRounds ? null : toolsDoneNote,
@@ -230,10 +239,7 @@ final class TurnRun {
           _pendingFailures.clear();
           continue;
         }
-        for (final message in retrySurface(turn)) {
-          _forwarded.add(message);
-          yield TurnEvent.message(message);
-        }
+        yield* _fallback();
       }
       if (_forwarded.isEmpty && !askedForSurface) {
         askedForSurface = true;
@@ -242,11 +248,10 @@ final class TurnRun {
           continue;
         }
       }
-      if (_forwarded.isEmpty && _text.toString().trim().isEmpty) {
-        for (final message in retrySurface(turn)) {
-          _forwarded.add(message);
-          yield TurnEvent.message(message);
-        }
+      if (_forwarded.isEmpty &&
+          (_text.toString().trim().isEmpty ||
+              (turnInput is ActionTurnInput && _homesReady))) {
+        yield* _fallback();
       }
       for (final message in compileBoard(plan: _plan, markets: tools.markets)) {
         yield TurnEvent.message(message);
@@ -276,7 +281,10 @@ final class TurnRun {
 
   String _modelText(TurnInput turnInput) {
     switch (turnInput) {
-      case TextTurnInput(:final text):
+      case TextTurnInput(:final text, :final reason):
+        if (reason != null) {
+          _plan = _plan.copyWith(story: _plan.story.copyWith(reason: reason));
+        }
         return text;
       case ActionTurnInput(:final action, :final surfaceData):
         final outcome = applyAction(
@@ -306,7 +314,7 @@ final class TurnRun {
     InteractionInput input, {
     required bool allowToolCalls,
   }) async {
-    final settled = await tools.runSettled(_plan);
+    final settled = await tools.runSettled(_plan, steps: _progress);
     _settledNames.addAll(settled.keys);
     _validator
       ..seeds = turnSeeds(_plan, [
@@ -406,12 +414,51 @@ final class TurnRun {
     }
   }
 
+  bool get _homesReady =>
+      _validator.seeds.containsKey(assessmentSlice.name) &&
+      _plan.story.chosen == null &&
+      !_validator.drewComponents;
+
+  Stream<TurnEvent> _fallback() async* {
+    final failuresBefore = _pendingFailures.length;
+    if (_homesReady) {
+      final empty = _validator.emptySurfaces.firstOrNull;
+      for (final source in homesFallback(
+        empty ?? InlineSurfaces.id(turn, 'homes'),
+        create: empty == null,
+      )) {
+        yield* _validated(source);
+      }
+      if (_pendingFailures.length == failuresBefore) {
+        _logFallback('homes');
+        return;
+      }
+    }
+    _logFallback('retry');
+    for (final message in retrySurface(turn)) {
+      _forwarded.add(message);
+      yield TurnEvent.message(message);
+    }
+  }
+
+  void _logFallback(String fallback) => _log.info(
+    LogEntry(
+      'Fallback drawn in turn $turn',
+      fields: {'turn': turn, 'fallback': fallback},
+    ),
+  );
+
   bool _isKnown(FunctionCall call) =>
       _settledNames.contains(call.name) || _calledNames.contains(call.name);
 
   Future<FunctionResult> _runCall(FunctionCall call) async {
     _calledNames.add(call.name);
-    final result = await tools.call(call.name, call.arguments, _plan);
+    final result = await tools.call(
+      call.name,
+      call.arguments,
+      _plan,
+      steps: _progress,
+    );
     _plan = result.plan ?? _plan;
     _calledSeeds.add(result.seeds);
     return FunctionResult(

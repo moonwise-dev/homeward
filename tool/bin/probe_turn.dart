@@ -13,7 +13,8 @@ Future<void> main(List<String> arguments) async {
   final geminiKey = probeGeminiKey(Platform.environment);
   if (geminiKey == null || arguments.length < 2) {
     stderr.writeln(
-      'Usage: probe_turn <server url> <message or @action {slice overrides}>…\n'
+      'Usage: probe_turn <server url> '
+      '<message, #reason message, or @action {slice overrides}>…\n'
       'The Gemini key comes from HOMEWARD_EVAL_GEMINI_KEY or '
       '~/.config/homeward/gemini_key.',
     );
@@ -49,10 +50,16 @@ Future<void> main(List<String> arguments) async {
 }
 
 TurnRequest? _requestFor(String input, ProbeSurfaces surfaces) {
+  final separator = input.indexOf(' ');
+  if (input.startsWith('#') && separator != -1) {
+    return TurnRequest.text(
+      input.substring(separator + 1),
+      reason: StoryReason.values.byName(input.substring(1, separator)),
+    );
+  }
   if (!input.startsWith('@')) {
     return TurnRequest.text(input);
   }
-  final separator = input.indexOf(' ');
   final name = input.substring(1, separator == -1 ? null : separator);
   final overrides = separator == -1
       ? const <String, Object?>{}
@@ -95,6 +102,13 @@ Future<void> _probeTurn(
           if (describeA2uiMessage(message) case final description?) {
             log(description);
           }
+        case AgentProgress(:final progress):
+          log(
+            [
+              for (final step in progress.steps)
+                '${step.state.name}: ${step.label}',
+            ].join(' · '),
+          );
         case AgentCompleted(text: final latest):
           text = latest;
           log('completed');

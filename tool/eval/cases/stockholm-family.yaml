@@ -1,7 +1,10 @@
 id: stockholm-family
 persona: relocating-family
 turns:
-  - text: >-
+  - reason: study
+    text: >-
+      Reason for the move: studies.
+
       We're moving to Stockholm, I start at KTH in January. Two kids, six and
       nine. We're looking at a flat on Odengatan and one in Solna.
     expect:

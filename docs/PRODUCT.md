@@ -35,6 +35,11 @@ tool or from shared finance code.
 
 - **The UI comes to the buyer.** The agent draws the controls it needs rather
   than asking questions in prose. The controls are the question.
+- **A journey, not a chat.** Each step is a page Homeward composes, and the
+  buyer can always add a sentence under it. The conversation is there as
+  history, not as the product.
+- **Waiting shows the work.** While Homeward measures, the buyer sees what it
+  is measuring, step by step, as each step finishes.
 - **Gemini composes; tools measure; code computes.** The composing model decides
   what to ask, which criteria matter, and how the screen is laid out. It never
   writes a figure a buyer relies on.
@@ -112,14 +117,17 @@ any city.
 
 The flow the video segment is built around. The story is the point.
 
-1. A buyer types: *"We're moving to Stockholm, I start at KTH in January. Two
-   kids, six and nine. We're looking at a flat on Odengatan and one in Solna."*
+1. A buyer opens a new plan, picks *studies* as why they are moving, and
+   writes: *"We're moving to Stockholm, I start at KTH in January. Two kids,
+   six and nine. We're looking at a flat on Odengatan and one in Solna."*
 2. Homeward infers a relocation for work, an anchor at KTH, children who need
    schools, and two candidates. It pins both flats and asks the gaps in one
    card: how they will get to work, the longest commute they accept, what kind
    of school, what they do after work, whether evenings should be lively or
    quiet, what they will not live with, and whether they drive.
-3. The board appears: a map with KTH, both flats, commute lines with minutes by
+3. While the homes are measured, the page lists each step as it runs and
+   ticks it off: finding the flats, looking for schools and parks near them,
+   timing the ride to KTH. Then the board appears: a map with KTH, both flats, commute lines with minutes by
    the chosen mode, schools and parks; a comparison of every criterion against
    both flats, each cell fits, close, or misses; pros and cons; the flats
    ranked. *Solna is six minutes over your 25-minute commute but has two

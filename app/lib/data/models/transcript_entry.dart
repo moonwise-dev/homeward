@@ -24,6 +24,7 @@ sealed class TranscriptEntry with _$TranscriptEntry {
     required AgentTurnStatus status,
     @Default('') String text,
     @Default([]) List<String> surfaceIds,
+    @Default(ResearchProgress()) ResearchProgress progress,
     AppError? error,
   }) = AgentEntry;
 }

@@ -72,7 +72,7 @@ final class EvalRunner {
           text = completed;
         case TurnFailed(:final failure):
           errorCode = failure.code.wireName;
-        case TurnText() || TurnWorking() || TurnCanceled():
+        case TurnText() || TurnWorking() || TurnProgress() || TurnCanceled():
       }
     }
     clock.stop();
@@ -119,7 +119,10 @@ final class EvalRunner {
 
   TurnInput? _inputFor(EvalInput input, ProbeSurfaces surfaces) =>
       switch (input) {
-        EvalText(:final text) => TurnInput.text(text),
+        EvalText(:final text, :final reason) => TurnInput.text(
+          text,
+          reason: reason,
+        ),
         EvalAction(:final name, :final overrides, :final tapped) =>
           switch (surfaces.actionFor(name, overrides, tapped: tapped)) {
             (:final action, :final surfaceData) => TurnInput.action(

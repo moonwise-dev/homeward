@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../gemini/function_declaration.dart';
 import '../markets/market_directory.dart';
+import '../research/research_steps.dart';
 
 part 'agent_tool.freezed.dart';
 
@@ -13,6 +14,7 @@ abstract class ToolContext with _$ToolContext {
   const factory ToolContext({
     required MarketDirectory markets,
     required Plan plan,
+    @Default(SilentSteps()) ResearchSteps steps,
   }) = _ToolContext;
 }
 

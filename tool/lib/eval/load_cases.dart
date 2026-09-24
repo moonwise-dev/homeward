@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:common/common.dart';
 import 'package:yaml/yaml.dart';
 
 import 'eval_case.dart';
@@ -43,7 +44,13 @@ Object? plain(Object? node) => switch (node) {
 
 EvalTurn _turn(Map<String, Object?> turn) => EvalTurn(
   input: switch (turn) {
-    {'text': final String text} => EvalText(text),
+    {'text': final String text} => EvalText(
+      text,
+      reason: switch (turn['reason']) {
+        final String name => StoryReason.values.byName(name),
+        _ => null,
+      },
+    ),
     {'action': final String action} => EvalAction(
       action,
       overrides: _map(turn['data'] ?? const <String, Object?>{}),

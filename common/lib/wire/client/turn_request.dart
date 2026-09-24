@@ -5,7 +5,9 @@ import '../a2a/a2a_message.dart';
 import '../a2a/a2a_part.dart';
 import '../a2a/a2a_role.dart';
 import '../a2a/client_action.dart';
+import '../../story/story_reason.dart';
 import '../a2ui_extension.dart';
+import '../homeward_metadata.dart';
 
 part 'turn_request.freezed.dart';
 
@@ -13,7 +15,8 @@ part 'turn_request.freezed.dart';
 sealed class TurnRequest with _$TurnRequest {
   const TurnRequest._();
 
-  const factory TurnRequest.text(String text) = TextTurnRequest;
+  const factory TurnRequest.text(String text, {StoryReason? reason}) =
+      TextTurnRequest;
 
   const factory TurnRequest.action(
     ClientAction action, {
@@ -42,6 +45,8 @@ sealed class TurnRequest with _$TurnRequest {
               'supportedCatalogIds': [homewardCatalogId],
             },
           },
+          if (this case TextTurnRequest(:final reason?))
+            HomewardMetadata.storyReason: reason.name,
           if (this case ActionTurnRequest(:final action, :final surfaceData))
             A2uiExtension.dataModelKey: {
               'version': A2uiExtension.version,

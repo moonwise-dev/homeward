@@ -21,13 +21,15 @@ logic.
 
 ## Layout
 
+A plan is a journey, not a chat (D106). It opens on a hand-built opening page
+(D107), and every turn after that is one page: the agent's text and the
+surfaces the turn created, centred and at most 1040 dp wide. Each Homeward
+component sets its own width inside the page.
+
 | Width | Layout |
 | --- | --- |
-| < 900 dp | Chat full screen. Plan board as a bottom sheet with a peek bar showing plan title and progress. |
-| ≥ 900 dp | Chat on the left, plan board as a persistent right pane, 380–440 dp wide. |
-
-Inline surfaces are attached under the agent message of the turn that created
-them and scroll with the transcript.
+| < 900 dp | The page fills the screen. The plan board and the wire inspector open as sheets. |
+| ≥ 900 dp | The page is centred. The plan board or the wire inspector can open as a right pane, 380–440 dp wide, from the app bar. |
 
 ## Routes
 
@@ -36,7 +38,7 @@ them and scroll with the transcript.
 | `/startup` | Startup |
 | `/key` | Gemini key |
 | `/plans` | Plans |
-| `/plans/:sessionId` | Plan chat with board |
+| `/plans/:sessionId` | Journey with board |
 | `/gallery` | Catalog gallery |
 | `/settings` | Settings |
 
@@ -77,21 +79,37 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 
 - Lists the buyer's plans from Firestore, newest activity first, with market
   name, coverage badge, and last activity.
-- Empty state offers three starter prompts, including the hero prompt.
-- New plan creates a session and opens it.
+- New plan creates a session and opens its opening page.
 - Delete plan asks for confirmation and deletes session, turns, and plan.
 
-### Plan Chat
+### Journey
 
-- Transcript: buyer messages, agent text streamed as it arrives, inline surfaces
-  under their agent message.
-- Status line during a turn from task status updates, for example
-  "Checking the rules for Madeira".
-- Composer with send; stop while a turn is running.
-- Starter prompts on a new plan.
+- **Opening page**, shown while a plan has no turns (D107):
+  - Why the buyer is moving, as chips: work, studies, family, lifestyle,
+    retirement, investment, or their own words.
+  - A story box: where they are going, what their days look like, and any
+    homes they are looking at.
+  - Two example stories that fill both in: the Stockholm family and the Lisbon
+    surfer.
+  - Start builds the first message from the reason and the story, so the model
+    never starts cold.
+- **Pages**: one page per turn that has text, a surface, or a failure. The
+  newest page shows by default. A step pager at the top moves to earlier pages;
+  their surfaces are read-only once a later commit locks them. Pages fade and
+  rise into place when they change.
+- **While a turn runs**, the current page stays on screen under an overlay, and
+  the next page replaces it when its first surface arrives or the turn ends:
+  - While tools run, the overlay lists the measuring steps from the server's
+    progress data part, each running, done, or unavailable (D108).
+  - Otherwise it shows a thinking line with the agent's text so far.
+  - Stop cancels the turn.
+- **Tell Homeward more**: a one-line field under every page sends free text,
+  which keeps the journey story-driven.
+- **History**: an app bar action opens the transcript as a sheet, with buyer
+  messages, the actions they took, and each turn's text.
 - Opening an existing plan replays stored A2UI messages into a fresh surface
-  controller before enabling the composer.
-- Turn failures show a toast and a retry affordance on the failed turn.
+  controller before the pages are shown.
+- Turn failures show a toast, and the failed page offers retry.
 - `gemini_key_invalid` routes to `/key`. `gemini_quota_exhausted` explains that
   the buyer's free key has hit a request limit, asks them to try again in a
   minute, and shows when the daily limit resets.
@@ -100,11 +118,11 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 
 ### Plan Board
 
-- Renders the `board` surface.
+- Renders the `board` surface in a pane or sheet opened from the app bar.
 - Before any decision: a short explanation of what will appear and the
   disclaimer.
-- Every section's change action sends a `change` action and scrolls chat to the
-  new turn.
+- Every section's change action sends a `change` action and moves the journey
+  to the new page.
 
 ### Catalog Gallery
 
@@ -116,8 +134,8 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 
 ### Wire Inspector
 
-- A panel inside plan chat: the second pane beside the chat where the board
-  would be, and a sheet on a narrow window, toggled from the app bar.
+- A panel inside the journey: the right pane where the board would be, and a
+  sheet on a narrow window, toggled from the app bar.
 - Timeline of A2A frames sent and received, each with its size and the gap
   since the frame before it, newest first.
 - A frame opens to the pretty-printed A2UI message it carried, named by the
@@ -144,7 +162,7 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 | `startup` | Session restore, App Check, key presence, initial route |
 | `api_key` | Input state, verify, save, remove |
 | `plans` | Stream plans, create, delete |
-| `plan_chat` | Send text, send action, stop, stream turn events, replay, retry |
+| `journey` | Start from the opening page, send text, stop, stream turn events and progress, replay, retry, page choice |
 | `plan_board` | Board surface presence and sheet state |
 | `catalog_gallery` | Selected component, example, toggles |
 | `wire_inspector` | Frame timeline with sizes, A2UI messages, live data model, counters |

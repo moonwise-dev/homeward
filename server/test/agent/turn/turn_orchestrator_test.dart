@@ -17,6 +17,7 @@ import 'package:homeward_server/gemini/gemini_exception.dart';
 import 'package:homeward_server/gemini/interaction_event.dart';
 import 'package:homeward_server/gemini/interaction_input.dart';
 import 'package:homeward_server/gemini/tool_choice.dart';
+import 'package:homeward_server/tools/agent_tool.dart';
 import 'package:homeward_server/tools/homeward_tools.dart';
 import 'package:test/test.dart';
 
@@ -33,11 +34,12 @@ void main() {
   TurnOrchestrator orchestrator(
     ScriptedInteractions script, {
     TurnSettings settings = const TurnSettings(),
+    List<AgentTool> tools = homewardTools,
   }) => TurnOrchestrator(
     sessions: sessions,
     createInteraction: script.call,
     prompts: prompts,
-    tools: ToolBelt(tools: homewardTools, markets: realMarkets),
+    tools: ToolBelt(tools: tools, markets: realMarkets),
     catalog: catalog,
     settings: settings,
     now: () => DateTime.utc(2026, 9, 17, 12),
@@ -583,6 +585,75 @@ void main() {
     expect(events.last, isA<TurnCompleted>());
   });
 
+  test(
+    'a composition that fails validation falls back to the measured homes',
+    () async {
+      await sessionWith(Plan(story: stockholmStory));
+      final invalid = reply(
+        'i1',
+        text: a2ui('t1-fit', [
+          {'id': 'root', 'component': 'FitMatrix'},
+        ]),
+      );
+      final script = ScriptedInteractions([invalid, invalid]);
+
+      final events = await send(
+        orchestrator(
+          script,
+          settings: const TurnSettings(maxCorrections: 1),
+          tools: [const _MeasuredHomes(), ...homewardTools],
+        ),
+      ).toList();
+      final forwarded = [
+        for (final message in messagesIn(events)) jsonEncode(message),
+      ];
+
+      expect(forwarded, isNot(contains(contains('"t1-retry"'))));
+      expect(forwarded, contains(contains('"LifestyleCommuteMap"')));
+      expect(
+        forwarded.where((message) => message.contains('"t1-homes"')),
+        isEmpty,
+      );
+      expect(
+        forwarded,
+        contains(allOf(contains('"t1-fit"'), contains('"/assessment"'))),
+      );
+      expect(events.last, isA<TurnCompleted>());
+    },
+  );
+
+  test('streams each measuring step before the model draws', () async {
+    await sessionWith(Plan(story: stockholmStory));
+    final script = ScriptedInteractions([reply('i1', text: 'Here they are.')]);
+
+    final events = await send(
+      orchestrator(script, tools: [const _MeasuredHomes(), ...homewardTools]),
+    ).toList();
+    final steps = [
+      for (final event in events)
+        if (event case TurnProgress(:final progress)) progress.steps,
+    ];
+
+    expect(steps, [
+      [
+        const ResearchStep(
+          label: 'Timing the trip',
+          state: ResearchStepState.running,
+        ),
+      ],
+      [
+        const ResearchStep(
+          label: 'Timing the trip',
+          state: ResearchStepState.done,
+        ),
+      ],
+    ]);
+    expect(
+      events.indexWhere((event) => event is TurnProgress),
+      lessThan(events.indexWhere((event) => event is TurnText)),
+    );
+  });
+
   test('fails a turn on a quota error and releases the session', () async {
     await sessions.create('uid-1');
     final script = ScriptedInteractions([
@@ -649,4 +720,31 @@ void main() {
     while (await running.moveNext()) {}
     expect(await sessions.lease('s-1'), isTrue);
   });
+}
+
+final class _MeasuredHomes extends AgentTool {
+  const _MeasuredHomes();
+
+  @override
+  String get name => 'assess_story';
+
+  @override
+  Map<String, Object?>? settledArguments(ToolContext context) => const {};
+
+  @override
+  Future<ToolResult> run(
+    Map<String, Object?> arguments,
+    ToolContext context,
+  ) => context.steps.track(
+    'Timing the trip',
+    () async => ToolResult(
+      modelResult: const {},
+      seeds: {
+        assessmentSlice.name: assessStory(
+          stockholmStory,
+          stockholmStoryMeasurements,
+        ).toJson(),
+      },
+    ),
+  );
 }

@@ -3,6 +3,8 @@ import 'package:common/common.dart';
 import '../research/open_data/geo_place.dart';
 import '../research/open_data/nominatim.dart';
 import '../research/open_data/open_data_unavailable.dart';
+import '../research/research_steps.dart';
+import '../research/step_labels.dart';
 import 'agent_tool.dart';
 import 'amount_arguments.dart';
 
@@ -127,15 +129,18 @@ final class ProposeStoryTool extends ModelTool {
     final plan = context.plan;
     final previous = plan.story;
     final city = arguments['city'] as String? ?? previous.city;
-    final cityPlace = city == null ? null : await _locate(city, null);
+    final steps = context.steps;
+    final cityPlace = city == null
+        ? null
+        : await _locate(city, city, null, steps);
     final box = cityPlace?.box;
     final placed = <String, GeoPlace>{};
 
-    Future<GeoPoint?> point(String query, GeoPoint? known) async {
+    Future<GeoPoint?> point(String query, String label, GeoPoint? known) async {
       if (known != null) {
         return known;
       }
-      final place = await _locate(query, box);
+      final place = await _locate(query, label, box, steps);
       if (place != null) {
         placed[query] = place;
       }
@@ -215,29 +220,35 @@ final class ProposeStoryTool extends ModelTool {
     );
   }
 
-  Future<GeoPlace?> _locate(String query, GeoBox? box) async {
+  Future<GeoPlace?> _locate(
+    String query,
+    String label,
+    GeoBox? box,
+    ResearchSteps steps,
+  ) => steps.track(locatingLabel(label), () async {
     try {
       return await _nominatim.locate(query, within: box);
     } on OpenDataUnavailable {
       return null;
     }
-  }
+  }, measured: (place) => place != null);
 
   Future<Anchor> _anchor(
     int index,
     Map<String, Object?> item,
     Story previous,
-    Future<GeoPoint?> Function(String, GeoPoint?) point,
+    Future<GeoPoint?> Function(String, String, GeoPoint?) point,
   ) async {
     final query = item['query'] as String? ?? item['label'] as String? ?? '';
     final known = previous.anchors
         .where((anchor) => anchor.query == query)
         .firstOrNull;
+    final label = item['label'] as String? ?? query;
     return Anchor(
       id: known?.id ?? 'a${index + 1}',
-      label: item['label'] as String? ?? query,
+      label: label,
       query: query,
-      point: await point(query, known?.point),
+      point: await point(query, label, known?.point),
       mode:
           _enum(TravelMode.values, item['mode']) ??
           known?.mode ??
@@ -251,17 +262,18 @@ final class ProposeStoryTool extends ModelTool {
     int index,
     Map<String, Object?> item,
     Story previous,
-    Future<GeoPoint?> Function(String, GeoPoint?) point,
+    Future<GeoPoint?> Function(String, String, GeoPoint?) point,
     ToolContext context,
   ) async {
     final query = item['query'] as String? ?? item['label'] as String? ?? '';
     final known = previous.candidates
         .where((candidate) => candidate.query == query)
         .firstOrNull;
-    final located = await point(query, known?.point);
+    final label = item['label'] as String? ?? query;
+    final located = await point(query, label, known?.point);
     return Candidate(
       id: known?.id ?? 'c${index + 1}',
-      label: item['label'] as String? ?? query,
+      label: label,
       query: query,
       point: located,
       address: known?.address,

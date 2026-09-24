@@ -1,11 +1,14 @@
+import 'package:common/common.dart';
+
 sealed class EvalInput {
   const EvalInput();
 }
 
 final class EvalText extends EvalInput {
-  const EvalText(this.text);
+  const EvalText(this.text, {this.reason});
 
   final String text;
+  final StoryReason? reason;
 }
 
 final class EvalAction extends EvalInput {

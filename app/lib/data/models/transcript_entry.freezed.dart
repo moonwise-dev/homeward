@@ -159,12 +159,12 @@ return agent(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String id,  String text)?  buyer,TResult Function( String id,  String actionName)?  buyerAction,TResult Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  AppError? error)?  agent,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String id,  String text)?  buyer,TResult Function( String id,  String actionName)?  buyerAction,TResult Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  AppError? error)?  agent,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case BuyerEntry() when buyer != null:
 return buyer(_that.id,_that.text);case BuyerActionEntry() when buyerAction != null:
 return buyerAction(_that.id,_that.actionName);case AgentEntry() when agent != null:
-return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.error);case _:
+return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.progress,_that.error);case _:
   return orElse();
 
 }
@@ -182,12 +182,12 @@ return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String id,  String text)  buyer,required TResult Function( String id,  String actionName)  buyerAction,required TResult Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  AppError? error)  agent,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String id,  String text)  buyer,required TResult Function( String id,  String actionName)  buyerAction,required TResult Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  AppError? error)  agent,}) {final _that = this;
 switch (_that) {
 case BuyerEntry():
 return buyer(_that.id,_that.text);case BuyerActionEntry():
 return buyerAction(_that.id,_that.actionName);case AgentEntry():
-return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.error);}
+return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.progress,_that.error);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -201,12 +201,12 @@ return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String id,  String text)?  buyer,TResult? Function( String id,  String actionName)?  buyerAction,TResult? Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  AppError? error)?  agent,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String id,  String text)?  buyer,TResult? Function( String id,  String actionName)?  buyerAction,TResult? Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  AppError? error)?  agent,}) {final _that = this;
 switch (_that) {
 case BuyerEntry() when buyer != null:
 return buyer(_that.id,_that.text);case BuyerActionEntry() when buyerAction != null:
 return buyerAction(_that.id,_that.actionName);case AgentEntry() when agent != null:
-return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.error);case _:
+return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.progress,_that.error);case _:
   return null;
 
 }
@@ -358,7 +358,7 @@ as String,
 
 
 class AgentEntry implements TranscriptEntry {
-  const AgentEntry({required this.id, required this.request, required this.status, this.text = '',  List<String> surfaceIds = const [], this.error}): _surfaceIds = surfaceIds;
+  const AgentEntry({required this.id, required this.request, required this.status, this.text = '',  List<String> surfaceIds = const [], this.progress = const ResearchProgress(), this.error}): _surfaceIds = surfaceIds;
   
 
 @override final  String id;
@@ -372,6 +372,7 @@ class AgentEntry implements TranscriptEntry {
   return EqualUnmodifiableListView(_surfaceIds);
 }
 
+@JsonKey() final  ResearchProgress progress;
  final  AppError? error;
 
 /// Create a copy of TranscriptEntry
@@ -384,18 +385,18 @@ $AgentEntryCopyWith<AgentEntry> get copyWith => _$AgentEntryCopyWithImpl<AgentEn
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is AgentEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.request, request) || other.request == request)&&(identical(other.status, status) || other.status == status)&&(identical(other.text, text) || other.text == text)&&const DeepCollectionEquality().equals(other.surfaceIds, _surfaceIds)&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is AgentEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.request, request) || other.request == request)&&(identical(other.status, status) || other.status == status)&&(identical(other.text, text) || other.text == text)&&const DeepCollectionEquality().equals(other.surfaceIds, _surfaceIds)&&(identical(other.progress, progress) || other.progress == progress)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,request,status,text,const DeepCollectionEquality().hash(_surfaceIds),error);
+    return Object.hash(runtimeType,id,request,status,text,const DeepCollectionEquality().hash(_surfaceIds),progress,error);
 }
 
 @override
 String toString() {
-    return 'TranscriptEntry.agent(id: $id, request: $request, status: $status, text: $text, surfaceIds: $surfaceIds, error: $error)';
+    return 'TranscriptEntry.agent(id: $id, request: $request, status: $status, text: $text, surfaceIds: $surfaceIds, progress: $progress, error: $error)';
 }
 
 
@@ -406,11 +407,11 @@ abstract mixin class $AgentEntryCopyWith<$Res> implements $TranscriptEntryCopyWi
   factory $AgentEntryCopyWith(AgentEntry value, $Res Function(AgentEntry) _then) = _$AgentEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, TurnRequest request, AgentTurnStatus status, String text, List<String> surfaceIds, AppError? error
+ String id, TurnRequest request, AgentTurnStatus status, String text, List<String> surfaceIds, ResearchProgress progress, AppError? error
 });
 
 
-$TurnRequestCopyWith<$Res> get request;$AppErrorCopyWith<$Res>? get error;
+$TurnRequestCopyWith<$Res> get request;$ResearchProgressCopyWith<$Res> get progress;$AppErrorCopyWith<$Res>? get error;
 
 }
 /// @nodoc
@@ -423,14 +424,15 @@ class _$AgentEntryCopyWithImpl<$Res>
 
 /// Create a copy of TranscriptEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? request = null,Object? status = null,Object? text = null,Object? surfaceIds = null,Object? error = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? request = null,Object? status = null,Object? text = null,Object? surfaceIds = null,Object? progress = null,Object? error = freezed,}) {
   return _then(AgentEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,request: null == request ? _self.request : request // ignore: cast_nullable_to_non_nullable
 as TurnRequest,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as AgentTurnStatus,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,surfaceIds: null == surfaceIds ? _self._surfaceIds : surfaceIds // ignore: cast_nullable_to_non_nullable
-as List<String>,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as List<String>,progress: null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
+as ResearchProgress,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as AppError?,
   ));
 }
@@ -443,6 +445,15 @@ $TurnRequestCopyWith<$Res> get request {
   
   return $TurnRequestCopyWith<$Res>(_self.request, (value) {
     return _then(_self.copyWith(request: value));
+  });
+}/// Create a copy of TranscriptEntry
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ResearchProgressCopyWith<$Res> get progress {
+  
+  return $ResearchProgressCopyWith<$Res>(_self.progress, (value) {
+    return _then(_self.copyWith(progress: value));
   });
 }/// Create a copy of TranscriptEntry
 /// with the given fields replaced by the non-null parameter values.

@@ -56,13 +56,14 @@ extension AgentEventPatterns on AgentEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( AgentStarted value)?  started,TResult Function( AgentText value)?  text,TResult Function( AgentA2ui value)?  a2ui,TResult Function( AgentCompleted value)?  completed,TResult Function( AgentCanceled value)?  canceled,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( AgentStarted value)?  started,TResult Function( AgentText value)?  text,TResult Function( AgentA2ui value)?  a2ui,TResult Function( AgentProgress value)?  progress,TResult Function( AgentCompleted value)?  completed,TResult Function( AgentCanceled value)?  canceled,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case AgentStarted() when started != null:
 return started(_that);case AgentText() when text != null:
 return text(_that);case AgentA2ui() when a2ui != null:
-return a2ui(_that);case AgentCompleted() when completed != null:
+return a2ui(_that);case AgentProgress() when progress != null:
+return progress(_that);case AgentCompleted() when completed != null:
 return completed(_that);case AgentCanceled() when canceled != null:
 return canceled(_that);case _:
   return orElse();
@@ -82,13 +83,14 @@ return canceled(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( AgentStarted value)  started,required TResult Function( AgentText value)  text,required TResult Function( AgentA2ui value)  a2ui,required TResult Function( AgentCompleted value)  completed,required TResult Function( AgentCanceled value)  canceled,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( AgentStarted value)  started,required TResult Function( AgentText value)  text,required TResult Function( AgentA2ui value)  a2ui,required TResult Function( AgentProgress value)  progress,required TResult Function( AgentCompleted value)  completed,required TResult Function( AgentCanceled value)  canceled,}){
 final _that = this;
 switch (_that) {
 case AgentStarted():
 return started(_that);case AgentText():
 return text(_that);case AgentA2ui():
-return a2ui(_that);case AgentCompleted():
+return a2ui(_that);case AgentProgress():
+return progress(_that);case AgentCompleted():
 return completed(_that);case AgentCanceled():
 return canceled(_that);}
 }
@@ -104,13 +106,14 @@ return canceled(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( AgentStarted value)?  started,TResult? Function( AgentText value)?  text,TResult? Function( AgentA2ui value)?  a2ui,TResult? Function( AgentCompleted value)?  completed,TResult? Function( AgentCanceled value)?  canceled,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( AgentStarted value)?  started,TResult? Function( AgentText value)?  text,TResult? Function( AgentA2ui value)?  a2ui,TResult? Function( AgentProgress value)?  progress,TResult? Function( AgentCompleted value)?  completed,TResult? Function( AgentCanceled value)?  canceled,}){
 final _that = this;
 switch (_that) {
 case AgentStarted() when started != null:
 return started(_that);case AgentText() when text != null:
 return text(_that);case AgentA2ui() when a2ui != null:
-return a2ui(_that);case AgentCompleted() when completed != null:
+return a2ui(_that);case AgentProgress() when progress != null:
+return progress(_that);case AgentCompleted() when completed != null:
 return completed(_that);case AgentCanceled() when canceled != null:
 return canceled(_that);case _:
   return null;
@@ -129,12 +132,13 @@ return canceled(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String taskId)?  started,TResult Function( String text)?  text,TResult Function( Map<String, Object?> message)?  a2ui,TResult Function( String text)?  completed,TResult Function()?  canceled,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String taskId)?  started,TResult Function( String text)?  text,TResult Function( Map<String, Object?> message)?  a2ui,TResult Function( ResearchProgress progress)?  progress,TResult Function( String text)?  completed,TResult Function()?  canceled,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case AgentStarted() when started != null:
 return started(_that.taskId);case AgentText() when text != null:
 return text(_that.text);case AgentA2ui() when a2ui != null:
-return a2ui(_that.message);case AgentCompleted() when completed != null:
+return a2ui(_that.message);case AgentProgress() when progress != null:
+return progress(_that.progress);case AgentCompleted() when completed != null:
 return completed(_that.text);case AgentCanceled() when canceled != null:
 return canceled();case _:
   return orElse();
@@ -154,12 +158,13 @@ return canceled();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String taskId)  started,required TResult Function( String text)  text,required TResult Function( Map<String, Object?> message)  a2ui,required TResult Function( String text)  completed,required TResult Function()  canceled,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String taskId)  started,required TResult Function( String text)  text,required TResult Function( Map<String, Object?> message)  a2ui,required TResult Function( ResearchProgress progress)  progress,required TResult Function( String text)  completed,required TResult Function()  canceled,}) {final _that = this;
 switch (_that) {
 case AgentStarted():
 return started(_that.taskId);case AgentText():
 return text(_that.text);case AgentA2ui():
-return a2ui(_that.message);case AgentCompleted():
+return a2ui(_that.message);case AgentProgress():
+return progress(_that.progress);case AgentCompleted():
 return completed(_that.text);case AgentCanceled():
 return canceled();}
 }
@@ -175,12 +180,13 @@ return canceled();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String taskId)?  started,TResult? Function( String text)?  text,TResult? Function( Map<String, Object?> message)?  a2ui,TResult? Function( String text)?  completed,TResult? Function()?  canceled,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String taskId)?  started,TResult? Function( String text)?  text,TResult? Function( Map<String, Object?> message)?  a2ui,TResult? Function( ResearchProgress progress)?  progress,TResult? Function( String text)?  completed,TResult? Function()?  canceled,}) {final _that = this;
 switch (_that) {
 case AgentStarted() when started != null:
 return started(_that.taskId);case AgentText() when text != null:
 return text(_that.text);case AgentA2ui() when a2ui != null:
-return a2ui(_that.message);case AgentCompleted() when completed != null:
+return a2ui(_that.message);case AgentProgress() when progress != null:
+return progress(_that.progress);case AgentCompleted() when completed != null:
 return completed(_that.text);case AgentCanceled() when canceled != null:
 return canceled();case _:
   return null;
@@ -398,6 +404,83 @@ as Map<String, Object?>,
 }
 
 
+}
+
+/// @nodoc
+
+
+class AgentProgress implements AgentEvent {
+  const AgentProgress(this.progress);
+  
+
+ final  ResearchProgress progress;
+
+/// Create a copy of AgentEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AgentProgressCopyWith<AgentProgress> get copyWith => _$AgentProgressCopyWithImpl<AgentProgress>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is AgentProgress&&(identical(other.progress, progress) || other.progress == progress));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,progress);
+}
+
+@override
+String toString() {
+    return 'AgentEvent.progress(progress: $progress)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $AgentProgressCopyWith<$Res> implements $AgentEventCopyWith<$Res> {
+  factory $AgentProgressCopyWith(AgentProgress value, $Res Function(AgentProgress) _then) = _$AgentProgressCopyWithImpl;
+@useResult
+$Res call({
+ ResearchProgress progress
+});
+
+
+$ResearchProgressCopyWith<$Res> get progress;
+
+}
+/// @nodoc
+class _$AgentProgressCopyWithImpl<$Res>
+    implements $AgentProgressCopyWith<$Res> {
+  _$AgentProgressCopyWithImpl(this._self, this._then);
+
+  final AgentProgress _self;
+  final $Res Function(AgentProgress) _then;
+
+/// Create a copy of AgentEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? progress = null,}) {
+  return _then(AgentProgress(
+null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
+as ResearchProgress,
+  ));
+}
+
+/// Create a copy of AgentEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ResearchProgressCopyWith<$Res> get progress {
+  
+  return $ResearchProgressCopyWith<$Res>(_self.progress, (value) {
+    return _then(_self.copyWith(progress: value));
+  });
+}
 }
 
 /// @nodoc

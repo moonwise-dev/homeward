@@ -156,6 +156,11 @@ surface data model in metadata:
 - genui writes `timestamp` in local time without a zone. The server never uses
   it and records its own receive time.
 - The client sends `a2uiClientCapabilities` on every turn.
+- The first message of a plan, sent from the opening page, also carries
+  `homewardStoryReason` in metadata: the reason the buyer picked, as a
+  `StoryReason` name. The server sets it on the plan before the model is
+  called, so the reason never depends on the model reading it from the text
+  (D107).
 - Clients may serialize absent optional fields as explicit `null`
   (`configuration`, `metadata`, `extensions`, `taskId`). The server treats
   `null` and absent the same.
@@ -205,7 +210,10 @@ Within a turn:
    a full text and would drop spaces between deltas.
 4. `status-update` with `state: working` whose message carries one data part
    per A2UI message, in order, as each passes validation.
-5. `status-update` with `state: completed`, `final: true`, whose message
+5. `status-update` with `state: working` whose message carries one progress
+   data part: every measuring step of the turn so far, sent whole whenever a
+   step starts or ends (D108). Clients replace the list they show.
+6. `status-update` with `state: completed`, `final: true`, whose message
    carries the final full text.
 
 A canceled turn ends with `state: canceled`, `final: true`.
@@ -245,6 +253,24 @@ A `failed` status is not used, because A2A clients surface it only as text.
 }
 ```
 
+A progress data part carries its own media type, so an A2UI client that does
+not know it skips it; `genui_a2a` 0.10.x logs a warning and moves on. Step
+labels are written by server code from the plan, never by the model.
+
+```json
+{
+  "kind": "data",
+  "metadata": { "mimeType": "application/json+homeward-progress" },
+  "data": {
+    "steps": [
+      { "label": "Finding KTH", "state": "done" },
+      { "label": "Looking for schools and parks near 2 homes", "state": "running" },
+      { "label": "Timing the ride to KTH by bike", "state": "unavailable" }
+    ]
+  }
+}
+```
+
 ### Extension Activation
 
 The client sends `X-A2A-Extensions: https://a2ui.org/a2a-extension/a2ui/v0.9`.
@@ -267,7 +293,7 @@ Placement is encoded in the surface ID so it survives any connector.
 | Surface ID | Placement | Author |
 | --- | --- | --- |
 | `board` | Plan board: side pane on wide screens, sheet on phones | Server, compiled from the plan record |
-| `t{turn}-{slug}` | Inline, attached to the agent message of turn `{turn}` | Model, validated by server |
+| `t{turn}-{slug}` | On the journey page of turn `{turn}` | Model, validated by server; `t{turn}-homes` and `t{turn}-retry` are server-drawn fallbacks (D109) |
 
 - At most two inline surfaces per turn.
 - The model never creates, updates, or deletes `board`.

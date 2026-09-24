@@ -150,10 +150,12 @@ An uncovered market leaves only `marketCoverage` open among them.
 | `obstaclesReview` | `get_obstacles` | `ForeignBuyerObstacles` |
 | `process` | `get_process` | `BuyingProcessTimeline`, `DocumentChecklist` |
 
-The first turn with nothing known draws one surface that asks where the buyer
-is buying and where they pay tax, with one button sending `select_market`. The
-server selects the market from the action context and keeps the profile facts
-from the surface's data model as the profile draft.
+The first message comes from the opening page (D107): the reason the buyer
+picked, as a sentence, then their story in their own words. The reason also
+travels as message metadata and is set on the plan before the model is called,
+so `story.reason` is known from the first round. The first turn therefore
+always has something to infer from; it calls `propose_story` and draws the
+questions card for the gaps, and never asks why the buyer is moving.
 
 The country code is required: in live turns on 2026-09-17 `gemini-3.5-flash-lite`
 sometimes left it out, the place list, which holds only regions with their own
@@ -288,12 +290,21 @@ owner, and leases it; `turn_run.dart` runs one turn:
    after one round they called them anyway and the buyer saw nothing. Every round
    is logged with its status, the names of the tools called, and its
    duration.
-9. A turn that ends with no text and no forwarded message draws the
-   `t{turn}-retry` surface, so a buyer never sees an empty answer (D85).
+9. A turn that ends with no text and no forwarded message draws a fallback,
+   so a buyer never sees an empty answer (D85).
 10. When messages were rejected, continue with one text input listing each
    `VALIDATION_FAILED` error, at most `HOMEWARD_MAX_CORRECTIONS` rounds. After
-   the last, a server-drawn `t{turn}-retry` surface asks the buyer to send the
-   message again.
+   the last, the server draws a fallback.
+
+The fallback is composed by code from what the turn already measured (D109).
+When the open decision is `homeChoice`, `assess_story` ran, and the model drew
+no components, it is the homes composition: the map, the ranked homes with
+their choose button, and the comparison table, bound to the same `/assessment`
+slice the model would have used and passed through the same validation. It
+fills the surface the model created and could not fill, or creates
+`t{turn}-homes`. Only when there is
+nothing measured to show does the `t{turn}-retry` surface ask the buyer to send
+the message again.
 11. Save the plan, the turn number, the last completed interaction ID, and every
     forwarded message, also when the turn fails or is cancelled, then release
     the lease and emit `completed`.
@@ -414,6 +425,11 @@ Research for any place runs on free services, measured in S9 (D100 to D102):
   twice; a service that fails leaves its criteria unmeasured, never missed.
 - `common` turns each measurement into fits, close, or misses with the words
   for it, and ranks the homes, weighing must-haves three times.
+- Each lookup reports a measuring step: finding a place, looking for what is
+  near the homes, timing a ride to an anchor. The turn streams the steps as a
+  progress data part while tools run, so the buyer sees the work rather than
+  a spinner (D108). Labels are written by the tool from the plan; a lookup
+  that fails shows as unavailable.
 
 Still to come in M3: a researcher behind one interface, a free third-party
 model first and Gemini as its fallback, for estimated rules, area ideas for a
@@ -440,7 +456,7 @@ and Google Maps grounding for ratings when the buyer asks.
 | Prepaid credits depleted | Turn fails with `gemini_credits_depleted`; app offers to change the key |
 | Model overloaded or stalled | Model selection falls back once; if every model is unhealthy, the turn fails with `gemini_unavailable` |
 | Unknown or expired previous interaction | Retry once with rebuilt history |
-| Model output invalid after corrections | Model text plus a retry surface |
+| Model output invalid after corrections | Model text plus a fallback composed from the turn's measurements, or the retry surface when nothing was measured |
 | Tool error | Short explanation plus retry surface |
 | Stream dropped | Client resumes with `tasks/get`; server keeps the task for 10 minutes |
 | Concurrent turn | Second turn rejected with `turn_in_progress` |

@@ -120,10 +120,10 @@ return action(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String text)?  text,TResult Function( ClientAction action,  Map<String, Object?> surfaceData)?  action,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String text,  StoryReason? reason)?  text,TResult Function( ClientAction action,  Map<String, Object?> surfaceData)?  action,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case TextTurnInput() when text != null:
-return text(_that.text);case ActionTurnInput() when action != null:
+return text(_that.text,_that.reason);case ActionTurnInput() when action != null:
 return action(_that.action,_that.surfaceData);case _:
   return orElse();
 
@@ -142,10 +142,10 @@ return action(_that.action,_that.surfaceData);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String text)  text,required TResult Function( ClientAction action,  Map<String, Object?> surfaceData)  action,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String text,  StoryReason? reason)  text,required TResult Function( ClientAction action,  Map<String, Object?> surfaceData)  action,}) {final _that = this;
 switch (_that) {
 case TextTurnInput():
-return text(_that.text);case ActionTurnInput():
+return text(_that.text,_that.reason);case ActionTurnInput():
 return action(_that.action,_that.surfaceData);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -160,10 +160,10 @@ return action(_that.action,_that.surfaceData);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String text)?  text,TResult? Function( ClientAction action,  Map<String, Object?> surfaceData)?  action,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String text,  StoryReason? reason)?  text,TResult? Function( ClientAction action,  Map<String, Object?> surfaceData)?  action,}) {final _that = this;
 switch (_that) {
 case TextTurnInput() when text != null:
-return text(_that.text);case ActionTurnInput() when action != null:
+return text(_that.text,_that.reason);case ActionTurnInput() when action != null:
 return action(_that.action,_that.surfaceData);case _:
   return null;
 
@@ -176,10 +176,11 @@ return action(_that.action,_that.surfaceData);case _:
 
 
 class TextTurnInput implements TurnInput {
-  const TextTurnInput(this.text);
+  const TextTurnInput(this.text, {this.reason});
   
 
  final  String text;
+ final  StoryReason? reason;
 
 /// Create a copy of TurnInput
 /// with the given fields replaced by the non-null parameter values.
@@ -191,18 +192,18 @@ $TextTurnInputCopyWith<TextTurnInput> get copyWith => _$TextTurnInputCopyWithImp
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is TextTurnInput&&(identical(other.text, text) || other.text == text));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is TextTurnInput&&(identical(other.text, text) || other.text == text)&&(identical(other.reason, reason) || other.reason == reason));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,text);
+    return Object.hash(runtimeType,text,reason);
 }
 
 @override
 String toString() {
-    return 'TurnInput.text(text: $text)';
+    return 'TurnInput.text(text: $text, reason: $reason)';
 }
 
 
@@ -213,7 +214,7 @@ abstract mixin class $TextTurnInputCopyWith<$Res> implements $TurnInputCopyWith<
   factory $TextTurnInputCopyWith(TextTurnInput value, $Res Function(TextTurnInput) _then) = _$TextTurnInputCopyWithImpl;
 @useResult
 $Res call({
- String text
+ String text, StoryReason? reason
 });
 
 
@@ -230,10 +231,11 @@ class _$TextTurnInputCopyWithImpl<$Res>
 
 /// Create a copy of TurnInput
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? text = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? text = null,Object? reason = freezed,}) {
   return _then(TextTurnInput(
 null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
-as String,
+as String,reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
+as StoryReason?,
   ));
 }
 
