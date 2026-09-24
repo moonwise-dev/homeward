@@ -1,9 +1,10 @@
+import 'output_parser.dart';
 import 'parsed_output.dart';
 
 const _openingFence = '```a2ui';
 const _closingFence = '```';
 
-final class StreamParser {
+final class StreamParser implements OutputParser {
   final _pending = StringBuffer();
   final _message = StringBuffer();
   var _insideBlock = false;
@@ -12,6 +13,7 @@ final class StreamParser {
   var _insideString = false;
   var _escaped = false;
 
+  @override
   List<ParsedOutput> add(String delta) {
     final outputs = <ParsedOutput>[];
     final lines = '$_pending$delta'.split('\n');
@@ -23,6 +25,7 @@ final class StreamParser {
     return outputs;
   }
 
+  @override
   List<ParsedOutput> close() {
     final rest = _pending.toString();
     _pending.clear();

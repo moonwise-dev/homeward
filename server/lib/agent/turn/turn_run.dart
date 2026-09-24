@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:common/common.dart';
 import 'package:logging/logging.dart';
 
@@ -13,7 +15,10 @@ import '../../tools/profile_field_paths.dart';
 import '../actions/action_input.dart';
 import '../actions/apply_action.dart';
 import '../board/compile_board.dart';
+import '../json_reply_parser.dart';
+import '../output_parser.dart';
 import '../parsed_output.dart';
+import '../prompt/catalog_response_schema.dart';
 import '../prompt/prompt_assembler.dart';
 import '../prompt/turn_context.dart';
 import '../stream_parser.dart';
@@ -22,6 +27,7 @@ import '../validation/turn_validator.dart';
 import '../validation/validation_failure.dart';
 import '../validation/validation_outcome.dart';
 import 'correction_input.dart';
+import 'drawn_components.dart';
 import 'homes_fallback.dart';
 import 'progress_log.dart';
 import 'replay_shadow.dart';
@@ -74,6 +80,7 @@ final class TurnRun {
   final _calledNames = <String>{};
   final _settledNames = <String>{};
   final _pendingFailures = <ValidationFailure>[];
+  final _rejectedSources = <String>[];
   final _text = StringBuffer();
   Plan _plan;
   String? _interactionId;
@@ -117,9 +124,14 @@ final class TurnRun {
     var corrections = 0;
     var askedForSurface = turnInput is! ActionTurnInput;
     var mayRebuildHistory = _interactionId != null;
+    var correcting = false;
     while (true) {
+      final constrained = correcting;
+      correcting = false;
+      OutputParser newParser() =>
+          constrained ? JsonReplyParser() : StreamParser();
       final calls = <FunctionCall>[];
-      var parser = StreamParser();
+      var parser = newParser();
       final textBeforeRound = _text.toString();
       final failuresBeforeRound = _pendingFailures.length;
       _acceptedInRound = 0;
@@ -132,6 +144,7 @@ final class TurnRun {
         () async => request = await _request(
           input,
           allowToolCalls: toolRounds < settings.maxToolRounds,
+          constrained: constrained,
         ),
       );
       try {
@@ -159,7 +172,7 @@ final class TurnRun {
                 ),
               );
               calls.clear();
-              parser = StreamParser();
+              parser = newParser();
               _pendingFailures.removeRange(
                 failuresBeforeRound,
                 _pendingFailures.length,
@@ -186,6 +199,9 @@ final class TurnRun {
         return;
       } on GeminiException catch (error) {
         _logFailure(error);
+        if (constrained && error is GeminiRequestInvalid) {
+          continue;
+        }
         final failure = HomewardFailure.fromGemini(error, now());
         _failed(failure);
         yield TurnEvent.failed(failure);
@@ -237,6 +253,7 @@ final class TurnRun {
           corrections++;
           input = InteractionInput.text(correctionInput(_pendingFailures));
           _pendingFailures.clear();
+          correcting = true;
           continue;
         }
         yield* _fallback();
@@ -313,6 +330,7 @@ final class TurnRun {
   Future<InteractionRequest> _request(
     InteractionInput input, {
     required bool allowToolCalls,
+    required bool constrained,
   }) async {
     final settled = await tools.runSettled(_plan, steps: _progress);
     _settledNames.addAll(settled.keys);
@@ -343,6 +361,15 @@ final class TurnRun {
       toolChoice: allowToolCalls ? null : ToolChoice.none,
       thinkingLevel: settings.thinkingLevel,
       previousInteractionId: _interactionId,
+      responseSchema: constrained
+          ? catalogResponseSchema({
+              ...correctionLayout,
+              ...drawnComponents([
+                ..._rejectedSources,
+                for (final message in _forwarded) jsonEncode(message),
+              ]),
+            })
+          : null,
     );
   }
 
@@ -402,6 +429,7 @@ final class TurnRun {
           ),
         );
         _pendingFailures.add(failure);
+        _rejectedSources.add(source);
       case Unchanged():
     }
   }

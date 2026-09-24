@@ -15,6 +15,7 @@ abstract class InteractionRequest with _$InteractionRequest {
     ToolChoice? toolChoice,
     String? thinkingLevel,
     String? previousInteractionId,
+    Map<String, Object?>? responseSchema,
   }) = _InteractionRequest;
 
   const InteractionRequest._();
@@ -30,6 +31,12 @@ abstract class InteractionRequest with _$InteractionRequest {
         'tool_choice': ?toolChoice?.name,
       },
     'previous_interaction_id': ?previousInteractionId,
+    if (responseSchema case final schema?)
+      'response_format': {
+        'type': 'text',
+        'mime_type': 'application/json',
+        'schema': schema,
+      },
     'store': true,
     'stream': true,
   };

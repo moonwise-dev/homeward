@@ -465,32 +465,81 @@ void main() {
     },
   );
 
-  test('sends rejections back and forwards the corrected surface once', () async {
+  test(
+    'sends rejections back and forwards the corrected surface once',
+    () async {
+      await sessionWith(Plan(marketId: MarketId.parse('SE')));
+      final script = ScriptedInteractions([
+        reply('i1', text: a2ui('t1-income', incomeForm(value: 62000))),
+        reply(
+          'i2',
+          text: jsonEncode({
+            'messages': [
+              {
+                'version': 'v0.9',
+                'updateComponents': {
+                  'surfaceId': 't1-income',
+                  'components': incomeForm(),
+                },
+              },
+            ],
+          }),
+        ),
+      ]);
+
+      final events = await send(orchestrator(script)).toList();
+
+      final correction = (script.requests[1].input as TextInput).text;
+      expect(correction, contains('VALIDATION_FAILED'));
+      expect(correction, contains('t1-income'));
+      expect(script.requests[1].previousInteractionId, 'i1');
+      expect(script.requests[0].responseSchema, isNull);
+      expect(
+        jsonEncode(script.requests[1].responseSchema),
+        contains('component_MoneyInput'),
+      );
+      expect(messagesIn(events).map((message) => message.keys.last), [
+        'createSurface',
+        'updateDataModel',
+        'updateDataModel',
+        'updateComponents',
+      ]);
+      expect(events.last, isA<TurnCompleted>());
+    },
+  );
+
+  test('a correction Gemini refuses to constrain runs again freely', () async {
     await sessionWith(Plan(marketId: MarketId.parse('SE')));
     final script = ScriptedInteractions([
       reply('i1', text: a2ui('t1-income', incomeForm(value: 62000))),
+      failing(
+        const GeminiRequestInvalid('Request contains an invalid argument.'),
+      ),
       reply(
-        'i2',
-        text:
-            '```a2ui\n${jsonEncode({
-              'version': 'v0.9',
-              'updateComponents': {'surfaceId': 't1-income', 'components': incomeForm()},
-            })}\n```\n',
+        'i3',
+        text: [
+          '```a2ui',
+          jsonEncode({
+            'version': 'v0.9',
+            'updateComponents': {
+              'surfaceId': 't1-income',
+              'components': incomeForm(),
+            },
+          }),
+          '```',
+          '',
+        ].join('\n'),
       ),
     ]);
 
     final events = await send(orchestrator(script)).toList();
 
-    final correction = (script.requests[1].input as TextInput).text;
-    expect(correction, contains('VALIDATION_FAILED'));
-    expect(correction, contains('t1-income'));
-    expect(script.requests[1].previousInteractionId, 'i1');
-    expect(messagesIn(events).map((message) => message.keys.last), [
-      'createSurface',
-      'updateDataModel',
-      'updateDataModel',
-      'updateComponents',
-    ]);
+    expect(script.requests[1].responseSchema, isNotNull);
+    expect(script.requests[2].responseSchema, isNull);
+    expect(
+      messagesIn(events).map((message) => message.keys.last),
+      contains('updateComponents'),
+    );
     expect(events.last, isA<TurnCompleted>());
   });
 

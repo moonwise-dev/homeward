@@ -74,7 +74,7 @@ Deliverables:
 - Measuring steps streamed while tools run (D108).
 - A board composed by code when the model's composition fails (D109).
 - Constrained A2UI output tried against the composed catalog schema, kept or
-  dropped with a decision.
+  dropped with a decision: kept for correction rounds (D110).
 
 Exit: at the Sep 28 session, the Stockholm family goes from its first message
 to a board comparing two flats on a map, and into the deal for one of them.
@@ -145,6 +145,7 @@ mode, `tool/perf`, and widget tests (D104).
 | S6 | Does `firebase_admin_sdk` verify anonymous ID tokens and App Check tokens and run Firestore transactions on Cloud Run with ADC? | Deploy a probe route | **Answered:** yes; clients call Cloud Run directly because Hosting rewrites cannot stream, and the invoker IAM check is off; see `docs/SPIKES.md`. |
 | S7 | Verify the high-impact Tier 1 claims: Portugal non-resident IMT, Portugal DSTI limit, Portugal non-resident LTV, Sweden top-up cap | Primary sources listed in `docs/MARKETS.md` | **Answered:** Sweden confirmed; Portugal corrected: DSTI 45% from 2026-08-01, non-resident IMT by Decree-Law 97/2026 with a refund path, non-resident 70% is lender practice; see `docs/SPIKES.md`. |
 | S8 | Can a buyer pick another model or API beside Gemini, and what does each route cost? | Desk research of Google and third-party provider limits, prices, APIs, and Dart libraries; one hero message on each candidate Gemini API model | **Answered:** `gemini-3.5-flash-lite` is the fallback candidate, Gemma 4 does not fit the free tier's 16k input tokens a minute, and an OpenAI-compatible provider choice follows the livestream (D80); see `docs/SPIKES.md`. |
+| S10 | Why does Gemini refuse the catalog as a response schema, and does an accepted schema constrain the output? | Bisecting the composed schema live, synthetic schemas, and chained corrections on the probe key | **Answered:** recursion and `allOf` are the obstacles; a flattened subset is enforced; see `docs/SPIKES.md` and D110. |
 | S9 | Can Homeward learn about any place on free keys: where things are, how far, how good, and what a listing says? | Open-data services and Gemini tools called around Stockholm on the probe key | **Answered:** open data covers where and how far with no key; Google Maps grounding and `url_context` work on free keys; see `docs/SPIKES.md`. |
 
 ## Risks
@@ -232,6 +233,7 @@ Decisions from the planning session on 2026-09-16.
 | D107 | How a plan starts | One hand-built opening page. It has reason chips and a story box, and the first message is built from both, so the model never starts cold and never asks why the buyer is moving | Two hand-built pages, which is Very Good Ventures' exact pattern and one more tap; Gemini from the first screen with starter prompts, as before |
 | D108 | What the buyer sees while tools run | Every lookup (finding a place, looking near the homes, timing a ride) is a step. The turn streams the steps whole in a progress data part with its own media type, which other A2UI clients skip, and the page lists them as they run and finish. Labels come from server code, never from the model | A thinking spinner, which says nothing for 5–16 s; animated pins and routes, about half a day more |
 | D109 | A composition that fails validation | The server composes the homes surface itself (map, ranked homes, comparison table) from the assessment the turn already measured, and passes it through the same validation. The retry text is left only for turns with nothing measured. About one turn in ten failed after corrections on 2026-09-23; the Very Good Ventures kit calls this a deterministic fallback | Always the retry text; more correction rounds, which spend the buyer's requests |
+| D110 | Constrained output | Only the correction round asks with an enforced schema. The schema offers the layout basics and the components the turn drew, flattened into one object each, with every fixed value as an enum and function calls not recursive. The whole catalog is refused, and components built with `allOf` are out of the model's reach under a schema (S10). Normal rounds keep streaming text with fenced A2UI; a refused schema repeats the round without it | Every round as one JSON object, which rewrites the streaming path and costs thousands of tokens a request; dropping constrained output |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

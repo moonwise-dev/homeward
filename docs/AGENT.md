@@ -293,8 +293,13 @@ owner, and leases it; `turn_run.dart` runs one turn:
 9. A turn that ends with no text and no forwarded message draws a fallback,
    so a buyer never sees an empty answer (D85).
 10. When messages were rejected, continue with one text input listing each
-   `VALIDATION_FAILED` error, at most `HOMEWARD_MAX_CORRECTIONS` rounds. After
-   the last, the server draws a fallback.
+   `VALIDATION_FAILED` error, at most `HOMEWARD_MAX_CORRECTIONS` rounds. The
+   correction round asks with an enforced response schema (D110): a JSON object
+   of messages, offering the layout basics and the components the turn drew or
+   tried to draw. Gemini then cannot write malformed JSON, an unknown
+   component, or another catalog ID; the validator still checks bindings and
+   ownership. If Gemini refuses the schema, the round repeats without it. After
+   the last correction, the server draws a fallback.
 
 The fallback is composed by code from what the turn already measured (D109).
 When the open decision is `homeChoice`, `assess_story` ran, and the model drew

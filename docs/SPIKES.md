@@ -699,3 +699,53 @@ are, and what a pasted listing says?
 - **D102:** Google Maps grounding for ratings when the buyer asks.
 - Constrained A2UI output stays open: the model keeps writing A2UI as text,
   validated as today, until a schema Gemini accepts is found.
+
+## S10 — Constrained A2UI Output
+
+**Answered 2026-09-24.**
+
+### Question
+
+Why does the Interactions API refuse the composed catalog as a
+`response_format`, and does a schema it accepts actually constrain what the
+model writes?
+
+### Method
+
+- Composed the catalog into one schema with every reference local: the common
+  types, the basic catalog, the functions, every agent-visible component, and a
+  wrapper `{ text, messages: [createSurface | updateComponents] }`.
+- Sent it on `gemini-3.5-flash-lite` with a small drawing request, then:
+  - each component alone;
+  - each definition together with the definitions it reaches;
+  - the same with one definition blanked at a time;
+  - small synthetic schemas for each recursion shape.
+- Relaxed the refused construct, sent the whole catalog again, and read what
+  the model wrote.
+- Sent `const` and `enum` alone, asking the model to write a forbidden value.
+- Sent the schema beside a function declaration.
+
+### Findings
+
+| Area | Result |
+| --- | --- |
+| The refusal | A2UI's `FunctionCall` reaches every catalog function through `anyFunction`, and each function's arguments reach back to `DynamicString`, `DynamicNumber`, and `DynamicBoolean`. The API answers that recursion with "Invalid JSON payload: syntax error in request body", which names no construct. A recursive reference behind `additionalProperties` is refused too. Self references, cycles of two or three definitions, and `allOf` cycles are accepted |
+| What is accepted | The whole catalog with a non-recursive `FunctionCall` (the function name as an `enum`, the arguments a plain object) and the action context a plain object: 37 KB |
+| `const` | Accepted and ignored: asked for `"default"`, the model wrote `"default"` against `const: "homeward"`. With the catalog, it wrote catalog IDs `homeward-v1` and `default` and a component named `MarketPicker` |
+| `enum` | Enforced: asked for `"default"`, the model wrote the only allowed value. Inside `oneOf` too |
+| `const` as a one-value `enum` | The whole catalog composed this way came back with the exact catalog ID and no invented component |
+| Closed objects | `additionalProperties: false` is not enforced; the model added a `currency` field to a `TextField` |
+| Beside tools | Accepted; the model called the declared function first (`requires_action`) |
+| Cost | The schema is counted as prompt: 11 to 16 thousand more prompt tokens a request for the whole catalog |
+| Components built with `allOf` | Out of reach under the schema. Asked for a city question, the model wrote `MarketSnapshotCard`, then `AffordabilitySummary` and `PaymentBreakdown`, even when continuing an interaction that had drawn the right surface. Every basic component composes `ComponentCommon` and the rest through `allOf` |
+| Flattened components | With each component flattened into one object, the model wrote exactly the Column, TextField, and Button it was asked for |
+| Size | The whole catalog flattened is refused with "Request contains an invalid argument", and so are twelve flattened components (22 KB). Twelve pass once the optional `accessibility`, `checks`, and `weight` properties are left out (18 KB). The whole catalog pruned the same way is still refused |
+| What a correction needs | The layout basics plus the components the turn drew for a questions card, the homes board, a profile form, and the deal: each accepted at 10 to 14 KB, and each composed as asked |
+
+### Decision
+
+D110: the correction round, and only it, asks with an enforced schema. The
+schema offers the layout basics and the components the turn drew or tried to
+draw, each flattened, with fixed values as enums, the optional extras left out,
+and function calls not recursive. A refused schema repeats the round without
+it.
