@@ -5,17 +5,20 @@ and contributors; detailed product and implementation rules live in `docs/`.
 
 ## Project Overview
 
-Homeward is a home-buying finance agent built as an A2UI vertical sample for
-the Flutter GenUI initiative. A buyer says where they want to buy and who they
-are; the agent works out which rules apply to that buyer in that place, and
-builds the exact interface the situation needs — an affordability form, a
-stress test, a purchase-cost breakdown, the obstacles a foreign buyer faces —
-instead of walking everyone through the same calculator.
+Homeward is a story-driven home-buying and relocation advisor built as an A2UI
+vertical sample for the Flutter GenUI initiative. A buyer says why they are
+moving and what their days look like; Homeward turns that story into the
+criteria that matter, checks candidate homes or areas against them on a map —
+commutes, schools, activities, evenings, noise, getting around — and walks the
+buyer into the deal: what they can borrow, what it costs, and the rules that
+apply to them there.
 
-The system is agent-driven and server-owned. A Dart server on Cloud Run runs the
-agent, the tools, and the rule packs. The Flutter app renders A2UI surfaces from
-a catalog it trusts, recomputes what-if figures locally through shared finance
-code, and never contains market rules or prompts.
+The system is agent-driven and server-owned. A Dart server on Cloud Run runs
+the composing agent, the research tools, and the rule packs. Gemini composes
+every screen from Homeward's building blocks; open map data, routing, and a
+free research model supply the facts; shared finance code does the numbers. The
+Flutter app renders A2UI surfaces from a catalog it trusts, recomputes what-if
+figures locally, and never contains market rules or prompts.
 
 ## Repository Shape
 
@@ -57,22 +60,30 @@ first.
 
 ## Agent Operating Rules
 
-- The model lays out; code does numbers. No figure a buyer relies on is ever
-  authored by the model.
-- Market rules live in rule packs, never in prompts, widgets, or tool bodies.
+- Gemini composes; tools measure; code computes. The composing model never
+  writes a figure a buyer relies on: distances, times, and counts come from
+  research tools, amounts from finance code.
+- Every fact carries its source kind: measured, Google Maps, estimate, verified,
+  or stated by the buyer. Estimates are labelled and editable.
+- Verified market rules live in rule packs; anywhere else rules are researched
+  estimates. Never in prompts, widgets, or tool bodies.
+- Every place a model names is checked against open map data before it is shown.
 - Finance math lives once, in `common`, and is used by both server tools and
   client functions.
-- Every rule carries a source and a review date. Homeward states rules only for
-  curated markets and says plainly when a market is not covered.
-- Everything runs on free tiers: buyers' free Gemini keys, Google Cloud within its
-  free allowances, no paid store accounts. A feature that needs payment is not
-  built.
-- The Gemini API key belongs to the user. Never log, persist, or echo it.
+- Google requests go to composing the UI, plus Google Maps grounding when a
+  buyer asks how good a place is. Research runs on a free third-party model
+  first, with Gemini as its fallback.
+- Everything runs on free tiers: buyers' free Gemini keys, the server's free
+  research key, Google Cloud within its free allowances, no paid store
+  accounts. A feature that needs payment is not built.
+- The Gemini API key belongs to the user. Never log, persist, or echo it. Keys
+  the server holds live in Secret Manager and are never logged either.
 - Write no code comments. Names, small functions, and types carry the meaning.
 - Prefer composition and small reusable units over copy and paste; prefer
   waiting for a second use over speculative abstraction.
 - Tests exist for `common` math, rule packs, catalog contract, server
-  validation passes, and agent evals. No widget tests.
+  validation passes, research tools, and agent evals. No widget tests; the UI
+  is reviewed visually.
 - Do not deploy unless explicitly asked.
 - Do not revert unrelated worktree changes.
 

@@ -654,3 +654,48 @@ minute rather than until midnight.
 - https://inference-docs.cerebras.ai/support/rate-limits
 - https://pub.dev/packages/dartantic_ai
 - https://pub.dev/packages?q=genui
+
+## S9 — Research For Any Place On Free Keys
+
+**Answered 2026-09-24.**
+
+### Question
+
+Can Homeward learn about any place a buyer names, on the spot, without paid
+features: where things are, how long it takes to reach them, how good they
+are, and what a pasted listing says?
+
+### Method
+
+- Called Nominatim, Overpass, the public OSRM server, and Transitous with no key
+  around Odenplan and KTH in Stockholm, reading status, CORS headers, and
+  results.
+- Called the Interactions API on the probe key with `gemini-3.5-flash-lite`:
+  the `google_maps` tool, the `url_context` tool, a JSON schema
+  `response_format`, `google_maps` beside a function declaration, and
+  `google_maps` beside a schema.
+- Sent JSON schemas using each keyword the composed catalog uses, then the
+  composed catalog itself, as a `response_format`.
+
+### Findings
+
+| Area | Result |
+| --- | --- |
+| Nominatim | Geocoded "Odengatan 50, Stockholm" with no key; one request a second by policy, a user agent required |
+| Overpass | Schools and gyms within a kilometre of Odenplan by name, with no key |
+| OSRM | Odenplan to KTH by bicycle, 2.6 km and 402 s, with no key |
+| Transitous | Odenplan to KTH by public transport, five itineraries around 17 minutes by bus, `access-control-allow-origin: *`, with no key |
+| Google Maps grounding | Works on the free key: three gyms near Odenplan with their Google ratings, steps `google_maps_call`, `google_maps_result`, `model_output`, and `grounding_tool_count` in usage. The result step is an opaque signature: no coordinates or place ids reach the caller |
+| Maps grounding with a function | In one interaction the model grounded, then called the declared function with typed arguments: `show_place(name: "SATS Odenplan", rating: 4)` |
+| Maps grounding with a schema | Accepted, output returned |
+| `url_context` | Works on the free key; the page is read into about 6k tool tokens |
+| JSON schema output | Every keyword the catalog uses is accepted on its own: `$defs` and `$ref`, recursive references, `anyOf`, `oneOf`, `allOf`, `const`, `enum` with `default`, `additionalProperties` as a schema or `false`, `unevaluatedProperties`. The composed catalog schema, 48 KB with every reference resolved locally, is refused with "Invalid JSON payload: syntax error in request body"; the construct was not found |
+
+### Decisions
+
+- **D100:** research runs behind one researcher interface, a free third-party
+  model first and Gemini as its fallback.
+- **D101:** places a model names are verified against open data.
+- **D102:** Google Maps grounding for ratings when the buyer asks.
+- Constrained A2UI output stays open: the model keeps writing A2UI as text,
+  validated as today, until a schema Gemini accepts is found.

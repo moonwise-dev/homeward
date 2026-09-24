@@ -50,72 +50,84 @@ Deliverables:
 Exit: at the Sep 28 session, a Stockholm buyer goes from first message to a
 live down payment slider updating payment locally, on web and one phone.
 
-### M2 Recording Cut — Sep 28 to Oct 7
+### M2 Story Slice — Sep 24 to Sep 28
+
+The re-scope of 2026-09-24 (D97): the product had become a calculator for the
+pitch's last act. M2 builds the first two acts on the same pipeline.
 
 Deliverables:
 
-- `SE` and `PT` + `PT-30` curated and reviewed.
-- Remaining MVP components: `MarketSnapshotCard`, `StressTestChart`,
-  `PurchaseCostsTable`, `EligibilityChecklist`, `ForeignBuyerObstacles`.
-- Remaining MVP tools: `estimate_purchase_costs`, `get_obstacles`.
-- Maximum price including purchase costs, term and age-at-maturity eligibility
-  checks, and an exchange-rate snapshot for income in another currency, which
-  the hero flow needs.
-- Board compiler and responsive two-pane and sheet layouts.
-- Session persistence and replay.
-- Wire inspector and catalog gallery.
-- Design pass: final tokens and primitives.
-- Eval cases `stockholm-first-time`, `madeira-nonresident`,
-  `madeira-resident-contrast`, `azores-uncovered`, `change-down-payment`
-  passing deterministic scores.
-- Hero script rehearsed end to end three times without a correction round, on
-  separate days or keys: a free key allows about one full run a day.
-- Model order compared for quality in the hero rehearsals: Flash-Lite first
-  against the Flash models (D81).
+- Product, agent guide, and roadmap rewritten around the story.
+- Research tools on open data, cached and polite: `geocode` (Nominatim),
+  `route` (OSRM by car, bike, and foot; Transitous by transit), `nearby`
+  (Overpass: nearest, counts, and noise by proximity to roads, rail, airports,
+  and nightlife).
+- A story data model: why the buyer is moving, anchors, criteria with
+  thresholds, candidates, and measured results per candidate and criterion.
+- Building blocks: `Map`, `ChoiceChips`, `FactTile`, `StatusRow`,
+  `ComparisonTable`, `ProsCons`, `SourceChip`, `CandidateInput`.
+- Flow: infer from the first message, ask the gaps in one or two cards, show
+  the board, refine on it.
+- A picked home opens the existing deal workspace with its price.
+- Constrained A2UI output tried against the composed catalog schema, kept or
+  dropped with a decision.
+
+Exit: at the Sep 28 session, the Stockholm family goes from its first message
+to a board comparing two flats on a map, and into the deal for one of them.
+
+### M3 Recording Cut — Sep 29 to Oct 7
+
+- Researcher behind one interface (D100): an OpenAI-compatible client, a Groq
+  and Cerebras bake-off against Gemini, Gemini as the fallback, the key in
+  Secret Manager.
+- Research operations: estimated rules, area ideas for a city, a pasted
+  listing's facts, toll and safety impressions; every named place verified
+  against open data (D101).
+- Google Maps grounding for ratings when the buyer asks, with attribution
+  (D102).
+- City entry: areas suggested and ranked on the map.
+- Estimated rules outside `SE` and `PT`, labelled and editable (D98).
+- `Gauge`, `Rating`, a deal sheet, and the association's finances for Sweden.
+- `MarketSnapshotCard`, `EligibilityChecklist`, and `ForeignBuyerObstacles`
+  leave the agent's catalog; the blocks compose what they showed.
+- Eval cases re-pointed at the story: `stockholm-family`, `lisbon-city-only`,
+  `funchal-cross-border`, `unlisted-city-estimates`.
+- The hero rehearsed three times without a correction round.
 
 Exit: the hero flow in `docs/PRODUCT.md` runs reliably on web at recording
 resolution.
 
-### M3 Recording — Oct 8 to Oct 10
+### M4 Recording — Oct 8 to Oct 10
 
-- Agree segment outline with Andrew: adaptive form, then instant what-if, then
-  the code that makes it possible (catalog declaration, client function, one
-  validation pass).
-- Recording build tagged; a free key whose daily quota is untouched that day;
-  the server warmed with one request just before recording.
+- Agree the segment outline with Andrew: the story told as UI, then the map
+  and comparison, then instant what-if, then the code that makes it possible (a
+  building block, a research tool, the composing prompt).
+- Recording build tagged; a key whose daily quota is untouched that day; the
+  server warmed with one request just before recording.
 - Backup: screen capture of every hero step recorded the day before.
-- Portugal sources re-read in the recording week; hero figures in
-  `docs/PRODUCT.md` recomputed if any changed.
 
-### M4 Sample Complete — Oct 13 to livestream
+### M5 Sample Complete — Oct 13 to livestream
 
-- Phase 2 components 11 to 20.
-- Tier 2 packs: `ES` with priority regional overlays, `GB`, `US` with `US-FL`,
-  `US-CA`, `US-NY`, `US-TX`.
-- Reference rate refresh tool and snapshots for every curated market.
-- Remaining tools: `get_process`, `get_loan_types`, `release_decision`.
-- Full eval case set; replay mode in the pre-push hook.
-- Dark theme.
 - Public web deployment and README with screenshots.
-- Repository made public under Apache-2.0.
+- The gallery shows every building block beside its parameters.
+- Repository made public under Apache-2.0; a tutorial draft.
+- Dark theme.
 
-### M5 Voice Door — after M4
+### M6 Voice Door — after M5
 
 - `/live` WebSocket door, Live API client, `show_ui` tool, voice composer mode.
 - Eval cases for voice turns using recorded audio.
 
-### M6 Tier 3 Destinations — after livestream
-
-- Southern Europe, tax-friendly hubs, Americas lifestyle, Asia-Pacific, in that
-  order unless demand says otherwise.
-
 ### M7 Provider Choice — after livestream
 
-- A second model API beside Gemini, picked by the buyer (D80): one
-  OpenAI-compatible `CreateInteraction` for OpenRouter, Cerebras, Mistral,
-  OpenAI, and a local Ollama; the model conversation stored in the session;
-  a provider picker with verification and data use terms per provider; the
-  hero script and evals passing on each provider offered.
+- A second model API for composing, picked by the buyer (D80), on the client
+  the researcher already brings.
+
+### Dropped On 2026-09-24
+
+Tier 2 and Tier 3 packs, coverage tiers beyond verified and estimated, the
+`get_process`, `get_loan_types`, and `release_decision` tools, eval replay
+mode, `tool/perf`, and widget tests (D104).
 
 ## Spikes
 
@@ -129,6 +141,7 @@ resolution.
 | S6 | Does `firebase_admin_sdk` verify anonymous ID tokens and App Check tokens and run Firestore transactions on Cloud Run with ADC? | Deploy a probe route | **Answered:** yes; clients call Cloud Run directly because Hosting rewrites cannot stream, and the invoker IAM check is off; see `docs/SPIKES.md`. |
 | S7 | Verify the high-impact Tier 1 claims: Portugal non-resident IMT, Portugal DSTI limit, Portugal non-resident LTV, Sweden top-up cap | Primary sources listed in `docs/MARKETS.md` | **Answered:** Sweden confirmed; Portugal corrected: DSTI 45% from 2026-08-01, non-resident IMT by Decree-Law 97/2026 with a refund path, non-resident 70% is lender practice; see `docs/SPIKES.md`. |
 | S8 | Can a buyer pick another model or API beside Gemini, and what does each route cost? | Desk research of Google and third-party provider limits, prices, APIs, and Dart libraries; one hero message on each candidate Gemini API model | **Answered:** `gemini-3.5-flash-lite` is the fallback candidate, Gemma 4 does not fit the free tier's 16k input tokens a minute, and an OpenAI-compatible provider choice follows the livestream (D80); see `docs/SPIKES.md`. |
+| S9 | Can Homeward learn about any place on free keys: where things are, how far, how good, and what a listing says? | Open-data services and Gemini tools called around Stockholm on the probe key | **Answered:** open data covers where and how far with no key; Google Maps grounding and `url_context` work on free keys; see `docs/SPIKES.md`. |
 
 ## Risks
 
@@ -144,7 +157,10 @@ resolution.
 | Scripted abuse of the web app exhausts reCAPTCHA's 10,000 free monthly assessments | $8 for the month, then $1 per 1,000 above 100,000 | One-day App Check tokens, the 25 SEK budget alert, per-UID rate limits |
 | Free-tier limits per model per Google Cloud project: 20 requests a day on Flash, 500 on Flash-Lite | Failed turns in rehearsal or on camera; about 250 turns a day per buyer on Flash-Lite | At most two requests per turn (D78); the next model takes over at a cap (D79); recording on a key unused that day; the cap explained in the app |
 | Free-tier prompts may be used by Google to improve its products and read by human reviewers; the terms ask for no sensitive or personal information | Buyers' financial details lose a privacy promise | Quoted on the key screen with advice to use round figures or a billing-enabled key (D76); no names are ever asked; terms re-read before recording |
-| Buyers ask about markets that are not curated | The "any location" idea goes unmet | Honest uncovered state, uncovered requests logged per market to drive curation order |
+| Public open-data services limit and refuse heavy use: Nominatim one request a second, Overpass and OSRM fair use | Slow or failed boards when many viewers arrive | A user agent naming Homeward, a cache per query, one request at a time per service, a board that shows what it has |
+| Free research models invent places and misremember rules | Wrong facts on the board | Every named place verified against open data (D101); estimates labelled; verified packs where they exist |
+| Google Maps grounding's terms on attribution and on showing its places on another map | Ratings withdrawn or reworked | Attribution shown with every rating; pins from open data; terms read before M3 ends |
+| A shared research key reaches its daily cap after launch | Research falls back to buyers' Gemini keys | Gemini fallback (D100); caps watched after launch |
 | Curated rules change after review; Portugal changed lending limits and non-resident IMT within four months of 2026 | Stale numbers on camera | 180-day expiry, effective dates, check warnings, sources re-read in the recording week |
 | Four weeks for server, client, catalog, and two markets | Scope slip before recording | Thin slice by Sep 28; Phase 2 components and Tier 2 explicitly after recording |
 | BYO key friction for video viewers | Fewer people try the demo | One-screen key flow with direct AI Studio link; hero prompt ready on first plan |
@@ -199,6 +215,15 @@ Decisions from the planning session on 2026-09-16.
 | D94 | A round that asks again for what it has | When every tool call in a round names a tool the server already settled or already ran this turn, the results still come back but the tool rounds end: the next request goes out with no tools and the note to draw now. Found by the first eval pass, where a Stockholm turn after `commit_profile` spent four rounds calling `propose_scenario` twice and `load_market`, whose result was already in `preRun`, and drew nothing; with the guard the same turn draws the affordability surface in two rounds and 8 s instead of 13 | Leaving D85's three tool rounds to run out, which costs a request and 5 s and often ends in the retry surface; refusing to run a settled tool, which leaves the call unanswered |
 | D95 | A form that misses a fact the rules need | The validation pass adds the input itself, picked by the field's value shape and placed above the commit button, instead of spending a correction round on it; the rejection stays for a form with nowhere to put an input. Three Portugal runs dropped residency facts and paid a correction each; with the completion the whole Funchal case runs with no correction and its first turn falls from 15.8 s to 8.9 s. The server draws part of one surface, which the sample now says plainly: the model composes, the rules decide what must be asked | Prompt wording, which took the misses from three paths to one but never to none; `gemini-3.5-flash`, which asks for everything but takes 37 s and emits malformed JSON of its own; splitting the Portugal form into two turns |
 | D96 | An action answered with words alone | When the buyer used a control and the turn forwarded no surface while a decision that calls for one is open, the server asks the model once more, naming the decision, before it settles for the retry surface. It costs a request when it fires and rescues a turn that would otherwise leave the buyer with prose and no what-if; a typed message answered in prose is left alone, since a question deserves an answer | Letting the turn end, which the eval caught twice on `commit_profile`; firing on every turn, which would force a surface onto an explain answer |
+| D97 | Scope | Re-scoped on 2026-09-24 to the pitch sent to Google: a story-driven mortgage and relocation advisor. Discovery of the buyer's life, criteria checked on a map, then the existing deal workspace. The built pipeline, finance code, and packs stay; the first two acts are added on top | Starting over; keeping the calculator and adding markets |
+| D98 | Rules outside curated markets | Researched estimates, labelled "estimate — check with a lender" and editable; the math stays in `common`. Replaces the uncovered state of D40 and D86 | Finance only where curated; the buyer typing every rule |
+| D99 | How much to ask | Infer from the first message and any listing, ask only the gaps in one or two adaptive cards, show the board, refine on it | A full interview by category, about ten turns; a board with assumed defaults and no questions |
+| D100 | Where research runs | Behind one researcher interface: a free third-party model on a key the server holds in Secret Manager first, Gemini on the buyer's key as its fallback, Google Search grounding if credits ever arrive; Google requests stay with composing the UI. Groq and Cerebras compete in a bake-off | Gemini for everything; a second key from the buyer; Gemma 4 on the buyer's key |
+| D101 | Places a model names | Checked against Nominatim or Overpass before they are shown, and dropped when they do not resolve; free research models have no maps or search and invent places | Trusting the model; research through Google Maps grounding only |
+| D102 | Ratings and quality | Google Maps grounding, which works on free keys (measured 2026-09-24), only when the buyer asks how good something is, shown with its attribution; open data answers what is near and how far | Dropping ratings; routing every place search through Google Maps |
+| D103 | Building blocks | Gemini composes screens from mid-level blocks that carry Homeward's design (`Map`, `FactTile`, `StatusRow`, `ComparisonTable`, `ChoiceChips`, and others) beside the A2UI basic components and the finance components that recompute on the device | Basic components only; whole single-purpose items such as a fit matrix |
+| D104 | Tests | No widget tests; the UI is reviewed visually. Tests cover `common`, packs, the catalog contract, validation passes, research tools, and evals | Keeping the widget tests added in the design pass |
+| D105 | What a buyer brings | Either up to three candidate homes, as a listing link, an address, or a pin, or just a city, for which areas are suggested | Candidates only; a city only |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.
@@ -229,3 +254,6 @@ them before M0 ends.
 5. Catalog ID domain: `moonwise.se/homeward` or a dedicated domain.
 6. Reply on the email thread with project details, which Hilda asked Moonwise
    for on 2026-09-14.
+7. Whether Google is comfortable with research on a non-Google model in a
+   GenUI sample (D100); worth one line to Abdallah before the recording.
+8. The Very Good Ventures product the finish should come close to.

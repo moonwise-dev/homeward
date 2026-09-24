@@ -2,239 +2,154 @@
 
 ## Product Summary
 
-Homeward answers one question for anyone buying in a market it covers: *can I
-buy this home, and what will it really take?*
+Homeward is a story-driven home-buying and relocation advisor. A buyer says why
+they are moving and what their days look like; Homeward turns that story into
+the criteria that matter to them, checks candidate homes or whole areas against
+those criteria on a map, and then walks them into the deal: what they can
+borrow, what it costs on the day and every month, and the rules that apply to
+someone like them in that place.
 
-A buyer names a place and describes themselves in plain language. Homeward
-works out which rules apply to that buyer in that place — lending limits,
-required amortization, stress tests, purchase taxes, restrictions on foreign
-buyers — and builds the interface that situation needs. A first-time buyer in
-Stockholm, a Swedish resident buying in Madeira, and a Portuguese resident
-buying the same flat see different forms, different constraints, and different
-obstacles, generated from the same catalog.
+Its job is to make sure nothing is forgotten. A family moving for a job thinks
+about the commute and the schools and forgets the congestion charge, the
+housing association's debt, or the motorway behind the playground. Homeward
+asks only what it cannot infer, measures everything it can, and shows the
+answer as condensed and visual as it can be: a map with distances, a table of
+what fits, what does not, and what comes close but misses by how much.
 
 Homeward is an A2UI vertical sample in the Finance & Tech industry for the
-Flutter GenUI initiative. It is built to show what generative UI does better
-than a static calculator: the relevant inputs differ wildly between buyers, and
-the stakes make getting the right inputs in front of the right buyer matter.
+Flutter GenUI initiative. Gemini composes every screen from Homeward's building
+blocks, so a family with a car and a single cyclist see different screens built
+from the same pieces, while every distance, time, count, and amount comes from a
+tool or from shared finance code.
 
 ## Positioning Against The Other Samples
 
-- Somnio's investing companion covers portfolios someone already holds.
-  Homeward covers a purchase someone has not made yet, and is not about
-  investing.
-- Homeward's distinct GenUI story is **adaptive forms driven by jurisdiction
-  and buyer profile**, followed by **instant local what-if** through data
-  binding and client functions.
+- Somnio's investing companion, the other Finance & Tech sample, covers
+  portfolios someone already holds. Homeward covers a home someone has not
+  bought yet, and the life around it.
+- Google's travel demo shows a multi-leg trip no static UI was built for.
+  Homeward shows a life decision no static UI was built for: many criteria,
+  each weighted by one buyer's story, joined to the money.
 
 ## Product Principles
 
-1. **The UI comes to the buyer.** The agent draws the controls it needs rather
-   than asking questions in prose. The controls are the question.
-2. **The model lays out; code does numbers.** Every rate, payment, limit, cost,
-   and stress result is computed by shared finance code from a rule pack. The
-   model chooses and arranges components and binds them to data paths.
-3. **Rules are data with provenance.** Every rule comes from a curated rule pack
-   and shows its source and review date. Homeward never guesses rules for a
-   market it does not cover.
-4. **What-if is instant.** Dragging a slider recomputes locally. The agent is
-   consulted when the buyer commits a decision or asks a question, not on every
-   pixel of a drag.
-5. **Estimates, not advice.** Homeward explains and estimates. It never tells a
-   buyer what to sign, never presents itself as a lender, and says so plainly.
+- **The UI comes to the buyer.** The agent draws the controls it needs rather
+  than asking questions in prose. The controls are the question.
+- **Gemini composes; tools measure; code computes.** The composing model decides
+  what to ask, which criteria matter, and how the screen is laid out. It never
+  writes a figure a buyer relies on.
+- **Ask less, show sooner.** Infer what the first message and the listing say,
+  ask only the gaps in one or two adaptive cards, then show a result the buyer
+  refines in place.
+- **Every fact shows where it came from.** Measured, Google Maps, estimate,
+  verified, or said by the buyer.
+- **Works anywhere, honest everywhere.** Lifestyle facts come from open map data
+  worldwide. Money rules are verified where Homeward curated them and labelled
+  estimates elsewhere, editable by the buyer.
+- **What-if is instant.** Dragging a slider recomputes on the device; the agent
+  is consulted when the buyer commits a decision or asks a question.
+- **Estimates, not advice.** Homeward explains and estimates. It never tells a
+  buyer what to sign or presents itself as a lender.
+- **Free to run.** Buyers bring a free Gemini key; research runs on a free
+  third-party model the server holds; Google Cloud stays within free allowances.
 
 ## Actors
 
 ### Buyers
 
-Buyers are anonymous by default. They can:
-
-- Provide their own Gemini API key.
-- Start and resume plans.
-- Describe a target location and themselves in chat.
-- Fill generated forms and adjust generated what-if controls.
-- Commit scenarios to their plan.
-- Tick off documents and process steps.
-- Ask the agent to explain any figure or rule.
+Anyone deciding where to live and whether they can afford it: relocating for
+work, moving for a lifestyle, upsizing for a family, buying across a border.
+They bring either candidate homes, as a listing link, an address, or a pin, up
+to three, or just a city. Buyers are anonymous, bring their own Gemini key,
+start and resume plans, answer generated questions, refine criteria on the
+board, commit a home and a scenario, and ask the agent to explain any figure.
 
 ### Curators
 
-Curators are Moonwise team members who maintain rule packs through pull
-requests to `markets/`. There is no admin app for v1. See `docs/MARKETS.md`.
+Moonwise maintains verified rule packs for the markets it covers and reviews
+them against primary sources. Curated markets are the exception that makes the
+rest honest, not a precondition for using Homeward.
 
 ## Personas
 
-| Persona | Example | What changes for them |
+| Persona | Example | What Homeward weighs |
 | --- | --- | --- |
-| Local first-time buyer | Stockholm resident, 3-room bostadsrätt in Södermalm | BRF fee and BRF debt, 90% cap, amortization tiers, bank stress rate |
-| Cross-border buyer | Swedish resident buying in Funchal, Madeira | Non-resident LTV, non-resident purchase taxes, tax number and local account, income currency risk |
-| Relocator | Moving to Lisbon for a job, income switching to EUR | Residency timing, which income counts, resident vs non-resident path |
-| Self-employed | Freelancer with variable income | Income evidence, averaging periods, lower lending limits |
-| Co-buyers | Couple with mixed residency or citizenship | Whose income counts, per-buyer obstacles |
+| Relocating family | Moving to Stockholm for a job at KTH, two children, deciding between a flat in Vasastan and one in Solna | Two commutes, schools and their kind, parks, noise, transit, the association's finances, Swedish lending rules |
+| Lifestyle mover | Remote worker moving to Lisbon for surf and quiet, only a city in mind | Areas by vibe, water and nature, cafés, airport access, residency and tax, Portuguese rules |
+| Cross-border buyer | Swedish resident buying a flat in Funchal | Non-resident lending limit and taxes, obstacles such as a tax number, walking and views |
+| Local upsizer | A couple in Stockholm with a second child on the way | Space, schools, preschool, parking, what the extra room costs a month |
 
-Porting an existing loan, refinancing, and sell-then-buy bridging are later
-personas and are not part of v1.
+## What Homeward Considers
+
+The criteria Homeward can raise, grouped the way it asks about them. Gemini
+picks the ones a buyer's story makes relevant; the buyer can add or drop any on
+the board.
+
+| Group | Criteria | Source |
+| --- | --- | --- |
+| Life anchors | Commute to work for each adult, the school run, family nearby | Measured: routing by car, bike, foot, and transit |
+| Schools and care | Schools by kind (public, private, international, language), preschool | Measured locations; quality on request from Google Maps |
+| Everyday | Groceries, pharmacy, doctor | Measured |
+| Activities | Running, cycling, gym, swimming, parks and nature, water, dogs | Measured; quality on request from Google Maps |
+| Evenings | Restaurants, cafés, nightlife, or quiet | Measured density |
+| Getting around | Nearest stop and its lines, bike routes; for drivers parking, congestion charges and tolls, charging | Measured; tolls researched |
+| Downsides | Noise from roads, rail, airports, and nightlife; safety impression; flood risk; construction | Noise measured by proximity; the rest researched and labelled |
+| The home | Price against budget, monthly cost, the housing association's or building's finances, energy and heating, fibre | Listing, buyer, researched |
+| Money and rules | What you can borrow, down payment, bank stress test, purchase taxes, running costs | Code, with verified or estimated rules |
+| Relocation | Residency and tax consequences, language, international community | Researched and labelled; verified where curated |
 
 ## Coverage
 
-Coverage decides whether Homeward can state rules for a market. It never
-guesses.
-
-| Coverage | Meaning | UI treatment |
+| Level | Where | What it means |
 | --- | --- | --- |
-| Curated | Hand-verified rule pack with sources and review date | Curated badge, sources on tap |
-| Uncovered | No curated pack | "Not covered yet" state naming the market, the curated markets Homeward can help with, and no rules of any kind |
+| Verified | `SE`, `PT`, `PT-30` | Rules from curated packs with sources and review dates |
+| Estimated | Everywhere else | Rules researched at the time of asking, labelled "estimate — check with a lender", each one editable |
 
-Runtime research of uncovered markets is not built. It needs Google Search
-grounding, which Gemini offers only on paid keys, and Homeward runs on buyers'
-free keys. Requests for uncovered markets are counted to decide what to curate
-next.
-
-### Curated Tiers
-
-| Tier | Markets | Target |
-| --- | --- | --- |
-| 1 | Sweden; Portugal including Madeira | Video recording (~Oct 10, 2026) |
-| 2 | Spain; United Kingdom; United States national plus Florida, California, New York, Texas | After recording, before the November livestream where possible |
-| 3 | Southern Europe: Italy, France, Greece, Cyprus, Malta, Croatia | After livestream |
-| 3 | Tax-friendly hubs: UAE (Dubai), Monaco, Andorra, Switzerland, Panama | After livestream |
-| 3 | Americas lifestyle: Mexico, Costa Rica, Dominican Republic, Colombia | After livestream |
-| 3 | Asia-Pacific: Thailand, Indonesia (Bali), Australia, Japan | After livestream |
-
-## Feature Map
-
-### Buyer Profile
-
-The profile captures only what the applicable rules need. The rule pack
-declares which profile fields matter for which buyer, so a cross-border buyer
-is asked for income currency, prior tax residency, and residency intent while a
-local buyer is not.
-
-Profile fields include citizenship, residency, tax residency, prior tax
-residency in the target market, residency intent, intended use (primary,
-secondary, investment), first-time buyer status, employment type, household
-net and gross monthly income with currency, savings, existing monthly debt
-payments, the number of borrowers, the oldest borrower's age, the number of
-adults, and each child's age.
-
-### Target Market Resolution
-
-Free text such as "a 3:a in Södermalm" or "a flat in Funchal" resolves to a
-market identifier (`SE`, `PT-30`) with a coverage status. Regional overlays
-apply on top of country rules.
-
-### Affordability
-
-Homeward computes the maximum loan for the buyer, and from M2 the maximum price
-including purchase costs, and names the binding constraint: loan-to-value,
-debt-service-to-income, loan-to-income, or Sweden's left-to-live-on check at the
-lender stress rate. The binding constraint is the single most useful thing to
-tell a buyer, and it is always explained.
-
-### What-If
-
-Price, down payment, term, loan type, and rate shock are adjustable in place.
-Monthly payment, amortization, stress result, cash needed, and eligibility
-update locally as the buyer drags.
-
-### Purchase Costs
-
-Upfront costs specific to the market and buyer: transfer taxes, stamp duties,
-registration, notary, mortgage deed or pledge fees, and typical professional
-fees. Cash needed is down payment plus upfront costs.
-
-### Loan Types
-
-Loan types are compared, not banks. Each market lists its common loan types
-(for example, 3-month variable, 3-year fixed, Euribor 12M plus spread, 30-year
-fixed) with a dated official reference rate and a typical spread range.
-
-### Stress Test
-
-Monthly cost at today's rate, at the market's stress rate or shock, and across a
-range, drawn against the affordability limit.
-
-### Foreign Buyer Obstacles
-
-Obstacles are listed with severity, mitigation, and typical duration: tax
-numbers, local bank accounts, ownership restrictions, approvals, residency
-effects on taxes, and currency exposure.
-
-### Buying Process And Documents
-
-The market's purchase process as ordered steps with typical durations, and the
-documents this buyer needs at each step, tickable and saved to the plan.
-
-### Plan Board
-
-A persistent summary of what has been decided: the market, the committed
-scenario and what follows from it, the costs, and the obstacles. It is drawn by
-the server from the plan record, never by the model, out of the same catalog
-components the chat uses. A section that holds a decision offers a "change"
-action that reopens it in chat; the sections that only follow from a decision
-carry none, so the board never shows the same button twice.
-
-### Explain
-
-Any figure or rule can be questioned. "Why is my limit 70%?" produces an
-explanation with the rule, its source, and what would change it.
+Lifestyle facts do not depend on coverage: open map data and routing work in
+any city.
 
 ## Hero Flow
 
-The flow the video segment is built around. Contrast is the point.
+The flow the video segment is built around. The story is the point.
 
-1. A buyer over 35 types: *"I live in Stockholm and want a two-bedroom flat in
-   Funchal, around €350k."*
-2. Homeward resolves `PT-30`, shows a market snapshot with a curated badge, and
-   draws a profile form. Because the buyer is a non-resident with SEK income,
-   the form includes income currency, age, whether they were ever a Portuguese
-   tax resident, and whether they intend to become one within two years.
-3. The same opening from a Lisbon resident draws a different form: no currency
-   or residency fields, resident lending limits, primary-residence tax
-   treatment.
-4. After committing the profile, the Stockholm buyer sees an affordability
-   summary where the binding constraint is lenders' 70% non-resident limit,
-   shown under the 80% legal cap; a payment breakdown; the cash needed,
-   including the flat 7.5% non-resident IMT and the part refunded if they become
-   resident; and the obstacles: tax number, local account, and the refund claim
-   deadline.
-5. The buyer drags the down payment slider. Payment, stress chart, cash needed,
-   and eligibility update instantly. The wire inspector shows zero network
-   traffic during the drag.
-6. The commit button is disabled while the down payment is below the minimum,
-   with the reason shown, through A2UI checks.
-7. Committing updates the plan board.
-
-Hero figures, verified against primary sources in spike S7 on 2026-09-16 and
-checked again in the recording week:
-
-| Figure | Amount |
-| --- | --- |
-| IMT at the deed as a non-resident | €26,250.00 |
-| IMT as a resident's primary home | €11,427.52 |
-| Refundable on request after becoming tax resident within two years | €14,822.48 |
-| Maximum loan at the 70% non-resident limit | €245,000.00 |
-| Down payment at that limit | €105,000.00 |
-
-The Stockholm buyer earns in kronor, counted at the European Central Bank's
-euro reference rate of the day, which the summary names beside the figures.
+1. A buyer types: *"We're moving to Stockholm, I start at KTH in January. Two
+   kids, six and nine. We're looking at a flat on Odengatan and one in Solna."*
+2. Homeward infers a relocation for work, an anchor at KTH, children who need
+   schools, and two candidates. It pins both flats and asks the gaps in one
+   card: how they will get to work, the longest commute they accept, what kind
+   of school, what they do after work, whether evenings should be lively or
+   quiet, what they will not live with, and whether they drive.
+3. The board appears: a map with KTH, both flats, commute lines with minutes by
+   the chosen mode, schools and parks; a comparison of every criterion against
+   both flats, each cell fits, close, or misses; pros and cons; the flats
+   ranked. *Solna is six minutes over your 25-minute commute but has two
+   international schools within a kilometre.*
+4. The buyer asks for well-rated schools near Odengatan; Homeward adds Google
+   Maps ratings to that row only.
+5. The buyer picks Odengatan. The deal opens with the listing's price and the
+   association fee: what they can borrow under Sweden's verified rules, a down
+   payment slider that moves payment, stress test, and cash needed on the
+   device with no network traffic, and the association's finances.
+6. Contrast: a remote worker types only *"Lisbon, I surf and I want quiet."*
+   Homeward suggests areas, ranks them on the map, and the chosen area opens a
+   deal under Portugal's verified rules. A buyer in a city Homeward never
+   curated gets the same flow with estimated rules, labelled.
 
 ## Non-Goals For v1
 
-- Property listing search.
+- Listing search or scraping of listing sites; buyers bring their candidates.
 - Named lender offers, applications, or credit checks.
-- Storing identity documents or financial documents.
+- Storing identity or financial documents.
 - Legal, tax, or investment advice.
 - Voice. Planned for phase 2, see `docs/AGENT.md`.
 - Localized UI. English only, with local terms explained inline.
 - Refinancing, porting, and bridging.
-- Runtime research of uncovered markets, which needs paid Gemini features.
 - Store distribution: TestFlight, App Store, and Google Play testing tracks.
 
 ## Related Documents
 
-- `docs/ARCHITECTURE.md`
-- `docs/CATALOG.md`
-- `docs/AGENT.md`
-- `docs/MARKETS.md`
-- `docs/ROADMAP.md`
+- `docs/ARCHITECTURE.md` - system shape and research layer.
+- `docs/CATALOG.md` - building blocks and finance components.
+- `docs/AGENT.md` - the composing loop, research, and prompts.
+- `docs/MARKETS.md` - verified packs and estimated rules.
+- `docs/ROADMAP.md` - milestones and decisions.
