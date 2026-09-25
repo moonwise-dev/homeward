@@ -87,8 +87,8 @@ the model lays them out and never writes a figure they show.
 
 A map of the buyer's life around the homes they weigh: anchors, homes, a route
 from each home to each anchor with its minutes and mode, and, when one home is
-in view, the nearest place for each criterion. CARTO light tiles over
-OpenStreetMap, attributed on the map.
+in view, the nearest place for each criterion. OpenStreetMap's own tiles, with
+no key, attributed on the map.
 
 | Property | Type | Required | Notes |
 | --- | --- | --- | --- |
