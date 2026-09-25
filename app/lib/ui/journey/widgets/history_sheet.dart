@@ -56,10 +56,11 @@ class _HistoryView extends ConsumerWidget {
               key: ValueKey(id),
               text: text,
             ),
-            BuyerActionEntry(:final id, :final actionName) => _BuyerActionNote(
-              key: ValueKey(id),
-              label: surfaceActionLabel(actionName),
-            ),
+            BuyerActionEntry(:final id, :final actionName, :final label) =>
+              _BuyerActionNote(
+                key: ValueKey(id),
+                label: label ?? surfaceActionLabel(actionName),
+              ),
             AgentEntry(:final id, :final text, :final status, :final error) =>
               _AgentMessage(
                 key: ValueKey(id),

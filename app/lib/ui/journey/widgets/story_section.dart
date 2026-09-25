@@ -184,6 +184,7 @@ String? _firstSentence(String text) {
 
 String? _answerText(TranscriptEntry? answer) => switch (answer) {
   BuyerEntry(:final text) => '“${text.replaceAll(RegExp(r'\s+'), ' ')}”',
+  BuyerActionEntry(:final label?) => label,
   BuyerActionEntry(:final actionName) => surfaceActionLabel(actionName),
   _ => null,
 };

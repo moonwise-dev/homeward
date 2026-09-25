@@ -85,9 +85,10 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
       id: _newEntryId(),
       text: text,
     ),
-    RecordedAction(:final name) => TranscriptEntry.buyerAction(
+    RecordedAction(:final name, :final context) => TranscriptEntry.buyerAction(
       id: _newEntryId(),
       actionName: name,
+      label: context['label'] as String?,
     ),
   };
 
@@ -185,6 +186,7 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
             TranscriptEntry.buyerAction(
               id: _newEntryId(),
               actionName: action.name,
+              label: action.context['label'] as String?,
             ),
           );
           unawaited(

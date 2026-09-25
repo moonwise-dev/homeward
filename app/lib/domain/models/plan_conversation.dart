@@ -23,6 +23,7 @@ sealed class TranscriptEntry with _$TranscriptEntry {
   const factory TranscriptEntry.buyerAction({
     required String id,
     required String actionName,
+    String? label,
   }) = BuyerActionEntry;
 
   const factory TranscriptEntry.agent({

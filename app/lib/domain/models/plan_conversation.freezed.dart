@@ -432,11 +432,11 @@ return agent(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String id,  String text)?  buyer,TResult Function( String id,  String actionName)?  buyerAction,TResult Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  AppError? error)?  agent,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String id,  String text)?  buyer,TResult Function( String id,  String actionName,  String? label)?  buyerAction,TResult Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  AppError? error)?  agent,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case BuyerEntry() when buyer != null:
 return buyer(_that.id,_that.text);case BuyerActionEntry() when buyerAction != null:
-return buyerAction(_that.id,_that.actionName);case AgentEntry() when agent != null:
+return buyerAction(_that.id,_that.actionName,_that.label);case AgentEntry() when agent != null:
 return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.progress,_that.error);case _:
   return orElse();
 
@@ -455,11 +455,11 @@ return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String id,  String text)  buyer,required TResult Function( String id,  String actionName)  buyerAction,required TResult Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  AppError? error)  agent,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String id,  String text)  buyer,required TResult Function( String id,  String actionName,  String? label)  buyerAction,required TResult Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  AppError? error)  agent,}) {final _that = this;
 switch (_that) {
 case BuyerEntry():
 return buyer(_that.id,_that.text);case BuyerActionEntry():
-return buyerAction(_that.id,_that.actionName);case AgentEntry():
+return buyerAction(_that.id,_that.actionName,_that.label);case AgentEntry():
 return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.progress,_that.error);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -474,11 +474,11 @@ return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String id,  String text)?  buyer,TResult? Function( String id,  String actionName)?  buyerAction,TResult? Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  AppError? error)?  agent,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String id,  String text)?  buyer,TResult? Function( String id,  String actionName,  String? label)?  buyerAction,TResult? Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  AppError? error)?  agent,}) {final _that = this;
 switch (_that) {
 case BuyerEntry() when buyer != null:
 return buyer(_that.id,_that.text);case BuyerActionEntry() when buyerAction != null:
-return buyerAction(_that.id,_that.actionName);case AgentEntry() when agent != null:
+return buyerAction(_that.id,_that.actionName,_that.label);case AgentEntry() when agent != null:
 return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.progress,_that.error);case _:
   return null;
 
@@ -561,11 +561,12 @@ as String,
 
 
 class BuyerActionEntry implements TranscriptEntry {
-  const BuyerActionEntry({required this.id, required this.actionName});
+  const BuyerActionEntry({required this.id, required this.actionName, this.label});
   
 
 @override final  String id;
  final  String actionName;
+ final  String? label;
 
 /// Create a copy of TranscriptEntry
 /// with the given fields replaced by the non-null parameter values.
@@ -577,18 +578,18 @@ $BuyerActionEntryCopyWith<BuyerActionEntry> get copyWith => _$BuyerActionEntryCo
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is BuyerActionEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.actionName, actionName) || other.actionName == actionName));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is BuyerActionEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.actionName, actionName) || other.actionName == actionName)&&(identical(other.label, label) || other.label == label));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,actionName);
+    return Object.hash(runtimeType,id,actionName,label);
 }
 
 @override
 String toString() {
-    return 'TranscriptEntry.buyerAction(id: $id, actionName: $actionName)';
+    return 'TranscriptEntry.buyerAction(id: $id, actionName: $actionName, label: $label)';
 }
 
 
@@ -599,7 +600,7 @@ abstract mixin class $BuyerActionEntryCopyWith<$Res> implements $TranscriptEntry
   factory $BuyerActionEntryCopyWith(BuyerActionEntry value, $Res Function(BuyerActionEntry) _then) = _$BuyerActionEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String actionName
+ String id, String actionName, String? label
 });
 
 
@@ -616,11 +617,12 @@ class _$BuyerActionEntryCopyWithImpl<$Res>
 
 /// Create a copy of TranscriptEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? actionName = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? actionName = null,Object? label = freezed,}) {
   return _then(BuyerActionEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,actionName: null == actionName ? _self.actionName : actionName // ignore: cast_nullable_to_non_nullable
-as String,
+as String,label: freezed == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
