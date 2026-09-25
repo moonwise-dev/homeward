@@ -37,6 +37,11 @@ void main() {
                 name: 'resolve_market',
                 arguments: {'placeName': 'Södermalm', 'countryCode': 'SE'},
               ),
+              FunctionCall(
+                callId: 'load',
+                name: 'load_market',
+                arguments: {'marketId': 'SE'},
+              ),
             ],
           ),
           reply(

@@ -1,15 +1,9 @@
 enum SurfaceAction {
-  continueStory(
-    'continue_story',
-    ['storyPath'],
-    'The buyer answers one step of the story; the server folds it in and '
-        'the next step follows.',
-  ),
   commitStory(
     'commit_story',
     ['storyPath'],
-    'The buyer confirms what matters to them; the server measures every home '
-        'against it.',
+    'The buyer confirms the story they corrected, pins included; the server '
+        'measures every home against it.',
   ),
   chooseHome(
     'choose_home',

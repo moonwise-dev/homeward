@@ -50,4 +50,5 @@ const _$MapMarkerKindEnumMap = {
   MapMarkerKind.candidate: 'candidate',
   MapMarkerKind.anchor: 'anchor',
   MapMarkerKind.place: 'place',
+  MapMarkerKind.city: 'city',
 };

@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import '../../ui/core/themes/colors.dart';
 import '../../ui/core/themes/dimens.dart';
 import '../../ui/core/themes/text_styles.dart';
+import '../map_tiles.dart';
 import '../story_marks.dart';
 
 class LifestyleCommuteMapView extends StatelessWidget {
@@ -29,9 +30,14 @@ class LifestyleCommuteMapView extends StatelessWidget {
     final homes = markers
         .where((marker) => marker.kind == MapMarkerKind.candidate)
         .length;
+    final onlyCity = markers.every(
+      (marker) => marker.kind == MapMarkerKind.city,
+    );
     final shown = [
       for (final marker in markers)
-        if (focus == null
+        if (marker.kind == MapMarkerKind.city)
+          if (onlyCity) marker else ...const <MapMarker>[]
+        else if (focus == null
             ? marker.kind != MapMarkerKind.place || homes == 1
             : marker.candidateId == null || marker.candidateId == focus)
           marker,
@@ -66,9 +72,10 @@ class LifestyleCommuteMapView extends StatelessWidget {
           height: height,
           child: RepaintBoundary(
             child: FlutterMap(
+              key: ValueKey(Object.hashAll(points)),
               options: MapOptions(
                 initialCenter: points.first,
-                initialZoom: 14,
+                initialZoom: onlyCity ? 12 : 14,
                 initialCameraFit: points.length < 2
                     ? null
                     : CameraFit.coordinates(
@@ -81,14 +88,7 @@ class LifestyleCommuteMapView extends StatelessWidget {
                 ),
               ),
               children: [
-                ColorFiltered(
-                  colorFilter: _calmTiles,
-                  child: TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    userAgentPackageName: 'se.moonwise.homeward',
-                  ),
-                ),
+                const MapTiles(),
                 PolylineLayer(
                   polylines: [
                     for (final route in shownRoutes)
@@ -103,6 +103,14 @@ class LifestyleCommuteMapView extends StatelessWidget {
                 ),
                 MarkerLayer(
                   markers: [
+                    for (final marker in shown)
+                      if (marker.kind == MapMarkerKind.city)
+                        Marker(
+                          point: LatLng(marker.lat, marker.lng),
+                          width: 160,
+                          height: 28,
+                          child: _CityLabel(label: marker.label),
+                        ),
                     for (final marker in shown)
                       if (marker.kind == MapMarkerKind.place)
                         Marker(
@@ -148,7 +156,7 @@ class LifestyleCommuteMapView extends StatelessWidget {
                           ),
                   ],
                 ),
-                const _Attribution(),
+                const MapAttribution(),
               ],
             ),
           ),
@@ -258,6 +266,28 @@ class _Pin extends StatelessWidget {
   }
 }
 
+class _CityLabel extends StatelessWidget {
+  const _CityLabel({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Center(
+    child: Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xxs,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadii.pill),
+        border: Border.all(color: AppColors.borderStrong),
+      ),
+      child: Text(label, style: AppTextStyles.label),
+    ),
+  );
+}
+
 class _PlaceDot extends StatelessWidget {
   const _PlaceDot({required this.marker});
 
@@ -308,43 +338,4 @@ class _RouteBadge extends StatelessWidget {
       ),
     );
   }
-}
-
-final _calmTiles = _softened(saturation: 0.35, lift: 12);
-
-ColorFilter _softened({required double saturation, required double lift}) {
-  const luminance = [0.2126, 0.7152, 0.0722];
-  final grey = 1 - saturation;
-  return ColorFilter.matrix([
-    for (var channel = 0; channel < 3; channel++) ...[
-      for (var source = 0; source < 3; source++)
-        grey * luminance[source] + (source == channel ? saturation : 0),
-      0,
-      lift,
-    ],
-    0,
-    0,
-    0,
-    1,
-    0,
-  ]);
-}
-
-class _Attribution extends StatelessWidget {
-  const _Attribution();
-
-  @override
-  Widget build(BuildContext context) => Align(
-    alignment: Alignment.bottomRight,
-    child: Container(
-      margin: const EdgeInsets.all(AppSpacing.xxs),
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxs),
-      color: AppColors.surface.withValues(alpha: 0.8),
-      child: Text(
-        '© OpenStreetMap contributors',
-        textAlign: TextAlign.right,
-        style: AppTextStyles.caption.copyWith(fontSize: 10),
-      ),
-    ),
-  );
 }

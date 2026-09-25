@@ -162,10 +162,10 @@ const derivedSlice = DataSlice(
 final storySlice = DataSlice(
   'story',
   'Why and where the buyer is moving, what they care about, and the homes or '
-      'areas they are weighing. Each Story Steps card writes the answer '
-      'fields for its own step; continue_story folds a step in, and '
-      'commit_story folds in the last one and confirms the story. anchors, '
-      'candidates, and criteria are read-only and placed by the server.',
+      'areas they are weighing. StoryDraft writes the answer fields as the '
+      'buyer corrects the story, and commit_story folds them into the story '
+      'and confirms it. anchors, candidates, criteria, and center are '
+      'read-only and placed by the server.',
   [
     const SliceField(
       'reason',
@@ -198,15 +198,21 @@ final storySlice = DataSlice(
       'Criteria the buyer will not give up.',
     ),
     const SliceField(
-      'note',
-      FieldKind.text,
-      'Anything else the buyer wants weighed, in their own words.',
+      'pins',
+      FieldKind.record,
+      'Places the buyer dropped on the map, by id: label, lat, lng. The map '
+          'shows them and commit_story turns them into anchors.',
+    ),
+    const SliceField(
+      'center',
+      FieldKind.record,
+      'Where the map opens: the city as lat and lng.',
     ),
     const SliceField(
       'markers',
       FieldKind.record,
-      'Map markers for the anchors and homes placed so far, for a Map before '
-          'the assessment exists.',
+      'Map markers for the city, the anchors, and the homes placed so far, for '
+          'a Map before the assessment exists.',
     ),
     const SliceField(
       'anchors',

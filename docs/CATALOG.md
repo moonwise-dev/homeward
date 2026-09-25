@@ -83,6 +83,31 @@ Building blocks Gemini composes the story from, beside the basic components.
 They bind to `/story` and `/assessment`, which the server fills from open data:
 the model lays them out and never writes a figure they show.
 
+### `StoryDraft`
+
+The buyer's story as a short paragraph Homeward writes and the buyer corrects
+in place. The model writes the prose and picks which slots the sentence needs;
+the device does the rest, so every correction is instant. A slot Homeward
+guessed is drawn as an assumption until the buyer touches it.
+
+| Property | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `story` | path | yes | Always `/story` |
+| `segments` | list | yes | Prose and slots, in reading order |
+
+A segment has a `type`:
+
+| Type | Fields | Shows | Writes |
+| --- | --- | --- | --- |
+| `text` | `text` | The sentence around the slots | Nothing |
+| `mode` | `assumed` | How they get around: on foot, by bike, by car, by transit | `/story/mode` |
+| `maxMinutes` | `assumed` | The longest trip they accept, 10 to 60 minutes | `/story/maxMinutes` |
+| `criterion` | `kind`, `assumed` | One thing that matters, with a menu: matters, must have, leave it out | `/story/picks/<group>`, `/story/mustHaves` |
+| `place` | `id`, `label`, `assumed` | A place they travel to; a blank opens a map to drop a pin, a placed one shows a pin | `/story/pins/<id>` |
+
+`LifestyleCommuteMap` shows the pins the buyer drops, through its optional
+`pins` binding to `/story/pins`.
+
 ### `LifestyleCommuteMap`
 
 A map of the buyer's life around the homes they weigh: anchors, homes, a route
@@ -94,6 +119,7 @@ no key, attributed on the map.
 | --- | --- | --- | --- |
 | `markers` | path | yes | `/story/markers` before measuring, `/assessment/markers` after |
 | `routes` | path | no | `/assessment/routes` |
+| `pins` | path | no | `/story/pins`, the places the buyer dropped, shown as anchors |
 | `focus` | string | no | A home id; shows that home alone with its routes and places |
 
 ### `ComparisonTable`
@@ -119,9 +145,8 @@ button to choose the home.
 | `homes` | path | yes | `/assessment/candidates`, already in rank order |
 | `choose` | `Action` | no | `choose_home`; the app adds the tapped home as `candidateId` |
 
-The Story Steps that come before them use basic components only: `ChoicePicker`
-in the chips style for the travel mode, the criteria per group, the
-must-haves, and the reason, and `TextField` for the longest trip and a note.
+The living story that comes before them is `StoryDraft` and the map, with a
+basic `Button` sending `commit_story`.
 
 ## Components
 

@@ -358,8 +358,7 @@ and `/market` through `common/finance` when the buyer changes a bound input.
 
 | Action | Context | Server behavior before the model runs |
 | --- | --- | --- |
-| `continue_story` | `storyPath` | Fold the surface's `/story` fields into the story without confirming it, so the next Story Steps step follows |
-| `commit_story` | `storyPath` | Fold the surface's `/story` fields into the story and confirm it |
+| `commit_story` | `storyPath` | Fold the surface's `/story` fields, pins included, into the story and confirm it |
 | `commit_profile` | `profilePath` | Save every valid field from the surface's `/profile` over the saved profile, clear the draft, and report invalid fields |
 | `select_market` | `marketId` | Resolve market, write to plan; profile facts on the surface become the profile draft |
 | `commit_scenario` | `scenarioPath` | Parse `/scenario`, refuse it unless amounts are in the market currency and `withinMaxLtv` holds, then save it and clear the draft |

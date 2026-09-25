@@ -14,6 +14,7 @@ import 'components/market_snapshot_card.dart';
 import 'components/money_input.dart';
 import 'components/payment_breakdown.dart';
 import 'components/purchase_costs_table.dart';
+import 'components/story_draft.dart';
 import 'components/stress_test_chart.dart';
 import 'functions/cash_needed_function.dart';
 import 'functions/catalog_function.dart';
@@ -24,6 +25,7 @@ const homewardCatalogId =
     'https://moonwise.se/homeward/catalogs/v1/catalog.json';
 
 const homewardComponents = <CatalogComponent>[
+  StoryDraft(),
   LifestyleCommuteMap(),
   ComparisonTable(),
   DynamicRecommendationStack(),

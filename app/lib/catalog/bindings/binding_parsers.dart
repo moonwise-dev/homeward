@@ -24,6 +24,13 @@ List<T>? jsonModelsOf<T>(
     ? [for (final item in value) ?jsonModelOf(item, fromJson)]
     : null;
 
+Map<String, StoryPin>? storyPinsOf(Object? json) => json is Map<String, Object?>
+    ? {
+        for (final MapEntry(:key, :value) in json.entries)
+          key: ?jsonModelOf(value, StoryPin.fromJson),
+      }
+    : null;
+
 MarketSnapshot? marketSnapshotOf(Object? value) {
   if (value is! Map<String, Object?>) {
     return null;

@@ -85,11 +85,19 @@ void main() {
     }
   });
 
-  test('is pre-runnable because its input comes from the plan', () {
+  test('waits for a chosen home, then pre-runs on the plan market', () {
+    final market = MarketId.parse('SE');
+
     expect(tool.settledArguments(contextWith()), isNull);
     expect(
+      tool.settledArguments(contextWith(plan: Plan(marketId: market))),
+      isNull,
+    );
+    expect(
       tool.settledArguments(
-        contextWith(plan: Plan(marketId: MarketId.parse('SE'))),
+        contextWith(
+          plan: Plan(marketId: market, story: stockholmChosen),
+        ),
       ),
       {'marketId': 'SE'},
     );

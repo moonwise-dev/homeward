@@ -111,7 +111,7 @@ void main() {
       allMessagesIn(events);
 
   test(
-    'resolves the market, pre-runs its rules, and draws a seeded form',
+    'resolves the market, loads its rules, and draws a seeded form',
     () async {
       await sessions.create('uid-1');
       final script = ScriptedInteractions([
@@ -122,6 +122,11 @@ void main() {
               callId: 'c1',
               name: 'resolve_market',
               arguments: {'placeName': 'Södermalm', 'countryCode': 'SE'},
+            ),
+            FunctionCall(
+              callId: 'c2',
+              name: 'load_market',
+              arguments: {'marketId': 'SE'},
             ),
           ],
         ),
@@ -173,9 +178,13 @@ void main() {
       expect(first.toolChoice, isNull);
       expect(second.previousInteractionId, 'i1');
       expect(second.toolChoice, isNull);
-      expect(second.systemInstruction, contains('"load_market": {'));
+      expect(second.systemInstruction, isNot(contains('"preRun"')));
       final input = second.input as FunctionResultsInput;
-      expect(input.results.single.result, contains('selectedMarket'));
+      expect(input.results.map((result) => result.name), [
+        'resolve_market',
+        'load_market',
+      ]);
+      expect(input.results.first.result, contains('selectedMarket'));
       expect(input.note, isNull);
 
       final saved = (await sessions.find('s-1'))!;
@@ -423,7 +432,9 @@ void main() {
   test(
     'sends rejections back and forwards the corrected surface once',
     () async {
-      await sessionWith(Plan(marketId: MarketId.parse('SE')));
+      await sessionWith(
+        Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),
+      );
       final script = ScriptedInteractions([
         reply('i1', text: a2ui('t1-income', incomeForm(value: 62000))),
         reply(
@@ -464,7 +475,9 @@ void main() {
   );
 
   test('a correction Gemini refuses to constrain runs again freely', () async {
-    await sessionWith(Plan(marketId: MarketId.parse('SE')));
+    await sessionWith(
+      Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),
+    );
     final script = ScriptedInteractions([
       reply('i1', text: a2ui('t1-income', incomeForm(value: 62000))),
       failing(
@@ -501,7 +514,9 @@ void main() {
   test(
     'asks for a form that covers every fact the market still needs',
     () async {
-      await sessionWith(Plan(marketId: MarketId.parse('SE')));
+      await sessionWith(
+        Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),
+      );
       final incomeOnly = [
         {
           'id': 'root',
@@ -551,7 +566,9 @@ void main() {
   test(
     'asks again when an action is answered with text and no surface',
     () async {
-      await sessionWith(Plan(marketId: MarketId.parse('SE')));
+      await sessionWith(
+        Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),
+      );
       final script = ScriptedInteractions([
         reply('i1', text: 'Here is what that means for you.'),
         reply('i2', text: a2ui('t1-income', incomeForm())),
@@ -573,7 +590,9 @@ void main() {
   );
 
   test('ends with a retry surface when corrections run out', () async {
-    await sessionWith(Plan(marketId: MarketId.parse('SE')));
+    await sessionWith(
+      Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),
+    );
     final invalid = reply('i1', text: a2ui('t1-income', incomeForm(value: 1)));
     final script = ScriptedInteractions([invalid, invalid]);
 

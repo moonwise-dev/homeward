@@ -13,6 +13,9 @@ _Story _$StoryFromJson(Map<String, dynamic> json) =>
         allowedKeys: const [
           'reason',
           'city',
+          'cityPoint',
+          'mode',
+          'maxMinutes',
           'anchors',
           'candidates',
           'criteria',
@@ -26,6 +29,16 @@ _Story _$StoryFromJson(Map<String, dynamic> json) =>
           (v) => $enumDecodeNullable(_$StoryReasonEnumMap, v),
         ),
         city: $checkedConvert('city', (v) => v as String?),
+        cityPoint: $checkedConvert(
+          'cityPoint',
+          (v) =>
+              v == null ? null : GeoPoint.fromJson(v as Map<String, dynamic>),
+        ),
+        mode: $checkedConvert(
+          'mode',
+          (v) => $enumDecodeNullable(_$TravelModeEnumMap, v),
+        ),
+        maxMinutes: $checkedConvert('maxMinutes', (v) => (v as num?)?.toInt()),
         anchors: $checkedConvert(
           'anchors',
           (v) =>
@@ -62,6 +75,9 @@ _Story _$StoryFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$StoryToJson(_Story instance) => <String, dynamic>{
   'reason': ?_$StoryReasonEnumMap[instance.reason],
   'city': ?instance.city,
+  'cityPoint': ?instance.cityPoint?.toJson(),
+  'mode': ?_$TravelModeEnumMap[instance.mode],
+  'maxMinutes': ?instance.maxMinutes,
   'anchors': instance.anchors.map((e) => e.toJson()).toList(),
   'candidates': instance.candidates.map((e) => e.toJson()).toList(),
   'criteria': instance.criteria.map((e) => e.toJson()).toList(),
@@ -77,4 +93,11 @@ const _$StoryReasonEnumMap = {
   StoryReason.retirement: 'retirement',
   StoryReason.investment: 'investment',
   StoryReason.other: 'other',
+};
+
+const _$TravelModeEnumMap = {
+  TravelMode.walk: 'walk',
+  TravelMode.bike: 'bike',
+  TravelMode.car: 'car',
+  TravelMode.transit: 'transit',
 };

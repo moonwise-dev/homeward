@@ -8,7 +8,8 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 | Component | Phase | Agent visible | Required | Bound | Examples |
 | --- | --- | --- | --- | --- | --- |
-| `LifestyleCommuteMap` | mvp | yes | `markers` | `markers`, `routes` | Two flats and the campus |
+| `StoryDraft` | mvp | yes | `story`, `segments` | `story` | A family moving for studies |
+| `LifestyleCommuteMap` | mvp | yes | `markers` | `markers`, `routes`, `pins` | Two flats and the campus |
 | `ComparisonTable` | mvp | yes | `rows`, `homes` | `rows`, `homes` | Odengatan against Solna |
 | `DynamicRecommendationStack` | mvp | yes | `homes` | `homes` | Which flat fits the move |
 | `LocationPicker` | mvp | yes | `label`, `value`, `mode` | `value` | Target market, Tax residence |
@@ -22,6 +23,10 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `StressTestChart` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Stockholm couple, Funchal non-resident |
 | `EligibilityChecklist` | mvp | yes | `scenario`, `market`, `profile` | `scenario`, `market`, `profile` | Funchal non-resident, Stockholm couple |
 | `ForeignBuyerObstacles` | mvp | yes | `market`, `profile` | `market`, `profile` | Funchal non-resident |
+
+### StoryDraft
+
+The buyer's story as a short paragraph the buyer corrects in place. Write two to four sentences in the second person from what the buyer said, and put a slot where a value belongs: the commute mode, the longest trip, a thing that matters, or a place they travel to. Mark a slot assumed when you guessed it. The buyer changes slots on the device; you never write their values. Bind story to /story.
 
 ### LifestyleCommuteMap
 
@@ -97,7 +102,7 @@ Every function of the A2UI v0.9 basic catalog is available too.
 
 ### `/story`
 
-Why and where the buyer is moving, what they care about, and the homes or areas they are weighing. Each Story Steps card writes the answer fields for its own step; continue_story folds a step in, and commit_story folds in the last one and confirms the story. anchors, candidates, and criteria are read-only and placed by the server.
+Why and where the buyer is moving, what they care about, and the homes or areas they are weighing. StoryDraft writes the answer fields as the buyer corrects the story, and commit_story folds them into the story and confirms it. anchors, candidates, criteria, and center are read-only and placed by the server.
 
 | Path | Value | Meaning |
 | --- | --- | --- |
@@ -112,8 +117,9 @@ Why and where the buyer is moving, what they care about, and the homes or areas 
 | `/story/picks/gettingAround` | list of criterion kinds, such as ["schools", "parks"] | Criteria picked for getting around. |
 | `/story/picks/downsides` | list of criterion kinds, such as ["schools", "parks"] | Criteria picked for downsides. |
 | `/story/mustHaves` | list of criterion kinds, such as ["schools", "parks"] | Criteria the buyer will not give up. |
-| `/story/note` | string | Anything else the buyer wants weighed, in their own words. |
-| `/story/markers` | object read by Homeward components | Map markers for the anchors and homes placed so far, for a Map before the assessment exists. |
+| `/story/pins` | object read by Homeward components | Places the buyer dropped on the map, by id: label, lat, lng. The map shows them and commit_story turns them into anchors. |
+| `/story/center` | object read by Homeward components | Where the map opens: the city as lat and lng. |
+| `/story/markers` | object read by Homeward components | Map markers for the city, the anchors, and the homes placed so far, for a Map before the assessment exists. |
 | `/story/anchors` | object read by Homeward components | Places the buyer travels to: id, label, mode, maxMinutes, point. |
 | `/story/candidates` | object read by Homeward components | Homes or areas being weighed: id, label, point, price. |
 | `/story/criteria` | object read by Homeward components | What is weighed: kind, anchorId, mustHave. |
@@ -199,8 +205,7 @@ Figures the server computed for the scenario, read-only.
 
 | Name | Context | Meaning |
 | --- | --- | --- |
-| `continue_story` | `storyPath` | The buyer answers one step of the story; the server folds it in and the next step follows. |
-| `commit_story` | `storyPath` | The buyer confirms what matters to them; the server measures every home against it. |
+| `commit_story` | `storyPath` | The buyer confirms the story they corrected, pins included; the server measures every home against it. |
 | `choose_home` | `candidateId` | The buyer picks the home to work out the deal for. |
 | `select_market` | `marketId` | The buyer picked a market. |
 | `commit_profile` | `profilePath` | The buyer saves the profile form; the server validates and stores it. |

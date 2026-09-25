@@ -87,6 +87,14 @@ void main() {
     expect(tool.settledArguments(contextWith()), isNull);
     expect(
       tool.settledArguments(contextWith(plan: Plan(marketId: madeira))),
+      isNull,
+    );
+    expect(
+      tool.settledArguments(
+        contextWith(
+          plan: Plan(marketId: madeira, story: stockholmChosen),
+        ),
+      ),
       const <String, Object?>{},
     );
   });

@@ -23,25 +23,10 @@ ActionOutcome applyAction({
   };
 
   switch (SurfaceAction.named(action.name)) {
-    case SurfaceAction.continueStory:
-      final story = storyFromAnswers(
-        plan.story,
-        form[storySlice.name] ?? const {},
-        committing: false,
-      );
-      return ActionOutcome(
-        plan: plan.copyWith(story: story),
-        summary: {
-          ...summary,
-          'applied': true,
-          'criteria': story.criteria.length,
-        },
-      );
     case SurfaceAction.commitStory:
       final story = storyFromAnswers(
         plan.story,
         form[storySlice.name] ?? const {},
-        committing: true,
       );
       return ActionOutcome(
         plan: plan.copyWith(story: story),

@@ -95,17 +95,23 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 
 ### Journey
 
-- **Opening page**, shown while a plan has no turns (D107, D116):
+- **Opening page**, shown while a plan has no turns (D107, D119):
   - Why the buyer is moving, as chips: work, studies, family, lifestyle,
     retirement, investment, or their own words.
   - Where they are going: one line, a city, an area, or a region.
   - Two examples that fill both in: the Stockholm family and the Lisbon
     surfer.
   - Start builds the first message from the reason and the place, so the model
-    never starts cold, then asks everything else as Story Steps: a short
-    back-and-forth of small cards, not a form.
+    never starts cold, then shows the living story (D119): the buyer's story
+    as a paragraph they correct in place, not a sequence of steps.
   - The disclaimer, in one line under Start: Homeward estimates and explains;
     it is not financial advice.
+- **The living story** (D119) is the page of the first turn and of every turn
+  where the buyer typed more: `StoryDraft`, the map, and Show me homes. Slots
+  in the paragraph open menus and change the story on the device with no
+  request, and a blank place slot opens a sheet with the map: tap to drop the
+  pin, tap again to move it, Use this place to keep it. Guesses are dotted until
+  the buyer touches them. Show me homes sends everything they changed.
 - **Pages**: one page per turn that has text, a surface, or a failure. The
   newest page shows by default. A step pager at the top moves to earlier pages;
   their surfaces are read-only once a later commit locks them. Pages fade and

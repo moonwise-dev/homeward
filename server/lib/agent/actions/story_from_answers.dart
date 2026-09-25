@@ -1,16 +1,15 @@
 import 'package:common/common.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-Story storyFromAnswers(
-  Story story,
-  Map<String, Object?> answers, {
-  required bool committing,
-}) {
-  final mode = _enum(TravelMode.values, _first(answers['mode']));
-  final maxMinutes = switch (answers['maxMinutes']) {
-    final num minutes when minutes > 0 => minutes.round(),
-    final String text => int.tryParse(text.trim()),
-    _ => null,
-  };
+Story storyFromAnswers(Story story, Map<String, Object?> answers) {
+  final mode = _enum(TravelMode.values, _first(answers['mode'])) ?? story.mode;
+  final maxMinutes =
+      switch (answers['maxMinutes']) {
+        final num minutes when minutes > 0 => minutes.round(),
+        final String text => int.tryParse(text.trim()),
+        _ => null,
+      } ??
+      story.maxMinutes;
   final picks = switch (answers['picks']) {
     final Map<String, Object?> groups => {
       for (final list in groups.values) ..._kinds(list),
@@ -18,13 +17,18 @@ Story storyFromAnswers(
     _ => null,
   };
   final mustHaves = _kinds(answers['mustHaves']);
-  final anchors = [
-    for (final anchor in story.anchors)
-      anchor.copyWith(
-        mode: mode ?? anchor.mode,
-        maxMinutes: maxMinutes ?? anchor.maxMinutes,
-      ),
-  ];
+  final anchors = _withPins(
+    [
+      for (final anchor in story.anchors)
+        anchor.copyWith(
+          mode: mode ?? anchor.mode,
+          maxMinutes: maxMinutes ?? anchor.maxMinutes,
+        ),
+    ],
+    answers['pins'],
+    mode: mode ?? TravelMode.transit,
+    maxMinutes: maxMinutes ?? 30,
+  );
   final kinds = picks == null
       ? {for (final criterion in story.criteria) criterion.kind}
       : {...picks, ...mustHaves};
@@ -32,6 +36,8 @@ Story storyFromAnswers(
   return story.copyWith(
     reason:
         _enum(StoryReason.values, _first(answers['reason'])) ?? story.reason,
+    mode: mode,
+    maxMinutes: maxMinutes,
     anchors: anchors,
     criteria: [
       for (final anchor in anchors)
@@ -44,9 +50,51 @@ Story storyFromAnswers(
         if (kinds.contains(kind))
           Criterion(kind: kind, mustHave: mustHaves.contains(kind)),
     ],
-    committed: committing,
+    committed: true,
     chosenCandidateId: null,
   );
+}
+
+List<Anchor> _withPins(
+  List<Anchor> anchors,
+  Object? pins, {
+  required TravelMode mode,
+  required int maxMinutes,
+}) {
+  if (pins is! Map<String, Object?>) {
+    return anchors;
+  }
+  final result = [...anchors];
+  for (final value in pins.values) {
+    if (value is! Map<String, Object?>) {
+      continue;
+    }
+    final StoryPin pin;
+    try {
+      pin = StoryPin.fromJson(value);
+    } on CheckedFromJsonException {
+      continue;
+    }
+    final point = GeoPoint(lat: pin.lat, lng: pin.lng);
+    final index = result.indexWhere(
+      (anchor) => anchor.label.toLowerCase() == pin.label.toLowerCase(),
+    );
+    if (index == -1) {
+      result.add(
+        Anchor(
+          id: 'a${result.length + 1}',
+          label: pin.label,
+          query: pin.label,
+          point: point,
+          mode: mode,
+          maxMinutes: maxMinutes,
+        ),
+      );
+    } else {
+      result[index] = result[index].copyWith(point: point);
+    }
+  }
+  return result;
 }
 
 Object? _first(Object? value) => switch (value) {

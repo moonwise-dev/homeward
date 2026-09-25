@@ -30,6 +30,9 @@ final class LifestyleCommuteMap extends CatalogComponent {
       'Markers: /story/markers or /assessment/markers.',
     ),
     'routes': CatalogSchemas.bound('Routes: /assessment/routes.'),
+    'pins': CatalogSchemas.bound(
+      'Places the buyer dropped: /story/pins. Bind it on the living story.',
+    ),
     'focus': Schema.string(
       description:
           'The id of one home, such as c1, to show on its own with its routes '
@@ -41,7 +44,7 @@ final class LifestyleCommuteMap extends CatalogComponent {
   List<String> get requiredProperties => ['markers'];
 
   @override
-  List<String> get boundProperties => ['markers', 'routes'];
+  List<String> get boundProperties => ['markers', 'routes', 'pins'];
 
   @override
   List<CatalogExample> get examples => [

@@ -42,6 +42,34 @@ void main() {
     );
   });
 
+  test('reads a story draft as the sentence it makes', () {
+    expect(
+      describeA2uiMessage({
+        'updateComponents': {
+          'surfaceId': 't1-story',
+          'components': [
+            {
+              'id': 'draft',
+              'component': 'StoryDraft',
+              'story': {'path': '/story'},
+              'segments': [
+                {'type': 'text', 'text': 'You will go '},
+                {'type': 'mode', 'assumed': true},
+                {'type': 'text', 'text': ' and value '},
+                {'type': 'criterion', 'kind': 'quiet'},
+                {'type': 'text', 'text': ' near '},
+                {'type': 'place', 'id': 'work', 'label': 'work'},
+              ],
+            },
+          ],
+        },
+      }),
+      'components t1-story:\n'
+      '  draft: StoryDraft story=/story\n'
+      '    You will go [mode?] and value [criterion quiet] near [place work]',
+    );
+  });
+
   test('reads the web API key from the generated Firebase options', () {
     final directory = Directory.systemTemp.createTempSync('probe');
     addTearDown(() => directory.deleteSync(recursive: true));

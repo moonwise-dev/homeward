@@ -43,10 +43,12 @@ tool or from shared finance code.
 - **Gemini composes; tools measure; code computes.** The composing model decides
   what to ask, which criteria matter, and how the screen is laid out. It never
   writes a figure a buyer relies on.
-- **Ask one thing at a time.** A short opening gives Homeward a reason and a
-  place; everything else comes as a handful of small, adaptive steps that
-  build the story, narrated back as it grows, never a form asking for
-  everything at once.
+- **A story you correct, not a form you fill.** From a reason and a place,
+  Homeward writes the buyer's story as a short paragraph and marks what it
+  assumed. The buyer fixes what is off inside the sentence itself; blanks appear
+  only for what Homeward cannot guess, such as where they go every day. Nothing
+  is asked in an order Homeward chose, and the buyer can ask for homes at any
+  moment.
 - **Every fact shows where it came from.** Measured, Google Maps, estimate,
   verified, or said by the buyer.
 - **Works anywhere, honest everywhere.** Lifestyle facts come from open map data
@@ -120,15 +122,16 @@ The flow the video segment is built around. The story is the point.
 
 1. A buyer opens a new plan, picks *studies* as why they are moving, and
    writes just *Stockholm* as the place.
-2. Homeward asks one short thing at a time, narrating what it has understood
-   so far as each answer arrives. First where they need to get to often, which
-   brings *"KTH, starting in January. We're looking at a flat on Odengatan for
-   7.4 million and one in Solna for 5.2 million."* Then how they'll get there
-   and the longest ride they'll accept. Then a few chips for what matters day
-   to day: schools, parks, quiet evenings. A last step asks what they will not
-   give up, and the buyer confirms. No step is a form; each is a card narrower
-   than the last, and the buyer watches the story take shape rather than
-   filling it in.
+2. Homeward writes their story back on one page, beside a map of Stockholm:
+   *"You're moving to Stockholm to study. You'll probably get around by
+   **transit**, in under **30 minutes**, and **quiet evenings** and **parks**
+   matter to you. Where do you study? **drop a pin**"* The bold words are
+   assumptions the buyer can change in place, and the one blank is what
+   Homeward could not guess. The buyer pins KTH, and adds in one line that they
+   have two children and are weighing a flat on Odengatan and one in Solna; the
+   story is rewritten with schools and both flats in it. Nothing is a step or a
+   Continue button, and nothing waited on the model until the buyer asked to
+   see homes.
 3. While the homes are measured, the page lists each step as it runs and
    ticks it off: finding the flats, looking for schools and parks near them,
    timing the ride to KTH. Then the board appears: a map with KTH, both flats, commute lines with minutes by

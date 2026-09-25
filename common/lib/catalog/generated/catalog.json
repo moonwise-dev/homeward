@@ -726,6 +726,113 @@
       ],
       "unevaluatedProperties": false
     },
+    "StoryDraft": {
+      "type": "object",
+      "description": "The buyer's story as a short paragraph the buyer corrects in place. Write two to four sentences in the second person from what the buyer said, and put a slot where a value belongs: the commute mode, the longest trip, a thing that matters, or a place they travel to. Mark a slot assumed when you guessed it. The buyer changes slots on the device; you never write their values. Bind story to /story.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "StoryDraft"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "story": {
+          "type": "object",
+          "description": "Always { \"path\": \"/story\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/story"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "segments": {
+          "type": "array",
+          "description": "The paragraph in reading order: text between slots, and the slots themselves.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "text is prose; mode is how they get around; maxMinutes is the longest trip they accept; criterion is one thing that matters, named by kind; place is somewhere they travel to.",
+                "enum": [
+                  "text",
+                  "mode",
+                  "maxMinutes",
+                  "criterion",
+                  "place"
+                ]
+              },
+              "text": {
+                "type": "string",
+                "description": "The prose, for type text."
+              },
+              "kind": {
+                "type": "string",
+                "description": "What matters, for type criterion.",
+                "enum": [
+                  "schools",
+                  "preschool",
+                  "groceries",
+                  "pharmacy",
+                  "healthcare",
+                  "gym",
+                  "swimming",
+                  "parks",
+                  "running",
+                  "playground",
+                  "water",
+                  "restaurants",
+                  "cafes",
+                  "nightlife",
+                  "quiet",
+                  "transit",
+                  "parking",
+                  "charging",
+                  "noise"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "description": "A short id such as work or school, for type place; unique in the story."
+              },
+              "label": {
+                "type": "string",
+                "description": "What the buyer calls the place, such as work, for type place."
+              },
+              "assumed": {
+                "type": "boolean",
+                "description": "True when you guessed the slot rather than heard it."
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "story",
+        "segments"
+      ],
+      "additionalProperties": false
+    },
     "LifestyleCommuteMap": {
       "type": "object",
       "description": "A map of the buyer's life around the homes they weigh: the places they travel to, each home, the route from each home to each place with its minutes, and the nearest place for each criterion. Before homes are measured, bind markers to /story/markers; after, bind markers to /assessment/markers and routes to /assessment/routes.",
@@ -761,6 +868,19 @@
         "routes": {
           "type": "object",
           "description": "Routes: /assessment/routes.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "pins": {
+          "type": "object",
+          "description": "Places the buyer dropped: /story/pins. Bind it on the living story.",
           "properties": {
             "path": {
               "type": "string"
@@ -2423,6 +2543,9 @@
         },
         {
           "$ref": "#/components/DateTimeInput"
+        },
+        {
+          "$ref": "#/components/StoryDraft"
         },
         {
           "$ref": "#/components/LifestyleCommuteMap"

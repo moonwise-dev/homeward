@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Story {
 
- StoryReason? get reason; String? get city; List<Anchor> get anchors; List<Candidate> get candidates; List<Criterion> get criteria; bool get committed; String? get chosenCandidateId;
+ StoryReason? get reason; String? get city; GeoPoint? get cityPoint; TravelMode? get mode; int? get maxMinutes; List<Anchor> get anchors; List<Candidate> get candidates; List<Criterion> get criteria; bool get committed; String? get chosenCandidateId;
 /// Create a copy of Story
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $StoryCopyWith<Story> get copyWith => _$StoryCopyWithImpl<Story>(this as Story, 
 @override
 bool operator ==(Object other) {
   final _this = this as Story;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Story&&(identical(other.reason, _this.reason) || other.reason == _this.reason)&&(identical(other.city, _this.city) || other.city == _this.city)&&const DeepCollectionEquality().equals(other.anchors, _this.anchors)&&const DeepCollectionEquality().equals(other.candidates, _this.candidates)&&const DeepCollectionEquality().equals(other.criteria, _this.criteria)&&(identical(other.committed, _this.committed) || other.committed == _this.committed)&&(identical(other.chosenCandidateId, _this.chosenCandidateId) || other.chosenCandidateId == _this.chosenCandidateId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Story&&(identical(other.reason, _this.reason) || other.reason == _this.reason)&&(identical(other.city, _this.city) || other.city == _this.city)&&(identical(other.cityPoint, _this.cityPoint) || other.cityPoint == _this.cityPoint)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.maxMinutes, _this.maxMinutes) || other.maxMinutes == _this.maxMinutes)&&const DeepCollectionEquality().equals(other.anchors, _this.anchors)&&const DeepCollectionEquality().equals(other.candidates, _this.candidates)&&const DeepCollectionEquality().equals(other.criteria, _this.criteria)&&(identical(other.committed, _this.committed) || other.committed == _this.committed)&&(identical(other.chosenCandidateId, _this.chosenCandidateId) || other.chosenCandidateId == _this.chosenCandidateId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Story;
-  return Object.hash(runtimeType,_this.reason,_this.city,const DeepCollectionEquality().hash(_this.anchors),const DeepCollectionEquality().hash(_this.candidates),const DeepCollectionEquality().hash(_this.criteria),_this.committed,_this.chosenCandidateId);
+  return Object.hash(runtimeType,_this.reason,_this.city,_this.cityPoint,_this.mode,_this.maxMinutes,const DeepCollectionEquality().hash(_this.anchors),const DeepCollectionEquality().hash(_this.candidates),const DeepCollectionEquality().hash(_this.criteria),_this.committed,_this.chosenCandidateId);
 }
 
 @override
 String toString() {
   final _this = this as Story;
-  return 'Story(reason: ${_this.reason}, city: ${_this.city}, anchors: ${_this.anchors}, candidates: ${_this.candidates}, criteria: ${_this.criteria}, committed: ${_this.committed}, chosenCandidateId: ${_this.chosenCandidateId})';
+  return 'Story(reason: ${_this.reason}, city: ${_this.city}, cityPoint: ${_this.cityPoint}, mode: ${_this.mode}, maxMinutes: ${_this.maxMinutes}, anchors: ${_this.anchors}, candidates: ${_this.candidates}, criteria: ${_this.criteria}, committed: ${_this.committed}, chosenCandidateId: ${_this.chosenCandidateId})';
 }
 
 
@@ -54,11 +54,11 @@ abstract mixin class $StoryCopyWith<$Res>  {
   factory $StoryCopyWith(Story value, $Res Function(Story) _then) = _$StoryCopyWithImpl;
 @useResult
 $Res call({
- StoryReason? reason, String? city, List<Anchor> anchors, List<Candidate> candidates, List<Criterion> criteria, bool committed, String? chosenCandidateId
+ StoryReason? reason, String? city, GeoPoint? cityPoint, TravelMode? mode, int? maxMinutes, List<Anchor> anchors, List<Candidate> candidates, List<Criterion> criteria, bool committed, String? chosenCandidateId
 });
 
 
-
+$GeoPointCopyWith<$Res>? get cityPoint;
 
 }
 /// @nodoc
@@ -71,11 +71,14 @@ class _$StoryCopyWithImpl<$Res>
 
 /// Create a copy of Story
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? reason = freezed,Object? city = freezed,Object? anchors = null,Object? candidates = null,Object? criteria = null,Object? committed = null,Object? chosenCandidateId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? reason = freezed,Object? city = freezed,Object? cityPoint = freezed,Object? mode = freezed,Object? maxMinutes = freezed,Object? anchors = null,Object? candidates = null,Object? criteria = null,Object? committed = null,Object? chosenCandidateId = freezed,}) {
   return _then(Story(
 reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
 as StoryReason?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
-as String?,anchors: null == anchors ? _self.anchors : anchors // ignore: cast_nullable_to_non_nullable
+as String?,cityPoint: freezed == cityPoint ? _self.cityPoint : cityPoint // ignore: cast_nullable_to_non_nullable
+as GeoPoint?,mode: freezed == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
+as TravelMode?,maxMinutes: freezed == maxMinutes ? _self.maxMinutes : maxMinutes // ignore: cast_nullable_to_non_nullable
+as int?,anchors: null == anchors ? _self.anchors : anchors // ignore: cast_nullable_to_non_nullable
 as List<Anchor>,candidates: null == candidates ? _self.candidates : candidates // ignore: cast_nullable_to_non_nullable
 as List<Candidate>,criteria: null == criteria ? _self.criteria : criteria // ignore: cast_nullable_to_non_nullable
 as List<Criterion>,committed: null == committed ? _self.committed : committed // ignore: cast_nullable_to_non_nullable
@@ -83,7 +86,19 @@ as bool,chosenCandidateId: freezed == chosenCandidateId ? _self.chosenCandidateI
 as String?,
   ));
 }
+/// Create a copy of Story
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$GeoPointCopyWith<$Res>? get cityPoint {
+    if (_self.cityPoint == null) {
+    return null;
+  }
 
+  return $GeoPointCopyWith<$Res>(_self.cityPoint!, (value) {
+    return _then(_self.copyWith(cityPoint: value));
+  });
+}
 }
 
 
@@ -165,10 +180,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StoryReason? reason,  String? city,  List<Anchor> anchors,  List<Candidate> candidates,  List<Criterion> criteria,  bool committed,  String? chosenCandidateId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( StoryReason? reason,  String? city,  GeoPoint? cityPoint,  TravelMode? mode,  int? maxMinutes,  List<Anchor> anchors,  List<Candidate> candidates,  List<Criterion> criteria,  bool committed,  String? chosenCandidateId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Story() when $default != null:
-return $default(_that.reason,_that.city,_that.anchors,_that.candidates,_that.criteria,_that.committed,_that.chosenCandidateId);case _:
+return $default(_that.reason,_that.city,_that.cityPoint,_that.mode,_that.maxMinutes,_that.anchors,_that.candidates,_that.criteria,_that.committed,_that.chosenCandidateId);case _:
   return orElse();
 
 }
@@ -186,10 +201,10 @@ return $default(_that.reason,_that.city,_that.anchors,_that.candidates,_that.cri
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StoryReason? reason,  String? city,  List<Anchor> anchors,  List<Candidate> candidates,  List<Criterion> criteria,  bool committed,  String? chosenCandidateId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( StoryReason? reason,  String? city,  GeoPoint? cityPoint,  TravelMode? mode,  int? maxMinutes,  List<Anchor> anchors,  List<Candidate> candidates,  List<Criterion> criteria,  bool committed,  String? chosenCandidateId)  $default,) {final _that = this;
 switch (_that) {
 case _Story():
-return $default(_that.reason,_that.city,_that.anchors,_that.candidates,_that.criteria,_that.committed,_that.chosenCandidateId);case _:
+return $default(_that.reason,_that.city,_that.cityPoint,_that.mode,_that.maxMinutes,_that.anchors,_that.candidates,_that.criteria,_that.committed,_that.chosenCandidateId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +221,10 @@ return $default(_that.reason,_that.city,_that.anchors,_that.candidates,_that.cri
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StoryReason? reason,  String? city,  List<Anchor> anchors,  List<Candidate> candidates,  List<Criterion> criteria,  bool committed,  String? chosenCandidateId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( StoryReason? reason,  String? city,  GeoPoint? cityPoint,  TravelMode? mode,  int? maxMinutes,  List<Anchor> anchors,  List<Candidate> candidates,  List<Criterion> criteria,  bool committed,  String? chosenCandidateId)?  $default,) {final _that = this;
 switch (_that) {
 case _Story() when $default != null:
-return $default(_that.reason,_that.city,_that.anchors,_that.candidates,_that.criteria,_that.committed,_that.chosenCandidateId);case _:
+return $default(_that.reason,_that.city,_that.cityPoint,_that.mode,_that.maxMinutes,_that.anchors,_that.candidates,_that.criteria,_that.committed,_that.chosenCandidateId);case _:
   return null;
 
 }
@@ -221,11 +236,14 @@ return $default(_that.reason,_that.city,_that.anchors,_that.candidates,_that.cri
 @JsonSerializable()
 
 class _Story extends Story {
-  const _Story({this.reason, this.city,  List<Anchor> anchors = const [],  List<Candidate> candidates = const [],  List<Criterion> criteria = const [], this.committed = false, this.chosenCandidateId}): _anchors = anchors,_candidates = candidates,_criteria = criteria,super._();
+  const _Story({this.reason, this.city, this.cityPoint, this.mode, this.maxMinutes,  List<Anchor> anchors = const [],  List<Candidate> candidates = const [],  List<Criterion> criteria = const [], this.committed = false, this.chosenCandidateId}): _anchors = anchors,_candidates = candidates,_criteria = criteria,super._();
   factory _Story.fromJson(Map<String, dynamic> json) => _$StoryFromJson(json);
 
 @override final  StoryReason? reason;
 @override final  String? city;
+@override final  GeoPoint? cityPoint;
+@override final  TravelMode? mode;
+@override final  int? maxMinutes;
  final  List<Anchor> _anchors;
 @override@JsonKey() List<Anchor> get anchors {
   if (_anchors is EqualUnmodifiableListView) return _anchors;
@@ -263,18 +281,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Story&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.city, city) || other.city == city)&&const DeepCollectionEquality().equals(other.anchors, _anchors)&&const DeepCollectionEquality().equals(other.candidates, _candidates)&&const DeepCollectionEquality().equals(other.criteria, _criteria)&&(identical(other.committed, committed) || other.committed == committed)&&(identical(other.chosenCandidateId, chosenCandidateId) || other.chosenCandidateId == chosenCandidateId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Story&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.city, city) || other.city == city)&&(identical(other.cityPoint, cityPoint) || other.cityPoint == cityPoint)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.maxMinutes, maxMinutes) || other.maxMinutes == maxMinutes)&&const DeepCollectionEquality().equals(other.anchors, _anchors)&&const DeepCollectionEquality().equals(other.candidates, _candidates)&&const DeepCollectionEquality().equals(other.criteria, _criteria)&&(identical(other.committed, committed) || other.committed == committed)&&(identical(other.chosenCandidateId, chosenCandidateId) || other.chosenCandidateId == chosenCandidateId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,reason,city,const DeepCollectionEquality().hash(_anchors),const DeepCollectionEquality().hash(_candidates),const DeepCollectionEquality().hash(_criteria),committed,chosenCandidateId);
+    return Object.hash(runtimeType,reason,city,cityPoint,mode,maxMinutes,const DeepCollectionEquality().hash(_anchors),const DeepCollectionEquality().hash(_candidates),const DeepCollectionEquality().hash(_criteria),committed,chosenCandidateId);
 }
 
 @override
 String toString() {
-    return 'Story(reason: $reason, city: $city, anchors: $anchors, candidates: $candidates, criteria: $criteria, committed: $committed, chosenCandidateId: $chosenCandidateId)';
+    return 'Story(reason: $reason, city: $city, cityPoint: $cityPoint, mode: $mode, maxMinutes: $maxMinutes, anchors: $anchors, candidates: $candidates, criteria: $criteria, committed: $committed, chosenCandidateId: $chosenCandidateId)';
 }
 
 
@@ -285,11 +303,11 @@ abstract mixin class _$StoryCopyWith<$Res> implements $StoryCopyWith<$Res> {
   factory _$StoryCopyWith(_Story value, $Res Function(_Story) _then) = __$StoryCopyWithImpl;
 @override @useResult
 $Res call({
- StoryReason? reason, String? city, List<Anchor> anchors, List<Candidate> candidates, List<Criterion> criteria, bool committed, String? chosenCandidateId
+ StoryReason? reason, String? city, GeoPoint? cityPoint, TravelMode? mode, int? maxMinutes, List<Anchor> anchors, List<Candidate> candidates, List<Criterion> criteria, bool committed, String? chosenCandidateId
 });
 
 
-
+@override $GeoPointCopyWith<$Res>? get cityPoint;
 
 }
 /// @nodoc
@@ -302,11 +320,14 @@ class __$StoryCopyWithImpl<$Res>
 
 /// Create a copy of Story
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? reason = freezed,Object? city = freezed,Object? anchors = null,Object? candidates = null,Object? criteria = null,Object? committed = null,Object? chosenCandidateId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? reason = freezed,Object? city = freezed,Object? cityPoint = freezed,Object? mode = freezed,Object? maxMinutes = freezed,Object? anchors = null,Object? candidates = null,Object? criteria = null,Object? committed = null,Object? chosenCandidateId = freezed,}) {
   return _then(_Story(
 reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
 as StoryReason?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
-as String?,anchors: null == anchors ? _self._anchors : anchors // ignore: cast_nullable_to_non_nullable
+as String?,cityPoint: freezed == cityPoint ? _self.cityPoint : cityPoint // ignore: cast_nullable_to_non_nullable
+as GeoPoint?,mode: freezed == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
+as TravelMode?,maxMinutes: freezed == maxMinutes ? _self.maxMinutes : maxMinutes // ignore: cast_nullable_to_non_nullable
+as int?,anchors: null == anchors ? _self._anchors : anchors // ignore: cast_nullable_to_non_nullable
 as List<Anchor>,candidates: null == candidates ? _self._candidates : candidates // ignore: cast_nullable_to_non_nullable
 as List<Candidate>,criteria: null == criteria ? _self._criteria : criteria // ignore: cast_nullable_to_non_nullable
 as List<Criterion>,committed: null == committed ? _self.committed : committed // ignore: cast_nullable_to_non_nullable
@@ -315,7 +336,19 @@ as String?,
   ));
 }
 
+/// Create a copy of Story
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$GeoPointCopyWith<$Res>? get cityPoint {
+    if (_self.cityPoint == null) {
+    return null;
+  }
 
+  return $GeoPointCopyWith<$Res>(_self.cityPoint!, (value) {
+    return _then(_self.copyWith(cityPoint: value));
+  });
+}
 }
 
 // dart format on

@@ -11,7 +11,9 @@ final class GetObstaclesTool extends AgentTool {
   @override
   Map<String, Object?>? settledArguments(ToolContext context) {
     final id = context.plan.marketId;
-    return id != null && context.markets.coverageOf(id) == Coverage.curated
+    return id != null &&
+            context.plan.story.chosen != null &&
+            context.markets.coverageOf(id) == Coverage.curated
         ? const {}
         : null;
   }

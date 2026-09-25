@@ -1,1 +1,1 @@
-enum MapMarkerKind { candidate, anchor, place }
+enum MapMarkerKind { candidate, anchor, place, city }

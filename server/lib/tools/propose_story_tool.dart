@@ -2,11 +2,9 @@ import 'package:common/common.dart';
 
 import '../research/open_data/geo_place.dart';
 import '../research/open_data/nominatim.dart';
-import '../research/open_data/open_data_unavailable.dart';
-import '../research/research_steps.dart';
-import '../research/step_labels.dart';
 import 'agent_tool.dart';
 import 'amount_arguments.dart';
+import 'locate_place.dart';
 
 final class ProposeStoryTool extends ModelTool {
   const ProposeStoryTool(this._nominatim);
@@ -21,11 +19,12 @@ final class ProposeStoryTool extends ModelTool {
   @override
   String get description =>
       "Record the buyer's story as they told it: why they are moving, where "
-      'to, the places they travel to often, the homes or areas they are '
-      'weighing, and what matters to them. Call it with everything the buyer '
-      'said whenever the story changes. The server finds each place on the '
-      'map and returns what it placed and what it could not. Only the buyer '
-      'confirms the story, with commit_story.';
+      'to, the places they travel to often, the homes they are weighing, and '
+      'what matters to them, with your assumptions marked by leaving out what '
+      'you would only be guessing at. Call it with everything the buyer said '
+      'whenever the story changes. The server finds each place on the map and '
+      'returns what it placed and what it could not. Only the buyer confirms '
+      'the story, with commit_story.';
 
   @override
   Map<String, Object?> get parameters => {
@@ -44,9 +43,24 @@ final class ProposeStoryTool extends ModelTool {
             'The city or region they are moving to, as a map search finds '
             'it, such as Stockholm or Funchal.',
       },
+      'mode': {
+        'type': 'string',
+        'enum': [for (final mode in TravelMode.values) mode.name],
+        'description':
+            'How the buyer will most likely get around, as an assumption '
+            'unless they said it; anchors without their own mode use it.',
+      },
+      'maxMinutes': {
+        'type': 'integer',
+        'description':
+            'The longest trip the buyer would accept, as an assumption '
+            'unless they said it.',
+      },
       'anchors': {
         'type': 'array',
-        'description': 'Places the buyer travels to often: work, school.',
+        'description':
+            'Places the buyer named that they travel to often: work, school. '
+            'Leave it out when they named none; they can drop a pin.',
         'items': {
           'type': 'object',
           'properties': {
@@ -73,9 +87,9 @@ final class ProposeStoryTool extends ModelTool {
         'type': 'array',
         'maxItems': maxCandidates,
         'description':
-            'Homes or areas the buyer is weighing, at most three. When the '
-            'buyer named only a city, pass up to three areas of it that suit '
-            'what they said, so there is something to compare.',
+            'Homes or areas the buyer named as ones they are weighing, at '
+            'most three. Never invent them; leave the list out when they '
+            'named none.',
         'items': {
           'type': 'object',
           'properties': {
@@ -132,7 +146,7 @@ final class ProposeStoryTool extends ModelTool {
     final steps = context.steps;
     final cityPlace = city == null
         ? null
-        : await _locate(city, city, null, steps);
+        : await locatePlace(_nominatim, city, city, null, steps);
     final box = cityPlace?.box;
     final placed = <String, GeoPlace>{};
 
@@ -140,17 +154,20 @@ final class ProposeStoryTool extends ModelTool {
       if (known != null) {
         return known;
       }
-      final place = await _locate(query, label, box, steps);
+      final place = await locatePlace(_nominatim, query, label, box, steps);
       if (place != null) {
         placed[query] = place;
       }
       return place?.point;
     }
 
+    final mode = _enum(TravelMode.values, arguments['mode']) ?? previous.mode;
+    final maxMinutes =
+        (arguments['maxMinutes'] as num?)?.toInt() ?? previous.maxMinutes;
     final anchors = arguments['anchors'] is List<Object?>
         ? [
             for (final (index, item) in _items(arguments['anchors']).indexed)
-              await _anchor(index, item, previous, point),
+              await _anchor(index, item, previous, point, mode, maxMinutes),
           ]
         : previous.anchors;
     final candidates = arguments['candidates'] is List<Object?>
@@ -161,7 +178,12 @@ final class ProposeStoryTool extends ModelTool {
               await _candidate(index, item, previous, point, context),
           ]
         : previous.candidates;
-    final mustHaves = _kinds(arguments['mustHaves']);
+    final mustHaves = arguments.containsKey('mustHaves')
+        ? _kinds(arguments['mustHaves'])
+        : {
+            for (final criterion in previous.criteria)
+              if (criterion.mustHave) criterion.kind,
+          };
     final kinds = {..._kinds(arguments['criteria']), ...mustHaves}
       ..remove(CriterionKind.commute);
     final criteria =
@@ -181,6 +203,11 @@ final class ProposeStoryTool extends ModelTool {
     final story = previous.copyWith(
       reason: _reason(arguments['reason']) ?? previous.reason,
       city: city,
+      cityPoint:
+          cityPlace?.point ??
+          (city == previous.city ? previous.cityPoint : null),
+      mode: mode,
+      maxMinutes: maxMinutes,
       anchors: anchors,
       candidates: candidates,
       criteria: criteria,
@@ -220,24 +247,13 @@ final class ProposeStoryTool extends ModelTool {
     );
   }
 
-  Future<GeoPlace?> _locate(
-    String query,
-    String label,
-    GeoBox? box,
-    ResearchSteps steps,
-  ) => steps.track(locatingLabel(label), () async {
-    try {
-      return await _nominatim.locate(query, within: box);
-    } on OpenDataUnavailable {
-      return null;
-    }
-  }, measured: (place) => place != null);
-
   Future<Anchor> _anchor(
     int index,
     Map<String, Object?> item,
     Story previous,
     Future<GeoPoint?> Function(String, String, GeoPoint?) point,
+    TravelMode? mode,
+    int? maxMinutes,
   ) async {
     final query = item['query'] as String? ?? item['label'] as String? ?? '';
     final known = previous.anchors
@@ -252,9 +268,13 @@ final class ProposeStoryTool extends ModelTool {
       mode:
           _enum(TravelMode.values, item['mode']) ??
           known?.mode ??
+          mode ??
           TravelMode.transit,
       maxMinutes:
-          (item['maxMinutes'] as num?)?.toInt() ?? known?.maxMinutes ?? 30,
+          (item['maxMinutes'] as num?)?.toInt() ??
+          known?.maxMinutes ??
+          maxMinutes ??
+          30,
     );
   }
 

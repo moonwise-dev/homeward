@@ -15,6 +15,7 @@ import 'market_snapshot_card/market_snapshot_card_item.dart';
 import 'money_input/money_input_item.dart';
 import 'payment_breakdown/payment_breakdown_item.dart';
 import 'purchase_costs_table/purchase_costs_table_item.dart';
+import 'story_draft/story_draft_item.dart';
 import 'stress_test_chart/stress_test_chart_item.dart';
 
 Catalog homewardGenuiCatalog() {
@@ -34,6 +35,7 @@ Catalog homewardGenuiCatalog() {
 }
 
 final _homewardCatalogItems = <CatalogItem>[
+  storyDraftItem,
   lifestyleCommuteMapItem,
   comparisonTableItem,
   dynamicRecommendationStackItem,

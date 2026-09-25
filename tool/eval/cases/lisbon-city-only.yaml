@@ -8,24 +8,20 @@ turns:
       Moving to: Lisbon.
     expect:
       tools_called: [propose_story]
-      tools_allowed: [resolve_market, propose_profile, load_market]
+      tools_allowed: [resolve_market, propose_profile]
       market: PT
       coverage: curated
-      components_exclude: [ComparisonTable, AffordabilitySummary]
-  - text: >-
-      I work remotely, so no commute. I surf most mornings, I like cafés, and
-      I want quiet evenings. No car.
-    expect:
-      tools_called: [propose_story]
-      tools_allowed: [resolve_market, propose_profile, load_market]
-      market: PT
-      coverage: curated
-      components_include: [ChoicePicker]
-      components_exclude: [ComparisonTable, AffordabilitySummary]
+      components_include: [StoryDraft, LifestyleCommuteMap]
+      components_exclude:
+        [ChoicePicker, ComparisonTable, AffordabilitySummary]
   - action: commit_story
     data:
       story:
+        picks:
+          activities: [water]
+          evenings: [cafes, quiet]
+          gettingAround: [transit]
         mustHaves: [water]
     expect:
-      tools_allowed: [propose_story, load_market, propose_profile]
+      tools_allowed: [propose_story, propose_profile]
       components_include: [LifestyleCommuteMap, ComparisonTable]

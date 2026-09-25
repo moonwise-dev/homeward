@@ -114,37 +114,18 @@ void main() {
     expect(committed({'price': stockholmScenario.price.toJson()}), isNull);
   });
 
-  test('continuing a story folds it in without confirming it', () {
-    final plan = const Plan(
-      story: Story(
-        anchors: [Anchor(id: 'a1', label: 'KTH', query: 'KTH')],
-      ),
-    );
+  test('confirming the story folds in what the buyer corrected', () {
     final outcome = applyAction(
-      action: action('continue_story', {'storyPath': '/story'}),
+      action: action('commit_story', {'storyPath': '/story'}),
       surfaceData: {
         'story': {
           'mode': ['bike'],
           'maxMinutes': 20,
-        },
-      },
-      plan: plan,
-      markets: realMarkets,
-    );
-
-    expect(outcome.plan.story.committed, isFalse);
-    expect(outcome.plan.story.anchors.single.mode, TravelMode.bike);
-    expect(outcome.plan.story.anchors.single.maxMinutes, 20);
-    expect(outcome.summary['applied'], isTrue);
-  });
-
-  test('a later story step keeps what an earlier one folded in', () {
-    final afterCommute = applyAction(
-      action: action('continue_story', {'storyPath': '/story'}),
-      surfaceData: {
-        'story': {
-          'mode': ['bike'],
-          'maxMinutes': 20,
+          'picks': {
+            'schools': ['schools'],
+            'evenings': ['quiet'],
+          },
+          'mustHaves': ['schools'],
         },
       },
       plan: const Plan(
@@ -153,44 +134,73 @@ void main() {
         ),
       ),
       markets: realMarkets,
-    ).plan;
+    );
+    final story = outcome.plan.story;
 
-    final afterLifestyle = applyAction(
-      action: action('continue_story', {'storyPath': '/story'}),
-      surfaceData: {
-        'story': {
-          'picks': {
-            'schools': ['schools'],
-          },
-        },
-      },
-      plan: afterCommute,
-      markets: realMarkets,
-    ).plan;
+    expect(story.committed, isTrue);
+    expect(story.mode, TravelMode.bike);
+    expect(story.maxMinutes, 20);
+    expect(story.anchors.single.mode, TravelMode.bike);
+    expect(story.anchors.single.maxMinutes, 20);
+    expect(story.criteria.map((criterion) => criterion.id), [
+      'commute-a1',
+      'schools',
+      'quiet',
+    ]);
+    expect(
+      story.criteria.where((criterion) => criterion.mustHave).map((c) => c.id),
+      ['schools'],
+    );
+  });
 
-    final afterConfirm = applyAction(
+  test('a pin the buyer dropped becomes an anchor with its own commute', () {
+    final story = applyAction(
       action: action('commit_story', {'storyPath': '/story'}),
       surfaceData: {
         'story': {
-          'mustHaves': ['schools'],
+          'mode': ['transit'],
+          'maxMinutes': 30,
+          'picks': {
+            'schools': ['schools'],
+          },
+          'pins': {
+            'work': {'label': 'Work', 'lat': 41.1, 'lng': 20.8},
+          },
         },
       },
-      plan: afterLifestyle,
+      plan: const Plan(),
       markets: realMarkets,
-    ).plan;
+    ).plan.story;
 
-    expect(afterConfirm.story.committed, isTrue);
-    expect(afterConfirm.story.anchors.single.mode, TravelMode.bike);
-    expect(
-      afterConfirm.story.criteria.map((criterion) => criterion.id),
-      containsAll(['commute-a1', 'schools']),
-    );
-    expect(
-      afterConfirm.story.criteria
-          .where((criterion) => criterion.mustHave)
-          .map((criterion) => criterion.id),
-      ['schools'],
-    );
+    expect(story.anchors.single.label, 'Work');
+    expect(story.anchors.single.point, const GeoPoint(lat: 41.1, lng: 20.8));
+    expect(story.anchors.single.mode, TravelMode.transit);
+    expect(story.criteria.map((criterion) => criterion.id), [
+      'commute-a1',
+      'schools',
+    ]);
+  });
+
+  test('a pin for a place already found moves it instead of adding one', () {
+    final story = applyAction(
+      action: action('commit_story', {'storyPath': '/story'}),
+      surfaceData: {
+        'story': {
+          'pins': {
+            'study': {'label': 'kth', 'lat': 59.35, 'lng': 18.07},
+          },
+        },
+      },
+      plan: const Plan(
+        story: Story(
+          anchors: [Anchor(id: 'a1', label: 'KTH', query: 'KTH')],
+        ),
+      ),
+      markets: realMarkets,
+    ).plan.story;
+
+    expect(story.anchors.map((anchor) => anchor.id), ['a1']);
+    expect(story.anchors.single.point, const GeoPoint(lat: 59.35, lng: 18.07));
   });
 
   test('a change reopens what it names', () {

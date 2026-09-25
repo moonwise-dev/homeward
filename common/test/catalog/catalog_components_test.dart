@@ -8,6 +8,7 @@ void main() {
   test('the catalog declares its components once under its id', () {
     expect(homewardCatalog.id, homewardCatalogId);
     expect(homewardCatalog.components.keys, [
+      'StoryDraft',
       'LifestyleCommuteMap',
       'ComparisonTable',
       'DynamicRecommendationStack',

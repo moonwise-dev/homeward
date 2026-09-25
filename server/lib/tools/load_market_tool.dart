@@ -34,9 +34,9 @@ final class LoadMarketTool extends ModelTool {
 
   @override
   Map<String, Object?>? settledArguments(ToolContext context) =>
-      switch (context.plan.marketId) {
-        final id? => {'marketId': id.code},
-        null => null,
+      switch ((context.plan.marketId, context.plan.story.chosen)) {
+        (final id?, != null) => {'marketId': id.code},
+        _ => null,
       };
 
   @override
