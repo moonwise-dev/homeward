@@ -10,6 +10,7 @@ Map<String, Object?> turnSeeds(
   Map<String, List<Photo>> lineups = const {},
 }) {
   final scenario = plan.scenarioDraft ?? plan.scenario;
+  final profile = plan.profileDraft ?? plan.profile;
   final options = plan.story.areaOptions;
   final seeds = <String, Object?>{
     selectionSlice.name: const <String, Object?>{},
@@ -31,7 +32,12 @@ Map<String, Object?> turnSeeds(
         'options': [for (final option in options) option.toJson()],
       },
     for (final slices in toolSeeds) ...slices,
-    profileSlice.name: (plan.profileDraft ?? plan.profile).toJson(),
+    profileSlice.name: profile
+        .copyWith(
+          adults: profile.adults ?? plan.story.adults,
+          childAges: profile.childAges ?? plan.story.childAges,
+        )
+        .toJson(),
   };
   if (scenario == null) {
     seeds.remove(scenarioSlice.name);

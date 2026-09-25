@@ -129,6 +129,9 @@ final class TurnRun {
     var askedForSurface = false;
     var mayStartOver = true;
     var correcting = false;
+    var nudged = false;
+    Stream<TurnEvent> emit(ParsedOutput output) =>
+        nudged && output is ProseOutput ? const Stream.empty() : _emit(output);
     while (true) {
       final constrained = correcting;
       correcting = false;
@@ -161,7 +164,7 @@ final class TurnRun {
           switch (event) {
             case TextDelta(:final text):
               for (final output in parser.add(text)) {
-                yield* _emit(output);
+                yield* emit(output);
               }
             case FunctionCall():
               calls.add(event);
@@ -230,7 +233,7 @@ final class TurnRun {
         ),
       );
       for (final output in parser.close()) {
-        yield* _emit(output);
+        yield* emit(output);
       }
       final drewNothing =
           _acceptedInRound == 0 &&
@@ -276,6 +279,7 @@ final class TurnRun {
             )
             case final note?) {
           input = InteractionInput.text(note);
+          nudged = true;
           continue;
         }
       }

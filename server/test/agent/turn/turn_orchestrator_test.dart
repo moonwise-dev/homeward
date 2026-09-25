@@ -579,7 +579,10 @@ void main() {
       expect(script.requests, hasLength(2));
       expect(
         (script.requests[1].input as TextInput).text,
-        contains('profileFields still open'),
+        allOf(
+          contains('profileFields still open'),
+          contains('the profile lacks'),
+        ),
       );
       expect(
         messagesIn(events).map((message) => message.keys.last),
@@ -588,6 +591,31 @@ void main() {
       expect(events.last, isA<TurnCompleted>());
     },
   );
+
+  test('words written in answer to that request are not shown', () async {
+    await sessionWith(
+      Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),
+    );
+    final script = ScriptedInteractions([
+      reply('i1', text: 'You are all set.'),
+      reply(
+        'i2',
+        text: 'An error occurred or profileFields is not actually open.',
+      ),
+    ]);
+
+    final events = await sendAction(orchestrator(script)).toList();
+
+    expect(script.requests, hasLength(2));
+    expect(
+      events.whereType<TurnText>().map((event) => event.text),
+      everyElement(isNot(contains('An error occurred'))),
+    );
+    expect(
+      events.whereType<TurnCompleted>().single.text,
+      'You are all set.',
+    );
+  });
 
   test('a typed turn in the case that draws no card is asked for it', () async {
     await sessionWith(

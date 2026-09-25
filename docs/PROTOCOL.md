@@ -432,7 +432,10 @@ pass rejects it.
    existing object, which it will write; relative template paths are skipped.
 9. **Actions.** Action names are in the action table. An action turn that
    forwards no surface while a drawing decision is open is asked once more,
-   naming the decision (D96).
+   naming the decision and, for `profileFields`, the fields still missing
+   (D96). Text written in answer to that request is not shown: the buyer
+   already has the turn's words, and the request is the server's, not
+   theirs (D124).
 10. **Forms.** A surface with a `commit_profile` action binds an input to every
     profile path the market still needs for this buyer, the same paths the
     turn context lists as missing (D83). The pass adds the inputs the model
