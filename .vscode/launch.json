@@ -6,10 +6,8 @@
       "type": "dart",
       "request": "launch",
       "program": "app/lib/main.dart",
-      "preLaunchTask": "app-defines",
-      "toolArgs": [
-        "--dart-define-from-file=${workspaceFolder}/app/.dart_tool/homeward_defines.json"
-      ]
+      "preLaunchTask": "dev-server",
+      "postDebugTask": "dev-server-stop"
     }
   ]
 }

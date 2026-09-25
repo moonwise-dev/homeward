@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../data/repositories/auth_repository.dart';
+import '../data/services/development_server.dart';
 import 'environment.dart';
 
 part 'dependencies.g.dart';
@@ -34,3 +35,7 @@ HomewardClient homewardClient(Ref ref) => HomewardClient(
   server: Uri.parse(kServerUrl),
   credentials: ref.watch(authRepositoryProvider).credentials,
 );
+
+@Riverpod(keepAlive: true)
+DevelopmentServer developmentServer(Ref ref) =>
+    DevelopmentServer(ref.watch(httpClientProvider), Uri.parse(kServerUrl));

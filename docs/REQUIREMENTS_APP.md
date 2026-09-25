@@ -75,13 +75,16 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
   billing, whose conversations Google does not use (D76). The wording is checked
   against the current terms again before recording.
 - Remove key is available here and in settings.
-- Development runs skip this screen. `make app-defines` writes the developer's
-  Gemini keys from `.env` as `HOMEWARD_DEV_GEMINI_KEYS`, with the App Check
-  debug token, into the git-ignored `app/.dart_tool/homeward_defines.json`.
-  `make app-web`, `make app-macos`, and the VS Code launch "Homeward app" write
-  it and pass it with `--dart-define-from-file`, and the app uses those keys
-  while no key is saved. Server secrets never enter it. Release builds ignore
-  the keys, and `make deploy-web` never passes them.
+- Development runs skip this screen (D117). A debug or profile app asks the
+  local server for `GET /dev/config`, which only `server/tool/dev.dart` serves
+  and only to `localhost`, and uses the Gemini keys it returns while no key is
+  saved. The app takes no compile-time defines, so `make app`, the VS Code
+  launch "Homeward app", and Run above `main()` start the same way. When the
+  server is not there, the startup screen says how to start it. Release builds
+  never ask.
+- Development runs do not activate App Check, which the local server does not
+  enforce. Pass `--dart-define=HOMEWARD_APP_CHECK_DEBUG_TOKEN=…` to reach a
+  server that does.
 
 ### Plans
 

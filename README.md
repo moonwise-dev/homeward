@@ -19,8 +19,7 @@ You need your own free Gemini API key; the app asks for it on first launch.
 
 ```sh
 make get
-make server-dev   # the agent server on localhost:8080
-make app-web      # the app in Chrome, in a second terminal
+make app          # starts the agent server on localhost:8080 and the app in Chrome
 ```
 
 `make check` runs everything a change must pass.

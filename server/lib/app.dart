@@ -17,7 +17,7 @@ import 'middleware/request_context_middleware.dart';
 import 'middleware/request_logging_middleware.dart';
 import 'sessions/sessions_handler.dart';
 
-Handler buildApp(Providers providers) {
+Handler buildApp(Providers providers, {Handler? development}) {
   final config = providers.config;
   final agentCard = homewardAgentCard(config.publicUrl);
   final a2a = A2aHandler(turns: providers.turns, tasks: providers.tasks);
@@ -56,6 +56,9 @@ Handler buildApp(Providers providers) {
         (request) => sessions.transcript(request, sessionId),
       )(request),
     );
+  if (development != null) {
+    router.mount('/dev/', development);
+  }
   return const Pipeline()
       .addMiddleware(requestContextMiddleware())
       .addMiddleware(requestLoggingMiddleware())

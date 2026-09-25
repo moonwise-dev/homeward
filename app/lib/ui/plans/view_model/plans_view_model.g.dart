@@ -41,7 +41,7 @@ final class PlansViewModelProvider
   }
 }
 
-String _$plansViewModelHash() => r'be9ab83dbc15a4cc0cde0091616e8112643b31be';
+String _$plansViewModelHash() => r'f9040875ad1ddeba28fee3a81642fec83520416f';
 
 abstract class _$PlansViewModel extends $Notifier<PlansState> {
   PlansState build();

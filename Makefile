@@ -16,7 +16,7 @@ SERVER_SERVICE := homeward-server
 SERVER_ACCOUNT := $(SERVER_SERVICE)@$(FIREBASE_PROJECT).iam.gserviceaccount.com
 SERVER_URL := https://homeward-server-1065509330520.europe-north1.run.app
 SERVER_REGISTRY_IMAGE := $(REGION)-docker.pkg.dev/$(FIREBASE_PROJECT)/homeward/server:$(shell git rev-parse --short HEAD)
-APP_DEFINES := $(CURDIR)/app/.dart_tool/homeward_defines.json
+DEVICE ?= chrome
 
 .PHONY: help
 help:
@@ -39,7 +39,9 @@ help:
 	@echo "  make fonts         Vendor the pinned font faces the app draws with"
 	@echo "  make territories   Regenerate country and subdivision names from CLDR"
 	@echo "  make emulator      Run the Firestore emulator on port 8081"
-	@echo "  make server-dev    Run the server locally with hot reload"
+	@echo "  make server-dev    Run the server locally with hot reload, in this terminal"
+	@echo "  make dev-server    Start the local server in the background if it is not running"
+	@echo "  make dev-server-stop  Stop a local server that make dev-server started"
 	@echo "  make probe         Send MESSAGE as a live turn to SERVER with the Gemini keys from .env"
 	@echo "  make eval          Run eval CASES against Gemini in process, and write a report"
 	@echo "  make server-build  Cross-compile the server for linux/x64"
@@ -47,9 +49,9 @@ help:
 	@echo "  make server-image-run  Run the server container image on port 8080"
 	@echo "  make deploy-server  Push the image tagged with the commit and deploy Cloud Run"
 	@echo "  make deploy-web     Build the Wasm web app and deploy Firebase Hosting"
-	@echo "  make app-defines   Write the app's development defines from .env, for make and IDE launches"
-	@echo "  make app-web       Run the app in Chrome"
-	@echo "  make app-macos     Run the app on macOS"
+	@echo "  make app           Start the local server if needed and run the app on DEVICE (default chrome)"
+	@echo "  make app-web       Same, in Chrome"
+	@echo "  make app-macos     Same, on macOS"
 	@echo "  make clean         Remove build outputs and resolved packages"
 
 .PHONY: get
@@ -137,7 +139,15 @@ emulator:
 
 .PHONY: server-dev
 server-dev:
-	@HOMEWARD_APP_CHECK_ENFORCED=false GOOGLE_CLOUD_PROJECT=$(FIREBASE_PROJECT) dart run --enable-vm-service server/tool/dev.dart
+	@dart run --enable-vm-service server/tool/dev.dart
+
+.PHONY: dev-server
+dev-server:
+	@dart run tool/bin/dev.dart server
+
+.PHONY: dev-server-stop
+dev-server-stop:
+	@dart run tool/bin/dev.dart stop
 
 .PHONY: eval
 eval:
@@ -178,20 +188,17 @@ deploy-web:
 	@cd app && flutter build web --wasm --dart-define=HOMEWARD_SERVER_URL=$(SERVER_URL)
 	@firebase deploy --only hosting --project $(FIREBASE_PROJECT)
 
-.PHONY: app-defines
-app-defines:
-	@mkdir -p $(dir $(APP_DEFINES))
-	@umask 077; printf '{"HOMEWARD_DEV_GEMINI_KEYS": "%s", "HOMEWARD_APP_CHECK_DEBUG_TOKEN": "%s"}\n' \
-		'$(HOMEWARD_EVAL_GEMINI_KEY),$(HOMEWARD_EVAL_GEMINI_MOON_KEY)' \
-		'$(HOMEWARD_APP_CHECK_DEBUG_TOKEN)' > $(APP_DEFINES)
+.PHONY: app
+app:
+	@dart run tool/bin/dev.dart app $(DEVICE)
 
 .PHONY: app-web
-app-web: app-defines
-	@cd app && flutter run -d chrome --dart-define-from-file=$(APP_DEFINES)
+app-web:
+	@$(MAKE) --no-print-directory app DEVICE=chrome
 
 .PHONY: app-macos
-app-macos: app-defines
-	@cd app && flutter run -d macos --dart-define-from-file=$(APP_DEFINES)
+app-macos:
+	@$(MAKE) --no-print-directory app DEVICE=macos
 
 .PHONY: clean
 clean:

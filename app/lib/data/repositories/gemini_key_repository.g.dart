@@ -99,4 +99,4 @@ final class GeminiKeyRepositoryProvider
 }
 
 String _$geminiKeyRepositoryHash() =>
-    r'8b60b8e4754fbd115ab05d605946c71f5bf49c26';
+    r'3e4f09ecf18444e0bccfc2b77348df46437f430c';

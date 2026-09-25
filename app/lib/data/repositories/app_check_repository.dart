@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../config/dependencies.dart';
@@ -43,9 +44,22 @@ class FirebaseAppCheckRepository implements AppCheckRepository {
   }
 }
 
+class UnenforcedAppCheckRepository implements AppCheckRepository {
+  const UnenforcedAppCheckRepository();
+
+  @override
+  Future<void> activate() async {}
+
+  @override
+  Future<String?> token() async => null;
+}
+
 @Riverpod(keepAlive: true)
-AppCheckRepository appCheckRepository(Ref ref) => FirebaseAppCheckRepository(
-  ref.watch(firebaseAppCheckProvider),
-  recaptchaSiteKey: kRecaptchaSiteKey,
-  debugToken: kAppCheckDebugToken.isEmpty ? null : kAppCheckDebugToken,
-);
+AppCheckRepository appCheckRepository(Ref ref) =>
+    kReleaseMode || kAppCheckDebugToken.isNotEmpty
+    ? FirebaseAppCheckRepository(
+        ref.watch(firebaseAppCheckProvider),
+        recaptchaSiteKey: kRecaptchaSiteKey,
+        debugToken: kAppCheckDebugToken.isEmpty ? null : kAppCheckDebugToken,
+      )
+    : const UnenforcedAppCheckRepository();

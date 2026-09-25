@@ -111,6 +111,12 @@ make server-build
 make server-image-run
 ```
 
+App and local server, started together:
+
+```sh
+make app                # Chrome; make app DEVICE=macos or DEVICE=<android id>
+```
+
 `make check` runs codegen-check, format-check, analyze, test, markets-check,
 and catalog-check. `eval` joins as its milestone lands; `make eval` needs
 `HOMEWARD_EVAL_GEMINI_KEY` and is never part of `check`.
@@ -123,9 +129,11 @@ second when the first hits its quota, and never prints them.
 
 The Makefile loads `.env` from the root and exports its variables to every
 target. Copy `.env.example` to `.env` once per clone and fill in the keys you
-use; `docs/REQUIREMENTS_SERVER.md` lists what reads each one. Launch the app
-with `make app-web`, `make app-macos`, or the VS Code launch "Homeward app", so
-it gets its development keys and skips the key screen.
+use; `docs/REQUIREMENTS_SERVER.md` lists what reads each one. `make app`,
+`make app-web`, `make app-macos`, and the VS Code launch "Homeward app" start
+the local server when it is not running and run the app; the server hands the
+app the development Gemini keys, so it skips the key screen. Run above `main()`
+works the same when a server is already up.
 
 `make hooks` is run once per clone; it points git at `tool/githooks`, whose
 `pre-push` runs `make check`.

@@ -1,12 +1,10 @@
 import 'package:common/common.dart';
+import 'package:homeward_server/development/gemini_key_names.dart';
 
 final class GeminiKeys {
   GeminiKeys._(this._keys);
 
-  static const names = [
-    'HOMEWARD_EVAL_GEMINI_KEY',
-    'HOMEWARD_EVAL_GEMINI_MOON_KEY',
-  ];
+  static const names = developmentGeminiKeyNames;
 
   static GeminiKeys? fromEnvironment(Map<String, String> environment) {
     final keys = {

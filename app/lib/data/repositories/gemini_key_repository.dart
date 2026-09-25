@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../config/dependencies.dart';
-import '../../config/environment.dart';
+import '../services/development_server.dart';
 import 'repository_guard.dart';
 
 part 'gemini_key_repository.g.dart';
@@ -62,17 +62,20 @@ class SecureGeminiKeyRepository
 }
 
 class DevelopmentGeminiKeyRepository implements GeminiKeyRepository {
-  DevelopmentGeminiKeyRepository(this._saved, this._keys);
+  DevelopmentGeminiKeyRepository(this._saved, this._server);
 
   final GeminiKeyRepository _saved;
-  final List<String> _keys;
+  final DevelopmentServer _server;
+  List<String>? _keys;
   var _current = 0;
 
   @override
   bool get canForget => _saved.canForget;
 
   @override
-  Future<String?> read() async => await _saved.read() ?? _keys[_current];
+  Future<String?> read() async =>
+      await _saved.read() ??
+      (await _developmentKeys()).elementAtOrNull(_current);
 
   @override
   Future<void> save(String key, {required bool remember}) =>
@@ -83,12 +86,16 @@ class DevelopmentGeminiKeyRepository implements GeminiKeyRepository {
 
   @override
   Future<bool> useNextKey() async {
-    if (await _saved.read() != null || _current == _keys.length - 1) {
+    if (await _saved.read() != null ||
+        _current >= (await _developmentKeys()).length - 1) {
       return false;
     }
     _current++;
     return true;
   }
+
+  Future<List<String>> _developmentKeys() async =>
+      _keys ??= await _server.geminiKeys();
 }
 
 @Riverpod(keepAlive: true)
@@ -113,11 +120,10 @@ GeminiKeyRepository geminiKeyRepository(Ref ref) {
     ref.watch(secureStorageProvider),
     canForget: kIsWeb,
   );
-  final developmentKeys = {
-    for (final key in kDevelopmentGeminiKeys.split(','))
-      if (key.trim() case final trimmed when trimmed.isNotEmpty) trimmed,
-  }.toList();
-  return developmentKeys.isEmpty
+  return kReleaseMode
       ? saved
-      : DevelopmentGeminiKeyRepository(saved, developmentKeys);
+      : DevelopmentGeminiKeyRepository(
+          saved,
+          ref.watch(developmentServerProvider),
+        );
 }

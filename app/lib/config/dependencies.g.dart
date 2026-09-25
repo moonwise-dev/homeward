@@ -224,3 +224,50 @@ final class HomewardClientProvider
 }
 
 String _$homewardClientHash() => r'39b87988ddf298600aeeb6d9e78f9dfa6b1dc34b';
+
+@ProviderFor(developmentServer)
+final developmentServerProvider = DevelopmentServerProvider._();
+
+final class DevelopmentServerProvider
+    extends
+        $FunctionalProvider<
+          DevelopmentServer,
+          DevelopmentServer,
+          DevelopmentServer
+        >
+    with $Provider<DevelopmentServer> {
+  DevelopmentServerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'developmentServerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$developmentServerHash();
+
+  @$internal
+  @override
+  $ProviderElement<DevelopmentServer> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  DevelopmentServer create(Ref ref) {
+    return developmentServer(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DevelopmentServer value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DevelopmentServer>(value),
+    );
+  }
+}
+
+String _$developmentServerHash() => r'1ff0fa5ef7de1c48a96c7a1f149897f4c6e641af';

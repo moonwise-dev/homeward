@@ -19,7 +19,7 @@ class PlansViewModel extends _$PlansViewModel
       ref.watch(plansRepositoryProvider).watchPlans(),
       (plans) => setState((current) => current.copyWith(plans: plans)),
     );
-    unawaited(refresh());
+    unawaited(Future.microtask(refresh));
     return const PlansState(isLoading: true);
   }
 

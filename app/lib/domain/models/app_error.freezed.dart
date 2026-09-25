@@ -56,12 +56,13 @@ extension AppErrorPatterns on AppError {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ServerAppError value)?  server,TResult Function( NetworkFailureAppError value)?  networkFailure,TResult Function( UnknownAppError value)?  unknown,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ServerAppError value)?  server,TResult Function( NetworkFailureAppError value)?  networkFailure,TResult Function( DevelopmentServerUnreachableAppError value)?  developmentServerUnreachable,TResult Function( UnknownAppError value)?  unknown,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case ServerAppError() when server != null:
 return server(_that);case NetworkFailureAppError() when networkFailure != null:
-return networkFailure(_that);case UnknownAppError() when unknown != null:
+return networkFailure(_that);case DevelopmentServerUnreachableAppError() when developmentServerUnreachable != null:
+return developmentServerUnreachable(_that);case UnknownAppError() when unknown != null:
 return unknown(_that);case _:
   return orElse();
 
@@ -80,12 +81,13 @@ return unknown(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ServerAppError value)  server,required TResult Function( NetworkFailureAppError value)  networkFailure,required TResult Function( UnknownAppError value)  unknown,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ServerAppError value)  server,required TResult Function( NetworkFailureAppError value)  networkFailure,required TResult Function( DevelopmentServerUnreachableAppError value)  developmentServerUnreachable,required TResult Function( UnknownAppError value)  unknown,}){
 final _that = this;
 switch (_that) {
 case ServerAppError():
 return server(_that);case NetworkFailureAppError():
-return networkFailure(_that);case UnknownAppError():
+return networkFailure(_that);case DevelopmentServerUnreachableAppError():
+return developmentServerUnreachable(_that);case UnknownAppError():
 return unknown(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -100,12 +102,13 @@ return unknown(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ServerAppError value)?  server,TResult? Function( NetworkFailureAppError value)?  networkFailure,TResult? Function( UnknownAppError value)?  unknown,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ServerAppError value)?  server,TResult? Function( NetworkFailureAppError value)?  networkFailure,TResult? Function( DevelopmentServerUnreachableAppError value)?  developmentServerUnreachable,TResult? Function( UnknownAppError value)?  unknown,}){
 final _that = this;
 switch (_that) {
 case ServerAppError() when server != null:
 return server(_that);case NetworkFailureAppError() when networkFailure != null:
-return networkFailure(_that);case UnknownAppError() when unknown != null:
+return networkFailure(_that);case DevelopmentServerUnreachableAppError() when developmentServerUnreachable != null:
+return developmentServerUnreachable(_that);case UnknownAppError() when unknown != null:
 return unknown(_that);case _:
   return null;
 
@@ -123,11 +126,12 @@ return unknown(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( HomewardErrorCode code,  String message,  Duration? retryAfter)?  server,TResult Function()?  networkFailure,TResult Function( Object cause)?  unknown,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( HomewardErrorCode code,  String message,  Duration? retryAfter)?  server,TResult Function()?  networkFailure,TResult Function( Uri server)?  developmentServerUnreachable,TResult Function( Object cause)?  unknown,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ServerAppError() when server != null:
 return server(_that.code,_that.message,_that.retryAfter);case NetworkFailureAppError() when networkFailure != null:
-return networkFailure();case UnknownAppError() when unknown != null:
+return networkFailure();case DevelopmentServerUnreachableAppError() when developmentServerUnreachable != null:
+return developmentServerUnreachable(_that.server);case UnknownAppError() when unknown != null:
 return unknown(_that.cause);case _:
   return orElse();
 
@@ -146,11 +150,12 @@ return unknown(_that.cause);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( HomewardErrorCode code,  String message,  Duration? retryAfter)  server,required TResult Function()  networkFailure,required TResult Function( Object cause)  unknown,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( HomewardErrorCode code,  String message,  Duration? retryAfter)  server,required TResult Function()  networkFailure,required TResult Function( Uri server)  developmentServerUnreachable,required TResult Function( Object cause)  unknown,}) {final _that = this;
 switch (_that) {
 case ServerAppError():
 return server(_that.code,_that.message,_that.retryAfter);case NetworkFailureAppError():
-return networkFailure();case UnknownAppError():
+return networkFailure();case DevelopmentServerUnreachableAppError():
+return developmentServerUnreachable(_that.server);case UnknownAppError():
 return unknown(_that.cause);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -165,11 +170,12 @@ return unknown(_that.cause);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( HomewardErrorCode code,  String message,  Duration? retryAfter)?  server,TResult? Function()?  networkFailure,TResult? Function( Object cause)?  unknown,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( HomewardErrorCode code,  String message,  Duration? retryAfter)?  server,TResult? Function()?  networkFailure,TResult? Function( Uri server)?  developmentServerUnreachable,TResult? Function( Object cause)?  unknown,}) {final _that = this;
 switch (_that) {
 case ServerAppError() when server != null:
 return server(_that.code,_that.message,_that.retryAfter);case NetworkFailureAppError() when networkFailure != null:
-return networkFailure();case UnknownAppError() when unknown != null:
+return networkFailure();case DevelopmentServerUnreachableAppError() when developmentServerUnreachable != null:
+return developmentServerUnreachable(_that.server);case UnknownAppError() when unknown != null:
 return unknown(_that.cause);case _:
   return null;
 
@@ -281,6 +287,74 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class DevelopmentServerUnreachableAppError extends AppError {
+  const DevelopmentServerUnreachableAppError(this.server): super._();
+  
+
+ final  Uri server;
+
+/// Create a copy of AppError
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DevelopmentServerUnreachableAppErrorCopyWith<DevelopmentServerUnreachableAppError> get copyWith => _$DevelopmentServerUnreachableAppErrorCopyWithImpl<DevelopmentServerUnreachableAppError>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is DevelopmentServerUnreachableAppError&&(identical(other.server, server) || other.server == server));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,server);
+}
+
+@override
+String toString() {
+    return 'AppError.developmentServerUnreachable(server: $server)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $DevelopmentServerUnreachableAppErrorCopyWith<$Res> implements $AppErrorCopyWith<$Res> {
+  factory $DevelopmentServerUnreachableAppErrorCopyWith(DevelopmentServerUnreachableAppError value, $Res Function(DevelopmentServerUnreachableAppError) _then) = _$DevelopmentServerUnreachableAppErrorCopyWithImpl;
+@useResult
+$Res call({
+ Uri server
+});
+
+
+
+
+}
+/// @nodoc
+class _$DevelopmentServerUnreachableAppErrorCopyWithImpl<$Res>
+    implements $DevelopmentServerUnreachableAppErrorCopyWith<$Res> {
+  _$DevelopmentServerUnreachableAppErrorCopyWithImpl(this._self, this._then);
+
+  final DevelopmentServerUnreachableAppError _self;
+  final $Res Function(DevelopmentServerUnreachableAppError) _then;
+
+/// Create a copy of AppError
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? server = null,}) {
+  return _then(DevelopmentServerUnreachableAppError(
+null == server ? _self.server : server // ignore: cast_nullable_to_non_nullable
+as Uri,
+  ));
+}
+
+
+}
 
 /// @nodoc
 

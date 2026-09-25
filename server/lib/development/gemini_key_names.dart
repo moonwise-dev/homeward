@@ -1,0 +1,4 @@
+const developmentGeminiKeyNames = [
+  'HOMEWARD_EVAL_GEMINI_KEY',
+  'HOMEWARD_EVAL_GEMINI_MOON_KEY',
+];

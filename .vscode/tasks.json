@@ -2,10 +2,19 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "app-defines",
+      "label": "dev-server",
       "type": "process",
       "command": "make",
-      "args": ["app-defines"],
+      "args": ["dev-server"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "silent" },
+      "problemMatcher": []
+    },
+    {
+      "label": "dev-server-stop",
+      "type": "process",
+      "command": "make",
+      "args": ["dev-server-stop"],
       "options": { "cwd": "${workspaceFolder}" },
       "presentation": { "reveal": "silent" },
       "problemMatcher": []

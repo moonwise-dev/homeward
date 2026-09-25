@@ -230,15 +230,25 @@ Secrets.
 
 - `make server-dev` runs `server/tool/dev.dart` with the VM service and
   `hotreloader`: saved changes in `server` and `common` reload in place. New
-  routes need a restart. App Check is not enforced.
+  routes need a restart. App Check is not enforced. The entry point reads `.env`
+  and `.firebaserc` itself, so it runs the same from make, an IDE, or a
+  terminal, and it serves `GET /dev/config`, the developer's Gemini keys for the
+  app, to `localhost` only (D117). Production never mounts it.
+- `make dev-server` starts that server in the background when nothing answers
+  on port 8080, logging to `.dart_tool/homeward/server.log`, and forwards the
+  port to attached Android devices with `adb reverse`. `make dev-server-stop`
+  stops a server it started.
 - `make emulator` runs the Firestore emulator on port 8081. With
   `FIRESTORE_EMULATOR_HOST` set, the server and its tests keep sessions there;
   without it, sessions stay in memory. Application Default Credentials from
   `gcloud auth application-default login` cannot reach Firestore (S6), so the
   emulator is the only local store.
 - `make server-image-run` builds and runs the production image on port 8080.
-- `make app-web` and `make app-macos` run the app against the local server.
-- The Gemini key is entered in the app like in production.
+- `make app`, `make app-web`, and `make app-macos` start the local server when it
+  is not running, run the app on `DEVICE` (Chrome, macOS, or an Android device
+  id), and stop the server they started when the app exits.
+- The Gemini key is entered in the app like in production, unless the local
+  server hands the app the development keys.
 - A developer's keys live in `.env` at the root, copied from `.env.example` and
   ignored by git. The Makefile loads it and exports its variables to every
   target, one `NAME=value` per line without quotes; a variable given on the
@@ -246,10 +256,8 @@ Secrets.
 
 | Variable | Read by |
 | --- | --- |
-| `HOMEWARD_EVAL_GEMINI_KEY`, `HOMEWARD_EVAL_GEMINI_MOON_KEY` | `make probe`, `make eval`, and the app's development runs, never the server. Two keys from two Google accounts, two free quotas: each moves to the next key when a turn fails with `gemini_quota_exhausted` |
+| `HOMEWARD_EVAL_GEMINI_KEY`, `HOMEWARD_EVAL_GEMINI_MOON_KEY` | `make probe`, `make eval`, and the local server's `/dev/config` for the app's development runs, never a turn. Two keys from two Google accounts, two free quotas: each moves to the next key when a turn fails with `gemini_quota_exhausted` |
 | `CEREBRAS_API_KEY`, `GROQ_API_KEY` | The server, as in production |
-| `HOMEWARD_APP_CHECK_DEBUG_TOKEN` | The app's development runs, to reach a server that enforces App Check |
 
-The app's development runs, `make app-web`, `make app-macos`, and the VS Code
-launch "Homeward app", receive only their own values through
-`make app-defines`; `docs/REQUIREMENTS_APP.md` has the details.
+The local server is the only thing that hands a key to the app, and only the two
+Gemini keys; `docs/REQUIREMENTS_APP.md` has the details.
