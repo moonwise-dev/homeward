@@ -162,9 +162,10 @@ const derivedSlice = DataSlice(
 final storySlice = DataSlice(
   'story',
   'Why and where the buyer is moving, what they care about, and the homes or '
-      'areas they are weighing. A question card writes the answer fields; '
-      'commit_story folds them into the story. anchors, candidates, and '
-      'criteria are read-only and placed by the server.',
+      'areas they are weighing. Each Story Steps card writes the answer '
+      'fields for its own step; continue_story folds a step in, and '
+      'commit_story folds in the last one and confirms the story. anchors, '
+      'candidates, and criteria are read-only and placed by the server.',
   [
     const SliceField(
       'reason',

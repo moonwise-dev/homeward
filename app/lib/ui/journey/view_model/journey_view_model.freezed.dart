@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$JourneyState {
 
- PlanConversation get conversation; String get draft; StoryReason? get reason; String get ownReason; String get story; int? get chosenPage;
+ PlanConversation get conversation; String get draft; StoryReason? get reason; String get ownReason; String get location; int? get chosenPage;
 /// Create a copy of JourneyState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $JourneyStateCopyWith<JourneyState> get copyWith => _$JourneyStateCopyWithImpl<J
 @override
 bool operator ==(Object other) {
   final _this = this as JourneyState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is JourneyState&&(identical(other.conversation, _this.conversation) || other.conversation == _this.conversation)&&(identical(other.draft, _this.draft) || other.draft == _this.draft)&&(identical(other.reason, _this.reason) || other.reason == _this.reason)&&(identical(other.ownReason, _this.ownReason) || other.ownReason == _this.ownReason)&&(identical(other.story, _this.story) || other.story == _this.story)&&(identical(other.chosenPage, _this.chosenPage) || other.chosenPage == _this.chosenPage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JourneyState&&(identical(other.conversation, _this.conversation) || other.conversation == _this.conversation)&&(identical(other.draft, _this.draft) || other.draft == _this.draft)&&(identical(other.reason, _this.reason) || other.reason == _this.reason)&&(identical(other.ownReason, _this.ownReason) || other.ownReason == _this.ownReason)&&(identical(other.location, _this.location) || other.location == _this.location)&&(identical(other.chosenPage, _this.chosenPage) || other.chosenPage == _this.chosenPage));
 }
 
 
 @override
 int get hashCode {
   final _this = this as JourneyState;
-  return Object.hash(runtimeType,_this.conversation,_this.draft,_this.reason,_this.ownReason,_this.story,_this.chosenPage);
+  return Object.hash(runtimeType,_this.conversation,_this.draft,_this.reason,_this.ownReason,_this.location,_this.chosenPage);
 }
 
 @override
 String toString() {
   final _this = this as JourneyState;
-  return 'JourneyState(conversation: ${_this.conversation}, draft: ${_this.draft}, reason: ${_this.reason}, ownReason: ${_this.ownReason}, story: ${_this.story}, chosenPage: ${_this.chosenPage})';
+  return 'JourneyState(conversation: ${_this.conversation}, draft: ${_this.draft}, reason: ${_this.reason}, ownReason: ${_this.ownReason}, location: ${_this.location}, chosenPage: ${_this.chosenPage})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $JourneyStateCopyWith<$Res>  {
   factory $JourneyStateCopyWith(JourneyState value, $Res Function(JourneyState) _then) = _$JourneyStateCopyWithImpl;
 @useResult
 $Res call({
- PlanConversation conversation, String draft, StoryReason? reason, String ownReason, String story, int? chosenPage
+ PlanConversation conversation, String draft, StoryReason? reason, String ownReason, String location, int? chosenPage
 });
 
 
@@ -68,13 +68,13 @@ class _$JourneyStateCopyWithImpl<$Res>
 
 /// Create a copy of JourneyState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? conversation = null,Object? draft = null,Object? reason = freezed,Object? ownReason = null,Object? story = null,Object? chosenPage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? conversation = null,Object? draft = null,Object? reason = freezed,Object? ownReason = null,Object? location = null,Object? chosenPage = freezed,}) {
   return _then(JourneyState(
 conversation: null == conversation ? _self.conversation : conversation // ignore: cast_nullable_to_non_nullable
 as PlanConversation,draft: null == draft ? _self.draft : draft // ignore: cast_nullable_to_non_nullable
 as String,reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
 as StoryReason?,ownReason: null == ownReason ? _self.ownReason : ownReason // ignore: cast_nullable_to_non_nullable
-as String,story: null == story ? _self.story : story // ignore: cast_nullable_to_non_nullable
+as String,location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as String,chosenPage: freezed == chosenPage ? _self.chosenPage : chosenPage // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
@@ -170,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( PlanConversation conversation,  String draft,  StoryReason? reason,  String ownReason,  String story,  int? chosenPage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( PlanConversation conversation,  String draft,  StoryReason? reason,  String ownReason,  String location,  int? chosenPage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _JourneyState() when $default != null:
-return $default(_that.conversation,_that.draft,_that.reason,_that.ownReason,_that.story,_that.chosenPage);case _:
+return $default(_that.conversation,_that.draft,_that.reason,_that.ownReason,_that.location,_that.chosenPage);case _:
   return orElse();
 
 }
@@ -191,10 +191,10 @@ return $default(_that.conversation,_that.draft,_that.reason,_that.ownReason,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( PlanConversation conversation,  String draft,  StoryReason? reason,  String ownReason,  String story,  int? chosenPage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( PlanConversation conversation,  String draft,  StoryReason? reason,  String ownReason,  String location,  int? chosenPage)  $default,) {final _that = this;
 switch (_that) {
 case _JourneyState():
-return $default(_that.conversation,_that.draft,_that.reason,_that.ownReason,_that.story,_that.chosenPage);case _:
+return $default(_that.conversation,_that.draft,_that.reason,_that.ownReason,_that.location,_that.chosenPage);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -211,10 +211,10 @@ return $default(_that.conversation,_that.draft,_that.reason,_that.ownReason,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( PlanConversation conversation,  String draft,  StoryReason? reason,  String ownReason,  String story,  int? chosenPage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( PlanConversation conversation,  String draft,  StoryReason? reason,  String ownReason,  String location,  int? chosenPage)?  $default,) {final _that = this;
 switch (_that) {
 case _JourneyState() when $default != null:
-return $default(_that.conversation,_that.draft,_that.reason,_that.ownReason,_that.story,_that.chosenPage);case _:
+return $default(_that.conversation,_that.draft,_that.reason,_that.ownReason,_that.location,_that.chosenPage);case _:
   return null;
 
 }
@@ -226,14 +226,14 @@ return $default(_that.conversation,_that.draft,_that.reason,_that.ownReason,_tha
 
 
 class _JourneyState extends JourneyState {
-  const _JourneyState({this.conversation = const PlanConversation(), this.draft = '', this.reason, this.ownReason = '', this.story = '', this.chosenPage}): super._();
+  const _JourneyState({this.conversation = const PlanConversation(), this.draft = '', this.reason, this.ownReason = '', this.location = '', this.chosenPage}): super._();
   
 
 @override@JsonKey() final  PlanConversation conversation;
 @override@JsonKey() final  String draft;
 @override final  StoryReason? reason;
 @override@JsonKey() final  String ownReason;
-@override@JsonKey() final  String story;
+@override@JsonKey() final  String location;
 @override final  int? chosenPage;
 
 /// Create a copy of JourneyState
@@ -246,18 +246,18 @@ _$JourneyStateCopyWith<_JourneyState> get copyWith => __$JourneyStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _JourneyState&&(identical(other.conversation, conversation) || other.conversation == conversation)&&(identical(other.draft, draft) || other.draft == draft)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.ownReason, ownReason) || other.ownReason == ownReason)&&(identical(other.story, story) || other.story == story)&&(identical(other.chosenPage, chosenPage) || other.chosenPage == chosenPage));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _JourneyState&&(identical(other.conversation, conversation) || other.conversation == conversation)&&(identical(other.draft, draft) || other.draft == draft)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.ownReason, ownReason) || other.ownReason == ownReason)&&(identical(other.location, location) || other.location == location)&&(identical(other.chosenPage, chosenPage) || other.chosenPage == chosenPage));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,conversation,draft,reason,ownReason,story,chosenPage);
+    return Object.hash(runtimeType,conversation,draft,reason,ownReason,location,chosenPage);
 }
 
 @override
 String toString() {
-    return 'JourneyState(conversation: $conversation, draft: $draft, reason: $reason, ownReason: $ownReason, story: $story, chosenPage: $chosenPage)';
+    return 'JourneyState(conversation: $conversation, draft: $draft, reason: $reason, ownReason: $ownReason, location: $location, chosenPage: $chosenPage)';
 }
 
 
@@ -268,7 +268,7 @@ abstract mixin class _$JourneyStateCopyWith<$Res> implements $JourneyStateCopyWi
   factory _$JourneyStateCopyWith(_JourneyState value, $Res Function(_JourneyState) _then) = __$JourneyStateCopyWithImpl;
 @override @useResult
 $Res call({
- PlanConversation conversation, String draft, StoryReason? reason, String ownReason, String story, int? chosenPage
+ PlanConversation conversation, String draft, StoryReason? reason, String ownReason, String location, int? chosenPage
 });
 
 
@@ -285,13 +285,13 @@ class __$JourneyStateCopyWithImpl<$Res>
 
 /// Create a copy of JourneyState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? conversation = null,Object? draft = null,Object? reason = freezed,Object? ownReason = null,Object? story = null,Object? chosenPage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? conversation = null,Object? draft = null,Object? reason = freezed,Object? ownReason = null,Object? location = null,Object? chosenPage = freezed,}) {
   return _then(_JourneyState(
 conversation: null == conversation ? _self.conversation : conversation // ignore: cast_nullable_to_non_nullable
 as PlanConversation,draft: null == draft ? _self.draft : draft // ignore: cast_nullable_to_non_nullable
 as String,reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
 as StoryReason?,ownReason: null == ownReason ? _self.ownReason : ownReason // ignore: cast_nullable_to_non_nullable
-as String,story: null == story ? _self.story : story // ignore: cast_nullable_to_non_nullable
+as String,location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as String,chosenPage: freezed == chosenPage ? _self.chosenPage : chosenPage // ignore: cast_nullable_to_non_nullable
 as int?,
   ));

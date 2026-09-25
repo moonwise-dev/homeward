@@ -92,15 +92,15 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 
 ### Journey
 
-- **Opening page**, shown while a plan has no turns (D107):
+- **Opening page**, shown while a plan has no turns (D107, D116):
   - Why the buyer is moving, as chips: work, studies, family, lifestyle,
     retirement, investment, or their own words.
-  - A story box: where they are going, what their days look like, and any
-    homes they are looking at.
-  - Two example stories that fill both in: the Stockholm family and the Lisbon
+  - Where they are going: one line, a city, an area, or a region.
+  - Two examples that fill both in: the Stockholm family and the Lisbon
     surfer.
-  - Start builds the first message from the reason and the story, so the model
-    never starts cold.
+  - Start builds the first message from the reason and the place, so the model
+    never starts cold, then asks everything else as Story Steps: a short
+    back-and-forth of small cards, not a form.
   - The disclaimer, in one line under Start: Homeward estimates and explains;
     it is not financial advice.
 - **Pages**: one page per turn that has text, a surface, or a failure. The

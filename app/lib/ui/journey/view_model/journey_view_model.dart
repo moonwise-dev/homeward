@@ -55,11 +55,12 @@ class JourneyViewModel extends _$JourneyViewModel
   void updateOwnReason(String ownReason) =>
       setState((current) => current.copyWith(ownReason: ownReason));
 
-  void updateStory(String story) =>
-      setState((current) => current.copyWith(story: story));
+  void updateLocation(String location) =>
+      setState((current) => current.copyWith(location: location));
 
   void useExample(OpeningExample example) => setState(
-    (current) => current.copyWith(reason: example.reason, story: example.story),
+    (current) =>
+        current.copyWith(reason: example.reason, location: example.location),
   );
 
   void showPage(int page) =>
@@ -73,7 +74,7 @@ class JourneyViewModel extends _$JourneyViewModel
       openingMessage(
         reason: state.reason,
         ownReason: state.ownReason,
-        story: state.story,
+        location: state.location,
       ),
       reason: state.reason,
     );
@@ -160,7 +161,7 @@ abstract class JourneyState with _$JourneyState {
     @Default('') String draft,
     StoryReason? reason,
     @Default('') String ownReason,
-    @Default('') String story,
+    @Default('') String location,
     int? chosenPage,
   }) = _JourneyState;
 
@@ -187,7 +188,7 @@ abstract class JourneyState with _$JourneyState {
     _ => null,
   };
 
-  bool get canStart => story.trim().isNotEmpty && !conversation.isRunning;
+  bool get canStart => location.trim().isNotEmpty && !conversation.isRunning;
 }
 
 String _quotaResetMessage(Duration? retryAfter, DateTime now) {

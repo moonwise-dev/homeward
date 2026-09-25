@@ -119,9 +119,9 @@ button to choose the home.
 | `homes` | path | yes | `/assessment/candidates`, already in rank order |
 | `choose` | `Action` | no | `choose_home`; the app adds the tapped home as `candidateId` |
 
-The questions card that comes before them uses basic components only:
-`ChoicePicker` in the chips style for the travel mode, the criteria per group,
-the must-haves, and the reason, and `TextField` for the longest trip and a note.
+The Story Steps that come before them use basic components only: `ChoicePicker`
+in the chips style for the travel mode, the criteria per group, the
+must-haves, and the reason, and `TextField` for the longest trip and a note.
 
 ## Components
 

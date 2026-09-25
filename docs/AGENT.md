@@ -140,7 +140,7 @@ An uncovered market leaves only `marketCoverage` open among them.
 | Open decision | Tools | Components |
 | --- | --- | --- |
 | `story` | `propose_story` when the message says anything about the move | — |
-| `storyGaps` | `propose_story` | The questions card: `LifestyleCommuteMap` on `/story/markers`, `ChoicePicker`s, `TextField`s, a `Button` sending `commit_story` |
+| `storyGaps` | `propose_story` | Story Steps: a short sequence of small cards, each folded in with `continue_story` and the last with `commit_story` |
 | `homeChoice` | `assess_story`, pre-run | `LifestyleCommuteMap`, `DynamicRecommendationStack` sending `choose_home`, `ComparisonTable` |
 | `targetMarket` | `resolve_market` | `LocationPicker` in `market` mode |
 | `marketCoverage` | — | `MarketSnapshotCard` in its uncovered state |
@@ -151,11 +151,13 @@ An uncovered market leaves only `marketCoverage` open among them.
 | `process` | `get_process` | `BuyingProcessTimeline`, `DocumentChecklist` |
 
 The first message comes from the opening page (D107): the reason the buyer
-picked, as a sentence, then their story in their own words. The reason also
+picked, as a sentence, then the place they are moving to. The reason also
 travels as message metadata and is set on the plan before the model is called,
 so `story.reason` is known from the first round. The first turn therefore
-always has something to infer from; it calls `propose_story` and draws the
-questions card for the gaps, and never asks why the buyer is moving.
+always has something to infer from; it calls `propose_story`, never asks why
+the buyer is moving, and moves straight into Story Steps (D116) for the rest:
+a short sequence of small cards, one focused thing at a time, rather than one
+form asking for everything the story could hold.
 
 The country code is required: in live turns on 2026-09-17 `gemini-3.5-flash-lite`
 sometimes left it out, the place list, which holds only regions with their own
@@ -199,7 +201,7 @@ plan, one request at a time.
 
 | Tool | Input | Model result | Seeds |
 | --- | --- | --- | --- |
-| `propose_story` | Reason, city, anchors with a map query, mode, and longest trip, up to three homes with a map query and price, criteria, must-haves | Each anchor and home with whether it was placed and the address found; the market it selected, if any | `/story` from the plan, with the answers prefilled for the questions card and markers for what was placed |
+| `propose_story` | Reason, city, anchors with a map query, mode, and longest trip, up to three homes with a map query and price, criteria, must-haves | Each anchor and home with whether it was placed and the address found; the market it selected, if any | `/story` from the plan, with the answers prefilled for whichever Story Steps step is next and markers for what was placed |
 | `assess_story` | — | Each home's rank and whether it misses a must-have, each criterion's status per home, the criteria that could not be measured. Never figures | `/assessment` |
 | `resolve_market` | `placeName` and the model's `countryCode`, both required, and its `subdivisionCode` | `selectedMarket` with name and coverage when exactly one matches, already the plan's market; otherwise `candidates`, with the curated markets when none resolve | `/selection` when several match |
 | `load_market` | `marketId` | Coverage, currency, profile fields with the profile paths that answer them and reasons, kinds of lending rule, never rule values | `/market`, the rules when curated and `{ id, name, coverage }` when not, with `/selection` holding the curated markets (D86) |

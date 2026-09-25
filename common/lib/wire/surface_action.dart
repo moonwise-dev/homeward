@@ -1,4 +1,10 @@
 enum SurfaceAction {
+  continueStory(
+    'continue_story',
+    ['storyPath'],
+    'The buyer answers one step of the story; the server folds it in and '
+        'the next step follows.',
+  ),
   commitStory(
     'commit_story',
     ['storyPath'],

@@ -1,6 +1,10 @@
 import 'package:common/common.dart';
 
-Story storyFromAnswers(Story story, Map<String, Object?> answers) {
+Story storyFromAnswers(
+  Story story,
+  Map<String, Object?> answers, {
+  required bool committing,
+}) {
   final mode = _enum(TravelMode.values, _first(answers['mode']));
   final maxMinutes = switch (answers['maxMinutes']) {
     final num minutes when minutes > 0 => minutes.round(),
@@ -40,7 +44,7 @@ Story storyFromAnswers(Story story, Map<String, Object?> answers) {
         if (kinds.contains(kind))
           Criterion(kind: kind, mustHave: mustHaves.contains(kind)),
     ],
-    committed: true,
+    committed: committing,
     chosenCandidateId: null,
   );
 }

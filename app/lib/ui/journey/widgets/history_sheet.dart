@@ -142,6 +142,7 @@ class _BuyerActionNote extends StatelessWidget {
 
 String _surfaceActionLabel(String wireName) =>
     switch (SurfaceAction.named(wireName)) {
+      SurfaceAction.continueStory => 'Answered part of the story',
       SurfaceAction.commitStory => 'That is what matters to us',
       SurfaceAction.chooseHome => 'Chose this home',
       SurfaceAction.selectMarket => 'Chose the market',

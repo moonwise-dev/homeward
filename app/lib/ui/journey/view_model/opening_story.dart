@@ -1,27 +1,16 @@
 import 'package:common/common.dart';
 
-typedef OpeningExample = ({String title, StoryReason reason, String story});
+typedef OpeningExample = ({String title, StoryReason reason, String location});
 
 const openingExamples = <OpeningExample>[
-  (
-    title: 'Stockholm family',
-    reason: StoryReason.study,
-    story:
-        "We're moving to Stockholm, I start at KTH in January. Two kids, six "
-        "and nine. We're looking at a flat on Odengatan for 7.4 million and one "
-        'in Solna for 5.2 million.',
-  ),
-  (
-    title: 'Lisbon surfer',
-    reason: StoryReason.lifestyle,
-    story: 'Lisbon. I work remotely, I surf, and I want quiet evenings.',
-  ),
+  (title: 'Stockholm family', reason: StoryReason.study, location: 'Stockholm'),
+  (title: 'Lisbon surfer', reason: StoryReason.lifestyle, location: 'Lisbon'),
 ];
 
 String openingMessage({
   required StoryReason? reason,
   required String ownReason,
-  required String story,
+  required String location,
 }) {
   final why = switch (reason) {
     null => '',
@@ -30,7 +19,7 @@ String openingMessage({
   };
   return [
     if (why.isNotEmpty) 'Reason for the move: $why.',
-    story.trim(),
+    'Moving to: ${location.trim()}.',
   ].join('\n\n');
 }
 

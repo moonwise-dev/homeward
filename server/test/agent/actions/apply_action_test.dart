@@ -114,6 +114,85 @@ void main() {
     expect(committed({'price': stockholmScenario.price.toJson()}), isNull);
   });
 
+  test('continuing a story folds it in without confirming it', () {
+    final plan = const Plan(
+      story: Story(
+        anchors: [Anchor(id: 'a1', label: 'KTH', query: 'KTH')],
+      ),
+    );
+    final outcome = applyAction(
+      action: action('continue_story', {'storyPath': '/story'}),
+      surfaceData: {
+        'story': {
+          'mode': ['bike'],
+          'maxMinutes': 20,
+        },
+      },
+      plan: plan,
+      markets: realMarkets,
+    );
+
+    expect(outcome.plan.story.committed, isFalse);
+    expect(outcome.plan.story.anchors.single.mode, TravelMode.bike);
+    expect(outcome.plan.story.anchors.single.maxMinutes, 20);
+    expect(outcome.summary['applied'], isTrue);
+  });
+
+  test('a later story step keeps what an earlier one folded in', () {
+    final afterCommute = applyAction(
+      action: action('continue_story', {'storyPath': '/story'}),
+      surfaceData: {
+        'story': {
+          'mode': ['bike'],
+          'maxMinutes': 20,
+        },
+      },
+      plan: const Plan(
+        story: Story(
+          anchors: [Anchor(id: 'a1', label: 'KTH', query: 'KTH')],
+        ),
+      ),
+      markets: realMarkets,
+    ).plan;
+
+    final afterLifestyle = applyAction(
+      action: action('continue_story', {'storyPath': '/story'}),
+      surfaceData: {
+        'story': {
+          'picks': {
+            'schools': ['schools'],
+          },
+        },
+      },
+      plan: afterCommute,
+      markets: realMarkets,
+    ).plan;
+
+    final afterConfirm = applyAction(
+      action: action('commit_story', {'storyPath': '/story'}),
+      surfaceData: {
+        'story': {
+          'mustHaves': ['schools'],
+        },
+      },
+      plan: afterLifestyle,
+      markets: realMarkets,
+    ).plan;
+
+    expect(afterConfirm.story.committed, isTrue);
+    expect(afterConfirm.story.anchors.single.mode, TravelMode.bike);
+    expect(
+      afterConfirm.story.criteria.map((criterion) => criterion.id),
+      containsAll(['commute-a1', 'schools']),
+    );
+    expect(
+      afterConfirm.story.criteria
+          .where((criterion) => criterion.mustHave)
+          .map((criterion) => criterion.id),
+      ['schools'],
+    );
+  });
+
   test('a change reopens what it names', () {
     final planned = Plan(
       marketId: MarketId.parse('SE'),

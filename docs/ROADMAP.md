@@ -66,8 +66,8 @@ Deliverables:
   thresholds, candidates, and measured results per candidate and criterion.
 - Building blocks: `Map`, `ChoiceChips`, `FactTile`, `StatusRow`,
   `ComparisonTable`, `ProsCons`, `SourceChip`, `CandidateInput`.
-- Flow: infer from the first message, ask the gaps in one or two cards, show
-  the board, refine on it.
+- Flow: infer from the first message, ask the rest as Story Steps, a short
+  sequence of small cards (D116), show the board, refine on it.
 - A picked home opens the existing deal workspace with its price.
 - A journey shell: an opening page, then one page per turn, with a history
   sheet (D106, D107).
@@ -239,6 +239,7 @@ Decisions from the planning session on 2026-09-16.
 | D113 | The deal after a home is chosen | Two pages. The facts page asks only what the rules need, filled in from the story. The deal sheet is one surface with the affordability, the down payment slider, the payment, the stress test, the purchase costs, and the rules, all recomputed on the device. It replaces a market card on the form and separate affordability and stress-test turns, and matches the pitch's deal workspace | One page where figures fill in while the buyer types, the riskiest change before Sep 28; polishing the step-by-step deal, four waits after choosing |
 | D114 | The plan board | Removed. It was a server-compiled summary pane from the chat design, and after D113 it only repeated what the journey pages and the deal sheet show. Its compiler, the `board` surface, the `toggle_document` action, and the app's pane go with it, and the disclaimer moves to the opening page. `change` stays as an action Gemini can put on any page | Keeping it as a "Your plan" pane beside the journey |
 | D115 | Where keys live | Every key is an environment variable. A developer's keys sit in a git-ignored `.env` at the root that the Makefile loads, beside a committed `.env.example`; on Cloud Run, keys the server holds come from Secret Manager through `--set-secrets`, so the server has no Secret Manager client and the image holds no key. Provider keys keep their vendors' names, `CEREBRAS_API_KEY` and `GROQ_API_KEY`; the probe and eval key stays `HOMEWARD_EVAL_GEMINI_KEY`, since the server never reads a Gemini key, and `HOMEWARD_EVAL_GEMINI_MOON_KEY` from a second account doubles the free quota: probe, eval, and development runs of the app move to it on `gemini_quota_exhausted`. Development runs take those keys from `.env` and skip the key screen. The buyer's key stays in `flutter_secure_storage` | A key file under `~/.config/homeward`, read only by the probe; a Secret Manager client in the server; a `dotenv` package in every entry point |
+| D116 | The story interview | Story Steps: a short sequence of small, single-purpose cards, each folded into the story with `continue_story` and the last with `commit_story`, gated on `/story`'s own fields and `surfacesUsed` rather than a fixed stage in code. The opening page drops its story box for a location line; everything else is asked one thing at a time and narrated back as it grows. Buyer testing on 2026-09-24 found the single "storyGaps" card (D99), even prefilled, read as a filter form of six controls at once, which is what an A2UI sample should avoid. Revises D99 and the opening page's second half of D107 | Keeping one card with every control, better prefilled; a fully atomic one-question-per-turn interview, more turns and more waiting than the chosen grouping; a plain-text back-and-forth with no cards, more typing than tapping |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

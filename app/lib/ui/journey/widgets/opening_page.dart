@@ -12,11 +12,11 @@ class OpeningPage extends StatelessWidget {
   const OpeningPage({
     required this.reason,
     required this.ownReason,
-    required this.story,
+    required this.location,
     required this.canStart,
     required this.onReason,
     required this.onOwnReason,
-    required this.onStory,
+    required this.onLocation,
     required this.onExample,
     required this.onStart,
     super.key,
@@ -24,11 +24,11 @@ class OpeningPage extends StatelessWidget {
 
   final StoryReason? reason;
   final String ownReason;
-  final String story;
+  final String location;
   final bool canStart;
   final ValueChanged<StoryReason?> onReason;
   final ValueChanged<String> onOwnReason;
-  final ValueChanged<String> onStory;
+  final ValueChanged<String> onLocation;
   final ValueChanged<OpeningExample> onExample;
   final VoidCallback onStart;
 
@@ -45,8 +45,8 @@ class OpeningPage extends StatelessWidget {
             Text('Tell us about the move', style: AppTextStyles.display),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Homeward turns your story into what matters to you, then '
-              'checks homes against it on a map.',
+              'Homeward asks a few short questions, then turns what you say '
+              'into what matters and checks homes against it on a map.',
               style: AppTextStyles.body.copyWith(
                 color: AppColors.textSecondary,
               ),
@@ -78,14 +78,10 @@ class OpeningPage extends StatelessWidget {
               ),
             const SizedBox(height: AppSpacing.lg),
             AppTextField(
-              label: 'Your story',
-              hintText:
-                  "Where you're going, what your days look like, and any "
-                  "homes you're looking at.",
-              value: story,
-              onChanged: onStory,
-              minLines: 4,
-              maxLines: 8,
+              label: 'Where are you moving to?',
+              hintText: 'A city, an area, or a region.',
+              value: location,
+              onChanged: onLocation,
             ),
             const SizedBox(height: AppSpacing.sm),
             Wrap(

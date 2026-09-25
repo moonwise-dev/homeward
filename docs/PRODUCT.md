@@ -43,9 +43,10 @@ tool or from shared finance code.
 - **Gemini composes; tools measure; code computes.** The composing model decides
   what to ask, which criteria matter, and how the screen is laid out. It never
   writes a figure a buyer relies on.
-- **Ask less, show sooner.** Infer what the first message and the listing say,
-  ask only the gaps in one or two adaptive cards, then show a result the buyer
-  refines in place.
+- **Ask one thing at a time.** A short opening gives Homeward a reason and a
+  place; everything else comes as a handful of small, adaptive steps that
+  build the story, narrated back as it grows, never a form asking for
+  everything at once.
 - **Every fact shows where it came from.** Measured, Google Maps, estimate,
   verified, or said by the buyer.
 - **Works anywhere, honest everywhere.** Lifestyle facts come from open map data
@@ -118,14 +119,16 @@ any city.
 The flow the video segment is built around. The story is the point.
 
 1. A buyer opens a new plan, picks *studies* as why they are moving, and
-   writes: *"We're moving to Stockholm, I start at KTH in January. Two kids,
-   six and nine. We're looking at a flat on Odengatan for 7.4 million and one
-   in Solna for 5.2 million."*
-2. Homeward infers a relocation for work, an anchor at KTH, children who need
-   schools, and two candidates. It pins both flats and asks the gaps in one
-   card: how they will get to work, the longest commute they accept, what kind
-   of school, what they do after work, whether evenings should be lively or
-   quiet, what they will not live with, and whether they drive.
+   writes just *Stockholm* as the place.
+2. Homeward asks one short thing at a time, narrating what it has understood
+   so far as each answer arrives. First where they need to get to often, which
+   brings *"KTH, starting in January. We're looking at a flat on Odengatan for
+   7.4 million and one in Solna for 5.2 million."* Then how they'll get there
+   and the longest ride they'll accept. Then a few chips for what matters day
+   to day: schools, parks, quiet evenings. A last step asks what they will not
+   give up, and the buyer confirms. No step is a form; each is a card narrower
+   than the last, and the buyer watches the story take shape rather than
+   filling it in.
 3. While the homes are measured, the page lists each step as it runs and
    ticks it off: finding the flats, looking for schools and parks near them,
    timing the ride to KTH. Then the board appears: a map with KTH, both flats, commute lines with minutes by
@@ -142,9 +145,10 @@ The flow the video segment is built around. The story is the point.
    that moves the payment, the bank's stress test, and the cash needed, all
    recomputed on the device with no network traffic, beside the rules that
    apply and the association's finances.
-6. Contrast: a remote worker types only *"Lisbon, I surf and I want quiet."*
-   Homeward suggests areas, ranks them on the map, and the chosen area opens a
-   deal under Portugal's verified rules. A buyer in a city Homeward never
+6. Contrast: a remote worker picks *lifestyle*, writes just *Lisbon*, and adds
+   surfing and quiet evenings as Homeward asks. Homeward suggests areas, ranks
+   them on the map, and the chosen area opens a deal under Portugal's verified
+   rules. A buyer in a city Homeward never
    curated gets the same flow with estimated rules, labelled.
 
 ## Non-Goals For v1

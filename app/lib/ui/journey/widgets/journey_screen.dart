@@ -34,11 +34,11 @@ class JourneyScreen extends HookConsumerWidget {
             key: const ValueKey('opening'),
             reason: state.reason,
             ownReason: state.ownReason,
-            story: state.story,
+            location: state.location,
             canStart: state.canStart,
             onReason: viewModel.pickReason,
             onOwnReason: viewModel.updateOwnReason,
-            onStory: viewModel.updateStory,
+            onLocation: viewModel.updateLocation,
             onExample: viewModel.useExample,
             onStart: viewModel.start,
           )

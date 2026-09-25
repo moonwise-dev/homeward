@@ -5,9 +5,17 @@ turns:
     text: >-
       Reason for the move: studies.
 
-      We're moving to Stockholm, I start at KTH in January. Two kids, six and
-      nine. We're looking at a flat on Odengatan for 7.4 million and one in
-      Solna for 5.2 million.
+      Moving to: Stockholm.
+    expect:
+      tools_called: [propose_story]
+      tools_allowed: [resolve_market, propose_profile, load_market]
+      market: SE
+      coverage: curated
+      components_exclude:
+        [ComparisonTable, AffordabilitySummary, DynamicRecommendationStack]
+  - text: >-
+      KTH, starting in January. We're looking at a flat on Odengatan for 7.4
+      million and one in Solna for 5.2 million.
     expect:
       tools_called: [propose_story]
       tools_allowed: [resolve_market, propose_profile, load_market]
@@ -15,17 +23,30 @@ turns:
       coverage: curated
       components_include: [LifestyleCommuteMap, ChoicePicker]
       components_exclude: [ComparisonTable, AffordabilitySummary]
-  - action: commit_story
+  - action: continue_story
     data:
       story:
         mode: [bike]
         maxMinutes: 20
+    expect:
+      tools_allowed: [propose_story, load_market, propose_profile]
+      components_include: [ChoicePicker]
+      components_exclude: [ComparisonTable, AffordabilitySummary]
+  - action: continue_story
+    data:
+      story:
         picks:
           schools: [schools]
           activities: [parks, gym]
           evenings: [quiet]
           gettingAround: [transit]
-          downsides: [noise]
+    expect:
+      tools_allowed: [propose_story, load_market, propose_profile]
+      components_include: [ChoicePicker]
+      components_exclude: [ComparisonTable, AffordabilitySummary]
+  - action: commit_story
+    data:
+      story:
         mustHaves: [commute, schools]
     expect:
       tools_allowed: [propose_story, load_market, propose_profile]

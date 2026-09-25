@@ -97,7 +97,7 @@ Every function of the A2UI v0.9 basic catalog is available too.
 
 ### `/story`
 
-Why and where the buyer is moving, what they care about, and the homes or areas they are weighing. A question card writes the answer fields; commit_story folds them into the story. anchors, candidates, and criteria are read-only and placed by the server.
+Why and where the buyer is moving, what they care about, and the homes or areas they are weighing. Each Story Steps card writes the answer fields for its own step; continue_story folds a step in, and commit_story folds in the last one and confirms the story. anchors, candidates, and criteria are read-only and placed by the server.
 
 | Path | Value | Meaning |
 | --- | --- | --- |
@@ -199,6 +199,7 @@ Figures the server computed for the scenario, read-only.
 
 | Name | Context | Meaning |
 | --- | --- | --- |
+| `continue_story` | `storyPath` | The buyer answers one step of the story; the server folds it in and the next step follows. |
 | `commit_story` | `storyPath` | The buyer confirms what matters to them; the server measures every home against it. |
 | `choose_home` | `candidateId` | The buyer picks the home to work out the deal for. |
 | `select_market` | `marketId` | The buyer picked a market. |
