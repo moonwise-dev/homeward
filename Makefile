@@ -33,6 +33,7 @@ help:
 	@echo "  make catalog       Regenerate the catalog document, model skill, and reference"
 	@echo "  make catalog-check Fail if catalog outputs are stale or an example is invalid"
 	@echo "  make codegen       Run build_runner in app, common, and server"
+	@echo "  make listings      Place and price the sample homes from tool/listings"
 	@echo "  make codegen-check Fail if build_runner changes a committed generated file"
 	@echo "  make iso-4217      Regenerate the ISO 4217 currency table from SIX"
 	@echo "  make a2ui-schemas  Vendor the pinned A2UI v0.9 basic catalog and common types"
@@ -91,6 +92,10 @@ check: codegen-check format-check analyze test markets-check catalog-check
 .PHONY: markets-check
 markets-check:
 	@dart run tool/bin/markets_check.dart markets
+
+.PHONY: listings
+listings:
+	@dart run tool/bin/generate_listings.dart .
 
 .PHONY: catalog
 catalog:

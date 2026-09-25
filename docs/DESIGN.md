@@ -147,6 +147,14 @@ icon and words.
 - Every chart takes a `summary` and exposes it as its semantics label, so a
   screen reader hears the figures the line draws.
 
+## Photos
+
+Photos of sample homes and lineups (D122) are cropped, never letterboxed: 4:3
+in a lineup, 16:10 at the head of a listing, with the `md` radius. A thin
+scrim at the bottom carries the credit in the caption style, and a sample
+listing shows a small "Sample listing" tag in the corner. A picked lineup photo
+gets an accent ring and a check; the others dim.
+
 ## Primitives (`app/lib/ui/core/ui`)
 
 Tokens: `AppColors`, `AppTextStyles`, `AppSpacing`, `AppRadii`, `AppSizes`,

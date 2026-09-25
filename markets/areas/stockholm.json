@@ -1,0 +1,164 @@
+{
+  "id": "stockholm",
+  "name": "Stockholm",
+  "aliases": [
+    "Stockholms kommun",
+    "Stockholm, Sweden"
+  ],
+  "marketId": "SE",
+  "currency": "SEK",
+  "pricePeriod": "June to August 2026",
+  "sources": [
+    {
+      "id": "maklarstatistik-2026-06-08",
+      "publisher": "Svensk Mäklarstatistik",
+      "title": "Average price per square metre of tenant-owned flats and of houses, June to August 2026",
+      "url": "https://www.maklarstatistik.se/omrade/riket/stockholms-lan/",
+      "kind": "secondary",
+      "retrievedAt": "2026-09-25"
+    }
+  ],
+  "areas": [
+    {
+      "id": "vasastan",
+      "name": "Vasastan",
+      "point": {
+        "lat": 59.3429,
+        "lng": 18.0496
+      },
+      "character": "Grand 1900s blocks, cafés and parks, the city on foot",
+      "flatPricePerM2": 134860,
+      "sourceId": "maklarstatistik-2026-06-08"
+    },
+    {
+      "id": "ostermalm",
+      "name": "Östermalm",
+      "point": {
+        "lat": 59.338,
+        "lng": 18.086
+      },
+      "character": "Stately streets, food halls, Djurgården at the door",
+      "flatPricePerM2": 127629,
+      "sourceId": "maklarstatistik-2026-06-08"
+    },
+    {
+      "id": "sodermalm",
+      "name": "Södermalm",
+      "point": {
+        "lat": 59.315,
+        "lng": 18.071
+      },
+      "character": "Hills, vintage shops and bars, water on three sides",
+      "flatPricePerM2": 114585,
+      "sourceId": "maklarstatistik-2026-06-08"
+    },
+    {
+      "id": "kungsholmen",
+      "name": "Kungsholmen",
+      "point": {
+        "lat": 59.332,
+        "lng": 18.028
+      },
+      "character": "Waterside walks and quiet streets, close to everything",
+      "flatPricePerM2": 112115,
+      "sourceId": "maklarstatistik-2026-06-08"
+    },
+    {
+      "id": "liljeholmen",
+      "name": "Liljeholmen",
+      "point": {
+        "lat": 59.31,
+        "lng": 18.023
+      },
+      "character": "Waterfront new-builds, the red line into town",
+      "flatPricePerM2": 80881,
+      "sourceId": "maklarstatistik-2026-06-08"
+    },
+    {
+      "id": "solna",
+      "name": "Solna",
+      "point": {
+        "lat": 59.36,
+        "lng": 18.0
+      },
+      "character": "New blocks and big parks, a short ride north of the city",
+      "flatPricePerM2": 64518,
+      "housePricePerM2": 83906,
+      "sourceId": "maklarstatistik-2026-06-08"
+    },
+    {
+      "id": "sundbyberg",
+      "name": "Sundbyberg",
+      "point": {
+        "lat": 59.361,
+        "lng": 17.971
+      },
+      "character": "A small-town centre with fast trains into the city",
+      "flatPricePerM2": 64135,
+      "housePricePerM2": 66890,
+      "sourceId": "maklarstatistik-2026-06-08"
+    },
+    {
+      "id": "danderyd",
+      "name": "Danderyd",
+      "point": {
+        "lat": 59.396,
+        "lng": 18.042
+      },
+      "character": "Leafy villas, strong schools, the metro to the city",
+      "flatPricePerM2": 67734,
+      "housePricePerM2": 92204,
+      "sourceId": "maklarstatistik-2026-06-08"
+    },
+    {
+      "id": "lidingo",
+      "name": "Lidingö",
+      "point": {
+        "lat": 59.366,
+        "lng": 18.133
+      },
+      "character": "An island of villas, forest trails, and sea baths",
+      "flatPricePerM2": 66152,
+      "housePricePerM2": 103971,
+      "sourceId": "maklarstatistik-2026-06-08"
+    },
+    {
+      "id": "bromma",
+      "name": "Bromma",
+      "point": {
+        "lat": 59.338,
+        "lng": 17.94
+      },
+      "character": "Garden suburbs by Lake Mälaren, green and quiet",
+      "flatPricePerM2": 64131,
+      "housePricePerM2": 71368,
+      "sourceId": "maklarstatistik-2026-06-08"
+    },
+    {
+      "id": "nacka",
+      "name": "Nacka",
+      "point": {
+        "lat": 59.31,
+        "lng": 18.164
+      },
+      "character": "Nature reserves and lakes, Slussen by bus",
+      "flatPricePerM2": 60334,
+      "housePricePerM2": 77823,
+      "sourceId": "maklarstatistik-2026-06-08"
+    }
+  ],
+  "lineups": {
+    "homes": [
+      "sto-01-2",
+      "sto-06-1",
+      "sto-11-1",
+      "sto-10-1"
+    ],
+    "life": [
+      "sto-life-1",
+      "sto-life-2",
+      "sto-life-3",
+      "sto-life-4"
+    ]
+  }
+}

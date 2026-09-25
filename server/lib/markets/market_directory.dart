@@ -1,5 +1,6 @@
 import 'package:common/common.dart';
 
+import '../samples/sample_directory.dart';
 import 'generated/subdivision_names.dart';
 import 'markets_data.dart';
 
@@ -12,6 +13,7 @@ final class MarketDirectory {
 
   final MarketsData _data;
   final Map<MarketId, MarketRulePack> _packsById;
+  late final samples = SampleDirectory(_data.samples);
   final _resolved = <MarketId, MarketRulePack>{};
 
   Coverage coverageOf(MarketId id) =>

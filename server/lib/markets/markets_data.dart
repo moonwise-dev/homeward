@@ -1,5 +1,6 @@
 import 'package:common/common.dart';
 
+import '../samples/sample_data.dart';
 import 'finding.dart';
 
 typedef MarketsData = ({
@@ -8,5 +9,6 @@ typedef MarketsData = ({
   List<ExchangeRateTable> exchangeRates,
   Map<CountryCode, LivingCosts> livingCosts,
   PlaceDirectory? places,
+  SampleData samples,
   List<Finding> loadFindings,
 });

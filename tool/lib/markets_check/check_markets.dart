@@ -5,13 +5,18 @@ import 'package:homeward_server/markets/generated/subdivision_names.dart';
 import 'package:homeward_server/markets/markets_data.dart';
 
 import 'check_cost_groups.dart';
+import 'check_samples.dart';
 
 const maxRateAgeDays = 75;
 const staleExchangeRateDays = 7;
 const maxExchangeRateAgeDays = 30;
 const expiryWarningDays = 30;
 
-List<Finding> checkMarkets(MarketsData data, {required CalendarDate today}) {
+List<Finding> checkMarkets(
+  MarketsData data, {
+  required CalendarDate today,
+  bool Function(String photoId)? hasPhotoFile,
+}) {
   final packsById = {
     for (final pack in data.packsByFile.values) pack.id: pack,
   };
@@ -21,6 +26,7 @@ List<Finding> checkMarkets(MarketsData data, {required CalendarDate today}) {
       ..._checkPack(file, pack, packsById, data, today),
     ..._checkPlaces(data, packsById),
     ..._checkExchangeRates(data, today),
+    ...checkSamples(data.samples, hasPhotoFile: hasPhotoFile),
   ];
 }
 

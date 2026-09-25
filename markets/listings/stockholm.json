@@ -1,0 +1,594 @@
+{
+  "cityId": "stockholm",
+  "listings": [
+    {
+      "id": "sto-01",
+      "areaId": "vasastan",
+      "areaName": "Vasastan",
+      "name": "Odengatan",
+      "title": "A bright corner flat above Vasaparken",
+      "blurb": "Three rooms with tall windows, a tiled stove, and a balcony over the park.",
+      "address": "Odengatan 64",
+      "point": {
+        "lat": 59.3469274,
+        "lng": 18.0669737
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 78,
+      "floor": 4,
+      "yearBuilt": 1911,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1031000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 468000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 13217900,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 13486000,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-01-1",
+        "sto-01-2",
+        "sto-01-3",
+        "sto-01-4"
+      ],
+      "photoCredit": "Photos: Oscar Nord, Taitopia Render, Andrew V / Unsplash"
+    },
+    {
+      "id": "sto-02",
+      "areaId": "vasastan",
+      "areaName": "Vasastan",
+      "name": "Dalagatan",
+      "title": "Two light rooms with a sleeping loft",
+      "blurb": "High ceilings, an arched window onto the street, and a loft for the bed.",
+      "address": "Dalagatan 32",
+      "point": {
+        "lat": 59.3401446,
+        "lng": 18.0474039
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 56,
+      "floor": 3,
+      "yearBuilt": 1904,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 770000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 336000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 13750000,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 13486000,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-02-1",
+        "sto-02-2",
+        "sto-02-3"
+      ],
+      "photoCredit": "Photos: Damir Yakupov, Lisa Anna / Unsplash"
+    },
+    {
+      "id": "sto-03",
+      "areaId": "ostermalm",
+      "areaName": "Östermalm",
+      "name": "Karlavägen",
+      "title": "A grand top-floor flat with a spiral stair",
+      "blurb": "Arched windows, a stair to a roof room, and a balcony above the lime trees of Karlavägen.",
+      "address": "Karlavägen 58",
+      "point": {
+        "lat": 59.3389853,
+        "lng": 18.0827281
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 118,
+      "floor": 5,
+      "yearBuilt": 1890,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1581000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 708000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 13398300,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 12762900,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-03-1",
+        "sto-03-2",
+        "sto-03-3"
+      ],
+      "photoCredit": "Photos: Samuel Horn af Rantzien, Davide Colonna, Erika Osberg / Unsplash"
+    },
+    {
+      "id": "sto-04",
+      "areaId": "sodermalm",
+      "areaName": "Södermalm",
+      "name": "Sankt Paulsgatan",
+      "title": "Three rooms on the hill above the water",
+      "blurb": "Open shelving and warm wood, with Mariatorget and its cafés down the street.",
+      "address": "Sankt Paulsgatan 21",
+      "point": {
+        "lat": 59.3179211,
+        "lng": 18.0662516
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 72,
+      "floor": 3,
+      "yearBuilt": 1925,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 792000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 432000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 11000000,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 11458500,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-04-1",
+        "sto-04-2",
+        "sto-04-3"
+      ],
+      "photoCredit": "Photos: Enza Brunero, Puscas Adryan, Jon Flobrant / Unsplash"
+    },
+    {
+      "id": "sto-05",
+      "areaId": "kungsholmen",
+      "areaName": "Kungsholmen",
+      "name": "Norr Mälarstrand",
+      "title": "A 1930s flat with a glazed balcony",
+      "blurb": "Herringbone floors, two bedrooms, and the waterside walk two minutes away.",
+      "address": "Norr Mälarstrand 30",
+      "point": {
+        "lat": 59.3268665,
+        "lng": 18.0437297
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 81,
+      "floor": 3,
+      "yearBuilt": 1934,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 899000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 486000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 11098800,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 11211500,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-05-1",
+        "sto-05-2",
+        "sto-05-3"
+      ],
+      "photoCredit": "Photos: Spencer James Lucas, Uffe One, Wemel Wood / Unsplash"
+    },
+    {
+      "id": "sto-06",
+      "areaId": "solna",
+      "areaName": "Solna",
+      "name": "Arenastaden",
+      "title": "A new-build four-room flat with a big balcony",
+      "blurb": "An open kitchen, three bedrooms, and a south-west balcony over the rooftops.",
+      "address": "Evenemangsgatan 21",
+      "point": {
+        "lat": 59.3701161,
+        "lng": 18.0008644
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 96,
+      "floor": 6,
+      "yearBuilt": 2021,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 644000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 576000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 6708300,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6451800,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-06-1",
+        "sto-06-2",
+        "sto-06-3",
+        "sto-06-4"
+      ],
+      "photoCredit": "Photos: Samuel Bryngelsson, Steven Ungermann, Bluewater Sweden, Caroline Badran / Unsplash"
+    },
+    {
+      "id": "sto-07",
+      "areaId": "solna",
+      "areaName": "Solna",
+      "name": "Bergshamra",
+      "title": "A family house at the edge of the woods",
+      "blurb": "Vaulted ceilings, an open kitchen, and the Ulriksdal woods at the end of the garden.",
+      "address": "Björnstigen 83",
+      "point": {
+        "lat": 59.3824567,
+        "lng": 18.0276181
+      },
+      "homeType": "house",
+      "rooms": 5,
+      "bedrooms": 4,
+      "sizeM2": 142,
+      "yearBuilt": 2012,
+      "outdoor": "garden",
+      "style": "modern",
+      "price": {
+        "minorUnits": 1132000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 7971800,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 8390600,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-07-1",
+        "sto-07-2",
+        "sto-07-3",
+        "sto-07-4"
+      ],
+      "photoCredit": "Photos: Emil Widlund, Bailey Alexander / Unsplash"
+    },
+    {
+      "id": "sto-08",
+      "areaId": "danderyd",
+      "areaName": "Danderyd",
+      "name": "Vasavägen",
+      "title": "A 1912 villa with a garden all the way round",
+      "blurb": "A carved wooden villa, carefully restored, with a formal dining room and a stair to five bedrooms.",
+      "address": "Vasavägen 30",
+      "point": {
+        "lat": 59.3853415,
+        "lng": 18.0569089
+      },
+      "homeType": "house",
+      "rooms": 6,
+      "bedrooms": 5,
+      "sizeM2": 190,
+      "yearBuilt": 1912,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1804000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 9494700,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 9220400,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-08-1",
+        "sto-08-2",
+        "sto-08-3"
+      ],
+      "photoCredit": "Photos: Frantisek Duris, Clay Banks / Unsplash"
+    },
+    {
+      "id": "sto-09",
+      "areaId": "danderyd",
+      "areaName": "Danderyd",
+      "name": "Stocksund",
+      "title": "A pink 1920s villa near the schools",
+      "blurb": "A plastered villa with a wood stove in the living room, and schools you can walk to.",
+      "address": "Edsviksvägen 20",
+      "point": {
+        "lat": 59.4001984,
+        "lng": 18.0298112
+      },
+      "homeType": "house",
+      "rooms": 5,
+      "bedrooms": 4,
+      "sizeM2": 158,
+      "yearBuilt": 1927,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1340000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 8481000,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 9220400,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-09-1",
+        "sto-09-2",
+        "sto-09-3"
+      ],
+      "photoCredit": "Photos: Samuel Bryngelsson, Clay Banks / Unsplash"
+    },
+    {
+      "id": "sto-10",
+      "areaId": "lidingo",
+      "areaName": "Lidingö",
+      "name": "Lidingö",
+      "title": "A yellow villa on the rocks by the water",
+      "blurb": "A living room above the pines, an attic bedroom, and a path down to the water.",
+      "address": "Kottlavägen 90",
+      "point": {
+        "lat": 59.3554764,
+        "lng": 18.1660333
+      },
+      "homeType": "house",
+      "rooms": 6,
+      "bedrooms": 4,
+      "sizeM2": 176,
+      "yearBuilt": 1935,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1958000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 11125000,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 10397100,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-10-1",
+        "sto-10-2",
+        "sto-10-3"
+      ],
+      "photoCredit": "Photos: Nick Russill, Hans, Bluewater Sweden / Unsplash"
+    },
+    {
+      "id": "sto-11",
+      "areaId": "bromma",
+      "areaName": "Bromma",
+      "name": "Äppelviken",
+      "title": "A red wooden house with a porch",
+      "blurb": "A wood stove, a country kitchen, and a porch on a street of gardens.",
+      "address": "Äppelviksvägen 40",
+      "point": {
+        "lat": 59.3247106,
+        "lng": 17.9805579
+      },
+      "homeType": "house",
+      "rooms": 5,
+      "bedrooms": 3,
+      "sizeM2": 148,
+      "yearBuilt": 1931,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1025000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 6925700,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 7136800,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-11-1",
+        "sto-11-2",
+        "sto-11-3"
+      ],
+      "photoCredit": "Photos: Rebecca Johansson, Sven Brandsma, Bluewater Sweden / Unsplash"
+    },
+    {
+      "id": "sto-12",
+      "areaId": "nacka",
+      "areaName": "Nacka",
+      "name": "Järla sjö",
+      "title": "A loft-style flat by the lake",
+      "blurb": "A spiral stair to a sleeping loft, with the trails around Järlasjön outside.",
+      "address": "Järla Gårdsväg 12",
+      "point": {
+        "lat": 59.3060154,
+        "lng": 18.1542551
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 77,
+      "floor": 5,
+      "yearBuilt": 2019,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 441000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 462000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 5727300,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6033400,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-12-1",
+        "sto-12-2",
+        "sto-12-3"
+      ],
+      "photoCredit": "Photos: Tobias Wilden, Alex Tyson / Unsplash"
+    },
+    {
+      "id": "sto-13",
+      "areaId": "sundbyberg",
+      "areaName": "Sundbyberg",
+      "name": "Lötsjön",
+      "title": "An orange wooden house with a flower garden",
+      "blurb": "A vaulted living room and a garden of flowers, near the commuter train.",
+      "address": "Lötsjövägen 10",
+      "point": {
+        "lat": 59.3736689,
+        "lng": 17.9683717
+      },
+      "homeType": "house",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 118,
+      "yearBuilt": 1918,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 742000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 6288100,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6689000,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-13-1",
+        "sto-13-2",
+        "sto-13-3"
+      ],
+      "photoCredit": "Photos: Emil Widlund, Clay Banks, Franco Debartolo / Unsplash"
+    },
+    {
+      "id": "sto-14",
+      "areaId": "liljeholmen",
+      "areaName": "Liljeholmen",
+      "name": "Liljeholmskajen",
+      "title": "Two rooms on the waterfront",
+      "blurb": "A compact kitchen, a quiet bedroom, and a balcony over the water.",
+      "address": "Liljeholmsstranden 3",
+      "point": {
+        "lat": 59.313877,
+        "lng": 18.0282964
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 58,
+      "floor": 7,
+      "yearBuilt": 2016,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 469000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 348000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 8086200,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 8088100,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-14-1",
+        "sto-14-2",
+        "sto-14-3"
+      ],
+      "photoCredit": "Photos: Valeriia Kryshchuk, Irena Oze / Unsplash"
+    }
+  ]
+}

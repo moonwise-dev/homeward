@@ -1,0 +1,604 @@
+{
+  "cityId": "lisbon",
+  "listings": [
+    {
+      "id": "lis-01",
+      "areaId": "santo-antonio",
+      "areaName": "Príncipe Real",
+      "name": "Príncipe Real",
+      "title": "A tall-ceilinged flat with a piano room",
+      "blurb": "Old parquet, tall windows, and a salon big enough for a piano, a block from the garden square.",
+      "address": "Rua da Escola Politécnica 56",
+      "point": {
+        "lat": 38.7180664,
+        "lng": -9.1502265
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 105,
+      "floor": 2,
+      "yearBuilt": 1905,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 75000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 10500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 714300,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 698600,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "photos": [
+        "lis-01-1",
+        "lis-01-2",
+        "lis-01-3"
+      ],
+      "photoCredit": "Photos: Freguesia de Estrela, Jessica Martins, Mihai Moisa / Unsplash"
+    },
+    {
+      "id": "lis-02",
+      "areaId": "misericordia",
+      "areaName": "Santos",
+      "name": "Bica",
+      "title": "A renovated one-bedroom with a green-tiled kitchen",
+      "blurb": "Oak floors, a green-tiled kitchen, and the river at the bottom of the street.",
+      "address": "Rua de São Paulo 100",
+      "point": {
+        "lat": 38.7084027,
+        "lng": -9.1463409
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 58,
+      "floor": 3,
+      "yearBuilt": 1920,
+      "outdoor": "none",
+      "style": "modern",
+      "price": {
+        "minorUnits": 34500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 6000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 594800,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 591300,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "photos": [
+        "lis-02-1",
+        "lis-02-2",
+        "lis-02-3",
+        "lis-02-4"
+      ],
+      "photoCredit": "Photos: Glauco Zuccaccia, Aquilion Property / Unsplash"
+    },
+    {
+      "id": "lis-03",
+      "areaId": "estrela",
+      "areaName": "Lapa",
+      "name": "Lapa",
+      "title": "A river-view flat on a quiet slope",
+      "blurb": "A tall, quiet flat on the Lapa hill, with a balcony and the Tagus in the windows.",
+      "address": "Rua do Prior 40",
+      "point": {
+        "lat": 38.706282,
+        "lng": -9.1634623
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 135,
+      "floor": 4,
+      "yearBuilt": 1910,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 83500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 13500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 618500,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 583300,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "photos": [
+        "lis-03-1",
+        "lis-03-2",
+        "lis-03-3"
+      ],
+      "photoCredit": "Photos: Evgeniy Beloshytskiy, Danilo Rios, Dalila Moreira / Unsplash"
+    },
+    {
+      "id": "lis-04",
+      "areaId": "campo-de-ourique",
+      "areaName": "Campo de Ourique",
+      "name": "Campo de Ourique",
+      "title": "Parquet floors and French windows",
+      "blurb": "Double doors between the rooms and French windows, above the market streets.",
+      "address": "Rua Ferreira Borges 100",
+      "point": {
+        "lat": 38.7174498,
+        "lng": -9.1639946
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 92,
+      "floor": 3,
+      "yearBuilt": 1935,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 53500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 9000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 581500,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 597900,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "photos": [
+        "lis-04-1",
+        "lis-04-2",
+        "lis-04-3",
+        "lis-04-4"
+      ],
+      "photoCredit": "Photos: Artem Astashov, Julia / Unsplash"
+    },
+    {
+      "id": "lis-05",
+      "areaId": "santa-maria-maior",
+      "areaName": "Alfama",
+      "name": "Alfama",
+      "title": "A one-bedroom with a terrace over the river",
+      "blurb": "At the top of an old stair, a terrace looks over the rooftops to the river.",
+      "address": "Rua de São Miguel 20",
+      "point": {
+        "lat": 38.7108958,
+        "lng": -9.1291931
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 60,
+      "floor": 4,
+      "yearBuilt": 1890,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 32500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 6000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 541700,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 500000,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "photos": [
+        "lis-05-1",
+        "lis-05-2",
+        "lis-05-3"
+      ],
+      "photoCredit": "Photos: Diego García, Christian Lue, João Reguengos / Unsplash"
+    },
+    {
+      "id": "lis-06",
+      "areaId": "sao-vicente",
+      "areaName": "Graça",
+      "name": "Graça",
+      "title": "A sunny two-bedroom on a tram street",
+      "blurb": "Light all day, the tram at the door, and the Graça viewpoint around the corner.",
+      "address": "Rua da Graça 50",
+      "point": {
+        "lat": 38.7203109,
+        "lng": -9.130125
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 84,
+      "floor": 2,
+      "yearBuilt": 1920,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 39000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 8500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 464300,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 495400,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "photos": [
+        "lis-06-1",
+        "lis-06-2",
+        "lis-06-3"
+      ],
+      "photoCredit": "Photos: Dmitrii E., Margo Evardson, Aleksandra Dementeva / Unsplash"
+    },
+    {
+      "id": "lis-07",
+      "areaId": "parque-das-nacoes",
+      "areaName": "Parque das Nações",
+      "name": "Parque das Nações",
+      "title": "A three-bedroom above the riverfront",
+      "blurb": "A kitchen that opens onto the balcony, high above the river promenade.",
+      "address": "Avenida Dom João II 40",
+      "point": {
+        "lat": 38.7676651,
+        "lng": -9.0968435
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 128,
+      "floor": 9,
+      "yearBuilt": 2004,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 82000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 13000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 640600,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 640700,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "photos": [
+        "lis-07-1",
+        "lis-07-2",
+        "lis-07-3",
+        "lis-07-4"
+      ],
+      "photoCredit": "Photos: Bruno Rothstein, Piotr AMS, Joao Emanuel, Marina Poliukhovich / Unsplash"
+    },
+    {
+      "id": "lis-08",
+      "areaId": "alvalade",
+      "areaName": "Alvalade",
+      "name": "Alvalade",
+      "title": "A 1950s family flat by the park",
+      "blurb": "Renovated, with built-in shelves, a family room, and schools and the park nearby.",
+      "address": "Avenida da Igreja 20",
+      "point": {
+        "lat": 38.7540442,
+        "lng": -9.1416304
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 112,
+      "floor": 3,
+      "yearBuilt": 1954,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 52500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 11000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 468800,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 504100,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "photos": [
+        "lis-08-1",
+        "lis-08-2",
+        "lis-08-3"
+      ],
+      "photoCredit": "Photos: Noa van Ieperen, Clay Banks, Steven Ungermann / Unsplash"
+    },
+    {
+      "id": "lis-09",
+      "areaId": "carcavelos",
+      "areaName": "Carcavelos",
+      "name": "Carcavelos",
+      "title": "A two-bedroom five minutes from the surf",
+      "blurb": "The sea from the balcony and the surf a short walk away.",
+      "address": "Avenida Jorge V",
+      "point": {
+        "lat": 38.6871862,
+        "lng": -9.337895
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 92,
+      "floor": 5,
+      "yearBuilt": 2016,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 45000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 9000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 489100,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 487000,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "photos": [
+        "lis-09-1",
+        "lis-09-2",
+        "lis-09-3"
+      ],
+      "photoCredit": "Photos: Ivan Rohovchenko, David Kuvaev, Ruben Aster / Unsplash"
+    },
+    {
+      "id": "lis-10",
+      "areaId": "cascais-estoril",
+      "areaName": "Cascais",
+      "name": "Monte Estoril",
+      "title": "A white townhouse with a walled garden",
+      "blurb": "Arched rooms, wooden ceilings, and a walled garden above the bay.",
+      "address": "Avenida de Sabóia",
+      "point": {
+        "lat": 38.7049934,
+        "lng": -9.4079212
+      },
+      "homeType": "house",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 168,
+      "yearBuilt": 1928,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 91500000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 544600,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 545900,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "photos": [
+        "lis-10-1",
+        "lis-10-2",
+        "lis-10-3"
+      ],
+      "photoCredit": "Photos: Lynn Van den Broeck, David Marquez / Unsplash"
+    },
+    {
+      "id": "lis-11",
+      "areaId": "costa-da-caparica",
+      "areaName": "Costa da Caparica",
+      "name": "Costa da Caparica",
+      "title": "A beachfront flat facing the Atlantic",
+      "blurb": "The Atlantic fills the dining-room windows; the beach is across the road.",
+      "address": "Avenida General Humberto Delgado",
+      "point": {
+        "lat": 38.6399061,
+        "lng": -9.2355396
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 88,
+      "floor": 4,
+      "yearBuilt": 2018,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 40000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 9000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 454500,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 442600,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "photos": [
+        "lis-11-1",
+        "lis-11-2",
+        "lis-11-3"
+      ],
+      "photoCredit": "Photos: Augusto Lopes, Caroline Badran / Unsplash"
+    },
+    {
+      "id": "lis-12",
+      "areaId": "sintra",
+      "areaName": "Sintra",
+      "name": "Sintra",
+      "title": "A tiled house in the hills below the palaces",
+      "blurb": "A fireplace, a white stair, and a big garden in the cool Sintra hills.",
+      "address": "Rua Visconde de Monserrate",
+      "point": {
+        "lat": 38.795958,
+        "lng": -9.388049
+      },
+      "homeType": "house",
+      "rooms": 5,
+      "bedrooms": 4,
+      "sizeM2": 230,
+      "yearBuilt": 1900,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 75500000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 328300,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 346500,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "photos": [
+        "lis-12-1",
+        "lis-12-2",
+        "lis-12-3"
+      ],
+      "photoCredit": "Photos: Leandro Barreto, Azzedine Rouichi / Unsplash"
+    },
+    {
+      "id": "lis-13",
+      "areaId": "carcavelos",
+      "areaName": "Carcavelos",
+      "name": "Parede",
+      "title": "A new villa with a pool near the beach",
+      "blurb": "A pool, a lawn, and open living rooms, a short walk from the beach.",
+      "address": "Avenida da República",
+      "point": {
+        "lat": 38.6882969,
+        "lng": -9.3496216
+      },
+      "homeType": "house",
+      "rooms": 5,
+      "bedrooms": 4,
+      "sizeM2": 210,
+      "yearBuilt": 2021,
+      "outdoor": "garden",
+      "style": "modern",
+      "price": {
+        "minorUnits": 104500000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 497600,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 487000,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "photos": [
+        "lis-13-1",
+        "lis-13-2",
+        "lis-13-3"
+      ],
+      "photoCredit": "Photos: Frederico Ferreira, Aalo Lens / Unsplash"
+    },
+    {
+      "id": "lis-14",
+      "areaId": "cascais-estoril",
+      "areaName": "Cascais",
+      "name": "Cascais",
+      "title": "A white house on the hill above the bay",
+      "blurb": "A roof terrace, breakfast on the balcony, and the old town down the hill.",
+      "address": "Rua Frederico Arouca",
+      "point": {
+        "lat": 38.6995527,
+        "lng": -9.4182305
+      },
+      "homeType": "house",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 160,
+      "yearBuilt": 1965,
+      "outdoor": "garden",
+      "style": "modern",
+      "price": {
+        "minorUnits": 85500000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 534400,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 545900,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "photos": [
+        "lis-14-1",
+        "lis-14-2",
+        "lis-14-3"
+      ],
+      "photoCredit": "Photos: Alex Kolodziej, Azzedine Rouichi, Ola K. / Unsplash"
+    }
+  ]
+}

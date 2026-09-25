@@ -1,0 +1,228 @@
+city: lisbon
+listings:
+  - id: lis-01
+    area: santo-antonio
+    name: Príncipe Real
+    address: Rua da Escola Politécnica 56
+    title: A tall-ceilinged flat with a piano room
+    blurb: Old parquet, tall windows, and a salon big enough for a piano, a block from the garden square.
+    type: flat
+    rooms: 3
+    bedrooms: 2
+    size: 105
+    floor: 2
+    year: 1905
+    outdoor: balcony
+    style: classic
+    factor: 1.02
+    photos: [lis-01-1, lis-01-2, lis-01-3]
+  - id: lis-02
+    area: misericordia
+    name: Bica
+    address: Rua de São Paulo 100
+    title: A renovated one-bedroom with a green-tiled kitchen
+    blurb: Oak floors, a green-tiled kitchen, and the river at the bottom of the street.
+    type: flat
+    rooms: 2
+    bedrooms: 1
+    size: 58
+    floor: 3
+    year: 1920
+    outdoor: none
+    style: modern
+    factor: 1.0
+    photos: [lis-02-1, lis-02-2, lis-02-3, lis-02-4]
+  - id: lis-03
+    area: estrela
+    name: Lapa
+    address: Rua do Prior 40
+    title: A river-view flat on a quiet slope
+    blurb: A tall, quiet flat on the Lapa hill, with a balcony and the Tagus in the windows.
+    type: flat
+    rooms: 4
+    bedrooms: 3
+    size: 135
+    floor: 4
+    year: 1910
+    outdoor: balcony
+    style: classic
+    factor: 1.06
+    photos: [lis-03-1, lis-03-2, lis-03-3]
+  - id: lis-04
+    area: campo-de-ourique
+    name: Campo de Ourique
+    address: Rua Ferreira Borges 100
+    title: Parquet floors and French windows
+    blurb: Double doors between the rooms and French windows, above the market streets.
+    type: flat
+    rooms: 3
+    bedrooms: 2
+    size: 92
+    floor: 3
+    year: 1935
+    outdoor: balcony
+    style: classic
+    factor: 0.97
+    photos: [lis-04-1, lis-04-2, lis-04-3, lis-04-4]
+  - id: lis-05
+    area: santa-maria-maior
+    name: Alfama
+    address: Rua de São Miguel 20
+    title: A one-bedroom with a terrace over the river
+    blurb: At the top of an old stair, a terrace looks over the rooftops to the river.
+    type: flat
+    rooms: 2
+    bedrooms: 1
+    size: 60
+    floor: 4
+    year: 1890
+    outdoor: balcony
+    style: classic
+    factor: 1.08
+    photos: [lis-05-1, lis-05-2, lis-05-3]
+  - id: lis-06
+    area: sao-vicente
+    name: Graça
+    address: Rua da Graça 50
+    title: A sunny two-bedroom on a tram street
+    blurb: Light all day, the tram at the door, and the Graça viewpoint around the corner.
+    type: flat
+    rooms: 3
+    bedrooms: 2
+    size: 84
+    floor: 2
+    year: 1920
+    outdoor: balcony
+    style: classic
+    factor: 0.94
+    photos: [lis-06-1, lis-06-2, lis-06-3]
+  - id: lis-07
+    area: parque-das-nacoes
+    name: Parque das Nações
+    address: Avenida Dom João II 40
+    title: A three-bedroom above the riverfront
+    blurb: A kitchen that opens onto the balcony, high above the river promenade.
+    type: flat
+    rooms: 4
+    bedrooms: 3
+    size: 128
+    floor: 9
+    year: 2004
+    outdoor: balcony
+    style: modern
+    factor: 1.0
+    photos: [lis-07-1, lis-07-2, lis-07-3, lis-07-4]
+  - id: lis-08
+    area: alvalade
+    name: Alvalade
+    address: Avenida da Igreja 20
+    title: A 1950s family flat by the park
+    blurb: Renovated, with built-in shelves, a family room, and schools and the park nearby.
+    type: flat
+    rooms: 4
+    bedrooms: 3
+    size: 112
+    floor: 3
+    year: 1954
+    outdoor: balcony
+    style: modern
+    factor: 0.93
+    photos: [lis-08-1, lis-08-2, lis-08-3]
+  - id: lis-09
+    area: carcavelos
+    name: Carcavelos
+    address: Avenida Jorge V
+    town: Carcavelos
+    title: A two-bedroom five minutes from the surf
+    blurb: The sea from the balcony and the surf a short walk away.
+    type: flat
+    rooms: 3
+    bedrooms: 2
+    size: 92
+    floor: 5
+    year: 2016
+    outdoor: balcony
+    style: modern
+    factor: 1.0
+    photos: [lis-09-1, lis-09-2, lis-09-3]
+  - id: lis-10
+    area: cascais-estoril
+    name: Monte Estoril
+    address: Avenida de Sabóia
+    town: Estoril
+    title: A white townhouse with a walled garden
+    blurb: Arched rooms, wooden ceilings, and a walled garden above the bay.
+    type: house
+    rooms: 4
+    bedrooms: 3
+    size: 168
+    year: 1928
+    outdoor: garden
+    style: classic
+    factor: 1.0
+    photos: [lis-10-1, lis-10-2, lis-10-3]
+  - id: lis-11
+    area: costa-da-caparica
+    name: Costa da Caparica
+    address: Avenida General Humberto Delgado
+    town: Costa da Caparica
+    title: A beachfront flat facing the Atlantic
+    blurb: The Atlantic fills the dining-room windows; the beach is across the road.
+    type: flat
+    rooms: 3
+    bedrooms: 2
+    size: 88
+    floor: 4
+    year: 2018
+    outdoor: balcony
+    style: modern
+    factor: 1.03
+    photos: [lis-11-1, lis-11-2, lis-11-3]
+  - id: lis-12
+    area: sintra
+    name: Sintra
+    address: Rua Visconde de Monserrate
+    town: Sintra
+    title: A tiled house in the hills below the palaces
+    blurb: A fireplace, a white stair, and a big garden in the cool Sintra hills.
+    type: house
+    rooms: 5
+    bedrooms: 4
+    size: 230
+    year: 1900
+    outdoor: garden
+    style: classic
+    factor: 0.95
+    photos: [lis-12-1, lis-12-2, lis-12-3]
+  - id: lis-13
+    area: carcavelos
+    name: Parede
+    address: Avenida da República
+    town: Parede
+    title: A new villa with a pool near the beach
+    blurb: A pool, a lawn, and open living rooms, a short walk from the beach.
+    type: house
+    rooms: 5
+    bedrooms: 4
+    size: 210
+    year: 2021
+    outdoor: garden
+    style: modern
+    factor: 1.02
+    photos: [lis-13-1, lis-13-2, lis-13-3]
+  - id: lis-14
+    area: cascais-estoril
+    name: Cascais
+    address: Rua Frederico Arouca
+    town: Cascais
+    title: A white house on the hill above the bay
+    blurb: A roof terrace, breakfast on the balcony, and the old town down the hill.
+    type: house
+    rooms: 4
+    bedrooms: 3
+    size: 160
+    year: 1965
+    outdoor: garden
+    style: modern
+    factor: 0.98
+    photos: [lis-14-1, lis-14-2, lis-14-3]

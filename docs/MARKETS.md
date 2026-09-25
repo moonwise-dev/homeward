@@ -332,6 +332,46 @@ age, the only adult age the profile holds; children take their own ages (D62). A
 household larger than the biggest listed size uses that size. A table for a year
 before last fails `make markets-check`.
 
+## Sample Homes
+
+No listing site offers a free API (checked 2026-09-25), so the demo cities
+carry sample homes (D122). They are labelled as samples wherever they show; the
+prices per square metre behind them are real.
+
+| File | Holds | Made by |
+| --- | --- | --- |
+| `markets/areas/<city>.json` | The city's names and aliases, the period its prices cover, its areas (id, name, a point, a one-line character, the price per square metre for flats and for houses where it has them, with the source), and its photo lineups | Curated from official or industry price statistics |
+| `tool/listings/<city>.yaml` | The sample homes as specs: area, street address and town, type, rooms, size, floor, year, outdoor space, style, a price factor around the area's price per square metre, a title, a line about the home, and its photos | Written and reviewed by hand |
+| `markets/listings/<city>.json` | The sample homes with their point, price, monthly fee, price per square metre, the area's figure and its source, and the photo credit | `make listings`, from the spec, the areas, the photo manifest, and Nominatim |
+| `markets/photos.json` | Every photo: id, caption, credit, and, for lineup photos, traits (home type, outdoor space, style, criteria, areas) | Curated |
+| `app/assets/photos/<id>.webp` | The photos, 1200 px wide | Downloaded from Unsplash and compressed |
+
+Stockholm prices come from Svensk Mäklarstatistik: the average price per
+square metre of tenant-owned flats and of houses sold in June to August 2026,
+by district or municipality. Lisbon and the Cascais line come from INE's local
+housing price statistics (indicator 0012234): the median value per square
+metre of all dwelling sales in the twelve months to March 2026, by parish, so
+an area there has one figure for flats and houses alike. A sample home's price
+is its size times its area's price per square metre times its factor, between
+0.85 and 1.15, rounded to the nearest 10 000 kr or 5 000 €, so a card can say
+how it compares with its area.
+
+Photos come from series where one photographer shot the same home, so a
+listing's photos match, under the Unsplash licence: free to use, no attribution
+required, credited on each photo anyway. No recognisable people and no
+Unsplash+ photos.
+
+`make listings` searches each address inside a box around its area and
+refuses a match more than four kilometres from the area's point, so a home
+never lands in the wrong town. A flat's monthly fee is an estimate from its
+size: 60 kr per square metre for a Stockholm association, 1 € for a Lisbon
+condominium.
+
+`make markets-check` checks the samples too: every area has a source and a
+price for each home type listed in it, every listing's area and photos exist,
+every photo has a file in `app/assets/photos`, and every lineup holds four
+photos with traits.
+
 ## Curation Workflow
 
 1. Open a branch `markets/<id>`.

@@ -10,7 +10,12 @@ void main(List<String> arguments) {
   final today = CalendarDate.parse(
     DateTime.now().toUtc().toIso8601String().substring(0, 10),
   );
-  final findings = checkMarkets(loadMarkets(root), today: today);
+  final findings = checkMarkets(
+    loadMarkets(root),
+    today: today,
+    hasPhotoFile: (id) =>
+        File('${root.parent.path}/app/assets/photos/$id.webp').existsSync(),
+  );
   for (final finding in findings) {
     stdout.writeln(
       '${finding.severity.name} ${finding.subject}: ${finding.message}',

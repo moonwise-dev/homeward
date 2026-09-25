@@ -88,6 +88,38 @@ MarketsData loadMarkets(Directory root) {
     }
   }
 
+  final cities = <String, SampleCity>{};
+  for (final file in _jsonFiles(Directory('${root.path}/areas'))) {
+    final city = parse(
+      file,
+      (json) => SampleCity.fromJson(json! as Map<String, Object?>),
+    );
+    if (city != null) {
+      cities[city.id] = city;
+    }
+  }
+
+  final listings = <String, List<Listing>>{};
+  for (final file in _jsonFiles(Directory('${root.path}/listings'))) {
+    final inventory = parse(
+      file,
+      (json) => ListingInventory.fromJson(json! as Map<String, Object?>),
+    );
+    if (inventory != null) {
+      listings[inventory.cityId] = inventory.listings;
+    }
+  }
+
+  final photosFile = File('${root.path}/photos.json');
+  final photos =
+      (photosFile.existsSync()
+          ? parse(
+              photosFile,
+              (json) => PhotoManifest.fromJson(json! as Map<String, Object?>),
+            )
+          : null) ??
+      const PhotoManifest(photos: []);
+
   final placesFile = File('${root.path}/places.json');
   final places = placesFile.existsSync()
       ? parse(
@@ -102,6 +134,7 @@ MarketsData loadMarkets(Directory root) {
     exchangeRates: exchangeRates,
     livingCosts: livingCosts,
     places: places,
+    samples: (cities: cities, listings: listings, photos: photos),
     loadFindings: findings,
   );
 }
