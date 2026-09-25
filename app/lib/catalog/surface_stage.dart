@@ -2,7 +2,7 @@ import 'package:common/common.dart';
 import 'package:genui/genui.dart';
 
 final _stages = [
-  (title: 'Your story', component: const StoryDraft().name),
+  (title: 'The case', component: const StoryDraft().name),
   (title: 'The deal', component: const AffordabilitySummary().name),
   (title: 'Homes', component: const ComparisonTable().name),
   (title: 'Homes', component: const DynamicRecommendationStack().name),

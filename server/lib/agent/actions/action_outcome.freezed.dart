@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ActionOutcome {
 
- Plan get plan; Map<String, Object?> get summary;
+ Plan get plan; Map<String, Object?> get summary; PlaceToFind? get placeToFind;
 /// Create a copy of ActionOutcome
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $ActionOutcomeCopyWith<ActionOutcome> get copyWith => _$ActionOutcomeCopyWithImp
 @override
 bool operator ==(Object other) {
   final _this = this as ActionOutcome;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ActionOutcome&&(identical(other.plan, _this.plan) || other.plan == _this.plan)&&const DeepCollectionEquality().equals(other.summary, _this.summary));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ActionOutcome&&(identical(other.plan, _this.plan) || other.plan == _this.plan)&&const DeepCollectionEquality().equals(other.summary, _this.summary)&&(identical(other.placeToFind, _this.placeToFind) || other.placeToFind == _this.placeToFind));
 }
 
 
 @override
 int get hashCode {
   final _this = this as ActionOutcome;
-  return Object.hash(runtimeType,_this.plan,const DeepCollectionEquality().hash(_this.summary));
+  return Object.hash(runtimeType,_this.plan,const DeepCollectionEquality().hash(_this.summary),_this.placeToFind);
 }
 
 @override
 String toString() {
   final _this = this as ActionOutcome;
-  return 'ActionOutcome(plan: ${_this.plan}, summary: ${_this.summary})';
+  return 'ActionOutcome(plan: ${_this.plan}, summary: ${_this.summary}, placeToFind: ${_this.placeToFind})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $ActionOutcomeCopyWith<$Res>  {
   factory $ActionOutcomeCopyWith(ActionOutcome value, $Res Function(ActionOutcome) _then) = _$ActionOutcomeCopyWithImpl;
 @useResult
 $Res call({
- Plan plan, Map<String, Object?> summary
+ Plan plan, Map<String, Object?> summary, PlaceToFind? placeToFind
 });
 
 
@@ -68,11 +68,12 @@ class _$ActionOutcomeCopyWithImpl<$Res>
 
 /// Create a copy of ActionOutcome
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? plan = null,Object? summary = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? plan = null,Object? summary = null,Object? placeToFind = freezed,}) {
   return _then(ActionOutcome(
 plan: null == plan ? _self.plan : plan // ignore: cast_nullable_to_non_nullable
 as Plan,summary: null == summary ? _self.summary : summary // ignore: cast_nullable_to_non_nullable
-as Map<String, Object?>,
+as Map<String, Object?>,placeToFind: freezed == placeToFind ? _self.placeToFind : placeToFind // ignore: cast_nullable_to_non_nullable
+as PlaceToFind?,
   ));
 }
 /// Create a copy of ActionOutcome
@@ -166,10 +167,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Plan plan,  Map<String, Object?> summary)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Plan plan,  Map<String, Object?> summary,  PlaceToFind? placeToFind)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ActionOutcome() when $default != null:
-return $default(_that.plan,_that.summary);case _:
+return $default(_that.plan,_that.summary,_that.placeToFind);case _:
   return orElse();
 
 }
@@ -187,10 +188,10 @@ return $default(_that.plan,_that.summary);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Plan plan,  Map<String, Object?> summary)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Plan plan,  Map<String, Object?> summary,  PlaceToFind? placeToFind)  $default,) {final _that = this;
 switch (_that) {
 case _ActionOutcome():
-return $default(_that.plan,_that.summary);case _:
+return $default(_that.plan,_that.summary,_that.placeToFind);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +208,10 @@ return $default(_that.plan,_that.summary);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Plan plan,  Map<String, Object?> summary)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Plan plan,  Map<String, Object?> summary,  PlaceToFind? placeToFind)?  $default,) {final _that = this;
 switch (_that) {
 case _ActionOutcome() when $default != null:
-return $default(_that.plan,_that.summary);case _:
+return $default(_that.plan,_that.summary,_that.placeToFind);case _:
   return null;
 
 }
@@ -222,7 +223,7 @@ return $default(_that.plan,_that.summary);case _:
 
 
 class _ActionOutcome implements ActionOutcome {
-  const _ActionOutcome({required this.plan, required  Map<String, Object?> summary}): _summary = summary;
+  const _ActionOutcome({required this.plan, required  Map<String, Object?> summary, this.placeToFind}): _summary = summary;
   
 
 @override final  Plan plan;
@@ -233,6 +234,7 @@ class _ActionOutcome implements ActionOutcome {
   return EqualUnmodifiableMapView(_summary);
 }
 
+@override final  PlaceToFind? placeToFind;
 
 /// Create a copy of ActionOutcome
 /// with the given fields replaced by the non-null parameter values.
@@ -244,18 +246,18 @@ _$ActionOutcomeCopyWith<_ActionOutcome> get copyWith => __$ActionOutcomeCopyWith
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ActionOutcome&&(identical(other.plan, plan) || other.plan == plan)&&const DeepCollectionEquality().equals(other.summary, _summary));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ActionOutcome&&(identical(other.plan, plan) || other.plan == plan)&&const DeepCollectionEquality().equals(other.summary, _summary)&&(identical(other.placeToFind, placeToFind) || other.placeToFind == placeToFind));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,plan,const DeepCollectionEquality().hash(_summary));
+    return Object.hash(runtimeType,plan,const DeepCollectionEquality().hash(_summary),placeToFind);
 }
 
 @override
 String toString() {
-    return 'ActionOutcome(plan: $plan, summary: $summary)';
+    return 'ActionOutcome(plan: $plan, summary: $summary, placeToFind: $placeToFind)';
 }
 
 
@@ -266,7 +268,7 @@ abstract mixin class _$ActionOutcomeCopyWith<$Res> implements $ActionOutcomeCopy
   factory _$ActionOutcomeCopyWith(_ActionOutcome value, $Res Function(_ActionOutcome) _then) = __$ActionOutcomeCopyWithImpl;
 @override @useResult
 $Res call({
- Plan plan, Map<String, Object?> summary
+ Plan plan, Map<String, Object?> summary, PlaceToFind? placeToFind
 });
 
 
@@ -283,11 +285,12 @@ class __$ActionOutcomeCopyWithImpl<$Res>
 
 /// Create a copy of ActionOutcome
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? plan = null,Object? summary = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? plan = null,Object? summary = null,Object? placeToFind = freezed,}) {
   return _then(_ActionOutcome(
 plan: null == plan ? _self.plan : plan // ignore: cast_nullable_to_non_nullable
 as Plan,summary: null == summary ? _self._summary : summary // ignore: cast_nullable_to_non_nullable
-as Map<String, Object?>,
+as Map<String, Object?>,placeToFind: freezed == placeToFind ? _self.placeToFind : placeToFind // ignore: cast_nullable_to_non_nullable
+as PlaceToFind?,
   ));
 }
 

@@ -2,6 +2,7 @@ import 'package:json_schema_builder/json_schema_builder.dart';
 
 import '../catalog_component.dart';
 import '../catalog_schemas.dart';
+import '../examples/case_example.dart';
 import '../examples/stockholm_story_example.dart';
 
 final class DynamicRecommendationStack extends CatalogComponent {
@@ -53,6 +54,20 @@ final class DynamicRecommendationStack extends CatalogComponent {
 ]
 ''',
       dataModel: stockholmStoryDataModel,
+    ),
+    CatalogExample(
+      name: 'Sample homes the case kept',
+      componentsJson: '''
+[
+  {
+    "id": "root",
+    "component": "DynamicRecommendationStack",
+    "homes": { "path": "/assessment/candidates" },
+    "choose": { "event": { "name": "choose_home", "context": {} } }
+  }
+]
+''',
+      dataModel: sampleHomesDataModel,
     ),
   ];
 }

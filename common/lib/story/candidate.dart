@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../geo/geo_point.dart';
 import '../money/money.dart';
+import '../samples/listing.dart';
 
 part 'candidate.freezed.dart';
 part 'candidate.g.dart';
@@ -17,6 +18,7 @@ abstract class Candidate with _$Candidate {
     Money? price,
     Money? monthlyFee,
     String? listingUrl,
+    Listing? listing,
   }) = _Candidate;
 
   factory Candidate.fromJson(Map<String, Object?> json) =>

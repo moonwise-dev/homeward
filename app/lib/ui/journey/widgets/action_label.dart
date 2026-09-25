@@ -2,7 +2,8 @@ import 'package:common/common.dart';
 
 String surfaceActionLabel(String wireName) =>
     switch (SurfaceAction.named(wireName)) {
-      SurfaceAction.commitStory => 'That is what matters to us',
+      SurfaceAction.answer => 'Answered a question',
+      SurfaceAction.commitStory => 'That is the case',
       SurfaceAction.chooseHome => 'Chose this home',
       SurfaceAction.selectMarket => 'Chose the market',
       SurfaceAction.commitProfile => 'Saved my details',

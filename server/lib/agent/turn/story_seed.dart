@@ -21,6 +21,8 @@ Map<String, Object?> storySeed(Story story) {
       for (final criterion in story.criteria)
         if (criterion.mustHave) criterion.kind.name,
     }.toList(),
+    'adults': story.adults ?? 1,
+    'childAges': story.childAges ?? const <int>[],
     'pins': const <String, Object?>{},
     'center': ?center?.toJson(),
     'markers': [

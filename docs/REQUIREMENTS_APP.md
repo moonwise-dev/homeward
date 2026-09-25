@@ -102,23 +102,30 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
   - Two examples that fill both in: the Stockholm family and the Lisbon
     surfer.
   - Start builds the first message from the reason and the place, so the model
-    never starts cold, then shows the living story (D119): the buyer's story
-    as a paragraph they correct in place, not a sequence of steps.
+    never starts cold, and Homeward opens the case (D121).
   - The disclaimer, in one line under Start: Homeward estimates and explains;
     it is not financial advice.
-- **The living story** (D119) is the page of the first turn and of every turn
-  where the buyer typed more: `StoryDraft`, the map, and Show me homes. Slots
-  in the paragraph open menus and change the story on the device with no
-  request, and a blank place slot opens a sheet with the map: tap to drop the
-  pin, tap again to move it, Use this place to keep it. Guesses are dotted until
-  the buyer touches them. Show me homes sends everything they changed.
+- **The case** (D121): each question is a section holding the detective's line
+  and one card, a hunch, a photo lineup, a trade-off, or the household. One tap
+  answers it: the card marks the choice and sends it, and the next section
+  opens under it. A place option can open the map to drop a pin instead.
+- **The case summary** (D119, D121) closes the questions: `StoryDraft`, the
+  map, and Find my three homes. Slots in the paragraph open menus and change the
+  story on the device with no request, and a blank place slot opens a sheet
+  with the map: tap to drop the pin, tap again to move it, Use this place to
+  keep it. Guesses are dotted until the buyer touches them. Find my three homes
+  sends everything they changed.
+- **Sample homes** (D122) show their photos as a carousel with dots, marked as
+  sample listings with each photo's credit. Photos are bundled WebP assets,
+  loaded when shown.
 - **Sections** (D120): one per turn that has text, a surface, or a failure, in
   one scrolling story with no page count, pager, or next button. The newest
   section is open and scrolls into view when it arrives. An earlier section
-  folds into a recap: what it showed (Your story, Homes, About you, The deal),
-  and beneath it what the buyer answered, their own words or the action they
-  took. Tapping a recap opens that section in place, and tapping its header
-  folds it again. Sections fade and rise into place.
+  folds into a recap: what it showed (The case, Homes, About you, The deal),
+  or for a question the deduction it opened with, and beneath it what the buyer
+  answered: their own words, the option they tapped, or the action they took.
+  Tapping a recap opens that section in place, and tapping its header folds it
+  again. Sections fade and rise into place.
 - **While a turn runs**, the newest section stays open and slightly dimmed, and
   a working card under it takes its place until the first surface arrives or
   the turn ends; on the opening page the card sits over the page:

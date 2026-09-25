@@ -132,6 +132,30 @@ final class ProposeStoryTool extends ModelTool {
           'enum': [for (final kind in CriterionKind.values) kind.name],
         },
       },
+      'adults': {
+        'type': 'integer',
+        'description': 'Adults moving, only when the buyer said who moves.',
+      },
+      'childAges': {
+        'type': 'array',
+        'description': 'The age of each child moving, when the buyer said.',
+        'items': {'type': 'integer'},
+      },
+      'homeType': {
+        'type': 'string',
+        'enum': [for (final type in HomeType.values) type.name],
+        'description': 'Flat or house, only when the buyer said which.',
+      },
+      'outdoor': {
+        'type': 'string',
+        'enum': [for (final outdoor in OutdoorSpace.values) outdoor.name],
+        'description': 'The outdoor space the buyer said they want.',
+      },
+      'rooms': {
+        'type': 'integer',
+        'description':
+            'The rooms the buyer said they need, living room included.',
+      },
     },
   };
 
@@ -200,20 +224,45 @@ final class ProposeStoryTool extends ModelTool {
                 Criterion(kind: kind, mustHave: mustHaves.contains(kind)),
           ]
         : previous.criteria;
-    final story = previous.copyWith(
-      reason: _reason(arguments['reason']) ?? previous.reason,
-      city: city,
-      cityPoint:
-          cityPlace?.point ??
-          (city == previous.city ? previous.cityPoint : null),
-      mode: mode,
-      maxMinutes: maxMinutes,
-      anchors: anchors,
-      candidates: candidates,
-      criteria: criteria,
-      committed: false,
-      chosenCandidateId: null,
-    );
+    final adults = (arguments['adults'] as num?)?.toInt();
+    final homeType = _enum(HomeType.values, arguments['homeType']);
+    final outdoor = _enum(OutdoorSpace.values, arguments['outdoor']);
+    final rooms = (arguments['rooms'] as num?)?.toInt();
+    final sampleCity = city == null
+        ? null
+        : context.markets.samples.cityNamed(city)?.id;
+    final story = previous
+        .answering({
+          if (adults != null) CaseFacet.household,
+          if (homeType != null) CaseFacet.homeType,
+          if (outdoor != null) CaseFacet.outdoor,
+          if (rooms != null) CaseFacet.rooms,
+        })
+        .copyWith(
+          reason: _reason(arguments['reason']) ?? previous.reason,
+          city: city,
+          sampleCity: sampleCity,
+          adults: adults ?? previous.adults,
+          childAges: arguments['childAges'] is List<Object?>
+              ? [
+                  for (final age in arguments['childAges'] as List<Object?>)
+                    if (age is num) age.toInt(),
+                ]
+              : previous.childAges,
+          homeType: homeType ?? previous.homeType,
+          outdoor: outdoor ?? previous.outdoor,
+          rooms: rooms ?? previous.rooms,
+          cityPoint:
+              cityPlace?.point ??
+              (city == previous.city ? previous.cityPoint : null),
+          mode: mode,
+          maxMinutes: maxMinutes,
+          anchors: anchors,
+          candidates: candidates,
+          criteria: criteria,
+          committed: false,
+          chosenCandidateId: null,
+        );
     final market = plan.marketId ?? _marketOf(cityPlace, placed, context);
     return ToolResult(
       modelResult: {
@@ -237,6 +286,7 @@ final class ProposeStoryTool extends ModelTool {
             },
         ],
         'criteria': [for (final criterion in criteria) criterion.id],
+        'sampleHomes': sampleCity != null,
         if (market != null && plan.marketId == null)
           'market': {
             'marketId': market.code,

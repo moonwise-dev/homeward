@@ -41,6 +41,8 @@ final _wideComponents = {
   const LifestyleCommuteMap().name,
   const DynamicRecommendationStack().name,
   const ComparisonTable().name,
+  const PhotoLineup().name,
+  const TradeOff().name,
 };
 
 bool isWideSurface(SurfaceDefinition? definition) =>

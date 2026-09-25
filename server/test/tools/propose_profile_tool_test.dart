@@ -37,6 +37,20 @@ void main() {
     expect(result.plan!.profile, const BuyerProfile());
   });
 
+  test('money waits while the case is open', () {
+    final open = contextWith(
+      plan: const Plan(story: Story(city: 'Stockholm')),
+    );
+
+    expect(tool.isOffered(open), isFalse);
+    expect(tool.run({'age': 34}, open).modelResult, contains('error'));
+    expect(
+      tool.isOffered(contextWith(plan: Plan(story: stockholmChosen))),
+      isTrue,
+    );
+    expect(tool.isOffered(contextWith()), isTrue);
+  });
+
   test('rejects facts that are not valid and keeps the rest', () {
     final result = tool.run({
       'taxResidence': 'Sweden',

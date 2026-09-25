@@ -20,6 +20,7 @@ _AssessedCandidate _$AssessedCandidateFromJson(
       'pros',
       'cons',
       'close',
+      'listing',
     ],
   );
   final val = _AssessedCandidate(
@@ -43,6 +44,10 @@ _AssessedCandidate _$AssessedCandidateFromJson(
       (v) =>
           (v as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
     ),
+    listing: $checkedConvert(
+      'listing',
+      (v) => v == null ? null : Listing.fromJson(v as Map<String, dynamic>),
+    ),
   );
   return val;
 });
@@ -57,4 +62,5 @@ Map<String, dynamic> _$AssessedCandidateToJson(_AssessedCandidate instance) =>
       'pros': instance.pros,
       'cons': instance.cons,
       'close': instance.close,
+      'listing': ?instance.listing?.toJson(),
     };

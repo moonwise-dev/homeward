@@ -88,7 +88,8 @@ the model lays them out and never writes a figure they show.
 The buyer's story as a short paragraph Homeward writes and the buyer corrects
 in place. The model writes the prose and picks which slots the sentence needs;
 the device does the rest, so every correction is instant. A slot Homeward
-guessed is drawn as an assumption until the buyer touches it.
+guessed is drawn as an assumption until the buyer touches it. In the case
+(D121) it is the case summary, drawn once after the questions.
 
 | Property | Type | Required | Notes |
 | --- | --- | --- | --- |
@@ -138,15 +139,75 @@ and homes across on a wide card; one criterion at a time on a narrow one.
 
 The homes ranked by how well they fit, best first: a score bar, what fits,
 what comes close, what misses, a warning when a must-have is lost, and a
-button to choose the home.
+button to choose the home. A sample home leads with its photos, price, size,
+and price per square metre against its area's (D122).
 
 | Property | Type | Required | Notes |
 | --- | --- | --- | --- |
 | `homes` | path | yes | `/assessment/candidates`, already in rank order |
 | `choose` | `Action` | no | `choose_home`; the app adds the tapped home as `candidateId` |
 
-The living story that comes before them is `StoryDraft` and the map, with a
+The case summary that comes before them is `StoryDraft` and the map, with a
 basic `Button` sending `commit_story`.
+
+### `ListingCard`
+
+One sample home in full: photos to swipe through, the price, size, rooms, and
+floor, the price per square metre against its area's with the source,
+what fits and what misses from the assessment, and a button to choose it. It
+is labelled as a sample listing, and each photo carries its credit.
+
+| Property | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `homes` | path | yes | `/assessment/candidates` |
+| `home` | string | yes | The id of the home to show |
+| `choose` | `Action` | no | `choose_home`; the app adds `candidateId` |
+
+## Case Blocks
+
+The detective's questions (D121, D123). Each is one card the buyer answers with
+a tap, sending `answer`; the app adds what was tapped to the action's context,
+so the model writes only the question. Figures on them come from tools.
+
+### `Hunch`
+
+A deduction about the buyer, the clue it came from, and one tap to confirm or
+correct it. The first option is the hunch itself.
+
+| Property | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `story` | path | yes | Always `/story`; a place option's map opens on its centre |
+| `hunch` | string | yes | The deduction, one sentence in the second person |
+| `because` | string | no | The clue it came from, such as "Two children at school" |
+| `facet` | enum | yes | `place`, `mode`, `maxMinutes`, `homeType`, `outdoor`, `style`, `rooms`, `criterion` |
+| `options` | list | yes | Two to four `{ label, value }`. `place`: a map query; `mode`: a travel mode; `maxMinutes` and `rooms`: a whole number; `homeType`: `flat` or `house`; `outdoor`: `none`, `balcony`, or `garden`; `style`: `classic` or `modern`; `criterion`: a criterion kind. A `place` option with `pin: true` opens the map to drop a pin |
+| `answer` | `Action` | yes | `answer`; the app adds `facet`, `value`, and `label`, and `pin` with `lat` and `lng` when the buyer dropped one |
+
+### `PhotoLineup`
+
+Four photos from the buyer's city, of homes or of ways to live there, each
+curated with the traits it stands for. The buyer taps the one that feels like
+theirs, and the server reads the traits.
+
+| Property | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `photos` | path | yes | `/lineup/homes` or `/lineup/life`, whichever the turn context lists |
+| `pick` | `Action` | yes | `answer`; the app adds `facet` `photo`, the photo id as `value`, and its caption as `label` |
+
+### `TradeOff`
+
+Two or three ways to live side by side: an area with its character, a home
+type and a size, the estimated price from the area's price per square metre
+with its source, and the minutes to the buyer's daily place.
+
+| Property | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `options` | path | yes | `/tradeoff/options`, seeded by `compare_areas` |
+| `pick` | `Action` | yes | `answer`; the app adds `facet` `area`, the option id as `value`, and a short `label` |
+
+`HouseholdInput` asks who moves when it binds `/story/adults` and
+`/story/childAges`, with a basic `Button` sending `answer` with the facet
+`household` and `storyPath`.
 
 ## Components
 

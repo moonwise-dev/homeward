@@ -316,6 +316,11 @@ Every surface is seeded by the server with the slices its components bind to.
 The model binds to these paths and never writes values.
 
 ```text
+/story                   the story, its answers, and map markers
+/lineup                  the city's photo lineups, homes and life
+/tradeoff
+  options                the ways to live compare_areas priced
+/assessment              candidates, rows, markers, routes; sample homes carry their listing
 /profile                 BuyerProfile
 /market                  ResolvedMarket in the pack's published format (D66)
   id, name, currency
@@ -358,7 +363,8 @@ and `/market` through `common/finance` when the buyer changes a bound input.
 
 | Action | Context | Server behavior before the model runs |
 | --- | --- | --- |
-| `commit_story` | `storyPath` | Fold the surface's `/story` fields, pins included, into the story and confirm it |
+| `answer` | `facet`, `value`, `label`; `pin` for a dropped pin; `storyPath` for the household | Fold one answer into the story (D121): a place is found in the city or taken from the pin, a photo applies its traits, an area option its area, home type, rooms, and price range; the facet counts as answered |
+| `commit_story` | `storyPath` | Fold the surface's `/story` fields, pins included, into the story and confirm it; in a city with sample homes, pick the three that fit (D122) |
 | `commit_profile` | `profilePath` | Save every valid field from the surface's `/profile` over the saved profile, clear the draft, and report invalid fields |
 | `select_market` | `marketId` | Resolve market, write to plan; profile facts on the surface become the profile draft |
 | `commit_scenario` | `scenarioPath` | Parse `/scenario`, refuse it unless amounts are in the market currency and `withinMaxLtv` holds, then save it and clear the draft |

@@ -34,6 +34,8 @@ abstract class AgentTool {
 
   Map<String, Object?>? settledArguments(ToolContext context) => null;
 
+  bool isOffered(ToolContext context) => true;
+
   FutureOr<ToolResult> run(Map<String, Object?> arguments, ToolContext context);
 }
 

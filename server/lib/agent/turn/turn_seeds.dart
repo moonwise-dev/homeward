@@ -6,12 +6,30 @@ import 'story_seed.dart';
 
 Map<String, Object?> turnSeeds(
   Plan plan,
-  Iterable<Map<String, Object?>> toolSeeds,
-) {
+  Iterable<Map<String, Object?>> toolSeeds, {
+  Map<String, List<Photo>> lineups = const {},
+}) {
   final scenario = plan.scenarioDraft ?? plan.scenario;
+  final options = plan.story.areaOptions;
   final seeds = <String, Object?>{
     selectionSlice.name: const <String, Object?>{},
     storySlice.name: storySeed(plan.story),
+    if (lineups.isNotEmpty)
+      lineupSlice.name: {
+        for (final MapEntry(key: name, value: photos) in lineups.entries)
+          name: [
+            for (final photo in photos)
+              {
+                'id': photo.id,
+                'caption': photo.caption,
+                'credit': '${photo.credit.name} / Unsplash',
+              },
+          ],
+      },
+    if (options.isNotEmpty)
+      tradeOffSlice.name: {
+        'options': [for (final option in options) option.toJson()],
+      },
     for (final slices in toolSeeds) ...slices,
     profileSlice.name: (plan.profileDraft ?? plan.profile).toJson(),
   };

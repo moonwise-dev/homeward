@@ -118,6 +118,7 @@ AssessedCandidate _assessed(
     pros: lines(FitStatus.fits),
     cons: lines(FitStatus.misses, withDetail: true),
     close: lines(FitStatus.close, withDetail: true),
+    listing: candidate.listing,
   );
 }
 

@@ -1,6 +1,7 @@
 enum OpenDecision {
   story,
-  storyGaps,
+  caseQuestions,
+  caseSummary,
   homeChoice,
   targetMarket,
   marketCoverage,

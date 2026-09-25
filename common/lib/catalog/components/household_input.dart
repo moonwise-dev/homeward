@@ -13,8 +13,10 @@ final class HouseholdInput extends CatalogComponent {
   @override
   String get description =>
       'Asks who lives in the home: how many adults and the age of each child, '
-      'with a one-tap answer for no children. Use it for the household fact, '
-      'bound to /profile/adults and /profile/childAges.';
+      'with a one-tap answer for no children. In the facts form bind it to '
+      '/profile/adults and /profile/childAges; when the case asks who moves, '
+      'bind it to /story/adults and /story/childAges beside a Button sending '
+      'answer with the facet household and storyPath /story.';
 
   @override
   CatalogPhase get phase => CatalogPhase.mvp;
@@ -26,10 +28,12 @@ final class HouseholdInput extends CatalogComponent {
   Map<String, Schema> get properties => {
     'label': CatalogSchemas.label,
     'adults': CatalogSchemas.bound(
-      'Where the number of adults is written, /profile/adults.',
+      'Where the number of adults is written, /profile/adults or '
+      '/story/adults.',
     ),
     'childAges': CatalogSchemas.bound(
-      'Where the list of child ages is written, /profile/childAges.',
+      'Where the list of child ages is written, /profile/childAges or '
+      '/story/childAges.',
     ),
   };
 

@@ -2,7 +2,9 @@ import 'package:common/common.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../markets/market_directory.dart';
+import '../../samples/pick_sample_homes.dart';
 import 'action_outcome.dart';
+import 'case_answer.dart';
 import 'profile_from_form.dart';
 import 'story_from_answers.dart';
 
@@ -23,17 +25,51 @@ ActionOutcome applyAction({
   };
 
   switch (SurfaceAction.named(action.name)) {
+    case SurfaceAction.answer:
+      return caseAnswer(
+        action: action,
+        form: form,
+        plan: plan,
+        markets: markets,
+        summary: summary,
+      );
     case SurfaceAction.commitStory:
-      final story = storyFromAnswers(
+      final confirmed = storyFromAnswers(
         plan.story,
         form[storySlice.name] ?? const {},
       );
+      final city = markets.samples.city(confirmed.sampleCity);
+      final named = [
+        for (final candidate in confirmed.candidates)
+          if (candidate.listing == null) candidate,
+      ];
+      final pick = city == null || named.isNotEmpty
+          ? null
+          : pickSampleHomes(confirmed, markets.samples.listingsIn(city.id));
+      final story = pick == null
+          ? confirmed
+          : confirmed.copyWith(
+              candidates: [
+                for (final (index, listing) in pick.homes.indexed)
+                  Candidate(
+                    id: 'c${index + 1}',
+                    label: listing.name,
+                    query: listing.address,
+                    point: listing.point,
+                    address: listing.address,
+                    price: listing.price,
+                    monthlyFee: listing.monthlyFee,
+                    listing: listing,
+                  ),
+              ],
+            );
       return ActionOutcome(
         plan: plan.copyWith(story: story),
         summary: {
           ...summary,
           'applied': true,
           'criteria': story.criteria.length,
+          if (pick != null) 'sampleHomes': pick.toSummary(),
         },
       );
     case SurfaceAction.chooseHome:

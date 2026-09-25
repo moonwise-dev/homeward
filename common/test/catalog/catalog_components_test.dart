@@ -9,9 +9,13 @@ void main() {
     expect(homewardCatalog.id, homewardCatalogId);
     expect(homewardCatalog.components.keys, [
       'StoryDraft',
+      'Hunch',
+      'PhotoLineup',
+      'TradeOff',
       'LifestyleCommuteMap',
       'ComparisonTable',
       'DynamicRecommendationStack',
+      'ListingCard',
       'LocationPicker',
       'MoneyInput',
       'HouseholdInput',

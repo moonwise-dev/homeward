@@ -47,12 +47,49 @@ Map<String, Object?> turnContext({
       'draftPending': plan.profileDraft != null,
     },
     'story': _story(plan.story),
+    'case': _case(plan.story, markets),
     'scenario': {
       'committed': plan.scenario != null,
       'draftPending': plan.scenarioDraft != null,
     },
     'surfacesUsed': surfacesUsed.toList(),
     if (preRun.isNotEmpty) 'preRun': preRun,
+  };
+}
+
+Map<String, Object?> _case(Story story, MarketDirectory markets) {
+  final samples = markets.samples;
+  final city = samples.city(story.sampleCity);
+  return {
+    'questionsAsked': story.questions,
+    'maxQuestions': maxCaseQuestions,
+    'open': [for (final gap in caseGaps(story)) gap.name],
+    'answered': [for (final facet in story.answered) facet.name],
+    'known': {
+      'adults': ?story.adults,
+      'childAges': ?story.childAges,
+      'homeType': ?story.homeType?.name,
+      'outdoor': ?story.outdoor?.name,
+      'style': ?story.style?.name,
+      'rooms': ?story.rooms,
+      if (story.areaIds.isNotEmpty) 'areas': story.areaIds,
+      'priceRangeSet': story.priceMax != null,
+    },
+    if (city != null)
+      'sampleHomes': {
+        'city': city.name,
+        'homes': samples.listingsIn(city.id).length,
+        'areas': [
+          for (final area in city.areas)
+            {
+              'id': area.id,
+              'name': area.name,
+              'types': [for (final type in area.homeTypes) type.name],
+              'character': area.character,
+            },
+        ],
+        'lineups': samples.lineupsOf(city.id).keys.toList(),
+      },
   };
 }
 

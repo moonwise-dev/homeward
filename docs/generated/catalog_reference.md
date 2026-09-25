@@ -9,9 +9,13 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | Component | Phase | Agent visible | Required | Bound | Examples |
 | --- | --- | --- | --- | --- | --- |
 | `StoryDraft` | mvp | yes | `story`, `segments` | `story` | A family moving for studies |
+| `Hunch` | mvp | yes | `story`, `hunch`, `facet`, `options`, `answer` | `story` | How they will get to KTH |
+| `PhotoLineup` | mvp | yes | `photos`, `pick` | `photos` | Which feels like home in Stockholm |
+| `TradeOff` | mvp | yes | `options`, `pick` | `options` | A garden or the city |
 | `LifestyleCommuteMap` | mvp | yes | `markers` | `markers`, `routes`, `pins` | Two flats and the campus |
 | `ComparisonTable` | mvp | yes | `rows`, `homes` | `rows`, `homes` | Odengatan against Solna |
-| `DynamicRecommendationStack` | mvp | yes | `homes` | `homes` | Which flat fits the move |
+| `DynamicRecommendationStack` | mvp | yes | `homes` | `homes` | Which flat fits the move, Sample homes the case kept |
+| `ListingCard` | mvp | yes | `homes`, `home` | `homes` | A sample home in Vasastan |
 | `LocationPicker` | mvp | yes | `label`, `value`, `mode` | `value` | Target market, Tax residence |
 | `MoneyInput` | mvp | yes | `label`, `value`, `currency` | `value` | Monthly net income |
 | `HouseholdInput` | mvp | yes | `label`, `adults`, `childAges` | `adults`, `childAges` | A couple without children, A family with two children |
@@ -28,6 +32,18 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 The buyer's story as a short paragraph the buyer corrects in place. Write two to four sentences in the second person from what the buyer said, and put a slot where a value belongs: the commute mode, the longest trip, a thing that matters, or a place they travel to. Mark a slot assumed when you guessed it. The buyer changes slots on the device; you never write their values. Bind story to /story.
 
+### Hunch
+
+One deduction about the buyer, the clue it came from, and a tap to confirm or correct it. The first option confirms the hunch; the others are the likeliest alternatives. The app adds facet, value, and label to the answer action. Values by facet: place, a map query without the city; mode, walk, bike, car, or transit; maxMinutes and rooms, a whole number; homeType, flat or house; outdoor, none, balcony, or garden; style, classic or modern; criterion, a criterion kind. A place option with pin true opens the map to drop a pin instead of its value. Bind story to /story.
+
+### PhotoLineup
+
+Four photos from the buyer's city, of homes or of ways to live there, curated with the traits each stands for. The buyer taps the one that feels like theirs, and the server reads its traits. Bind photos to a lineup the turn context lists. The app adds facet photo, the photo id as value, and its caption as label to the pick action.
+
+### TradeOff
+
+Two or three ways to live side by side, as compare_areas priced them: an area and its character, a home type and size, the estimated price from the area's price per square metre with its source, and the minutes to their daily place. The buyer picks one, which sets the area and a price range. Call compare_areas first and bind options to /tradeoff/options. The app adds facet area, the option id as value, and a label to the pick action.
+
 ### LifestyleCommuteMap
 
 A map of the buyer's life around the homes they weigh: the places they travel to, each home, the route from each home to each place with its minutes, and the nearest place for each criterion. Before homes are measured, bind markers to /story/markers; after, bind markers to /assessment/markers and routes to /assessment/routes.
@@ -40,6 +56,10 @@ Every criterion against every home: whether it fits, comes close and misses by h
 
 The buyer's homes ranked by how well they fit the story, best first: what fits, what comes close and by how much, what misses, and whether a must-have is lost, each with a button to choose that home. Bind homes to /assessment/candidates. choose is sent with the chosen home added to its context as candidateId.
 
+### ListingCard
+
+One sample home in full: photos to swipe through, price, size, rooms, and floor, the price per square metre against its area's median with the source, what fits and what misses, and a button to choose it. Labelled as a sample listing. Bind homes to /assessment/candidates and name the home by id. choose is sent with candidateId added.
+
 ### LocationPicker
 
 Chooses a market or a country and writes its ISO 3166 code. Use mode market for where the buyer is buying, with the select_market action; use mode country for citizenship and tax residence.
@@ -50,7 +70,7 @@ An amount field that writes a money object to the bound path. Use it for incomes
 
 ### HouseholdInput
 
-Asks who lives in the home: how many adults and the age of each child, with a one-tap answer for no children. Use it for the household fact, bound to /profile/adults and /profile/childAges.
+Asks who lives in the home: how many adults and the age of each child, with a one-tap answer for no children. In the facts form bind it to /profile/adults and /profile/childAges; when the case asks who moves, bind it to /story/adults and /story/childAges beside a Button sending answer with the facet household and storyPath /story.
 
 ### AmountSlider
 
@@ -117,6 +137,8 @@ Why and where the buyer is moving, what they care about, and the homes or areas 
 | `/story/picks/gettingAround` | list of criterion kinds, such as ["schools", "parks"] | Criteria picked for getting around. |
 | `/story/picks/downsides` | list of criterion kinds, such as ["schools", "parks"] | Criteria picked for downsides. |
 | `/story/mustHaves` | list of criterion kinds, such as ["schools", "parks"] | Criteria the buyer will not give up. |
+| `/story/adults` | integer | Adults moving, for a HouseholdInput asking who moves. |
+| `/story/childAges` | list of integers | Age of each child moving, for a HouseholdInput asking who moves. |
 | `/story/pins` | object read by Homeward components | Places the buyer dropped on the map, by id: label, lat, lng. The map shows them and commit_story turns them into anchors. |
 | `/story/center` | object read by Homeward components | Where the map opens: the city as lat and lng. |
 | `/story/markers` | object read by Homeward components | Map markers for the city, the anchors, and the homes placed so far, for a Map before the assessment exists. |
@@ -124,13 +146,30 @@ Why and where the buyer is moving, what they care about, and the homes or areas 
 | `/story/candidates` | object read by Homeward components | Homes or areas being weighed: id, label, point, price. |
 | `/story/criteria` | object read by Homeward components | What is weighed: kind, anchorId, mustHave. |
 
+### `/lineup`
+
+The buyer's city's photo lineups, read-only and seeded by the server when the city has sample homes. Bind a PhotoLineup to one of them.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/lineup/homes` | object read by Homeward components | Four photos of homes: id, caption, and the traits the server reads. |
+| `/lineup/life` | object read by Homeward components | Four photos of ways to live in the city: id, caption, and traits. |
+
+### `/tradeoff`
+
+The ways to live compare_areas priced, read-only. Bind a TradeOff to it.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/tradeoff/options` | object read by Homeward components | Each option: id, area, character, home type, rooms, size, estimated price, the price per square metre with its source, and minutes to the first placed anchor. |
+
 ### `/assessment`
 
 How each home fits each criterion, measured by the server, read-only. Bind building blocks to its lists.
 
 | Path | Value | Meaning |
 | --- | --- | --- |
-| `/assessment/candidates` | object read by Homeward components | Each home with rank, score, missesMustHave, and pros, cons, and close as ready sentences. |
+| `/assessment/candidates` | object read by Homeward components | Each home with rank, score, missesMustHave, and pros, cons, and close as ready sentences; a sample home carries its listing. |
 | `/assessment/rows` | object read by Homeward components | One row per criterion: label, group, mustHave, and a cell per home with status fits, close, misses, or unknown, text, and detail. |
 | `/assessment/markers` | object read by Homeward components | Map markers for anchors, homes, and the nearest places found. |
 | `/assessment/routes` | object read by Homeward components | A route from each home to each anchor with its minutes and path. |
@@ -205,7 +244,8 @@ Figures the server computed for the scenario, read-only.
 
 | Name | Context | Meaning |
 | --- | --- | --- |
-| `commit_story` | `storyPath` | The buyer confirms the story they corrected, pins included; the server measures every home against it. |
+| `answer` | `facet`, `value`, `label` | The buyer answers one of the detective's questions with a tap; the app adds the facet, the value, and the label of what was tapped, and the server folds it into the story. |
+| `commit_story` | `storyPath` | The buyer confirms the case summary they corrected, pins included; the server picks the sample homes that fit, where the city has them, and measures every home against the story. |
 | `choose_home` | `candidateId` | The buyer picks the home to work out the deal for. |
 | `select_market` | `marketId` | The buyer picked a market. |
 | `commit_profile` | `profilePath` | The buyer saves the profile form; the server validates and stores it. |

@@ -4,6 +4,7 @@ import 'package:a2ui_core/a2ui_core.dart';
 import 'package:common/common.dart';
 
 import 'component_tree.dart';
+import 'hunch_problem.dart';
 import 'form_completion.dart';
 import 'validation_failure.dart';
 import 'validation_outcome.dart';
@@ -141,6 +142,9 @@ final class TurnValidator {
         if (!SurfaceAction.wireNames.contains(action)) {
           return _reject(surfaceId, path, 'Unknown action $action');
         }
+      }
+      if (hunchProblem(component) case final problem?) {
+        return _reject(surfaceId, '$path/options', problem);
       }
       merged[component['id']! as String] = component;
     }

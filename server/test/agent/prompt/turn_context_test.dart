@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 import '../../tools/tool_fixtures.dart';
 
 void main() {
-  const storyOpen = ['story', 'storyGaps', 'homeChoice'];
+  const storyOpen = ['story', 'caseQuestions', 'homeChoice'];
 
   test('a new plan is open from the story, then the target market', () {
     expect(turnContext(turn: 1, plan: const Plan(), markets: realMarkets), {
@@ -29,9 +29,43 @@ void main() {
         'mustHaves': <String>[],
         'committed': false,
       },
+      'case': {
+        'questionsAsked': 0,
+        'maxQuestions': maxCaseQuestions,
+        'open': ['household', 'homeType', 'outdoor', 'style'],
+        'answered': <String>[],
+        'known': {'priceRangeSet': false},
+      },
       'scenario': {'committed': false, 'draftPending': false},
       'surfacesUsed': <String>[],
     });
+  });
+
+  test('a city with sample homes lists its areas and lineups', () {
+    final context = turnContext(
+      turn: 2,
+      plan: const Plan(
+        story: Story(
+          reason: StoryReason.study,
+          city: 'Stockholm',
+          sampleCity: 'stockholm',
+        ),
+      ),
+      markets: realMarkets,
+    );
+    final caseBlock = context['case']! as Map<String, Object?>;
+    final samples = caseBlock['sampleHomes']! as Map<String, Object?>;
+
+    expect(caseBlock['open'], containsAllInOrder(['place', 'household']));
+    expect(caseBlock['open'], contains('area'));
+    expect(samples['city'], 'Stockholm');
+    expect(
+      [
+        for (final area in samples['areas']! as List<Object?>)
+          (area! as Map)['id'],
+      ],
+      containsAll(['vasastan', 'danderyd']),
+    );
   });
 
   test('the story says what was placed and what the chosen home costs', () {

@@ -1,6 +1,7 @@
 import '../research/research.dart';
 import 'agent_tool.dart';
 import 'assess_story_tool.dart';
+import 'compare_areas_tool.dart';
 import 'compute_affordability_tool.dart';
 import 'estimate_purchase_costs_tool.dart';
 import 'get_obstacles_tool.dart';
@@ -24,6 +25,7 @@ const homewardTools = <AgentTool>[
 List<AgentTool> storyTools(Research research) => [
   ProposeStoryTool(research.nominatim),
   ProposeAreasTool(research.nominatim),
+  CompareAreasTool(research.routing),
   AssessStoryTool(research.measurer),
 ];
 

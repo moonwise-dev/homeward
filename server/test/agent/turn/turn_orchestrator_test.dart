@@ -589,6 +589,45 @@ void main() {
     },
   );
 
+  test('a typed turn in the case that draws no card is asked for it', () async {
+    await sessionWith(
+      const Plan(
+        story: Story(reason: StoryReason.study, city: 'Stockholm'),
+      ),
+    );
+    final script = ScriptedInteractions([
+      reply('i1', text: 'Where will you study?'),
+      reply(
+        'i2',
+        text: a2ui('t1-clue', [
+          {'id': 'root', 'component': 'Text', 'text': 'KTH or somewhere else?'},
+        ]),
+      ),
+    ]);
+
+    final events = await send(orchestrator(script), 'Hi').toList();
+
+    expect(script.requests, hasLength(2));
+    expect(
+      (script.requests[1].input as TextInput).text,
+      contains('caseQuestions still open'),
+    );
+    expect(events.last, isA<TurnCompleted>());
+  });
+
+  test('a typed question outside the case is answered in words', () async {
+    await sessionWith(
+      Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),
+    );
+    final script = ScriptedInteractions([
+      reply('i1', text: 'A bostadsrätt is a share in an association.'),
+    ]);
+
+    await send(orchestrator(script), 'What is a bostadsrätt?').toList();
+
+    expect(script.requests, hasLength(1));
+  });
+
   test('ends with a retry surface when corrections run out', () async {
     await sessionWith(
       Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),

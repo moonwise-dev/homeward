@@ -119,7 +119,8 @@ pure and unit tested.
 | Open decision | Opens when |
 | --- | --- |
 | `story` | The story names no city and no home |
-| `storyGaps` | The buyer has not confirmed what matters |
+| `caseQuestions` | The case has an essential clue open and fewer than five questions were asked (D121) |
+| `caseSummary` | The questions are done and the buyer has not confirmed the case |
 | `homeChoice` | No home is chosen |
 | `targetMarket` | No market selected |
 | `marketCoverage` | Market selected that has no curated pack |
@@ -140,8 +141,9 @@ An uncovered market leaves only `marketCoverage` open among them.
 | Open decision | Tools | Components |
 | --- | --- | --- |
 | `story` | `propose_story` when the message says anything about the move | — |
-| `storyGaps` | `propose_story` | The living story (D119): `StoryDraft`, `LifestyleCommuteMap`, and a `Button` sending `commit_story` on one surface |
-| `homeChoice` | `assess_story`, pre-run | `LifestyleCommuteMap`, `DynamicRecommendationStack` sending `choose_home`, `ComparisonTable` |
+| `caseQuestions` | `propose_story` when the buyer types; `compare_areas` for a trade-off | One question card: `Hunch`, `PhotoLineup`, `TradeOff`, or `HouseholdInput` with a `Button` sending `answer` |
+| `caseSummary` | — | The case summary (D119, D121): `StoryDraft`, `LifestyleCommuteMap`, and a `Button` sending `commit_story`, on one surface |
+| `homeChoice` | `assess_story`, pre-run; sample homes are picked when `commit_story` is applied | `LifestyleCommuteMap`, `DynamicRecommendationStack` sending `choose_home`, which shows a sample home's photos and price per square metre, `ComparisonTable`; `ListingCard` for one home |
 | `targetMarket` | `resolve_market` | `LocationPicker` in `market` mode |
 | `marketCoverage` | — | `MarketSnapshotCard` in its uncovered state |
 | `profileFields` | `load_market`, `propose_profile` | The facts page: `HouseholdInput`, `MoneyInput`, `LocationPicker` in `country` mode, `ChoicePicker`, commit `Button`; no market card |
@@ -155,16 +157,62 @@ picked, as a sentence, then the place they are moving to. The reason also
 travels as message metadata and is set on the plan before the model is called,
 so `story.reason` is known from the first round. The first turn therefore
 always has something to infer from; it calls `propose_story`, never asks why
-the buyer is moving, and draws the living story (D119): one surface holding
-the story as a paragraph, the map, and a Show me homes button. The model writes
-the paragraph, what it assumes, and the one or two blanks it cannot guess; the
-buyer corrects it on the device with no model turn. Only a sentence typed under
-the page or Show me homes reaches the model again.
+the buyer is moving, and opens the case with its first question (D121).
 
 Homeward researches nothing before it is needed (D119): areas are suggested
-only with `propose_areas`, once the story is confirmed and has no homes, the market's rules and the
-obstacles wait for a chosen home, and homes are measured when the buyer asks to
-see them.
+only with `propose_areas`, once the case is confirmed in a city with no sample
+homes, the market's rules and the obstacles wait for a chosen home, and homes
+are measured when the buyer asks to see them.
+
+### The Case
+
+The story phase is a case Homeward works like a detective (D121). Each turn
+states one deduction from the last clue and asks one question, drawn as a card
+the buyer answers with a tap:
+
+| Card | Asks | Answer |
+| --- | --- | --- |
+| `Hunch` | Whether a deduction is right, with two or three alternatives: where they will spend their days, how they get around, the longest trip, flat or house, outdoor space, style, rooms, or one thing that matters | `answer` with the facet and the tapped value |
+| `PhotoLineup` | Which of the city's curated photos feels like home, or like the life they want | `answer` with the photo; the server applies its traits: home type, outdoor space, style, criteria, areas |
+| `TradeOff` | Which of two or three ways to live they would pick: an area, a home type, and a size each, priced from the area's price per square metre and timed to their daily place by `compare_areas` | `answer` with the option; the server sets the area, the home type, the rooms, and a price range from its estimate |
+| `HouseholdInput` | Who moves with them, bound to `/story/adults` and `/story/childAges` | A `Button` sending `answer` with the facet `household` and `storyPath`; children add schools from six, preschool under six, and playgrounds under ten |
+
+The story records what the buyer answered, by tap or in words, and
+`common/lib/story/case_gaps.dart` derives what is still open. Essential facets
+are where the buyer spends their days when they move for work or study, who
+moves, flat or house, and, in a city with sample homes, the area and price
+range. `caseQuestions` stays open while any of them is and fewer than five
+questions were asked; then `caseSummary` asks for the living story paragraph
+(D119), now drawn once as the case summary, with a Find my three homes button
+sending `commit_story`. The turn context's `case` block carries the open
+facets, the questions asked, and, when the city has sample homes, its areas and
+photo lineups.
+
+The model chooses the question and the card: the open facet that most changes
+which homes win, reached from the clue the buyer just gave. Moving for work or
+study starts with where they will be every day, a family with who moves, a
+lifestyle move with what pulls them there. It asks about the buyer's life and
+taste, never directly for a room count or a budget: rooms are a deduction the
+buyer confirms, and the price range comes from the trade-off they pick. Every
+figure on a card comes from a tool or the server's data.
+
+When `commit_story` is applied in a city with sample homes, code picks the
+homes (D122): it rules out listings of the wrong type, more than a tenth over
+the price range, outside the areas the buyer leaned to, or short of the rooms
+they need, relaxing the price, then the area, then the type until three
+remain, and keeps the three that fit best by rooms, outdoor space, style,
+straight-line distance to their daily place, and price per square metre
+against the area's. They become the story's homes, `assess_story`
+measures them before the model runs, and the action summary tells the model
+how many homes it went through and why it ruled the others out, so it can say
+so.
+
+Each answer is a model turn. The server pre-runs what a question needs from
+the plan, so a question takes one model round unless the model calls
+`compare_areas`. A turn of the case that ends with no card, typed or tapped,
+is asked once for it. `propose_profile` is not offered while the case is open,
+and refuses if called: money waits for a chosen home, and who moves goes to
+`propose_story`.
 
 The country code is required: in live turns on 2026-09-17 `gemini-3.5-flash-lite`
 sometimes left it out, the place list, which holds only regions with their own
@@ -208,9 +256,10 @@ plan, one request at a time.
 
 | Tool | Input | Model result | Seeds |
 | --- | --- | --- | --- |
-| `propose_story` | Reason, city, an assumed commute mode and longest trip, anchors with a map query, homes the buyer named with a map query and price, criteria, must-haves | Each anchor and home with whether it was placed and the address found; the market it selected, if any | `/story` from the plan, with the answers prefilled for the living story, the city as a marker, and markers for what was placed |
+| `propose_story` | Reason, city, an assumed commute mode and longest trip, anchors with a map query, homes the buyer named with a map query and price, criteria, must-haves, and the household, home type, outdoor space, and rooms when the buyer stated them | Each anchor and home with whether it was placed and the address found; the market it selected, if any; whether the city has sample homes | `/story` from the plan, with the answers prefilled for the case summary, the city as a marker, and markers for what was placed |
+| `compare_areas` | Two or three options, each an area from `case.areas`, a home type, and rooms | Each option's area, home type, size, and whether it was timed; never amounts | `/tradeoff/options`: each option with its estimated price, the area's price per square metre and its source, and minutes to the first placed anchor by the story's mode |
 | `propose_areas` | Up to three areas of the buyer's city, only when the confirmed story has no homes | Each area with whether it was placed; the story is otherwise untouched | `/story` from the plan |
-| `assess_story` | — | Each home's rank and whether it misses a must-have, each criterion's status per home, the criteria that could not be measured. Never figures | `/assessment` |
+| `assess_story` | — | Each home's rank and whether it misses a must-have, each criterion's status per home, the criteria that could not be measured. Never figures | `/assessment`, each sample home with its listing |
 | `resolve_market` | `placeName` and the model's `countryCode`, both required, and its `subdivisionCode` | `selectedMarket` with name and coverage when exactly one matches, already the plan's market; otherwise `candidates`, with the curated markets when none resolve | `/selection` when several match |
 | `load_market` | `marketId` | Coverage, currency, profile fields with the profile paths that answer them and reasons, kinds of lending rule, never rule values | `/market`, the rules when curated and `{ id, name, coverage }` when not, with `/selection` holding the curated markets (D86) |
 | `propose_profile` | Facts the buyer stated: countries as ISO codes, enums, amounts as `{ amount, currency? }` in major units | Accepted and rejected facts with reasons | `/profile` from the plan's profile draft |
@@ -237,10 +286,10 @@ joins in order:
    components instead of restating figures.
 5. `prompts/generated/catalog_skill.md`: the agent-visible catalog, generated.
 6. A per-turn context block from `server/lib/agent/prompt/turn_context.dart`:
-   turn number, open decisions, the selected market with its coverage, saved
-   profile facts without amounts, which amounts were given, missing fields with
-   the profile paths that answer them, whether drafts are waiting, surface IDs
-   already used, and pre-run tool results. No rule values.
+   turn number, open decisions, the story, the case, the selected market with
+   its coverage, saved profile facts without amounts, which amounts were given,
+   missing fields with the profile paths that answer them, whether drafts are
+   waiting, surface IDs already used, and pre-run tool results. No rule values.
 
 Everything, the context block included, is sent as `system_instruction`, which
 goes out again with every request of the turn, tool-result rounds included, and
@@ -349,6 +398,11 @@ arrive, so components appear progressively while the model is still writing.
 On 2026-09-17 `gemini-3.5-flash-lite` pretty-printed in two of five first
 messages; when each line was a candidate, every line was rejected, two
 correction rounds followed, and one turn drew its form twice.
+
+A block opens on a line that is the fence alone or that ends with it, so a
+question followed straight by its card still draws: on 2026-09-25 the model
+wrote "Who is moving with you?```a2ui" and the whole surface fell into the
+prose. A fence with text after it on the same line stays prose.
 
 ### Rebuilding History
 

@@ -45,12 +45,14 @@ tool or from shared finance code.
 - **Gemini composes; tools measure; code computes.** The composing model decides
   what to ask, which criteria matter, and how the screen is laid out. It never
   writes a figure a buyer relies on.
-- **A story you correct, not a form you fill.** From a reason and a place,
-  Homeward writes the buyer's story as a short paragraph and marks what it
-  assumed. The buyer fixes what is off inside the sentence itself; blanks appear
-  only for what Homeward cannot guess, such as where they go every day. Nothing
-  is asked in an order Homeward chose, and the buyer can ask for homes at any
-  moment.
+- **A detective, not a form.** Homeward works the buyer out the way a
+  detective works a case. Each turn it says what it deduced from the last clue
+  and asks one question the buyer answers with a tap: which of four homes feels
+  like theirs, whether its hunch is right, which of two ways of living they
+  would pick. It asks about their life and taste, never for a room count or a
+  budget, and the order follows the clues, not a script. After a handful of
+  questions it writes the case back as a paragraph the buyer corrects in place,
+  then goes looking.
 - **Every fact shows where it came from.** Measured, Google Maps, estimate,
   verified, or said by the buyer.
 - **Works anywhere, honest everywhere.** Lifestyle facts come from open map data
@@ -70,7 +72,8 @@ tool or from shared finance code.
 Anyone deciding where to live and whether they can afford it: relocating for
 work, moving for a lifestyle, upsizing for a family, buying across a border.
 They bring either candidate homes, as a listing link, an address, or a pin, up
-to three, or just a city. Buyers are anonymous, bring their own Gemini key,
+to three, or just a city; in Stockholm and Lisbon Homeward also finds homes for
+them among sample listings (D122). Buyers are anonymous, bring their own Gemini key,
 start and resume plans, answer generated questions, refine criteria on the
 board, commit a home and a scenario, and ask the agent to explain any figure.
 
@@ -84,7 +87,7 @@ rest honest, not a precondition for using Homeward.
 
 | Persona | Example | What Homeward weighs |
 | --- | --- | --- |
-| Relocating family | Moving to Stockholm for a job at KTH, two children, deciding between a flat in Vasastan and one in Solna | Two commutes, schools and their kind, parks, noise, transit, the association's finances, Swedish lending rules |
+| Relocating family | Moving to Stockholm to study at KTH, two children, torn between a garden further out and a flat close in | Two commutes, schools and their kind, parks, noise, transit, the association's finances, Swedish lending rules |
 | Lifestyle mover | Remote worker moving to Lisbon for surf and quiet, only a city in mind | Areas by vibe, water and nature, cafés, airport access, residency and tax, Portuguese rules |
 | Cross-border buyer | Swedish resident buying a flat in Funchal | Non-resident lending limit and taxes, obstacles such as a tax number, walking and views |
 | Local upsizer | A couple in Stockholm with a second child on the way | Space, schools, preschool, parking, what the extra room costs a month |
@@ -104,7 +107,7 @@ the board.
 | Evenings | Restaurants, cafés, nightlife, or quiet | Measured density |
 | Getting around | Nearest stop and its lines, bike routes; for drivers parking, congestion charges and tolls, charging | Measured; tolls researched |
 | Downsides | Noise from roads, rail, airports, and nightlife; safety impression; flood risk; construction | Noise measured by proximity; the rest researched and labelled |
-| The home | Price against budget, monthly cost, the housing association's or building's finances, energy and heating, fibre | Listing, buyer, researched |
+| The home | Price against the range the buyer picked, price per square metre against the area's, monthly cost, the housing association's or building's finances, energy and heating, fibre | Listing, official price statistics, buyer, researched |
 | Money and rules | What you can borrow, down payment, bank stress test, purchase taxes, running costs | Code, with verified or estimated rules |
 | Relocation | Residency and tax consequences, language, international community | Researched and labelled; verified where curated |
 
@@ -120,45 +123,57 @@ any city.
 
 ## Hero Flow
 
-The flow the video segment is built around. The story is the point.
+The flow the video segment is built around. The story is the point, and
+Homeward gets it the way a detective would (D121).
 
 1. A buyer opens a new plan, picks *studies* as why they are moving, and
    writes just *Stockholm* as the place.
-2. Homeward writes their story back on one page, beside a map of Stockholm:
-   *"You're moving to Stockholm to study. You'll probably get around by
-   **transit**, in under **30 minutes**, and **quiet evenings** and **parks**
-   matter to you. Where do you study? **drop a pin**"* The bold words are
-   assumptions the buyer can change in place, and the one blank is what
-   Homeward could not guess. The buyer pins KTH, and adds in one line that they
-   have two children and are weighing a flat on Odengatan and one in Solna; the
-   story is rewritten with schools and both flats in it. Nothing is a step or a
-   Continue button, and nothing waited on the model until the buyer asked to
-   see homes.
-3. While the homes are measured, a card under the story lists each step as it
-   runs and ticks it off: finding the flats, looking for schools and parks near them,
-   timing the ride to KTH. Then the board appears: a map with KTH, both flats, commute lines with minutes by
-   the chosen mode, schools and parks; a comparison of every criterion against
-   both flats, each cell fits, close, or misses; pros and cons; the flats
-   ranked. *Solna is six minutes over your 25-minute commute but has two
-   international schools within a kilometre.*
-4. The buyer asks for well-rated schools near Odengatan; Homeward adds Google
-   Maps ratings to that row only.
-5. The buyer picks Odengatan. The board folds into a line, and one short section
-   asks the money facts the rules need, filled in from the story where it can. Then the deal sheet: the
-   listing's price and the association fee, what they can borrow under
-   Sweden's verified rules and the rule that limits it, a down payment slider
-   that moves the payment, the bank's stress test, and the cash needed, all
-   recomputed on the device with no network traffic, beside the rules that
-   apply and the association's finances.
-6. Contrast: a remote worker picks *lifestyle*, writes just *Lisbon*, and adds
-   surfing and quiet evenings as Homeward asks. Homeward suggests areas, ranks
-   them on the map, and the chosen area opens a deal under Portugal's verified
-   rules. A buyer in a city Homeward never
-   curated gets the same flow with estimated rules, labelled.
+2. Homeward opens the case with what it can already deduce, and one question:
+   *"Studies in Stockholm. First clue: where will you spend your days?"* It
+   offers KTH, Stockholm University, and Karolinska as taps, and a pin for
+   anywhere else. The buyer taps KTH.
+3. *"KTH, then. Most people starting there come alone. Is anyone coming with
+   you?"* The buyer sets two adults and two children, six and nine. *"Two
+   children at school: you'll want a school they can walk to, and three rooms
+   at least. Which of these feels most like home?"* Four photos: a classic flat
+   with high ceilings, a new-build with a big balcony, a terraced house with a
+   garden, a villa by the water. The buyer taps the terraced house.
+4. *"A garden, then. Near KTH that has a price."* Two ways to live, each priced
+   from its area's real price per square metre and timed to KTH by bike: a
+   house in Danderyd, further out and roomier, and a flat in Vasastan, close
+   and smaller. The buyer picks Danderyd, which sets the area and a price range
+   without anyone typing a budget.
+5. Homeward writes the case back as a paragraph beside the map, its guesses
+   dotted: that they cycle, within 25 minutes, and that schools and parks
+   matter above all. The buyer changes one guess and taps *Find my three
+   homes*.
+6. While it looks, the working card lists each step: going through the sample
+   homes in Stockholm, timing the ride to KTH, looking for schools and parks
+   near the ones left. Then: *"I went through twelve homes and ruled out nine:
+   five were over your price, four had no garden. Three fit the case."* The
+   board shows the three on a map, each with its photos, price, size, and price
+   per square metre against its area's, what fits, and what comes close
+   but misses by how much.
+7. The buyer picks one. One short section asks the money facts the rules need,
+   filled in from the case where it can. Then the deal sheet: what they can
+   borrow under Sweden's verified rules and the rule that limits it, a down
+   payment slider that moves the payment, the bank's stress test, and the cash
+   needed, all recomputed on the device with no network traffic, beside the
+   rules that apply.
+8. Contrast: a remote worker picks *lifestyle* and writes just *Lisbon*. The
+   first question is a lineup of ways to live there: surf, the old town, a café
+   street, green hills. The trade-off puts a flat by the beach in Carcavelos
+   against one in Santos, the three homes are on the Cascais line, and the
+   chosen one opens a deal under Portugal's verified rules. A buyer in a city
+   with no sample homes gets the same questions and suggested areas instead,
+   and a buyer where Homeward never curated rules gets estimated rules,
+   labelled.
 
 ## Non-Goals For v1
 
-- Listing search or scraping of listing sites; buyers bring their candidates.
+- Listing search or scraping of listing sites. No listing site offers a free
+  API (checked 2026-09-25), so the demo cities carry sample listings, priced
+  from real prices per square metre and labelled as samples (D122).
 - Named lender offers, applications, or credit checks.
 - Storing identity or financial documents.
 - Legal, tax, or investment advice.

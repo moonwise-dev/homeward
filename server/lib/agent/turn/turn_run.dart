@@ -118,11 +118,15 @@ final class TurnRun {
       TextTurnInput(:final text) => RecordedInput.text(text),
       ActionTurnInput(:final action) => recordedInputOf(action),
     };
-    final firstInput = InteractionInput.text(_modelText(turnInput));
+    late final String firstText;
+    yield* _progress.whileRunning(
+      () async => firstText = await _modelText(turnInput),
+    );
+    final firstInput = InteractionInput.text(firstText);
     InteractionInput input = firstInput;
     var toolRounds = 0;
     var corrections = 0;
-    var askedForSurface = turnInput is! ActionTurnInput;
+    var askedForSurface = false;
     var mayStartOver = true;
     var correcting = false;
     while (true) {
@@ -265,7 +269,12 @@ final class TurnRun {
       }
       if (_forwarded.isEmpty && !askedForSurface) {
         askedForSurface = true;
-        if (surfaceDueNote(_plan, _market()) case final note?) {
+        if (surfaceDueNote(
+              _plan,
+              _market(),
+              caseOnly: turnInput is! ActionTurnInput,
+            )
+            case final note?) {
           input = InteractionInput.text(note);
           continue;
         }
@@ -313,7 +322,7 @@ final class TurnRun {
     _errorCode = failure.code.wireName;
   }
 
-  String _modelText(TurnInput turnInput) {
+  Future<String> _modelText(TurnInput turnInput) async {
     switch (turnInput) {
       case TextTurnInput(:final text, :final reason):
         if (reason != null) {
@@ -328,7 +337,24 @@ final class TurnRun {
           markets: tools.markets,
         );
         _plan = outcome.plan;
-        return actionInput(outcome.summary);
+        final place = outcome.placeToFind;
+        if (place == null) {
+          return actionInput(outcome.summary);
+        }
+        final found = await tools.call(
+          'propose_story',
+          {
+            'anchors': [
+              for (final anchor in _plan.story.anchors)
+                {'label': anchor.label, 'query': anchor.query},
+              {'label': place.label, 'query': place.query},
+            ],
+          },
+          _plan,
+          steps: _progress,
+        );
+        _plan = found.plan ?? _plan;
+        return actionInput({...outcome.summary, 'place': found.modelResult});
     }
   }
 
@@ -352,10 +378,11 @@ final class TurnRun {
     final settled = await tools.runSettled(_plan, steps: _progress);
     _settledNames.addAll(settled.keys);
     _validator
-      ..seeds = turnSeeds(_plan, [
-        ..._calledSeeds,
-        for (final result in settled.values) result.seeds,
-      ])
+      ..seeds = turnSeeds(
+        _plan,
+        [..._calledSeeds, for (final result in settled.values) result.seeds],
+        lineups: tools.markets.samples.lineupsOf(_plan.story.sampleCity),
+      )
       ..requiredProfilePaths = _requiredProfilePaths();
     return InteractionRequest(
       input: input,

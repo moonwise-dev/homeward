@@ -31,7 +31,8 @@ final class ToolBelt {
     final context = ToolContext(markets: markets, plan: plan);
     return [
       for (final tool in tools.whereType<ModelTool>())
-        if (tool.settledArguments(context) == null) tool.declaration,
+        if (tool.settledArguments(context) == null && tool.isOffered(context))
+          tool.declaration,
     ];
   }
 

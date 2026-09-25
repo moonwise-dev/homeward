@@ -833,6 +833,196 @@
       ],
       "additionalProperties": false
     },
+    "Hunch": {
+      "type": "object",
+      "description": "One deduction about the buyer, the clue it came from, and a tap to confirm or correct it. The first option confirms the hunch; the others are the likeliest alternatives. The app adds facet, value, and label to the answer action. Values by facet: place, a map query without the city; mode, walk, bike, car, or transit; maxMinutes and rooms, a whole number; homeType, flat or house; outdoor, none, balcony, or garden; style, classic or modern; criterion, a criterion kind. A place option with pin true opens the map to drop a pin instead of its value. Bind story to /story.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "Hunch"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "story": {
+          "type": "object",
+          "description": "Always { \"path\": \"/story\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/story"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "hunch": {
+          "type": "string",
+          "description": "The deduction, one sentence in the second person, such as \"I would bet you will cycle, and no more than 20 minutes.\""
+        },
+        "because": {
+          "type": "string",
+          "description": "The clue it came from, a few words, such as \"Two children at school\"."
+        },
+        "facet": {
+          "type": "string",
+          "description": "What the answer sets in the story.",
+          "enum": [
+            "place",
+            "mode",
+            "maxMinutes",
+            "homeType",
+            "outdoor",
+            "style",
+            "rooms",
+            "criterion"
+          ]
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "What the buyer taps, a few words."
+              },
+              "value": {
+                "type": "string",
+                "description": "The value for the facet."
+              },
+              "pin": {
+                "type": "boolean",
+                "description": "For place only: open the map to drop a pin."
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 2,
+          "maxItems": 4
+        },
+        "answer": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "story",
+        "hunch",
+        "facet",
+        "options",
+        "answer"
+      ],
+      "additionalProperties": false
+    },
+    "PhotoLineup": {
+      "type": "object",
+      "description": "Four photos from the buyer's city, of homes or of ways to live there, curated with the traits each stands for. The buyer taps the one that feels like theirs, and the server reads its traits. Bind photos to a lineup the turn context lists. The app adds facet photo, the photo id as value, and its caption as label to the pick action.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "PhotoLineup"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "photos": {
+          "type": "object",
+          "description": "Always one of the lineups, such as { \"path\": \"/lineup/homes\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "enum": [
+                "/lineup/homes",
+                "/lineup/life"
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "pick": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "photos",
+        "pick"
+      ],
+      "additionalProperties": false
+    },
+    "TradeOff": {
+      "type": "object",
+      "description": "Two or three ways to live side by side, as compare_areas priced them: an area and its character, a home type and size, the estimated price from the area's price per square metre with its source, and the minutes to their daily place. The buyer picks one, which sets the area and a price range. Call compare_areas first and bind options to /tradeoff/options. The app adds facet area, the option id as value, and a label to the pick action.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "TradeOff"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "options": {
+          "type": "object",
+          "description": "Always { \"path\": \"/tradeoff/options\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/tradeoff/options"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "pick": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "options",
+        "pick"
+      ],
+      "additionalProperties": false
+    },
     "LifestyleCommuteMap": {
       "type": "object",
       "description": "A map of the buyer's life around the homes they weigh: the places they travel to, each home, the route from each home to each place with its minutes, and the nearest place for each criterion. Before homes are measured, bind markers to /story/markers; after, bind markers to /assessment/markers and routes to /assessment/routes.",
@@ -1000,6 +1190,55 @@
       ],
       "additionalProperties": false
     },
+    "ListingCard": {
+      "type": "object",
+      "description": "One sample home in full: photos to swipe through, price, size, rooms, and floor, the price per square metre against its area's median with the source, what fits and what misses, and a button to choose it. Labelled as a sample listing. Bind homes to /assessment/candidates and name the home by id. choose is sent with candidateId added.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "ListingCard"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "homes": {
+          "type": "object",
+          "description": "Always { \"path\": \"/assessment/candidates\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/assessment/candidates"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "home": {
+          "type": "string",
+          "description": "The id of the home to show, from the assessment."
+        },
+        "choose": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "homes",
+        "home"
+      ],
+      "additionalProperties": false
+    },
     "LocationPicker": {
       "type": "object",
       "description": "Chooses a market or a country and writes its ISO 3166 code. Use mode market for where the buyer is buying, with the select_market action; use mode country for citizenship and tax residence.",
@@ -1153,7 +1392,7 @@
     },
     "HouseholdInput": {
       "type": "object",
-      "description": "Asks who lives in the home: how many adults and the age of each child, with a one-tap answer for no children. Use it for the household fact, bound to /profile/adults and /profile/childAges.",
+      "description": "Asks who lives in the home: how many adults and the age of each child, with a one-tap answer for no children. In the facts form bind it to /profile/adults and /profile/childAges; when the case asks who moves, bind it to /story/adults and /story/childAges beside a Button sending answer with the facet household and storyPath /story.",
       "properties": {
         "id": {
           "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
@@ -1176,7 +1415,7 @@
         },
         "adults": {
           "type": "object",
-          "description": "Where the number of adults is written, /profile/adults.",
+          "description": "Where the number of adults is written, /profile/adults or /story/adults.",
           "properties": {
             "path": {
               "type": "string"
@@ -1189,7 +1428,7 @@
         },
         "childAges": {
           "type": "object",
-          "description": "Where the list of child ages is written, /profile/childAges.",
+          "description": "Where the list of child ages is written, /profile/childAges or /story/childAges.",
           "properties": {
             "path": {
               "type": "string"
@@ -2548,6 +2787,15 @@
           "$ref": "#/components/StoryDraft"
         },
         {
+          "$ref": "#/components/Hunch"
+        },
+        {
+          "$ref": "#/components/PhotoLineup"
+        },
+        {
+          "$ref": "#/components/TradeOff"
+        },
+        {
           "$ref": "#/components/LifestyleCommuteMap"
         },
         {
@@ -2555,6 +2803,9 @@
         },
         {
           "$ref": "#/components/DynamicRecommendationStack"
+        },
+        {
+          "$ref": "#/components/ListingCard"
         },
         {
           "$ref": "#/components/LocationPicker"

@@ -6,6 +6,7 @@ import '../../ui/core/themes/dimens.dart';
 import '../../ui/core/themes/text_styles.dart';
 import '../../ui/core/ui/app_button.dart';
 import '../../ui/core/ui/app_status_tag.dart';
+import '../listing_card/listing_card_view.dart';
 import '../story_marks.dart';
 
 class DynamicRecommendationStackView extends StatelessWidget {
@@ -19,19 +20,50 @@ class DynamicRecommendationStackView extends StatelessWidget {
   final ValueChanged<String>? onChoose;
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      for (final (index, home) in homes.indexed)
-        Padding(
-          padding: EdgeInsets.only(top: index == 0 ? 0 : AppSpacing.sm),
-          child: _HomeCard(
-            home: home,
-            onChoose: onChoose == null ? null : () => onChoose!(home.id),
-          ),
+  Widget build(BuildContext context) {
+    Widget card(AssessedCandidate home) {
+      final onChoose = this.onChoose == null
+          ? null
+          : () => this.onChoose!(home.id);
+      return switch (home.listing) {
+        final listing? => ListingCardView(
+          home: home,
+          listing: listing,
+          showRank: true,
+          onChoose: onChoose,
         ),
-    ],
-  );
+        null => _HomeCard(home: home, onChoose: onChoose),
+      };
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) =>
+          constraints.maxWidth >= 860 &&
+              homes.length > 1 &&
+              homes.every((home) => home.listing != null)
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final (index, home) in homes.indexed) ...[
+                  if (index > 0) const SizedBox(width: AppSpacing.sm),
+                  Expanded(child: card(home)),
+                ],
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (final (index, home) in homes.indexed)
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: index == 0 ? 0 : AppSpacing.sm,
+                    ),
+                    child: card(home),
+                  ),
+              ],
+            ),
+    );
+  }
 }
 
 class _HomeCard extends StatelessWidget {

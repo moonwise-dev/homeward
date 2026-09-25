@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../samples/listing.dart';
+
 part 'assessed_candidate.freezed.dart';
 part 'assessed_candidate.g.dart';
 
@@ -14,6 +16,7 @@ abstract class AssessedCandidate with _$AssessedCandidate {
     @Default([]) List<String> pros,
     @Default([]) List<String> cons,
     @Default([]) List<String> close,
+    Listing? listing,
   }) = _AssessedCandidate;
 
   factory AssessedCandidate.fromJson(Map<String, Object?> json) =>

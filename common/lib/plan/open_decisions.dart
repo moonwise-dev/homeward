@@ -1,6 +1,7 @@
 import '../markets/resolved_market.dart';
 import '../profile/buyer_profile.dart';
 import '../profile/profile_field.dart';
+import '../story/case_gaps.dart';
 import '../story/story.dart';
 import 'open_decision.dart';
 import 'plan.dart';
@@ -12,7 +13,10 @@ List<OpenDecision> openDecisions(Plan plan, ResolvedMarket? market) => [
 
 List<OpenDecision> storyDecisions(Story story) => [
   if (story.candidates.isEmpty && story.city == null) OpenDecision.story,
-  if (!story.committed) OpenDecision.storyGaps,
+  if (!story.committed)
+    caseQuestionsOpen(story)
+        ? OpenDecision.caseQuestions
+        : OpenDecision.caseSummary,
   if (story.chosen == null) OpenDecision.homeChoice,
 ];
 

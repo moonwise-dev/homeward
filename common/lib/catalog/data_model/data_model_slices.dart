@@ -198,6 +198,16 @@ final storySlice = DataSlice(
       'Criteria the buyer will not give up.',
     ),
     const SliceField(
+      'adults',
+      FieldKind.integer,
+      'Adults moving, for a HouseholdInput asking who moves.',
+    ),
+    const SliceField(
+      'childAges',
+      FieldKind.integers,
+      'Age of each child moving, for a HouseholdInput asking who moves.',
+    ),
+    const SliceField(
       'pins',
       FieldKind.record,
       'Places the buyer dropped on the map, by id: label, lat, lng. The map '
@@ -232,6 +242,38 @@ final storySlice = DataSlice(
   ],
 );
 
+const lineupSlice = DataSlice(
+  'lineup',
+  "The buyer's city's photo lineups, read-only and seeded by the server when "
+      'the city has sample homes. Bind a PhotoLineup to one of them.',
+  [
+    SliceField(
+      'homes',
+      FieldKind.record,
+      'Four photos of homes: id, caption, and the traits the server reads.',
+    ),
+    SliceField(
+      'life',
+      FieldKind.record,
+      'Four photos of ways to live in the city: id, caption, and traits.',
+    ),
+  ],
+);
+
+const tradeOffSlice = DataSlice(
+  'tradeoff',
+  'The ways to live compare_areas priced, read-only. Bind a TradeOff to it.',
+  [
+    SliceField(
+      'options',
+      FieldKind.record,
+      'Each option: id, area, character, home type, rooms, size, estimated '
+          'price, the price per square metre with its source, and minutes to '
+          'the first placed anchor.',
+    ),
+  ],
+);
+
 const assessmentSlice = DataSlice(
   'assessment',
   'How each home fits each criterion, measured by the server, read-only. '
@@ -241,7 +283,7 @@ const assessmentSlice = DataSlice(
       'candidates',
       FieldKind.record,
       'Each home with rank, score, missesMustHave, and pros, cons, and close '
-          'as ready sentences.',
+          'as ready sentences; a sample home carries its listing.',
     ),
     SliceField(
       'rows',
@@ -264,6 +306,8 @@ const assessmentSlice = DataSlice(
 
 final dataModelSlices = [
   storySlice,
+  lineupSlice,
+  tradeOffSlice,
   assessmentSlice,
   selectionSlice,
   profileSlice,

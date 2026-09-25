@@ -19,6 +19,7 @@ _Candidate _$CandidateFromJson(Map<String, dynamic> json) =>
           'price',
           'monthlyFee',
           'listingUrl',
+          'listing',
         ],
       );
       final val = _Candidate(
@@ -40,6 +41,10 @@ _Candidate _$CandidateFromJson(Map<String, dynamic> json) =>
           (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
         ),
         listingUrl: $checkedConvert('listingUrl', (v) => v as String?),
+        listing: $checkedConvert(
+          'listing',
+          (v) => v == null ? null : Listing.fromJson(v as Map<String, dynamic>),
+        ),
       );
       return val;
     });
@@ -54,4 +59,5 @@ Map<String, dynamic> _$CandidateToJson(_Candidate instance) =>
       'price': ?instance.price?.toJson(),
       'monthlyFee': ?instance.monthlyFee?.toJson(),
       'listingUrl': ?instance.listingUrl,
+      'listing': ?instance.listing?.toJson(),
     };

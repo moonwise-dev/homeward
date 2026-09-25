@@ -8,7 +8,11 @@ import 'open_data/routing.dart';
 import 'story_measurer.dart';
 
 final class Research {
-  Research({required this.nominatim, required this.measurer});
+  Research({
+    required this.nominatim,
+    required this.measurer,
+    required this.routing,
+  });
 
   factory Research.open(
     http.Client client, {
@@ -16,15 +20,15 @@ final class Research {
     ResearchCache cache = const NoResearchCache(),
   }) {
     final polite = PoliteClient(client, userAgent: userAgent, store: cache);
+    final routing = Routing(polite);
     return Research(
       nominatim: Nominatim(polite),
-      measurer: StoryMeasurer(
-        overpass: Overpass(polite),
-        routing: Routing(polite),
-      ),
+      measurer: StoryMeasurer(overpass: Overpass(polite), routing: routing),
+      routing: routing,
     );
   }
 
   final Nominatim nominatim;
   final StoryMeasurer measurer;
+  final Routing routing;
 }

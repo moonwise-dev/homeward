@@ -53,7 +53,7 @@ void main() {
   test('a new plan starts with the story, and the money follows', () {
     expect(openDecisions(const Plan(), null).take(4), [
       OpenDecision.story,
-      OpenDecision.storyGaps,
+      OpenDecision.caseQuestions,
       OpenDecision.homeChoice,
       OpenDecision.targetMarket,
     ]);
@@ -65,7 +65,7 @@ void main() {
     );
 
     expect(storyDecisions(named), [
-      OpenDecision.storyGaps,
+      OpenDecision.caseQuestions,
       OpenDecision.homeChoice,
     ]);
     expect(storyDecisions(named.copyWith(committed: true)), [

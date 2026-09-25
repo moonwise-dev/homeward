@@ -66,8 +66,11 @@ Deliverables:
   thresholds, candidates, and measured results per candidate and criterion.
 - Building blocks: `Map`, `ChoiceChips`, `FactTile`, `StatusRow`,
   `ComparisonTable`, `ProsCons`, `SourceChip`, `CandidateInput`.
-- Flow: write the buyer's story back as a paragraph they correct in place
-  (D119), show the board, refine on it.
+- Flow: work the story out as a case, one tapped question at a time, and write
+  it back as a paragraph they correct (D119, D121); then three sample homes
+  (D122) or suggested areas on the board.
+- The detective's cards: `Hunch`, `PhotoLineup`, `TradeOff`, `ListingCard`
+  (D123).
 - A picked home opens the existing deal workspace with its price.
 - A journey shell: an opening page, then one scrolling story with a section per
   turn, and a history sheet (D106, D107, D120).
@@ -76,8 +79,9 @@ Deliverables:
 - Constrained A2UI output tried against the composed catalog schema, kept or
   dropped with a decision: kept for correction rounds (D110).
 
-Exit: at the Sep 28 session, the Stockholm family goes from its first message
-to a board comparing two flats on a map, and into the deal for one of them.
+Exit: at the Sep 28 session, the Stockholm family goes from its first message,
+through the detective's questions, to three sample homes on a map, and into
+the deal for one of them.
 
 ### M3 Recording Cut — Sep 29 to Oct 7
 
@@ -90,6 +94,7 @@ to a board comparing two flats on a map, and into the deal for one of them.
 - Google Maps grounding for ratings when the buyer asks, with attribution
   (D102).
 - City entry: areas suggested and ranked on the map.
+- A day-rhythm card for the case (D123), and sample homes for more cities.
 - Estimated rules outside `SE` and `PT`, labelled and editable (D98).
 - `Gauge`, `Rating`, a deal sheet, and the association's finances for Sweden.
 - `MarketSnapshotCard`, `EligibilityChecklist`, and `ForeignBuyerObstacles`
@@ -244,7 +249,9 @@ Decisions from the planning session on 2026-09-16.
 | D118 | Map tiles | OpenStreetMap's own tile server, with no key, under a colour filter that keeps the pins readable and the map as calm as the light basemap it replaces. CARTO's keyless tiles have carried an "API KEY REQUIRED" watermark since 2026-09-23. The sample is not a production app, so an account and a key for a map style is not worth it; the OSM policy allows light interactive use with a named user agent, attribution, and caching, and can block heavy use, which the livestream is the moment to watch | A free CARTO key (email only; 5 million tiles a month for non-commercial use), which keeps the exact look but adds a key to deploy and to development; OpenFreeMap vector tiles, which need no key but a new package and style loading |
 | D119 | The living story | The story phase is one surface: `StoryDraft`, the story as a paragraph Homeward writes from a reason and a place, with inline slots for the commute mode and longest trip, the criteria that matter, and the places they travel to, beside a map and a Show me homes button. Guesses are marked as assumed; blanks are only what Homeward cannot guess. Corrections run on the device with no model turn, and only typed text or Show me homes reaches Gemini, so a story costs two requests instead of five. A pin dropped on the map is an anchor with no geocoding. Testing on 2026-09-25 found Story Steps still read as an onboarding wizard: a page and a Continue per question, in an order Homeward chose. Also cut: the areas suggested on turn 1, and `load_market` and `get_obstacles` before a home is chosen. Replaces D116, and `continue_story` goes | Story Steps with adaptive questions; a map-first conversation of pins and a drag ring, kept for later since it suits commute stories better than lifestyle ones; a chat with inline controls, which is the journey D106 left |
 | D120 | One scrolling story | The journey is one scrolling story, not a page per turn. Each turn adds a section; the newest is open and scrolls into view, earlier ones fold into a recap of what they showed and what the buyer answered, and tapping a recap opens it in place. There is no step count, pager, or next button, and a working card under the newest section replaces the overlay once the story has begun. The recap names what a section holds from its components, and shows the buyer's own words or the action they took as the answer. Amends D106 | Step titles from the plan's stage (still a wizard); the story pinned on top with one focus card below (hides earlier decisions); recaps written by the model (a request and a figure to check for each) |
+| D121 | The case | The story phase is a case Homeward works like a detective. Each turn states one deduction from the last clue and asks one question the buyer answers with a tap, as a `Hunch`, a `PhotoLineup`, a `TradeOff`, or the household, sending `answer`. It asks about life and taste, never for a room count or a budget; rooms are a deduction to confirm, and the price range comes from the trade-off picked. The server tracks answered facets and derives what is open; after the essential ones, or five questions, the living story paragraph (D119) is drawn once as the case summary with Find my three homes. Every answer is a model turn, one round when the server pre-runs what the question needs. Amends D119, which drew the paragraph first | A short interview drafted once and tapped through on the device, which is a wizard again; the living story kept as the opening with questions after it; a case board of clue chips instead of the paragraph |
 | D122 | Sample homes | No listing site offers a free API (checked 2026-09-25: Zillow and Hemnet partner-only, Booli unclear, Idealista on request, RentCast US-only). Stockholm and Lisbon carry about twelve sample homes each, generated by `make listings` from a reviewed spec: real street addresses placed with Nominatim, prices from the area's price per square metre (Svensk Mäklarstatistik, INE) times a factor, photos from Unsplash series of the same home bundled as WebP assets. At `commit_story` code rules out homes that miss the type, price range, area, or rooms, relaxing in that order until three remain, and `assess_story` measures those three. Labelled as samples. Other cities fall back to suggested areas | Generating listings at runtime for any city from price statistics and Overpass, which adds seconds and cannot review photos; scraping listing sites; photos from Firebase Storage, which needs the Blaze plan; images from Gemini, which are not free |
+| D123 | The detective's cards | `Hunch` (a deduction with alternatives), `PhotoLineup` (four curated photos whose traits the server reads), `TradeOff` (ways to live priced by `compare_areas`), and `ListingCard` (one sample home in full); the stack shows a sample home's photos. The app adds the tapped value to the `answer` action, so the model writes only the question, and every figure comes from a tool. A day-rhythm card is deferred to M3 | The day rhythm first, about a day to build; a free-form photo picker where the model names photos |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

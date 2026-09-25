@@ -1,9 +1,17 @@
 enum SurfaceAction {
+  answer(
+    'answer',
+    ['facet', 'value', 'label'],
+    "The buyer answers one of the detective's questions with a tap; the app "
+        'adds the facet, the value, and the label of what was tapped, and the '
+        'server folds it into the story.',
+  ),
   commitStory(
     'commit_story',
     ['storyPath'],
-    'The buyer confirms the story they corrected, pins included; the server '
-        'measures every home against it.',
+    'The buyer confirms the case summary they corrected, pins included; the '
+        'server picks the sample homes that fit, where the city has them, and '
+        'measures every home against the story.',
   ),
   chooseHome(
     'choose_home',

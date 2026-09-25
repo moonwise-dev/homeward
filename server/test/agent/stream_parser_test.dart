@@ -72,6 +72,29 @@ void main() {
     expect(parser.add('\n'), [const ParsedOutput.a2uiMessage('{"a":1}')]);
   });
 
+  test('a fence that ends a line of prose still opens a block', () {
+    const answer = 'Who is moving with you?```a2ui\n{"a":1}\n```\n';
+    for (final deltas in [
+      [answer],
+      [for (var i = 0; i < answer.length; i++) answer[i]],
+    ]) {
+      final parser = StreamParser();
+      final outputs = [
+        for (final delta in deltas) ...parser.add(delta),
+        ...parser.close(),
+      ];
+
+      expect(
+        outputs.whereType<ProseOutput>().map((output) => output.text).join(),
+        startsWith('Who is moving with you?'),
+      );
+      expect(
+        outputs.whereType<A2uiMessageOutput>().map((output) => output.source),
+        ['{"a":1}'],
+      );
+    }
+  });
+
   test('ends a block whose closing fence is the last output', () {
     final parser = StreamParser();
     final outputs = [

@@ -26,7 +26,22 @@ final class ProposeProfileTool extends ModelTool {
   Map<String, Object?> get parameters => sliceParameters(profileSlice);
 
   @override
+  bool isOffered(ToolContext context) {
+    final story = context.plan.story;
+    return story.city == null || story.chosen != null;
+  }
+
+  @override
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {
+    if (!isOffered(context)) {
+      return const ToolResult(
+        modelResult: {
+          'error':
+              'Money waits until the buyer chooses a home; pass who moves '
+              'to propose_story instead',
+        },
+      );
+    }
     final plan = context.plan;
     final currency = switch (plan.marketId) {
       final id? => context.markets.resolveFor(id, plan.profile)?.currency,

@@ -49,7 +49,11 @@ final class StreamParser implements OutputParser {
       } else if (trimmed.isNotEmpty) {
         _appendToMessage(trimmed, outputs);
       }
-    } else if (!_lineIsProse && trimmed == _openingFence) {
+    } else if (trimmed.endsWith(_openingFence)) {
+      final prose = line.substring(0, line.lastIndexOf(_openingFence));
+      if (prose.trim().isNotEmpty) {
+        outputs.add(ParsedOutput.prose('$prose\n'));
+      }
       _insideBlock = true;
     } else {
       outputs.add(ParsedOutput.prose('$line\n'));
@@ -66,8 +70,23 @@ final class StreamParser implements OutputParser {
       _pending.write(partial);
       return;
     }
-    outputs.add(ParsedOutput.prose(partial));
-    _lineIsProse = true;
+    final held = _fenceStartAtEnd(partial);
+    final prose = partial.substring(0, partial.length - held.length);
+    if (prose.isNotEmpty) {
+      outputs.add(ParsedOutput.prose(prose));
+      _lineIsProse = true;
+    }
+    _pending.write(held);
+  }
+
+  String _fenceStartAtEnd(String text) {
+    for (var length = _openingFence.length; length > 0; length--) {
+      if (text.length >= length &&
+          _openingFence.startsWith(text.substring(text.length - length))) {
+        return text.substring(text.length - length);
+      }
+    }
+    return '';
   }
 
   void _appendToMessage(String line, List<ParsedOutput> outputs) {
