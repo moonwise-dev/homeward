@@ -26,6 +26,7 @@ EvalCase evalCase(File file) {
   return EvalCase(
     id: document['id']! as String,
     persona: document['persona'] as String?,
+    buyer: _map(document['buyer'] ?? const <String, Object?>{}),
     turns: [
       for (final turn in document['turns']! as List<Object?>) _turn(_map(turn)),
     ],
@@ -51,12 +52,15 @@ EvalTurn _turn(Map<String, Object?> turn) => EvalTurn(
         _ => null,
       },
     ),
+    {'answer': 'until_summary'} => const EvalAnswers(),
     {'action': final String action} => EvalAction(
       action,
       overrides: _map(turn['data'] ?? const <String, Object?>{}),
       tapped: _map(turn['tapped'] ?? const <String, Object?>{}),
     ),
-    _ => throw FormatException('A turn needs text or an action: $turn'),
+    _ => throw FormatException(
+      'A turn needs text, an action, or answer: until_summary: $turn',
+    ),
   },
   expect: _expectations(_map(turn['expect'] ?? const <String, Object?>{})),
 );

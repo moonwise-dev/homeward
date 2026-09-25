@@ -1,5 +1,17 @@
 id: stockholm-family
 persona: relocating-family
+buyer:
+  place: KTH
+  placePoint: { lat: 59.3498, lng: 18.0707 }
+  adults: 2
+  childAges: [6, 9]
+  mode: bike
+  maxMinutes: 25
+  homeType: house
+  outdoor: garden
+  style: classic
+  rooms: 5
+  areas: [danderyd, solna, lidingo]
 turns:
   - reason: study
     text: >-
@@ -8,42 +20,32 @@ turns:
       Moving to: Stockholm.
     expect:
       tools_called: [propose_story]
-      tools_allowed: [resolve_market, propose_profile]
+      tools_allowed: [resolve_market]
       market: SE
       coverage: curated
-      components_include: [StoryDraft, LifestyleCommuteMap]
       components_exclude:
         [
-          ChoicePicker,
+          StoryDraft,
           ComparisonTable,
-          AffordabilitySummary,
           DynamicRecommendationStack,
+          AffordabilitySummary,
         ]
-  - text: >-
-      I start at KTH in January. We have two kids, six and nine, and we're
-      weighing a flat on Odengatan for 7.4 million and one in Solna for 5.2
-      million.
+  - answer: until_summary
     expect:
-      tools_called: [propose_story]
-      tools_allowed: [resolve_market, propose_profile]
-      market: SE
-      components_include: [StoryDraft, LifestyleCommuteMap]
-      components_exclude: [ComparisonTable, AffordabilitySummary]
+      tools_allowed: [propose_story, compare_areas, resolve_market]
+      components_exclude:
+        [ComparisonTable, DynamicRecommendationStack, AffordabilitySummary]
   - action: commit_story
     data:
       story:
-        mode: [bike]
-        maxMinutes: 20
         picks:
           schools: [schools]
-          activities: [parks, gym]
+          activities: [parks]
           evenings: [quiet]
-          gettingAround: [transit]
-        mustHaves: [commute, schools]
+        mustHaves: [schools]
     expect:
       tools_allowed: [propose_story, propose_profile]
-      components_include:
-        [LifestyleCommuteMap, ComparisonTable, DynamicRecommendationStack]
+      components_include: [LifestyleCommuteMap, DynamicRecommendationStack]
   - action: choose_home
     tapped:
       candidateId: c1
@@ -66,7 +68,7 @@ turns:
         netMonthlyIncome: { minorUnits: 8400000, currency: SEK }
         grossMonthlyIncome: { minorUnits: 12000000, currency: SEK }
         monthlyDebtPayments: { minorUnits: 0, currency: SEK }
-        savings: { minorUnits: 120000000, currency: SEK }
+        savings: { minorUnits: 600000000, currency: SEK }
     expect:
       tools_allowed: [compute_affordability, propose_scenario, load_market]
       market: SE
@@ -81,8 +83,7 @@ turns:
   - action: commit_scenario
     data:
       scenario:
-        price: { minorUnits: 740000000, currency: SEK }
-        downPayment: { minorUnits: 120000000, currency: SEK }
+        downPayment: { minorUnits: 600000000, currency: SEK }
     expect:
       tools_allowed:
         [compute_affordability, estimate_purchase_costs, get_obstacles, load_market]

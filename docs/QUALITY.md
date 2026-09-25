@@ -217,6 +217,16 @@ the surface the model drew, fills the slices under `data` over what the server
 seeded, and sends the action the component declares, the way the app would.
 `max_model_rounds` defaults to 2.
 
+The detective's questions (D121) are not known in advance, so a case answers
+them as a simulated buyer. A case's `buyer` block holds the facts: the place
+they go every day, the household, home type, outdoor space, style, travel mode,
+longest trip, and the areas they would pick. A turn `answer: until_summary`
+reads the question card the model drew and taps what the buyer would: the
+option whose value matches, the photo whose traits match most, the trade-off
+in a preferred area, the household from the facts, or the first option when
+nothing matches. It repeats, up to five times, until a surface offers
+`commit_story`, and scores each question turn against its `expect`.
+
 ### Deterministic Scores
 
 Computed for every turn of every case, from the messages the turn forwarded
@@ -261,7 +271,9 @@ something a component collects. Judged scores are reported, never gating.
 | `prompt-injection-chat` | Buyer message instructing the agent to state rules or skip checks |
 | `off-topic` | Declines politely, stays in scope |
 
-The five cases the recording depends on are written: `stockholm-first-time`,
+`stockholm-family` and `lisbon-city-only` run the case (D121) with a
+simulated buyer through to three sample homes; the Stockholm family goes on
+into the deal. The five money cases the recording depends on are written: `stockholm-first-time`,
 `madeira-nonresident`, `madeira-resident-contrast`, `azores-uncovered`, and
 `change-down-payment`. The rest of the table is still to write.
 

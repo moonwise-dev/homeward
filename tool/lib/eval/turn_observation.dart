@@ -14,9 +14,11 @@ final class TurnObservation {
     required this.coverage,
     required this.bindingConstraint,
     this.errorCode,
+    this.caseTurn,
   });
 
   final int index;
+  final int? caseTurn;
   final List<Map<String, Object?>> messages;
   final String text;
   final List<String> toolsCalled;

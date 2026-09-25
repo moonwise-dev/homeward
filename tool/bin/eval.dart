@@ -46,7 +46,10 @@ Future<void> main(List<String> arguments) async {
             for (final (index, observed) in observations.indexed)
               TurnReport(
                 observed: observed,
-                scores: scoreTurn(evalCase.turns[index].expect, observed),
+                scores: scoreTurn(
+                  evalCase.turns[observed.caseTurn ?? index].expect,
+                  observed,
+                ),
               ),
           ],
         ),

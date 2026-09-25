@@ -6,6 +6,7 @@ import 'package:homeward_tool/probe/probe_surfaces.dart';
 
 import 'eval_case.dart';
 import 'eval_server.dart';
+import 'simulated_buyer.dart';
 import 'turn_log.dart';
 import 'turn_observation.dart';
 
@@ -24,19 +25,19 @@ final class EvalRunner {
   }) async {
     final session = await server.sessions.create('eval');
     final surfaces = ProbeSurfaces();
+    final buyer = SimulatedBuyer(
+      evalCase.buyer,
+      photo: server.markets.samples.photo,
+    );
     final observations = <TurnObservation>[];
-    for (final (index, turn) in evalCase.turns.indexed) {
-      if (index > 0) {
+    Future<void> run(TurnInput input, int caseTurn) async {
+      if (observations.isNotEmpty) {
         await Future<void>.delayed(betweenTurns);
-      }
-      final input = _inputFor(turn.input, surfaces);
-      if (input == null) {
-        observations.add(_unoffered(index + 1, turn.input));
-        break;
       }
       observations.add(
         await _runTurn(
-          index: index + 1,
+          index: observations.length + 1,
+          caseTurn: caseTurn,
           sessionId: session.id,
           input: input,
           keys: keys,
@@ -44,11 +45,43 @@ final class EvalRunner {
         ),
       );
     }
+
+    for (final (index, turn) in evalCase.turns.indexed) {
+      if (turn.input is EvalAnswers) {
+        for (var asked = 0; asked < EvalAnswers.maxQuestions; asked++) {
+          final latest = surfaces.latest;
+          if (latest == null || surfaces.offers('commit_story', latest)) {
+            break;
+          }
+          final answer = buyer.answer(latest);
+          if (answer == null) {
+            observations.add(
+              _unoffered(observations.length + 1, turn.input, caseTurn: index),
+            );
+            return observations;
+          }
+          await run(
+            TurnInput.action(answer.action, surfaceData: answer.surfaceData),
+            index,
+          );
+        }
+        continue;
+      }
+      final input = _inputFor(turn.input, surfaces);
+      if (input == null) {
+        observations.add(
+          _unoffered(observations.length + 1, turn.input, caseTurn: index),
+        );
+        break;
+      }
+      await run(input, index);
+    }
     return observations;
   }
 
   Future<TurnObservation> _runTurn({
     required int index,
+    required int caseTurn,
     required String sessionId,
     required TurnInput input,
     required GeminiKeys keys,
@@ -57,6 +90,7 @@ final class EvalRunner {
     final observed = await _runTurnOn(
       keys.current,
       index: index,
+      caseTurn: caseTurn,
       sessionId: sessionId,
       input: input,
       surfaces: surfaces,
@@ -64,6 +98,7 @@ final class EvalRunner {
     return keys.moveOnAfter(observed.errorCode)
         ? _runTurn(
             index: index,
+            caseTurn: caseTurn,
             sessionId: sessionId,
             input: input,
             keys: keys,
@@ -75,6 +110,7 @@ final class EvalRunner {
   Future<TurnObservation> _runTurnOn(
     String apiKey, {
     required int index,
+    required int caseTurn,
     required String sessionId,
     required TurnInput input,
     required ProbeSurfaces surfaces,
@@ -105,6 +141,7 @@ final class EvalRunner {
     final plan = (await server.sessions.find(sessionId))!.plan;
     return TurnObservation(
       index: index,
+      caseTurn: caseTurn,
       messages: messages,
       text: text,
       toolsCalled: log.toolsCalled,
@@ -124,8 +161,13 @@ final class EvalRunner {
     );
   }
 
-  TurnObservation _unoffered(int index, EvalInput input) => TurnObservation(
+  TurnObservation _unoffered(
+    int index,
+    EvalInput input, {
+    required int caseTurn,
+  }) => TurnObservation(
     index: index,
+    caseTurn: caseTurn,
     messages: const [],
     text: '',
     toolsCalled: const [],
@@ -140,6 +182,7 @@ final class EvalRunner {
     errorCode: switch (input) {
       EvalText() => 'no turn ran',
       EvalAction(:final name) => 'no surface offers $name',
+      EvalAnswers() => 'no question card to answer',
     },
   );
 
@@ -157,6 +200,7 @@ final class EvalRunner {
             ),
             null => null,
           },
+        EvalAnswers() => null,
       };
 
   String? _bindingOf(Plan plan) {

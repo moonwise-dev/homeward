@@ -28,10 +28,23 @@ String _describeComponent(Map<String, Object?> component) {
     for (final MapEntry(:key, :value) in component.entries)
       if (value case {'path': final String path}) '$key=$path',
     for (final value in component.values)
-      if (value case {'event': {'name': final String name}}) 'action=$name',
+      if (value case {'event': {'name': final String name}})
+        switch (value['event']) {
+          {'context': final Map<String, Object?> context}
+              when context.isNotEmpty =>
+            'action=$name$context',
+          _ => 'action=$name',
+        },
   ].join(' ');
-  return switch (component['segments']) {
-    final List<Object?> segments => '$line\n    ${_sentence(segments)}',
+  return switch (component) {
+    {'segments': final List<Object?> segments} =>
+      '$line\n    ${_sentence(segments)}',
+    {'hunch': final String hunch, 'options': final List<Object?> options} =>
+      '$line\n    ${[if (component['because'] case final String because) '($because)', hunch].join(' ')}'
+          '\n    ${component['facet']}: ${[
+            for (final option in options)
+              if (option case {'label': final String label}) '$label=${option['pin'] == true ? 'pin' : option['value']}',
+          ].join(' | ')}',
     _ => line,
   };
 }

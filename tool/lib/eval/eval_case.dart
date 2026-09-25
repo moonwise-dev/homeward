@@ -23,6 +23,12 @@ final class EvalAction extends EvalInput {
   final Map<String, Object?> tapped;
 }
 
+final class EvalAnswers extends EvalInput {
+  const EvalAnswers();
+
+  static const maxQuestions = 5;
+}
+
 final class EvalExpectations {
   const EvalExpectations({
     this.toolsCalled = const [],
@@ -55,9 +61,15 @@ final class EvalTurn {
 }
 
 final class EvalCase {
-  const EvalCase({required this.id, required this.turns, this.persona});
+  const EvalCase({
+    required this.id,
+    required this.turns,
+    this.persona,
+    this.buyer = const {},
+  });
 
   final String id;
   final String? persona;
+  final Map<String, Object?> buyer;
   final List<EvalTurn> turns;
 }

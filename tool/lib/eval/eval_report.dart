@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import '../probe/describe_event.dart';
 import 'eval_case.dart';
 import 'eval_score.dart';
 import 'turn_observation.dart';
@@ -38,6 +39,12 @@ final class TurnReport {
       'marketId': observed.marketId,
       'bindingConstraint': observed.bindingConstraint,
     },
+    'text': observed.text,
+    'drawn': [
+      for (final message in observed.messages)
+        if (message.containsKey('updateComponents'))
+          ?describeA2uiMessage(message),
+    ],
   };
 }
 
@@ -47,9 +54,16 @@ final class CaseReport {
   final EvalCase evalCase;
   final List<TurnReport> turns;
 
-  bool get passed =>
-      turns.length == evalCase.turns.length &&
-      turns.every((turn) => turn.passed);
+  bool get passed {
+    final reached = {
+      for (final (index, turn) in turns.indexed)
+        turn.observed.caseTurn ?? index,
+      for (final (index, turn) in evalCase.turns.indexed)
+        if (turn.input is EvalAnswers) index,
+    };
+    return reached.length == evalCase.turns.length &&
+        turns.every((turn) => turn.passed);
+  }
 
   Map<String, Object?> toJson() => {
     'id': evalCase.id,
@@ -83,6 +97,9 @@ final class EvalReport {
           '${turn.observed.corrections} corrections, '
           '${turn.observed.elapsed.inMilliseconds} ms',
         );
+        if (turn.observed.text.isNotEmpty) {
+          lines.writeln('> ${turn.observed.text.replaceAll('\n', ' ')}');
+        }
         for (final score in turn.scores) {
           final detail = score.detail;
           lines.writeln(

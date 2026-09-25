@@ -2,6 +2,12 @@ import 'package:common/common.dart';
 
 typedef ProbeAction = ({ClientAction action, Map<String, Object?> surfaceData});
 
+typedef ProbeSurface = ({
+  String surfaceId,
+  List<Map<String, Object?>> components,
+  Map<String, Object?> data,
+});
+
 final class ProbeSurfaces {
   final _data = <String, Map<String, Object?>>{};
   final _components = <String, List<Map<String, Object?>>>{};
@@ -28,6 +34,22 @@ final class ProbeSurfaces {
         ];
     }
   }
+
+  ProbeSurface? get latest => switch (_components.keys.lastOrNull) {
+    final String id => (
+      surfaceId: id,
+      components: _components[id]!,
+      data: _data[id] ?? const {},
+    ),
+    null => null,
+  };
+
+  bool offers(String action, ProbeSurface surface) => surface.components.any(
+    (component) => switch (component['action'] ?? component['choose']) {
+      {'event': {'name': final String name}} => name == action,
+      _ => false,
+    },
+  );
 
   ProbeAction? actionFor(
     String name,
