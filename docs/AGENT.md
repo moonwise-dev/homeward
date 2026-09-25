@@ -360,6 +360,17 @@ carries the plan state. Replaying the last few turns' text joins with
 persistence in M2. Nothing is lost because the plan record holds every
 decision.
 
+A stored chain can also be refused later, mid-turn (measured 2026-09-25): a
+tool round fails with 400 `invalid_request`, "function response turn
+comes immediately after a function call turn", and every retry fails the same
+way, because the interaction that ends the last turn cannot be continued with
+a tool result. The same tool calls replayed on a fresh chain continue
+normally, so the fault is in what Gemini stored, not in the request. When a
+request carrying `previous_interaction_id` is refused this way before the turn
+has drawn anything, the orchestrator starts the turn over once on a new
+conversation, from the turn's first input. The new chain replaces the stored
+one, so later turns are clean.
+
 ### Interactions API Client
 
 `server/lib/gemini` is a hand-written client over REST, shaped by spike S2:
@@ -471,6 +482,7 @@ and Google Maps grounding for ratings when the buyer asks.
 | Prepaid credits depleted | Turn fails with `gemini_credits_depleted`; app offers to change the key |
 | Model overloaded or stalled | Model selection falls back once; if every model is unhealthy, the turn fails with `gemini_unavailable` |
 | Unknown or expired previous interaction | Retry once with rebuilt history |
+| Stored chain refused with `invalid_request` before anything is drawn | The turn starts over once on a new conversation |
 | Model output invalid after corrections | Model text plus a fallback composed from the turn's measurements, or the retry surface when nothing was measured |
 | Tool error | Short explanation plus retry surface |
 | Stream dropped | Client resumes with `tasks/get`; server keeps the task for 10 minutes |

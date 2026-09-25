@@ -715,6 +715,63 @@ void main() {
     expect(events.last, const TurnEvent.completed('Where are you buying?'));
   });
 
+  test(
+    'starts the turn over in a new conversation when Gemini refuses to '
+    'continue a stored one',
+    () async {
+      final session = await sessions.create('uid-1');
+      await sessions.save(session.copyWith(lastInteractionId: 'stored'));
+      const call = FunctionCall(
+        callId: 'c1',
+        name: 'propose_profile',
+        arguments: {'age': 35},
+      );
+      final script = ScriptedInteractions([
+        reply('i1', calls: const [call]),
+        failing(
+          const GeminiRequestInvalid(
+            'Please ensure that function response turn comes immediately '
+            'after a function call turn.',
+          ),
+        ),
+        reply('i3', calls: const [call]),
+        reply('i4', text: 'Tell me about your income.'),
+      ]);
+
+      final events = await send(orchestrator(script), 'Hi again').toList();
+
+      expect(script.requests.map((request) => request.previousInteractionId), [
+        'stored',
+        'i1',
+        null,
+        'i3',
+      ]);
+      expect(script.requests[2].input, const InteractionInput.text('Hi again'));
+      expect(
+        events.last,
+        const TurnEvent.completed('Tell me about your income.'),
+      );
+      expect((await sessions.find('s-1'))!.lastInteractionId, 'i4');
+    },
+  );
+
+  test('fails the turn when the new conversation is refused too', () async {
+    final session = await sessions.create('uid-1');
+    await sessions.save(session.copyWith(lastInteractionId: 'stored'));
+    const refused = GeminiRequestInvalid(
+      'Request contains an invalid argument.',
+    );
+    final script = ScriptedInteractions([failing(refused), failing(refused)]);
+
+    final events = await send(orchestrator(script)).toList();
+
+    expect(script.requests.map((request) => request.previousInteractionId), [
+      'stored',
+      null,
+    ]);
+    expect(events.last, isA<TurnFailed>());
+  });
+
   test('refuses foreign sessions and a second turn while one runs', () async {
     await sessions.create('uid-1');
     final gate = Completer<void>();

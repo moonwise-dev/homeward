@@ -118,11 +118,12 @@ final class TurnRun {
       TextTurnInput(:final text) => RecordedInput.text(text),
       ActionTurnInput(:final action) => recordedInputOf(action),
     };
-    InteractionInput input = InteractionInput.text(_modelText(turnInput));
+    final firstInput = InteractionInput.text(_modelText(turnInput));
+    InteractionInput input = firstInput;
     var toolRounds = 0;
     var corrections = 0;
     var askedForSurface = turnInput is! ActionTurnInput;
-    var mayRebuildHistory = _interactionId != null;
+    var mayStartOver = true;
     var correcting = false;
     while (true) {
       final constrained = correcting;
@@ -186,27 +187,32 @@ final class TurnRun {
         }
       } on InteractionCancelled {
         return;
-      } on GeminiHistoryMissing catch (error) {
-        _logFailure(error);
-        if (mayRebuildHistory) {
-          mayRebuildHistory = false;
-          _interactionId = null;
-          continue;
-        }
-        _failed(HomewardFailure.internal);
-        yield const TurnEvent.failed(HomewardFailure.internal);
-        return;
       } on GeminiException catch (error) {
         _logFailure(error);
         if (constrained && error is GeminiRequestInvalid) {
           continue;
+        }
+        if (mayStartOver &&
+            request.previousInteractionId != null &&
+            _forwarded.isEmpty &&
+            (error is GeminiHistoryMissing || error is GeminiRequestInvalid)) {
+          mayStartOver = false;
+          _startOver();
+          input = firstInput;
+          toolRounds = 0;
+          yield* _emitText();
+          continue;
+        }
+        if (error is GeminiHistoryMissing) {
+          _failed(HomewardFailure.internal);
+          yield const TurnEvent.failed(HomewardFailure.internal);
+          return;
         }
         final failure = HomewardFailure.fromGemini(error, now());
         _failed(failure);
         yield TurnEvent.failed(failure);
         return;
       }
-      mayRebuildHistory = false;
       _log.info(
         LogEntry(
           'Model round $_rounds of turn $turn',
@@ -285,6 +291,21 @@ final class TurnRun {
       yield TurnEvent.completed(_text.toString().trim());
       return;
     }
+  }
+
+  void _startOver() {
+    _log.info(
+      LogEntry(
+        'Turn $turn starts over in a new conversation',
+        fields: {'turn': turn},
+      ),
+    );
+    _interactionId = null;
+    _calledNames.clear();
+    _calledSeeds.clear();
+    _pendingFailures.clear();
+    _rejectedSources.clear();
+    _text.clear();
   }
 
   void _failed(HomewardFailure failure) {
