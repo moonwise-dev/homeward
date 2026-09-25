@@ -1,4 +1,3 @@
-import 'package:common/common.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -10,6 +9,7 @@ import '../../core/ui/app_button.dart';
 import '../../core/ui/app_chat_bubble.dart';
 import '../../core/ui/app_status_line.dart';
 import '../view_model/journey_view_model.dart';
+import 'action_label.dart';
 
 Future<void> showHistorySheet(BuildContext context, String sessionId) =>
     showModalBottomSheet<void>(
@@ -58,7 +58,7 @@ class _HistoryView extends ConsumerWidget {
             ),
             BuyerActionEntry(:final id, :final actionName) => _BuyerActionNote(
               key: ValueKey(id),
-              label: _surfaceActionLabel(actionName),
+              label: surfaceActionLabel(actionName),
             ),
             AgentEntry(:final id, :final text, :final status, :final error) =>
               _AgentMessage(
@@ -139,16 +139,3 @@ class _BuyerActionNote extends StatelessWidget {
     child: AppStatusLine(text: label, icon: Icons.check_circle_outline),
   );
 }
-
-String _surfaceActionLabel(String wireName) =>
-    switch (SurfaceAction.named(wireName)) {
-      SurfaceAction.commitStory => 'That is what matters to us',
-      SurfaceAction.chooseHome => 'Chose this home',
-      SurfaceAction.selectMarket => 'Chose the market',
-      SurfaceAction.commitProfile => 'Saved my details',
-      SurfaceAction.commitScenario => 'Kept this scenario',
-      SurfaceAction.change => 'Reopened a decision',
-      SurfaceAction.explain => 'Asked why',
-      SurfaceAction.compareLoanTypes => 'Asked to compare loan types',
-      null => 'Answered the form',
-    };

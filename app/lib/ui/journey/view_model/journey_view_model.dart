@@ -31,12 +31,8 @@ class JourneyViewModel extends _$JourneyViewModel
     return const JourneyState();
   }
 
-  void _onConversation(PlanConversation conversation) => setState((current) {
-    final next = current.copyWith(conversation: conversation);
-    return next.pages.length > current.pages.length
-        ? next.copyWith(chosenPage: null)
-        : next;
-  });
+  void _onConversation(PlanConversation conversation) =>
+      setState((current) => current.copyWith(conversation: conversation));
 
   Future<void> _open(AgentRepository agent) async {
     try {
@@ -62,9 +58,6 @@ class JourneyViewModel extends _$JourneyViewModel
     (current) =>
         current.copyWith(reason: example.reason, location: example.location),
   );
-
-  void showPage(int page) =>
-      setState((current) => current.copyWith(chosenPage: page));
 
   Future<void> start() async {
     if (!state.canStart) {
@@ -162,23 +155,24 @@ abstract class JourneyState with _$JourneyState {
     StoryReason? reason,
     @Default('') String ownReason,
     @Default('') String location,
-    int? chosenPage,
   }) = _JourneyState;
 
   const JourneyState._();
 
-  List<AgentEntry> get pages => [
-    for (final entry in conversation.entries)
-      if (entry
-          case AgentEntry(
-            :final status,
-            :final surfaceIds,
-          )
-          when status != AgentTurnStatus.streaming || surfaceIds.isNotEmpty)
-        entry,
+  List<JourneySection> get sections => [
+    for (final (index, entry) in conversation.entries.indexed)
+      if (entry case final AgentEntry agent
+          when agent.status != AgentTurnStatus.streaming ||
+              agent.surfaceIds.isNotEmpty)
+        JourneySection(
+          entry: agent,
+          answer: switch (conversation.entries.elementAtOrNull(index + 1)) {
+            final BuyerEntry answer => answer,
+            final BuyerActionEntry answer => answer,
+            _ => null,
+          },
+        ),
   ];
-
-  int get page => (chosenPage ?? pages.length - 1).clamp(0, pages.length - 1);
 
   AgentEntry? get pending => switch (conversation.entries.lastOrNull) {
     final AgentEntry entry
@@ -189,6 +183,13 @@ abstract class JourneyState with _$JourneyState {
   };
 
   bool get canStart => location.trim().isNotEmpty && !conversation.isRunning;
+}
+
+final class JourneySection {
+  const JourneySection({required this.entry, this.answer});
+
+  final AgentEntry entry;
+  final TranscriptEntry? answer;
 }
 
 String _quotaResetMessage(Duration? retryAfter, DateTime now) {

@@ -23,14 +23,14 @@ logic.
 ## Layout
 
 A plan is a journey, not a chat (D106). It opens on a hand-built opening page
-(D107), and every turn after that is one page: the agent's text and the
-surfaces the turn created, centred and at most 1040 dp wide. Each Homeward
-component sets its own width inside the page.
+(D107), and every turn after that adds a section to one scrolling story (D120):
+the agent's text and the surfaces the turn created, centred and at most 1040 dp
+wide. Each Homeward component sets its own width inside its section.
 
 | Width | Layout |
 | --- | --- |
-| < 900 dp | The page fills the screen. The wire inspector opens as a sheet. |
-| ≥ 900 dp | The page is centred. The wire inspector can open as a right pane, 380–440 dp wide, from the app bar. |
+| < 900 dp | The story fills the screen. The wire inspector opens as a sheet. |
+| ≥ 900 dp | The story is centred. The wire inspector can open as a right pane, 380–440 dp wide, from the app bar. |
 
 ## Routes
 
@@ -112,23 +112,27 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
   request, and a blank place slot opens a sheet with the map: tap to drop the
   pin, tap again to move it, Use this place to keep it. Guesses are dotted until
   the buyer touches them. Show me homes sends everything they changed.
-- **Pages**: one page per turn that has text, a surface, or a failure. The
-  newest page shows by default. A step pager at the top moves to earlier pages;
-  their surfaces are read-only once a later commit locks them. Pages fade and
-  rise into place when they change.
-- **While a turn runs**, the current page stays on screen under an overlay, and
-  the next page replaces it when its first surface arrives or the turn ends:
-  - While tools run, the overlay lists the measuring steps from the server's
+- **Sections** (D120): one per turn that has text, a surface, or a failure, in
+  one scrolling story with no page count, pager, or next button. The newest
+  section is open and scrolls into view when it arrives. An earlier section
+  folds into a recap: what it showed (Your story, Homes, About you, The deal),
+  and beneath it what the buyer answered, their own words or the action they
+  took. Tapping a recap opens that section in place, and tapping its header
+  folds it again. Sections fade and rise into place.
+- **While a turn runs**, the newest section stays open and slightly dimmed, and
+  a working card under it takes its place until the first surface arrives or
+  the turn ends; on the opening page the card sits over the page:
+  - While tools run, the card lists the measuring steps from the server's
     progress data part, each running, done, or unavailable (D108).
   - Otherwise it shows a thinking line with the agent's text so far.
   - Stop cancels the turn.
-- **Tell Homeward more**: a one-line field under every page sends free text,
+- **Tell Homeward more**: a one-line field under the story sends free text,
   which keeps the journey story-driven.
 - **History**: an app bar action opens the transcript as a sheet, with buyer
   messages, the actions they took, and each turn's text.
 - Opening an existing plan replays stored A2UI messages into a fresh surface
-  controller before the pages are shown.
-- Turn failures show a toast, and the failed page offers retry.
+  controller before the sections are shown.
+- Turn failures show a toast, and the failed section offers retry.
 - `gemini_key_invalid` routes to `/key`. `gemini_quota_exhausted` explains that
   the buyer's free key has hit a request limit, asks them to try again in a
   minute, and shows when the daily limit resets. In a development run with
@@ -174,7 +178,7 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 | `startup` | Session restore, App Check, key presence, initial route |
 | `api_key` | Input state, verify, save, remove |
 | `plans` | Stream plans, create, delete |
-| `journey` | Start from the opening page, send text, stop, stream turn events and progress, replay, retry, page choice |
+| `journey` | Start from the opening page, send text, stop, stream turn events and progress, replay, retry, the recap of each section |
 | `gallery` | Selected component, example, toggles |
 | `wire_inspector` | Frame timeline with sizes, A2UI messages, live data model, counters |
 | `settings` | Developer tools flag, delete all data |

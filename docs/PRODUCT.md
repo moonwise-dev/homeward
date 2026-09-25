@@ -35,9 +35,11 @@ tool or from shared finance code.
 
 - **The UI comes to the buyer.** The agent draws the controls it needs rather
   than asking questions in prose. The controls are the question.
-- **A journey, not a chat.** Each step is a page Homeward composes, and the
-  buyer can always add a sentence under it. The conversation is there as
-  history, not as the product.
+- **A journey, not a chat.** One story that grows downward: what Homeward
+  composes for each decision is a section of it, the newest section is open,
+  and earlier ones fold into a line saying what was decided. The buyer can
+  always add a sentence under it, and there is no step count and no next
+  button. The conversation is there as history, not as the product.
 - **Waiting shows the work.** While Homeward measures, the buyer sees what it
   is measuring, step by step, as each step finishes.
 - **Gemini composes; tools measure; code computes.** The composing model decides
@@ -132,8 +134,8 @@ The flow the video segment is built around. The story is the point.
    story is rewritten with schools and both flats in it. Nothing is a step or a
    Continue button, and nothing waited on the model until the buyer asked to
    see homes.
-3. While the homes are measured, the page lists each step as it runs and
-   ticks it off: finding the flats, looking for schools and parks near them,
+3. While the homes are measured, a card under the story lists each step as it
+   runs and ticks it off: finding the flats, looking for schools and parks near them,
    timing the ride to KTH. Then the board appears: a map with KTH, both flats, commute lines with minutes by
    the chosen mode, schools and parks; a comparison of every criterion against
    both flats, each cell fits, close, or misses; pros and cons; the flats
@@ -141,8 +143,8 @@ The flow the video segment is built around. The story is the point.
    international schools within a kilometre.*
 4. The buyer asks for well-rated schools near Odengatan; Homeward adds Google
    Maps ratings to that row only.
-5. The buyer picks Odengatan. One short page asks the money facts the rules
-   need, filled in from the story where it can. Then the deal sheet: the
+5. The buyer picks Odengatan. The board folds into a line, and one short section
+   asks the money facts the rules need, filled in from the story where it can. Then the deal sheet: the
    listing's price and the association fee, what they can borrow under
    Sweden's verified rules and the rule that limits it, a down payment slider
    that moves the payment, the bank's stress test, and the cash needed, all

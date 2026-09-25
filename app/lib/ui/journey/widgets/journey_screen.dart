@@ -7,9 +7,8 @@ import '../../core/themes/motion.dart';
 import '../../wire_inspector/widgets/wire_inspector_pane.dart';
 import '../view_model/journey_view_model.dart';
 import 'history_sheet.dart';
-import 'journey_page_view.dart';
+import 'journey_story.dart';
 import 'opening_page.dart';
-import 'step_pager.dart';
 import 'tell_more_field.dart';
 import 'turn_overlay.dart';
 
@@ -24,12 +23,12 @@ class JourneyScreen extends HookConsumerWidget {
     final state = ref.watch(provider);
     final viewModel = ref.read(provider.notifier);
     final conversation = state.conversation;
-    final pages = state.pages;
+    final sections = state.sections;
     final isWide = MediaQuery.sizeOf(context).width >= AppSizes.twoPane;
     final showsWire = useState(false);
     final wirePane = isWide && showsWire.value;
 
-    final current = pages.isEmpty
+    final current = sections.isEmpty
         ? OpeningPage(
             key: const ValueKey('opening'),
             reason: state.reason,
@@ -42,20 +41,16 @@ class JourneyScreen extends HookConsumerWidget {
             onExample: viewModel.useExample,
             onStart: viewModel.start,
           )
-        : JourneyPageView(
-            key: ValueKey(pages[state.page].id),
+        : JourneyStory(
+            key: const ValueKey('story'),
             sessionId: sessionId,
-            entry: pages[state.page],
-            onRetry: () => viewModel.retry(pages[state.page].id),
+            sections: sections,
+            pending: state.pending,
+            onRetry: viewModel.retry,
+            onStop: viewModel.stop,
           );
     final journey = Column(
       children: [
-        if (pages.length > 1)
-          StepPager(
-            page: state.page,
-            count: pages.length,
-            onChanged: viewModel.showPage,
-          ),
         Expanded(
           child: Stack(
             children: [
@@ -80,14 +75,15 @@ class JourneyScreen extends HookConsumerWidget {
                   child: current,
                 ),
               ),
-              if (state.pending case final pending?)
-                Positioned.fill(
-                  child: TurnOverlay(entry: pending, onStop: viewModel.stop),
-                ),
+              if (sections.isEmpty)
+                if (state.pending case final pending?)
+                  Positioned.fill(
+                    child: TurnOverlay(entry: pending, onStop: viewModel.stop),
+                  ),
             ],
           ),
         ),
-        if (pages.isNotEmpty)
+        if (sections.isNotEmpty)
           Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(

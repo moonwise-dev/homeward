@@ -58,7 +58,7 @@ final class JourneyViewModelProvider
   }
 }
 
-String _$journeyViewModelHash() => r'e5a070cea24a23e7535fa99d5b708d0c347d1f2d';
+String _$journeyViewModelHash() => r'161bd1c63abba0f7ee3cfd20cba7f8afd8019fe3';
 
 final class JourneyViewModelFamily extends $Family
     with
