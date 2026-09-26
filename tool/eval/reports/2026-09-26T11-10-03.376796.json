@@ -1,0 +1,787 @@
+{
+  "at": "2026-09-26T11:10:03.376796",
+  "passed": false,
+  "cases": [
+    {
+      "id": "lisbon-city-only",
+      "passed": false,
+      "turns": [
+        {
+          "turn": 1,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "called the tools the turn needs",
+              "passed": true
+            },
+            {
+              "name": "called no tool it did not need",
+              "passed": true
+            },
+            {
+              "name": "landed on PT",
+              "passed": true,
+              "detail": "PT"
+            },
+            {
+              "name": "reported the market as curated",
+              "passed": true,
+              "detail": "curated"
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "propose_story"
+            ],
+            "toolsRun": [
+              "propose_story"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "HouseholdInput",
+              "Button",
+              "Text"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 2,
+            "corrections": 0,
+            "latencyMs": 11745,
+            "marketId": "PT",
+            "bindingConstraint": null
+          },
+          "text": "A fresh start by the Tagus calls for knowing who is making the move with you. Who lives in the home?",
+          "drawn": [
+            "components t1-clue:\n  root: Column\n  input: HouseholdInput adults=/story/adults childAges=/story/childAges\n  btn: Button action=answer{facet: household, storyPath: /story}\n  btnText: Text"
+          ]
+        },
+        {
+          "turn": 2,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "propose_story"
+            ],
+            "toolsRun": [
+              "propose_story"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "HomeSwipe"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 2,
+            "corrections": 0,
+            "latencyMs": 8202,
+            "marketId": "PT",
+            "bindingConstraint": null
+          },
+          "text": "Living alone in Lisbon opens up everything from a classic tiled flat to a modern home with a terrace. Swipe through these homes to show what feels right.",
+          "drawn": [
+            "components t2-clue:\n  root: Column\n  swipe: HomeSwipe homes=/swipe/homes action=answer"
+          ]
+        },
+        {
+          "turn": 3,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "compare_areas"
+            ],
+            "toolsRun": [
+              "compare_areas"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "TradeOff"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 2,
+            "corrections": 0,
+            "latencyMs": 9251,
+            "marketId": "PT",
+            "bindingConstraint": null
+          },
+          "text": "Every flat passed and every balcony kept: a home with outdoor space, whether in the historic alleys or the leafy avenues. Which of these feels most like home?",
+          "drawn": [
+            "components t3-clue:\n  root: Column\n  tradeoff: TradeOff options=/tradeoff/options action=answer"
+          ]
+        },
+        {
+          "turn": 4,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "propose_story"
+            ],
+            "toolsRun": [
+              "propose_story"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "StoryDraft",
+              "LifestyleCommuteMap",
+              "Button",
+              "Text"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 2,
+            "corrections": 0,
+            "latencyMs": 10934,
+            "marketId": "PT",
+            "bindingConstraint": null
+          },
+          "text": "Here's the case; change anything I got wrong.",
+          "drawn": [
+            "components t4-case:\n  root: Column\n  draft: StoryDraft story=/story\n    You're moving to Lisbon for a change of lifestyle, living alone in a flat with a balcony in Alfama. You'd like to get around [mode?] and be within [maxMinutes?] of your places. Above all, [criterion parks], [criterion water], and [criterion cafes] matter to you.\n  map: LifestyleCommuteMap markers=/story/markers pins=/story/pins\n  btn: Button action=commit_story{storyPath: /story}\n  btnText: Text"
+          ]
+        },
+        {
+          "turn": 5,
+          "passed": false,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": false,
+              "detail": ": A field has the wrong type (type 'Null' is not a subtype of type 'String' in type cast); check surfaceId, catalogId, and that components is a list of objects"
+            },
+            {
+              "name": "drew the components the turn calls for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [],
+            "toolsRun": [
+              "assess_story"
+            ],
+            "rejections": [
+              ": A field has the wrong type (type 'Null' is not a subtype of type 'String' in type cast); check surfaceId, catalogId, and that components is a list of objects"
+            ],
+            "components": [
+              "Column",
+              "LifestyleCommuteMap",
+              "DynamicRecommendationStack",
+              "ComparisonTable"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 2,
+            "corrections": 1,
+            "latencyMs": 41734,
+            "marketId": "PT",
+            "bindingConstraint": null
+          },
+          "text": "I went through fourteen homes: eleven fit less well, and three fit the case.\n\nAlfama fits your story best because of its immediate access to the river and cafes, though quiet evenings are harder to come by there.",
+          "drawn": [
+            "components t5-assessment:\n  root: Column\n  map: LifestyleCommuteMap markers=/assessment/markers routes=/assessment/routes\n  stack: DynamicRecommendationStack homes=/assessment/candidates action=choose_home\n  table: ComparisonTable rows=/assessment/rows homes=/assessment/candidates"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stockholm-family",
+      "passed": false,
+      "turns": [
+        {
+          "turn": 1,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "called the tools the turn needs",
+              "passed": true
+            },
+            {
+              "name": "called no tool it did not need",
+              "passed": true
+            },
+            {
+              "name": "landed on SE",
+              "passed": true,
+              "detail": "SE"
+            },
+            {
+              "name": "reported the market as curated",
+              "passed": true,
+              "detail": "curated"
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "propose_story"
+            ],
+            "toolsRun": [
+              "propose_story"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "Hunch"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 2,
+            "corrections": 0,
+            "latencyMs": 10735,
+            "marketId": "SE",
+            "bindingConstraint": null
+          },
+          "text": "Studying in Stockholm usually means heading to KTH or the university. Where will you be studying?",
+          "drawn": [
+            "components t1-clue:\n  root: Column\n  hunch: Hunch story=/story action=answer\n    (Studies in Stockholm) I'd bet you're headed to KTH or Stockholm University.\n    place: KTH=KTH | Stockholm University=Stockholm University | Somewhere else=pin"
+          ]
+        },
+        {
+          "turn": 2,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "propose_story"
+            ],
+            "toolsRun": [
+              "propose_story"
+            ],
+            "rejections": [],
+            "components": [
+              "HouseholdInput",
+              "Column",
+              "Button",
+              "Text"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 2,
+            "corrections": 0,
+            "latencyMs": 8887,
+            "marketId": "SE",
+            "bindingConstraint": null
+          },
+          "text": "Two children at school: you'll want a school they can walk to, and three rooms at least. Who is moving into the home with you?",
+          "drawn": [
+            "components t2-clue:\n  household: HouseholdInput adults=/story/adults childAges=/story/childAges\n  root: Column\n  answer-household: Button action=answer{facet: household, storyPath: /story}\n  answer-household-label: Text"
+          ]
+        },
+        {
+          "turn": 3,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "propose_story"
+            ],
+            "toolsRun": [
+              "propose_story"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "Hunch"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 2,
+            "corrections": 0,
+            "latencyMs": 7992,
+            "marketId": "SE",
+            "bindingConstraint": null
+          },
+          "text": "Only a few of these homes can be reached without steps or have a lift. Are there any specific features you need in the home itself?",
+          "drawn": [
+            "components t3-clue:\n  root: Column\n  hunch: Hunch story=/story action=answer\n    (A family with children) You'll want a home that is easy to enter without steps.\n    needs: Step-free entry=stepFree | A lift in the building=lift | No special needs=none"
+          ]
+        },
+        {
+          "turn": 4,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "propose_story"
+            ],
+            "toolsRun": [
+              "read_listings",
+              "propose_story"
+            ],
+            "rejections": [],
+            "components": [
+              "Routine",
+              "Column",
+              "Button",
+              "Text"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 2,
+            "corrections": 0,
+            "latencyMs": 16242,
+            "marketId": "SE",
+            "bindingConstraint": null
+          },
+          "text": "A new student routine takes in more than just campus. What does your week look like?",
+          "drawn": [
+            "components t4-clue:\n  routine: Routine routine=/story/routine story=/story\n  root: Column\n  answer-routine: Button action=answer{facet: routine, storyPath: /story}\n  answer-routine-label: Text"
+          ]
+        },
+        {
+          "turn": 5,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "propose_story"
+            ],
+            "toolsRun": [
+              "propose_story"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "HomeSwipe"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 2,
+            "corrections": 0,
+            "latencyMs": 8963,
+            "marketId": "SE",
+            "bindingConstraint": null
+          },
+          "text": "Every flat passed and every garden kept: a house, then. Let's see what kind of home you'd like.",
+          "drawn": [
+            "components t5-clue:\n  root: Column\n  swipe: HomeSwipe homes=/swipe/homes action=answer"
+          ]
+        },
+        {
+          "turn": 6,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "2 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "compare_areas"
+            ],
+            "toolsRun": [
+              "compare_areas"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "TradeOff"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 2,
+            "corrections": 0,
+            "latencyMs": 8785,
+            "marketId": "SE",
+            "bindingConstraint": null
+          },
+          "text": "Solna gives you a short trip to campus, while Danderyd sits further out with leafy streets. Which of these ways to live feels right?",
+          "drawn": [
+            "components t6-clue:\n  root: Column\n  tradeoff: TradeOff options=/tradeoff/options action=answer"
+          ]
+        },
+        {
+          "turn": 7,
+          "passed": false,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": false,
+              "detail": "/updateComponents/components/3/action: Button: Expected to match exactly one schema, but matched 0"
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "3 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [
+              "propose_story"
+            ],
+            "toolsRun": [
+              "propose_story"
+            ],
+            "rejections": [
+              "/updateComponents/components/3/action: Button: Expected to match exactly one schema, but matched 0"
+            ],
+            "components": [
+              "Column",
+              "StoryDraft",
+              "LifestyleCommuteMap",
+              "Button",
+              "Text"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 3,
+            "corrections": 1,
+            "latencyMs": 15948,
+            "marketId": "SE",
+            "bindingConstraint": null
+          },
+          "text": "Here's the case; change anything I got wrong.",
+          "drawn": [
+            "components t7-case:\n  root: Column\n  draft: StoryDraft story=/story\n    You're moving to Stockholm to study at [place KTH], with three adults and two children who will need schools. You're looking for a house with a garden, step-free entry, and four rooms, getting around [mode?] within [maxMinutes?]. Above all, [criterion schools] and [criterion playground] matter to you.\n  map: LifestyleCommuteMap markers=/story/markers pins=/story/pins\n  button: Button action=commit_story\n  btn-text: Text"
+          ]
+        },
+        {
+          "turn": 8,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "drew the components the turn calls for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "1 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [],
+            "toolsRun": [
+              "assess_story"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "LifestyleCommuteMap",
+              "DynamicRecommendationStack",
+              "ComparisonTable"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 1,
+            "corrections": 0,
+            "latencyMs": 9227,
+            "marketId": "SE",
+            "bindingConstraint": null
+          },
+          "text": "I went through fourteen homes: seven were ruled out because they failed step-free entry, four fit less well, and three fit the case. Bergshamra fits your move best with a straightforward trip to campus and everything close by, though Stocksund comes very close.",
+          "drawn": [
+            "components t8-assessment:\n  root: Column\n  map: LifestyleCommuteMap markers=/assessment/markers routes=/assessment/routes\n  stack: DynamicRecommendationStack homes=/assessment/candidates action=choose_home\n  table: ComparisonTable rows=/assessment/rows homes=/assessment/candidates"
+          ]
+        },
+        {
+          "turn": 9,
+          "passed": true,
+          "scores": [
+            {
+              "name": "the turn finished",
+              "passed": true
+            },
+            {
+              "name": "validated without a correction",
+              "passed": true,
+              "detail": "0 corrections"
+            },
+            {
+              "name": "drew the components the turn calls for",
+              "passed": true
+            },
+            {
+              "name": "left out the components it has no facts for",
+              "passed": true
+            },
+            {
+              "name": "kept amounts out of the prose",
+              "passed": true
+            },
+            {
+              "name": "stayed within 4 model rounds",
+              "passed": true,
+              "detail": "1 rounds"
+            }
+          ],
+          "metrics": {
+            "toolsCalled": [],
+            "toolsRun": [
+              "assess_story"
+            ],
+            "rejections": [],
+            "components": [
+              "Column",
+              "LifestyleCommuteMap"
+            ],
+            "profileFieldsAsked": [],
+            "modelRounds": 1,
+            "corrections": 0,
+            "latencyMs": 5481,
+            "marketId": "SE",
+            "bindingConstraint": null
+          },
+          "text": "You've chosen Bergshamra. It gives you a house with a garden, step-free entry, and a smooth trip to KTH and the clinic.",
+          "drawn": [
+            "components t9-home:\n  root: Column\n  map: LifestyleCommuteMap markers=/assessment/markers routes=/assessment/routes focus=c1"
+          ]
+        }
+      ]
+    }
+  ]
+}

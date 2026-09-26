@@ -38,6 +38,8 @@ import 'tool_belt.dart';
 import 'tools_done_note.dart';
 import 'turn_event.dart';
 import 'turn_input.dart';
+import '../../research/gemini_researcher.dart';
+import '../../research/researcher.dart';
 import '../../errors/homeward_failure.dart';
 import 'turn_seeds.dart';
 import 'turn_settings.dart';
@@ -73,6 +75,8 @@ final class TurnRun {
   final Session _session;
   final TurnValidator _validator;
   final _seeder = SurfaceSeeder();
+  Researcher? _researcher;
+  Set<String> _withheld = const {};
   final _progress = ProgressLog();
   final _forwarded = <Map<String, Object?>>[];
   final _calledSeeds = <Map<String, Object?>>[];
@@ -114,6 +118,22 @@ final class TurnRun {
     required String apiKey,
     Future<void>? cancellation,
   }) async* {
+    _withheld = switch (turnInput) {
+      ActionTurnInput(:final action) => switch (SurfaceAction.named(
+        action.name,
+      )) {
+        SurfaceAction.commitStory || SurfaceAction.chooseHome => const {
+          'propose_story',
+        },
+        _ => const {},
+      },
+      _ => const {},
+    };
+    _researcher = GeminiResearcher(
+      createInteraction: createInteraction,
+      apiKey: apiKey,
+      thinkingLevel: settings.thinkingLevel,
+    );
     _turnRequest = switch (turnInput) {
       TextTurnInput(:final text) => RecordedInput.text(text),
       ActionTurnInput(:final action) => recordedInputOf(action),
@@ -276,12 +296,16 @@ final class TurnRun {
               _plan,
               _market(),
               caseOnly: turnInput is! ActionTurnInput,
+              deal: settings.deal,
             )
             case final note?) {
           input = InteractionInput.text(note);
           nudged = true;
           continue;
         }
+      }
+      if (_forwarded.isEmpty && _weekReady) {
+        yield* _weekFallback();
       }
       if (_forwarded.isEmpty &&
           (_text.toString().trim().isEmpty ||
@@ -379,15 +403,25 @@ final class TurnRun {
     required bool allowToolCalls,
     required bool constrained,
   }) async {
-    final settled = await tools.runSettled(_plan, steps: _progress);
+    final run = await tools.runSettled(
+      _plan,
+      steps: _progress,
+      researcher: _researcher,
+    );
+    final settled = run.results;
+    _plan = run.plan;
     _settledNames.addAll(settled.keys);
     _validator
       ..seeds = turnSeeds(
         _plan,
         [..._calledSeeds, for (final result in settled.values) result.seeds],
         lineups: tools.markets.samples.lineupsOf(_plan.story.sampleCity),
+        swipe: _plan.story.committed
+            ? const []
+            : tools.markets.samples.swipeDeckOf(_plan.story.sampleCity),
       )
-      ..requiredProfilePaths = _requiredProfilePaths();
+      ..requiredProfilePaths = _requiredProfilePaths()
+      ..mustAsk = caseMustAsk(_plan.story).toSet();
     return InteractionRequest(
       input: input,
       systemInstruction: prompts.systemInstruction(
@@ -403,15 +437,17 @@ final class TurnRun {
             for (final MapEntry(key: name, value: result) in settled.entries)
               name: result.modelResult,
           },
+          deal: settings.deal,
         ),
       ),
-      tools: tools.declarationsFor(_plan),
+      tools: tools.declarationsFor(_plan, withholding: _withheld),
       toolChoice: allowToolCalls ? null : ToolChoice.none,
       thinkingLevel: settings.thinkingLevel,
       previousInteractionId: _interactionId,
       responseSchema: constrained
           ? catalogResponseSchema({
               ...correctionLayout,
+              if (_validator.mustAsk.isNotEmpty) ...caseQuestionCards,
               ...drawnComponents([
                 ..._rejectedSources,
                 for (final message in _forwarded) jsonEncode(message),
@@ -494,6 +530,24 @@ final class TurnRun {
       _validator.seeds.containsKey(assessmentSlice.name) &&
       _plan.story.chosen == null &&
       !_validator.drewComponents;
+
+  bool get _weekReady =>
+      !settings.deal &&
+      _plan.story.chosen != null &&
+      _validator.seeds.containsKey(assessmentSlice.name) &&
+      !_validator.drewComponents;
+
+  Stream<TurnEvent> _weekFallback() async* {
+    final empty = _validator.emptySurfaces.firstOrNull;
+    for (final source in weekFallback(
+      empty ?? InlineSurfaces.id(turn, 'week'),
+      _plan.story.chosen!.id,
+      create: empty == null,
+    )) {
+      yield* _validated(source);
+    }
+    _logFallback('week');
+  }
 
   Stream<TurnEvent> _fallback() async* {
     final failuresBefore = _pendingFailures.length;

@@ -26,7 +26,7 @@ final class EvalAction extends EvalInput {
 final class EvalAnswers extends EvalInput {
   const EvalAnswers();
 
-  static const maxQuestions = 5;
+  static const maxQuestions = maxCaseQuestions;
 }
 
 final class EvalExpectations {
@@ -66,10 +66,12 @@ final class EvalCase {
     required this.turns,
     this.persona,
     this.buyer = const {},
+    this.deal = false,
   });
 
   final String id;
   final String? persona;
+  final bool deal;
   final Map<String, Object?> buyer;
   final List<EvalTurn> turns;
 }

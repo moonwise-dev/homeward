@@ -27,6 +27,7 @@ EvalCase evalCase(File file) {
     id: document['id']! as String,
     persona: document['persona'] as String?,
     buyer: _map(document['buyer'] ?? const <String, Object?>{}),
+    deal: document['deal'] == true,
     turns: [
       for (final turn in document['turns']! as List<Object?>) _turn(_map(turn)),
     ],

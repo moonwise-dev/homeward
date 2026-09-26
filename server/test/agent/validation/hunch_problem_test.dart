@@ -1,3 +1,4 @@
+import 'package:common/common.dart';
 import 'package:homeward_server/agent/validation/hunch_problem.dart';
 import 'package:test/test.dart';
 
@@ -39,23 +40,53 @@ void main() {
     expect(problem, contains('5 to 120'));
   });
 
-  test('a button answering who moves carries its facet and story', () {
-    Map<String, Object?> button(Map<String, Object?> context) => {
-      'id': 'send',
-      'component': 'Button',
-      'action': {
-        'event': {'name': 'answer', 'context': context},
-      },
-    };
-
-    expect(
-      hunchProblem(button({'facet': 'household', 'storyPath': '/story'})),
-      isNull,
-    );
-    expect(hunchProblem(button({})), contains('household'));
-  });
-
   test('other components are not its business', () {
     expect(hunchProblem({'id': 'x', 'component': 'Text'}), isNull);
+  });
+
+  test('needs are named needs, or none', () {
+    expect(
+      hunchProblem(
+        hunch('needs', [
+          {
+            'label': 'Step-free, and a shower',
+            'value': 'stepFree,entryLevelShower',
+          },
+          {'label': 'Stairs are fine', 'value': 'none'},
+        ]),
+      ),
+      isNull,
+    );
+    expect(
+      hunchProblem(
+        hunch('needs', [
+          {'label': 'A sauna', 'value': 'sauna'},
+          {'label': 'Stairs are fine', 'value': 'none'},
+        ]),
+      ),
+      isNotNull,
+    );
+  });
+
+  test('a question the case does not still need is sent back', () {
+    const mustAsk = {CaseFacet.needs, CaseFacet.routine};
+
+    expect(
+      caseQuestionProblem(hunch('mode', const []), mustAsk),
+      allOf(contains('needs, routine'), contains('not mode')),
+    );
+    expect(caseQuestionProblem(hunch('needs', const []), mustAsk), isNull);
+    expect(
+      caseQuestionProblem({
+        'id': 'week',
+        'component': 'Routine',
+      }, mustAsk),
+      isNull,
+    );
+    expect(caseQuestionProblem(hunch('mode', const []), const {}), isNull);
+    expect(
+      caseQuestionProblem({'id': 'draft', 'component': 'StoryDraft'}, mustAsk),
+      contains('the case summary comes once they are answered'),
+    );
   });
 }

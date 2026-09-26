@@ -1,5 +1,6 @@
 id: stockholm-first-time
 persona: local
+deal: true
 turns:
   - text: >-
       We are a couple in Stockholm looking at a 3-room flat in Södermalm for

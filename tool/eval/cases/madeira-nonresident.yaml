@@ -1,5 +1,6 @@
 id: madeira-nonresident
 persona: cross-border
+deal: true
 turns:
   - text: >-
       I live in Stockholm and want a two-bedroom flat in Funchal, around

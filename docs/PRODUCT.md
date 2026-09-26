@@ -133,11 +133,13 @@ Homeward gets it the way a detective would (D121).
    offers KTH, Stockholm University, and Karolinska as taps, and a pin for
    anywhere else. The buyer taps KTH.
 3. *"KTH, then. Most people starting there come alone. Is anyone coming with
-   you?"* The buyer sets two adults and two children, six and nine. *"Two
-   children at school: you'll want a school they can walk to, and three rooms
-   at least. Which of these feels most like home?"* Four photos: a classic flat
-   with high ceilings, a new-build with a big balcony, a terraced house with a
-   garden, a villa by the water. The buyer taps the terraced house.
+   you?"* The buyer sets three adults and two children, six and nine. *"A
+   third adult is often a parent moving in. Will stairs matter?"* The buyer
+   taps *Step-free, with a shower on the entry floor* (D126). *"Two
+   children at school and a parent: a school they can walk to, and four rooms
+   at least. Keep the ones that feel like yours."* Six real homes from the
+   city, one card at a time (D128): the buyer keeps the two houses with
+   gardens and passes the flats. *"Every flat passed, every garden kept."*
 4. *"A garden, then. Near KTH that has a price."* Two ways to live, each priced
    from its area's real price per square metre and timed to KTH by bike: a
    house in Danderyd, further out and roomier, and a flat in Vasastan, close
@@ -147,14 +149,19 @@ Homeward gets it the way a detective would (D121).
    dotted: that they cycle, within 25 minutes, and that schools and parks
    matter above all. The buyer changes one guess and taps *Find my three
    homes*.
-6. While it looks, the working card lists each step: going through the sample
-   homes in Stockholm, timing the ride to KTH, looking for schools and parks
-   near the ones left. Then: *"I went through twelve homes and ruled out nine:
-   five were over your price, four had no garden. Three fit the case."* The
-   board shows the three on a map, each with its photos, price, size, and price
-   per square metre against its area's, what fits, and what comes close
-   but misses by how much.
-7. The buyer picks one. One short section asks the money facts the rules need,
+6. While it looks, the working card lists each step: reading the Stockholm
+   listings for step-free entry and a shower on the entry floor, timing the ride
+   to KTH, looking for schools and parks near the ones left. Then: *"I went
+   through fourteen homes and ruled out eleven: eight were flats, three had
+   steps at the door. Three fit the case."* The board shows the three on a map,
+   each with its photos, price, size, and price per square metre against its
+   area's. Under *Why it fits*, each reason names its source: *"A ramp runs up
+   beside the front steps"* quoted from the listing with the words that matter
+   highlighted, the ride to KTH as measured, the garden as the buyer's own
+   pick. *Where it falls short* says what comes close but misses, and what the
+   listing never mentions.
+7. The buyer picks one, and the case closes on the map of their week from it.
+   With the deal switched on (D125), one short section then asks the money facts the rules need,
    filled in from the case where it can. Then the deal sheet: what they can
    borrow under Sweden's verified rules and the rule that limits it, a down
    payment slider that moves the payment, the bank's stress test, and the cash

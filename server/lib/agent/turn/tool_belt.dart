@@ -5,9 +5,12 @@ import '../../gemini/function_declaration.dart';
 import '../../logging/log_entry.dart';
 import '../../markets/market_directory.dart';
 import '../../research/research_steps.dart';
+import '../../research/researcher.dart';
 import '../../tools/agent_tool.dart';
 
 final _log = Logger('tools');
+
+typedef SettledRun = ({Map<String, ToolResult> results, Plan plan});
 
 final class ToolBelt {
   ToolBelt({required this.tools, required this.markets});
@@ -15,23 +18,39 @@ final class ToolBelt {
   final List<AgentTool> tools;
   final MarketDirectory markets;
 
-  Future<Map<String, ToolResult>> runSettled(
+  Future<SettledRun> runSettled(
     Plan plan, {
     ResearchSteps steps = const SilentSteps(),
+    Researcher? researcher,
   }) async {
-    final context = ToolContext(markets: markets, plan: plan, steps: steps);
-    return {
-      for (final tool in tools)
-        if (tool.settledArguments(context) case final arguments?)
-          tool.name: await _run(tool, arguments, context),
-    };
+    var settled = plan;
+    final results = <String, ToolResult>{};
+    for (final tool in tools) {
+      final context = ToolContext(
+        markets: markets,
+        plan: settled,
+        steps: steps,
+        researcher: researcher,
+      );
+      if (tool.settledArguments(context) case final arguments?) {
+        final result = await _run(tool, arguments, context);
+        results[tool.name] = result;
+        settled = result.plan ?? settled;
+      }
+    }
+    return (results: results, plan: settled);
   }
 
-  List<FunctionDeclaration> declarationsFor(Plan plan) {
+  List<FunctionDeclaration> declarationsFor(
+    Plan plan, {
+    Set<String> withholding = const {},
+  }) {
     final context = ToolContext(markets: markets, plan: plan);
     return [
       for (final tool in tools.whereType<ModelTool>())
-        if (tool.settledArguments(context) == null && tool.isOffered(context))
+        if (tool.settledArguments(context) == null &&
+            tool.isOffered(context) &&
+            !withholding.contains(tool.name))
           tool.declaration,
     ];
   }

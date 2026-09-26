@@ -9,6 +9,7 @@ Map<String, Object?> turnContext({
   required MarketDirectory markets,
   Set<String> surfacesUsed = const {},
   Map<String, Map<String, Object?>> preRun = const {},
+  bool deal = true,
 }) {
   final marketId = plan.marketId;
   final market = marketId == null
@@ -22,36 +23,39 @@ Map<String, Object?> turnContext({
   return {
     'turn': turn,
     'openDecisions': [
-      for (final decision in openDecisions(plan, market)) decision.name,
+      for (final decision in openDecisions(plan, market, deal: deal))
+        decision.name,
     ],
-    if (marketId != null)
+    if (deal && marketId != null)
       'market': {
         'marketId': marketId.code,
         'name': markets.nameOf(marketId),
         'coverage': markets.coverageOf(marketId).name,
       },
-    'profile': {
-      'facts': {
-        for (final MapEntry(:key, :value) in profile.entries)
-          if (!amounts.contains(key)) key: value,
-      },
-      'amountsGiven': [
-        for (final key in profile.keys)
-          if (amounts.contains(key)) key,
-      ],
-      if (market != null)
-        'missing': [
-          for (final field in missingProfileFields(plan.profile, market))
-            {'field': field.name, 'paths': profileFieldPaths(field)},
+    if (deal)
+      'profile': {
+        'facts': {
+          for (final MapEntry(:key, :value) in profile.entries)
+            if (!amounts.contains(key)) key: value,
+        },
+        'amountsGiven': [
+          for (final key in profile.keys)
+            if (amounts.contains(key)) key,
         ],
-      'draftPending': plan.profileDraft != null,
-    },
+        if (market != null)
+          'missing': [
+            for (final field in missingProfileFields(plan.profile, market))
+              {'field': field.name, 'paths': profileFieldPaths(field)},
+          ],
+        'draftPending': plan.profileDraft != null,
+      },
     'story': _story(plan.story),
     'case': _case(plan.story, markets),
-    'scenario': {
-      'committed': plan.scenario != null,
-      'draftPending': plan.scenarioDraft != null,
-    },
+    if (deal)
+      'scenario': {
+        'committed': plan.scenario != null,
+        'draftPending': plan.scenarioDraft != null,
+      },
     'surfacesUsed': surfacesUsed.toList(),
     if (preRun.isNotEmpty) 'preRun': preRun,
   };
@@ -63,6 +67,7 @@ Map<String, Object?> _case(Story story, MarketDirectory markets) {
   return {
     'questionsAsked': story.questions,
     'maxQuestions': maxCaseQuestions,
+    'mustAsk': [for (final gap in caseMustAsk(story)) gap.name],
     'open': [for (final gap in caseGaps(story)) gap.name],
     'answered': [for (final facet in story.answered) facet.name],
     'known': {
@@ -72,6 +77,8 @@ Map<String, Object?> _case(Story story, MarketDirectory markets) {
       'outdoor': ?story.outdoor?.name,
       'style': ?story.style?.name,
       'rooms': ?story.rooms,
+      if (story.needs.isNotEmpty)
+        'needs': [for (final need in story.needs) need.name],
       if (story.areaIds.isNotEmpty) 'areas': story.areaIds,
       'priceRangeSet': story.priceMax != null,
     },
@@ -88,7 +95,10 @@ Map<String, Object?> _case(Story story, MarketDirectory markets) {
               'character': area.character,
             },
         ],
-        'lineups': samples.lineupsOf(city.id).keys.toList(),
+        'lineups': [
+          for (final name in samples.lineupsOf(city.id).keys)
+            if (name != 'homes') name,
+        ],
       },
   };
 }
@@ -104,6 +114,7 @@ Map<String, Object?> _story(Story story) => {
         'placed': anchor.point != null,
         'mode': anchor.mode.name,
         'maxMinutes': anchor.maxMinutes,
+        'perWeek': anchor.perWeek,
       },
   ],
   'homes': [

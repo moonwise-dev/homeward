@@ -112,16 +112,26 @@ A segment has a `type`:
 ### `LifestyleCommuteMap`
 
 A map of the buyer's life around the homes they weigh: anchors, homes, a route
-from each home to each anchor with its minutes and mode, and, when one home is
-in view, the nearest place for each criterion. OpenStreetMap's own tiles, with
-no key, attributed on the map.
+from each home to each anchor with its minutes, its mode, and how many days a
+week the buyer makes the trip, and, when one home is in view, the nearest place
+for each criterion and the home's week in travel. OpenStreetMap's own tiles,
+with no key, attributed on the map.
+
+Its property names are those of the Maps Agentic UI Toolkit's `GoogleMap`
+(D127): `center`, `zoom`, `markers`, `routes` whose items carry an `origin` and a
+`destination` pin of `lat`, `lng`, and `label`, and `travelMode`. Homeward binds
+the places instead of writing them, so every place on the map is one it
+checked against open map data.
 
 | Property | Type | Required | Notes |
 | --- | --- | --- | --- |
 | `markers` | path | yes | `/story/markers` before measuring, `/assessment/markers` after |
-| `routes` | path | no | `/assessment/routes` |
+| `routes` | path | no | `/assessment/routes`; each route has `origin`, `destination`, `minutes`, `mode`, and `perWeek` |
+| `center` | path | no | `/story/center`; otherwise the map fits what it shows |
+| `zoom` | number | no | Map zoom, with `center` |
+| `travelMode` | enum | no | `driving`, `walking`, `bicycling`, or `transit`: show only routes of that mode |
 | `pins` | path | no | `/story/pins`, the places the buyer dropped, shown as anchors |
-| `focus` | string | no | A home id; shows that home alone with its routes and places |
+| `focus` | string | no | A home id; shows that home alone with its routes, places, and week |
 
 ### `ComparisonTable`
 
@@ -153,9 +163,11 @@ basic `Button` sending `commit_story`.
 ### `ListingCard`
 
 One sample home in full: photos to swipe through, the price, size, rooms, and
-floor, the price per square metre against its area's with the source,
-what fits and what misses from the assessment, and a button to choose it. It
-is labelled as a sample listing, and each photo carries its credit.
+floor, the price per square metre against its area's with the source, why it
+fits and where it falls short, and a button to choose it (D126). Every reason
+names its source: a quote from the listing with the words that matter
+highlighted, measured by Homeward, or what the buyer said. It is labelled as a
+sample listing, and each photo carries its credit.
 
 | Property | Type | Required | Notes |
 | --- | --- | --- | --- |
@@ -179,8 +191,8 @@ correct it. The first option is the hunch itself.
 | `story` | path | yes | Always `/story`; a place option's map opens on its centre |
 | `hunch` | string | yes | The deduction, one sentence in the second person |
 | `because` | string | no | The clue it came from, such as "Two children at school" |
-| `facet` | enum | yes | `place`, `mode`, `maxMinutes`, `homeType`, `outdoor`, `style`, `rooms`, `criterion` |
-| `options` | list | yes | Two to four `{ label, value }`. `place`: a map query; `mode`: a travel mode; `maxMinutes` and `rooms`: a whole number; `homeType`: `flat` or `house`; `outdoor`: `none`, `balcony`, or `garden`; `style`: `classic` or `modern`; `criterion`: a criterion kind. A `place` option with `pin: true` opens the map to drop a pin |
+| `facet` | enum | yes | `place`, `mode`, `maxMinutes`, `homeType`, `outdoor`, `style`, `rooms`, `needs`, `criterion` |
+| `options` | list | yes | Two to four `{ label, value }`. `place`: a map query; `mode`: a travel mode; `maxMinutes` and `rooms`: a whole number; `homeType`: `flat` or `house`; `outdoor`: `none`, `balcony`, or `garden`; `style`: `classic` or `modern`; `needs`: needs separated by commas, such as `stepFree,entryLevelShower`, or `none` (D126); `criterion`: a criterion kind. A `place` option with `pin: true` opens the map to drop a pin |
 | `answer` | `Action` | yes | `answer`; the app adds `facet`, `value`, and `label`, and `pin` with `lat` and `lng` when the buyer dropped one |
 
 ### `PhotoLineup`
@@ -194,6 +206,19 @@ theirs, and the server reads the traits.
 | `photos` | path | yes | `/lineup/homes` or `/lineup/life`, whichever the turn context lists |
 | `pick` | `Action` | yes | `answer`; the app adds `facet` `photo`, the photo id as `value`, and its caption as `label` |
 
+### `HomeSwipe`
+
+Six real sample homes from the buyer's city, one card at a time: a photo, the
+title, the area, the price, and the size (D128). The buyer keeps a home with a
+swipe right or a tap on Keep, and passes with a swipe left or Pass; after the
+last card the app sends the answer. The server chose the six to differ in
+kind, outdoor space, style, and size, so the pattern means something.
+
+| Property | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `homes` | path | yes | `/swipe/homes` |
+| `answer` | `Action` | yes | `answer`; the app adds `facet` `swipe`, the kept ids as `value`, a `label` such as "Kept 2 of 6", and `kept` and `passed` lists |
+
 ### `TradeOff`
 
 Two or three ways to live side by side: an area with its character, a home
@@ -204,6 +229,20 @@ with its source, and the minutes to the buyer's daily place.
 | --- | --- | --- | --- |
 | `options` | path | yes | `/tradeoff/options`, seeded by `compare_areas` |
 | `pick` | `Action` | yes | `answer`; the app adds `facet` `area`, the option id as `value`, and a short `label` |
+
+### `Routine`
+
+The buyer's week as taps (D127): every place they go regularly with how many
+days a week, those the case already knows filled in, and a way to add another,
+such as a clinic once a week, by name and a pin on the map.
+
+| Property | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `routine` | path | yes | `/story/routine`: each place's `id`, `label`, and `perWeek`, and a `pin` for one the buyer added |
+| `story` | path | yes | `/story`; the add sheet's map opens on its centre |
+| `label` | string | no | The question, such as "What does your week look like?" |
+
+A basic `Button` sends `answer` with the facet `routine` and `storyPath`.
 
 `HouseholdInput` asks who moves when it binds `/story/adults` and
 `/story/childAges`, with a basic `Button` sending `answer` with the facet
@@ -515,6 +554,10 @@ From the same declarations `make catalog` generates:
   write messages, the data model paths, the actions, the surface and component
   examples, and then the catalog document and the common types as compact JSON
   Schema, exactly what validation enforces (D69).
+- `server/prompts/generated/catalog_skill_story.md`, the same skill without the
+  deal (D125): components, functions, data model slices, and actions each
+  belong to the story or the deal, and this one leaves out the deal's, and
+  the surface examples, which are all the deal's.
 - `docs/generated/catalog_reference.md`, a human reference.
 
 `make catalog-check` fails if generated files are stale or if any component or

@@ -106,9 +106,18 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
   - The disclaimer, in one line under Start: Homeward estimates and explains;
     it is not financial advice.
 - **The case** (D121): each question is a section holding the detective's line
-  and one card, a hunch, a photo lineup, a trade-off, or the household. One tap
-  answers it: the card marks the choice and sends it, and the next section
-  opens under it. A place option can open the map to drop a pin instead.
+  and one card, a hunch, a photo lineup, a swipe, a trade-off, the household,
+  or the week. One tap answers it: the card marks the choice and sends it, and
+  the next section opens under it. A place option can open the map to drop a
+  pin instead.
+  - The swipe (D128) deals six homes one at a time, with a photo, the area, the
+    title, the price, and the size. Dragging a card leans it and tints its edge
+    green or red, and past a quarter of its width keeps or passes it; Keep and
+    Pass do the same for a tap or a screen reader. After the last card it says
+    how many were kept and sends the answer.
+  - The week (D127) lists each place with seven day chips, the known ones
+    filled in, and a field to name another place, which opens the map sheet to
+    pin it; a pinned place can be removed. That's my week sends it.
 - **The case summary** (D119, D121) closes the questions: `StoryDraft`, the
   map, and Find my three homes. Slots in the paragraph open menus and change the
   story on the device with no request, and a blank place slot opens a sheet
@@ -117,7 +126,13 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
   sends everything they changed.
 - **Sample homes** (D122) show their photos as a carousel with dots, marked as
   sample listings with each photo's credit. Photos are bundled WebP assets,
-  loaded when shown.
+  loaded when shown. Each one says why it fits and where it falls short
+  (D126): every reason with its source, From the listing, Measured, or You
+  said, and a listing reason with its sentence from the description, the
+  quoted words highlighted. The home's week in travel sits under its price.
+- **The case closed** (D125): with the deal off, choosing a home ends on the
+  map of the buyer's week from it: each routine trip with its minutes and how
+  often they make it, and a card with the week's total in travel.
 - **Sections** (D120): one per turn that has text, a surface, or a failure, in
   one scrolling story with no page count, pager, or next button. The newest
   section is open and scrolls into view when it arrives. An earlier section

@@ -712,6 +712,72 @@ void main() {
     },
   );
 
+  test('without the deal, a closing turn that draws nothing shows the week '
+      'from the chosen home', () async {
+    await sessionWith(Plan(story: stockholmChosen));
+    final script = ScriptedInteractions([
+      reply('i1', text: 'The case is closed.'),
+    ]);
+
+    final events = await sendAction(
+      orchestrator(
+        script,
+        settings: const TurnSettings(deal: false),
+        tools: [const _MeasuredHomes()],
+      ),
+    ).toList();
+    final forwarded = [
+      for (final message in messagesIn(events)) jsonEncode(message),
+    ];
+
+    expect(script.requests, hasLength(1));
+    expect(
+      forwarded,
+      contains(allOf(contains('"t1-week"'), contains('"focus":"c1"'))),
+    );
+    expect(events.last, isA<TurnCompleted>());
+  });
+
+  test('the board and the closing turn never reopen the story', () async {
+    await sessionWith(Plan(story: stockholmStory));
+    final script = ScriptedInteractions([
+      reply('i1', text: 'A fine choice.'),
+      reply('i2', text: 'Tell me more.'),
+    ]);
+    final agent = orchestrator(
+      script,
+      settings: const TurnSettings(deal: false),
+      tools: const [_StoryProposal()],
+    );
+
+    await agent
+        .run(
+          sessionId: 's-1',
+          uid: 'uid-1',
+          input: const TurnInput.action(
+            ClientAction(
+              name: 'choose_home',
+              surfaceId: 't0-board',
+              sourceComponentId: 'homes',
+              context: {'candidateId': 'c1'},
+            ),
+            surfaceData: {},
+          ),
+          apiKey: 'key',
+        )
+        .drain<void>();
+    await send(agent, 'We also have a dog').drain<void>();
+
+    expect(
+      script.requests.first.tools.map((tool) => tool.name),
+      isNot(contains('propose_story')),
+    );
+    expect(
+      script.requests.last.tools.map((tool) => tool.name),
+      contains('propose_story'),
+    );
+  });
+
   test('streams each measuring step before the model draws', () async {
     await sessionWith(Plan(story: stockholmStory));
     final script = ScriptedInteractions([reply('i1', text: 'Here they are.')]);
@@ -894,4 +960,21 @@ final class _MeasuredHomes extends AgentTool {
       },
     ),
   );
+}
+
+final class _StoryProposal extends ModelTool {
+  const _StoryProposal();
+
+  @override
+  String get name => 'propose_story';
+
+  @override
+  String get description => 'Proposes the story.';
+
+  @override
+  Map<String, Object?> get parameters => const {'type': 'object'};
+
+  @override
+  ToolResult run(Map<String, Object?> arguments, ToolContext context) =>
+      const ToolResult(modelResult: {});
 }

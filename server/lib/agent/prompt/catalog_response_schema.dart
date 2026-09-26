@@ -4,6 +4,15 @@ import 'package:common/common.dart';
 
 const correctionLayout = {'Column', 'Row', 'Card', 'Text', 'Button', 'Divider'};
 
+const caseQuestionCards = {
+  'Hunch',
+  'HouseholdInput',
+  'Routine',
+  'HomeSwipe',
+  'TradeOff',
+  'PhotoLineup',
+};
+
 final _catalog = homewardCatalogDocument();
 
 final _commonDefs =

@@ -141,6 +141,7 @@ window, and the session limit joins with Firestore in M2.
 | `HOMEWARD_FIRST_STEP_DEADLINE` | Deadline for the first Gemini step, in seconds |
 | `HOMEWARD_MODEL_COOLDOWN` | How long an overloaded model is skipped, in seconds |
 | `HOMEWARD_MAX_CORRECTIONS` | Validation correction rounds |
+| `HOMEWARD_DEAL` | `on` to walk a buyer into the deal after choosing a home; `off`, the default, ends the journey at the chosen home (D125) |
 | `HOMEWARD_ALLOWED_ORIGINS` | CORS origins |
 | `HOMEWARD_APP_CHECK_ENFORCED` | Enforce App Check, off for local development |
 | `HOMEWARD_PUBLIC_URL` | Base URL clients call, used for the agent card's `url` |

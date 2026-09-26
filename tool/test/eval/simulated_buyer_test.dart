@@ -13,6 +13,15 @@ void main() {
       'adults': 2,
       'childAges': [6, 9],
       'areas': ['danderyd'],
+      'needs': ['stepFree', 'entryLevelShower'],
+      'routine': [
+        {'label': 'KTH', 'perWeek': 3},
+        {
+          'label': 'The clinic',
+          'perWeek': 1,
+          'point': {'lat': 59.39, 'lng': 18.04},
+        },
+      ],
     },
     photo: (id) => switch (id) {
       'garden' => const Photo(
@@ -89,6 +98,104 @@ void main() {
         .action;
 
     expect(action.context, containsPair('value', '20'));
+  });
+
+  test('picks the needs option closest to theirs', () {
+    final action = buyer
+        .answer(
+          surface([
+            {
+              'id': 'root',
+              'component': 'Hunch',
+              'facet': 'needs',
+              'options': [
+                {'label': 'Step-free is enough', 'value': 'stepFree'},
+                {
+                  'label': 'Step-free, and a shower on the entry floor',
+                  'value': 'stepFree,entryLevelShower',
+                },
+                {'label': 'Stairs are fine', 'value': 'none'},
+              ],
+              'answer': answer,
+            },
+          ]),
+        )!
+        .action;
+
+    expect(action.context, containsPair('value', 'stepFree,entryLevelShower'));
+  });
+
+  test('sets their week and adds the places they go', () {
+    final answered = buyer.answer(
+      surface(
+        [
+          {
+            'id': 'week',
+            'component': 'Routine',
+            'routine': {'path': '/story/routine'},
+            'story': {'path': '/story'},
+          },
+          {
+            'id': 'done',
+            'component': 'Button',
+            'action': {
+              'event': {
+                'name': 'answer',
+                'context': {'facet': 'routine', 'storyPath': '/story'},
+              },
+            },
+          },
+        ],
+        {
+          'story': {
+            'routine': [
+              {'id': 'a1', 'label': 'KTH', 'perWeek': 5},
+            ],
+          },
+        },
+      ),
+    )!;
+    final story = answered.surfaceData['story']! as Map<String, Object?>;
+
+    expect(answered.action.context, containsPair('facet', 'routine'));
+    expect(story['routine'], [
+      {'id': 'a1', 'label': 'KTH', 'perWeek': 3},
+      {
+        'id': 'r2',
+        'label': 'The clinic',
+        'perWeek': 1,
+        'pin': {'lat': 59.39, 'lng': 18.04},
+      },
+    ]);
+  });
+
+  test('keeps the homes that match and passes the rest', () {
+    final action = buyer
+        .answer(
+          surface(
+            [
+              {
+                'id': 'root',
+                'component': 'HomeSwipe',
+                'homes': {'path': '/swipe/homes'},
+                'answer': answer,
+              },
+            ],
+            {
+              'swipe': {
+                'homes': [
+                  {'id': 'flat', 'homeType': 'flat', 'outdoor': 'balcony'},
+                  {'id': 'villa', 'homeType': 'house', 'outdoor': 'garden'},
+                ],
+              },
+            },
+          ),
+        )!
+        .action;
+
+    expect(action.context, containsPair('kept', ['villa']));
+    expect(action.context, containsPair('passed', ['flat']));
+    expect(action.context, containsPair('facet', 'swipe'));
   });
 
   test('picks the lineup photo whose traits fit', () {

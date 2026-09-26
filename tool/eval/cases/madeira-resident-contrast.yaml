@@ -1,5 +1,6 @@
 id: madeira-resident-contrast
 persona: resident
+deal: true
 turns:
   - text: >-
       I already live in Funchal and pay tax in Portugal. I am looking at a

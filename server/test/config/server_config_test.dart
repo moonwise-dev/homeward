@@ -21,6 +21,7 @@ void main() {
         firstStepDeadline: const Duration(seconds: 20),
         modelCooldown: const Duration(minutes: 5),
         maxCorrections: 2,
+        deal: false,
         allowedOrigins: const [
           'https://homeward-genui.web.app',
           'https://homeward-genui.firebaseapp.com',
@@ -31,6 +32,14 @@ void main() {
         marketsDirectory: 'markets',
         sessionStore: SessionStore.memory,
       ),
+    );
+  });
+
+  test('walks into the deal only when it is switched on', () {
+    expect(ServerConfig.fromEnvironment({'HOMEWARD_DEAL': 'on'}).deal, isTrue);
+    expect(
+      ServerConfig.fromEnvironment({'HOMEWARD_DEAL': 'off'}).deal,
+      isFalse,
     );
   });
 

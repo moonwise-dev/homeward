@@ -316,11 +316,14 @@ Every surface is seeded by the server with the slices its components bind to.
 The model binds to these paths and never writes values.
 
 ```text
-/story                   the story, its answers, and map markers
+/story                   the story, its answers, map markers, and the routine
 /lineup                  the city's photo lineups, homes and life
+/swipe
+  homes                  six sample homes to keep or pass, as listings
 /tradeoff
   options                the ways to live compare_areas priced
-/assessment              candidates, rows, markers, routes; sample homes carry their listing
+/assessment              candidates, rows, markers, routes; sample homes carry their listing,
+                         each home its reasons with sources and its week in travel
 /profile                 BuyerProfile
 /market                  ResolvedMarket in the pack's published format (D66)
   id, name, currency
@@ -363,7 +366,7 @@ and `/market` through `common/finance` when the buyer changes a bound input.
 
 | Action | Context | Server behavior before the model runs |
 | --- | --- | --- |
-| `answer` | `facet`, `value`, `label`; `pin` for a dropped pin; `storyPath` for the household | Fold one answer into the story (D121): a place is found in the city or taken from the pin, a photo applies its traits, an area option its area, home type, rooms, and price range; the facet counts as answered |
+| `answer` | `facet`, `value`, `label`; `pin` for a dropped pin; `storyPath` for the household and the routine | Fold one answer into the story (D121): a place is found in the city or taken from the pin, a photo applies its traits, an area option its area, home type, rooms, and price range, needs set what the home must have (D126), and the routine how often each trip is made, with the places the buyer pinned added (D127); a swipe sets what every kept home shares and no passed one has (D128); the facet counts as answered |
 | `commit_story` | `storyPath` | Fold the surface's `/story` fields, pins included, into the story and confirm it; in a city with sample homes, pick the three that fit (D122) |
 | `commit_profile` | `profilePath` | Save every valid field from the surface's `/profile` over the saved profile, clear the draft, and report invalid fields |
 | `select_market` | `marketId` | Resolve market, write to plan; profile facts on the surface become the profile draft |
@@ -396,7 +399,10 @@ pass rejects it.
 
 1. **Parse.** One JSON object per message inside an `a2ui` fenced block; the
    catalog skill asks for one per line, and a message spread over several lines
-   is joined once its braces close.
+   is joined once its braces close. Two slips live runs on 2026-09-26 made are
+   mended before anything is rejected: a closing brace too many, and a string
+   in single quotes. Anything else is rejected with the text around the error,
+   so the correction knows where to look.
 2. **Envelope.** `A2uiMessage.fromJson` from `a2ui_core`: exactly one message
    type, `version` is `v0.9`. It reports wrong field types as raw cast errors,
    so the pass maps any `TypeError` to a `VALIDATION_FAILED` error.
@@ -430,7 +436,13 @@ pass rejects it.
    seed. A `createSurface` repeating one accepted earlier in the turn changes
    nothing and is not forwarded, since models resend it when correcting. An input may bind to a missing field of an
    existing object, which it will write; relative template paths are skipped.
-9. **Actions.** Action names are in the action table. An action turn that
+9. **Questions.** While the case still has essential clues open, a question
+   card must ask about one of them: a `Hunch` by its facet, a `HouseholdInput`
+   bound to `/story` about who moves, a `Routine` about the week, a
+   `HomeSwipe` or the homes lineup about the kind of home, and a `TradeOff`
+   about the area. The case summary, a `StoryDraft`, waits until they are
+   answered. The rejection names the clues still open (D127).
+   **Actions.** Action names are in the action table. An action turn that
    forwards no surface while a drawing decision is open is asked once more,
    naming the decision and, for `profileFields`, the fields still missing
    (D96). Text written in answer to that request is not shown: the buyer
@@ -445,7 +457,11 @@ pass rejects it.
     a `ChoicePicker` for a choice, a `CheckBox` for a yes or no, a
     `HouseholdInput` for the household, and a number `TextField` for the rest
     (D95). The message is rejected only when there is nowhere to put them,
-    such as a button with no container.
+    such as a button with no container. A case card that the buyer confirms,
+    a `HouseholdInput` bound to `/story` or a `Routine`, gets the `Button`
+    sending `answer` with its facet and `storyPath` right after it when the
+    model left it out: a live run on 2026-09-26 drew the household card alone,
+    and the buyer had nothing to tap.
 11. **Seed.** The server prepends `createSurface` with `sendDataModel: true` if
     the model omitted it, and emits `updateDataModel` for the slices the
     components bind to.

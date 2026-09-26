@@ -123,7 +123,9 @@ void main() {
         'code': 'VALIDATION_FAILED',
         'surfaceId': 'plan',
         'path': '/createSurface/surfaceId',
-        'message': 'Surface ids in turn 1 look like t1-budget',
+        'message':
+            'Surface id "plan" does not fit turn 1: surface ids in turn 1 '
+            'look like t1-clue, lowercase letters and digits joined by hyphens',
       },
     });
   });
@@ -153,7 +155,7 @@ void main() {
     (
       'ownership: another turn',
       () => [create('t2-budget')],
-      'look like t1-budget',
+      'look like t1-clue',
     ),
     (
       'ownership: data model writes',
@@ -186,7 +188,7 @@ void main() {
     (
       'ownership: an earlier surface',
       () => [update('t0-earlier', validTree)],
-      'look like t1-budget',
+      'look like t1-clue',
     ),
     (
       'ownership: components before the surface',
@@ -467,6 +469,179 @@ void main() {
           update('t1-profile', validTree),
         ),
         isA<Accepted>(),
+      );
+    });
+  });
+
+  group('a case card', () {
+    List<Map<String, Object?>> drawn(List<Map<String, Object?>> components) {
+      final validator = TurnValidator(
+        turn: 2,
+        catalog: catalog,
+        shadow: MessageProcessor<ComponentApi>(
+          catalogs: [Catalog(id: homewardCatalogId, components: const [])],
+        ),
+        seeds: const {
+          'story': {
+            'adults': 1,
+            'childAges': <int>[],
+            'routine': <Object?>[],
+            'center': {'lat': 59.33, 'lng': 18.07},
+          },
+        },
+      );
+      expect(validator.validate(create('t2-clue')), isA<Accepted>());
+      return ((validator.validate(
+                update('t2-clue', components),
+              ) as Accepted).message
+              as UpdateComponentsMessage)
+          .components;
+    }
+
+    const household = {
+      'id': 'who',
+      'component': 'HouseholdInput',
+      'label': 'Who is moving?',
+      'adults': {'path': '/story/adults'},
+      'childAges': {'path': '/story/childAges'},
+    };
+
+    test('that asks who moves gets its button when it has none', () {
+      final components = drawn([
+        {
+          'id': 'root',
+          'component': 'Column',
+          'children': ['who'],
+        },
+        household,
+      ]);
+
+      expect(
+        components.where((component) => component['id'] == 'root'),
+        hasLength(1),
+      );
+      expect(
+        components.lastWhere((component) => component['id'] == 'root'),
+        containsPair('children', ['who', 'answer-household']),
+      );
+      expect(
+        components.firstWhere(
+          (component) => component['id'] == 'answer-household',
+        ),
+        containsPair('action', {
+          'event': {
+            'name': 'answer',
+            'context': {'facet': 'household', 'storyPath': '/story'},
+          },
+        }),
+      );
+    });
+
+    test('that has its button is left alone', () {
+      final components = drawn([
+        {
+          'id': 'root',
+          'component': 'Column',
+          'children': ['who', 'done'],
+        },
+        household,
+        {
+          'id': 'done',
+          'component': 'Button',
+          'child': 'done_label',
+          'action': {
+            'event': {
+              'name': 'answer',
+              'context': {'facet': 'household', 'storyPath': '/story'},
+            },
+          },
+        },
+        {'id': 'done_label', 'component': 'Text', 'text': "That's us"},
+      ]);
+
+      expect(
+        components.map((component) => component['id']),
+        ['root', 'who', 'done', 'done_label'],
+      );
+    });
+
+    test('keeps the button the model drew and completes its context', () {
+      final components = drawn([
+        {
+          'id': 'root',
+          'component': 'Column',
+          'children': ['who', 'done'],
+        },
+        household,
+        {
+          'id': 'done',
+          'component': 'Button',
+          'child': 'done_label',
+          'action': {
+            'event': {
+              'name': 'answer',
+              'context': {'facet': 'household'},
+            },
+          },
+        },
+        {'id': 'done_label', 'component': 'Text', 'text': "That's us"},
+      ]);
+
+      expect(
+        components.lastWhere((component) => component['id'] == 'done'),
+        containsPair('action', {
+          'event': {
+            'name': 'answer',
+            'context': {'facet': 'household', 'storyPath': '/story'},
+          },
+        }),
+      );
+      expect(
+        components.where((component) => component['id'] == 'answer-household'),
+        isEmpty,
+      );
+    });
+
+    test('drawn as the root moves under a column with its button', () {
+      final components = drawn([
+        {...household, 'id': 'root'},
+      ]);
+      final byId = {
+        for (final component in components) component['id']: component,
+      };
+
+      expect(
+        components.where((component) => component['id'] == 'root'),
+        hasLength(1),
+      );
+      expect(
+        byId['root'],
+        containsPair('children', ['household-input', 'answer-household']),
+      );
+      expect(
+        byId['household-input'],
+        containsPair('component', 'HouseholdInput'),
+      );
+    });
+
+    test('for the week gets its button too', () {
+      final components = drawn([
+        {
+          'id': 'root',
+          'component': 'Column',
+          'children': ['week'],
+        },
+        {
+          'id': 'week',
+          'component': 'Routine',
+          'routine': {'path': '/story/routine'},
+          'story': {'path': '/story'},
+        },
+      ]);
+
+      expect(
+        components.map((component) => component['id']),
+        containsAll(['answer-routine', 'answer-routine-label']),
       );
     });
   });

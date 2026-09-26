@@ -26,11 +26,16 @@ Future<void> main(List<String> arguments) async {
     exitCode = 64;
     return;
   }
-  final server = EvalServer.start(
-    ServerConfig.fromEnvironment(Platform.environment),
-  );
+  final config = ServerConfig.fromEnvironment(Platform.environment);
+  final servers = <bool, EvalServer>{};
   final log = TurnLog();
-  final runner = EvalRunner(server, log);
+  EvalRunner runnerFor(bool deal) => EvalRunner(
+    servers.putIfAbsent(
+      deal,
+      () => EvalServer.start(config.copyWith(deal: deal)),
+    ),
+    log,
+  );
   final reports = <CaseReport>[];
   try {
     for (final evalCase in cases) {
@@ -38,7 +43,9 @@ Future<void> main(List<String> arguments) async {
       if (reports.isNotEmpty) {
         await Future<void>.delayed(const Duration(seconds: 20));
       }
-      final observations = await runner.run(evalCase, keys: keys);
+      final observations = await runnerFor(
+        evalCase.deal,
+      ).run(evalCase, keys: keys);
       reports.add(
         CaseReport(
           evalCase: evalCase,
@@ -57,7 +64,9 @@ Future<void> main(List<String> arguments) async {
     }
   } finally {
     await log.close();
-    server.close();
+    for (final server in servers.values) {
+      server.close();
+    }
   }
   final directory = Directory('tool/eval/reports');
   final previous = lastReport(directory);

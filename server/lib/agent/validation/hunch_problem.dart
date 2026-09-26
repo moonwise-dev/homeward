@@ -1,17 +1,6 @@
 import 'package:common/common.dart';
 
 String? hunchProblem(Map<String, Object?> component) {
-  if (component case {
-    'component': 'Button',
-    'action': {'event': {'name': 'answer'} && final Map<String, Object?> event},
-  }) {
-    return switch (event['context']) {
-      {'facet': 'household', 'storyPath': '/story'} => null,
-      _ =>
-        'A Button sending answer asks who moves: its context is always '
-            '{ "facet": "household", "storyPath": "/story" }',
-    };
-  }
   if (component['component'] != const Hunch().name) {
     return null;
   }
@@ -81,3 +70,34 @@ String _expected(CaseFacet facet) => switch (facet) {
   CaseFacet.routine ||
   CaseFacet.swipe => 'a facet a Hunch cannot answer',
 };
+
+String? caseQuestionProblem(
+  Map<String, Object?> component,
+  Set<CaseFacet> mustAsk,
+) {
+  if (mustAsk.isEmpty) {
+    return null;
+  }
+  final needs = [for (final facet in mustAsk) facet.name].join(', ');
+  if (component['component'] == const StoryDraft().name) {
+    return 'The case still needs $needs: ask about one of them with a '
+        'question card; the case summary comes once they are answered';
+  }
+  final asks = switch (component) {
+    {'component': 'Hunch', 'facet': final String facet} =>
+      CaseFacet.values.where((value) => value.name == facet).firstOrNull,
+    {'component': 'HouseholdInput', 'adults': {'path': final String path}}
+        when path.startsWith(storySlice.path) =>
+      CaseFacet.household,
+    {'component': 'Routine'} => CaseFacet.routine,
+    {'component': 'HomeSwipe'} => CaseFacet.homeType,
+    {'component': 'TradeOff'} => CaseFacet.area,
+    {'component': 'PhotoLineup', 'photos': {'path': '/lineup/homes'}} =>
+      CaseFacet.homeType,
+    _ => null,
+  };
+  return asks == null || mustAsk.contains(asks)
+      ? null
+      : 'The case still needs $needs: ask about one of them, not '
+            '${asks.name}';
+}

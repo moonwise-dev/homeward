@@ -64,7 +64,8 @@ first.
   writes a figure a buyer relies on: distances, times, and counts come from
   research tools, amounts from finance code.
 - Every fact carries its source kind: measured, Google Maps, estimate, verified,
-  or stated by the buyer. Estimates are labelled and editable.
+  stated by the buyer, or quoted from a listing. Estimates are labelled and
+  editable; a quote appears word for word in the listing it names.
 - Verified market rules live in rule packs; anywhere else rules are researched
   estimates. Never in prompts, widgets, or tool bodies.
 - Every place a model names is checked against open map data before it is shown.

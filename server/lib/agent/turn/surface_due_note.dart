@@ -16,12 +16,15 @@ String? surfaceDueNote(
   Plan plan,
   ResolvedMarket? market, {
   bool caseOnly = false,
+  bool deal = true,
 }) {
   final story = plan.story;
   final begun = story.candidates.isNotEmpty || story.city != null;
-  final decision =
-      (begun ? openDecisions(plan, market) : financeDecisions(plan, market))
-          .firstOrNull;
+  final decision = switch (begun) {
+    true => openDecisions(plan, market, deal: deal),
+    false when deal => financeDecisions(plan, market),
+    false => const <OpenDecision>[],
+  }.firstOrNull;
   if (decision == null ||
       !_drawing.contains(decision) ||
       (caseOnly && !_case.contains(decision))) {

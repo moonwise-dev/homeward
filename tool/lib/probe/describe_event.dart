@@ -27,6 +27,8 @@ String _describeComponent(Map<String, Object?> component) {
     '${component['id']}: ${component['component']}',
     for (final MapEntry(:key, :value) in component.entries)
       if (value case {'path': final String path}) '$key=$path',
+    for (final key in const ['focus', 'zoom', 'travelMode'])
+      if (component[key] case final Object value) '$key=$value',
     for (final value in component.values)
       if (value case {'event': {'name': final String name}})
         switch (value['event']) {

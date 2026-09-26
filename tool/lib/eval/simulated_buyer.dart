@@ -14,6 +14,7 @@ final class SimulatedBuyer {
         'Hunch' => _hunch(component),
         'PhotoLineup' => _lineup(component, surface.data),
         'TradeOff' => _tradeOff(component, surface.data),
+        'HomeSwipe' => _swipe(surface.data),
         _ => null,
       };
       if (answered != null) {
@@ -31,20 +32,29 @@ final class SimulatedBuyer {
               },
             },
           }
-          when context['facet'] == CaseFacet.household.name) {
+          when context['facet'] == CaseFacet.household.name ||
+              context['facet'] == CaseFacet.routine.name) {
+        final story = surface.data['story'] as Map<String, Object?>? ?? {};
+        final household = context['facet'] == CaseFacet.household.name;
         return (
           action: ClientAction(
             name: 'answer',
             surfaceId: surface.surfaceId,
             sourceComponentId: component['id']! as String,
-            context: {...context, 'label': 'That is us'},
+            context: {
+              ...context,
+              'label': household ? 'That is us' : 'That is my week',
+            },
           ),
           surfaceData: {
             ...surface.data,
             'story': {
-              ...?surface.data['story'] as Map<String, Object?>?,
-              'adults': facts['adults'] ?? 1,
-              'childAges': facts['childAges'] ?? const <int>[],
+              ...story,
+              if (household) ...{
+                'adults': facts['adults'] ?? 1,
+                'childAges': facts['childAges'] ?? const <int>[],
+              } else
+                'routine': _routine(story['routine']),
             },
           },
         );
@@ -67,6 +77,73 @@ final class SimulatedBuyer {
     ),
     surfaceData: data,
   );
+
+  Map<String, Object?>? _swipe(Map<String, Object?> data) {
+    final homes = [
+      for (final home
+          in (data['swipe'] as Map<String, Object?>?)?['homes']
+                  as List<Object?>? ??
+              const [])
+        if (home is Map<String, Object?>) home,
+    ];
+    if (homes.isEmpty) {
+      return null;
+    }
+    bool wanted(Map<String, Object?> home) =>
+        (facts['homeType'] == null || home['homeType'] == facts['homeType']) &&
+        (facts['outdoor'] == null ||
+            OutdoorSpace.values
+                .byName('${home['outdoor']}')
+                .satisfies(OutdoorSpace.values.byName('${facts['outdoor']}')));
+    final kept = [
+      for (final home in homes)
+        if (wanted(home)) home['id']! as String,
+    ];
+    return {
+      'facet': CaseFacet.swipe.name,
+      'value': kept.join(','),
+      'label': 'Kept ${kept.length} of ${homes.length}',
+      'kept': kept,
+      'passed': [
+        for (final home in homes)
+          if (!kept.contains(home['id'])) home['id']! as String,
+      ],
+    };
+  }
+
+  List<Object?> _routine(Object? seeded) {
+    final places = [
+      for (final place in seeded as List<Object?>? ?? const [])
+        if (place is Map<String, Object?>) place,
+    ];
+    final wanted = [
+      for (final place in facts['routine'] as List<Object?>? ?? const [])
+        if (place is Map<String, Object?>) place,
+    ];
+    bool same(Map<String, Object?> place, Map<String, Object?> fact) =>
+        '${place['label']}'.toLowerCase().contains(
+          '${fact['label']}'.toLowerCase(),
+        );
+    return [
+      for (final place in places)
+        {
+          ...place,
+          'perWeek':
+              wanted
+                  .where((fact) => same(place, fact))
+                  .firstOrNull?['perWeek'] ??
+              place['perWeek'],
+        },
+      for (final (index, fact) in wanted.indexed)
+        if (!places.any((place) => same(place, fact)) && fact['point'] != null)
+          {
+            'id': 'r${index + 1}',
+            'label': fact['label'],
+            'perWeek': fact['perWeek'] ?? 1,
+            'pin': fact['point'],
+          },
+    ];
+  }
 
   Map<String, Object?>? _hunch(Map<String, Object?> component) {
     final facet = component['facet'] as String?;
@@ -96,6 +173,24 @@ final class SimulatedBuyer {
           'pin': facts['placePoint'],
         };
       }
+    } else if (facet == CaseFacet.needs.name) {
+      final needs = {
+        for (final need in wanted as List<Object?>? ?? const []) '$need',
+      };
+      int overlap(Map<String, Object?> option) {
+        final offered = {
+          for (final need
+              in HomeNeed.parse(option['value']) ?? const <HomeNeed>[])
+            need.name,
+        };
+        return offered.intersection(needs).length * 2 -
+            offered.difference(needs).length -
+            needs.difference(offered).length;
+      }
+
+      chosen = ([
+        ...options,
+      ]..sort((a, b) => overlap(b).compareTo(overlap(a)))).first;
     } else if (wanted is num) {
       num gap(Map<String, Object?> option) =>
           ((num.tryParse('${option['value']}') ?? 1e9) - wanted).abs();

@@ -40,19 +40,75 @@ void main() {
       areaIds: const ['danderyd'],
     );
 
-    expect(caseQuestionsOpen(settled), isFalse);
-    expect(storyDecisions(settled).first, OpenDecision.caseSummary);
+    expect(caseGaps(settled), contains(CaseFacet.routine));
+    expect(
+      caseQuestionsOpen(settled.answering({CaseFacet.routine})),
+      isFalse,
+    );
+    expect(
+      storyDecisions(settled.answering({CaseFacet.routine})).first,
+      OpenDecision.caseSummary,
+    );
   });
 
-  test('the questions close after five, whatever is still open', () {
-    expect(caseQuestionsOpen(student), isTrue);
-    expect(caseQuestionsOpen(student.copyWith(questions: 5)), isFalse);
+  test('the questions close after six, whatever is still open', () {
+    expect(caseQuestionsOpen(student.copyWith(questions: 5)), isTrue);
+    expect(caseQuestionsOpen(student.copyWith(questions: 6)), isFalse);
   });
 
   test('a remote worker with no daily place skips the place', () {
     expect(
       caseGaps(const Story(reason: StoryReason.lifestyle, city: 'Lisbon')),
       isNot(contains(CaseFacet.place)),
+    );
+  });
+
+  test('a third adult or a move near family opens what the home needs', () {
+    const three = Story(
+      reason: StoryReason.lifestyle,
+      adults: 3,
+      childAges: [],
+    );
+    const family = Story(reason: StoryReason.family, adults: 2, childAges: []);
+
+    expect(caseGaps(three), contains(CaseFacet.needs));
+    expect(caseGaps(family), contains(CaseFacet.needs));
+    expect(
+      caseGaps(three.answering({CaseFacet.needs})),
+      isNot(contains(CaseFacet.needs)),
+    );
+    expect(
+      caseGaps(const Story(adults: 2, childAges: [6])),
+      isNot(contains(CaseFacet.needs)),
+    );
+  });
+
+  test('needs read as named needs, or none', () {
+    expect(HomeNeed.parse('stepFree, lift'), [
+      HomeNeed.stepFree,
+      HomeNeed.lift,
+    ]);
+    expect(HomeNeed.parse(HomeNeed.none), isEmpty);
+    expect(HomeNeed.parse('stepFree,sauna'), isNull);
+    expect(HomeNeed.parse(''), isNull);
+    expect(
+      HomeNeed.parse(HomeNeed.answer(const [HomeNeed.pets])),
+      [HomeNeed.pets],
+    );
+  });
+
+  test('a swipe closes the kind of home, whatever it settled', () {
+    const swiped = Story(answered: [CaseFacet.swipe]);
+
+    expect(
+      caseGaps(swiped),
+      isNot(
+        anyOf(
+          contains(CaseFacet.homeType),
+          contains(CaseFacet.outdoor),
+          contains(CaseFacet.style),
+        ),
+      ),
     );
   });
 }

@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:a2ui_core/a2ui_core.dart';
 import 'package:common/common.dart';
 
+import 'case_completion.dart';
 import 'component_tree.dart';
 import 'hunch_problem.dart';
+import 'json_repair.dart';
 import 'form_completion.dart';
 import 'validation_failure.dart';
 import 'validation_outcome.dart';
@@ -22,6 +24,7 @@ final class TurnValidator {
   final MessageProcessor<ComponentApi> shadow;
   Map<String, Object?> seeds;
   Set<String> requiredProfilePaths = const {};
+  Set<CaseFacet> mustAsk = const {};
   final RegExp _surfacePattern;
   final _components = <String, Map<String, Map<String, Object?>>>{};
 
@@ -40,7 +43,14 @@ final class TurnValidator {
     try {
       json = jsonDecode(source);
     } on FormatException catch (error) {
-      return _reject('', '', 'Not valid JSON: ${error.message}');
+      if (repairedJson(source) case final repaired?) {
+        return validate(jsonEncode(repaired));
+      }
+      return _reject(
+        '',
+        '',
+        'Not valid JSON: ${error.message}${_near(source, error.offset)}',
+      );
     }
     if (json is! Map<String, Object?>) {
       return _reject('', '', 'Each a2ui message must be one JSON object');
@@ -143,18 +153,31 @@ final class TurnValidator {
           return _reject(surfaceId, path, 'Unknown action $action');
         }
       }
+      if (caseQuestionProblem(component, mustAsk) case final problem?) {
+        return _reject(surfaceId, path, problem);
+      }
       if (hunchProblem(component) case final problem?) {
         return _reject(surfaceId, '$path/options', problem);
       }
       merged[component['id']! as String] = component;
     }
-    final completing = completingComponents(
-      components: merged,
-      requiredPaths: requiredProfilePaths,
-    );
-    for (final component in completing) {
-      merged[component['id']! as String] = component;
+    final completed = <String, Map<String, Object?>>{};
+    void complete(List<Map<String, Object?>> components) {
+      for (final component in components) {
+        final id = component['id']! as String;
+        merged[id] = component;
+        completed[id] = component;
+      }
     }
+
+    complete(
+      completingComponents(
+        components: merged,
+        requiredPaths: requiredProfilePaths,
+      ),
+    );
+    complete(caseAnswerCompletion(merged));
+    final completing = completed.values.toList();
     if (structureProblem(merged) ?? _formProblem(merged) case final problem?) {
       return _reject(surfaceId, '/updateComponents/components', problem);
     }
@@ -167,11 +190,18 @@ final class TurnValidator {
   UpdateComponentsMessage _completed(
     UpdateComponentsMessage message,
     List<Map<String, Object?>> completing,
-  ) => UpdateComponentsMessage(
-    version: message.version,
-    surfaceId: message.surfaceId,
-    components: [...message.components, ...completing],
-  );
+  ) {
+    final replaced = {for (final component in completing) component['id']};
+    return UpdateComponentsMessage(
+      version: message.version,
+      surfaceId: message.surfaceId,
+      components: [
+        for (final component in message.components)
+          if (!replaced.contains(component['id'])) component,
+        ...completing,
+      ],
+    );
+  }
 
   String? _formProblem(Map<String, Map<String, Object?>> components) {
     final commitsProfile = components.values.any(
@@ -192,10 +222,21 @@ final class TurnValidator {
               'inputs bound to ${unbound.join(', ')}';
   }
 
+  static String _near(String source, int? offset) {
+    if (offset == null) {
+      return '';
+    }
+    final start = (offset - 40).clamp(0, source.length);
+    final end = (offset + 40).clamp(0, source.length);
+    return ' at character $offset, near `${source.substring(start, end)}`';
+  }
+
   String? _ownershipProblem(String surfaceId) =>
       _surfacePattern.hasMatch(surfaceId)
       ? null
-      : 'Surface ids in turn $turn look like ${InlineSurfaces.id(turn, 'budget')}';
+      : 'Surface id "$surfaceId" does not fit turn $turn: surface ids in '
+            'turn $turn look like ${InlineSurfaces.id(turn, 'clue')}, lowercase '
+            'letters and digits joined by hyphens';
 
   ValidationOutcome _apply(A2uiMessage message, void Function() record) {
     try {

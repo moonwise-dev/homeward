@@ -1,5 +1,6 @@
 id: azores-uncovered
 persona: cross-border
+deal: true
 turns:
   - text: We are thinking about a house in Ponta Delgada in the Azores
     expect:

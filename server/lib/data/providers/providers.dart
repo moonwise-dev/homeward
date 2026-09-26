@@ -70,8 +70,9 @@ final class Providers {
         prompts: prompts,
         tools: ToolBelt(
           tools: switch (research) {
-            final research? => allTools(research),
-            null => homewardTools,
+            final research? when config.deal => allTools(research),
+            final research? => storyTools(research),
+            null => config.deal ? homewardTools : const [],
           },
           markets: markets,
         ),
@@ -79,6 +80,7 @@ final class Providers {
         settings: TurnSettings(
           maxCorrections: config.maxCorrections,
           thinkingLevel: config.thinkingLevel,
+          deal: config.deal,
         ),
         now: now,
       ),
@@ -156,7 +158,10 @@ final class Providers {
         model: config.turnModels.first,
       ),
       markets: MarketDirectory(marketsData),
-      prompts: PromptAssembler.load(Directory(config.promptsDirectory)),
+      prompts: PromptAssembler.load(
+        Directory(config.promptsDirectory),
+        deal: config.deal,
+      ),
       research: Research.open(
         httpClient,
         userAgent: homewardUserAgent(config),

@@ -341,7 +341,7 @@ prices per square metre behind them are real.
 | File | Holds | Made by |
 | --- | --- | --- |
 | `markets/areas/<city>.json` | The city's names and aliases, the period its prices cover, its areas (id, name, a point, a one-line character, the price per square metre for flats and for houses where it has them, with the source), and its photo lineups | Curated from official or industry price statistics |
-| `tool/listings/<city>.yaml` | The sample homes as specs: area, street address and town, type, rooms, size, floor, year, outdoor space, style, a price factor around the area's price per square metre, a title, a line about the home, and its photos | Written and reviewed by hand |
+| `tool/listings/<city>.yaml` | The sample homes as specs: area, street address and town, type, rooms, size, floor, year, outdoor space, style, a price factor around the area's price per square metre, a title, a line about the home, a description of about eighty words that says what a buyer would ask about (stairs and lifts, where the bedrooms and showers are, room to work, pets), and its photos | Written and reviewed by hand |
 | `markets/listings/<city>.json` | The sample homes with their point, price, monthly fee, price per square metre, the area's figure and its source, and the photo credit | `make listings`, from the spec, the areas, the photo manifest, and Nominatim |
 | `markets/photos.json` | Every photo: id, caption, credit, and, for lineup photos, traits (home type, outdoor space, style, criteria, areas) | Curated |
 | `app/assets/photos/<id>.webp` | The photos, 1200 px wide | Downloaded from Unsplash and compressed |

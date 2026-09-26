@@ -68,17 +68,25 @@ final class EvalServer {
               canFallBack: canFallBack,
               cancellation: cancellation,
             ),
-        prompts: PromptAssembler.load(Directory(config.promptsDirectory)),
+        prompts: PromptAssembler.load(
+          Directory(config.promptsDirectory),
+          deal: config.deal,
+        ),
         tools: ToolBelt(
-          tools: allTools(
-            Research.open(httpClient, userAgent: homewardUserAgent(config)),
-          ),
+          tools: switch (Research.open(
+            httpClient,
+            userAgent: homewardUserAgent(config),
+          )) {
+            final research when config.deal => allTools(research),
+            final research => storyTools(research),
+          },
           markets: markets,
         ),
         catalog: CatalogValidator(homewardCatalogDocument()),
         settings: TurnSettings(
           maxCorrections: config.maxCorrections,
           thinkingLevel: config.thinkingLevel,
+          deal: config.deal,
         ),
       ),
       sessions: sessions,

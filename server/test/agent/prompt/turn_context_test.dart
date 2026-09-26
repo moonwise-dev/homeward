@@ -32,6 +32,7 @@ void main() {
       'case': {
         'questionsAsked': 0,
         'maxQuestions': maxCaseQuestions,
+        'mustAsk': ['household', 'homeType'],
         'open': ['household', 'homeType', 'outdoor', 'style'],
         'answered': <String>[],
         'known': {'priceRangeSet': false},
@@ -39,6 +40,23 @@ void main() {
       'scenario': {'committed': false, 'draftPending': false},
       'surfacesUsed': <String>[],
     });
+  });
+
+  test('without the deal the context holds only the story', () {
+    final context = turnContext(
+      turn: 1,
+      plan: Plan(marketId: MarketId.parse('SE')),
+      markets: realMarkets,
+      deal: false,
+    );
+
+    expect(context['openDecisions'], storyOpen);
+    expect(
+      context.keys,
+      isNot(
+        anyOf(contains('market'), contains('profile'), contains('scenario')),
+      ),
+    );
   });
 
   test('a city with sample homes lists its areas and lineups', () {
@@ -58,6 +76,7 @@ void main() {
 
     expect(caseBlock['open'], containsAllInOrder(['place', 'household']));
     expect(caseBlock['open'], contains('area'));
+    expect(caseBlock['mustAsk'], ['place', 'household', 'homeType', 'area']);
     expect(samples['city'], 'Stockholm');
     expect(
       [
@@ -85,6 +104,7 @@ void main() {
           'placed': true,
           'mode': 'bike',
           'maxMinutes': 20,
+          'perWeek': 5,
         },
       ],
       'homes': [
