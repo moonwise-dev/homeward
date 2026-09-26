@@ -308,7 +308,7 @@ final class TurnRun {
     previousInteractionId: _interactionId,
     responseSchema: constrained
         ? catalogResponseSchema({
-            ...correctionLayout,
+            ...coreComponents,
             ...drawnComponents([
               ..._rejectedSources,
               for (final message in _forwarded) jsonEncode(message),

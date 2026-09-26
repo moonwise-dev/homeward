@@ -1,9 +1,10 @@
+import 'package:common/common.dart';
 import 'package:homeward_server/agent/prompt/catalog_response_schema.dart';
 import 'package:test/test.dart';
 
 void main() {
   final schema = catalogResponseSchema({
-    ...correctionLayout,
+    ...coreComponents,
     'TextField',
     'FitMatrix',
   });

@@ -7,15 +7,10 @@ import 'render_contract_sections.dart';
 
 String renderCatalogSkill() {
   final commonTypes = jsonDecode(a2uiCommonTypesJson) as Map<String, Object?>;
-  final commonTypesId = commonTypes[r'$id']! as String;
-  String compact(Object? json) =>
-      jsonEncode(json).replaceAll(commonTypesId, 'common_types.json');
   final slices = renderDataModelSlices('###');
-  final examples = [
-    for (final component in homewardComponents)
-      if (component.agentVisible)
-        for (final example in component.examples)
-          '### ${component.name}: ${example.name}\n\n${fenced('json', compact(example.components))}',
+  final index = [
+    for (final MapEntry(:key, :value) in componentIndex().entries)
+      '- ${code(key)}: $value',
   ];
 
   return '''
@@ -55,14 +50,20 @@ ${slices.isEmpty ? '' : '\nThe server seeds every surface with the slices below.
 
 Buttons send actions as `{ "event": { "name": …, "context": { … } } }`. Name each action for what the buyer does, in lowercase words joined by underscores, such as `keep_home`. Context values are literals or bindings. You receive the action's name, its context, and the data model of its surface as the buyer's next message.
 
-${examples.isEmpty ? '' : '## Component Examples\n\n${examples.join('\n\n')}\n\n'}## Catalog Schema
+## Components
 
-Components and functions validate against this JSON Schema. References to `common_types.json` point at the common types after it.
+The catalog schema below holds the full schemas of the layout components: ${codeList(coreComponents)}. Every other component is listed here with what it is for. Before you draw one whose schema you have not read in this plan, call `component_docs` once with it and every other listed component you are about to draw. Its schema and examples stay with you for the rest of the plan.
 
-${fenced('json', compact(homewardCatalogDocument()))}
+${index.join('\n')}
+
+## Catalog Schema
+
+The layout components and the functions validate against this JSON Schema, and `component_docs` returns the schemas of the others in the same form. References to `$commonTypesFile` point at the common types after it.
+
+${fenced('json', compactCatalogJson(coreCatalogDocument()))}
 
 ## Common Types
 
-${fenced('json', compact(commonTypes))}
+${fenced('json', compactCatalogJson(commonTypes))}
 ''';
 }

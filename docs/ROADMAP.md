@@ -43,9 +43,10 @@ four journeys of `docs/PRODUCT.md` (D141).
   (D139): the validator accepts `plan` in any turn and `t{turn}-{slug}` in its
   own turn, and the app shows the conversation with its inline cards next to
   the plan panel, or the panel as a tab on a phone. Leaves out new blocks.
-- **C3 Progressive disclosure.** After S16: the catalog skill carries a
-  compact index of every component, and full schemas and examples arrive when
-  Gemini asks for them, so 25 to 30 components fit the free tier (D140).
+- **C3 Progressive disclosure — done.** The catalog skill carries the full schemas
+  of the layout components and an index of every other component, and a
+  `component_docs` tool returns the full schemas and examples of the ones
+  Gemini is about to draw (D140, D143). Leaves out new blocks.
 - **C4 Understanding.** An `update_brief` tool and a `/brief` slice stored with
   the session (D132); the `Fact` and `Choice` blocks; the prompt that asks like
   a coding agent (D130).
@@ -126,7 +127,7 @@ four journeys of `docs/PRODUCT.md` (D141).
 | S12 | Which sources answer money and local-rule questions on free keys, and how is each quote checked? | `url_context` on official pages, Google Search grounding on the models that have a free tier, our own fetch for checking quotes | After the recording (D142). |
 | S13 | Can Homeward read a listing the buyer pastes, and check its quotes? | `url_context` against our own fetch, on listing sites in the demo cities | After the recording (D142). |
 | S14 | Can Grounding Lite give Google place IDs for `PlaceDetailsCompact`, and how does Flutter show the place card? | Grounding Lite `search_places`; the `gmp-place-details-compact` element on web | Before `PlaceDetailsCompact`. |
-| S16 | Does a catalog skill of 25 to 30 components fit the free tier, and does a compact index with schemas on demand keep Gemini as reliable as the full schema? | Measure prompt tokens and first-message validity for the full skill against an index plus a `component_docs` tool, on `gemini-3.5-flash-lite` with the probe key | Before C3. |
+| S16 | Does a catalog skill of 25 to 30 components fit the free tier, and does a compact index with schemas on demand keep Gemini as reliable as the full schema? | Measure prompt tokens and first-message validity for the full skill against an index plus a `component_docs` tool, on `gemini-3.5-flash-lite` with the probe key | **Answered:** the full skill fits at about 24K tokens and costs no measurable time; progressive disclosure is built anyway (D143); see `docs/SPIKES.md`. |
 | S15 | Does the toolkit's own web client render a Homeward map surface? | Its React sample pointed at a local Homeward server | Optional, after C8. |
 
 ## Risks
@@ -181,7 +182,7 @@ superseded stay as history.
 | D66 | `/market` slice | The resolved market in the pack's published format with its reference rates and living costs, parsed by the same models on app and server | A separate data-model format with ppm integers and money objects |
 | D67 | Basic component validation | Vendor the A2UI v0.9 basic catalog and common types at a pinned spec commit and validate against a composed Homeward catalog document | Hand-declared basic components; no property schemas for basic components |
 | D68 | Place resolution | The model proposes ISO 3166 codes; generated CLDR tables verify them and a curated place list for rule-bearing regions overrides them | A curated gazetteer only; OpenStreetMap Nominatim |
-| D69 | Catalog skill | The exact composed catalog document and common types as compact JSON Schema, plus message rules, data model paths, actions, and component and surface examples, as genui's `PromptBuilder` and the A2UI agent SDK embed schemas; about 12k tokens | A compact generated summary of about 5k tokens; schemas without examples |
+| D69 | Catalog skill | The exact composed catalog document and common types as compact JSON Schema, plus message rules, data model paths, actions, and component and surface examples, as genui's `PromptBuilder` and the A2UI agent SDK embed schemas; about 12k tokens. Amended by D143: full schemas for the layout components, the rest on demand | A compact generated summary of about 5k tokens; schemas without examples |
 | D70 | Turn context placement | Appended to `system_instruction`, re-sent on every request and never stored in history | Prepended to the buyer's message, which keeps stale snapshots in history |
 | D71 | A single resolved market | `resolve_market` selects it for the plan in the same model round, and the surface offers a change | The buyer confirms every market in a picker first, one extra turn per plan; a market draft committed with the profile |
 | D72 | Turn model order | `gemini-3.5-flash` first and `gemini-3.8-flash` as fallback, after live turns found 3.8 stalling or failing mid-stream in every turn; replaced by D81 | 3.8 first; 3.5 only |
@@ -255,6 +256,7 @@ superseded stay as history.
 | D140 | Catalog size | 25 to 30 components before the recording, in families: understanding, money, homes, place and travel, and trust. Vishal needed 12 to 13 for a decent demo and Abdallah Shaban asked for 20 to 30 so developers can build their own journeys on the catalog. The catalog skill moves to progressive disclosure after S16: a compact index of every component, with full schemas and examples on demand. Replaces the few-blocks principle | About 15 for the recording and 20 to 25 by M5; staying at about eight |
 | D141 | Journeys | Four named journeys, documented in `docs/PRODUCT.md` and the README, rehearsed, and used in the probe: can we afford it here, a home that works for Mum, sharing in Lisbon, and is this one worth it. They are capabilities; none is coded as a flow, so D130 holds. The kickoff asked for three to five well laid-out journeys | No named journeys, test stories only |
 | D142 | Deferred until after the recording | S12 and on-the-spot research of rules and rates, S13 and reading a listing the buyer pastes, and areas for any city. The recording's money comes from labelled sample rates and rules, which the kickoff called fine | Building them before the recording, at the cost of components |
+| D143 | Progressive disclosure of the catalog | S16 found the full skill fits the free tier at 25 to 30 blocks and costs no measurable time; progressive disclosure is built anyway, by the user's choice. The skill carries the full schemas of the layout components correction rounds use (`Column`, `Row`, `Card`, `Text`, `Button`, `Divider`), the functions, and the common types, and an index of every other component with its one-line description. `component_docs` returns the full schemas and examples of the components Gemini names. Amends D69 | The full schema in the prompt; deciding at C10 |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

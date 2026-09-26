@@ -21,8 +21,9 @@ only. Homeward's own blocks come back one at a time, each with the chunk of
    finance sample (D138). Each block is expressive on its own: it earns its
    place when basic components cannot show what a household's story needs,
    such as what a home costs them each month or their week on a map. The
-   skill stays within the free tier through progressive disclosure: a compact
-   index of every block, with full schemas on demand (S16).
+   skill discloses the catalog progressively: an index of every block with
+   its one-line description, and its full schema when Gemini is about to draw
+   it (D143).
 3. **Blocks carry the design, Gemini carries the layout.** A block draws one
    thing well with Homeward's tokens; Gemini decides which blocks a buyer's
    screen needs and how they sit together.
@@ -38,10 +39,15 @@ only. Homeward's own blocks come back one at a time, each with the chunk of
 
 ## Basic Components
 
-Agent-visible basic components:
+Agent-visible basic components, each declared with its one-line description
+in `basicComponentSummaries`:
 
 `Text`, `Row`, `Column`, `Card`, `Divider`, `List`, `Tabs`, `Icon`, `Button`,
 `CheckBox`, `ChoicePicker`, `TextField`, `DateTimeInput`.
+
+The layout components, `coreComponents`: `Column`, `Row`, `Card`, `Text`,
+`Button`, and `Divider`. The skill always carries their full schemas, and
+correction rounds offer them (D110, D143).
 
 Not agent-visible: `Image`, `Video`, `AudioPlayer`, `Modal`, `Slider`.
 
@@ -100,7 +106,8 @@ interface genui uses internally for its catalog items. It carries:
 - Bound properties, which accept only `{ "path" }`, never a literal.
 - Agent visibility.
 - One or more example component trees with a data model.
-- A usage note for the model.
+- A one-line description for the model, shown in the skill's index and
+  carried by the schema.
 
 It is listed in `homewardComponents` in `common/lib/catalog/homeward_catalog.dart`.
 
@@ -128,9 +135,12 @@ From the same declarations `make catalog` generates:
 
 - `common/lib/catalog/generated/catalog.json`, the catalog document.
 - `server/prompts/generated/catalog_skill.md`, the model-facing skill: how to
-  write messages, binding, actions, the component examples, and then the
-  catalog document and the common types as compact JSON Schema, exactly what
-  validation enforces (D69).
+  write messages, binding, actions, and the index of the components beyond
+  the layout ones, each with its one-line description; then the catalog
+  document with the layout components and every function, and the common
+  types, as compact JSON Schema, exactly what validation enforces (D69,
+  D143). The `component_docs` tool returns every other component's schema, in
+  the same form, and its examples.
 - `docs/generated/catalog_reference.md`, a human reference.
 
 `make catalog-check` fails if generated files are stale, if any component

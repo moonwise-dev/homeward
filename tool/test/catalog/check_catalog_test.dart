@@ -72,7 +72,7 @@ void main() {
     ]);
   });
 
-  test('the skill carries the exact catalog schema and every example', () {
+  test('the skill carries the exact core schema and indexes the rest', () {
     final skill = renderCatalogSkill();
     final schema = RegExp(
       r'## Catalog Schema\n\n.*?\n\n```json\n(.*?)\n```',
@@ -84,12 +84,10 @@ void main() {
 
     expect(
       jsonDecode(schema.replaceAll('common_types.json', commonTypesId)),
-      homewardCatalogDocument(),
+      coreCatalogDocument(),
     );
-    for (final component in homewardComponents) {
-      for (final example in component.examples) {
-        expect(skill, contains('### ${component.name}: ${example.name}'));
-      }
+    for (final name in componentIndex().keys) {
+      expect(skill, contains('- `$name`: '));
     }
     expect(skill, contains('`plan`, the plan panel'));
     expect(skill, isNot(contains(commonTypesId)));

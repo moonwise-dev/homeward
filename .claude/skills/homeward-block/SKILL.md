@@ -29,7 +29,8 @@ story needs.
     relies on;
   - agent visibility;
   - one or more example component trees, each with a data model;
-  - a short usage note for the model.
+  - a one-line description for the model. The skill's index shows it, and
+    Gemini reads the schema and examples through `component_docs` (D143).
 - **List it** in `homewardComponents` in
   `common/lib/catalog/homeward_catalog.dart`.
 - **Tool seeds.** If the block binds what a tool seeds, declare the slice as a

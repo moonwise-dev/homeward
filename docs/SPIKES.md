@@ -749,3 +749,46 @@ schema offers the layout basics and the components the turn drew or tried to
 draw, each flattened, with fixed values as enums, the optional extras left out,
 and function calls not recursive. A refused schema repeats the round without
 it.
+
+## S16 — Progressive Disclosure Of The Catalog
+
+**Answered 2026-09-26.**
+
+### Question
+
+Does a catalog skill of 25 to 30 components fit the free tier, and does a
+compact index with schemas on demand keep Gemini as reliable as the full
+schema?
+
+### Method
+
+- Counted the input tokens of the system instruction as the server sends it,
+  with `countTokens` on `gemini-3.5-flash-lite`: the role, the style, the
+  catalog skill, and an empty turn context, with one buyer message. Once with
+  today's skill and once with the skill at `6faa8ab`, before the reset.
+- Sent each three times through the Interactions API with
+  `thinking_level: low`, alternating, and timed the first text and the whole
+  reply.
+- The full skill's first-message validity at that size comes from the D81
+  runs on the same model; the index's is measured in C3's probe.
+
+### Findings
+
+| Area | Result |
+| --- | --- |
+| Today | 13 basic components: 34.7 KB, 8,432 input tokens |
+| Before the reset | 13 basic and 21 Homeward components: 83.7 KB, 20,354 input tokens, about 570 tokens per Homeward component with its examples |
+| At 25 to 30 blocks | About 24,000 input tokens with 28 Homeward blocks. Flash-Lite's 250K input tokens a minute cover about ten such requests, close to its 15 requests a minute |
+| Time | First text at 8.4K tokens: 6.2, 5.3, and 4.6 s; at 20.4K: 5.5, 4.2, and 4.3 s. The whole reply took 7.5 to 8.5 s against 5.7 to 7.2 s. Thinking, 1,000 to 1,800 tokens, sets the time, not the prompt |
+| Implicit caching | From the second request, 16,384 tokens of the 20.4K prompt came from Gemini's implicit cache. The 8.4K prompt was never cached |
+| Validity | The 34-component skill validated first messages on Flash-Lite in five hero runs of five (D81) |
+| What an index costs | A turn that draws a component whose schema the model has not read needs a round for it first: one more request of the buyer's quota, and 4 to 8 s |
+
+### Decision
+
+The full skill fits the free tier at 25 to 30 blocks, and carrying it costs no
+measurable time. Decided with the user on 2026-09-26 to build progressive
+disclosure anyway (D143): the prompt carries the full schemas of the layout
+components and an index of every other component, and `component_docs`
+returns the schemas and examples of the components Gemini names. C3's probe
+measures the round it adds.

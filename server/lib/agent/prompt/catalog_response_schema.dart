@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:common/common.dart';
 
-const correctionLayout = {'Column', 'Row', 'Card', 'Text', 'Button', 'Divider'};
-
 final _catalog = homewardCatalogDocument();
 
 final _commonDefs =
