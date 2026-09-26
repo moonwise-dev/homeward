@@ -37,6 +37,11 @@ Iterable<String> boundPaths(Object? json) sync* {
   }
 }
 
+Set<String> boundSlices(Object? json) => {
+  for (final path in boundPaths(json))
+    if (path.startsWith('/')) path.split('/')[1],
+};
+
 String? structureProblem(
   Map<String, Map<String, Object?>> components, {
   required Set<String> mustReach,

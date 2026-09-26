@@ -22,6 +22,9 @@ abstract class Session with _$Session {
     for (final turn in turns) ...turn.messages,
   ];
 
+  Map<String, Object?> get slices =>
+      turns.isEmpty ? const {} : turns.last.slices;
+
   String? get title {
     for (final turn in turns) {
       if (turn.input case RecordedText(:final text) when text.isNotEmpty) {

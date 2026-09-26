@@ -105,7 +105,10 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 - **The plan panel** (D131): the plan's living surface, `plan`. Each turn
   changes it in place as the turn streams, so components appear and change
   without the panel being rebuilt. Before a turn has drawn it, it says the
-  plan appears here as Homeward learns about the move.
+  plan appears here as Homeward learns about the move. A fact Homeward
+  deduced offers Right and Not quite; a tap goes to Homeward as the buyer's
+  next message, shown in the conversation as "Right: …" or "Not quite: …"
+  (D144).
 - **While a turn runs**, the plan panel takes no taps while it changes, and a
   working card at the end of the conversation shows the turn:
   - While tools run, the card lists the measuring steps from the server's
@@ -116,7 +119,8 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
   text.
 - Opening an existing plan replays stored A2UI messages into a fresh surface
   controller before the conversation and the plan are shown.
-- Turn failures show a toast, and the failed section offers retry.
+- Turn failures show a toast, and the failed section offers retry. A retried
+  turn keeps the plan panel the failed one drew, since the server keeps it.
 - `gemini_key_invalid` routes to `/key`. `gemini_quota_exhausted` explains that
   the buyer's free key has hit a request limit, asks them to try again in a
   minute, and shows when the daily limit resets. In a development run with

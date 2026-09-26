@@ -65,6 +65,7 @@ _TurnRecord _$TurnRecordFromJson(Map<String, dynamic> json) =>
           'input',
           'outputText',
           'messages',
+          'slices',
           'status',
           'errorCode',
         ],
@@ -84,6 +85,10 @@ _TurnRecord _$TurnRecordFromJson(Map<String, dynamic> json) =>
                   .toList() ??
               const [],
         ),
+        slices: $checkedConvert(
+          'slices',
+          (v) => v as Map<String, dynamic>? ?? const {},
+        ),
         status: $checkedConvert(
           'status',
           (v) => $enumDecode(_$TurnStatusEnumMap, v),
@@ -99,6 +104,7 @@ Map<String, dynamic> _$TurnRecordToJson(_TurnRecord instance) =>
       'input': instance.input.toJson(),
       'outputText': instance.outputText,
       'messages': instance.messages,
+      'slices': instance.slices,
       'status': _$TurnStatusEnumMap[instance.status]!,
       'errorCode': ?instance.errorCode,
     };

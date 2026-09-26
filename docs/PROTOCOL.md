@@ -313,10 +313,14 @@ changes are not stored and are not replayed.
 
 ## Data Model
 
-The server seeds a surface with the slices its components bind, from what the
-turn's tools returned as seeds; there are no slices since the reset (D129), and
-`common/lib/catalog/data_model` declares each one as it arrives. The model
-binds to paths and never writes values. An input may bind a path that has no
+The server seeds a surface with the slices its components bind. Every turn
+keeps the slices as it left them in its record, and the next turn starts from
+them, so what a tool found in an earlier turn is still there to bind. When a
+tool changes a slice during a turn, the server sends the new value at once to
+every surface the turn may change that binds it, so the plan panel shows the
+change even when Gemini does not redraw it. `common/lib/catalog/data_model`
+declares each slice as it arrives: `/brief` since C4 (D132). The model binds
+to paths and never writes values. An input may bind a path that has no
 value yet, such as `/notes`; what the buyer enters there reaches the model with
 their next action.
 
@@ -348,8 +352,11 @@ pass rejects it.
    catalog skill asks for one per line, and a message spread over several lines
    is joined once its braces close. Two slips live runs on 2026-09-26 made are
    mended before anything is rejected: a closing brace too many, and a string
-   in single quotes; a third, a comma before a closing brace, followed in C2. Anything else is rejected with the text around the error,
-   so the correction knows where to look.
+   in single quotes; a third, a comma before a closing brace, followed in C2,
+   and in C4 a stray character where a JSON token belongs, and braces left
+   open at the end of a message. Anything
+   else is rejected with the text around the error and the surface ID the
+   text names, so the correction knows which message to send again.
 2. **Envelope.** `A2uiMessage.fromJson` from `a2ui_core`: exactly one message
    type, `version` is `v0.9`. It reports wrong field types as raw cast errors,
    so the pass maps any `TypeError` to a `VALIDATION_FAILED` error. It ignores
@@ -392,7 +399,9 @@ pass rejects it.
    template paths are skipped.
 9. **Seed.** The server prepends `createSurface` with `sendDataModel: true` if
     the model omitted it, and emits `updateDataModel` for the slices the
-    components bind to.
+    components bind to, unless the surface already holds that value. After a
+    tool changes a slice, it emits one for every surface the turn may change
+    that binds the slice.
 
 Measured in spike S5: schema validation costs about 12 µs per component in the
 AOT server binary.

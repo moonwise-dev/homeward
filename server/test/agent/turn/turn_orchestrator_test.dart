@@ -17,8 +17,8 @@ import 'package:homeward_server/gemini/gemini_exception.dart';
 import 'package:homeward_server/gemini/interaction_event.dart';
 import 'package:homeward_server/gemini/interaction_input.dart';
 import 'package:homeward_server/gemini/tool_choice.dart';
-import 'package:homeward_server/research/research_steps.dart';
 import 'package:homeward_server/tools/agent_tool.dart';
+import 'package:homeward_server/tools/tool_context.dart';
 import 'package:test/test.dart';
 
 import 'scripted_interactions.dart';
@@ -533,8 +533,8 @@ final class _Locate extends AgentTool {
   @override
   Future<ToolResult> run(
     Map<String, Object?> arguments,
-    ResearchSteps steps,
-  ) => steps.track(
+    ToolContext context,
+  ) => context.steps.track(
     'Finding ${arguments['place']} on the map',
     () async => ToolResult(
       modelResult: {'found': arguments['place']},

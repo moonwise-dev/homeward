@@ -44,12 +44,15 @@ four journeys of `docs/PRODUCT.md` (D141).
   own turn, and the app shows the conversation with its inline cards next to
   the plan panel, or the panel as a tab on a phone. Leaves out new blocks.
 - **C3 Progressive disclosure — done.** The catalog skill carries the full schemas
-  of the layout components and an index of every other component, and a
+  of the core components and an index of every other component, and a
   `component_docs` tool returns the full schemas and examples of the ones
   Gemini is about to draw (D140, D143). Leaves out new blocks.
-- **C4 Understanding.** An `update_brief` tool and a `/brief` slice stored with
-  the session (D132); the `Fact` and `Choice` blocks; the prompt that asks like
-  a coding agent (D130).
+- **C4 The brief — done.** An `update_brief` tool and a `/brief` slice kept with each
+  turn's record (D132); the `Fact` block, with Right and Not quite on a
+  deduction (D144); the prompt that deduces first and keeps the brief, like a
+  coding agent (D130). Leaves out `Choice`.
+- **C4b Choice.** The `Choice` block, one decision with Gemini's
+  recommendation first, and the prompt that asks one decision at a time.
 - **C5 Money core.** Restored from `6faa8ab`: `common/lib/finance`,
   `common/lib/affordability`, `common/lib/costs`, and the market model with
   the Swedish and Portuguese packs, rates, and living costs, reduced to the
@@ -257,6 +260,7 @@ superseded stay as history.
 | D141 | Journeys | Four named journeys, documented in `docs/PRODUCT.md` and the README, rehearsed, and used in the probe: can we afford it here, a home that works for Mum, sharing in Lisbon, and is this one worth it. They are capabilities; none is coded as a flow, so D130 holds. The kickoff asked for three to five well laid-out journeys | No named journeys, test stories only |
 | D142 | Deferred until after the recording | S12 and on-the-spot research of rules and rates, S13 and reading a listing the buyer pastes, and areas for any city. The recording's money comes from labelled sample rates and rules, which the kickoff called fine | Building them before the recording, at the cost of components |
 | D143 | Progressive disclosure of the catalog | S16 found the full skill fits the free tier at 25 to 30 blocks and costs no measurable time; progressive disclosure is built anyway, by the user's choice. The skill carries the full schemas of the layout components correction rounds use (`Column`, `Row`, `Card`, `Text`, `Button`, `Divider`), the functions, and the common types, and an index of every other component with its one-line description. `component_docs` returns the full schemas and examples of the components Gemini names. Amends D69 | The full schema in the prompt; deciding at C10 |
+| D144 | The brief on screen | C4 splits into the brief and then `Choice` (C4b), smaller chunks. The brief is kept as the `/brief` slice in each turn's record, the way every slice persists, and seeded again into the plan whenever a tool changes it. `Fact` binds one item and joins the core components, whose schemas the skill always carries, since every plan shows the brief; on a deduction it offers Right and Not quite, which reach Gemini as an action with the item's ID, and Gemini updates the brief with `update_brief`. `update_brief` stores an item only when its words appear word for word in what the buyer wrote or tapped, and every number in its sentence appears in those words | Editing a fact in place, stored by the server as said; correcting only by typing; the brief as a field of the session document |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

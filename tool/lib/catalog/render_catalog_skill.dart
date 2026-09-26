@@ -12,6 +12,12 @@ String renderCatalogSkill() {
     for (final MapEntry(:key, :value) in componentIndex().entries)
       '- ${code(key)}: $value',
   ];
+  final examples = [
+    for (final component in homewardComponents)
+      if (coreComponents.contains(component.name))
+        for (final example in component.examples)
+          '### ${component.name}: ${example.name}\n\n${fenced('json', compactCatalogJson(example.components))}',
+  ];
 
   return '''
 # Drawing The Interface
@@ -52,13 +58,13 @@ Buttons send actions as `{ "event": { "name": …, "context": { … } } }`. Name
 
 ## Components
 
-The catalog schema below holds the full schemas of the layout components: ${codeList(coreComponents)}. Every other component is listed here with what it is for. Before you draw one whose schema you have not read in this plan, call `component_docs` once with it and every other listed component you are about to draw. Its schema and examples stay with you for the rest of the plan.
+The catalog schema below holds the full schemas of the components every plan uses: ${codeList(coreComponents)}. Every other component is listed here with what it is for. Before you draw one whose schema you have not read in this plan, call `component_docs` once with it and every other listed component you are about to draw. Its schema and examples stay with you for the rest of the plan.
 
 ${index.join('\n')}
 
-## Catalog Schema
+${examples.isEmpty ? '' : '## Examples\n\n${examples.join('\n\n')}\n\n'}## Catalog Schema
 
-The layout components and the functions validate against this JSON Schema, and `component_docs` returns the schemas of the others in the same form. References to `$commonTypesFile` point at the common types after it.
+Those components and the functions validate against this JSON Schema, and `component_docs` returns the schemas of the others in the same form. References to `$commonTypesFile` point at the common types after it.
 
 ${fenced('json', compactCatalogJson(coreCatalogDocument()))}
 

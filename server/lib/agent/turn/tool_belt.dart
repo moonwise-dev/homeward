@@ -2,8 +2,8 @@ import 'package:logging/logging.dart';
 
 import '../../gemini/function_declaration.dart';
 import '../../logging/log_entry.dart';
-import '../../research/research_steps.dart';
 import '../../tools/agent_tool.dart';
+import '../../tools/tool_context.dart';
 
 final _log = Logger('tools');
 
@@ -19,11 +19,11 @@ final class ToolBelt {
   Future<ToolResult> call(
     String name,
     Map<String, Object?> arguments, {
-    ResearchSteps steps = const SilentSteps(),
+    ToolContext context = const ToolContext(),
   }) async {
     for (final tool in tools) {
       if (tool.name == name) {
-        return _run(tool, arguments, steps);
+        return _run(tool, arguments, context);
       }
     }
     return ToolResult(modelResult: {'error': 'There is no tool named $name'});
@@ -32,23 +32,26 @@ final class ToolBelt {
   Future<ToolResult> _run(
     AgentTool tool,
     Map<String, Object?> arguments,
-    ResearchSteps steps,
+    ToolContext context,
   ) async {
     final stopwatch = Stopwatch()..start();
+    ToolResult? result;
     try {
-      return await tool.run(arguments, steps);
+      return result = await tool.run(arguments, context);
     } on Object catch (error, stackTrace) {
       _log.severe('Tool ${tool.name} failed', error, stackTrace);
       return const ToolResult(
         modelResult: {'error': 'The tool failed; nothing was changed'},
       );
     } finally {
-      _log.fine(
+      _log.log(
+        result?.modelResult['error'] == null ? Level.FINE : Level.INFO,
         LogEntry(
           'Tool ${tool.name}',
           fields: {
             'tool': tool.name,
             'durationMs': stopwatch.elapsedMilliseconds,
+            'error': ?result?.modelResult['error'],
           },
         ),
       );

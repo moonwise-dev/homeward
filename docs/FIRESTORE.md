@@ -30,7 +30,7 @@ default on Cloud Run and against the emulator, and in memory otherwise.
 | `ownerUid` | string | |
 | `index` | int | From 1 |
 | `status` | `completed` \| `failed` \| `canceled` | |
-| `recordJson` | string | The whole `TurnRecord`: input, text, forwarded A2UI messages, error code |
+| `recordJson` | string | The whole `TurnRecord`: input, text, forwarded A2UI messages, the data model slices as the turn left them, such as the brief, and error code |
 
 A turn document is written once, under an id derived from the session and the
 index, so saving a session again costs one write for the turn it just added.

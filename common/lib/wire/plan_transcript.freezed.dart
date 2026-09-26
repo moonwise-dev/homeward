@@ -364,7 +364,7 @@ as Map<String, Object?>,
 /// @nodoc
 mixin _$TurnRecord {
 
- int get index; RecordedInput get input; String get outputText; List<Map<String, Object?>> get messages; TurnStatus get status; String? get errorCode;
+ int get index; RecordedInput get input; String get outputText; List<Map<String, Object?>> get messages; Map<String, Object?> get slices; TurnStatus get status; String? get errorCode;
 /// Create a copy of TurnRecord
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -378,20 +378,20 @@ $TurnRecordCopyWith<TurnRecord> get copyWith => _$TurnRecordCopyWithImpl<TurnRec
 @override
 bool operator ==(Object other) {
   final _this = this as TurnRecord;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TurnRecord&&(identical(other.index, _this.index) || other.index == _this.index)&&(identical(other.input, _this.input) || other.input == _this.input)&&(identical(other.outputText, _this.outputText) || other.outputText == _this.outputText)&&const DeepCollectionEquality().equals(other.messages, _this.messages)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.errorCode, _this.errorCode) || other.errorCode == _this.errorCode));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TurnRecord&&(identical(other.index, _this.index) || other.index == _this.index)&&(identical(other.input, _this.input) || other.input == _this.input)&&(identical(other.outputText, _this.outputText) || other.outputText == _this.outputText)&&const DeepCollectionEquality().equals(other.messages, _this.messages)&&const DeepCollectionEquality().equals(other.slices, _this.slices)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.errorCode, _this.errorCode) || other.errorCode == _this.errorCode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as TurnRecord;
-  return Object.hash(runtimeType,_this.index,_this.input,_this.outputText,const DeepCollectionEquality().hash(_this.messages),_this.status,_this.errorCode);
+  return Object.hash(runtimeType,_this.index,_this.input,_this.outputText,const DeepCollectionEquality().hash(_this.messages),const DeepCollectionEquality().hash(_this.slices),_this.status,_this.errorCode);
 }
 
 @override
 String toString() {
   final _this = this as TurnRecord;
-  return 'TurnRecord(index: ${_this.index}, input: ${_this.input}, outputText: ${_this.outputText}, messages: ${_this.messages}, status: ${_this.status}, errorCode: ${_this.errorCode})';
+  return 'TurnRecord(index: ${_this.index}, input: ${_this.input}, outputText: ${_this.outputText}, messages: ${_this.messages}, slices: ${_this.slices}, status: ${_this.status}, errorCode: ${_this.errorCode})';
 }
 
 
@@ -402,7 +402,7 @@ abstract mixin class $TurnRecordCopyWith<$Res>  {
   factory $TurnRecordCopyWith(TurnRecord value, $Res Function(TurnRecord) _then) = _$TurnRecordCopyWithImpl;
 @useResult
 $Res call({
- int index, RecordedInput input, String outputText, List<Map<String, Object?>> messages, TurnStatus status, String? errorCode
+ int index, RecordedInput input, String outputText, List<Map<String, Object?>> messages, Map<String, Object?> slices, TurnStatus status, String? errorCode
 });
 
 
@@ -419,13 +419,14 @@ class _$TurnRecordCopyWithImpl<$Res>
 
 /// Create a copy of TurnRecord
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? index = null,Object? input = null,Object? outputText = null,Object? messages = null,Object? status = null,Object? errorCode = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? index = null,Object? input = null,Object? outputText = null,Object? messages = null,Object? slices = null,Object? status = null,Object? errorCode = freezed,}) {
   return _then(TurnRecord(
 index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
 as int,input: null == input ? _self.input : input // ignore: cast_nullable_to_non_nullable
 as RecordedInput,outputText: null == outputText ? _self.outputText : outputText // ignore: cast_nullable_to_non_nullable
 as String,messages: null == messages ? _self.messages : messages // ignore: cast_nullable_to_non_nullable
-as List<Map<String, Object?>>,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as List<Map<String, Object?>>,slices: null == slices ? _self.slices : slices // ignore: cast_nullable_to_non_nullable
+as Map<String, Object?>,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as TurnStatus,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -521,10 +522,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int index,  RecordedInput input,  String outputText,  List<Map<String, Object?>> messages,  TurnStatus status,  String? errorCode)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int index,  RecordedInput input,  String outputText,  List<Map<String, Object?>> messages,  Map<String, Object?> slices,  TurnStatus status,  String? errorCode)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TurnRecord() when $default != null:
-return $default(_that.index,_that.input,_that.outputText,_that.messages,_that.status,_that.errorCode);case _:
+return $default(_that.index,_that.input,_that.outputText,_that.messages,_that.slices,_that.status,_that.errorCode);case _:
   return orElse();
 
 }
@@ -542,10 +543,10 @@ return $default(_that.index,_that.input,_that.outputText,_that.messages,_that.st
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int index,  RecordedInput input,  String outputText,  List<Map<String, Object?>> messages,  TurnStatus status,  String? errorCode)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int index,  RecordedInput input,  String outputText,  List<Map<String, Object?>> messages,  Map<String, Object?> slices,  TurnStatus status,  String? errorCode)  $default,) {final _that = this;
 switch (_that) {
 case _TurnRecord():
-return $default(_that.index,_that.input,_that.outputText,_that.messages,_that.status,_that.errorCode);case _:
+return $default(_that.index,_that.input,_that.outputText,_that.messages,_that.slices,_that.status,_that.errorCode);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -562,10 +563,10 @@ return $default(_that.index,_that.input,_that.outputText,_that.messages,_that.st
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int index,  RecordedInput input,  String outputText,  List<Map<String, Object?>> messages,  TurnStatus status,  String? errorCode)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int index,  RecordedInput input,  String outputText,  List<Map<String, Object?>> messages,  Map<String, Object?> slices,  TurnStatus status,  String? errorCode)?  $default,) {final _that = this;
 switch (_that) {
 case _TurnRecord() when $default != null:
-return $default(_that.index,_that.input,_that.outputText,_that.messages,_that.status,_that.errorCode);case _:
+return $default(_that.index,_that.input,_that.outputText,_that.messages,_that.slices,_that.status,_that.errorCode);case _:
   return null;
 
 }
@@ -577,7 +578,7 @@ return $default(_that.index,_that.input,_that.outputText,_that.messages,_that.st
 @JsonSerializable()
 
 class _TurnRecord implements TurnRecord {
-  const _TurnRecord({required this.index, required this.input, this.outputText = '',  List<Map<String, Object?>> messages = const [], required this.status, this.errorCode}): _messages = messages;
+  const _TurnRecord({required this.index, required this.input, this.outputText = '',  List<Map<String, Object?>> messages = const [],  Map<String, Object?> slices = const {}, required this.status, this.errorCode}): _messages = messages,_slices = slices;
   factory _TurnRecord.fromJson(Map<String, dynamic> json) => _$TurnRecordFromJson(json);
 
 @override final  int index;
@@ -588,6 +589,13 @@ class _TurnRecord implements TurnRecord {
   if (_messages is EqualUnmodifiableListView) return _messages;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_messages);
+}
+
+ final  Map<String, Object?> _slices;
+@override@JsonKey() Map<String, Object?> get slices {
+  if (_slices is EqualUnmodifiableMapView) return _slices;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_slices);
 }
 
 @override final  TurnStatus status;
@@ -606,18 +614,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TurnRecord&&(identical(other.index, index) || other.index == index)&&(identical(other.input, input) || other.input == input)&&(identical(other.outputText, outputText) || other.outputText == outputText)&&const DeepCollectionEquality().equals(other.messages, _messages)&&(identical(other.status, status) || other.status == status)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TurnRecord&&(identical(other.index, index) || other.index == index)&&(identical(other.input, input) || other.input == input)&&(identical(other.outputText, outputText) || other.outputText == outputText)&&const DeepCollectionEquality().equals(other.messages, _messages)&&const DeepCollectionEquality().equals(other.slices, _slices)&&(identical(other.status, status) || other.status == status)&&(identical(other.errorCode, errorCode) || other.errorCode == errorCode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,index,input,outputText,const DeepCollectionEquality().hash(_messages),status,errorCode);
+    return Object.hash(runtimeType,index,input,outputText,const DeepCollectionEquality().hash(_messages),const DeepCollectionEquality().hash(_slices),status,errorCode);
 }
 
 @override
 String toString() {
-    return 'TurnRecord(index: $index, input: $input, outputText: $outputText, messages: $messages, status: $status, errorCode: $errorCode)';
+    return 'TurnRecord(index: $index, input: $input, outputText: $outputText, messages: $messages, slices: $slices, status: $status, errorCode: $errorCode)';
 }
 
 
@@ -628,7 +636,7 @@ abstract mixin class _$TurnRecordCopyWith<$Res> implements $TurnRecordCopyWith<$
   factory _$TurnRecordCopyWith(_TurnRecord value, $Res Function(_TurnRecord) _then) = __$TurnRecordCopyWithImpl;
 @override @useResult
 $Res call({
- int index, RecordedInput input, String outputText, List<Map<String, Object?>> messages, TurnStatus status, String? errorCode
+ int index, RecordedInput input, String outputText, List<Map<String, Object?>> messages, Map<String, Object?> slices, TurnStatus status, String? errorCode
 });
 
 
@@ -645,13 +653,14 @@ class __$TurnRecordCopyWithImpl<$Res>
 
 /// Create a copy of TurnRecord
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? index = null,Object? input = null,Object? outputText = null,Object? messages = null,Object? status = null,Object? errorCode = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? index = null,Object? input = null,Object? outputText = null,Object? messages = null,Object? slices = null,Object? status = null,Object? errorCode = freezed,}) {
   return _then(_TurnRecord(
 index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
 as int,input: null == input ? _self.input : input // ignore: cast_nullable_to_non_nullable
 as RecordedInput,outputText: null == outputText ? _self.outputText : outputText // ignore: cast_nullable_to_non_nullable
 as String,messages: null == messages ? _self._messages : messages // ignore: cast_nullable_to_non_nullable
-as List<Map<String, Object?>>,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as List<Map<String, Object?>>,slices: null == slices ? _self._slices : slices // ignore: cast_nullable_to_non_nullable
+as Map<String, Object?>,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as TurnStatus,errorCode: freezed == errorCode ? _self.errorCode : errorCode // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

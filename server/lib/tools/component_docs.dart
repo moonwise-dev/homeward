@@ -1,7 +1,7 @@
 import 'package:common/common.dart';
 
-import '../research/research_steps.dart';
 import 'agent_tool.dart';
+import 'tool_context.dart';
 
 final class ComponentDocs extends AgentTool {
   const ComponentDocs();
@@ -33,7 +33,7 @@ final class ComponentDocs extends AgentTool {
   };
 
   @override
-  ToolResult run(Map<String, Object?> arguments, ResearchSteps steps) {
+  ToolResult run(Map<String, Object?> arguments, ToolContext context) {
     final docs = {
       for (final name in arguments['components'] as List<Object?>? ?? const [])
         '$name': componentDocs('$name'),

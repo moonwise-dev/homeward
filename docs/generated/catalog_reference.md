@@ -6,8 +6,13 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 ## Homeward Components
 
-None yet.
+| Component | Agent visible | Required | Bound | Examples |
+| --- | --- | --- | --- | --- |
+| `Fact` | yes | `fact` | `fact` | What Homeward understood |
 
+### Fact
+
+One item of the brief, with where it came from; a deduction offers Right and Not quite when it has an answer action.
 ## Basic Components
 
 Agent-visible from the A2UI v0.9 basic catalog: `Text`, `Row`, `Column`, `Card`, `Divider`, `List`, `Tabs`, `Icon`, `Button`, `CheckBox`, `ChoicePicker`, `TextField`, `DateTimeInput`.
@@ -20,4 +25,10 @@ Every function of the A2UI v0.9 basic catalog is available too.
 
 ## Data Model
 
-No slices yet.
+### `/brief`
+
+What Homeward learned about the household, written with update_brief: an object of items by ID.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/brief/<id>` | object read by Homeward components | One item: { id, kind, text, source, words }. Bind it whole to a Fact. |

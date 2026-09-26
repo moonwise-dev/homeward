@@ -40,6 +40,7 @@ void main() {
           'Divider',
           'Button',
           'TextField',
+          'Fact',
         ])
           '#/\$defs/component_$name',
       ],

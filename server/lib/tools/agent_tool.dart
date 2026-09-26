@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../gemini/function_declaration.dart';
-import '../research/research_steps.dart';
+import 'tool_context.dart';
 
 part 'agent_tool.freezed.dart';
 
@@ -30,5 +30,5 @@ abstract class AgentTool {
     parameters: parameters,
   );
 
-  FutureOr<ToolResult> run(Map<String, Object?> arguments, ResearchSteps steps);
+  FutureOr<ToolResult> run(Map<String, Object?> arguments, ToolContext context);
 }

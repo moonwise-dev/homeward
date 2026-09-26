@@ -211,12 +211,18 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
     String? replacing,
   }) async {
     final entryId = replacing ?? _newEntryId();
+    final keptPlan = switch (replacing == null ? null : plan.entry(replacing)) {
+      AgentEntry(:final surfaceIds) when surfaceIds.contains(planSurfaceId) =>
+        const [planSurfaceId],
+      _ => const <String>[],
+    };
     plan
       ..put(
         TranscriptEntry.agent(
           id: entryId,
           request: request,
           status: AgentTurnStatus.streaming,
+          surfaceIds: keptPlan,
         ),
       )
       ..isRunning = true

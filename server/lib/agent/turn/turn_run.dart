@@ -12,6 +12,7 @@ import '../../gemini/interaction_input.dart';
 import '../../gemini/interaction_request.dart';
 import '../../gemini/tool_choice.dart';
 import '../../logging/log_entry.dart';
+import '../../tools/tool_context.dart';
 import '../actions/action_input.dart';
 import '../json_reply_parser.dart';
 import '../output_parser.dart';
@@ -24,6 +25,7 @@ import '../validation/split_batched_messages.dart';
 import '../validation/turn_validator.dart';
 import '../validation/validation_failure.dart';
 import '../validation/validation_outcome.dart';
+import 'buyer_words.dart';
 import 'correction_input.dart';
 import 'create_interaction.dart';
 import 'drawn_components.dart';
@@ -55,7 +57,7 @@ final class TurnRun {
          turn: session.turnCount + 1,
          catalog: catalog,
          shadow: replayShadow(session.messages),
-         seeds: const {},
+         seeds: session.slices,
        );
 
   final int turn;
@@ -66,7 +68,7 @@ final class TurnRun {
   final DateTime Function() now;
   final Session _session;
   final TurnValidator _validator;
-  final _seeder = SurfaceSeeder();
+  late final _seeder = SurfaceSeeder(held: _validator.heldValue);
   final _progress = ProgressLog();
   final _forwarded = <Map<String, Object?>>[];
   final _pendingFailures = <ValidationFailure>[];
@@ -92,6 +94,7 @@ final class TurnRun {
         input: _turnRequest,
         outputText: _text.toString().trim(),
         messages: _forwarded,
+        slices: _validator.seeds,
         status: _status,
         errorCode: _errorCode,
       ),
@@ -227,6 +230,7 @@ final class TurnRun {
             results.add(await _runCall(call));
           }
         });
+        yield* _refreshSlices();
         input = InteractionInput.functionResults(
           results,
           note: toolRounds < settings.maxToolRounds ? null : toolsDoneNote,
@@ -300,7 +304,14 @@ final class TurnRun {
   }) => InteractionRequest(
     input: input,
     systemInstruction: prompts.systemInstruction(
-      turnContext(turn: turn, screen: _validator.screen ?? const []),
+      turnContext(
+        turn: turn,
+        screen: _validator.screen ?? const [],
+        brief: switch (_validator.seeds[briefSlice.name]) {
+          final Map<String, Object?> brief => brief,
+          _ => const {},
+        },
+      ),
     ),
     tools: tools.declarations,
     toolChoice: allowToolCalls ? null : ToolChoice.none,
@@ -380,11 +391,30 @@ final class TurnRun {
     yield* _emitText();
   }
 
+  Stream<TurnEvent> _refreshSlices() async* {
+    final seeds = _validator.seeds;
+    for (final slice in seeds.keys) {
+      for (final surfaceId in _validator.surfacesBinding(slice)) {
+        for (final json in _seeder.refresh(surfaceId, [slice], seeds)) {
+          _forwarded.add(json);
+          yield TurnEvent.message(json);
+        }
+      }
+    }
+  }
+
   Future<FunctionResult> _runCall(FunctionCall call) async {
     final result = await tools.call(
       call.name,
       call.arguments,
-      steps: _progress,
+      context: ToolContext(
+        steps: _progress,
+        slices: _validator.seeds,
+        buyerWords: buyerWords([
+          for (final record in _session.turns) record.input,
+          _turnRequest,
+        ]),
+      ),
     );
     _validator.seeds = {..._validator.seeds, ...result.seeds};
     return FunctionResult(

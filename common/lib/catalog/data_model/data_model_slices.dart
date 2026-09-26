@@ -1,3 +1,4 @@
+import 'brief_slice.dart';
 import 'data_slice.dart';
 
-const dataModelSlices = <DataSlice>[];
+const dataModelSlices = <DataSlice>[briefSlice];

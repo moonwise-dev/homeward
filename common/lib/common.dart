@@ -1,10 +1,13 @@
 export 'a2ui/catalog_validator.dart';
 export 'a2ui/generated/a2ui_v09_schemas.dart';
+export 'brief/brief_item.dart';
 export 'catalog/agent_visible_basic_components.dart';
 export 'catalog/catalog_component.dart';
 export 'catalog/catalog_disclosure.dart';
 export 'catalog/catalog_schemas.dart';
+export 'catalog/components/fact.dart';
 export 'catalog/core_components.dart';
+export 'catalog/data_model/brief_slice.dart';
 export 'catalog/data_model/data_model_slices.dart';
 export 'catalog/data_model/data_slice.dart';
 export 'catalog/data_model/field_kind.dart';

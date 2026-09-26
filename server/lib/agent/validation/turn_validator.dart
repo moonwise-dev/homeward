@@ -36,6 +36,19 @@ final class TurnValidator {
     null => null,
   };
 
+  Object? heldValue(String surfaceId, String slice) =>
+      _surface(surfaceId)?.dataModel.get('/$slice');
+
+  List<String> surfacesBinding(String slice) => [
+    for (final surfaceId in [planSurfaceId, ..._inlineCreated])
+      if (_surface(surfaceId) case final surface?
+          when boundSlices([
+            for (final component in surface.componentsModel.all)
+              component.toJson(),
+          ]).contains(slice))
+        surfaceId,
+  ];
+
   SurfaceModel<ComponentApi>? _surface(String surfaceId) =>
       shadow.groupModel.getSurface(surfaceId);
 
@@ -48,7 +61,7 @@ final class TurnValidator {
         return validate(jsonEncode(repaired));
       }
       return _reject(
-        '',
+        _surfaceIdPattern.firstMatch(source)?[1] ?? '',
         '',
         'Not valid JSON: ${error.message}${_near(source, error.offset)}',
       );
@@ -238,6 +251,8 @@ final class TurnValidator {
   Rejected _reject(String surfaceId, String path, String message) => Rejected(
     ValidationFailure(surfaceId: surfaceId, path: path, message: message),
   );
+
+  static final _surfaceIdPattern = RegExp(r'"surfaceId"\s*:\s*"([^"]+)"');
 
   String _surfaceIdIn(Map<String, Object?> json) => switch (json) {
     {'createSurface': {'surfaceId': final String id}} => id,

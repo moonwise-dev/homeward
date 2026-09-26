@@ -6,9 +6,8 @@ once in `common/lib/catalog`, implemented in `app/lib/catalog`, validated in
 
 Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
-Since the reset (D129) the catalog holds the agent-visible basic components
-only. Homeward's own blocks come back one at a time, each with the chunk of
-`docs/ROADMAP.md` that needs it.
+Since the reset (D129) Homeward's own blocks come back one at a time, each
+with the chunk of `docs/ROADMAP.md` that needs it. The first is `Fact` (C4).
 
 ## Design Principles
 
@@ -45,13 +44,25 @@ in `basicComponentSummaries`:
 `Text`, `Row`, `Column`, `Card`, `Divider`, `List`, `Tabs`, `Icon`, `Button`,
 `CheckBox`, `ChoicePicker`, `TextField`, `DateTimeInput`.
 
-The layout components, `coreComponents`: `Column`, `Row`, `Card`, `Text`,
-`Button`, and `Divider`. The skill always carries their full schemas, and
-correction rounds offer them (D110, D143).
+The core components, `coreComponents`: the layout components `Column`,
+`Row`, `Card`, `Text`, `Button`, and `Divider`, and `Fact`, which every plan
+uses. The skill always carries their full schemas, and correction rounds offer
+them (D110, D143, D144).
 
 Not agent-visible: `Image`, `Video`, `AudioPlayer`, `Modal`, `Slider`.
 
 Buttons send actions the model names itself (`docs/PROTOCOL.md`).
+
+## Homeward Components
+
+| Family | Block | What it shows | Properties |
+| --- | --- | --- | --- |
+| Understanding | `Fact` | One item of the brief: the sentence, and where it came from: "You said", "Deduced from" with the buyer's words, or "You confirmed". A deduction with an `answer` action offers Right and Not quite (D144) | `fact`, bound to one item, `{ "path": "/brief/<id>" }`; `answer`, an optional action |
+
+A `Fact` tap sends its `answer` action with `fact`, the item's ID, `answer`,
+`right` or `not_quite`, and `label`, the words the conversation shows, such as
+"Right: Your mum can't manage stairs". A `Fact` bound to an item the brief
+does not hold draws nothing.
 
 ## Planned Blocks
 
@@ -61,9 +72,8 @@ marked restored come back from `6faa8ab`.
 
 | Family | Block | Chunk | What it shows |
 | --- | --- | --- | --- |
-| Understanding | `Fact` | C4 | A statement with its source (said, deduced, measured, estimated, or quoted) and a way to confirm or correct it; the unit of the brief and of a home's reasons |
-| Understanding | `Choice` | C4 | An inline ask: one decision, its options, Gemini's recommendation first, and room to type |
-| Understanding | `Brief` | C4 | A section of the brief: the household, its needs, its week, or what is open |
+| Understanding | `Choice` | C4b | An inline ask: one decision, its options, Gemini's recommendation first, and room to type |
+| Understanding | `Brief` | C10 | A section of the brief: the household, its needs, its week, or what is open |
 | Understanding | `HouseholdSummary` | C10 | Who moves, incomes and savings as stated, and who shares the costs |
 | Money | `AffordabilitySummary` | C5 | What the household can borrow and the price range it allows, and which rule limits it; restored |
 | Money | `MonthlyCostBreakdown` | C5 | What a home costs each month: interest, amortization, fees, and running costs; restored as `PaymentBreakdown` |
@@ -123,7 +133,9 @@ against the same definitions. The server validates against it.
 Beside the components, `common/lib/catalog` declares:
 
 - `data_model/`: the slices the server seeds from tool results and the fields
-  components may bind, with value shapes and meanings. None yet.
+  components may bind, with value shapes and meanings. `brief` (C4, D132): an
+  object of the brief's items by ID, each `{ id, kind, text, source, words }`,
+  declared with `BriefItem` in `common/lib/brief`.
 - `functions/`: client functions, `CatalogFunction`s with a pure `evaluate`
   over JSON-shaped arguments, which the app wraps as genui `ClientFunction`s
   and the server can reuse. They serve basic components, such as a check that
@@ -136,8 +148,9 @@ From the same declarations `make catalog` generates:
 - `common/lib/catalog/generated/catalog.json`, the catalog document.
 - `server/prompts/generated/catalog_skill.md`, the model-facing skill: how to
   write messages, binding, actions, and the index of the components beyond
-  the layout ones, each with its one-line description; then the catalog
-  document with the layout components and every function, and the common
+  the core ones, each with its one-line description; the examples of the
+  core components; then the catalog document with the core components and
+  every function, and the common
   types, as compact JSON Schema, exactly what validation enforces (D69,
   D143). The `component_docs` tool returns every other component's schema, in
   the same form, and its examples.

@@ -1,4 +1,5 @@
 Map<String, Object?> turnContext({
   required int turn,
   required List<Map<String, Object?>> screen,
-}) => {'turn': turn, 'screen': screen};
+  required Map<String, Object?> brief,
+}) => {'turn': turn, 'screen': screen, 'brief': brief};

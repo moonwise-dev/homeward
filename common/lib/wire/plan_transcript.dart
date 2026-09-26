@@ -29,6 +29,7 @@ abstract class TurnRecord with _$TurnRecord {
     required RecordedInput input,
     @Default('') String outputText,
     @Default([]) List<Map<String, Object?>> messages,
+    @Default({}) Map<String, Object?> slices,
     required TurnStatus status,
     String? errorCode,
   }) = _TurnRecord;
