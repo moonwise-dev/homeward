@@ -98,6 +98,32 @@ first.
 - Do not deploy unless explicitly asked.
 - Do not revert unrelated worktree changes.
 
+## Agent Tooling
+
+Claude Code picks these up from `.claude/settings.json` and `.mcp.json`, and
+asks once to trust them:
+
+- The `dart-flutter` plugin (`flutter/agent-plugins`): the Dart MCP server,
+  which can analyze, run tests, launch the app, hot reload, read runtime errors
+  and the widget tree, and read pinned package sources, plus the Flutter and
+  Dart skills. Where a skill disagrees with this file, such as writing tests,
+  this file wins.
+- The `gemini-skills` plugin (`google-gemini/gemini-skills`): the Gemini API
+  and Live API skills.
+- The `firebase` plugin (`firebase/agent-skills`): the Firebase MCP server and
+  the Firestore and rules skills. Deploying still waits for an explicit ask.
+- The `chrome-devtools-mcp` plugin: screenshots, console, and network of the
+  web app for the visual look at the end of a chunk.
+- The Google Maps Platform Code Assist MCP server in `.mcp.json`: official Maps
+  docs and samples, used from C5.
+
+Project skills in `.claude/skills/`:
+
+- `homeward-chunk` runs one chunk of `docs/ROADMAP.md` end to end, with the
+  test stories used for probing and rehearsal.
+- `homeward-block` adds a catalog block.
+- `homeward-tool` adds an agent tool.
+
 ## Verification
 
 Root `Makefile` targets:

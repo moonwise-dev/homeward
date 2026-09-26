@@ -1,0 +1,28 @@
+{
+  "enabledPlugins": {
+    "dart-flutter@dart-flutter": true,
+    "gemini-skills@gemini-skills": true,
+    "firebase@firebase": true,
+    "chrome-devtools-mcp@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "dart-flutter": {
+      "source": {
+        "source": "github",
+        "repo": "flutter/agent-plugins"
+      }
+    },
+    "gemini-skills": {
+      "source": {
+        "source": "github",
+        "repo": "google-gemini/gemini-skills"
+      }
+    },
+    "firebase": {
+      "source": {
+        "source": "github",
+        "repo": "firebase/agent-skills"
+      }
+    }
+  }
+}
