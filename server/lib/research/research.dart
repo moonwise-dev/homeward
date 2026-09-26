@@ -4,17 +4,14 @@ import 'open_data/nominatim.dart';
 import 'open_data/overpass.dart';
 import 'open_data/polite_client.dart';
 import 'open_data/research_cache.dart';
-import '../samples/listing_reader.dart';
 import 'open_data/routing.dart';
-import 'story_measurer.dart';
 
 final class Research {
   Research({
     required this.nominatim,
-    required this.measurer,
+    required this.overpass,
     required this.routing,
-    ListingReader? listings,
-  }) : listings = listings ?? ListingReader();
+  });
 
   factory Research.open(
     http.Client client, {
@@ -22,16 +19,14 @@ final class Research {
     ResearchCache cache = const NoResearchCache(),
   }) {
     final polite = PoliteClient(client, userAgent: userAgent, store: cache);
-    final routing = Routing(polite);
     return Research(
       nominatim: Nominatim(polite),
-      measurer: StoryMeasurer(overpass: Overpass(polite), routing: routing),
-      routing: routing,
+      overpass: Overpass(polite),
+      routing: Routing(polite),
     );
   }
 
   final Nominatim nominatim;
-  final StoryMeasurer measurer;
+  final Overpass overpass;
   final Routing routing;
-  final ListingReader listings;
 }

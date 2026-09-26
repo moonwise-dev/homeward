@@ -14,7 +14,6 @@ import '../../../routing/router.dart';
 import '../../../routing/routes.dart';
 import '../../../utils/safe_notifier_state.dart';
 import '../../core/messages/app_message.dart';
-import 'opening_story.dart';
 
 part 'journey_view_model.freezed.dart';
 part 'journey_view_model.g.dart';
@@ -45,34 +44,6 @@ class JourneyViewModel extends _$JourneyViewModel
   void updateDraft(String draft) =>
       setState((current) => current.copyWith(draft: draft));
 
-  void pickReason(StoryReason? reason) =>
-      setState((current) => current.copyWith(reason: reason));
-
-  void updateOwnReason(String ownReason) =>
-      setState((current) => current.copyWith(ownReason: ownReason));
-
-  void updateLocation(String location) =>
-      setState((current) => current.copyWith(location: location));
-
-  void useExample(OpeningExample example) => setState(
-    (current) =>
-        current.copyWith(reason: example.reason, location: example.location),
-  );
-
-  Future<void> start() async {
-    if (!state.canStart) {
-      return;
-    }
-    await _sendText(
-      openingMessage(
-        reason: state.reason,
-        ownReason: state.ownReason,
-        location: state.location,
-      ),
-      reason: state.reason,
-    );
-  }
-
   Future<void> send() async {
     final text = state.draft.trim();
     if (text.isEmpty || state.conversation.isRunning) {
@@ -82,13 +53,11 @@ class JourneyViewModel extends _$JourneyViewModel
     await _sendText(text);
   }
 
-  Future<void> _sendText(String text, {StoryReason? reason}) async {
+  Future<void> _sendText(String text) async {
     ref
         .read(plansRepositoryProvider)
         .recordActivity(sessionId, buyerText: text);
-    await ref
-        .read(agentRepositoryProvider)
-        .sendText(sessionId, text, reason: reason);
+    await ref.read(agentRepositoryProvider).sendText(sessionId, text);
   }
 
   Future<void> stop() async {
@@ -152,9 +121,6 @@ abstract class JourneyState with _$JourneyState {
   const factory JourneyState({
     @Default(PlanConversation()) PlanConversation conversation,
     @Default('') String draft,
-    StoryReason? reason,
-    @Default('') String ownReason,
-    @Default('') String location,
   }) = _JourneyState;
 
   const JourneyState._();
@@ -166,9 +132,9 @@ abstract class JourneyState with _$JourneyState {
               agent.surfaceIds.isNotEmpty)
         JourneySection(
           entry: agent,
-          answer: switch (conversation.entries.elementAtOrNull(index + 1)) {
-            final BuyerEntry answer => answer,
-            final BuyerActionEntry answer => answer,
+          prompt: switch (conversation.entries.elementAtOrNull(index - 1)) {
+            final BuyerEntry prompt => prompt,
+            final BuyerActionEntry prompt => prompt,
             _ => null,
           },
         ),
@@ -181,15 +147,13 @@ abstract class JourneyState with _$JourneyState {
       entry,
     _ => null,
   };
-
-  bool get canStart => location.trim().isNotEmpty && !conversation.isRunning;
 }
 
 final class JourneySection {
-  const JourneySection({required this.entry, this.answer});
+  const JourneySection({required this.entry, this.prompt});
 
   final AgentEntry entry;
-  final TranscriptEntry? answer;
+  final TranscriptEntry? prompt;
 }
 
 String _quotaResetMessage(Duration? retryAfter, DateTime now) {

@@ -21,7 +21,7 @@ Handler buildApp(Providers providers, {Handler? development}) {
   final config = providers.config;
   final agentCard = homewardAgentCard(config.publicUrl);
   final a2a = A2aHandler(turns: providers.turns, tasks: providers.tasks);
-  final sessions = SessionsHandler(providers.sessions, providers.markets);
+  final sessions = SessionsHandler(providers.sessions);
   final keys = KeysHandler(providers.verifyKey);
   final verified = const Pipeline()
       .addMiddleware(authenticationMiddleware(providers.identity))

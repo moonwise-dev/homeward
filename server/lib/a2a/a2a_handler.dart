@@ -157,15 +157,7 @@ final class A2aHandler {
       for (final part in message.parts)
         if (part case A2aTextPart(:final text)) text,
     ].join('\n').trim();
-    return text.isEmpty
-        ? null
-        : TurnInput.text(
-            text,
-            reason: switch (message.metadata?[HomewardMetadata.storyReason]) {
-              final String name => StoryReason.values.asNameMap()[name],
-              _ => null,
-            },
-          );
+    return text.isEmpty ? null : TurnInput.text(text);
   }
 
   RunningTask? _task(Request request, JsonRpcRequest rpc) {

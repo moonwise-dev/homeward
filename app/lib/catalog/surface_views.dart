@@ -1,4 +1,3 @@
-import 'package:common/common.dart';
 import 'package:flutter/widgets.dart';
 import 'package:genui/genui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -36,17 +35,3 @@ class GallerySurfaceView extends ConsumerWidget {
         .surfaceContext(surfaceId),
   );
 }
-
-final _wideComponents = {
-  const LifestyleCommuteMap().name,
-  const DynamicRecommendationStack().name,
-  const ComparisonTable().name,
-  const PhotoLineup().name,
-  const TradeOff().name,
-};
-
-bool isWideSurface(SurfaceDefinition? definition) =>
-    definition?.components.values.any(
-      (component) => _wideComponents.contains(component.type),
-    ) ??
-    false;

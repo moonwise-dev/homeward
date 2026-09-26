@@ -8,7 +8,6 @@ abstract class SessionListing with _$SessionListing {
     required String id,
     @Default(0) int turnCount,
     String? title,
-    String? marketId,
     DateTime? updatedAt,
   }) = _SessionListing;
 }

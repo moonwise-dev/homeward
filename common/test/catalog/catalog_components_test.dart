@@ -8,27 +8,7 @@ void main() {
   test('the catalog declares its components once under its id', () {
     expect(homewardCatalog.id, homewardCatalogId);
     expect(homewardCatalog.components.keys, [
-      'StoryDraft',
-      'Hunch',
-      'PhotoLineup',
-      'HomeSwipe',
-      'TradeOff',
-      'Routine',
-      'LifestyleCommuteMap',
-      'ComparisonTable',
-      'DynamicRecommendationStack',
-      'ListingCard',
-      'LocationPicker',
-      'MoneyInput',
-      'HouseholdInput',
-      'AmountSlider',
-      'MarketSnapshotCard',
-      'AffordabilitySummary',
-      'PaymentBreakdown',
-      'PurchaseCostsTable',
-      'StressTestChart',
-      'EligibilityChecklist',
-      'ForeignBuyerObstacles',
+      for (final component in homewardComponents) component.name,
     ]);
   });
 
@@ -94,19 +74,6 @@ void main() {
       });
     });
   }
-
-  test('slice references accept only their own path', () {
-    final schema = const AffordabilitySummary().schema;
-    final root = const AffordabilitySummary().examples.first.components.first;
-
-    expect(
-      schema.validateSync({
-        ...root,
-        'scenario': {'path': '/profile'},
-      }),
-      isNotEmpty,
-    );
-  });
 }
 
 Iterable<String> _boundPaths(Object? json) sync* {

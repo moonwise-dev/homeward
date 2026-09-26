@@ -4,14 +4,12 @@ import 'package:shelf/shelf.dart';
 import '../data/repository/session_repository.dart';
 import '../errors/homeward_failure.dart';
 import '../http/api_envelope.dart';
-import '../markets/market_directory.dart';
 import '../request/request_values.dart';
 
 final class SessionsHandler {
-  const SessionsHandler(this.sessions, this.markets);
+  const SessionsHandler(this.sessions);
 
   final SessionRepository sessions;
-  final MarketDirectory markets;
 
   Future<Response> create(Request request) async {
     final uid = request.callerUid;
@@ -35,11 +33,6 @@ final class SessionsHandler {
             sessionId: listing.id,
             turnCount: listing.turnCount,
             title: listing.title,
-            marketId: listing.marketId,
-            marketName: switch (listing.marketId) {
-              final code? => markets.nameOf(MarketId.parse(code)),
-              null => null,
-            },
             updatedAt: listing.updatedAt,
           ).toJson(),
       ],

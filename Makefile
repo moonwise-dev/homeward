@@ -28,23 +28,19 @@ help:
 	@echo "  make format        Format every package"
 	@echo "  make format-check  Fail if any package is not formatted"
 	@echo "  make test          Run tests in pure Dart packages"
-	@echo "  make check         codegen-check, format-check, analyze, test, markets-check, catalog-check"
-	@echo "  make markets-check Check rule packs, rate snapshots, and living costs"
+	@echo "  make check         codegen-check, format-check, analyze, test, catalog-check"
 	@echo "  make catalog       Regenerate the catalog document, model skill, and reference"
 	@echo "  make catalog-check Fail if catalog outputs are stale or an example is invalid"
 	@echo "  make codegen       Run build_runner in app, common, and server"
-	@echo "  make listings      Place and price the sample homes from tool/listings"
 	@echo "  make codegen-check Fail if build_runner changes a committed generated file"
 	@echo "  make iso-4217      Regenerate the ISO 4217 currency table from SIX"
 	@echo "  make a2ui-schemas  Vendor the pinned A2UI v0.9 basic catalog and common types"
 	@echo "  make fonts         Vendor the pinned font faces the app draws with"
-	@echo "  make territories   Regenerate country and subdivision names from CLDR"
 	@echo "  make emulator      Run the Firestore emulator on port 8081"
 	@echo "  make server-dev    Run the server locally with hot reload, in this terminal"
 	@echo "  make dev-server    Start the local server in the background if it is not running"
 	@echo "  make dev-server-stop  Stop a local server that make dev-server started"
 	@echo "  make probe         Send MESSAGE as a live turn to SERVER with the Gemini keys from .env"
-	@echo "  make eval          Run eval CASES against Gemini in process, and write a report"
 	@echo "  make server-build  Cross-compile the server for linux/x64"
 	@echo "  make server-image  Build the server container image"
 	@echo "  make server-image-run  Run the server container image on port 8080"
@@ -87,15 +83,7 @@ test:
 	@cd app && flutter test
 
 .PHONY: check
-check: codegen-check format-check analyze test markets-check catalog-check
-
-.PHONY: markets-check
-markets-check:
-	@dart run tool/bin/markets_check.dart markets
-
-.PHONY: listings
-listings:
-	@dart run tool/bin/generate_listings.dart .
+check: codegen-check format-check analyze test catalog-check
 
 .PHONY: catalog
 catalog:
@@ -133,11 +121,6 @@ a2ui-schemas:
 fonts:
 	@dart run tool/bin/vendor_fonts.dart app/assets/fonts
 
-.PHONY: territories
-territories:
-	@dart run tool/bin/generate_territories.dart common/lib/geo/generated/country_names.dart server/lib/markets/generated/subdivision_names.dart
-	@dart format common/lib/geo/generated/country_names.dart server/lib/markets/generated/subdivision_names.dart
-
 .PHONY: emulator
 emulator:
 	@firebase emulators:start --only firestore --project $(FIREBASE_PROJECT)
@@ -153,10 +136,6 @@ dev-server:
 .PHONY: dev-server-stop
 dev-server-stop:
 	@dart run tool/bin/dev.dart stop
-
-.PHONY: eval
-eval:
-	@dart run tool/bin/eval.dart $(CASES)
 
 .PHONY: probe
 probe:

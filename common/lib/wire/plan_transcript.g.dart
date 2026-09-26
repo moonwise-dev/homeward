@@ -115,21 +115,12 @@ _PlanListing _$PlanListingFromJson(Map<String, dynamic> json) => $checkedCreate(
   ($checkedConvert) {
     $checkKeys(
       json,
-      allowedKeys: const [
-        'sessionId',
-        'turnCount',
-        'title',
-        'marketId',
-        'marketName',
-        'updatedAt',
-      ],
+      allowedKeys: const ['sessionId', 'turnCount', 'title', 'updatedAt'],
     );
     final val = _PlanListing(
       sessionId: $checkedConvert('sessionId', (v) => v as String),
       turnCount: $checkedConvert('turnCount', (v) => (v as num?)?.toInt() ?? 0),
       title: $checkedConvert('title', (v) => v as String?),
-      marketId: $checkedConvert('marketId', (v) => v as String?),
-      marketName: $checkedConvert('marketName', (v) => v as String?),
       updatedAt: $checkedConvert(
         'updatedAt',
         (v) => v == null ? null : DateTime.parse(v as String),
@@ -144,8 +135,6 @@ Map<String, dynamic> _$PlanListingToJson(_PlanListing instance) =>
       'sessionId': instance.sessionId,
       'turnCount': instance.turnCount,
       'title': ?instance.title,
-      'marketId': ?instance.marketId,
-      'marketName': ?instance.marketName,
       'updatedAt': ?instance.updatedAt?.toIso8601String(),
     };
 

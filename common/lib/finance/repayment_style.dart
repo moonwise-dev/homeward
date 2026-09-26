@@ -1,1 +1,0 @@
-enum RepaymentStyle { annuity, straight }

@@ -8,7 +8,6 @@ import 'package:homeward_server/data/providers/providers.dart';
 import 'package:homeward_server/gemini/gemini_exception.dart';
 
 import '../agent/turn/scripted_interactions.dart';
-import '../tools/tool_fixtures.dart';
 
 final class TokenIdentityVerifier implements IdentityVerifier {
   const TokenIdentityVerifier(this.uids);
@@ -44,6 +43,5 @@ Providers testProviders({
       throw const GeminiKeyInvalid('API key not valid');
     }
   },
-  markets: realMarkets,
   prompts: PromptAssembler.load(Directory('prompts')),
 );

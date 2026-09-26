@@ -5,7 +5,6 @@ void main() {
   final schema = catalogResponseSchema({
     ...correctionLayout,
     'TextField',
-    'LifestyleCommuteMap',
     'FitMatrix',
   });
   final defs = schema[r'$defs']! as Map<String, Object?>;
@@ -40,12 +39,11 @@ void main() {
           'Divider',
           'Button',
           'TextField',
-          'LifestyleCommuteMap',
         ])
           '#/\$defs/component_$name',
       ],
     );
-    expect(defs, isNot(contains('component_MoneyInput')));
+    expect(defs, isNot(contains('component_FitMatrix')));
   });
 
   test('says every fixed value as an enum, which Gemini enforces', () {

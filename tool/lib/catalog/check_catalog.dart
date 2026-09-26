@@ -4,10 +4,10 @@ import 'package:a2ui_core/a2ui_core.dart';
 import 'package:common/common.dart';
 import 'package:homeward_server/agent/validation/turn_validator.dart';
 import 'package:homeward_server/agent/validation/validation_outcome.dart';
-import 'package:homeward_server/markets/finding.dart';
 
 import 'catalog_outputs.dart';
 import 'example_messages.dart';
+import 'finding.dart';
 
 List<Finding> checkCatalog(Directory root) => [
   for (final MapEntry(key: path, value: content) in catalogOutputs().entries)
@@ -45,15 +45,12 @@ final _catalogItemPattern = RegExp(r'catalogItemFor\(\s*const\s+(\w+)\(\)');
 
 List<Finding> checkCatalogExamples({
   List<CatalogComponent> components = homewardComponents,
-  List<CatalogExample>? surfaces,
 }) {
   final catalog = CatalogValidator(homewardCatalogDocument());
   final examples = [
     for (final component in components)
       for (final example in component.examples)
         (subject: '${component.name}: ${example.name}', example: example),
-    for (final example in surfaces ?? surfaceExamples)
-      (subject: 'Surface: ${example.name}', example: example),
   ];
   return [
     for (final (:subject, :example) in examples)

@@ -4,20 +4,17 @@ import 'dart:io';
 final class PromptAssembler {
   const PromptAssembler(this.instructions);
 
-  factory PromptAssembler.load(Directory prompts, {bool deal = true}) =>
-      PromptAssembler(
-        [
-          for (final name in instructionFiles(deal: deal))
-            File('${prompts.path}/$name').readAsStringSync().trim(),
-        ].join('\n\n'),
-      );
+  factory PromptAssembler.load(Directory prompts) => PromptAssembler(
+    [
+      for (final name in instructionFiles)
+        File('${prompts.path}/$name').readAsStringSync().trim(),
+    ].join('\n\n'),
+  );
 
-  static List<String> instructionFiles({required bool deal}) => [
+  static const instructionFiles = [
     'role.md',
-    'flow.md',
-    if (deal) ...['deal.md', 'markets.md'],
     'style.md',
-    deal ? 'generated/catalog_skill.md' : 'generated/catalog_skill_story.md',
+    'generated/catalog_skill.md',
   ];
 
   final String instructions;

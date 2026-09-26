@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SessionListing {
 
- String get id; int get turnCount; String? get title; String? get marketId; DateTime? get updatedAt;
+ String get id; int get turnCount; String? get title; DateTime? get updatedAt;
 /// Create a copy of SessionListing
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $SessionListingCopyWith<SessionListing> get copyWith => _$SessionListingCopyWith
 @override
 bool operator ==(Object other) {
   final _this = this as SessionListing;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionListing&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.turnCount, _this.turnCount) || other.turnCount == _this.turnCount)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.marketId, _this.marketId) || other.marketId == _this.marketId)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionListing&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.turnCount, _this.turnCount) || other.turnCount == _this.turnCount)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 
 @override
 int get hashCode {
   final _this = this as SessionListing;
-  return Object.hash(runtimeType,_this.id,_this.turnCount,_this.title,_this.marketId,_this.updatedAt);
+  return Object.hash(runtimeType,_this.id,_this.turnCount,_this.title,_this.updatedAt);
 }
 
 @override
 String toString() {
   final _this = this as SessionListing;
-  return 'SessionListing(id: ${_this.id}, turnCount: ${_this.turnCount}, title: ${_this.title}, marketId: ${_this.marketId}, updatedAt: ${_this.updatedAt})';
+  return 'SessionListing(id: ${_this.id}, turnCount: ${_this.turnCount}, title: ${_this.title}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $SessionListingCopyWith<$Res>  {
   factory $SessionListingCopyWith(SessionListing value, $Res Function(SessionListing) _then) = _$SessionListingCopyWithImpl;
 @useResult
 $Res call({
- String id, int turnCount, String? title, String? marketId, DateTime? updatedAt
+ String id, int turnCount, String? title, DateTime? updatedAt
 });
 
 
@@ -68,12 +68,11 @@ class _$SessionListingCopyWithImpl<$Res>
 
 /// Create a copy of SessionListing
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? turnCount = null,Object? title = freezed,Object? marketId = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? turnCount = null,Object? title = freezed,Object? updatedAt = freezed,}) {
   return _then(SessionListing(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,turnCount: null == turnCount ? _self.turnCount : turnCount // ignore: cast_nullable_to_non_nullable
 as int,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String?,marketId: freezed == marketId ? _self.marketId : marketId // ignore: cast_nullable_to_non_nullable
 as String?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
@@ -160,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  int turnCount,  String? title,  String? marketId,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  int turnCount,  String? title,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SessionListing() when $default != null:
-return $default(_that.id,_that.turnCount,_that.title,_that.marketId,_that.updatedAt);case _:
+return $default(_that.id,_that.turnCount,_that.title,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -181,10 +180,10 @@ return $default(_that.id,_that.turnCount,_that.title,_that.marketId,_that.update
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int turnCount,  String? title,  String? marketId,  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int turnCount,  String? title,  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _SessionListing():
-return $default(_that.id,_that.turnCount,_that.title,_that.marketId,_that.updatedAt);case _:
+return $default(_that.id,_that.turnCount,_that.title,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +200,10 @@ return $default(_that.id,_that.turnCount,_that.title,_that.marketId,_that.update
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  int turnCount,  String? title,  String? marketId,  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  int turnCount,  String? title,  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _SessionListing() when $default != null:
-return $default(_that.id,_that.turnCount,_that.title,_that.marketId,_that.updatedAt);case _:
+return $default(_that.id,_that.turnCount,_that.title,_that.updatedAt);case _:
   return null;
 
 }
@@ -216,13 +215,12 @@ return $default(_that.id,_that.turnCount,_that.title,_that.marketId,_that.update
 
 
 class _SessionListing implements SessionListing {
-  const _SessionListing({required this.id, this.turnCount = 0, this.title, this.marketId, this.updatedAt});
+  const _SessionListing({required this.id, this.turnCount = 0, this.title, this.updatedAt});
   
 
 @override final  String id;
 @override@JsonKey() final  int turnCount;
 @override final  String? title;
-@override final  String? marketId;
 @override final  DateTime? updatedAt;
 
 /// Create a copy of SessionListing
@@ -235,18 +233,18 @@ _$SessionListingCopyWith<_SessionListing> get copyWith => __$SessionListingCopyW
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionListing&&(identical(other.id, id) || other.id == id)&&(identical(other.turnCount, turnCount) || other.turnCount == turnCount)&&(identical(other.title, title) || other.title == title)&&(identical(other.marketId, marketId) || other.marketId == marketId)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionListing&&(identical(other.id, id) || other.id == id)&&(identical(other.turnCount, turnCount) || other.turnCount == turnCount)&&(identical(other.title, title) || other.title == title)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,turnCount,title,marketId,updatedAt);
+    return Object.hash(runtimeType,id,turnCount,title,updatedAt);
 }
 
 @override
 String toString() {
-    return 'SessionListing(id: $id, turnCount: $turnCount, title: $title, marketId: $marketId, updatedAt: $updatedAt)';
+    return 'SessionListing(id: $id, turnCount: $turnCount, title: $title, updatedAt: $updatedAt)';
 }
 
 
@@ -257,7 +255,7 @@ abstract mixin class _$SessionListingCopyWith<$Res> implements $SessionListingCo
   factory _$SessionListingCopyWith(_SessionListing value, $Res Function(_SessionListing) _then) = __$SessionListingCopyWithImpl;
 @override @useResult
 $Res call({
- String id, int turnCount, String? title, String? marketId, DateTime? updatedAt
+ String id, int turnCount, String? title, DateTime? updatedAt
 });
 
 
@@ -274,12 +272,11 @@ class __$SessionListingCopyWithImpl<$Res>
 
 /// Create a copy of SessionListing
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? turnCount = null,Object? title = freezed,Object? marketId = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? turnCount = null,Object? title = freezed,Object? updatedAt = freezed,}) {
   return _then(_SessionListing(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,turnCount: null == turnCount ? _self.turnCount : turnCount // ignore: cast_nullable_to_non_nullable
 as int,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String?,marketId: freezed == marketId ? _self.marketId : marketId // ignore: cast_nullable_to_non_nullable
 as String?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));

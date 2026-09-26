@@ -103,8 +103,6 @@ void main() {
             {
               'sessionId': 's-1',
               'turnCount': 2,
-              'marketId': 'PT-30',
-              'marketName': 'Madeira, Portugal',
             },
           ],
         },
@@ -112,12 +110,7 @@ void main() {
     );
 
     expect(await listing.plans(), [
-      const PlanListing(
-        sessionId: 's-1',
-        turnCount: 2,
-        marketId: 'PT-30',
-        marketName: 'Madeira, Portugal',
-      ),
+      const PlanListing(sessionId: 's-1', turnCount: 2),
     ]);
     expect(requests.single.method, 'GET');
     expect(requests.single.url, server.resolve('api/sessions'));

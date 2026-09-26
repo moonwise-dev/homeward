@@ -38,7 +38,7 @@ void main() {
     }
   });
 
-  test('the gallery shows every component and surface example', () {
+  test('the gallery shows every component example', () {
     expect(
       repository.entries.map((entry) => entry.title),
       containsAll([

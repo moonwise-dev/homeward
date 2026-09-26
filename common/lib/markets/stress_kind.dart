@@ -1,1 +1,0 @@
-enum StressKind { fixedRate, shock }

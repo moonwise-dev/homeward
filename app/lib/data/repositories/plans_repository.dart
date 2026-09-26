@@ -73,7 +73,6 @@ class SessionPlansRepository with RepositoryGuard implements PlansRepository {
     id: listing.sessionId,
     lastActivityAt: _laterOf(listing.updatedAt, known?.lastActivityAt),
     title: known?.title ?? listing.title,
-    marketName: listing.marketName ?? known?.marketName,
   );
 
   DateTime _laterOf(DateTime? one, DateTime? other) {

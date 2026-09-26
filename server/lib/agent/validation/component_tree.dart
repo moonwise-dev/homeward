@@ -37,21 +37,6 @@ Iterable<String> boundPaths(Object? json) sync* {
   }
 }
 
-Iterable<String> actionNames(Object? json) sync* {
-  switch (json) {
-    case {'event': {'name': final String name}}:
-      yield name;
-    case final Map<String, Object?> map:
-      for (final value in map.values) {
-        yield* actionNames(value);
-      }
-    case final List<Object?> list:
-      for (final value in list) {
-        yield* actionNames(value);
-      }
-  }
-}
-
 String? structureProblem(Map<String, Map<String, Object?>> components) {
   if (!components.containsKey('root')) {
     return 'The surface needs a component with id "root"';

@@ -23,7 +23,9 @@ void main() {
       turn: turn,
       catalog: catalog,
       shadow: shadow,
-      seeds: stockholmDataModel,
+      seeds: const {
+        'home': {'name': 'Flat on Odengatan', 'rooms': 3},
+      },
     );
   }
 
@@ -43,53 +45,29 @@ void main() {
         'updateComponents': {'surfaceId': surfaceId, 'components': components},
       });
 
-  final slider = {
-    'id': 'slider',
-    'component': 'AmountSlider',
-    'label': 'Down payment',
-    'value': {'path': '/scenario/downPayment'},
-    'bounds': {'path': '/derived/downPaymentBounds'},
-    'shareOf': {'path': '/scenario/price'},
-    'currency': {'path': '/market/currency'},
-  };
   final validTree = <Map<String, Object?>>[
     {
       'id': 'root',
       'component': 'Column',
-      'children': ['summary', 'slider', 'commit'],
+      'children': ['name', 'keep'],
     },
     {
-      'id': 'summary',
-      'component': 'AffordabilitySummary',
-      'scenario': {'path': '/scenario'},
-      'market': {'path': '/market'},
-      'profile': {'path': '/profile'},
+      'id': 'name',
+      'component': 'Text',
+      'text': {'path': '/home/name'},
     },
-    slider,
     {
-      'id': 'commit',
+      'id': 'keep',
       'component': 'Button',
-      'child': 'commit_label',
-      'checks': [
-        {
-          'condition': {
-            'call': 'withinMaxLtv',
-            'args': {
-              'scenario': {'path': '/scenario'},
-              'market': {'path': '/market'},
-            },
-          },
-          'message': 'Down payment is below the minimum',
-        },
-      ],
+      'child': 'keep_label',
       'action': {
         'event': {
-          'name': 'commit_scenario',
-          'context': {'scenarioPath': '/scenario'},
+          'name': 'keep_home',
+          'context': {'homeId': 'h1'},
         },
       },
     },
-    {'id': 'commit_label', 'component': 'Text', 'text': 'Use this scenario'},
+    {'id': 'keep_label', 'component': 'Text', 'text': 'Keep this one'},
   ];
 
   String rejection(TurnValidator validator, String line) =>
@@ -109,7 +87,7 @@ void main() {
       validator.shadow.groupModel
           .getSurface('t3-budget')
           ?.componentsModel
-          .get('slider'),
+          .get('keep'),
       isNotNull,
     );
   });
@@ -216,16 +194,6 @@ void main() {
       '/updateComponents/components/0',
     ),
     (
-      'bound numbers: literal amount',
-      () => [
-        create('t1-a'),
-        update('t1-a', [
-          {...slider, 'id': 'root', 'value': 450000},
-        ]),
-      ],
-      'AmountSlider',
-    ),
-    (
       'structure: no root',
       () => [
         create('t1-a'),
@@ -273,31 +241,13 @@ void main() {
         create('t1-a'),
         update('t1-a', [
           {
-            ...slider,
             'id': 'root',
-            'bounds': {'path': '/derived/nothing/min'},
+            'component': 'Text',
+            'text': {'path': '/lineup/nothing/name'},
           },
         ]),
       ],
-      '/derived/nothing/min is not in the data model',
-    ),
-    (
-      'actions: unknown name',
-      () => [
-        create('t1-a'),
-        update('t1-a', [
-          {
-            'id': 'root',
-            'component': 'Button',
-            'child': 'label',
-            'action': {
-              'event': {'name': 'buy_now'},
-            },
-          },
-          {'id': 'label', 'component': 'Text', 'text': 'Buy'},
-        ]),
-      ],
-      'Unknown action buy_now',
+      '/lineup/nothing/name is not in the data model',
     ),
   ];
 
@@ -312,7 +262,7 @@ void main() {
     });
   }
 
-  test('an input may bind to a profile field not yet answered', () {
+  test('an input may bind to a field not yet written', () {
     final validator = validatorForTurn(1)..validate(create('t1-a'));
 
     expect(
@@ -320,11 +270,31 @@ void main() {
         update('t1-a', [
           {
             'id': 'root',
-            'component': 'MoneyInput',
-            'label': 'Other monthly loans',
-            'value': {'path': '/profile/otherLoans'},
-            'currency': 'SEK',
+            'component': 'TextField',
+            'label': 'Anything else about the home?',
+            'value': {'path': '/home/notes'},
           },
+        ]),
+      ),
+      isA<Accepted>(),
+    );
+  });
+
+  test('a button may send any action the model names', () {
+    final validator = validatorForTurn(1)..validate(create('t1-a'));
+
+    expect(
+      validator.validate(
+        update('t1-a', [
+          {
+            'id': 'root',
+            'component': 'Button',
+            'child': 'label',
+            'action': {
+              'event': {'name': 'compare_commutes'},
+            },
+          },
+          {'id': 'label', 'component': 'Text', 'text': 'Compare'},
         ]),
       ),
       isA<Accepted>(),
@@ -338,311 +308,5 @@ void main() {
     expect(validator.validate(update('t1-a', validTree)), isA<Accepted>());
     expect(validator.validate(create('t1-a')), isA<Unchanged>());
     expect(validator.validate(update('t1-a', validTree)), isA<Accepted>());
-  });
-
-  group('a form sending commit_profile', () {
-    List<Map<String, Object?>> form(List<Map<String, Object?>> inputs) => [
-      {
-        'id': 'root',
-        'component': 'Column',
-        'children': [for (final input in inputs) input['id'], 'save'],
-      },
-      ...inputs,
-      {
-        'id': 'save',
-        'component': 'Button',
-        'child': 'save_label',
-        'action': {
-          'event': {
-            'name': 'commit_profile',
-            'context': {'profilePath': '/profile'},
-          },
-        },
-      },
-      {'id': 'save_label', 'component': 'Text', 'text': 'Save'},
-    ];
-    const income = {
-      'id': 'income',
-      'component': 'MoneyInput',
-      'label': 'Net income',
-      'value': {'path': '/profile/netMonthlyIncome'},
-      'currency': {'path': '/market/currency'},
-    };
-    const household = {
-      'id': 'household',
-      'component': 'HouseholdInput',
-      'label': 'Who lives in the home?',
-      'adults': {'path': '/profile/adults'},
-      'childAges': {'path': '/profile/childAges'},
-    };
-
-    TurnValidator validatorNeeding(Set<String> paths) => validatorForTurn(1)
-      ..requiredProfilePaths = paths
-      ..validate(create('t1-profile'));
-
-    List<Map<String, dynamic>> accepted(
-      TurnValidator validator,
-      String source,
-    ) =>
-        ((validator.validate(source) as Accepted).message
-                as UpdateComponentsMessage)
-            .components;
-
-    test('asks for the paths the form left out', () {
-      final components = accepted(
-        validatorNeeding({
-          '/profile/netMonthlyIncome',
-          '/profile/adults',
-          '/profile/childAges',
-          '/profile/employment',
-        }),
-        update('t1-profile', form([income])),
-      );
-
-      expect(
-        components.map((component) => component['id']),
-        containsAll(['asked-employment', 'asked-household']),
-      );
-      expect(
-        components.lastWhere(
-          (component) => component['id'] == 'root',
-        )['children'],
-        ['income', 'asked-employment', 'asked-household', 'save'],
-      );
-      expect(
-        components.firstWhere(
-          (component) => component['id'] == 'asked-employment',
-        ),
-        containsPair('options', [
-          {'label': 'Employed', 'value': 'employed'},
-          {'label': 'Self-employed', 'value': 'selfEmployed'},
-          {'label': 'Retired', 'value': 'retired'},
-        ]),
-      );
-    });
-
-    test('leaves a form that asks for everything alone', () {
-      final components = accepted(
-        validatorNeeding({
-          '/profile/netMonthlyIncome',
-          '/profile/adults',
-          '/profile/childAges',
-        }),
-        update('t1-profile', form([income, household])),
-      );
-
-      expect(
-        components.map((component) => component['id']),
-        ['root', 'income', 'household', 'save', 'save_label'],
-      );
-    });
-
-    test('says so when there is nowhere to put the input', () {
-      final validator = validatorNeeding({'/profile/employment'});
-
-      expect(
-        rejection(
-          validator,
-          update('t1-profile', [
-            {
-              'id': 'root',
-              'component': 'Button',
-              'child': 'save_label',
-              'action': {
-                'event': {
-                  'name': 'commit_profile',
-                  'context': {'profilePath': '/profile'},
-                },
-              },
-            },
-            {'id': 'save_label', 'component': 'Text', 'text': 'Save'},
-          ]),
-        ),
-        '/updateComponents/components A form sending commit_profile needs '
-        'inputs bound to /profile/employment',
-      );
-    });
-
-    test('is not checked on surfaces without the action', () {
-      expect(
-        validatorNeeding({'/profile/adults'}).validate(
-          update('t1-profile', validTree),
-        ),
-        isA<Accepted>(),
-      );
-    });
-  });
-
-  group('a case card', () {
-    List<Map<String, Object?>> drawn(List<Map<String, Object?>> components) {
-      final validator = TurnValidator(
-        turn: 2,
-        catalog: catalog,
-        shadow: MessageProcessor<ComponentApi>(
-          catalogs: [Catalog(id: homewardCatalogId, components: const [])],
-        ),
-        seeds: const {
-          'story': {
-            'adults': 1,
-            'childAges': <int>[],
-            'routine': <Object?>[],
-            'center': {'lat': 59.33, 'lng': 18.07},
-          },
-        },
-      );
-      expect(validator.validate(create('t2-clue')), isA<Accepted>());
-      return ((validator.validate(
-                update('t2-clue', components),
-              ) as Accepted).message
-              as UpdateComponentsMessage)
-          .components;
-    }
-
-    const household = {
-      'id': 'who',
-      'component': 'HouseholdInput',
-      'label': 'Who is moving?',
-      'adults': {'path': '/story/adults'},
-      'childAges': {'path': '/story/childAges'},
-    };
-
-    test('that asks who moves gets its button when it has none', () {
-      final components = drawn([
-        {
-          'id': 'root',
-          'component': 'Column',
-          'children': ['who'],
-        },
-        household,
-      ]);
-
-      expect(
-        components.where((component) => component['id'] == 'root'),
-        hasLength(1),
-      );
-      expect(
-        components.lastWhere((component) => component['id'] == 'root'),
-        containsPair('children', ['who', 'answer-household']),
-      );
-      expect(
-        components.firstWhere(
-          (component) => component['id'] == 'answer-household',
-        ),
-        containsPair('action', {
-          'event': {
-            'name': 'answer',
-            'context': {'facet': 'household', 'storyPath': '/story'},
-          },
-        }),
-      );
-    });
-
-    test('that has its button is left alone', () {
-      final components = drawn([
-        {
-          'id': 'root',
-          'component': 'Column',
-          'children': ['who', 'done'],
-        },
-        household,
-        {
-          'id': 'done',
-          'component': 'Button',
-          'child': 'done_label',
-          'action': {
-            'event': {
-              'name': 'answer',
-              'context': {'facet': 'household', 'storyPath': '/story'},
-            },
-          },
-        },
-        {'id': 'done_label', 'component': 'Text', 'text': "That's us"},
-      ]);
-
-      expect(
-        components.map((component) => component['id']),
-        ['root', 'who', 'done', 'done_label'],
-      );
-    });
-
-    test('keeps the button the model drew and completes its context', () {
-      final components = drawn([
-        {
-          'id': 'root',
-          'component': 'Column',
-          'children': ['who', 'done'],
-        },
-        household,
-        {
-          'id': 'done',
-          'component': 'Button',
-          'child': 'done_label',
-          'action': {
-            'event': {
-              'name': 'answer',
-              'context': {'facet': 'household'},
-            },
-          },
-        },
-        {'id': 'done_label', 'component': 'Text', 'text': "That's us"},
-      ]);
-
-      expect(
-        components.lastWhere((component) => component['id'] == 'done'),
-        containsPair('action', {
-          'event': {
-            'name': 'answer',
-            'context': {'facet': 'household', 'storyPath': '/story'},
-          },
-        }),
-      );
-      expect(
-        components.where((component) => component['id'] == 'answer-household'),
-        isEmpty,
-      );
-    });
-
-    test('drawn as the root moves under a column with its button', () {
-      final components = drawn([
-        {...household, 'id': 'root'},
-      ]);
-      final byId = {
-        for (final component in components) component['id']: component,
-      };
-
-      expect(
-        components.where((component) => component['id'] == 'root'),
-        hasLength(1),
-      );
-      expect(
-        byId['root'],
-        containsPair('children', ['household-input', 'answer-household']),
-      );
-      expect(
-        byId['household-input'],
-        containsPair('component', 'HouseholdInput'),
-      );
-    });
-
-    test('for the week gets its button too', () {
-      final components = drawn([
-        {
-          'id': 'root',
-          'component': 'Column',
-          'children': ['week'],
-        },
-        {
-          'id': 'week',
-          'component': 'Routine',
-          'routine': {'path': '/story/routine'},
-          'story': {'path': '/story'},
-        },
-      ]);
-
-      expect(
-        components.map((component) => component['id']),
-        containsAll(['answer-routine', 'answer-routine-label']),
-      );
-    });
   });
 }

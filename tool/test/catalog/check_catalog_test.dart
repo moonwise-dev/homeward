@@ -4,8 +4,9 @@ import 'dart:io';
 import 'package:common/common.dart';
 import 'package:homeward_tool/catalog/catalog_outputs.dart';
 import 'package:homeward_tool/catalog/check_catalog.dart';
+import 'package:homeward_tool/catalog/finding.dart';
 import 'package:homeward_tool/catalog/render_catalog_skill.dart';
-import 'package:homeward_server/markets/finding.dart';
+import 'package:test/fake.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -13,26 +14,8 @@ void main() {
     for (final finding in found) '${finding.subject}: ${finding.message}',
   ];
 
-  test('every component and surface example passes server validation', () {
+  test('every component example passes server validation', () {
     expect(messages(checkCatalogExamples()), isEmpty);
-  });
-
-  test('an example with a literal amount or an unknown path is reported', () {
-    final broken = CatalogExample(
-      name: 'Broken form',
-      componentsJson: '''
-[
-  { "id": "root", "component": "Column", "children": ["price", "fee"] },
-  { "id": "price", "component": "MoneyInput", "label": "Price", "value": 4500000, "currency": "SEK" },
-  { "id": "fee", "component": "MoneyInput", "label": "Fee", "value": { "path": "/scenario/fees/monthly" }, "currency": "SEK" }
-]
-''',
-      dataModel: stockholmDataModel,
-    );
-
-    expect(messages(checkCatalogExamples(components: [], surfaces: [broken])), [
-      startsWith('Surface: Broken form: /updateComponents/components/1'),
-    ]);
   });
 
   test('every declared component has an app catalog item', () {
@@ -45,23 +28,23 @@ void main() {
   test('app items and declarations that do not pair up are reported', () {
     final items = Directory.systemTemp.createTempSync('catalog_items');
     addTearDown(() => items.deleteSync(recursive: true));
-    File('${items.path}/amount_slider_item.dart').writeAsStringSync(
-      'final amountSliderItem = catalogItemFor(const AmountSlider(), build);',
+    File('${items.path}/map_item.dart').writeAsStringSync(
+      'final mapItem = catalogItemFor(const LifeMap(), build);',
     );
-    File('${items.path}/stress_item.dart').writeAsStringSync(
-      'final stressItem = catalogItemFor(\n  const StressTestChart(),\n  build,\n);',
+    File('${items.path}/home_item.dart').writeAsStringSync(
+      'final homeItem = catalogItemFor(\n  const HomeCard(),\n  build,\n);',
     );
 
     expect(
       messages(
         checkAppCatalogItems(
           items,
-          components: const [AmountSlider(), MoneyInput()],
+          components: [_Declared('LifeMap'), _Declared('NeedCard')],
         ),
       ),
       [
-        'StressTestChart: App catalog item without a declaration in common',
-        'MoneyInput: Declared in common without an app catalog item',
+        'HomeCard: App catalog item without a declaration in common',
+        'NeedCard: Declared in common without an app catalog item',
       ],
     );
   });
@@ -108,7 +91,14 @@ void main() {
         expect(skill, contains('### ${component.name}: ${example.name}'));
       }
     }
-    expect(skill, contains('t2-profile-form'));
+    expect(skill, contains('t2-week'));
     expect(skill, isNot(contains(commonTypesId)));
   });
+}
+
+final class _Declared extends Fake implements CatalogComponent {
+  _Declared(this.name);
+
+  @override
+  final String name;
 }

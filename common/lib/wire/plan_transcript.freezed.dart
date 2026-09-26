@@ -673,7 +673,7 @@ $RecordedInputCopyWith<$Res> get input {
 /// @nodoc
 mixin _$PlanListing {
 
- String get sessionId; int get turnCount; String? get title; String? get marketId; String? get marketName; DateTime? get updatedAt;
+ String get sessionId; int get turnCount; String? get title; DateTime? get updatedAt;
 /// Create a copy of PlanListing
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -687,20 +687,20 @@ $PlanListingCopyWith<PlanListing> get copyWith => _$PlanListingCopyWithImpl<Plan
 @override
 bool operator ==(Object other) {
   final _this = this as PlanListing;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlanListing&&(identical(other.sessionId, _this.sessionId) || other.sessionId == _this.sessionId)&&(identical(other.turnCount, _this.turnCount) || other.turnCount == _this.turnCount)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.marketId, _this.marketId) || other.marketId == _this.marketId)&&(identical(other.marketName, _this.marketName) || other.marketName == _this.marketName)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlanListing&&(identical(other.sessionId, _this.sessionId) || other.sessionId == _this.sessionId)&&(identical(other.turnCount, _this.turnCount) || other.turnCount == _this.turnCount)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as PlanListing;
-  return Object.hash(runtimeType,_this.sessionId,_this.turnCount,_this.title,_this.marketId,_this.marketName,_this.updatedAt);
+  return Object.hash(runtimeType,_this.sessionId,_this.turnCount,_this.title,_this.updatedAt);
 }
 
 @override
 String toString() {
   final _this = this as PlanListing;
-  return 'PlanListing(sessionId: ${_this.sessionId}, turnCount: ${_this.turnCount}, title: ${_this.title}, marketId: ${_this.marketId}, marketName: ${_this.marketName}, updatedAt: ${_this.updatedAt})';
+  return 'PlanListing(sessionId: ${_this.sessionId}, turnCount: ${_this.turnCount}, title: ${_this.title}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -711,7 +711,7 @@ abstract mixin class $PlanListingCopyWith<$Res>  {
   factory $PlanListingCopyWith(PlanListing value, $Res Function(PlanListing) _then) = _$PlanListingCopyWithImpl;
 @useResult
 $Res call({
- String sessionId, int turnCount, String? title, String? marketId, String? marketName, DateTime? updatedAt
+ String sessionId, int turnCount, String? title, DateTime? updatedAt
 });
 
 
@@ -728,13 +728,11 @@ class _$PlanListingCopyWithImpl<$Res>
 
 /// Create a copy of PlanListing
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? sessionId = null,Object? turnCount = null,Object? title = freezed,Object? marketId = freezed,Object? marketName = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? sessionId = null,Object? turnCount = null,Object? title = freezed,Object? updatedAt = freezed,}) {
   return _then(PlanListing(
 sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as String,turnCount: null == turnCount ? _self.turnCount : turnCount // ignore: cast_nullable_to_non_nullable
 as int,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String?,marketId: freezed == marketId ? _self.marketId : marketId // ignore: cast_nullable_to_non_nullable
-as String?,marketName: freezed == marketName ? _self.marketName : marketName // ignore: cast_nullable_to_non_nullable
 as String?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
@@ -821,10 +819,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String sessionId,  int turnCount,  String? title,  String? marketId,  String? marketName,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String sessionId,  int turnCount,  String? title,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlanListing() when $default != null:
-return $default(_that.sessionId,_that.turnCount,_that.title,_that.marketId,_that.marketName,_that.updatedAt);case _:
+return $default(_that.sessionId,_that.turnCount,_that.title,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -842,10 +840,10 @@ return $default(_that.sessionId,_that.turnCount,_that.title,_that.marketId,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String sessionId,  int turnCount,  String? title,  String? marketId,  String? marketName,  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String sessionId,  int turnCount,  String? title,  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _PlanListing():
-return $default(_that.sessionId,_that.turnCount,_that.title,_that.marketId,_that.marketName,_that.updatedAt);case _:
+return $default(_that.sessionId,_that.turnCount,_that.title,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -862,10 +860,10 @@ return $default(_that.sessionId,_that.turnCount,_that.title,_that.marketId,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String sessionId,  int turnCount,  String? title,  String? marketId,  String? marketName,  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String sessionId,  int turnCount,  String? title,  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _PlanListing() when $default != null:
-return $default(_that.sessionId,_that.turnCount,_that.title,_that.marketId,_that.marketName,_that.updatedAt);case _:
+return $default(_that.sessionId,_that.turnCount,_that.title,_that.updatedAt);case _:
   return null;
 
 }
@@ -877,14 +875,12 @@ return $default(_that.sessionId,_that.turnCount,_that.title,_that.marketId,_that
 @JsonSerializable()
 
 class _PlanListing implements PlanListing {
-  const _PlanListing({required this.sessionId, this.turnCount = 0, this.title, this.marketId, this.marketName, this.updatedAt});
+  const _PlanListing({required this.sessionId, this.turnCount = 0, this.title, this.updatedAt});
   factory _PlanListing.fromJson(Map<String, dynamic> json) => _$PlanListingFromJson(json);
 
 @override final  String sessionId;
 @override@JsonKey() final  int turnCount;
 @override final  String? title;
-@override final  String? marketId;
-@override final  String? marketName;
 @override final  DateTime? updatedAt;
 
 /// Create a copy of PlanListing
@@ -900,18 +896,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlanListing&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.turnCount, turnCount) || other.turnCount == turnCount)&&(identical(other.title, title) || other.title == title)&&(identical(other.marketId, marketId) || other.marketId == marketId)&&(identical(other.marketName, marketName) || other.marketName == marketName)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlanListing&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.turnCount, turnCount) || other.turnCount == turnCount)&&(identical(other.title, title) || other.title == title)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,sessionId,turnCount,title,marketId,marketName,updatedAt);
+    return Object.hash(runtimeType,sessionId,turnCount,title,updatedAt);
 }
 
 @override
 String toString() {
-    return 'PlanListing(sessionId: $sessionId, turnCount: $turnCount, title: $title, marketId: $marketId, marketName: $marketName, updatedAt: $updatedAt)';
+    return 'PlanListing(sessionId: $sessionId, turnCount: $turnCount, title: $title, updatedAt: $updatedAt)';
 }
 
 
@@ -922,7 +918,7 @@ abstract mixin class _$PlanListingCopyWith<$Res> implements $PlanListingCopyWith
   factory _$PlanListingCopyWith(_PlanListing value, $Res Function(_PlanListing) _then) = __$PlanListingCopyWithImpl;
 @override @useResult
 $Res call({
- String sessionId, int turnCount, String? title, String? marketId, String? marketName, DateTime? updatedAt
+ String sessionId, int turnCount, String? title, DateTime? updatedAt
 });
 
 
@@ -939,13 +935,11 @@ class __$PlanListingCopyWithImpl<$Res>
 
 /// Create a copy of PlanListing
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? sessionId = null,Object? turnCount = null,Object? title = freezed,Object? marketId = freezed,Object? marketName = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? sessionId = null,Object? turnCount = null,Object? title = freezed,Object? updatedAt = freezed,}) {
   return _then(_PlanListing(
 sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as String,turnCount: null == turnCount ? _self.turnCount : turnCount // ignore: cast_nullable_to_non_nullable
 as int,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String?,marketId: freezed == marketId ? _self.marketId : marketId // ignore: cast_nullable_to_non_nullable
-as String?,marketName: freezed == marketName ? _self.marketName : marketName // ignore: cast_nullable_to_non_nullable
 as String?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));

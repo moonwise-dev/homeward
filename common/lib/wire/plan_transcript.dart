@@ -43,8 +43,6 @@ abstract class PlanListing with _$PlanListing {
     required String sessionId,
     @Default(0) int turnCount,
     String? title,
-    String? marketId,
-    String? marketName,
     DateTime? updatedAt,
   }) = _PlanListing;
 

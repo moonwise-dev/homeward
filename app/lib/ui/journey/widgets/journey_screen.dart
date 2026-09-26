@@ -4,11 +4,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../core/themes/dimens.dart';
 import '../../core/themes/motion.dart';
+import '../../core/themes/text_styles.dart';
 import '../../wire_inspector/widgets/wire_inspector_pane.dart';
 import '../view_model/journey_view_model.dart';
 import 'history_sheet.dart';
 import 'journey_story.dart';
-import 'opening_page.dart';
 import 'tell_more_field.dart';
 import 'turn_overlay.dart';
 
@@ -29,18 +29,7 @@ class JourneyScreen extends HookConsumerWidget {
     final wirePane = isWide && showsWire.value;
 
     final current = sections.isEmpty
-        ? OpeningPage(
-            key: const ValueKey('opening'),
-            reason: state.reason,
-            ownReason: state.ownReason,
-            location: state.location,
-            canStart: state.canStart,
-            onReason: viewModel.pickReason,
-            onOwnReason: viewModel.updateOwnReason,
-            onLocation: viewModel.updateLocation,
-            onExample: viewModel.useExample,
-            onStart: viewModel.start,
-          )
+        ? const _EmptyJourney(key: ValueKey('empty'))
         : JourneyStory(
             key: const ValueKey('story'),
             sessionId: sessionId,
@@ -83,24 +72,23 @@ class JourneyScreen extends HookConsumerWidget {
             ],
           ),
         ),
-        if (sections.isNotEmpty)
-          Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: AppSizes.contentWidth,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.md),
-                child: TellMoreField(
-                  draft: state.draft,
-                  isRunning: conversation.isRunning,
-                  onChanged: viewModel.updateDraft,
-                  onSend: viewModel.send,
-                  onStop: viewModel.stop,
-                ),
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: AppSizes.contentWidth,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: TellMoreField(
+                draft: state.draft,
+                isRunning: conversation.isRunning,
+                onChanged: viewModel.updateDraft,
+                onSend: viewModel.send,
+                onStop: viewModel.stop,
               ),
             ),
           ),
+        ),
       ],
     );
     return Scaffold(
@@ -140,4 +128,20 @@ class JourneyScreen extends HookConsumerWidget {
       ),
     );
   }
+}
+
+class _EmptyJourney extends StatelessWidget {
+  const _EmptyJourney({super.key});
+
+  @override
+  Widget build(BuildContext context) => Center(
+    child: Padding(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Text(
+        'Tell Homeward about your move.',
+        style: AppTextStyles.title,
+        textAlign: TextAlign.center,
+      ),
+    ),
+  );
 }

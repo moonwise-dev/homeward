@@ -42,16 +42,12 @@ void main() {
         sessionId: 's-1',
         turnCount: 2,
         title: 'A flat in Funchal',
-        marketId: 'PT-30',
-        marketName: 'Madeira, Portugal',
         updatedAt: today.subtract(const Duration(days: 1)),
       ),
       PlanListing(
         sessionId: 's-2',
         turnCount: 1,
         title: 'Somewhere in Stockholm',
-        marketId: 'SE',
-        marketName: 'Sweden',
         updatedAt: today.subtract(const Duration(hours: 1)),
       ),
     ];
@@ -64,15 +60,10 @@ void main() {
       [
         isA<PlanSummary>()
             .having((plan) => plan.id, 'id', 's-2')
-            .having((plan) => plan.title, 'title', 'Somewhere in Stockholm')
-            .having((plan) => plan.marketName, 'marketName', 'Sweden'),
+            .having((plan) => plan.title, 'title', 'Somewhere in Stockholm'),
         isA<PlanSummary>()
             .having((plan) => plan.id, 'id', 's-1')
-            .having(
-              (plan) => plan.marketName,
-              'marketName',
-              'Madeira, Portugal',
-            ),
+            .having((plan) => plan.title, 'title', 'A flat in Funchal'),
       ],
     );
   });

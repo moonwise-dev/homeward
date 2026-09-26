@@ -13,43 +13,36 @@ Catalog ID: `$homewardCatalogId`
 
 ## Homeward Components
 
-${markdownTable(['Component', 'Phase', 'Agent visible', 'Required', 'Bound', 'Examples'], [
-      for (final component in homewardComponents) [
-          code(component.name),
-          component.phase.name,
-          component.agentVisible ? 'yes' : 'no',
-          codeList(component.requiredProperties),
-          codeList(component.boundProperties),
-          component.examples.map((example) => example.name).join(', '),
-        ],
-    ])}
-
-${[for (final component in homewardComponents) '### ${component.name}\n\n${component.description}'].join('\n\n')}
-
+${homewardComponents.isEmpty ? 'None yet.' : markdownTable(['Component', 'Agent visible', 'Required', 'Bound', 'Examples'], [
+            for (final component in homewardComponents) [
+                code(component.name),
+                component.agentVisible ? 'yes' : 'no',
+                codeList(component.requiredProperties),
+                codeList(component.boundProperties),
+                component.examples.map((example) => example.name).join(', '),
+              ],
+          ])}
+${[for (final component in homewardComponents) '\n### ${component.name}\n\n${component.description}'].join('\n')}
 ## Basic Components
 
 Agent-visible from the A2UI v0.9 basic catalog: ${codeList(agentVisibleBasicComponents)}.
 
 ## Functions
 
-${markdownTable(['Function', 'Returns', 'Arguments', 'Description'], [
-      for (final function in homewardFunctions) [
-          code(function.name),
-          function.returnType.jsonValue,
-          codeList(_argumentNames(function)),
-          function.description,
-        ],
-    ])}
+${homewardFunctions.isEmpty ? 'None yet.' : markdownTable(['Function', 'Returns', 'Arguments', 'Description'], [
+            for (final function in homewardFunctions) [
+                code(function.name),
+                function.returnType.jsonValue,
+                codeList(_argumentNames(function)),
+                function.description,
+              ],
+          ])}
 
 Every function of the A2UI v0.9 basic catalog is available too.
 
 ## Data Model
 
-${renderDataModelSlices('###')}
-
-## Actions
-
-${renderActionsTable()}
+${dataModelSlices.isEmpty ? 'No slices yet.' : renderDataModelSlices('###')}
 ''';
 
 Iterable<String> _argumentNames(CatalogFunction function) =>

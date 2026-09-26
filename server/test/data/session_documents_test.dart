@@ -10,10 +10,6 @@ void main() {
   final session = Session(
     id: 's-1',
     ownerUid: 'uid-1',
-    plan: Plan(
-      marketId: MarketId.parse('PT-30'),
-      profile: const BuyerProfile(adults: 2, childAges: [4, 7]),
-    ),
     turnCount: 2,
     lastInteractionId: 'interaction-7',
     updatedAt: updatedAt,
@@ -47,7 +43,6 @@ void main() {
     final restored = sessionOf(
       id: session.id,
       document: sessionDocument(session),
-      plan: planDocument(session),
       turns: [
         for (final turn in session.turns) turnDocument(session, turn),
       ],
@@ -63,7 +58,6 @@ void main() {
         id: 's-1',
         turnCount: 2,
         title: 'We are buying in Funchal',
-        marketId: 'PT-30',
         updatedAt: updatedAt,
       ),
     );

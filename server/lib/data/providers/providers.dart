@@ -22,20 +22,11 @@ import '../../gemini/model_caps.dart';
 import '../../gemini/model_circuits.dart';
 import '../../gemini/models_client.dart';
 import '../../keys/verify_gemini_key.dart';
-import '../../markets/finding.dart';
-import '../../markets/load_markets.dart';
-import '../../markets/market_directory.dart';
 import '../../rate_limit/fixed_window_limiter.dart';
-import '../../research/open_data/research_cache.dart';
-import '../../research/research.dart';
 import '../../tools/homeward_tools.dart';
-import '../repository/firestore_research_cache.dart';
 import '../repository/firestore_session_repository.dart';
 import '../repository/in_memory_session_repository.dart';
 import '../repository/session_repository.dart';
-
-String homewardUserAgent(ServerConfig config) =>
-    'Homeward/0.1 (+${config.publicUrl})';
 
 final class Providers {
   factory Providers({
@@ -44,10 +35,8 @@ final class Providers {
     required AppCheckVerifier appCheck,
     required CreateInteraction createInteraction,
     required VerifyGeminiKey verifyKey,
-    required MarketDirectory markets,
     required PromptAssembler prompts,
     SessionRepository? sessions,
-    Research? research,
     DateTime Function()? now,
   }) {
     final repository = sessions ?? InMemorySessionRepository();
@@ -57,7 +46,6 @@ final class Providers {
       appCheck: appCheck,
       verifyKey: verifyKey,
       sessions: repository,
-      markets: markets,
       tasks: TaskRegistry(),
       turnLimiter: FixedWindowLimiter(
         limit: 30,
@@ -68,19 +56,11 @@ final class Providers {
         sessions: repository,
         createInteraction: createInteraction,
         prompts: prompts,
-        tools: ToolBelt(
-          tools: switch (research) {
-            final research? when config.deal => allTools(research),
-            final research? => storyTools(research),
-            null => config.deal ? homewardTools : const [],
-          },
-          markets: markets,
-        ),
+        tools: const ToolBelt(homewardTools),
         catalog: CatalogValidator(homewardCatalogDocument()),
         settings: TurnSettings(
           maxCorrections: config.maxCorrections,
           thinkingLevel: config.thinkingLevel,
-          deal: config.deal,
         ),
         now: now,
       ),
@@ -93,22 +73,12 @@ final class Providers {
     required this.appCheck,
     required this.verifyKey,
     required this.sessions,
-    required this.markets,
     required this.tasks,
     required this.turnLimiter,
     required this.turns,
   });
 
   factory Providers.production(ServerConfig config, http.Client httpClient) {
-    final marketsData = loadMarkets(Directory(config.marketsDirectory));
-    final errors = [
-      for (final finding in marketsData.loadFindings)
-        if (finding.severity == FindingSeverity.error)
-          '${finding.subject}: ${finding.message}',
-    ];
-    if (errors.isNotEmpty) {
-      throw StateError('Markets failed to load: ${errors.join('; ')}');
-    }
     final firebase = FirebaseApp.initializeApp(
       options: AppOptions(projectId: config.projectId),
     );
@@ -157,19 +127,7 @@ final class Providers {
         apiKey: apiKey,
         model: config.turnModels.first,
       ),
-      markets: MarketDirectory(marketsData),
-      prompts: PromptAssembler.load(
-        Directory(config.promptsDirectory),
-        deal: config.deal,
-      ),
-      research: Research.open(
-        httpClient,
-        userAgent: homewardUserAgent(config),
-        cache: switch (firestore) {
-          final firestore? => FirestoreResearchCache(firestore),
-          null => const NoResearchCache(),
-        },
-      ),
+      prompts: PromptAssembler.load(Directory(config.promptsDirectory)),
     );
   }
 
@@ -178,7 +136,6 @@ final class Providers {
   final AppCheckVerifier appCheck;
   final VerifyGeminiKey verifyKey;
   final SessionRepository sessions;
-  final MarketDirectory markets;
   final TaskRegistry tasks;
   final FixedWindowLimiter turnLimiter;
   final TurnOrchestrator turns;

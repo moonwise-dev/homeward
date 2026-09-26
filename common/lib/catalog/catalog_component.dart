@@ -3,10 +3,6 @@ import 'dart:convert';
 import 'package:a2ui_core/a2ui_core.dart';
 import 'package:json_schema_builder/json_schema_builder.dart';
 
-enum CatalogPhase { mvp, later }
-
-enum CatalogPart { story, deal }
-
 final class CatalogExample {
   const CatalogExample({
     required this.name,
@@ -28,10 +24,6 @@ abstract class CatalogComponent implements ComponentApi {
   const CatalogComponent();
 
   String get description;
-
-  CatalogPhase get phase;
-
-  CatalogPart get part => CatalogPart.story;
 
   bool get agentVisible;
 

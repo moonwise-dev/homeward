@@ -68,32 +68,24 @@ void main() {
         ),
       ),
     );
-    expect(text, 'Sweden is a curated market. Tell me about your household.');
+    expect(
+      text,
+      'A flat in Södermalm for the two of you. Anything else the home has to '
+      'have?',
+    );
     expect(
       [for (final message in messages) message.runtimeType.toString()],
-      [
-        'CreateSurfaceMessage',
-        'UpdateDataModelMessage',
-        'UpdateDataModelMessage',
-        'UpdateComponentsMessage',
-      ],
+      ['CreateSurfaceMessage', 'UpdateComponentsMessage'],
     );
-    final surface = surfaces.contextFor('t1-profile');
+    final components = surfaces
+        .contextFor('t1-story')
+        .definition
+        .value!
+        .components;
+    expect(components['notes']?.type, 'TextField');
     expect(
-      surface.dataModel.getValue<Object?>(
-        DataPath(marketSlice.pathOf('currency')),
-      ),
-      'SEK',
-    );
-    final components = surface.definition.value!.components;
-    expect(components['household']?.type, 'HouseholdInput');
-    expect(
-      _componentNames(surfaceExamples.first.components),
+      {for (final component in components.values) component.type},
       everyElement(isIn([for (final item in catalog.items) item.name])),
     );
   });
 }
-
-Set<String> _componentNames(List<Map<String, Object?>> components) => {
-  for (final component in components) component['component']! as String,
-};

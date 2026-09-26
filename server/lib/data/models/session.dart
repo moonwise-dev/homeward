@@ -10,7 +10,6 @@ abstract class Session with _$Session {
   const factory Session({
     required String id,
     required String ownerUid,
-    @Default(Plan()) Plan plan,
     @Default(0) int turnCount,
     String? lastInteractionId,
     DateTime? updatedAt,
@@ -36,7 +35,6 @@ abstract class Session with _$Session {
     id: id,
     turnCount: turnCount,
     title: title,
-    marketId: plan.marketId?.code,
     updatedAt: updatedAt,
   );
 }

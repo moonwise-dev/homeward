@@ -26,7 +26,7 @@ abstract interface class AgentRepository {
 
   SurfaceContext surfaceContext(String sessionId, String surfaceId);
 
-  Future<void> sendText(String sessionId, String text, {StoryReason? reason});
+  Future<void> sendText(String sessionId, String text);
 
   Future<void> retry(String sessionId, String entryId);
 
@@ -134,14 +134,10 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
   );
 
   @override
-  Future<void> sendText(
-    String sessionId,
-    String text, {
-    StoryReason? reason,
-  }) {
+  Future<void> sendText(String sessionId, String text) {
     final plan = _plan(sessionId);
     plan.add(TranscriptEntry.buyer(id: _newEntryId(), text: text));
-    return _run(sessionId, plan, TurnRequest.text(text, reason: reason));
+    return _run(sessionId, plan, TurnRequest.text(text));
   }
 
   @override

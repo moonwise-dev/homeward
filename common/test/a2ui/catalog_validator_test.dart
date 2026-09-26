@@ -5,7 +5,7 @@ void main() {
   final document = homewardCatalogDocument();
   final validator = CatalogValidator(document);
 
-  test('the Homeward catalog document composes basic and Homeward parts', () {
+  test('the Homeward catalog document composes the basic parts', () {
     expect(a2uiSpecCommit, hasLength(40));
     expect(document[r'$id'], homewardCatalogId);
     expect(validator.componentNames, {
@@ -15,11 +15,11 @@ void main() {
     expect(validator.componentNames, isNot(contains('Slider')));
     expect(
       (document['functions']! as Map<String, Object?>).keys,
-      containsAll(['formatCurrency', 'and', 'monthlyPayment', 'withinMaxLtv']),
+      containsAll(['formatCurrency', 'and']),
     );
   });
 
-  test('accepts basic components calling Homeward and basic functions', () {
+  test('accepts basic components calling basic functions', () {
     final valid = <Map<String, Object?>>[
       {
         'id': 'title',
@@ -37,22 +37,10 @@ void main() {
         'component': 'Button',
         'child': 'commit_label',
         'variant': 'primary',
-        'checks': [
-          {
-            'condition': {
-              'call': 'withinMaxLtv',
-              'args': {
-                'scenario': {'path': '/scenario'},
-                'market': {'path': '/market'},
-              },
-            },
-            'message': 'Down payment is below the minimum',
-          },
-        ],
         'action': {
           'event': {
-            'name': 'commit_scenario',
-            'context': {'scenarioPath': '/scenario'},
+            'name': 'keep_home',
+            'context': {'homeId': 'h1'},
           },
         },
       },
@@ -123,65 +111,6 @@ void main() {
       }
     },
   );
-
-  test('validates Homeward components with their own schemas', () {
-    for (final component in homewardComponents) {
-      for (final example in component.examples) {
-        for (final entry in example.components) {
-          expect(validator.validateComponent(entry), isEmpty, reason: '$entry');
-        }
-      }
-    }
-    expect(
-      validator.validateComponent({
-        'id': 'root',
-        'component': 'AmountSlider',
-        'label': 'Down payment',
-        'value': 450000,
-        'bounds': {'path': '/derived/downPaymentBounds'},
-        'currency': {'path': '/market/currency'},
-      }),
-      isNotEmpty,
-    );
-  });
-
-  test('Homeward components reference the vendored common types', () {
-    final location =
-        (document['components']! as Map<String, Object?>)['LocationPicker']!
-            as Map<String, Object?>;
-    final properties = location['properties']! as Map<String, Object?>;
-
-    expect(properties['label'], {
-      r'$ref': 'https://a2ui.org/specification/v0_9/common_types.json#/\$defs/DynamicString',
-      'description': 'Represents a string',
-    });
-    expect(document.toString(), isNot(contains('REF:')));
-    for (final component in [
-      {
-        'id': 'root',
-        'component': 'LocationPicker',
-        'label': 42,
-        'value': {'path': '/selection/marketId'},
-        'mode': 'market',
-      },
-      {
-        'id': 'root',
-        'component': 'LocationPicker',
-        'label': 'Where?',
-        'value': {'path': '/selection/marketId'},
-        'mode': 'market',
-        'action': {'event': 'select_market'},
-      },
-    ]) {
-      final errors = validator.validateComponent(component);
-      expect(errors, isNotEmpty, reason: '$component');
-      expect(
-        errors!.map((error) => error.error.name),
-        isNot(contains('refResolutionError')),
-        reason: '$component',
-      );
-    }
-  });
 
   test('knows nothing about components outside the catalog', () {
     expect(

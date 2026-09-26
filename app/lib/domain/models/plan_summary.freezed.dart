@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PlanSummary {
 
- String get id; DateTime get lastActivityAt; String? get title; String? get marketName;
+ String get id; DateTime get lastActivityAt; String? get title;
 /// Create a copy of PlanSummary
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $PlanSummaryCopyWith<PlanSummary> get copyWith => _$PlanSummaryCopyWithImpl<Plan
 @override
 bool operator ==(Object other) {
   final _this = this as PlanSummary;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlanSummary&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.lastActivityAt, _this.lastActivityAt) || other.lastActivityAt == _this.lastActivityAt)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.marketName, _this.marketName) || other.marketName == _this.marketName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlanSummary&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.lastActivityAt, _this.lastActivityAt) || other.lastActivityAt == _this.lastActivityAt)&&(identical(other.title, _this.title) || other.title == _this.title));
 }
 
 
 @override
 int get hashCode {
   final _this = this as PlanSummary;
-  return Object.hash(runtimeType,_this.id,_this.lastActivityAt,_this.title,_this.marketName);
+  return Object.hash(runtimeType,_this.id,_this.lastActivityAt,_this.title);
 }
 
 @override
 String toString() {
   final _this = this as PlanSummary;
-  return 'PlanSummary(id: ${_this.id}, lastActivityAt: ${_this.lastActivityAt}, title: ${_this.title}, marketName: ${_this.marketName})';
+  return 'PlanSummary(id: ${_this.id}, lastActivityAt: ${_this.lastActivityAt}, title: ${_this.title})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $PlanSummaryCopyWith<$Res>  {
   factory $PlanSummaryCopyWith(PlanSummary value, $Res Function(PlanSummary) _then) = _$PlanSummaryCopyWithImpl;
 @useResult
 $Res call({
- String id, DateTime lastActivityAt, String? title, String? marketName
+ String id, DateTime lastActivityAt, String? title
 });
 
 
@@ -68,12 +68,11 @@ class _$PlanSummaryCopyWithImpl<$Res>
 
 /// Create a copy of PlanSummary
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? lastActivityAt = null,Object? title = freezed,Object? marketName = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? lastActivityAt = null,Object? title = freezed,}) {
   return _then(PlanSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,lastActivityAt: null == lastActivityAt ? _self.lastActivityAt : lastActivityAt // ignore: cast_nullable_to_non_nullable
 as DateTime,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String?,marketName: freezed == marketName ? _self.marketName : marketName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -159,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DateTime lastActivityAt,  String? title,  String? marketName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DateTime lastActivityAt,  String? title)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlanSummary() when $default != null:
-return $default(_that.id,_that.lastActivityAt,_that.title,_that.marketName);case _:
+return $default(_that.id,_that.lastActivityAt,_that.title);case _:
   return orElse();
 
 }
@@ -180,10 +179,10 @@ return $default(_that.id,_that.lastActivityAt,_that.title,_that.marketName);case
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DateTime lastActivityAt,  String? title,  String? marketName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DateTime lastActivityAt,  String? title)  $default,) {final _that = this;
 switch (_that) {
 case _PlanSummary():
-return $default(_that.id,_that.lastActivityAt,_that.title,_that.marketName);case _:
+return $default(_that.id,_that.lastActivityAt,_that.title);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +199,10 @@ return $default(_that.id,_that.lastActivityAt,_that.title,_that.marketName);case
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DateTime lastActivityAt,  String? title,  String? marketName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DateTime lastActivityAt,  String? title)?  $default,) {final _that = this;
 switch (_that) {
 case _PlanSummary() when $default != null:
-return $default(_that.id,_that.lastActivityAt,_that.title,_that.marketName);case _:
+return $default(_that.id,_that.lastActivityAt,_that.title);case _:
   return null;
 
 }
@@ -215,13 +214,12 @@ return $default(_that.id,_that.lastActivityAt,_that.title,_that.marketName);case
 
 
 class _PlanSummary implements PlanSummary {
-  const _PlanSummary({required this.id, required this.lastActivityAt, this.title, this.marketName});
+  const _PlanSummary({required this.id, required this.lastActivityAt, this.title});
   
 
 @override final  String id;
 @override final  DateTime lastActivityAt;
 @override final  String? title;
-@override final  String? marketName;
 
 /// Create a copy of PlanSummary
 /// with the given fields replaced by the non-null parameter values.
@@ -233,18 +231,18 @@ _$PlanSummaryCopyWith<_PlanSummary> get copyWith => __$PlanSummaryCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlanSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.lastActivityAt, lastActivityAt) || other.lastActivityAt == lastActivityAt)&&(identical(other.title, title) || other.title == title)&&(identical(other.marketName, marketName) || other.marketName == marketName));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlanSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.lastActivityAt, lastActivityAt) || other.lastActivityAt == lastActivityAt)&&(identical(other.title, title) || other.title == title));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,lastActivityAt,title,marketName);
+    return Object.hash(runtimeType,id,lastActivityAt,title);
 }
 
 @override
 String toString() {
-    return 'PlanSummary(id: $id, lastActivityAt: $lastActivityAt, title: $title, marketName: $marketName)';
+    return 'PlanSummary(id: $id, lastActivityAt: $lastActivityAt, title: $title)';
 }
 
 
@@ -255,7 +253,7 @@ abstract mixin class _$PlanSummaryCopyWith<$Res> implements $PlanSummaryCopyWith
   factory _$PlanSummaryCopyWith(_PlanSummary value, $Res Function(_PlanSummary) _then) = __$PlanSummaryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, DateTime lastActivityAt, String? title, String? marketName
+ String id, DateTime lastActivityAt, String? title
 });
 
 
@@ -272,12 +270,11 @@ class __$PlanSummaryCopyWithImpl<$Res>
 
 /// Create a copy of PlanSummary
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? lastActivityAt = null,Object? title = freezed,Object? marketName = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? lastActivityAt = null,Object? title = freezed,}) {
   return _then(_PlanSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,lastActivityAt: null == lastActivityAt ? _self.lastActivityAt : lastActivityAt // ignore: cast_nullable_to_non_nullable
 as DateTime,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String?,marketName: freezed == marketName ? _self.marketName : marketName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

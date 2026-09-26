@@ -3,11 +3,8 @@ import 'dart:convert';
 import 'package:a2ui_core/a2ui_core.dart';
 import 'package:common/common.dart';
 
-import 'case_completion.dart';
 import 'component_tree.dart';
-import 'hunch_problem.dart';
 import 'json_repair.dart';
-import 'form_completion.dart';
 import 'validation_failure.dart';
 import 'validation_outcome.dart';
 
@@ -23,8 +20,6 @@ final class TurnValidator {
   final CatalogValidator catalog;
   final MessageProcessor<ComponentApi> shadow;
   Map<String, Object?> seeds;
-  Set<String> requiredProfilePaths = const {};
-  Set<CaseFacet> mustAsk = const {};
   final RegExp _surfacePattern;
   final _components = <String, Map<String, Map<String, Object?>>>{};
 
@@ -148,78 +143,12 @@ final class TurnValidator {
           return _reject(surfaceId, path, '$bound is not in the data model');
         }
       }
-      for (final action in actionNames(component)) {
-        if (!SurfaceAction.wireNames.contains(action)) {
-          return _reject(surfaceId, path, 'Unknown action $action');
-        }
-      }
-      if (caseQuestionProblem(component, mustAsk) case final problem?) {
-        return _reject(surfaceId, path, problem);
-      }
-      if (hunchProblem(component) case final problem?) {
-        return _reject(surfaceId, '$path/options', problem);
-      }
       merged[component['id']! as String] = component;
     }
-    final completed = <String, Map<String, Object?>>{};
-    void complete(List<Map<String, Object?>> components) {
-      for (final component in components) {
-        final id = component['id']! as String;
-        merged[id] = component;
-        completed[id] = component;
-      }
-    }
-
-    complete(
-      completingComponents(
-        components: merged,
-        requiredPaths: requiredProfilePaths,
-      ),
-    );
-    complete(caseAnswerCompletion(merged));
-    final completing = completed.values.toList();
-    if (structureProblem(merged) ?? _formProblem(merged) case final problem?) {
+    if (structureProblem(merged) case final problem?) {
       return _reject(surfaceId, '/updateComponents/components', problem);
     }
-    return _apply(
-      completing.isEmpty ? message : _completed(message, completing),
-      () => _components[surfaceId] = merged,
-    );
-  }
-
-  UpdateComponentsMessage _completed(
-    UpdateComponentsMessage message,
-    List<Map<String, Object?>> completing,
-  ) {
-    final replaced = {for (final component in completing) component['id']};
-    return UpdateComponentsMessage(
-      version: message.version,
-      surfaceId: message.surfaceId,
-      components: [
-        for (final component in message.components)
-          if (!replaced.contains(component['id'])) component,
-        ...completing,
-      ],
-    );
-  }
-
-  String? _formProblem(Map<String, Map<String, Object?>> components) {
-    final commitsProfile = components.values.any(
-      (component) => actionNames(
-        component,
-      ).contains(SurfaceAction.commitProfile.wireName),
-    );
-    if (!commitsProfile) {
-      return null;
-    }
-    final bound = {
-      for (final component in components.values) ...boundPaths(component),
-    };
-    final unbound = requiredProfilePaths.difference(bound);
-    return unbound.isEmpty
-        ? null
-        : 'A form sending ${SurfaceAction.commitProfile.wireName} needs '
-              'inputs bound to ${unbound.join(', ')}';
+    return _apply(message, () => _components[surfaceId] = merged);
   }
 
   static String _near(String source, int? offset) {

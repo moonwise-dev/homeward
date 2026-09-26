@@ -1,1 +1,0 @@
-enum IncomeBasis { net, gross }

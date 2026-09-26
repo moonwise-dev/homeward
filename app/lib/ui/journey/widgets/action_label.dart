@@ -1,15 +1,7 @@
-import 'package:common/common.dart';
-
-String surfaceActionLabel(String wireName) =>
-    switch (SurfaceAction.named(wireName)) {
-      SurfaceAction.answer => 'Answered a question',
-      SurfaceAction.commitStory => 'That is the case',
-      SurfaceAction.chooseHome => 'Chose this home',
-      SurfaceAction.selectMarket => 'Chose the market',
-      SurfaceAction.commitProfile => 'Saved my details',
-      SurfaceAction.commitScenario => 'Kept this scenario',
-      SurfaceAction.change => 'Reopened a decision',
-      SurfaceAction.explain => 'Asked why',
-      SurfaceAction.compareLoanTypes => 'Asked to compare loan types',
-      null => 'Answered the form',
-    };
+String actionLabel(String actionName) {
+  final words = actionName.split('_').where((word) => word.isNotEmpty);
+  final sentence = words.join(' ');
+  return sentence.isEmpty
+      ? 'Used a control'
+      : '${sentence[0].toUpperCase()}${sentence.substring(1)}';
+}

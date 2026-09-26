@@ -14,7 +14,7 @@ Future<void> main(List<String> arguments) async {
   if (keys == null || arguments.length < 2) {
     stderr.writeln(
       'Usage: probe_turn <server url> '
-      '<message, #reason message, or @action {slice overrides}>…\n'
+      '<message or @action {slice overrides}>…\n'
       'Gemini keys come from ${GeminiKeys.names.join(' and ')}, '
       'which make reads from .env.',
     );
@@ -55,12 +55,6 @@ Future<void> main(List<String> arguments) async {
 
 TurnRequest? _requestFor(String input, ProbeSurfaces surfaces) {
   final separator = input.indexOf(' ');
-  if (input.startsWith('#') && separator != -1) {
-    return TurnRequest.text(
-      input.substring(separator + 1),
-      reason: StoryReason.values.byName(input.substring(1, separator)),
-    );
-  }
   if (!input.startsWith('@')) {
     return TurnRequest.text(input);
   }

@@ -19,16 +19,6 @@ abstract interface class GalleryRepository {
 class GenUiGalleryRepository implements GalleryRepository {
   GenUiGalleryRepository(Catalog catalog)
     : _surfaces = SurfaceController(catalogs: [catalog]) {
-    for (final (index, example) in surfaceExamples.indexed) {
-      _show(
-        GalleryEntry(
-          surfaceId: 'gallery-surface-$index',
-          title: example.name,
-          subtitle: 'Surface example',
-        ),
-        example,
-      );
-    }
     for (final component in homewardComponents) {
       for (final (index, example) in component.examples.indexed) {
         _show(

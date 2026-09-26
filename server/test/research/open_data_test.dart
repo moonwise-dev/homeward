@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:common/common.dart';
-import 'package:homeward_server/research/open_data/criterion_matchers.dart';
 import 'package:homeward_server/research/open_data/nominatim.dart';
 import 'package:homeward_server/research/open_data/open_data_unavailable.dart';
+import 'package:homeward_server/research/open_data/osm_matcher.dart';
 import 'package:homeward_server/research/open_data/overpass.dart';
 import 'package:homeward_server/research/open_data/polite_client.dart';
 import 'package:homeward_server/research/open_data/polyline.dart';
@@ -105,11 +105,15 @@ void main() {
       final features = await overpass.around(
         [odenplan, kth],
         [
+          (matcher: const OsmMatcher('amenity', ['school']), radius: 2000),
           (
-            matcher: criterionMatchers[CriterionKind.schools]!.single,
-            radius: 2000,
+            matcher: const OsmMatcher('highway', [
+              'motorway',
+              'trunk',
+              'primary',
+            ], lines: true),
+            radius: 200,
           ),
-          (matcher: noiseMatchers.first, radius: 200),
         ],
       );
 
@@ -219,15 +223,10 @@ void main() {
 
     final route = await routing.route(odenplan, kth, TravelMode.bike);
 
-    expect(
-      route,
-      const Measurement.route(
-        mode: TravelMode.bike,
-        minutes: 12,
-        meters: 2134,
-        path: [odenplan, kth],
-      ),
-    );
+    expect(route?.mode, TravelMode.bike);
+    expect(route?.minutes, 12);
+    expect(route?.meters, 2134);
+    expect(route?.path, [odenplan, kth]);
   });
 
   test('transit takes the fastest itinerary of a weekday morning', () async {
@@ -256,10 +255,8 @@ void main() {
 
     final route = await routing.route(odenplan, kth, TravelMode.transit);
 
-    expect(route, isA<RouteMeasurement>());
-    route as RouteMeasurement;
-    expect(route.minutes, 17);
-    expect(route.path, hasLength(2));
+    expect(route?.minutes, 17);
+    expect(route?.path, hasLength(2));
   });
 }
 

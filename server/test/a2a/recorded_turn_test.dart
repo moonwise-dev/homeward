@@ -5,7 +5,6 @@ import 'package:common/common.dart';
 import 'package:homeward_server/a2a/a2a_handler.dart';
 import 'package:homeward_server/a2a/task_registry.dart';
 import 'package:homeward_server/a2a/turn_wire.dart';
-import 'package:homeward_server/gemini/interaction_event.dart';
 import 'package:homeward_server/agent/prompt/prompt_assembler.dart';
 import 'package:homeward_server/agent/turn/tool_belt.dart';
 import 'package:homeward_server/agent/turn/turn_orchestrator.dart';
@@ -16,7 +15,6 @@ import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
 import '../agent/turn/scripted_interactions.dart';
-import '../tools/tool_fixtures.dart';
 
 void main() {
   final recording = File('../app/test/fixtures/recorded_turn.sse');
@@ -31,30 +29,16 @@ void main() {
         createInteraction: ScriptedInteractions([
           reply(
             'i1',
-            calls: const [
-              FunctionCall(
-                callId: 'market',
-                name: 'resolve_market',
-                arguments: {'placeName': 'Södermalm', 'countryCode': 'SE'},
-              ),
-              FunctionCall(
-                callId: 'load',
-                name: 'load_market',
-                arguments: {'marketId': 'SE'},
-              ),
-            ],
-          ),
-          reply(
-            'i2',
             text:
-                'Sweden is a curated market. Tell me about your household.\n'
+                'A flat in Södermalm for the two of you. Anything else the '
+                'home has to have?\n'
                 '```a2ui\n'
                 '${[for (final message in _surface()) jsonEncode(message)].join('\n')}\n'
                 '```\n',
           ),
         ]).call,
         prompts: PromptAssembler.load(Directory('prompts')),
-        tools: ToolBelt(tools: homewardTools, markets: realMarkets),
+        tools: const ToolBelt(homewardTools),
         catalog: CatalogValidator(homewardCatalogDocument()),
         now: () => DateTime.utc(2026, 9, 17, 12),
       ),
@@ -104,7 +88,7 @@ List<Map<String, Object?>> _surface() => [
   {
     'version': 'v0.9',
     'createSurface': {
-      'surfaceId': 't1-profile',
+      'surfaceId': 't1-story',
       'catalogId': homewardCatalogId,
       'sendDataModel': true,
     },
@@ -112,8 +96,41 @@ List<Map<String, Object?>> _surface() => [
   {
     'version': 'v0.9',
     'updateComponents': {
-      'surfaceId': 't1-profile',
-      'components': surfaceExamples.first.components,
+      'surfaceId': 't1-story',
+      'components': [
+        {
+          'id': 'root',
+          'component': 'Column',
+          'children': ['title', 'notes', 'done'],
+        },
+        {
+          'id': 'title',
+          'component': 'Text',
+          'text': 'What the home has to have',
+          'variant': 'h3',
+        },
+        {
+          'id': 'notes',
+          'component': 'TextField',
+          'label': 'Anything else?',
+          'value': {'path': '/notes'},
+        },
+        {
+          'id': 'done',
+          'component': 'Button',
+          'child': 'done_label',
+          'variant': 'primary',
+          'action': {
+            'event': {
+              'name': 'confirm_story',
+              'context': {
+                'notes': {'path': '/notes'},
+              },
+            },
+          },
+        },
+        {'id': 'done_label', 'component': 'Text', 'text': 'That is it'},
+      ],
     },
   },
 ];

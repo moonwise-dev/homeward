@@ -60,10 +60,7 @@ class PlansScreen extends ConsumerWidget {
           for (final plan in state.plans)
             _PlanTile(
               title: plan.title ?? 'New plan',
-              subtitle: [
-                ?plan.marketName,
-                _relativeTime(plan.lastActivityAt, now),
-              ].join(' · '),
+              subtitle: _relativeTime(plan.lastActivityAt, now),
               onTap: () => context.push(AppRoutes.planOf(plan.id)),
             ),
         ],

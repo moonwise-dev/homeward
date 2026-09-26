@@ -16,7 +16,6 @@ import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
 import '../agent/turn/scripted_interactions.dart';
-import '../tools/tool_fixtures.dart';
 
 void main() {
   final prompts = PromptAssembler.load(Directory('prompts'));
@@ -33,7 +32,7 @@ void main() {
       sessions: sessions,
       createInteraction: script.call,
       prompts: prompts,
-      tools: ToolBelt(tools: homewardTools, markets: realMarkets),
+      tools: const ToolBelt(homewardTools),
       catalog: catalog,
       now: () => DateTime.utc(2026, 9, 17, 12),
     ),
@@ -131,7 +130,7 @@ void main() {
   );
 
   test(
-    'applies an action with its surface data before the model runs',
+    'hands an action and its surface data to the model',
     () async {
       final script = ScriptedInteractions([reply('i1', text: 'Saved.')]);
       final handler = handlerFor(script);
@@ -148,10 +147,10 @@ void main() {
                     'version': 'v0.9',
                     'action': {
                       'surfaceId': 't1-start',
-                      'name': 'select_market',
-                      'sourceComponentId': 'go',
+                      'name': 'keep_home',
+                      'sourceComponentId': 'keep',
                       'timestamp': '2026-09-17T10:00:00.000',
-                      'context': {'marketId': 'SE'},
+                      'context': {'homeId': 'h1'},
                     },
                   },
                 },
@@ -162,10 +161,7 @@ void main() {
                 'a2uiClientDataModel': {
                   'version': 'v0.9',
                   'surfaces': {
-                    't1-start': {
-                      'selection': {'marketId': 'SE'},
-                      'profile': {'taxResidence': 'SE'},
-                    },
+                    't1-start': {'notes': 'A garden for the dog'},
                   },
                 },
               },
@@ -174,11 +170,9 @@ void main() {
         ),
       );
 
-      final plan = (await sessions.find('s-1'))!.plan;
-      expect(plan.marketId, MarketId.parse('SE'));
-      expect(plan.profileDraft?.taxResidence, CountryCode.parse('SE'));
-      final input = script.requests.first.input;
-      expect(jsonEncode(input.toJson()), contains('select_market'));
+      final input = jsonEncode(script.requests.first.input.toJson());
+      expect(input, contains('keep_home'));
+      expect(input, contains('A garden for the dog'));
     },
   );
 
@@ -211,22 +205,6 @@ void main() {
       });
     },
   );
-
-  test('a reason picked on the opening page is on the plan', () async {
-    final handler = handlerFor(
-      ScriptedInteractions([reply('i1', text: 'Tell me more.')]),
-    );
-    final message = const TurnRequest.text(
-      'Reason for the move: studies.',
-      reason: StoryReason.study,
-    ).message(sessionId: 's-1', messageId: 'm-1');
-
-    await events(
-      await handler(rpc('message/stream', {'message': message.toJson()})),
-    );
-
-    expect((await sessions.find('s-1'))!.plan.story.reason, StoryReason.study);
-  });
 
   test('cancels a running turn and frees the session', () async {
     final gate = Completer<void>();

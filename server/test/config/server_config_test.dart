@@ -21,7 +21,6 @@ void main() {
         firstStepDeadline: const Duration(seconds: 20),
         modelCooldown: const Duration(minutes: 5),
         maxCorrections: 2,
-        deal: false,
         allowedOrigins: const [
           'https://homeward-genui.web.app',
           'https://homeward-genui.firebaseapp.com',
@@ -29,17 +28,8 @@ void main() {
         ],
         appCheckEnforced: true,
         promptsDirectory: 'server/prompts',
-        marketsDirectory: 'markets',
         sessionStore: SessionStore.memory,
       ),
-    );
-  });
-
-  test('walks into the deal only when it is switched on', () {
-    expect(ServerConfig.fromEnvironment({'HOMEWARD_DEAL': 'on'}).deal, isTrue);
-    expect(
-      ServerConfig.fromEnvironment({'HOMEWARD_DEAL': 'off'}).deal,
-      isFalse,
     );
   });
 
@@ -76,7 +66,6 @@ void main() {
       'HOMEWARD_ALLOWED_ORIGINS': 'https://a.example, https://b.example',
       'HOMEWARD_APP_CHECK_ENFORCED': 'false',
       'HOMEWARD_PROMPTS_DIR': '/app/prompts',
-      'HOMEWARD_MARKETS_DIR': '/app/markets',
     });
 
     expect(config.port, 9090);
@@ -88,6 +77,5 @@ void main() {
     expect(config.allowedOrigins, ['https://a.example', 'https://b.example']);
     expect(config.appCheckEnforced, isFalse);
     expect(config.promptsDirectory, '/app/prompts');
-    expect(config.marketsDirectory, '/app/markets');
   });
 }

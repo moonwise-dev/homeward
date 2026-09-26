@@ -40,16 +40,16 @@ final class FirestoreSessionRepository implements SessionRepository {
     if (document == null) {
       return null;
     }
-    final parts = await _firestore.getAll([
-      _plan(id),
-      for (var index = 1; index <= countOf(document['turnCount']); index++)
-        _turn(id, index),
-    ]);
+    final count = countOf(document['turnCount']);
+    final turns = count == 0
+        ? const <DocumentSnapshot<DocumentData>>[]
+        : await _firestore.getAll([
+            for (var index = 1; index <= count; index++) _turn(id, index),
+          ]);
     return sessionOf(
       id: id,
       document: document,
-      plan: parts.first.data(),
-      turns: [for (final part in parts.skip(1)) ?part.data()],
+      turns: [for (final turn in turns) ?turn.data()],
     );
   }
 
@@ -75,8 +75,7 @@ final class FirestoreSessionRepository implements SessionRepository {
         _session(session.id),
         mergeable(sessionDocument(session)),
         options: const SetOptions.merge(),
-      )
-      ..set(_plan(session.id), planDocument(session));
+      );
     for (final turn in session.turns) {
       if (turn.index > written) {
         batch.set(
@@ -113,9 +112,6 @@ final class FirestoreSessionRepository implements SessionRepository {
 
   DocumentReference<DocumentData> _session(String id) =>
       _firestore.collection(sessionsCollection).doc(id);
-
-  DocumentReference<DocumentData> _plan(String sessionId) =>
-      _firestore.collection(plansCollection).doc(sessionId);
 
   DocumentReference<DocumentData> _turn(String sessionId, int index) =>
       _firestore

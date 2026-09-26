@@ -8,20 +8,18 @@ import 'package:homeward_server/agent/turn/tool_belt.dart';
 import 'package:homeward_server/agent/turn/tools_done_note.dart';
 import 'package:homeward_server/agent/turn/turn_event.dart';
 import 'package:homeward_server/agent/turn/turn_input.dart';
-import 'package:homeward_server/errors/homeward_failure.dart';
 import 'package:homeward_server/agent/turn/turn_orchestrator.dart';
 import 'package:homeward_server/agent/turn/turn_settings.dart';
-import 'package:homeward_server/data/models/session.dart';
 import 'package:homeward_server/data/repository/in_memory_session_repository.dart';
+import 'package:homeward_server/errors/homeward_failure.dart';
 import 'package:homeward_server/gemini/gemini_exception.dart';
 import 'package:homeward_server/gemini/interaction_event.dart';
 import 'package:homeward_server/gemini/interaction_input.dart';
 import 'package:homeward_server/gemini/tool_choice.dart';
+import 'package:homeward_server/research/research_steps.dart';
 import 'package:homeward_server/tools/agent_tool.dart';
-import 'package:homeward_server/tools/homeward_tools.dart';
 import 'package:test/test.dart';
 
-import '../../tools/tool_fixtures.dart';
 import 'scripted_interactions.dart';
 
 void main() {
@@ -34,22 +32,15 @@ void main() {
   TurnOrchestrator orchestrator(
     ScriptedInteractions script, {
     TurnSettings settings = const TurnSettings(),
-    List<AgentTool> tools = homewardTools,
   }) => TurnOrchestrator(
     sessions: sessions,
     createInteraction: script.call,
     prompts: prompts,
-    tools: ToolBelt(tools: tools, markets: realMarkets),
+    tools: const ToolBelt([_Locate()]),
     catalog: catalog,
     settings: settings,
     now: () => DateTime.utc(2026, 9, 17, 12),
   );
-
-  Future<Session> sessionWith(Plan plan) async {
-    final session = await sessions.create('uid-1');
-    await sessions.save(session.copyWith(plan: plan));
-    return session;
-  }
 
   Stream<TurnEvent> send(TurnOrchestrator agent, [String text = 'Hi']) =>
       agent.run(
@@ -59,20 +50,8 @@ void main() {
         apiKey: 'key',
       );
 
-  Stream<TurnEvent> sendAction(TurnOrchestrator agent) => agent.run(
-    sessionId: 's-1',
-    uid: 'uid-1',
-    input: const TurnInput.action(
-      ClientAction(
-        name: 'commit_profile',
-        surfaceId: 't0-profile',
-        sourceComponentId: 'save',
-        context: {'profilePath': '/profile'},
-      ),
-      surfaceData: {},
-    ),
-    apiKey: 'key',
-  );
+  FunctionCall locate(String place) =>
+      FunctionCall(callId: place, name: 'locate', arguments: {'place': place});
 
   String a2ui(String surfaceId, List<Map<String, Object?>> components) => [
     '```a2ui',
@@ -92,299 +71,192 @@ void main() {
     '',
   ].join('\n');
 
-  List<Map<String, Object?>> incomeForm({Object? value}) => [
-    {
-      'id': 'root',
-      'component': 'MoneyInput',
-      'label': 'Household net income',
-      'value': value ?? {'path': '/profile/netMonthlyIncome'},
-      'currency': {'path': '/market/currency'},
-    },
+  List<Map<String, Object?>> note({String property = 'text'}) => [
+    {'id': 'root', 'component': 'Text', property: 'A home near KTH'},
   ];
 
-  List<Map<String, Object?>> allMessagesIn(List<TurnEvent> events) => [
+  List<Map<String, Object?>> messagesIn(List<TurnEvent> events) => [
     for (final event in events)
       if (event case TurnMessage(:final message)) message,
   ];
 
-  List<Map<String, Object?>> messagesIn(List<TurnEvent> events) =>
-      allMessagesIn(events);
-
   test(
-    'resolves the market, loads its rules, and draws a seeded form',
+    'runs the tools the model calls and seeds its surface with their results',
     () async {
       await sessions.create('uid-1');
       final script = ScriptedInteractions([
-        reply(
-          'i1',
-          calls: const [
-            FunctionCall(
-              callId: 'c1',
-              name: 'resolve_market',
-              arguments: {'placeName': 'Södermalm', 'countryCode': 'SE'},
-            ),
-            FunctionCall(
-              callId: 'c2',
-              name: 'load_market',
-              arguments: {'marketId': 'SE'},
-            ),
-          ],
-        ),
+        reply('i1', calls: [locate('KTH')]),
         reply(
           'i2',
           text:
-              'Sweden it is. Tell me about your income.\n'
-              '${a2ui('t1-profile', surfaceExamples.first.components)}',
+              'KTH it is.\n'
+              '${a2ui('t1-place', [
+                {
+                  'id': 'root',
+                  'component': 'Text',
+                  'text': {'path': '/places/kth/name'},
+                },
+              ])}',
         ),
       ]);
 
       final events = await send(
         orchestrator(script),
-        'A 3:a in Södermalm',
+        'I study at KTH',
       ).toList();
 
       expect(events.first, const TurnEvent.working());
-      expect(
-        events.last,
-        const TurnEvent.completed('Sweden it is. Tell me about your income.'),
-      );
+      expect(events.last, const TurnEvent.completed('KTH it is.'));
       final messages = messagesIn(events);
       expect(messages.map((message) => message.keys.last), [
         'createSurface',
         'updateDataModel',
-        'updateDataModel',
         'updateComponents',
       ]);
-      expect(
-        messages.first['createSurface'],
-        containsPair('sendDataModel', true),
-      );
-      expect(
-        [
-          for (final message in messages.skip(1).take(2))
-            (message['updateDataModel']! as Map<String, Object?>)['path'],
-        ],
-        ['/profile', '/market'],
-      );
+      expect(messages[1]['updateDataModel'], containsPair('path', '/places'));
 
       final [first, second] = script.requests;
       expect(first.previousInteractionId, isNull);
-      expect(first.tools.map((tool) => tool.name), [
-        'resolve_market',
-        'load_market',
-        'propose_profile',
-        'propose_scenario',
-      ]);
+      expect(first.tools.map((tool) => tool.name), ['locate']);
       expect(first.toolChoice, isNull);
       expect(second.previousInteractionId, 'i1');
-      expect(second.toolChoice, isNull);
-      expect(second.systemInstruction, isNot(contains('"preRun"')));
       final input = second.input as FunctionResultsInput;
-      expect(input.results.map((result) => result.name), [
-        'resolve_market',
-        'load_market',
-      ]);
-      expect(input.results.first.result, contains('selectedMarket'));
+      expect(input.results.single.result, {'found': 'KTH'});
       expect(input.note, isNull);
 
       final saved = (await sessions.find('s-1'))!;
-      expect(saved.plan.marketId, MarketId.parse('SE'));
       expect(saved.turnCount, 1);
       expect(saved.lastInteractionId, 'i2');
       expect(saved.messages, messages);
     },
   );
 
-  test(
-    'runs tool calls in dependency order and answers in call order',
-    () async {
-      await sessions.create('uid-1');
-      final script = ScriptedInteractions([
-        reply(
-          'i1',
-          calls: const [
-            FunctionCall(
-              callId: 'profile',
-              name: 'propose_profile',
-              arguments: {
-                'netMonthlyIncome': {'amount': 62000},
-              },
-            ),
-            FunctionCall(
-              callId: 'market',
-              name: 'resolve_market',
-              arguments: {'placeName': 'Södermalm', 'countryCode': 'SE'},
-            ),
-          ],
-        ),
-        reply('i2', text: 'Noted.'),
-      ]);
-
-      await send(orchestrator(script)).drain<void>();
-
-      final results =
-          (script.requests[1].input as FunctionResultsInput).results;
-      expect(results.map((result) => result.callId), ['profile', 'market']);
-      expect(results.first.result, {
-        'accepted': ['netMonthlyIncome'],
-        'rejected': <Object?>[],
-      });
-      expect(
-        (await sessions.find('s-1'))!
-            .plan
-            .profileDraft
-            ?.netMonthlyIncome
-            ?.currency,
-        Currency.parse('SEK'),
-      );
-    },
-  );
-
-  test(
-    'offers tools for one round and pre-runs affordability for a proposal',
-    () async {
-      await sessionWith(
-        Plan(marketId: MarketId.parse('SE'), profile: stockholmProfile),
-      );
-      FunctionCall proposal(String callId, int price) => FunctionCall(
-        callId: callId,
-        name: 'propose_scenario',
-        arguments: {
-          'price': {'amount': price},
-        },
-      );
-      final script = ScriptedInteractions([
-        reply('i1', calls: [proposal('first', 4500000)]),
-        reply(
-          'i2',
-          text: 'Here is what that price means.',
-          calls: [proposal('second', 3000000)],
-        ),
-      ]);
-
-      final events = await send(orchestrator(script)).toList();
-
-      final [first, second] = script.requests;
-      expect(
-        first.tools.map((tool) => tool.name),
-        isNot(contains('compute_affordability')),
-      );
-      expect(second.toolChoice, isNull);
-      expect(second.systemInstruction, contains('"compute_affordability": {'));
-      expect(
-        events.last,
-        const TurnEvent.completed('Here is what that price means.'),
-      );
-      expect(
-        (await sessions.find('s-1'))!.plan.scenarioDraft?.price,
-        stockholmScenario.price,
-      );
-    },
-  );
-
-  test(
-    'lets a model that calls one tool at a time reach its surfaces',
-    () async {
-      await sessions.create('uid-1');
-      FunctionCall call(String name, Map<String, Object?> arguments) =>
-          FunctionCall(callId: name, name: name, arguments: arguments);
-      final script = ScriptedInteractions([
-        reply(
-          'i1',
-          calls: [
-            call('resolve_market', const {
-              'placeName': 'Södermalm',
-              'countryCode': 'SE',
-            }),
-          ],
-        ),
-        reply(
-          'i2',
-          calls: [
-            call('propose_profile', const {'adults': 2}),
-          ],
-        ),
-        reply(
-          'i3',
-          calls: [
-            call('propose_scenario', const {
-              'price': {'amount': 4500000},
-            }),
-          ],
-        ),
-        reply('i4', text: 'Tell me about your household.'),
-      ]);
-
-      final events = await send(orchestrator(script)).toList();
-
-      expect(script.requests, hasLength(4));
-      expect(script.requests[3].toolChoice, ToolChoice.none);
-      expect(
-        (script.requests[3].input as FunctionResultsInput).note,
-        toolsDoneNote,
-      );
-      expect(
-        events.last,
-        const TurnEvent.completed('Tell me about your household.'),
-      );
-      final saved = (await sessions.find('s-1'))!.plan;
-      expect(saved.profileDraft?.adults, 2);
-      expect(saved.scenarioDraft, isNotNull);
-    },
-  );
-
-  test(
-    'a round that asks again for what it has ends the tool rounds',
-    () async {
-      await sessions.create('uid-1');
-      final calling = reply(
-        'i1',
-        calls: const [
-          FunctionCall(
-            callId: 'c',
-            name: 'resolve_market',
-            arguments: {'placeName': 'Sodermalm', 'countryCode': 'SE'},
-          ),
-        ],
-      );
-      final script = ScriptedInteractions([
-        calling,
-        calling,
-        reply('i3', text: 'Tell me about your household.'),
-      ]);
-
-      final events = await send(orchestrator(script)).toList();
-
-      expect(script.requests, hasLength(3));
-      expect(script.requests[2].toolChoice, ToolChoice.none);
-      expect(
-        (script.requests[2].input as FunctionResultsInput).note,
-        toolsDoneNote,
-      );
-      expect(
-        events.last,
-        const TurnEvent.completed('Tell me about your household.'),
-      );
-    },
-  );
-
-  test('offers a retry surface when a turn draws nothing at all', () async {
+  test('answers tool calls in the order the model made them', () async {
     await sessions.create('uid-1');
-    final calling = reply(
-      'i1',
-      calls: const [
-        FunctionCall(
-          callId: 'c',
-          name: 'resolve_market',
-          arguments: {'placeName': 'Södermalm', 'countryCode': 'SE'},
+    final script = ScriptedInteractions([
+      reply('i1', calls: [locate('KTH'), locate('Odenplan')]),
+      reply('i2', text: 'Noted.'),
+    ]);
+
+    await send(orchestrator(script)).drain<void>();
+
+    final results = (script.requests[1].input as FunctionResultsInput).results;
+    expect(results.map((result) => result.callId), ['KTH', 'Odenplan']);
+  });
+
+  test('streams each measuring step while a tool runs', () async {
+    await sessions.create('uid-1');
+    final script = ScriptedInteractions([
+      reply('i1', calls: [locate('KTH')]),
+      reply('i2', text: 'Found it.'),
+    ]);
+
+    final events = await send(orchestrator(script)).toList();
+    final steps = [
+      for (final event in events)
+        if (event case TurnProgress(:final progress)) progress.steps,
+    ];
+
+    expect(steps, [
+      [
+        const ResearchStep(
+          label: 'Finding KTH on the map',
+          state: ResearchStepState.running,
         ),
       ],
+      [
+        const ResearchStep(
+          label: 'Finding KTH on the map',
+          state: ResearchStepState.done,
+        ),
+      ],
+    ]);
+    expect(
+      events.indexWhere((event) => event is TurnProgress),
+      lessThan(events.indexWhere((event) => event is TurnText)),
     );
-    final script = ScriptedInteractions([calling, calling, reply('i3')]);
+  });
+
+  test('ends the tool rounds once they run out, and says so', () async {
+    await sessions.create('uid-1');
+    final script = ScriptedInteractions([
+      reply('i1', calls: [locate('KTH')]),
+      reply('i2', calls: [locate('Odenplan')]),
+      reply('i3', calls: [locate('Solna')]),
+      reply('i4', text: 'Here is your week.'),
+    ]);
 
     final events = await send(orchestrator(script)).toList();
 
-    expect(script.requests, hasLength(3));
+    expect(script.requests, hasLength(4));
+    expect(script.requests[3].toolChoice, ToolChoice.none);
+    expect(
+      (script.requests[3].input as FunctionResultsInput).note,
+      toolsDoneNote,
+    );
+    expect(events.last, const TurnEvent.completed('Here is your week.'));
+  });
+
+  test(
+    'hands an action to the model with its context and surface data',
+    () async {
+      await sessions.create('uid-1');
+      final script = ScriptedInteractions([reply('i1', text: 'Kept.')]);
+
+      await orchestrator(script)
+          .run(
+            sessionId: 's-1',
+            uid: 'uid-1',
+            input: const TurnInput.action(
+              ClientAction(
+                name: 'keep_home',
+                surfaceId: 't0-homes',
+                sourceComponentId: 'keep',
+                context: {'homeId': 'h1'},
+              ),
+              surfaceData: {'notes': 'A garden for the dog'},
+            ),
+            apiKey: 'key',
+          )
+          .drain<void>();
+
+      final input = (script.requests.single.input as TextInput).text;
+      expect(input, contains('The buyer used a control'));
+      expect(input, contains('"action":"keep_home"'));
+      expect(input, contains('"homeId":"h1"'));
+      expect(input, contains('A garden for the dog'));
+      expect(
+        (await sessions.find('s-1'))!.turns.single.input,
+        isA<RecordedAction>(),
+      );
+    },
+  );
+
+  test('a reply in words alone is left as it is', () async {
+    await sessions.create('uid-1');
+    final script = ScriptedInteractions([
+      reply('i1', text: 'A bostadsrätt is a share in an association.'),
+    ]);
+
+    final events = await send(
+      orchestrator(script),
+      'What is a bostadsrätt?',
+    ).toList();
+
+    expect(script.requests, hasLength(1));
+    expect(messagesIn(events), isEmpty);
+    expect(
+      events.last,
+      const TurnEvent.completed('A bostadsrätt is a share in an association.'),
+    );
+  });
+
+  test('offers a retry notice when a turn gives nothing at all', () async {
+    await sessions.create('uid-1');
+    final script = ScriptedInteractions([reply('i1')]);
+
+    final events = await send(orchestrator(script)).toList();
+
     expect(
       [for (final message in messagesIn(events)) jsonEncode(message)],
       [contains('"t1-retry"'), contains('"t1-retry"')],
@@ -393,7 +265,7 @@ void main() {
   });
 
   test(
-    'takes back a failed model\'s draft and continues on the fallback',
+    "takes back a failed model's draft and continues on the fallback",
     () async {
       await sessions.create('uid-1');
       final script = ScriptedInteractions([
@@ -401,14 +273,14 @@ void main() {
           const InteractionEvent.textDelta('Draft that will vanish\n'),
           const FunctionCall(
             callId: 'c1',
-            name: 'resolve_market',
-            arguments: {'placeName': 'Atlantis'},
+            name: 'locate',
+            arguments: {'place': 'Atlantis'},
           ),
           const InteractionEvent.modelFailed(
             model: 'gemini-3.5-flash',
             reason: GeminiUnavailable('overloaded'),
           ),
-          const InteractionEvent.textDelta('Where are you buying?'),
+          const InteractionEvent.textDelta('Where are you moving?'),
           const InteractionEvent.completed(
             interactionId: 'i1',
             status: 'completed',
@@ -422,8 +294,8 @@ void main() {
         const TurnEvent.working(),
         const TurnEvent.text('Draft that will vanish'),
         const TurnEvent.text(''),
-        const TurnEvent.text('Where are you buying?'),
-        const TurnEvent.completed('Where are you buying?'),
+        const TurnEvent.text('Where are you moving?'),
+        const TurnEvent.completed('Where are you moving?'),
       ]);
       expect(script.requests, hasLength(1));
     },
@@ -432,11 +304,9 @@ void main() {
   test(
     'sends rejections back and forwards the corrected surface once',
     () async {
-      await sessionWith(
-        Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),
-      );
+      await sessions.create('uid-1');
       final script = ScriptedInteractions([
-        reply('i1', text: a2ui('t1-income', incomeForm(value: 62000))),
+        reply('i1', text: a2ui('t1-note', note(property: 'label'))),
         reply(
           'i2',
           text: jsonEncode({
@@ -444,8 +314,8 @@ void main() {
               {
                 'version': 'v0.9',
                 'updateComponents': {
-                  'surfaceId': 't1-income',
-                  'components': incomeForm(),
+                  'surfaceId': 't1-note',
+                  'components': note(),
                 },
               },
             ],
@@ -457,17 +327,15 @@ void main() {
 
       final correction = (script.requests[1].input as TextInput).text;
       expect(correction, contains('VALIDATION_FAILED'));
-      expect(correction, contains('t1-income'));
+      expect(correction, contains('t1-note'));
       expect(script.requests[1].previousInteractionId, 'i1');
       expect(script.requests[0].responseSchema, isNull);
       expect(
         jsonEncode(script.requests[1].responseSchema),
-        contains('component_MoneyInput'),
+        contains('component_Text'),
       );
       expect(messagesIn(events).map((message) => message.keys.last), [
         'createSurface',
-        'updateDataModel',
-        'updateDataModel',
         'updateComponents',
       ]);
       expect(events.last, isA<TurnCompleted>());
@@ -475,11 +343,9 @@ void main() {
   );
 
   test('a correction Gemini refuses to constrain runs again freely', () async {
-    await sessionWith(
-      Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),
-    );
+    await sessions.create('uid-1');
     final script = ScriptedInteractions([
-      reply('i1', text: a2ui('t1-income', incomeForm(value: 62000))),
+      reply('i1', text: a2ui('t1-note', note(property: 'label'))),
       failing(
         const GeminiRequestInvalid('Request contains an invalid argument.'),
       ),
@@ -489,10 +355,7 @@ void main() {
           '```a2ui',
           jsonEncode({
             'version': 'v0.9',
-            'updateComponents': {
-              'surfaceId': 't1-income',
-              'components': incomeForm(),
-            },
+            'updateComponents': {'surfaceId': 't1-note', 'components': note()},
           }),
           '```',
           '',
@@ -511,156 +374,12 @@ void main() {
     expect(events.last, isA<TurnCompleted>());
   });
 
-  test(
-    'asks for a form that covers every fact the market still needs',
-    () async {
-      await sessionWith(
-        Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),
-      );
-      final incomeOnly = [
-        {
-          'id': 'root',
-          'component': 'Column',
-          'children': ['income', 'save'],
-        },
-        {...incomeForm().single, 'id': 'income'},
-        {
-          'id': 'save',
-          'component': 'Button',
-          'child': 'save_label',
-          'action': {
-            'event': {
-              'name': 'commit_profile',
-              'context': {'profilePath': '/profile'},
-            },
-          },
-        },
-        {'id': 'save_label', 'component': 'Text', 'text': 'Save'},
-      ];
-      final script = ScriptedInteractions([
-        reply('i1', text: a2ui('t1-income', incomeOnly)),
-      ]);
-
-      final events = await send(orchestrator(script)).toList();
-
-      expect(script.requests, hasLength(1));
-      final drawn = messagesIn(events).firstWhere(
-        (message) => message.containsKey('updateComponents'),
-      );
-      final components =
-          ((drawn['updateComponents']! as Map<String, Object?>)['components']!
-                  as List<Object?>)
-              .cast<Map<String, Object?>>();
-      expect(
-        components.map((component) => component['id']),
-        containsAll(['asked-household', 'asked-savings']),
-      );
-      expect(
-        (components.last['children']! as List<Object?>).last,
-        'save',
-      );
-      expect(events.last, isA<TurnCompleted>());
-    },
-  );
-
-  test(
-    'asks again when an action is answered with text and no surface',
-    () async {
-      await sessionWith(
-        Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),
-      );
-      final script = ScriptedInteractions([
-        reply('i1', text: 'Here is what that means for you.'),
-        reply('i2', text: a2ui('t1-income', incomeForm())),
-      ]);
-
-      final events = await sendAction(orchestrator(script)).toList();
-
-      expect(script.requests, hasLength(2));
-      expect(
-        (script.requests[1].input as TextInput).text,
-        allOf(
-          contains('profileFields still open'),
-          contains('the profile lacks'),
-        ),
-      );
-      expect(
-        messagesIn(events).map((message) => message.keys.last),
-        contains('updateComponents'),
-      );
-      expect(events.last, isA<TurnCompleted>());
-    },
-  );
-
-  test('words written in answer to that request are not shown', () async {
-    await sessionWith(
-      Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),
+  test('ends with a retry notice when corrections run out', () async {
+    await sessions.create('uid-1');
+    final invalid = reply(
+      'i1',
+      text: a2ui('t1-note', note(property: 'label')),
     );
-    final script = ScriptedInteractions([
-      reply('i1', text: 'You are all set.'),
-      reply(
-        'i2',
-        text: 'An error occurred or profileFields is not actually open.',
-      ),
-    ]);
-
-    final events = await sendAction(orchestrator(script)).toList();
-
-    expect(script.requests, hasLength(2));
-    expect(
-      events.whereType<TurnText>().map((event) => event.text),
-      everyElement(isNot(contains('An error occurred'))),
-    );
-    expect(
-      events.whereType<TurnCompleted>().single.text,
-      'You are all set.',
-    );
-  });
-
-  test('a typed turn in the case that draws no card is asked for it', () async {
-    await sessionWith(
-      const Plan(
-        story: Story(reason: StoryReason.study, city: 'Stockholm'),
-      ),
-    );
-    final script = ScriptedInteractions([
-      reply('i1', text: 'Where will you study?'),
-      reply(
-        'i2',
-        text: a2ui('t1-clue', [
-          {'id': 'root', 'component': 'Text', 'text': 'KTH or somewhere else?'},
-        ]),
-      ),
-    ]);
-
-    final events = await send(orchestrator(script), 'Hi').toList();
-
-    expect(script.requests, hasLength(2));
-    expect(
-      (script.requests[1].input as TextInput).text,
-      contains('caseQuestions still open'),
-    );
-    expect(events.last, isA<TurnCompleted>());
-  });
-
-  test('a typed question outside the case is answered in words', () async {
-    await sessionWith(
-      Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),
-    );
-    final script = ScriptedInteractions([
-      reply('i1', text: 'A bostadsrätt is a share in an association.'),
-    ]);
-
-    await send(orchestrator(script), 'What is a bostadsrätt?').toList();
-
-    expect(script.requests, hasLength(1));
-  });
-
-  test('ends with a retry surface when corrections run out', () async {
-    await sessionWith(
-      Plan(marketId: MarketId.parse('SE'), story: stockholmChosen),
-    );
-    final invalid = reply('i1', text: a2ui('t1-income', incomeForm(value: 1)));
     final script = ScriptedInteractions([invalid, invalid]);
 
     final events = await send(
@@ -673,141 +392,6 @@ void main() {
       [contains('"t1-retry"'), contains('"t1-retry"')],
     );
     expect(events.last, isA<TurnCompleted>());
-  });
-
-  test(
-    'a composition that fails validation falls back to the measured homes',
-    () async {
-      await sessionWith(Plan(story: stockholmStory));
-      final invalid = reply(
-        'i1',
-        text: a2ui('t1-fit', [
-          {'id': 'root', 'component': 'FitMatrix'},
-        ]),
-      );
-      final script = ScriptedInteractions([invalid, invalid]);
-
-      final events = await send(
-        orchestrator(
-          script,
-          settings: const TurnSettings(maxCorrections: 1),
-          tools: [const _MeasuredHomes(), ...homewardTools],
-        ),
-      ).toList();
-      final forwarded = [
-        for (final message in messagesIn(events)) jsonEncode(message),
-      ];
-
-      expect(forwarded, isNot(contains(contains('"t1-retry"'))));
-      expect(forwarded, contains(contains('"LifestyleCommuteMap"')));
-      expect(
-        forwarded.where((message) => message.contains('"t1-homes"')),
-        isEmpty,
-      );
-      expect(
-        forwarded,
-        contains(allOf(contains('"t1-fit"'), contains('"/assessment"'))),
-      );
-      expect(events.last, isA<TurnCompleted>());
-    },
-  );
-
-  test('without the deal, a closing turn that draws nothing shows the week '
-      'from the chosen home', () async {
-    await sessionWith(Plan(story: stockholmChosen));
-    final script = ScriptedInteractions([
-      reply('i1', text: 'The case is closed.'),
-    ]);
-
-    final events = await sendAction(
-      orchestrator(
-        script,
-        settings: const TurnSettings(deal: false),
-        tools: [const _MeasuredHomes()],
-      ),
-    ).toList();
-    final forwarded = [
-      for (final message in messagesIn(events)) jsonEncode(message),
-    ];
-
-    expect(script.requests, hasLength(1));
-    expect(
-      forwarded,
-      contains(allOf(contains('"t1-week"'), contains('"focus":"c1"'))),
-    );
-    expect(events.last, isA<TurnCompleted>());
-  });
-
-  test('the board and the closing turn never reopen the story', () async {
-    await sessionWith(Plan(story: stockholmStory));
-    final script = ScriptedInteractions([
-      reply('i1', text: 'A fine choice.'),
-      reply('i2', text: 'Tell me more.'),
-    ]);
-    final agent = orchestrator(
-      script,
-      settings: const TurnSettings(deal: false),
-      tools: const [_StoryProposal()],
-    );
-
-    await agent
-        .run(
-          sessionId: 's-1',
-          uid: 'uid-1',
-          input: const TurnInput.action(
-            ClientAction(
-              name: 'choose_home',
-              surfaceId: 't0-board',
-              sourceComponentId: 'homes',
-              context: {'candidateId': 'c1'},
-            ),
-            surfaceData: {},
-          ),
-          apiKey: 'key',
-        )
-        .drain<void>();
-    await send(agent, 'We also have a dog').drain<void>();
-
-    expect(
-      script.requests.first.tools.map((tool) => tool.name),
-      isNot(contains('propose_story')),
-    );
-    expect(
-      script.requests.last.tools.map((tool) => tool.name),
-      contains('propose_story'),
-    );
-  });
-
-  test('streams each measuring step before the model draws', () async {
-    await sessionWith(Plan(story: stockholmStory));
-    final script = ScriptedInteractions([reply('i1', text: 'Here they are.')]);
-
-    final events = await send(
-      orchestrator(script, tools: [const _MeasuredHomes(), ...homewardTools]),
-    ).toList();
-    final steps = [
-      for (final event in events)
-        if (event case TurnProgress(:final progress)) progress.steps,
-    ];
-
-    expect(steps, [
-      [
-        const ResearchStep(
-          label: 'Timing the trip',
-          state: ResearchStepState.running,
-        ),
-      ],
-      [
-        const ResearchStep(
-          label: 'Timing the trip',
-          state: ResearchStepState.done,
-        ),
-      ],
-    ]);
-    expect(
-      events.indexWhere((event) => event is TurnProgress),
-      lessThan(events.indexWhere((event) => event is TurnText)),
-    );
   });
 
   test('fails a turn on a quota error and releases the session', () async {
@@ -836,7 +420,7 @@ void main() {
     await sessions.save(session.copyWith(lastInteractionId: 'expired'));
     final script = ScriptedInteractions([
       failing(const GeminiHistoryMissing('not_found')),
-      reply('i2', text: 'Where are you buying?'),
+      reply('i2', text: 'Where are you moving?'),
     ]);
 
     final events = await send(orchestrator(script)).toList();
@@ -845,7 +429,7 @@ void main() {
       'expired',
       null,
     ]);
-    expect(events.last, const TurnEvent.completed('Where are you buying?'));
+    expect(events.last, const TurnEvent.completed('Where are you moving?'));
   });
 
   test(
@@ -854,21 +438,16 @@ void main() {
     () async {
       final session = await sessions.create('uid-1');
       await sessions.save(session.copyWith(lastInteractionId: 'stored'));
-      const call = FunctionCall(
-        callId: 'c1',
-        name: 'propose_profile',
-        arguments: {'age': 35},
-      );
       final script = ScriptedInteractions([
-        reply('i1', calls: const [call]),
+        reply('i1', calls: [locate('KTH')]),
         failing(
           const GeminiRequestInvalid(
             'Please ensure that function response turn comes immediately '
             'after a function call turn.',
           ),
         ),
-        reply('i3', calls: const [call]),
-        reply('i4', text: 'Tell me about your income.'),
+        reply('i3', calls: [locate('KTH')]),
+        reply('i4', text: 'KTH it is.'),
       ]);
 
       final events = await send(orchestrator(script), 'Hi again').toList();
@@ -880,10 +459,7 @@ void main() {
         'i3',
       ]);
       expect(script.requests[2].input, const InteractionInput.text('Hi again'));
-      expect(
-        events.last,
-        const TurnEvent.completed('Tell me about your income.'),
-      );
+      expect(events.last, const TurnEvent.completed('KTH it is.'));
       expect((await sessions.find('s-1'))!.lastInteractionId, 'i4');
     },
   );
@@ -935,46 +511,36 @@ void main() {
   });
 }
 
-final class _MeasuredHomes extends AgentTool {
-  const _MeasuredHomes();
+final class _Locate extends AgentTool {
+  const _Locate();
 
   @override
-  String get name => 'assess_story';
+  String get name => 'locate';
 
   @override
-  Map<String, Object?>? settledArguments(ToolContext context) => const {};
+  String get description => 'Finds a place on the map.';
+
+  @override
+  Map<String, Object?> get parameters => const {
+    'type': 'object',
+    'properties': {
+      'place': {'type': 'string'},
+    },
+  };
 
   @override
   Future<ToolResult> run(
     Map<String, Object?> arguments,
-    ToolContext context,
-  ) => context.steps.track(
-    'Timing the trip',
+    ResearchSteps steps,
+  ) => steps.track(
+    'Finding ${arguments['place']} on the map',
     () async => ToolResult(
-      modelResult: const {},
-      seeds: {
-        assessmentSlice.name: assessStory(
-          stockholmStory,
-          stockholmStoryMeasurements,
-        ).toJson(),
+      modelResult: {'found': arguments['place']},
+      seeds: const {
+        'places': {
+          'kth': {'name': 'KTH'},
+        },
       },
     ),
   );
-}
-
-final class _StoryProposal extends ModelTool {
-  const _StoryProposal();
-
-  @override
-  String get name => 'propose_story';
-
-  @override
-  String get description => 'Proposes the story.';
-
-  @override
-  Map<String, Object?> get parameters => const {'type': 'object'};
-
-  @override
-  ToolResult run(Map<String, Object?> arguments, ToolContext context) =>
-      const ToolResult(modelResult: {});
 }

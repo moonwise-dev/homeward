@@ -27,7 +27,6 @@ void main() {
     test('a plan outlives the server that started it', () async {
       final started = await repository().create('$run-uid-1');
       final session = started.copyWith(
-        plan: Plan(marketId: MarketId.parse('PT-30')),
         turnCount: 1,
         lastInteractionId: 'interaction-1',
         updatedAt: now,
@@ -82,7 +81,6 @@ void main() {
         newer.copyWith(
           updatedAt: now,
           turnCount: 1,
-          plan: Plan(marketId: MarketId.parse('SE')),
           turns: const [
             TurnRecord(
               index: 1,
@@ -98,7 +96,6 @@ void main() {
 
       expect(listings.map((listing) => listing.id), [newer.id, older.id]);
       expect(listings.first.title, 'A flat in Stockholm');
-      expect(listings.first.marketId, 'SE');
     });
 
     test('one turn at a time runs, until the lease runs out', () async {

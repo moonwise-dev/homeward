@@ -7,8 +7,6 @@ import 'package:homeward_server/sessions/sessions_handler.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../tools/tool_fixtures.dart';
-
 void main() {
   late InMemorySessionRepository sessions;
   late SessionsHandler handler;
@@ -17,7 +15,7 @@ void main() {
   setUp(() {
     made = 0;
     sessions = InMemorySessionRepository(newId: () => 's-${++made}');
-    handler = SessionsHandler(sessions, realMarkets);
+    handler = SessionsHandler(sessions);
   });
 
   Request get(String path, {String? uid = 'uid-1'}) {
@@ -57,13 +55,10 @@ void main() {
     });
   });
 
-  test('lists the caller own plans with the market each is about', () async {
+  test('lists the caller own plans', () async {
     final mine = await sessions.create('uid-1');
     await sessions.save(
-      mine.copyWith(
-        plan: Plan(marketId: MarketId.parse('PT-30')),
-        turnCount: 3,
-      ),
+      mine.copyWith(turnCount: 3),
     );
     await sessions.save((await sessions.create('uid-2')));
 
@@ -77,12 +72,7 @@ void main() {
           PlanListing.fromJson(listing! as Map<String, Object?>),
       ],
       [
-        const PlanListing(
-          sessionId: 's-1',
-          turnCount: 3,
-          marketId: 'PT-30',
-          marketName: 'Madeira, Portugal',
-        ),
+        const PlanListing(sessionId: 's-1', turnCount: 3),
       ],
     );
   });
@@ -91,7 +81,6 @@ void main() {
     final session = await sessions.create('uid-1');
     await sessions.save(
       session.copyWith(
-        plan: Plan(marketId: MarketId.parse('SE')),
         turnCount: 1,
         turns: [
           const TurnRecord(

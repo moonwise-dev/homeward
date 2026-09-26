@@ -18,11 +18,9 @@ abstract class ServerConfig with _$ServerConfig {
     required Duration firstStepDeadline,
     required Duration modelCooldown,
     required int maxCorrections,
-    required bool deal,
     required List<String> allowedOrigins,
     required bool appCheckEnforced,
     required String promptsDirectory,
-    required String marketsDirectory,
     required SessionStore sessionStore,
   }) = _ServerConfig;
 
@@ -53,7 +51,6 @@ abstract class ServerConfig with _$ServerConfig {
       firstStepDeadline: seconds('HOMEWARD_FIRST_STEP_DEADLINE', 20),
       modelCooldown: seconds('HOMEWARD_MODEL_COOLDOWN', 300),
       maxCorrections: int.parse(read('HOMEWARD_MAX_CORRECTIONS', '2')),
-      deal: read('HOMEWARD_DEAL', 'off') == 'on',
       allowedOrigins: list(
         'HOMEWARD_ALLOWED_ORIGINS',
         'https://homeward-genui.web.app,'
@@ -62,7 +59,6 @@ abstract class ServerConfig with _$ServerConfig {
       ),
       appCheckEnforced: read('HOMEWARD_APP_CHECK_ENFORCED', 'true') == 'true',
       promptsDirectory: read('HOMEWARD_PROMPTS_DIR', 'server/prompts'),
-      marketsDirectory: read('HOMEWARD_MARKETS_DIR', 'markets'),
       sessionStore: SessionStore.values.byName(
         read('HOMEWARD_SESSION_STORE', _storeFor(environment).name),
       ),

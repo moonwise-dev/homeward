@@ -2,6 +2,7 @@ import 'package:common/common.dart';
 
 import 'polite_client.dart';
 import 'polyline.dart';
+import 'travel_route.dart';
 
 final class Routing {
   Routing(
@@ -23,13 +24,17 @@ final class Routing {
   final Uri transit;
   final DateTime Function() _now;
 
-  Future<Measurement> route(GeoPoint from, GeoPoint to, TravelMode mode) =>
+  Future<TravelRoute?> route(GeoPoint from, GeoPoint to, TravelMode mode) =>
       switch (mode) {
         TravelMode.transit => _transit(from, to),
         _ => _road(from, to, mode),
       };
 
-  Future<Measurement> _road(GeoPoint from, GeoPoint to, TravelMode mode) async {
+  Future<TravelRoute?> _road(
+    GeoPoint from,
+    GeoPoint to,
+    TravelMode mode,
+  ) async {
     final profile = switch (mode) {
       TravelMode.walk => 'foot',
       TravelMode.bike => 'bike',
@@ -53,7 +58,7 @@ final class Routing {
         ...,
       ],
     }) {
-      return Measurement.route(
+      return (
         mode: mode,
         minutes: (seconds / 60).ceil(),
         meters: meters.round(),
@@ -64,10 +69,10 @@ final class Routing {
         ],
       );
     }
-    return const Measurement.none();
+    return null;
   }
 
-  Future<Measurement> _transit(GeoPoint from, GeoPoint to) async {
+  Future<TravelRoute?> _transit(GeoPoint from, GeoPoint to) async {
     final json = await _client.getJson(
       transit.replace(
         queryParameters: {
@@ -84,7 +89,7 @@ final class Routing {
       _ => <Map<String, Object?>>[],
     };
     if (itineraries.isEmpty) {
-      return const Measurement.none();
+      return null;
     }
     final fastest = itineraries.reduce(
       (a, b) => (a['duration'] as num) <= (b['duration'] as num) ? a : b,
@@ -101,7 +106,7 @@ final class Routing {
             precision: (geometry['precision'] as num?)?.toInt() ?? 5,
           ),
     ];
-    return Measurement.route(
+    return (
       mode: TravelMode.transit,
       minutes: ((fastest['duration'] as num) / 60).ceil(),
       meters: _length(path),

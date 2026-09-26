@@ -4,6 +4,7 @@ import 'package:common/common.dart';
 import 'package:logging/logging.dart';
 
 import '../../data/models/session.dart';
+import '../../errors/homeward_failure.dart';
 import '../../gemini/gemini_exception.dart';
 import '../../gemini/interaction_cancelled.dart';
 import '../../gemini/interaction_event.dart';
@@ -11,9 +12,7 @@ import '../../gemini/interaction_input.dart';
 import '../../gemini/interaction_request.dart';
 import '../../gemini/tool_choice.dart';
 import '../../logging/log_entry.dart';
-import '../../tools/profile_field_paths.dart';
 import '../actions/action_input.dart';
-import '../actions/apply_action.dart';
 import '../json_reply_parser.dart';
 import '../output_parser.dart';
 import '../parsed_output.dart';
@@ -26,22 +25,16 @@ import '../validation/turn_validator.dart';
 import '../validation/validation_failure.dart';
 import '../validation/validation_outcome.dart';
 import 'correction_input.dart';
+import 'create_interaction.dart';
 import 'drawn_components.dart';
-import 'homes_fallback.dart';
 import 'progress_log.dart';
 import 'replay_shadow.dart';
-import 'create_interaction.dart';
 import 'retry_surface.dart';
-import 'surface_due_note.dart';
 import 'surface_seeder.dart';
 import 'tool_belt.dart';
 import 'tools_done_note.dart';
 import 'turn_event.dart';
 import 'turn_input.dart';
-import '../../research/gemini_researcher.dart';
-import '../../research/researcher.dart';
-import '../../errors/homeward_failure.dart';
-import 'turn_seeds.dart';
 import 'turn_settings.dart';
 
 final _log = Logger('turn');
@@ -57,7 +50,6 @@ final class TurnRun {
     required this.now,
   }) : turn = session.turnCount + 1,
        _session = session,
-       _plan = session.plan,
        _interactionId = session.lastInteractionId,
        _validator = TurnValidator(
          turn: session.turnCount + 1,
@@ -75,17 +67,11 @@ final class TurnRun {
   final Session _session;
   final TurnValidator _validator;
   final _seeder = SurfaceSeeder();
-  Researcher? _researcher;
-  Set<String> _withheld = const {};
   final _progress = ProgressLog();
   final _forwarded = <Map<String, Object?>>[];
-  final _calledSeeds = <Map<String, Object?>>[];
-  final _calledNames = <String>{};
-  final _settledNames = <String>{};
   final _pendingFailures = <ValidationFailure>[];
   final _rejectedSources = <String>[];
   final _text = StringBuffer();
-  Plan _plan;
   String? _interactionId;
   var _emittedText = '';
   var _separateRound = false;
@@ -96,7 +82,6 @@ final class TurnRun {
   String? _errorCode;
 
   Session get session => _session.copyWith(
-    plan: _plan,
     turnCount: turn,
     lastInteractionId: _interactionId,
     updatedAt: now(),
@@ -118,40 +103,22 @@ final class TurnRun {
     required String apiKey,
     Future<void>? cancellation,
   }) async* {
-    _withheld = switch (turnInput) {
-      ActionTurnInput(:final action) => switch (SurfaceAction.named(
-        action.name,
-      )) {
-        SurfaceAction.commitStory || SurfaceAction.chooseHome => const {
-          'propose_story',
-        },
-        _ => const {},
-      },
-      _ => const {},
-    };
-    _researcher = GeminiResearcher(
-      createInteraction: createInteraction,
-      apiKey: apiKey,
-      thinkingLevel: settings.thinkingLevel,
-    );
     _turnRequest = switch (turnInput) {
       TextTurnInput(:final text) => RecordedInput.text(text),
       ActionTurnInput(:final action) => recordedInputOf(action),
     };
-    late final String firstText;
-    yield* _progress.whileRunning(
-      () async => firstText = await _modelText(turnInput),
-    );
-    final firstInput = InteractionInput.text(firstText);
+    final firstInput = InteractionInput.text(switch (turnInput) {
+      TextTurnInput(:final text) => text,
+      ActionTurnInput(:final action, :final surfaceData) => actionInput(
+        action,
+        surfaceData,
+      ),
+    });
     InteractionInput input = firstInput;
     var toolRounds = 0;
     var corrections = 0;
-    var askedForSurface = false;
     var mayStartOver = true;
     var correcting = false;
-    var nudged = false;
-    Stream<TurnEvent> emit(ParsedOutput output) =>
-        nudged && output is ProseOutput ? const Stream.empty() : _emit(output);
     while (true) {
       final constrained = correcting;
       correcting = false;
@@ -166,13 +133,10 @@ final class TurnRun {
       _rounds++;
       final roundClock = Stopwatch()..start();
       String? status;
-      late final InteractionRequest request;
-      yield* _progress.whileRunning(
-        () async => request = await _request(
-          input,
-          allowToolCalls: toolRounds < settings.maxToolRounds,
-          constrained: constrained,
-        ),
+      final request = _request(
+        input,
+        allowToolCalls: toolRounds < settings.maxToolRounds,
+        constrained: constrained,
       );
       try {
         await for (final event in createInteraction(
@@ -184,7 +148,7 @@ final class TurnRun {
           switch (event) {
             case TextDelta(:final text):
               for (final output in parser.add(text)) {
-                yield* emit(output);
+                yield* _emit(output);
               }
             case FunctionCall():
               calls.add(event);
@@ -253,64 +217,33 @@ final class TurnRun {
         ),
       );
       for (final output in parser.close()) {
-        yield* emit(output);
+        yield* _emit(output);
       }
-      final drewNothing =
-          _acceptedInRound == 0 &&
-          _text.toString().trim() == textBeforeRound.trim();
-      if (calls.isNotEmpty &&
-          toolRounds < settings.maxToolRounds &&
-          (toolRounds == 0 || drewNothing)) {
-        toolRounds = calls.every(_isKnown)
-            ? settings.maxToolRounds
-            : toolRounds + 1;
-        final results = <String, FunctionResult>{};
+      if (calls.isNotEmpty && toolRounds < settings.maxToolRounds) {
+        toolRounds++;
+        final results = <FunctionResult>[];
         yield* _progress.whileRunning(() async {
-          for (final call
-              in [...calls]..sort(
-                (a, b) =>
-                    tools.orderOf(a.name).compareTo(tools.orderOf(b.name)),
-              )) {
-            results[call.callId] = await _runCall(call);
+          for (final call in calls) {
+            results.add(await _runCall(call));
           }
         });
         input = InteractionInput.functionResults(
-          [for (final call in calls) results[call.callId]!],
+          results,
           note: toolRounds < settings.maxToolRounds ? null : toolsDoneNote,
         );
         continue;
       }
-      if (_pendingFailures.isNotEmpty) {
-        if (corrections < settings.maxCorrections) {
-          corrections++;
-          input = InteractionInput.text(correctionInput(_pendingFailures));
-          _pendingFailures.clear();
-          correcting = true;
-          continue;
-        }
-        yield* _fallback();
+      if (_pendingFailures.isNotEmpty &&
+          corrections < settings.maxCorrections) {
+        corrections++;
+        input = InteractionInput.text(correctionInput(_pendingFailures));
+        _pendingFailures.clear();
+        correcting = true;
+        continue;
       }
-      if (_forwarded.isEmpty && !askedForSurface) {
-        askedForSurface = true;
-        if (surfaceDueNote(
-              _plan,
-              _market(),
-              caseOnly: turnInput is! ActionTurnInput,
-              deal: settings.deal,
-            )
-            case final note?) {
-          input = InteractionInput.text(note);
-          nudged = true;
-          continue;
-        }
-      }
-      if (_forwarded.isEmpty && _weekReady) {
-        yield* _weekFallback();
-      }
-      if (_forwarded.isEmpty &&
-          (_text.toString().trim().isEmpty ||
-              (turnInput is ActionTurnInput && _homesReady))) {
-        yield* _fallback();
+      if (_pendingFailures.isNotEmpty ||
+          (_forwarded.isEmpty && _text.toString().trim().isEmpty)) {
+        yield* _retry();
       }
       _log.info(
         LogEntry(
@@ -338,8 +271,6 @@ final class TurnRun {
       ),
     );
     _interactionId = null;
-    _calledNames.clear();
-    _calledSeeds.clear();
     _pendingFailures.clear();
     _rejectedSources.clear();
     _text.clear();
@@ -348,42 +279,6 @@ final class TurnRun {
   void _failed(HomewardFailure failure) {
     _status = TurnStatus.failed;
     _errorCode = failure.code.wireName;
-  }
-
-  Future<String> _modelText(TurnInput turnInput) async {
-    switch (turnInput) {
-      case TextTurnInput(:final text, :final reason):
-        if (reason != null) {
-          _plan = _plan.copyWith(story: _plan.story.copyWith(reason: reason));
-        }
-        return text;
-      case ActionTurnInput(:final action, :final surfaceData):
-        final outcome = applyAction(
-          action: action,
-          surfaceData: surfaceData,
-          plan: _plan,
-          markets: tools.markets,
-        );
-        _plan = outcome.plan;
-        final place = outcome.placeToFind;
-        if (place == null) {
-          return actionInput(outcome.summary);
-        }
-        final found = await tools.call(
-          'propose_story',
-          {
-            'anchors': [
-              for (final anchor in _plan.story.anchors)
-                {'label': anchor.label, 'query': anchor.query},
-              {'label': place.label, 'query': place.query},
-            ],
-          },
-          _plan,
-          steps: _progress,
-        );
-        _plan = found.plan ?? _plan;
-        return actionInput({...outcome.summary, 'place': found.modelResult});
-    }
   }
 
   void _logFailure(GeminiException error) => _log.warning(
@@ -398,81 +293,35 @@ final class TurnRun {
     ),
   );
 
-  Future<InteractionRequest> _request(
+  InteractionRequest _request(
     InteractionInput input, {
     required bool allowToolCalls,
     required bool constrained,
-  }) async {
-    final run = await tools.runSettled(
-      _plan,
-      steps: _progress,
-      researcher: _researcher,
-    );
-    final settled = run.results;
-    _plan = run.plan;
-    _settledNames.addAll(settled.keys);
-    _validator
-      ..seeds = turnSeeds(
-        _plan,
-        [..._calledSeeds, for (final result in settled.values) result.seeds],
-        lineups: tools.markets.samples.lineupsOf(_plan.story.sampleCity),
-        swipe: _plan.story.committed
-            ? const []
-            : tools.markets.samples.swipeDeckOf(_plan.story.sampleCity),
-      )
-      ..requiredProfilePaths = _requiredProfilePaths()
-      ..mustAsk = caseMustAsk(_plan.story).toSet();
-    return InteractionRequest(
-      input: input,
-      systemInstruction: prompts.systemInstruction(
-        turnContext(
-          turn: turn,
-          plan: _plan,
-          markets: tools.markets,
-          surfacesUsed: {
-            ..._surfaceIds(_session.messages),
-            ..._validator.surfacesCreated,
-          },
-          preRun: {
-            for (final MapEntry(key: name, value: result) in settled.entries)
-              name: result.modelResult,
-          },
-          deal: settings.deal,
-        ),
+  }) => InteractionRequest(
+    input: input,
+    systemInstruction: prompts.systemInstruction(
+      turnContext(
+        turn: turn,
+        surfacesUsed: {
+          ..._surfaceIds(_session.messages),
+          ..._validator.surfacesCreated,
+        },
       ),
-      tools: tools.declarationsFor(_plan, withholding: _withheld),
-      toolChoice: allowToolCalls ? null : ToolChoice.none,
-      thinkingLevel: settings.thinkingLevel,
-      previousInteractionId: _interactionId,
-      responseSchema: constrained
-          ? catalogResponseSchema({
-              ...correctionLayout,
-              if (_validator.mustAsk.isNotEmpty) ...caseQuestionCards,
-              ...drawnComponents([
-                ..._rejectedSources,
-                for (final message in _forwarded) jsonEncode(message),
-              ]),
-            })
-          : null,
-    );
-  }
-
-  ResolvedMarket? _market() => switch (_plan.marketId) {
-    final id? => tools.markets.resolveFor(id, _plan.profile),
-    null => null,
-  };
-
-  Set<String> _requiredProfilePaths() {
-    final marketId = _plan.marketId;
-    final market = marketId == null
-        ? null
-        : tools.markets.resolveFor(marketId, _plan.profile);
-    return {
-      if (market != null)
-        for (final field in missingProfileFields(_plan.profile, market))
-          ...profileFieldPaths(field),
-    };
-  }
+    ),
+    tools: tools.declarations,
+    toolChoice: allowToolCalls ? null : ToolChoice.none,
+    thinkingLevel: settings.thinkingLevel,
+    previousInteractionId: _interactionId,
+    responseSchema: constrained
+        ? catalogResponseSchema({
+            ...correctionLayout,
+            ...drawnComponents([
+              ..._rejectedSources,
+              for (final message in _forwarded) jsonEncode(message),
+            ]),
+          })
+        : null,
+  );
 
   Stream<TurnEvent> _emit(ParsedOutput output) async* {
     switch (output) {
@@ -526,71 +375,23 @@ final class TurnRun {
     }
   }
 
-  bool get _homesReady =>
-      _validator.seeds.containsKey(assessmentSlice.name) &&
-      _plan.story.chosen == null &&
-      !_validator.drewComponents;
-
-  bool get _weekReady =>
-      !settings.deal &&
-      _plan.story.chosen != null &&
-      _validator.seeds.containsKey(assessmentSlice.name) &&
-      !_validator.drewComponents;
-
-  Stream<TurnEvent> _weekFallback() async* {
-    final empty = _validator.emptySurfaces.firstOrNull;
-    for (final source in weekFallback(
-      empty ?? InlineSurfaces.id(turn, 'week'),
-      _plan.story.chosen!.id,
-      create: empty == null,
-    )) {
-      yield* _validated(source);
-    }
-    _logFallback('week');
-  }
-
-  Stream<TurnEvent> _fallback() async* {
-    final failuresBefore = _pendingFailures.length;
-    if (_homesReady) {
-      final empty = _validator.emptySurfaces.firstOrNull;
-      for (final source in homesFallback(
-        empty ?? InlineSurfaces.id(turn, 'homes'),
-        create: empty == null,
-      )) {
-        yield* _validated(source);
-      }
-      if (_pendingFailures.length == failuresBefore) {
-        _logFallback('homes');
-        return;
-      }
-    }
-    _logFallback('retry');
+  Stream<TurnEvent> _retry() async* {
+    _log.info(
+      LogEntry('Retry notice drawn in turn $turn', fields: {'turn': turn}),
+    );
     for (final message in retrySurface(turn)) {
       _forwarded.add(message);
       yield TurnEvent.message(message);
     }
   }
 
-  void _logFallback(String fallback) => _log.info(
-    LogEntry(
-      'Fallback drawn in turn $turn',
-      fields: {'turn': turn, 'fallback': fallback},
-    ),
-  );
-
-  bool _isKnown(FunctionCall call) =>
-      _settledNames.contains(call.name) || _calledNames.contains(call.name);
-
   Future<FunctionResult> _runCall(FunctionCall call) async {
-    _calledNames.add(call.name);
     final result = await tools.call(
       call.name,
       call.arguments,
-      _plan,
       steps: _progress,
     );
-    _plan = result.plan ?? _plan;
-    _calledSeeds.add(result.seeds);
+    _validator.seeds = {..._validator.seeds, ...result.seeds};
     return FunctionResult(
       callId: call.callId,
       name: call.name,

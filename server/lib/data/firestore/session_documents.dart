@@ -7,7 +7,6 @@ import '../models/session.dart';
 import '../models/session_listing.dart';
 
 const sessionsCollection = 'sessions';
-const plansCollection = 'plans';
 const turnsCollection = 'turns';
 
 String turnDocumentId(String sessionId, int index) => '$sessionId-$index';
@@ -15,15 +14,8 @@ String turnDocumentId(String sessionId, int index) => '$sessionId-$index';
 Map<String, Object?> sessionDocument(Session session) => {
   'ownerUid': session.ownerUid,
   'title': session.title,
-  'marketId': session.plan.marketId?.code,
   'turnCount': session.turnCount,
   'lastInteractionId': session.lastInteractionId,
-  'updatedAt': session.updatedAt,
-};
-
-Map<String, Object?> planDocument(Session session) => {
-  'ownerUid': session.ownerUid,
-  'planJson': jsonEncode(session.plan.toJson()),
   'updatedAt': session.updatedAt,
 };
 
@@ -43,12 +35,10 @@ Map<String, Object?> mergeable(Map<String, Object?> document) => {
 Session sessionOf({
   required String id,
   required Map<String, Object?> document,
-  Map<String, Object?>? plan,
   List<Map<String, Object?>> turns = const [],
 }) => Session(
   id: id,
   ownerUid: document['ownerUid']! as String,
-  plan: plan == null ? const Plan() : Plan.fromJson(_decode(plan['planJson'])),
   turnCount: countOf(document['turnCount']),
   lastInteractionId: document['lastInteractionId'] as String?,
   updatedAt: dateTimeOf(document['updatedAt']),
@@ -62,7 +52,6 @@ SessionListing listingOf(String id, Map<String, Object?> document) =>
       id: id,
       turnCount: countOf(document['turnCount']),
       title: document['title'] as String?,
-      marketId: document['marketId'] as String?,
       updatedAt: dateTimeOf(document['updatedAt']),
     );
 
