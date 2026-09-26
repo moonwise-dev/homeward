@@ -5,13 +5,16 @@ and contributors; detailed product and implementation rules live in `docs/`.
 
 ## Project Overview
 
-Homeward is a relocation agent built as an A2UI vertical sample for the
-Flutter GenUI initiative. It works on a move the way a coding agent works on a
-codebase: a buyer tells it a little, Gemini deduces what it can, looks up what
-it can find out, asks one decision at a time, keeps a brief of what it learned,
-and offers areas, homes, and research once it knows enough. The screen is
-composed from Homeward's building blocks as the conversation goes, so two
-buyers with different stories see different screens. Nothing is scripted.
+Homeward is a home-finance agent, Moonwise's sample for the finance and
+fintech vertical of the Flutter GenUI initiative (D138). It works on a
+household's money decision the way a coding agent works on a codebase: a buyer
+tells it a little, Gemini deduces what it can, looks up what it can find out,
+asks one decision at a time, and keeps a brief of what it learned. The money
+is the spine: what they can borrow, what a specific home costs them each
+month, the mortgage options, the stress test, and rent split; the story, needs,
+and week make it personal. The screen is composed from Homeward's building
+blocks as the conversation goes, so two households with different stories see
+different screens. Nothing is scripted.
 
 The system is agent-driven and server-owned. A Dart server on Cloud Run runs
 the composing agent and its tools; open map data and routing supply the facts.

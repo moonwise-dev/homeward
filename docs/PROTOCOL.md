@@ -283,7 +283,9 @@ Placement is encoded in the surface ID so it survives any connector.
 | `plan` | The buyer's screen, the whole journey | Model, validated by server (D131) |
 
 A plan has one surface, its living screen. `planSurfaceId` in
-`common/lib/wire/plan_surface.dart` names it.
+`common/lib/wire/plan_surface.dart` names it. C2 brings back inline surfaces,
+`t{turn}-{slug}`, for the questions and options a turn asks in the
+conversation, beside `plan` (D139); these rules change then, docs first.
 
 ### Lifecycle
 

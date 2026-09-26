@@ -4,7 +4,7 @@
 
 | Date | Event | Source |
 | --- | --- | --- |
-| 2026-09-28 | Working group and demo build session; shows the direction (D130 to D135), the foundation, and C1 to C3 if ready | Hilda Arteaga, 2026-09-14 |
+| 2026-09-28 | Working group and demo build session; shows the fintech realignment (D138 to D142), the foundation, and C1 to C2 if ready | Hilda Arteaga, 2026-09-14 |
 | ~2026-10-10 | Recording deadline for Andrew Brogdon's GenUI video segment | Andrew Brogdon, 2026-09-10: "around this time next month"; confirm exact date |
 | 2026-11 | Livestream premiere, date unannounced | Andrew Brogdon, 2026-09-10 |
 
@@ -24,81 +24,67 @@ case's script. On 2026-09-26 all of that was removed (D129): the server had
 taken the flow away from the model, so the app read as a filter rather than
 generated UI. It is in git history at `6faa8ab`.
 
-### The Rebuild — Chunks C1 to C13
+### The Rebuild — Chunks C1 to C10
 
-The rebuild runs in small chunks, grouped into steps R1 to R7. Each chunk is
-one visible change, demoable on its own, and says what it leaves out. Each ends
-with `make check` green, a live probe with a few test stories, and a visual
-look; no new unit tests are written (D137). Earlier work to bring back from
-`6faa8ab` is named where it exists. The recording targets R1 to R4.
+The rebuild runs in small chunks. Each chunk is one visible change, demoable
+on its own, and says what it leaves out. Each ends with `make check` green, a
+live probe with a few test stories, and a visual look; no new unit tests are
+written (D137). Earlier work to bring back from `6faa8ab` is named where it
+exists, restored only as far as the chunk needs and never with the server
+scripting D129 removed. The order puts finance and domain blocks first, since
+Homeward is a finance sample and screens of basic components read as forms
+(D138). The recording targets C1 to C10: 25 to 30 components (D140) and the
+four journeys of `docs/PRODUCT.md` (D141).
 
-#### R1 The Brief And The Living Screen — next
-
-- **C1 One living surface — done.** A plan's screen is one surface that later turns
-  update in place, instead of a new card per turn; the ownership pass allows
-  it (D131). Leaves out the brief and new blocks.
-- **C2 The brief.** An `update_brief` tool and a `/brief` slice, stored with
-  the session and seeded into the data model; Gemini draws it with basic
-  components (D132). Leaves out editing it on the screen.
-- **C3 Asking like a coding agent.** Prompt only: deduce first, never ask what
-  a tool can find out, one decision at a time as a choice with a
-  recommendation, typing always open (D130).
-- **C4 `Fact`.** The first Homeward block: a statement, its source, and
-  confirm or correct. Edits reach the brief with the next action.
-
-#### R2 The Map
-
-- **C5 The Maps renderer package.** After a short S11: the Maps Agentic UI
-  Toolkit's `GoogleMap`, schema vendored at a pinned commit, drawn with
-  `google_maps_flutter` with center, zoom, and markers, shown in the gallery
-  (D133). Leaves out routes and agent use.
-- **C6 Places on the living screen.** A `find_place` tool over Nominatim, the
-  brief's places pinned, and a validation pass that checks marker coordinates
-  against the places tools returned.
-
-#### R3 The Week
-
-- **C7 Routes drawn.** The renderer's route resolver draws the routes the
-  server measured.
-- **C8 Weekly travel.** Habits with how often, a `measure_week` tool, and a
-  weekly travel block (D127's routine, without its card).
-
-#### R4 Homes With The Why
-
-- **C9 Sample homes.** A labelled pool of sample listings in one city, with
-  long descriptions, and a `search_homes` tool.
-- **C10 Needs read from listings.** Needs read from descriptions with every
-  quote checked word for word (the listing reader of D126), and a home block
-  with sourced reasons and shortfalls.
-
-#### R5 Areas
-
-- **C11 Areas for any city.** Neighbourhoods scored against the week and the
-  needs, from open data (D134).
-
-#### R6 Pasted Listings
-
-- S13, then **C12**: a listing the buyer pastes, read on the spot against the
-  brief.
-
-#### R7 Research On The Spot
-
-- S12, then **C13**: money and local rules researched when the buyer asks,
-  quoted with sources, figures from `common` (D135).
+- **C1 One living surface — done.** A plan's screen is one surface that later
+  turns update in place, instead of a new card per turn; the ownership pass
+  allows it (D131).
+- **C2 Two patterns.** Inline asks in the conversation beside the plan panel
+  (D139): the validator accepts `plan` in any turn and `t{turn}-{slug}` in its
+  own turn, and the app shows the conversation with its inline cards next to
+  the plan panel, or the panel as a tab on a phone. Leaves out new blocks.
+- **C3 Progressive disclosure.** After S16: the catalog skill carries a
+  compact index of every component, and full schemas and examples arrive when
+  Gemini asks for them, so 25 to 30 components fit the free tier (D140).
+- **C4 Understanding.** An `update_brief` tool and a `/brief` slice stored with
+  the session (D132); the `Fact` and `Choice` blocks; the prompt that asks like
+  a coding agent (D130).
+- **C5 Money core.** Restored from `6faa8ab`: `common/lib/finance`,
+  `common/lib/affordability`, `common/lib/costs`, and the market model with
+  the Swedish and Portuguese packs, rates, and living costs, reduced to the
+  demo cities and labelled as samples. An affordability tool, and the
+  `AffordabilitySummary`, `MonthlyCostBreakdown`, and `RuleNote` blocks.
+- **C6 Mortgage options.** `MortgageOptions`, `DownPaymentSlider`,
+  `StressTestChart`, and `PurchaseCostsTable`, recomputed on the device.
+- **C7 Homes.** The restored sample homes of Stockholm and Lisbon, a
+  `search_homes` tool, and `HomeCard` with its monthly cost, `HomeComparison`,
+  and `Shortlist`.
+- **C8 Place.** After S11: the Maps renderer package with the toolkit's
+  `GoogleMap` (D133), a `find_place` tool, `WeeklyTravel`, and
+  `RouteSummary`.
+- **C9 Sharing and choosing.** `RentSplit`, `BuyVsRent`, `HomeSwipe`, and
+  `ListingQuote`, with needs read from each listing and quotes checked word
+  for word (D126's reader).
+- **C10 Complete.** The catalog filled to 25 to 30, the gallery showing each
+  component beside its parameters, the README with the journeys, and the
+  journeys rehearsed.
 
 #### Later
 
+- S12, then on-the-spot research of rules and rates (D142).
+- S13, then reading a listing the buyer pastes (D142).
 - S14 and `PlaceDetailsCompact`.
-- Swipe cards for taste (D128's idea, rebuilt as a block).
 - S15, the toolkit's own client rendering a Homeward map surface.
+- Areas suggested for any city from open data.
 - Evals that score facts and validity, never which question came when.
 
 ### M4 Recording — around Oct 8 to Oct 10
 
-- Agree the segment outline with Andrew: a conversation that becomes a brief
-  and a screen, the week on the map, the homes with the why, then the code
-  that makes it possible (a building block, the Maps renderer, a tool, the
-  composing prompt).
+- Agree the segment outline with Andrew: a household's story that becomes a
+  plan, what they can afford, homes with what each costs them and why it fits,
+  the mortgage options and stress test for one of them, then the code that
+  makes it possible (a finance block, the Maps renderer, a tool, the composing
+  prompt).
 - Recording build tagged; a key whose daily quota is untouched that day; the
   server warmed with one request just before recording.
 - Backup: screen capture of every step recorded the day before.
@@ -106,6 +92,10 @@ look; no new unit tests are written (D137). Earlier work to bring back from
 ### M5 Sample Complete — Oct 13 to livestream
 
 - Public web deployment and README with screenshots.
+- The repository is the most important asset (Abdallah Shaban, 2026-09-03):
+  the README walks through the four journeys, how to add a component, and how
+  to add a tool, so a developer or a Google field engineer can build their own
+  finance journey from the catalog.
 - The gallery shows every building block beside its parameters.
 - Repository made public under Apache-2.0; a tutorial draft.
 - Dark theme.
@@ -132,11 +122,12 @@ look; no new unit tests are written (D137). Earlier work to bring back from
 | S8 | Can a buyer pick another model or API beside Gemini, and what does each route cost? | Desk research of Google and third-party provider limits, prices, APIs, and Dart libraries; one hero message on each candidate Gemini API model | **Answered:** `gemini-3.5-flash-lite` is the fallback candidate, Gemma 4 does not fit the free tier's 16k input tokens a minute, and an OpenAI-compatible provider choice follows the livestream (D80); see `docs/SPIKES.md`. |
 | S10 | Why does Gemini refuse the catalog as a response schema, and does an accepted schema constrain the output? | Bisecting the composed schema live, synthetic schemas, and chained corrections on the probe key | **Answered:** recursion and `allOf` are the obstacles; a flattened subset is enforced; see `docs/SPIKES.md` and D110. |
 | S9 | Can Homeward learn about any place on free keys: where things are, how far, how good, and what a listing says? | Open-data services and Gemini tools called around Stockholm on the probe key | **Answered:** open data covers where and how far with no key; Google Maps grounding and `url_context` work on free keys; see `docs/SPIKES.md`. |
-| S11 | Does `google_maps_flutter` draw the toolkit's `GoogleMap` on web, Android, and iOS: markers, anchor, satellite, tilt, and routes from a resolver? How does the Maps key reach each platform from the environment, and do the quotas cap at the free allowances? | A throwaway app on each platform with a restricted key | Before C5. |
-| S12 | Which sources answer money and local-rule questions on free keys, and how is each quote checked? | `url_context` on official pages, Google Search grounding on the models that have a free tier, our own fetch for checking quotes | Before C13. |
-| S13 | Can Homeward read a listing the buyer pastes, and check its quotes? | `url_context` against our own fetch, on listing sites in the demo cities | Before C12. |
+| S11 | Does `google_maps_flutter` draw the toolkit's `GoogleMap` on web, Android, and iOS: markers, anchor, satellite, tilt, and routes from a resolver? How does the Maps key reach each platform from the environment, and do the quotas cap at the free allowances? | A throwaway app on each platform with a restricted key | Before C8. |
+| S12 | Which sources answer money and local-rule questions on free keys, and how is each quote checked? | `url_context` on official pages, Google Search grounding on the models that have a free tier, our own fetch for checking quotes | After the recording (D142). |
+| S13 | Can Homeward read a listing the buyer pastes, and check its quotes? | `url_context` against our own fetch, on listing sites in the demo cities | After the recording (D142). |
 | S14 | Can Grounding Lite give Google place IDs for `PlaceDetailsCompact`, and how does Flutter show the place card? | Grounding Lite `search_places`; the `gmp-place-details-compact` element on web | Before `PlaceDetailsCompact`. |
-| S15 | Does the toolkit's own web client render a Homeward map surface? | Its React sample pointed at a local Homeward server | Optional, after C7. |
+| S16 | Does a catalog skill of 25 to 30 components fit the free tier, and does a compact index with schemas on demand keep Gemini as reliable as the full schema? | Measure prompt tokens and first-message validity for the full skill against an index plus a `component_docs` tool, on `gemini-3.5-flash-lite` with the probe key | Before C3. |
+| S15 | Does the toolkit's own web client render a Homeward map surface? | Its React sample pointed at a local Homeward server | Optional, after C8. |
 
 ## Risks
 
@@ -153,14 +144,18 @@ look; no new unit tests are written (D137). Earlier work to bring back from
 | Free-tier prompts may be used by Google to improve its products and read by human reviewers; the terms ask for no sensitive or personal information | Buyers' financial details lose a privacy promise | Quoted on the key screen with advice to use round figures or a billing-enabled key (D76); no names are ever asked; terms re-read before recording |
 | Public open-data services limit and refuse heavy use: Nominatim one request a second, Overpass and OSRM fair use | Slow or failed screens when many viewers arrive | A user agent naming Homeward, a cache per query, one request at a time per service |
 | Gemini draws weaker screens without the server steering it | A demo that wanders | A small catalog of expressive blocks, a clear prompt, and evals on validity and facts; no server rule that picks the next question (D129) |
-| The rebuild is not demoable by the Sep 28 session | Little to show at the session | Each chunk demoable on its own; show the direction and the foundation if C1 to C3 are not done |
+| The rebuild is not demoable by the Sep 28 session | Little to show at the session | Each chunk demoable on its own; show the direction and the foundation if C1 to C2 are not done |
 | An unscripted agent wanders on camera | A recording that loses its thread | Rehearsal with test stories kept outside the app, inputs only; a recorded backup; the brief keeps each turn anchored |
 | A coding-agent loop spends more free requests per turn | The buyer's daily quota runs out sooner | Lookups that are cheap; research only on request; the tool-round cap stays |
 | The Maps key sits on a billing account | A bill if usage passes the free allowances | Quotas capped at the free allowances, the budget alert, the key restricted by referrer and bundle ID |
 | `google_maps_flutter` has no macOS support | The development build shows no map | A placeholder on macOS; record on web or mobile |
 | The Maps toolkit is alpha | Its schema changes under us | The schema vendored at a pinned commit (D133) |
 | The Flutter map is 2D where the toolkit's web client draws 3D | Tilt looks different from Google's own client | Said plainly in the docs and the README |
-| Sample homes read as fake | The needs reading looks staged | Labelled as samples; a pasted real listing is read the same way (C12) |
+| Sample homes read as fake | The needs reading looks staged | Labelled as samples; reading a pasted real listing follows after the recording (D142) |
+| Homeward reads as a relocation app, not a finance sample | Google's finance vertical goes unmet; field engineers find no reusable finance components | Money in every journey and in the recording, finance blocks first in the build order (D138) |
+| 25 to 30 components in about twelve days | Unfinished blocks on camera | Finance math and six finance blocks restored from `6faa8ab`; each chunk demoable; the gallery shows only finished blocks |
+| A catalog of 25 to 30 components outgrows the prompt | Slower turns, more corrections, the free tier's token limits | Progressive disclosure after S16 (D140) |
+| The restored finance was the slowest and least reliable part before (D125) | Money turns fail on camera | The math returns without the scripted deal: Gemini composes the finance blocks freely, and tools seed the figures |
 | BYO key friction for video viewers | Fewer people try the demo | One-screen key flow with direct AI Studio link; hero prompt ready on first plan |
 | Buyers' personal details in EU | Compliance exposure | Anonymous auth, `eur3`, no content in logs, delete controls, 90-day inactivity cleanup |
 
@@ -247,14 +242,19 @@ superseded stay as history.
 | D127 | The routine and the week map | Each place the buyer goes gets how often, and one routine card sets the week with taps: the places the case knows, days a week for each, and places to add on the map. Code computes each home's weekly travel time from the measured trips, and the map draws each routine trip with its frequency. The routine is an essential clue once a daily place is on the map, so the case asks at most six questions, not five. The map component takes the property names of the Maps Agentic UI Toolkit's `GoogleMap`: `center`, `zoom`, `markers`, `routes` with `origin` and `destination`, and `travelMode`, drawn on OpenStreetMap, which D133 replaces with the toolkit's own component on Google Maps. Workshop feedback asked to map the buyer's actual routine, such as three office days and a weekly clinic visit, with a weekly commute figure and the routes drawn, and pointed at the toolkit | A median over departure times, which needs several routing calls per trip; the toolkit itself, which has no Flutter client and needs a Maps Platform key with billing |
 | D128 | Swipe clues | A `HomeSwipe` card deals six of the city's sample homes that differ in type, outdoor space, style, and size. The buyer keeps or passes each with a swipe or a tap, and the server reads what the kept homes share that the passed ones lack: a kind of home, outdoor space, or style it then sets on the story, and the pattern it hands the model for its next deduction, such as every flat passed. The model draws it where it would draw the homes lineup. Stairs were planned as a fourth trait, but only a listing reading knows them, and that waits for needs | Photos alone, which carry taste but not size or price |
 | D129 | The reset | Clean the project down to what is essential and certainly correct, and rebuild in small steps around one screen per buyer that Gemini composes and updates as the buyer talks. Kept: the server platform, the agent loop with validation and correction rounds, the catalog contract with basic components only, the app shell with renderer, gallery, and wire inspector, money and geo types, the probe, and the open-data clients. Removed: the case and every question card (D121, D123, D126 to D128), the story model and its tools, the sample homes and photos (D122), the deal with its finance code, rule packs, and markets (D113, D125), the plan record, the fixed action list, and the evals (D93). Actions are now named by the model and handed back to it with their surface's data model. Reviewed on 2026-09-26, the app still felt like a filter dressed as AI: each live failure had been fixed with a server rule (must-ask lists, rejections, withheld tools, fallbacks the server drew), until the server scripted the flow and Gemini only worded it, and the evals scored the script | Stripping the guardrails but keeping the question cards; a full restart in a new repository |
-| D130 | What Homeward is | A relocation agent that works like a coding agent. There are no scenarios and no scripted flows: Gemini deduces what it can from what the buyer says and shows it as assumed, with the words it came from; never asks what a tool can find out; asks one real decision at a time, as a choice on the screen with its recommendation, with typing always open; shows its work while tools run; and proposes, for the buyer to approve or correct. The server only validates (D129). Set on 2026-09-26 from the pitch, two emails from Google's Vishal (a screen that confirms the buyer's own filters before homes, needs read from long listings with each reason's source, the buyer's week on a map, the Maps Agentic UI Toolkit, and later mortgage options, rentals, and roommates), and the owner's call for "a specialised agent for relocating, like you are for coding" | Two fixed demo stories; a question flow chosen by the server, which D129 removed |
-| D131 | The living screen grows | One surface per plan, updated in place. It starts with the brief, the open question, and the buyer's week on the map; "Looks right" grows solutions onto the same screen, and a later correction re-ranks them in place. This is the confirmation before homes that Google asked for, without a wizard | A confirmation screen and then a separate homes screen, which reads as steps; homes from the first message with the understanding above them, which skips the confirmation |
+| D130 | What Homeward is | A relocation agent that works like a coding agent. There are no scenarios and no scripted flows: Gemini deduces what it can from what the buyer says and shows it as assumed, with the words it came from; never asks what a tool can find out; asks one real decision at a time, as a choice on the screen with its recommendation, with typing always open; shows its work while tools run; and proposes, for the buyer to approve or correct. The server only validates (D129). Set on 2026-09-26 from the pitch, two emails from Google's Vishal (a screen that confirms the buyer's own filters before homes, needs read from long listings with each reason's source, the buyer's week on a map, the Maps Agentic UI Toolkit, and later mortgage options, rentals, and roommates), and the owner's call for "a specialised agent for relocating, like you are for coding". Amended by D138: a home-finance agent | Two fixed demo stories; a question flow chosen by the server, which D129 removed |
+| D131 | The living screen grows | One surface per plan, updated in place. It starts with the brief, the open question, and the buyer's week on the map; "Looks right" grows solutions onto the same screen, and a later correction re-ranks them in place. This is the confirmation before homes that Google asked for, without a wizard. D139 adds inline asks beside it | A confirmation screen and then a separate homes screen, which reads as steps; homes from the first message with the understanding above them, which skips the confirmation |
 | D132 | The brief | Gemini's own notes on the buyer, written with a tool, the way a coding agent keeps a plan: needs, habits (a place and how often), wants, places, and open questions, each marked said, deduced (from which words), measured, or quoted. Stored with the session, seeded into the data model for the screen, edited by the buyer, and read by tools, such as the week's places for routes. The server never decides from it | The understanding only in what Gemini draws, re-read from the conversation each turn, which tools cannot read and long sessions drift from; the plan record D129 removed, which the server filled |
 | D133 | Maps | Homeward renders the Maps Agentic UI Toolkit's catalog (`googlemaps/a2ui`, alpha, Apache-2.0) in Flutter, which the toolkit does not. Its `GoogleMap` schema is vendored at a pinned commit, as the basic catalog is (D67), and joins Homeward's catalog; a reusable Flutter package draws it with `google_maps_flutter` on Android, iOS, and web, and resolves route geometry through an injectable resolver so that the drawn routes are the ones the server measured. Open data stays the measuring layer, and a validation pass checks the literal marker coordinates against places tools returned. The prompt adapts the toolkit's guidance on maps. The Maps key sits on the project's billing account, restricted by referrer and bundle ID, with quotas capped at the free allowances: the mobile SDKs are free without limit, and web maps have 10,000 free loads a month (checked 2026-09-26). Replaces D118, and the OSM drawing of D127 | The toolkit's properties drawn on OpenStreetMap, a component named after Google Maps that is not; the full Google stack with Grounding Lite for places and routes, kept for S14 |
-| D134 | Solutions | Offered when the conversation gets there, in the order Gemini judges: areas for any city, from open data; labelled sample homes it searches, with long, realistic descriptions; and listings the buyer pastes, read on the spot. Every reason a home fits, and every shortfall, carries its source: a quote checked word for word in code, a measurement, or the buyer's words | Sample homes only; areas only |
-| D135 | Money | Researched on the spot when the buyer wants it or accepts Homeward's offer: local rules and rates quoted with their sources, figures computed in `common` and labelled as estimates, rent split per person for people sharing. No prebuilt deal | A monthly cost block per home; the deal workspace from `6faa8ab` (D113), the slowest and least reliable part of earlier runs (D125) |
+| D134 | Solutions | Offered when the conversation gets there, in the order Gemini judges: areas for any city, from open data; labelled sample homes it searches, with long, realistic descriptions; and listings the buyer pastes, read on the spot. Every reason a home fits, and every shortfall, carries its source: a quote checked word for word in code, a measurement, or the buyer's words. Amended by D138 and D142 | Sample homes only; areas only |
+| D135 | Money | Researched on the spot when the buyer wants it or accepts Homeward's offer: local rules and rates quoted with their sources, figures computed in `common` and labelled as estimates, rent split per person for people sharing. No prebuilt deal. Superseded by D138 | A monthly cost block per home; the deal workspace from `6faa8ab` (D113), the slowest and least reliable part of earlier runs (D125) |
 | D136 | Cerebras | Not used. On 2026-09-26 the server's Cerebras key answered HTTP 402, payment required; the free trial now needs a payment method for $5 of credit that expires in 30 days. Even free it allows 5 requests a minute and 1M tokens a day on one key shared by every viewer, about 100 of today's 8.3k-token requests a day for everyone, against 15 a minute and 500 a day on each buyer's own Gemini Flash-Lite key. Gemma 4 on the Gemini key fits 16k input tokens a minute, about one request. Homeward stays on Gemini and spends fewer requests. Supersedes D100's third-party researcher; the provider choice after the livestream (D80) stays open | Cerebras for reading listings or research; Cerebras as a composing fallback |
 | D137 | Tests during the rebuild | No new unit tests. Existing tests keep running in `make check`, and a test goes when the behaviour it covers changes. Each chunk ends with `make check` green, a live probe with a few test stories, and a visual look | Tests for each chunk, as before the reset; no probe or visual check |
+| D138 | Fintech realignment | Homeward is a home-finance agent: Moonwise's assigned vertical at the kickoff on 2026-09-03 was finance and fintech, and the plan had drifted to a relocation app with money as an optional last chunk. The household's money decision is the spine: what they can borrow, what a specific home costs them each month, the mortgage options, the stress test, the upfront costs, and rent split between people sharing, computed in `common` from sample rates and rules for the demo cities, each labelled. The story, needs, and week make the numbers personal. Vishal Motwani endorsed the home idea in writing and named mortgage options and rent sharing himself; the kickoff said mocked data is fine. Distinct from Somnio's investing companion and Very Good Ventures' Life Goal Simulator: lending tied to a real home and household. Amends D130 and D134; supersedes D135 | Money only on request, researched on the spot (D135); pivoting to a small-business money copilot or shared household money, which would lose the endorsement two weeks before recording |
+| D139 | Two surface patterns | The two patterns Vishal showed at the kickoff: questions and options as inline cards in the conversation, `t{turn}-{slug}`, one turn each, so the history shows each decision, beside the living plan panel `plan` (D131), which holds the brief, the shortlist, the map, and the money. Wide screens show them side by side; a phone shows the panel as a tab. Amends D131 | One living screen holding the questions too, as C1 built it |
+| D140 | Catalog size | 25 to 30 components before the recording, in families: understanding, money, homes, place and travel, and trust. Vishal needed 12 to 13 for a decent demo and Abdallah Shaban asked for 20 to 30 so developers can build their own journeys on the catalog. The catalog skill moves to progressive disclosure after S16: a compact index of every component, with full schemas and examples on demand. Replaces the few-blocks principle | About 15 for the recording and 20 to 25 by M5; staying at about eight |
+| D141 | Journeys | Four named journeys, documented in `docs/PRODUCT.md` and the README, rehearsed, and used in the probe: can we afford it here, a home that works for Mum, sharing in Lisbon, and is this one worth it. They are capabilities; none is coded as a flow, so D130 holds. The kickoff asked for three to five well laid-out journeys | No named journeys, test stories only |
+| D142 | Deferred until after the recording | S12 and on-the-spot research of rules and rates, S13 and reading a listing the buyer pastes, and areas for any city. The recording's money comes from labelled sample rates and rules, which the kickoff called fine | Building them before the recording, at the cost of components |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.
@@ -279,8 +279,8 @@ them before M0 ends.
 
 1. Exact recording date, segment length, and production help from Andrew's
    team.
-2. Who attends the Sep 28 session. It shows the direction (D130 to D135) and
-   whatever of C1 to C3 is ready.
+2. Who attends the Sep 28 session. It shows the realignment (D138 to D142) and
+   whatever of C1 to C2 is ready.
 3. Whether Google wants a public deployment and where it will be linked.
 4. Catalog ID domain: `moonwise.se/homeward` or a dedicated domain.
 5. Reply on the email thread with project details, which Hilda asked Moonwise

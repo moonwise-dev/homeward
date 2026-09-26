@@ -15,10 +15,14 @@ only. Homeward's own blocks come back one at a time, each with the chunk of
 1. **Building blocks, not screens.** The catalog never holds a screen, a step,
    or a flow. Gemini composes every screen from blocks as the conversation
    goes, so two buyers end up on structurally different screens.
-2. **Few blocks, each expressive.** A small catalog keeps the prompt short and
-   Gemini reliable without server rules steering it. A block earns its place
-   when basic components cannot show what a buyer's story needs, such as a
-   map of their week or a home with the reasons it fits.
+2. **A catalog others can build on.** 25 to 30 blocks in families (D140), so
+   Homeward's journeys and the ones a developer or a Google field engineer
+   builds next share one vocabulary. The money blocks are the core of a
+   finance sample (D138). Each block is expressive on its own: it earns its
+   place when basic components cannot show what a household's story needs,
+   such as what a home costs them each month or their week on a map. The
+   skill stays within the free tier through progressive disclosure: a compact
+   index of every block, with full schemas on demand (S16).
 3. **Blocks carry the design, Gemini carries the layout.** A block draws one
    thing well with Homeward's tokens; Gemini decides which blocks a buyer's
    screen needs and how they sit together.
@@ -45,17 +49,37 @@ Buttons send actions the model names itself (`docs/PROTOCOL.md`).
 
 ## Planned Blocks
 
-Candidates, each confirmed, reshaped, or dropped by the chunk of
-`docs/ROADMAP.md` that needs it:
+Candidates toward 25 to 30 (D140), grouped in families, each confirmed,
+reshaped, or dropped by the chunk of `docs/ROADMAP.md` that needs it. Blocks
+marked restored come back from `6faa8ab`.
 
-| Block | Chunk | What it shows |
-| --- | --- | --- |
-| `Fact` | C4 | A statement with its source (said, deduced, measured, estimated, or quoted) and a way to confirm or correct it; the unit of the brief and of a home's reasons |
-| `GoogleMap` | C5 | The Maps Agentic UI Toolkit's map, with its schema vendored at a pinned commit from `googlemaps/a2ui` (`agent/python_agent/shared/schema/maps_catalog_extension.json`) and drawn by Homeward's Flutter Maps package (D133) |
-| Weekly travel | C8 | Each place in the buyer's week with how often they go and the measured trip, and the weekly total from one location |
-| Home | C10 | A sample or pasted home with its reasons and shortfalls as facts, and the listing text with each quote highlighted |
-| `PlaceDetailsCompact` | Later | The toolkit's place card, after S14 |
-| Cost estimate | C13 | Researched rules and rates with their sources, and the figures `common` computes from them |
+| Family | Block | Chunk | What it shows |
+| --- | --- | --- | --- |
+| Understanding | `Fact` | C4 | A statement with its source (said, deduced, measured, estimated, or quoted) and a way to confirm or correct it; the unit of the brief and of a home's reasons |
+| Understanding | `Choice` | C4 | An inline ask: one decision, its options, Gemini's recommendation first, and room to type |
+| Understanding | `Brief` | C4 | A section of the brief: the household, its needs, its week, or what is open |
+| Understanding | `HouseholdSummary` | C10 | Who moves, incomes and savings as stated, and who shares the costs |
+| Money | `AffordabilitySummary` | C5 | What the household can borrow and the price range it allows, and which rule limits it; restored |
+| Money | `MonthlyCostBreakdown` | C5 | What a home costs each month: interest, amortization, fees, and running costs; restored as `PaymentBreakdown` |
+| Money | `RuleNote` | C5 | A local lending rule or fee, with its source and whether it is a sample |
+| Money | `MortgageOptions` | C6 | Fixed against variable, down payment levels, and terms, side by side |
+| Money | `DownPaymentSlider` | C6 | A what-if recomputed on the device, bound to the seeded bounds |
+| Money | `StressTestChart` | C6 | The monthly cost as rates rise, against what the household can carry; restored |
+| Money | `PurchaseCostsTable` | C6 | The upfront costs: down payment, taxes, and fees; restored |
+| Money | `MoneyInput` | C6 | An amount in a currency, for incomes and savings; restored |
+| Money | `RentSplit` | C9 | Rent and bills split between people sharing, by the rule they choose |
+| Money | `BuyVsRent` | C9 | Buying a home against renting one like it, over the years they expect to stay |
+| Homes | `HomeCard` | C7 | A sample home with its monthly cost for this household and why it fits |
+| Homes | `HomeComparison` | C7 | Two or three homes side by side on cost, needs, and the week |
+| Homes | `Shortlist` | C7 | The homes the household kept, on the plan panel |
+| Homes | `HomeSwipe` | C9 | Keep or pass through homes to learn taste |
+| Homes | `ListingQuote` | C9 | The listing text with the sentence that meets a need highlighted |
+| Place and travel | `GoogleMap` | C8 | The Maps Agentic UI Toolkit's map, with its schema vendored at a pinned commit from `googlemaps/a2ui` (`agent/python_agent/shared/schema/maps_catalog_extension.json`) and drawn by Homeward's Flutter Maps package (D133) |
+| Place and travel | `WeeklyTravel` | C8 | Each place in the week with how often they go and the measured trip, and the weekly total from one home |
+| Place and travel | `RouteSummary` | C8 | One trip: mode, minutes, and distance, measured |
+| Place and travel | `MarketSnapshotCard` | C10 | The city's reference rates and typical costs, as samples; restored |
+| Place and travel | `PlaceDetailsCompact` | Later | The toolkit's place card, after S14 |
+| Trust | `EstimateNote` | C5 | Marks a figure as an estimate from sample rates, and says what would change it |
 
 `GoogleMap` keeps the toolkit's schema exactly, so a surface that uses it
 stays readable by the toolkit's own clients. Its `markers` and `routes` take

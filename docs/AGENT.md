@@ -114,7 +114,10 @@ minute and 24 of 20 a day.
   first. Typing stays open for any other answer.
 - **Propose, then build.** Gemini offers solutions when it judges it knows
   enough, and the buyer's confirmation or correction decides what grows next.
-  Money is offered as research, never assumed (D135).
+- **Money is the spine** (D138). Every journey reaches what the household can
+  borrow and what a home costs them; Gemini draws the money blocks once it
+  knows enough, and tools compute every figure from the sample rates and
+  rules.
 - **Never telegraph.** "Let me check…" is not a turn. Call the tool and draw the
   result in the same turn.
 - **Figures live in components.** Chat text refers to results in words and
@@ -139,7 +142,10 @@ a coding agent reads a file before editing it (D131).
 
 Planned in `docs/ROADMAP.md`:
 
-- **The brief (C2).** Gemini writes its notes on the buyer with
+- **Inline asks (C2).** Beside the plan panel, a turn may draw its question or
+  options as an inline surface of its own, `t{turn}-{slug}`, shown in the
+  conversation; the plan panel keeps the state (D139).
+- **The brief (C4).** Gemini writes its notes on the buyer with
   `update_brief`: needs, habits, wants, places, and open questions, each with
   its source. The server stores the brief with the session and seeds it as
   `/brief`, where the screen shows it and the buyer edits it; tools read it.
@@ -172,14 +178,18 @@ Planned tools, each arriving with its chunk:
 
 | Tool | Chunk | What it does |
 | --- | --- | --- |
-| `update_brief` | C2 | Records what Gemini learned or deduced, with its source |
-| `find_place` | C6 | Resolves a place the buyer names, with Nominatim |
-| `measure_week` | C8 | Measures each trip of the buyer's week from a location, and the weekly total |
-| `search_homes` | C9 | Searches the labelled sample homes |
-| Listing reader | C10 | Reads listings for the buyer's needs; code keeps a quote only when it appears word for word |
-| `suggest_areas` | C11 | Scores areas of any city against the week and the needs |
-| Pasted listing | C12 | Reads a listing the buyer pastes, after S13 |
-| Research | C13 | Researches money and local rules on request, after S12 |
+| `component_docs` | C3 | Returns the full schemas and examples of the components Gemini names, after S16 (D140) |
+| `update_brief` | C4 | Records what Gemini learned or deduced, with its source |
+| Affordability | C5 | What the household can borrow and the price range, from `common` and the sample market pack; seeds the money slices |
+| Mortgage options | C6 | Monthly cost, stress curve, and upfront costs for a price, a down payment, and a term |
+| `search_homes` | C7 | Searches the labelled sample homes and prices each for this household |
+| `find_place` | C8 | Resolves a place the buyer names, with Nominatim |
+| `measure_week` | C8 | Measures each trip of the week from a home, and the weekly total |
+| Listing reader | C9 | Reads listings for the household's needs; code keeps a quote only when it appears word for word |
+| Rent split | C9 | Splits rent and bills between people sharing by the rule they pick |
+
+After the recording (D142): on-the-spot research of rules and rates (S12),
+reading a listing the buyer pastes (S13), and areas for any city.
 
 ## Prompt Assembly
 
@@ -197,9 +207,14 @@ joins in order:
    shadow surface, so a tool or correction round sees what this turn already
    changed.
 
-When `GoogleMap` joins the catalog (C5, C6), the prompt adapts the Maps
+When `GoogleMap` joins the catalog (C8), the prompt adapts the Maps
 Agentic UI Toolkit's guidance on when a map helps, roadmap or satellite, tilt,
 and anchor or markers, with attribution to `googlemaps/a2ui` (Apache-2.0).
+
+With 25 to 30 components (D140), the catalog skill moves to progressive
+disclosure in C3, after S16: the prompt carries a compact index of every
+component, and `component_docs` returns the full schemas and examples of the
+ones Gemini is about to draw.
 
 Everything, the context block included, is sent as `system_instruction`, which
 goes out again with every request of the turn, tool-result rounds included, and
