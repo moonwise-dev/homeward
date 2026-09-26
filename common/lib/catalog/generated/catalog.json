@@ -790,6 +790,72 @@
         "fact"
       ],
       "additionalProperties": false
+    },
+    "Choice": {
+      "type": "object",
+      "description": "One decision to ask: its options, the one you recommend first with why, and a tap that answers at once.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "Choice"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "question": {
+          "type": "string",
+          "description": "The decision, one short question to the buyer."
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "What the buyer taps, a few words."
+              },
+              "detail": {
+                "type": "string",
+                "description": "Optional. What choosing it means, one short line."
+              }
+            },
+            "required": [
+              "label"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 2,
+          "maxItems": 5
+        },
+        "recommended": {
+          "type": "string",
+          "description": "The label of the option you recommend, shown first. Only when what you know about this household gives you a reason."
+        },
+        "because": {
+          "type": "string",
+          "description": "Why you recommend it, one short sentence."
+        },
+        "answer": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "question",
+        "options",
+        "answer"
+      ],
+      "additionalProperties": false
     }
   },
   "functions": {
@@ -1388,6 +1454,9 @@
         },
         {
           "$ref": "#/components/Fact"
+        },
+        {
+          "$ref": "#/components/Choice"
         }
       ]
     },

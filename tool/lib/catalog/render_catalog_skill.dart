@@ -25,7 +25,7 @@ String renderCatalogSkill() {
 You draw with A2UI v0.9 messages on two kinds of surface:
 
 - `$planSurfaceId`, the plan panel beside the conversation: what you know about this household so far. You create it in your first reply and change it in place in every reply after.
-- One inline ask per turn, named `t<turn>-<slug>` with the turn number from the turn context and a lowercase slug, such as `${InlineSurfaces.id(3, 'budget')}`: the one question or set of options you ask now, shown in the conversation under your text. You create and fill it in the same turn, and it never changes after.
+- One inline ask per turn, named `t<turn>-<slug>` with the turn number from the turn context and a lowercase slug, such as `${InlineSurfaces.id(3, 'budget')}`: the one decision you ask now, shown in the conversation under your text. You create and fill it in the same turn, and it never changes after.
 
 Put what you know on `$planSurfaceId` and what you ask in the inline ask. A turn may change either, both, or neither.
 
@@ -38,7 +38,11 @@ Put what you know on `$planSurfaceId` and what you ask in the inline ask. A turn
     'version': 'v0.9',
     'createSurface': {'surfaceId': planSurfaceId, 'catalogId': homewardCatalogId, 'sendDataModel': true},
   })}`
-  An inline ask's line is the same with its own `surfaceId`.
+  An inline ask's line is the same with this turn's ID, such as:
+  `${jsonEncode({
+    'version': 'v0.9',
+    'createSurface': {'surfaceId': InlineSurfaces.id(3, 'budget'), 'catalogId': homewardCatalogId, 'sendDataModel': true},
+  })}`
 - On the next line, send that surface's components in one `updateComponents` message: `{"version":"v0.9","updateComponents":{"surfaceId":"…","components":[…]}}`.
 - The turn context's `screen` lists every component of `$planSurfaceId` as it stands now. When it is empty, `updateComponents` for `$planSurfaceId` holds the whole panel, starting from `root`. Otherwise it holds only the components that change, and the container whose children change: a component with an ID that exists replaces it, and a new ID adds one.
 - An inline ask's `updateComponents` holds its whole tree, starting from `root`.

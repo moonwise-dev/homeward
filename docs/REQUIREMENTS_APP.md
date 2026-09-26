@@ -102,6 +102,8 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
   they took named in words, as a bubble, then Homeward's reply and the turn's
   inline ask as a card. Only the latest turn's ask takes taps; earlier asks
   stay as the record of what was decided. The newest section scrolls into view.
+  A `Choice` sends the option at once when tapped and keeps it marked; its
+  last line points at the text field for any other answer (D145).
 - **The plan panel** (D131): the plan's living surface, `plan`. Each turn
   changes it in place as the turn streams, so components appear and change
   without the panel being rebuilt. Before a turn has drawn it, it says the

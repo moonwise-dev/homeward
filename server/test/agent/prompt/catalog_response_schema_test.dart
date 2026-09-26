@@ -41,6 +41,7 @@ void main() {
           'Button',
           'TextField',
           'Fact',
+          'Choice',
         ])
           '#/\$defs/component_$name',
       ],

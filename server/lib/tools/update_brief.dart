@@ -1,6 +1,7 @@
 import 'package:common/common.dart';
 
 import 'agent_tool.dart';
+import 'numbers_in.dart';
 import 'tool_context.dart';
 
 final class UpdateBrief extends AgentTool {
@@ -20,8 +21,9 @@ final class UpdateBrief extends AgentTool {
       'Records what you learned or deduced about this household in the '
       'brief, your notes on it, which surfaces bind as /brief. Call it '
       'whenever the buyer tells you something or you deduce something from '
-      'their words, before you draw a Fact that binds it. It stores nothing '
-      'if any item fails a check, and returns the whole brief.';
+      'their words. It does not draw: add a Fact to the plan for each new '
+      'item in the same turn. It stores nothing if any item fails a check, '
+      'and returns the whole brief.';
 
   @override
   Map<String, Object?> get parameters => {
@@ -138,9 +140,9 @@ final class UpdateBrief extends AgentTool {
     if (words is! String || !_appearsIn(words, buyerWords)) {
       return 'words must be copied exactly from something the buyer wrote.';
     }
-    if (!_numbers(words).containsAll(_numbers(text))) {
-      return 'text has a number that is not in words; write only the '
-          'numbers the buyer wrote.';
+    if (!numbersIn(words).containsAll(numbersIn(text))) {
+      return 'text has a number that is not in words; write numbers only '
+          'as the buyer wrote them.';
     }
     return null;
   }
@@ -160,9 +162,4 @@ final class UpdateBrief extends AgentTool {
       .replaceAll(RegExp('[‘’]'), "'")
       .replaceAll(RegExp('[“”]'), '"')
       .replaceAll(RegExp(r'\s+'), ' ');
-
-  static Set<String> _numbers(String text) => {
-    for (final match in RegExp(r"\d(?:[\d,.' ]*\d)?").allMatches(text))
-      match[0]!.replaceAll(RegExp(r'\D'), ''),
-  };
 }

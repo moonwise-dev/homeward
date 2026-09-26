@@ -7,7 +7,8 @@ once in `common/lib/catalog`, implemented in `app/lib/catalog`, validated in
 Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 Since the reset (D129) Homeward's own blocks come back one at a time, each
-with the chunk of `docs/ROADMAP.md` that needs it. The first is `Fact` (C4).
+with the chunk of `docs/ROADMAP.md` that needs it: `Fact` (C4) and `Choice`
+(C4b) so far.
 
 ## Design Principles
 
@@ -45,9 +46,9 @@ in `basicComponentSummaries`:
 `CheckBox`, `ChoicePicker`, `TextField`, `DateTimeInput`.
 
 The core components, `coreComponents`: the layout components `Column`,
-`Row`, `Card`, `Text`, `Button`, and `Divider`, and `Fact`, which every plan
-uses. The skill always carries their full schemas, and correction rounds offer
-them (D110, D143, D144).
+`Row`, `Card`, `Text`, `Button`, and `Divider`, `Fact`, which every plan
+uses, and `Choice`, which every ask uses. The skill always carries their full
+schemas, and correction rounds offer them (D110, D143, D144, D145).
 
 Not agent-visible: `Image`, `Video`, `AudioPlayer`, `Modal`, `Slider`.
 
@@ -58,6 +59,10 @@ Buttons send actions the model names itself (`docs/PROTOCOL.md`).
 | Family | Block | What it shows | Properties |
 | --- | --- | --- | --- |
 | Understanding | `Fact` | One item of the brief: the sentence, and where it came from: "You said", "Deduced from" with the buyer's words, or "You confirmed". A deduction with an `answer` action offers Right and Not quite (D144) | `fact`, bound to one item, `{ "path": "/brief/<id>" }`; `answer`, an optional action |
+| Understanding | `Choice` | One decision as an inline ask: the question, two to five options, the recommended one first with why, and a line pointing at the text field for any other answer (D145) | `question`; `options`, each a `label` and an optional `detail`; `recommended`, the label of one option; `because`; `answer`, an action |
+
+A `Choice` tap sends its `answer` action at once, with `choice` and `label`,
+the option's label, added to its context; the tapped option stays marked.
 
 A `Fact` tap sends its `answer` action with `fact`, the item's ID, `answer`,
 `right` or `not_quite`, and `label`, the words the conversation shows, such as
@@ -72,7 +77,6 @@ marked restored come back from `6faa8ab`.
 
 | Family | Block | Chunk | What it shows |
 | --- | --- | --- | --- |
-| Understanding | `Choice` | C4b | An inline ask: one decision, its options, Gemini's recommendation first, and room to type |
 | Understanding | `Brief` | C10 | A section of the brief: the household, its needs, its week, or what is open |
 | Understanding | `HouseholdSummary` | C10 | Who moves, incomes and savings as stated, and who shares the costs |
 | Money | `AffordabilitySummary` | C5 | What the household can borrow and the price range it allows, and which rule limits it; restored |

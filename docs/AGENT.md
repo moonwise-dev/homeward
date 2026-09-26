@@ -110,8 +110,9 @@ minute and 24 of 20 a day.
 - **Never ask what a tool can find out.** Places, distances, travel times, and
   what a listing says are looked up.
 - **One decision at a time.** When Gemini must ask, it asks the one decision
-  that matters most next, as a control on the screen with its recommendation
-  first. Typing stays open for any other answer.
+  that matters most next, as a `Choice` in the turn's inline ask with its
+  recommendation first and why (C4b, D145). Typing stays open for any other
+  answer.
 - **Propose, then build.** Gemini offers solutions when it judges it knows
   enough, and the buyer's confirmation or correction decides what grows next.
 - **Money is the spine** (D138). Every journey reaches what the household can
@@ -188,8 +189,9 @@ source (`said`, `deduced`, or `confirmed`, a deduction the buyer tapped Right
 on), and the buyer's words it came from. An item with an existing ID replaces
 it; `remove` drops items. The tool checks every item before it stores any:
 the words must appear word for word in what the buyer wrote or tapped in this
-plan, and every number in the sentence must appear in the words, so a figure
-in the brief is always the buyer's own. A failed check answers with the
+plan, and every number in the sentence, in digits or spelled out, must have
+the same value as one in the words, so a figure in the brief is always the
+buyer's own, and a count Gemini worked out is refused. A failed check answers with the
 reason and stores nothing. It returns the whole brief and seeds it as
 `/brief`. Measured, quoted, and estimated items come from the tools that
 measure, quote, or estimate, never from `update_brief`.

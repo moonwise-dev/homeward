@@ -6,4 +6,5 @@ const coreComponents = {
   'Button',
   'Divider',
   'Fact',
+  'Choice',
 };

@@ -188,7 +188,7 @@ final class TurnRun {
         }
         if (mayStartOver &&
             request.previousInteractionId != null &&
-            _forwarded.isEmpty &&
+            !_validator.drewThisTurn &&
             (error is GeminiHistoryMissing || error is GeminiRequestInvalid)) {
           mayStartOver = false;
           _startOver();
@@ -246,7 +246,7 @@ final class TurnRun {
         continue;
       }
       if (_pendingFailures.isNotEmpty ||
-          (_forwarded.isEmpty && _text.toString().trim().isEmpty)) {
+          (!_validator.drewThisTurn && _text.toString().trim().isEmpty)) {
         yield* _retry();
       }
       _log.info(

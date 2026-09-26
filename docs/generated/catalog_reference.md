@@ -9,10 +9,15 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | Component | Agent visible | Required | Bound | Examples |
 | --- | --- | --- | --- | --- |
 | `Fact` | yes | `fact` | `fact` | What Homeward understood |
+| `Choice` | yes | `question`, `options`, `answer` |  | Rent first or buy |
 
 ### Fact
 
 One item of the brief, with where it came from; a deduction offers Right and Not quite when it has an answer action.
+
+### Choice
+
+One decision to ask: its options, the one you recommend first with why, and a tap that answers at once.
 ## Basic Components
 
 Agent-visible from the A2UI v0.9 basic catalog: `Text`, `Row`, `Column`, `Card`, `Divider`, `List`, `Tabs`, `Icon`, `Button`, `CheckBox`, `ChoicePicker`, `TextField`, `DateTimeInput`.

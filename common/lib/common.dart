@@ -5,6 +5,7 @@ export 'catalog/agent_visible_basic_components.dart';
 export 'catalog/catalog_component.dart';
 export 'catalog/catalog_disclosure.dart';
 export 'catalog/catalog_schemas.dart';
+export 'catalog/components/choice.dart';
 export 'catalog/components/fact.dart';
 export 'catalog/core_components.dart';
 export 'catalog/data_model/brief_slice.dart';
