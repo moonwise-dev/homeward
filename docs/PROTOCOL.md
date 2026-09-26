@@ -47,7 +47,7 @@ model yet.
 {
   "protocolVersion": "0.3.0",
   "name": "Homeward",
-  "description": "Home-buying finance agent: affordability, purchase costs, and foreign buyer obstacles for any location.",
+  "description": "Home-buying and relocation advisor: turns the story of a move into a screen made for that buyer.",
   "url": "https://homeward-server-1065509330520.europe-north1.run.app/a2a",
   "version": "1.0.0",
   "capabilities": {
@@ -73,10 +73,7 @@ model yet.
   "defaultInputModes": ["text/plain", "application/json"],
   "defaultOutputModes": ["text/plain", "application/json+a2ui"],
   "skills": [
-    { "id": "affordability", "name": "Affordability", "description": "Maximum loan and price, binding constraint, what-if.", "tags": ["mortgage", "affordability"] },
-    { "id": "purchase_costs", "name": "Purchase costs", "description": "Upfront taxes and fees for a buyer in a market.", "tags": ["taxes", "fees"] },
-    { "id": "foreign_buyer", "name": "Foreign buyer", "description": "Obstacles, restrictions, and process for non-residents.", "tags": ["cross-border"] },
-    { "id": "buying_process", "name": "Buying process", "description": "Steps and documents for a purchase.", "tags": ["process", "documents"] }
+    { "id": "relocation", "name": "Relocation", "description": "Turns a buyer's story of their move into a screen made for them.", "tags": ["home-buying", "relocation"] }
   ]
 }
 ```
@@ -118,7 +115,7 @@ A text turn:
       "role": "user",
       "messageId": "m-7f3",
       "contextId": "s-9a2",
-      "parts": [{ "kind": "text", "text": "I live in Stockholm and want a flat in Funchal around €350k" }],
+      "parts": [{ "kind": "text", "text": "We are moving to Stockholm for my job at KTH, and my mum is moving in with us" }],
       "metadata": {
         "a2uiClientCapabilities": {
           "v0.9": {
@@ -141,11 +138,11 @@ surface data model in metadata:
   "data": {
     "version": "v0.9",
     "action": {
-      "surfaceId": "t3-affordability",
-      "name": "commit_scenario",
-      "sourceComponentId": "commit",
+      "surfaceId": "t3-home",
+      "name": "keep_home",
+      "sourceComponentId": "keep",
       "timestamp": "2026-10-02T09:14:03.201",
-      "context": { "scenarioPath": "/scenario" }
+      "context": { "homeId": "h1" }
     }
   }
 }
@@ -156,11 +153,6 @@ surface data model in metadata:
 - genui writes `timestamp` in local time without a zone. The server never uses
   it and records its own receive time.
 - The client sends `a2uiClientCapabilities` on every turn.
-- The first message of a plan, sent from the opening page, also carries
-  `homewardStoryReason` in metadata: the reason the buyer picked, as a
-  `StoryReason` name. The server sets it on the plan before the model is
-  called, so the reason never depends on the model reading it from the text
-  (D107).
 - Clients may serialize absent optional fields as explicit `null`
   (`configuration`, `metadata`, `extensions`, `taskId`). The server treats
   `null` and absent the same.
@@ -171,11 +163,8 @@ surface data model in metadata:
   "a2uiClientDataModel": {
     "version": "v0.9",
     "surfaces": {
-      "t3-affordability": {
-        "scenario": {
-          "price": { "minorUnits": 35000000, "currency": "EUR" },
-          "downPayment": { "minorUnits": 12000000, "currency": "EUR" }
-        }
+      "t3-home": {
+        "notes": "A garden for the dog"
       }
     }
   }
@@ -239,14 +228,13 @@ A `failed` status is not used, because A2A clients surface it only as text.
   "data": {
     "version": "v0.9",
     "updateComponents": {
-      "surfaceId": "t3-affordability",
+      "surfaceId": "t3-home",
       "components": [
-        { "id": "root", "component": "Column", "children": ["summary", "slider", "payment", "commit"] },
-        { "id": "summary", "component": "AffordabilitySummary", "scenario": { "path": "/scenario" }, "market": { "path": "/market" }, "profile": { "path": "/profile" } },
-        { "id": "slider", "component": "AmountSlider", "label": "Down payment", "value": { "path": "/scenario/downPayment" }, "bounds": { "path": "/derived/downPaymentBounds" }, "shareOf": { "path": "/scenario/price" }, "currency": { "path": "/market/currency" } },
-        { "id": "payment", "component": "PaymentBreakdown", "scenario": { "path": "/scenario" }, "market": { "path": "/market" }, "profile": { "path": "/profile" } },
-        { "id": "commit", "component": "Button", "child": "commit_label", "action": { "event": { "name": "commit_scenario", "context": { "scenarioPath": "/scenario" } } } },
-        { "id": "commit_label", "component": "Text", "text": "Use this scenario" }
+        { "id": "root", "component": "Column", "children": ["title", "notes", "keep"] },
+        { "id": "title", "component": "Text", "text": "What the home has to have", "variant": "h3" },
+        { "id": "notes", "component": "TextField", "label": "Anything else?", "value": { "path": "/notes" } },
+        { "id": "keep", "component": "Button", "child": "keep_label", "action": { "event": { "name": "keep_home", "context": { "homeId": "h1" } } } },
+        { "id": "keep_label", "component": "Text", "text": "Keep this one" }
       ]
     }
   }
@@ -255,7 +243,7 @@ A `failed` status is not used, because A2A clients surface it only as text.
 
 A progress data part carries its own media type, so an A2UI client that does
 not know it skips it; `genui_a2a` 0.10.x logs a warning and moves on. Step
-labels are written by server code from the plan, never by the model.
+labels are written by the tool, never by the model.
 
 ```json
 {
@@ -292,7 +280,7 @@ Placement is encoded in the surface ID so it survives any connector.
 
 | Surface ID | Placement | Author |
 | --- | --- | --- |
-| `t{turn}-{slug}` | On the journey page of turn `{turn}` | Model, validated by server; `t{turn}-homes` and `t{turn}-retry` are server-drawn fallbacks (D109) |
+| `t{turn}-{slug}` | In the journey, with turn `{turn}` | Model, validated by server; `t{turn}-retry` is the server's notice when a turn draws nothing (D129) |
 
 - At most two inline surfaces per turn.
 - Surface IDs are unique per session.
@@ -300,8 +288,8 @@ Placement is encoded in the surface ID so it survives any connector.
 ### Lifecycle
 
 - An inline surface is created in its turn and never updated by a later turn.
-- When a later commit supersedes it, the server writes `/ui/locked: true` into
-  its data model. Interactive Homeward components render read-only when locked.
+  One living screen updated across turns is the next step (R1 in
+  `docs/ROADMAP.md`), and will change this rule.
 - `deleteSurface` is used only when a turn is canceled mid-stream.
 
 ### Replay
@@ -312,81 +300,27 @@ changes are not stored and are not replayed.
 
 ## Data Model
 
-Every surface is seeded by the server with the slices its components bind to.
-The model binds to these paths and never writes values.
-
-```text
-/story                   the story, its answers, map markers, and the routine
-/lineup                  the city's photo lineups, homes and life
-/swipe
-  homes                  six sample homes to keep or pass, as listings
-/tradeoff
-  options                the ways to live compare_areas priced
-/assessment              candidates, rows, markers, routes; sample homes carry their listing,
-                         each home its reasons with sources and its week in travel
-/profile                 BuyerProfile
-/market                  ResolvedMarket in the pack's published format (D66)
-  id, name, currency
-  lending                every lending rule that applies to this buyer
-  purchaseCosts, recurringCosts
-  loanTypes              loan types with spread range and default spread
-  referenceRates         dated snapshots for those loan types
-  livingCosts            the living cost table when a left-to-live-on rule applies
-  pendingRules, requiredFields
-  obstacles              applicable foreign buyer obstacles
-  process                applicable steps and documents
-  sources                source list for everything above
-/scenario                price, downPayment, termYears, loanTypeId, rateSpreadPpm,
-                         rateShockPpm, associationFee
-/derived                 computed by server tools at seed time
-  affordability          maxLoan, maxPrice, bindingConstraint, headroom
-  downPaymentBounds      min, max, step
-  payment                interest, amortization, fees, total
-  stress                 series and limit line
-  costs                  itemized upfront costs and total
-  cashNeeded
-  eligibility            checks with status and reason
-/ui                      locked
-```
+The server seeds a surface with the slices its components bind, from what the
+turn's tools returned as seeds; there are no slices since the reset (D129), and
+`common/lib/catalog/data_model` declares each one as it arrives. The model
+binds to paths and never writes values. An input may bind a path that has no
+value yet, such as `/notes`; what the buyer enters there reaches the model with
+their next action.
 
 Data model values are JSON-shaped as produced by `jsonDecode`; see the binding
 rules in `docs/CATALOG.md`.
 
-In slices the buyer edits, `/profile` and `/scenario`, and in `/derived`, money
-values are `{ "minorUnits": 35000000, "currency": "EUR" }` and rates are integer
-parts per million in fields ending in `Ppm`. `/market` is read-only and uses the
-pack format: amounts as decimal strings and rates as percent strings, so the
-same `common` models parse packs and the slice.
-
-`/derived` holds seeded values so a surface renders correctly before any
-interaction. Homeward components recompute their own figures from `/scenario`
-and `/market` through `common/finance` when the buyer changes a bound input.
-
 ## Actions
 
-| Action | Context | Server behavior before the model runs |
-| --- | --- | --- |
-| `answer` | `facet`, `value`, `label`; `pin` for a dropped pin; `storyPath` for the household and the routine | Fold one answer into the story (D121): a place is found in the city or taken from the pin, a photo applies its traits, an area option its area, home type, rooms, and price range, needs set what the home must have (D126), and the routine how often each trip is made, with the places the buyer pinned added (D127); a swipe sets what every kept home shares and no passed one has (D128); the facet counts as answered |
-| `commit_story` | `storyPath` | Fold the surface's `/story` fields, pins included, into the story and confirm it; in a city with sample homes, pick the three that fit (D122) |
-| `commit_profile` | `profilePath` | Save every valid field from the surface's `/profile` over the saved profile, clear the draft, and report invalid fields |
-| `select_market` | `marketId` | Resolve market, write to plan; profile facts on the surface become the profile draft |
-| `commit_scenario` | `scenarioPath` | Parse `/scenario`, refuse it unless amounts are in the market currency and `withinMaxLtv` holds, then save it and clear the draft |
-| `change` | `section` | Release the decision in the plan, then run the model |
-| `explain` | `topic`, `path` | Run the model with the resolved value and its source attached |
-| `compare_loan_types` | `scenarioPath` | Run the model with loan types attached |
+Actions are not a fixed list (D129). Gemini names each action it puts on a
+control, in lowercase words joined by underscores, and gives it a context.
+When the buyer uses the control, the server applies nothing itself: it hands
+Gemini the action's name, its surface, the component that sent it, its context,
+and the surface's data model, as the buyer's next message, and Gemini decides
+what it means.
 
-Every interactive surface is created with `sendDataModel: true` so committed
-values arrive with the action.
-
-Actions the server can complete without the model do not call the model.
-
-`server/lib/agent/actions/apply_action.dart` applies an action to the plan before
-the model runs and hands the model a summary: the action, the surface, whether
-it was applied, and why not or which fields were refused. Values are read as
-the basic inputs write them: a `ChoicePicker` writes a one-item list, and a
-`TextField` writes a number or a numeric string, so profile fields are
-normalized by their data model kind first. In M1 every action runs the model;
-`explain` and the actions of later milestones reach it with their context.
+Every surface is created with `sendDataModel: true` so what the buyer entered
+arrives with the action.
 
 ## Server Validation Passes
 
@@ -436,33 +370,7 @@ pass rejects it.
    seed. A `createSurface` repeating one accepted earlier in the turn changes
    nothing and is not forwarded, since models resend it when correcting. An input may bind to a missing field of an
    existing object, which it will write; relative template paths are skipped.
-9. **Questions.** While the case still has essential clues open, a question
-   card must ask about one of them: a `Hunch` by its facet, a `HouseholdInput`
-   bound to `/story` about who moves, a `Routine` about the week, a
-   `HomeSwipe` or the homes lineup about the kind of home, and a `TradeOff`
-   about the area. The case summary, a `StoryDraft`, waits until they are
-   answered. The rejection names the clues still open (D127).
-   **Actions.** Action names are in the action table. An action turn that
-   forwards no surface while a drawing decision is open is asked once more,
-   naming the decision and, for `profileFields`, the fields still missing
-   (D96). Text written in answer to that request is not shown: the buyer
-   already has the turn's words, and the request is the server's, not
-   theirs (D124).
-10. **Forms.** A surface with a `commit_profile` action binds an input to every
-    profile path the market still needs for this buyer, the same paths the
-    turn context lists as missing (D83). The pass adds the inputs the model
-    left out, in the order the profile slice declares them, above the button
-    that sends the action, and picks each one by the field's value shape: a
-    `MoneyInput` for money, a `LocationPicker` in country mode for a country,
-    a `ChoicePicker` for a choice, a `CheckBox` for a yes or no, a
-    `HouseholdInput` for the household, and a number `TextField` for the rest
-    (D95). The message is rejected only when there is nowhere to put them,
-    such as a button with no container. A case card that the buyer confirms,
-    a `HouseholdInput` bound to `/story` or a `Routine`, gets the `Button`
-    sending `answer` with its facet and `storyPath` right after it when the
-    model left it out: a live run on 2026-09-26 drew the household card alone,
-    and the buyer had nothing to tap.
-11. **Seed.** The server prepends `createSurface` with `sendDataModel: true` if
+9. **Seed.** The server prepends `createSurface` with `sendDataModel: true` if
     the model omitted it, and emits `updateDataModel` for the slices the
     components bind to.
 
@@ -471,3 +379,6 @@ AOT server binary.
 
 After two failed correction rounds the turn ends with the model's text and a
 single `Text` surface offering to retry.
+
+The passes check only that a message is valid. None of them decides what the
+screen should show or which question comes next (D129).

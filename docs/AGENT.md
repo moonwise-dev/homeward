@@ -1,8 +1,10 @@
 # Homeward Agent
 
-The agent is a loop on the server around the Gemini Interactions API. It reads
-the plan, decides what is still open, calls tools, and draws the next surface.
-It has no hard-coded stages; the open decisions of the plan decide the step.
+The agent is a loop on the server around the Gemini Interactions API. Each turn
+it hands Gemini the buyer's words or the action they took, runs the tools
+Gemini calls, and forwards the surfaces Gemini draws once they validate. Gemini
+decides what the buyer's screen shows and what it asks; the server decides
+only whether what Gemini drew is valid (D129).
 
 ## Model Configuration
 
@@ -15,9 +17,9 @@ It has no hard-coded stages; the open decisions of the plan decide the step.
 | Unhealthy model cool-down | 5 min | `HOMEWARD_MODEL_COOLDOWN` |
 | Store interactions | `true` | fixed |
 | Validation correction rounds | 2 | `HOMEWARD_MAX_CORRECTIONS` |
-| Model rounds per turn | 2 when the model calls its tools together, up to 4 when it calls them one at a time, plus correction rounds | enforced by the tool round cap |
+| Model rounds per turn | 1, plus one per tool round and one per correction round | enforced by the caps below |
 | Inline surfaces per turn | 2 | fixed |
-| Tool rounds per turn, cap | 3 | fixed (D78, D85) |
+| Tool rounds per turn, cap | 3 | `TurnSettings.maxToolRounds` (D85) |
 
 Spike S2 found every listed model available on a free-tier key, but
 `gemini-3.8-flash` overloaded on the day: `generateContent` answered 503, and
@@ -38,14 +40,6 @@ requests of a Flash model and three times its requests a minute. In probes on
 profile form with its first text after about 5 s in ten further first
 messages. The Flash models follow it, and the order is compared again for
 quality in the M2 rehearsals.
-
-A live run of the M1 exit flow in the web app on 2026-09-17, after D82 to D84:
-the Stockholm starter drew the full profile form with `HouseholdInput` in two
-requests and 7 s; `commit_profile` drew the what-if in one request and 4.4 s;
-dragging the down payment slider recomputed the loan, interest, amortization
-tier, and deduction with no server traffic; `commit_scenario` stalled on
-`gemini-3.5-flash-lite` and then `gemini-3.5-flash`, 20 s each, failed with
-`gemini_unavailable`, and succeeded on Retry in one request and 7.8 s.
 
 Free-tier limits, read in AI Studio for the Homeward project on 2026-09-17.
 They apply per Google Cloud project, so every key in the project and AI Studio
@@ -97,272 +91,81 @@ minute and 24 of 20 a day.
 
 ## Principles
 
-- **Rules in code, judgment in the prompt.** The prompt tells the model how to
-  choose and explain. Code guarantees correctness.
-- **Controls are the question.** Never ask in prose for something a component
-  can collect.
+- **Gemini composes the screen.** It decides what a buyer's screen holds, in
+  which blocks, and what to ask. No server rule picks the next question,
+  withholds a tool to steer the flow, or draws a screen in the model's place.
+  When the model misbehaves, the fix is a smaller catalog, a clearer prompt, or
+  a better tool before a server rule.
+- **Code guarantees correctness.** Validation checks that every message is
+  well formed, fits the catalog, binds data that exists, and stays on the
+  surfaces this turn owns.
+- **Controls are the question.** When a tap is quicker than typing, the
+  question is a control on the screen.
 - **Never telegraph.** "Let me check…" is not a turn. Call the tool and draw the
   result in the same turn.
-- **Prefill, never commit.** Values the buyer states in chat are proposed into
-  the form by the model and committed only by the buyer.
 - **Figures live in components.** Chat text refers to results in words and
-  points at the component. It does not restate money amounts or rates.
-- **Change is a delta.** Changing a decision releases that decision and redraws
-  what depends on it, never the whole plan.
-
-## Open Decisions
-
-`common/lib/plan/open_decisions.dart` derives, from the plan and the resolved
-rule pack, an ordered list of what is still open. It is the agent's map. It is
-pure and unit tested.
-
-| Open decision | Opens when |
-| --- | --- |
-| `story` | The story names no city and no home |
-| `caseQuestions` | The case has an essential clue open and fewer than six questions were asked (D121, D127) |
-| `caseSummary` | The questions are done and the buyer has not confirmed the case |
-| `homeChoice` | No home is chosen |
-| `targetMarket` | No market selected |
-| `marketCoverage` | Market selected that has no curated pack |
-| `profileFields` | Any field the resolved market requires is missing from the saved profile; a field counts as answered when every profile key it names has a value |
-| `scenario` | No scenario saved |
-| `scenarioCommit` | No scenario saved; the buyer is trying a draft |
-| `obstaclesReview` | Buyer faces obstacles with severity `blocker` or `effort`; from M2 |
-| `process` | Scenario committed; from M2 |
-
-The story decisions come first (D97). A buyer who asks only about money can
-skip them: the money decisions follow in the same list, and the note that asks
-again for a missing surface looks at the money decisions until a story begins.
-With no market selected, every money decision except `marketCoverage` is open.
-An uncovered market leaves only `marketCoverage` open among them.
-
-The money decisions are the deal, and `HOMEWARD_DEAL` switches it (D125). It is
-off by default and in the demo: the list then ends at `homeChoice`, the deal's
-tools are not offered, the prompt leaves out `prompts/deal.md` and
-`prompts/markets.md` and carries the story catalog skill, and the turn context
-leaves out the market, the profile, and the scenario. Choosing a home closes
-the case: two sentences naming the home and the clue that decided it, and the
-map of the buyer's week from it, which the server draws itself when the model
-leaves it out. With the deal on, everything below applies as written.
-
-After `commit_story` and after `choose_home`, the story is settled, so those
-turns do not offer `propose_story`: a live run on 2026-09-26 called it on the
-board turn, which reopened the story, stopped `assess_story` from running
-again, and left the board with nothing to bind.
+  points at the component. It never states a figure a buyer relies on.
 
 ## Flow
 
-| Open decision | Tools | Components |
-| --- | --- | --- |
-| `story` | `propose_story` when the message says anything about the move | — |
-| `caseQuestions` | `propose_story` when the buyer types; `compare_areas` for a trade-off | One question card: `Hunch`, `PhotoLineup`, `TradeOff`, or `HouseholdInput` with a `Button` sending `answer` |
-| `caseSummary` | — | The case summary (D119, D121): `StoryDraft`, `LifestyleCommuteMap`, and a `Button` sending `commit_story`, on one surface |
-| `homeChoice` | `assess_story`, pre-run; sample homes are picked when `commit_story` is applied | `LifestyleCommuteMap`, `DynamicRecommendationStack` sending `choose_home`, which shows a sample home's photos and price per square metre, `ComparisonTable`; `ListingCard` for one home |
-| Nothing open, deal off | — | The case closed: `LifestyleCommuteMap` focused on the chosen home, with its routes |
-| `targetMarket` | `resolve_market` | `LocationPicker` in `market` mode |
-| `marketCoverage` | — | `MarketSnapshotCard` in its uncovered state |
-| `profileFields` | `load_market`, `propose_profile` | The facts page: `HouseholdInput`, `MoneyInput`, `LocationPicker` in `country` mode, `ChoicePicker`, commit `Button`; no market card |
-| `scenario` | `propose_scenario`, `compute_affordability`, `estimate_purchase_costs` | The deal sheet, one surface (D113): the chosen home's name, `AffordabilitySummary`, `AmountSlider` for the down payment, `PaymentBreakdown`, `StressTestChart`, `PurchaseCostsTable`, `MarketSnapshotCard` for the rules, commit `Button` with checks |
-| `scenarioCommit` | — | Nothing new unless the buyer asks for an input the deal sheet lacks |
-| `obstaclesReview` | `get_obstacles` | `ForeignBuyerObstacles` |
-| `process` | `get_process` | `BuyingProcessTimeline`, `DocumentChecklist` |
+A turn starts from one of two inputs:
 
-The first message comes from the opening page (D107): the reason the buyer
-picked, as a sentence, then the place they are moving to. The reason also
-travels as message metadata and is set on the plan before the model is called,
-so `story.reason` is known from the first round. The first turn therefore
-always has something to infer from; it calls `propose_story`, never asks why
-the buyer is moving, and opens the case with its first question (D121).
+- **Text** the buyer typed, sent as it is.
+- **An action** from a control on a surface: its name, which Gemini chose when
+  it drew the control, the context Gemini gave it, and the data model of the
+  surface it came from. `server/lib/agent/actions/action_input.dart` writes
+  them into one message, and Gemini decides what they mean. Actions are not a
+  fixed list and the server applies none of them itself.
 
-Homeward researches nothing before it is needed (D119): areas are suggested
-only with `propose_areas`, once the case is confirmed in a city with no sample
-homes, the market's rules and the obstacles wait for a chosen home, and homes
-are measured when the buyer asks to see them.
-
-### The Case
-
-The story phase is a case Homeward works like a detective (D121). Each turn
-states one deduction from the last clue and asks one question, drawn as a card
-the buyer answers with a tap:
-
-| Card | Asks | Answer |
-| --- | --- | --- |
-| `Hunch` | Whether a deduction is right, with two or three alternatives: where they will spend their days, how they get around, the longest trip, flat or house, outdoor space, style, rooms, what the home itself must have, or one thing that matters | `answer` with the facet and the tapped value; for needs, the value names one or more needs separated by commas, or `none` |
-| `PhotoLineup` | Which of the city's curated photos feels like home, or like the life they want | `answer` with the photo; the server applies its traits: home type, outdoor space, style, criteria, areas |
-| `HomeSwipe` | Six of the city's sample homes to keep or pass, one at a time (D128) | `answer` with the facet `swipe`, the kept ids as `value`, and `kept` and `passed`; what every kept home shares and no passed one has, a kind of home, outdoor space, or style, is set on the story, and the pattern goes to the model |
-| `TradeOff` | Which of two or three ways to live they would pick: an area, a home type, and a size each, priced from the area's price per square metre and timed to their daily place by `compare_areas` | `answer` with the option; the server sets the area, the home type, the rooms, and a price range from its estimate |
-| `HouseholdInput` | Who moves with them, bound to `/story/adults` and `/story/childAges` | A `Button` sending `answer` with the facet `household` and `storyPath`; children add schools from six, preschool under six, and playgrounds under ten |
-| `Routine` | Their week: how many days a week they go to each place, and places to add on the map (D127) | A `Button` sending `answer` with the facet `routine` and `storyPath`; each place gets its days a week, and a pinned one becomes a place of the story |
-
-The story records what the buyer answered, by tap or in words, and
-`common/lib/story/case_gaps.dart` derives what is still open. Essential facets
-are where the buyer spends their days when they move for work or study, who
-moves, what the home needs when a parent may be moving in, their week once
-a daily place is on the map, flat or house, and, in a city with sample homes, the area and price
-range. `caseQuestions` stays open while any of them is and fewer than six
-questions were asked (five before D127); then `caseSummary` asks for the living story paragraph
-(D119), now drawn once as the case summary, with a Find my three homes button
-sending `commit_story`. The turn context's `case` block carries the open
-facets, the questions asked, and, when the city has sample homes, its areas and
-photo lineups.
-
-The routine is how often the buyer makes each trip (D127). The place they go
-every day starts at five days a week; the routine card sets the rest and adds
-places such as a clinic, a gym, or a parent. Code computes each home's week in
-travel: the measured trip to each place, there and back, times the days a week
-they go, summed. It shows on each home and on the map of their week, never in
-the model's words.
-
-Needs are what the home itself must have (D126): step-free entry, a lift, a
-walk-in shower or a bedroom on the entry floor, room for a home office, pets.
-They are an essential clue when a third adult moves in or the move is to be
-near family, since a parent may be coming, and the model asks about them
-whenever another clue points there, such as a buyer who mentions a parent, a
-wheelchair, or a dog. The first live run on 2026-09-26 saw three adults, named
-them in a deduction, and skipped the question, so the case opens it in code.
-
-The turn context lists the essential clues still open as `mustAsk`, in
-order, and the model asks only about those while any remain: the first, unless
-the buyer's last clue points more naturally at another in the list. A
-lifestyle move may open with the `life` lineup first. A live run on
-2026-09-26 spent its questions on outdoor space and style and never asked
-about the parent or the week, so the choice of facet is bounded in code, and
-the words and the card stay the model's. A swipe closes flat or house,
-outdoor space, and style, whether or not its pattern settled them, so a mixed
-swipe costs no further question.
-
-The model chooses the question and the card: the open facet that most changes
-which homes win, reached from the clue the buyer just gave. Moving for work or
-study starts with where they will be every day, a family with who moves, a
-lifestyle move with what pulls them there. It asks about the buyer's life and
-taste, never directly for a room count or a budget: rooms are a deduction the
-buyer confirms, and the price range comes from the trade-off they pick. Every
-figure on a card comes from a tool or the server's data.
-
-When `commit_story` is applied in a city with sample homes, code picks the
-homes (D122): it rules out listings of the wrong type, more than a tenth over
-the price range, outside the areas the buyer leaned to, short of the rooms
-they need, or that fail a need the buyer set, relaxing the price, then the
-area, then the rooms, then the type, and the needs last, until three remain.
-A house a room short is closer to the case than a flat for a buyer who wants
-a house, so rooms give way before the type. It keeps the
-three that fit best by rooms, outdoor space, style, straight-line distance to
-their daily place, price per square metre against the area's, and needs: one
-the listing meets counts for it, one it never mentions counts against it. They become the story's homes, `assess_story`
-measures them before the model runs, and the action summary tells the model
-how many homes it went through and why it ruled the others out, so it can say
-so.
-
-Each answer is a model turn. The server pre-runs what a question needs from
-the plan, so a question takes one model round unless the model calls
-`compare_areas`. A turn of the case that ends with no card, typed or tapped,
-is asked once for it. `propose_profile` is not offered while the case is open,
-and refuses if called: money waits for a chosen home, and who moves goes to
-`propose_story`.
-
-The country code is required: in live turns on 2026-09-17 `gemini-3.5-flash-lite`
-sometimes left it out, the place list, which holds only regions with their own
-rules, did not know Stockholm, and the turn drew a market picker or a form
-without a market.
-
-When `resolve_market` finds exactly one market for the place the buyer typed, it
-selects that market for the plan in the same model round, so `load_market` runs
-and the profile form is drawn in that turn (D71). Selecting a different market
-releases the scenario and keeps the profile. Several matches get a
-`LocationPicker` and `select_market`.
-
-The tools column lists what a step needs, not who calls it. When a step's inputs
-are settled in the plan, the orchestrator pre-runs its tools before the model is
-called; the model only calls tools that need interpretation.
+There are no stages and no open decisions in code. The turn context tells
+Gemini only the turn number and the surface IDs already used.
 
 ## Tools
 
-Tools are Dart classes in `server/lib/tools`, one per file, each an adapter over
-`common` and repositories. A tool returns three things:
+A tool is an `AgentTool` in `server/lib/tools/`: a name, a description,
+JSON Schema parameters, and a `run` that takes the arguments and the progress
+steps and returns a `ToolResult`, the result the model reads and the seeds, data
+model slices keyed by name, that surfaces may bind. `homewardTools` in
+`server/lib/tools/homeward_tools.dart` lists them; the list is empty since the
+reset, and the first tool arrives with the step of `docs/ROADMAP.md` that needs
+it.
 
-- `modelResult`: compact JSON the model reasons over.
-- `plan`: the updated plan record, only for `resolve_market` when it selects a
-  single market, `propose_*`, which store drafts (`profileDraft`,
-  `scenarioDraft`) that the buyer later commits, and `release_decision`.
-- `seeds`: data model slices the server injects into surfaces created this turn.
-
-Each tool declares whether it can be pre-run: `load_market`,
-`compute_affordability`, `estimate_purchase_costs`, `get_obstacles`,
-`get_process`, and `get_loan_types` can, because their inputs come from the plan.
-`resolve_market`, `propose_profile`, `propose_scenario`, and `release_decision`
-cannot, because their inputs come from what the buyer wrote.
-
-Tools that take no input, `compute_affordability`, `estimate_purchase_costs`,
-`get_obstacles`, `get_process`, and `get_loan_types`, are server steps
-(`AgentTool`): never offered to the model, run whenever the plan settles them,
-and read by the model in `preRun`. The others are `ModelTool`s with a function
-declaration; `load_market` is offered until a market is selected and pre-run
-after (D78). A model that could call an input-free tool used it to probe the
-plan, one request at a time.
-
-| Tool | Input | Model result | Seeds |
-| --- | --- | --- | --- |
-| `propose_story` | Reason, city, an assumed commute mode and longest trip, anchors with a map query, homes the buyer named with a map query and price, criteria, must-haves, and the household, home type, outdoor space, and rooms when the buyer stated them | Each anchor and home with whether it was placed and the address found; the market it selected, if any; whether the city has sample homes | `/story` from the plan, with the answers prefilled for the case summary, the city as a marker, and markers for what was placed |
-| `compare_areas` | Two or three options, each an area from `case.areas`, a home type, and rooms | Each option's area, home type, size, and whether it was timed; never amounts | `/tradeoff/options`: each option with its estimated price, the area's price per square metre and its source, and minutes to the first placed anchor by the story's mode |
-| `propose_areas` | Up to three areas of the buyer's city, only when the confirmed story has no homes | Each area with whether it was placed; the story is otherwise untouched | `/story` from the plan |
-| `read_listings` | — | For each need, how many of the city's listings meet it, fail it, or never mention it | — |
-| `assess_story` | — | Each home's rank and whether it misses a must-have, each criterion's status per home, the criteria that could not be measured. Never figures | `/assessment`, each sample home with its listing |
-| `resolve_market` | `placeName` and the model's `countryCode`, both required, and its `subdivisionCode` | `selectedMarket` with name and coverage when exactly one matches, already the plan's market; otherwise `candidates`, with the curated markets when none resolve | `/selection` when several match |
-| `load_market` | `marketId` | Coverage, currency, profile fields with the profile paths that answer them and reasons, kinds of lending rule, never rule values | `/market`, the rules when curated and `{ id, name, coverage }` when not, with `/selection` holding the curated markets (D86) |
-| `propose_profile` | Facts the buyer stated: countries as ISO codes, enums, amounts as `{ amount, currency? }` in major units | Accepted and rejected facts with reasons | `/profile` from the plan's profile draft, with who moves taken from the case when the profile has not said |
-| `propose_scenario` | Price, and any down payment, term, loan type, or association fee the buyer stated | Accepted, defaulted, and rejected fields; unstated values come from the market: the smallest down payment the loan-to-value limit allows, the first loan type and its default spread, the shortest maximum term or 30 years | `/scenario` from the plan's scenario draft |
-| `compute_affordability` | — | `assessed` with the binding limit and headroom `comfortable`, `atLimit`, or `overLimit`; `incomplete` with missing facts; or what it needs first. Never amounts | `/derived/affordability`, `/derived/downPaymentBounds`, `/derived/payment`; while `incomplete`, only `/derived/downPaymentBounds` from the loan-to-value cap, so the what-if slider still works (D83) |
-| `estimate_purchase_costs` | — | The charges that apply with their local terms, and the deadline and claim window of any refund the buyer is on course for; `incomplete` with missing facts; or what it needs first. Never amounts | — : `PurchaseCostsTable` and `cashNeeded` compute from `/market` and `/scenario`, so the figures follow the down payment slider |
-| `get_obstacles` | — | Obstacle IDs, severities, and titles, with the facts that would settle a pending one | — : the obstacles that apply are already in `/market`, resolved with the rest of the pack |
-| `get_process` | — | Step IDs | `/market/process` |
-| `get_loan_types` | — | Loan type IDs | `/market/loanTypes` |
-| `release_decision` | `section` | Released decisions | — |
-
-`read_listings` runs before the model whenever the story has needs, its city
-has sample homes, and a listing has not been read for one of them (D126).
-Gemini, on the buyer's key and with an enforced response schema, reads every
-description in one request and answers per listing and need `meets`, `fails`,
-or `silent`, with the sentence that says so. Code keeps a verdict only when its
-sentence appears word for word in the description, and otherwise records it
-as `silent`. The readings go on the story and into each picked home's reasons,
-and are cached per listing and need for the life of the server, since a
-description never changes. The research model of D100 takes this over when it
-lands, with Gemini as its fallback.
-
-Tool inputs never include market rules, and tool results never ask the model to
-compute.
+- Tools never call Gemini. They measure through `server/lib/research`, whose
+  open-data clients find places with Nominatim, look near them with Overpass,
+  and route by car, bike, and foot on the FOSSGIS router and by public
+  transport on Transitous. Calls go one at a time per service with the gap its
+  policy asks, under a user agent naming Homeward, and are cached for six
+  hours in memory and a week in Firestore (D112).
+- Each lookup reports a measuring step through `ResearchSteps`, which the turn
+  streams as a progress data part while tools run (D108). Labels come from the
+  tool, never from the model.
+- A tool that throws answers the model with an error and changes nothing.
+- Every place a model names is checked against open data before it is shown
+  (D101).
 
 ## Prompt Assembly
 
 `server/lib/agent/prompt/prompt_assembler.dart` loads, once at startup, and
 joins in order:
 
-1. `prompts/role.md`: who Homeward is, what it will and will not do.
-2. `prompts/flow.md`: the story's open decisions, the case, and each turn.
-3. With the deal on, `prompts/deal.md`: the money decisions and how to draw
-   them, and `prompts/markets.md`: coverage, how to talk about uncovered
-   markets, sources.
-4. `prompts/style.md`: tone, the estimates-not-advice line, how to reference
-   components instead of restating figures.
-5. The agent-visible catalog, generated: `prompts/generated/catalog_skill.md`
-   with the deal on, `prompts/generated/catalog_skill_story.md` with it off.
-6. A per-turn context block from `server/lib/agent/prompt/turn_context.dart`:
-   turn number, open decisions, the story, the case, the selected market with
-   its coverage, saved profile facts without amounts, which amounts were given,
-   missing fields with the profile paths that answer them, whether drafts are
-   waiting, surface IDs already used, and pre-run tool results. No rule values.
+1. `prompts/role.md`: who Homeward is, what it does, and what it never does.
+2. `prompts/style.md`: tone, and how to point at components instead of
+   restating figures.
+3. `prompts/generated/catalog_skill.md`: how to write messages, bind data, and
+   name actions, the catalog document, and the common types, generated by
+   `make catalog`.
+4. A per-turn context block from `server/lib/agent/prompt/turn_context.dart`:
+   the turn number and the surface IDs already used.
 
 Everything, the context block included, is sent as `system_instruction`, which
 goes out again with every request of the turn, tool-result rounds included, and
-is never stored in the interaction history. The model therefore sees only the
-current plan state, and stale snapshots never pile up in history (D70).
+is never stored in the interaction history (D70).
 
 The catalog skill carries the composed catalog document and the A2UI common
-types as compact JSON Schema, exactly what validation enforces, after the
-message rules, data model paths, actions, and examples (D69). It is about 12k
-tokens. Tokens cost nothing on a buyer's free key, but every correction round
-spends one of their roughly 20 daily requests, so a first message that
-validates is worth more than a short prompt.
+types as compact JSON Schema, exactly what validation enforces (D69). Every
+correction round spends a request of the buyer's free quota, so a first message
+that validates is worth more than a short prompt, and a small catalog keeps
+both the prompt and the room for mistakes small.
 
 ## Turn Orchestrator
 
@@ -371,76 +174,40 @@ owner, and leases it; `turn_run.dart` runs one turn:
 
 1. Lease the session turn. A second turn while one runs fails with
    `turn_in_progress`; a missing or foreign session fails with
-   `session_not_found`. M1 keeps sessions in `InMemorySessionRepository`
-   behind `SessionRepository`; Firestore with a transactional lease replaces it
-   in M2.
-2. If the input is an action the server can complete, apply it to the plan.
-3. Replay the session's stored A2UI messages into the shadow processor.
-4. Before every model request, not only the first:
-   - Run every tool whose `settledArguments` the current plan provides, such as
-     `load_market` once a market is selected and `compute_affordability` once a
-     covered market has a scenario. Their model results become `preRun` in the
-     turn context, and they are left out of the declarations.
-   - Rebuild the seeds: an empty `/selection`, seeds from tools called this
-     turn, seeds from the settled tools, and `/profile` and `/scenario` from the
-     plan's drafts or saved values.
-   - Assemble the system instruction with a fresh turn context.
+   `session_not_found`.
+2. Replay the session's stored A2UI messages into the shadow processor, so
+   validation knows the surfaces earlier turns drew.
+3. Write the first input: the buyer's text, or the action with its context and
+   surface data.
+4. Before every model request, assemble the system instruction with a fresh
+   turn context, and declare the tools.
 5. Call `interactions.create` with streaming, `previous_interaction_id` when
    present, `store: true`, through model selection.
 6. Stream: forward the full text so far as it grows; validate each message of
    an `a2ui` block as it completes; collect function calls.
 7. Forward accepted messages through the seeder: a `createSurface` is held
    until its first valid `updateComponents`, then sent with
-   `sendDataModel: true`, followed by one `updateDataModel` for each seeded
-   slice its components bind, then the components. A surface whose tree never
-   validates never reaches the buyer.
-8. When the round ended with function calls, run them in the order of the tool
-   list, so `resolve_market` selects the market before a profile proposal in
-   the same round converts amounts into its currency, and continue the
-   interaction with all results at once, in the order the model called them.
-   A round that wrote text or a surface ends the tool phase: function calls
-   beside output are dropped, so a model cannot spread tools over requests it
-   also draws in (D78). While a round draws nothing, its calls run and the
-   model is asked again, at most three tool rounds. The request after the last
-   allowed round ends with a text note that tools are done and sets
-   `tool_choice` to `none` (D85). Live turns on 2026-09-17 called
-   `resolve_market`, then `propose_profile`, then `propose_scenario` in
-   separate requests, two first messages in three; with tools switched off
-   after one round they called them anyway and the buyer saw nothing. Every round
-   is logged with its status, the names of the tools called, and its
-   duration.
-9. A turn that ends with no text and no forwarded message draws a fallback,
-   so a buyer never sees an empty answer (D85).
-10. When messages were rejected, continue with one text input listing each
+   `sendDataModel: true`, followed by one `updateDataModel` for each slice a
+   tool seeded that its components bind, then the components. A surface whose
+   tree never validates never reaches the buyer.
+8. When the round ended with function calls, run them in the order the model
+   made them and continue the interaction with every result at once, at most
+   three tool rounds. The request after the last allowed round ends with a note
+   that tools are done and sets `tool_choice` to `none` (D85). Every round is
+   logged with its status, the names of the tools called, and its duration.
+9. When messages were rejected, continue with one text input listing each
    `VALIDATION_FAILED` error, at most `HOMEWARD_MAX_CORRECTIONS` rounds. The
    correction round asks with an enforced response schema (D110): a JSON object
    of messages, offering the layout basics and the components the turn drew or
-   tried to draw. Gemini then cannot write malformed JSON, an unknown
-   component, or another catalog ID; the validator still checks bindings and
-   ownership. If Gemini refuses the schema, the round repeats without it. After
-   the last correction, the server draws a fallback.
-
-The fallback is composed by code from what the turn already measured (D109).
-When the open decision is `homeChoice`, `assess_story` ran, and the model drew
-no components, it is the homes composition: the map, the ranked homes with
-their choose button, and the comparison table, bound to the same `/assessment`
-slice the model would have used and passed through the same validation. It
-fills the surface the model created and could not fill, or creates
-`t{turn}-homes`. Only when there is
-nothing measured to show does the `t{turn}-retry` surface ask the buyer to send
-the message again.
-11. Save the plan, the turn number, the last completed interaction ID, and every
+   tried to draw. If Gemini refuses the schema, the round repeats without it.
+10. A turn that ends with nothing at all, or with messages still rejected after
+    the last correction, adds the `t{turn}-retry` notice asking the buyer to
+    send the message again. A reply in words alone is a valid turn.
+11. Save the turn number, the last completed interaction ID, and every
     forwarded message, also when the turn fails or is cancelled, then release
     the lease and emit `completed`.
 
 The turn number advances even when a turn fails, so surface IDs never repeat.
-
-A turn that commits a profile or scenario therefore usually needs one model
-round: the numbers are already computed, and the model only writes and lays
-out. A turn that starts from free text needs two, and never more apart from
-correction rounds. Before D78, live turns on 2026-09-17 took three and four
-rounds, the model calling `compute_affordability` and `propose_profile` in
-separate requests.
 
 ### Stream Parser
 
@@ -470,10 +237,10 @@ prose. A fence with text after it on the same line stays prose.
 Interaction history is a cache. When a request carrying
 `previous_interaction_id` fails with 404 `not_found` (deleted or expired) or
 400 `invalid_request` (unknown to this key, or never stored), the orchestrator
-retries once without it, starting a fresh interaction whose turn context
-carries the plan state. Replaying the last few turns' text joins with
-persistence in M2. Nothing is lost because the plan record holds every
-decision.
+retries once without it, starting a fresh interaction from the turn's input.
+The session record keeps every turn's text and surfaces, so the buyer's screen
+is not lost; replaying earlier turns' text into the new interaction is not
+built yet.
 
 A stored chain can also be refused later, mid-turn (measured 2026-09-25): a
 tool round fails with 400 `invalid_request`, "function response turn
@@ -538,54 +305,13 @@ one, so later turns are clean.
 - Recorded streams and error bodies live in
   `server/test/fixtures/interactions/`.
 
-## Uncovered Markets
-
-When the buyer names a place with no curated pack, `resolve_market` reports it
-as uncovered. `load_market`, pre-run once that market is selected, seeds
-`/market` with the market, its name, and `coverage: uncovered`, and `/selection`
-with the curated markets. The agent says so plainly and shows
-`MarketSnapshotCard`, which reads both, beside a `LocationPicker` for switching. It never states lending limits, taxes, costs, or obstacles for an
-uncovered market, whether from a tool or from the model's own knowledge.
-
-Every uncovered request is logged with its market identifier so curation
-follows demand.
-
-### Research
-
-Research for any place runs on free services, measured in S9 (D100 to D102):
-
-- `propose_story` finds the city with Nominatim, then each anchor and home
-  inside the city's box, so an English campus name cannot land in another town.
-- `assess_story` measures every home in one Overpass query for every nearby
-  criterion and a noise check against main roads and rail, and routes each
-  home to each anchor on the FOSSGIS router by car, bike, or foot and on
-  Transitous by public transport on a weekday morning.
-- Calls go one at a time per service with the gap its policy asks, under a
-  user agent naming Homeward, and are cached for six hours in memory and a
-  week in Firestore (D112); a busy Overpass is waited out
-  twice; a service that fails leaves its criteria unmeasured, never missed.
-- `common` turns each measurement into fits, close, or misses with the words
-  for it, and ranks the homes, weighing must-haves three times.
-- Each lookup reports a measuring step: finding a place, looking for what is
-  near the homes, timing a ride to an anchor. The turn streams the steps as a
-  progress data part while tools run, so the buyer sees the work rather than
-  a spinner (D108). Labels are written by the tool from the plan; a lookup
-  that fails shows as unavailable.
-
-Still to come in M3: a researcher behind one interface, a free third-party
-model first and Gemini as its fallback, for estimated rules, area ideas for a
-city, and a pasted listing; every place it names verified against open data;
-and Google Maps grounding for ratings when the buyer asks.
-
 ## Guardrails
 
 - Homeward estimates and explains. It does not recommend a lender, a product, or
   a decision to buy.
-- Every surface that shows a rule-derived figure shows coverage.
-- The disclaimer is on the opening page of every plan.
-- Chat text containing money amounts or rates is flagged by evals.
-- Tool errors become a short explanation and a retry surface, never invented
-  figures.
+- The prompt forbids figures the model worked out itself; figures reach the
+  buyer from tools, through bound components.
+- Tool errors become a short explanation, never invented figures.
 
 ## Failure Handling
 
@@ -596,10 +322,10 @@ and Google Maps grounding for ratings when the buyer asks.
 | Key quota exhausted (HTTP 429) | Turn fails with `gemini_quota_exhausted` and the next midnight Pacific as reset time; app asks to try again in a minute and names when the daily limit resets |
 | Prepaid credits depleted | Turn fails with `gemini_credits_depleted`; app offers to change the key |
 | Model overloaded or stalled | Model selection falls back once; if every model is unhealthy, the turn fails with `gemini_unavailable` |
-| Unknown or expired previous interaction | Retry once with rebuilt history |
+| Unknown or expired previous interaction | Retry once on a fresh interaction |
 | Stored chain refused with `invalid_request` before anything is drawn | The turn starts over once on a new conversation |
-| Model output invalid after corrections | Model text plus a fallback composed from the turn's measurements, or the retry surface when nothing was measured |
-| Tool error | Short explanation plus retry surface |
+| Model output invalid after corrections | Model text plus the retry notice |
+| Tool error | The model hears the error and says so in a sentence |
 | Stream dropped | Client resumes with `tasks/get`; server keeps the task for 10 minutes |
 | Concurrent turn | Second turn rejected with `turn_in_progress` |
 
@@ -622,5 +348,5 @@ app ──WebSocket /live──► server ──WebSocket──► Live API
   the client over the socket.
 - Speak, then screen: the model says one sentence and draws the rest.
 - The buyer's key is sent in the first socket frame, never in the URL.
-- The text door and the voice door share the plan, so a buyer can switch
+- The text door and the voice door share the session, so a buyer can switch
   between them mid-plan.

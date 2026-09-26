@@ -2,8 +2,8 @@
 
 ## Scope
 
-A Dart `shelf` server on Cloud Run. It owns the agent loop, tools, rule packs,
-validation, and plan state. It holds no Gemini key of its own.
+A Dart `shelf` server on Cloud Run. It owns the agent loop, tools, validation,
+and session state. It holds no Gemini key of its own.
 
 ## Routes
 
@@ -64,23 +64,18 @@ route: the envelope for `/api/*`, a JSON-RPC error without an ID for `/a2a`.
 
 ## Server Secrets
 
-The research model's keys are the server's own (D100). Each reaches the server
-as an environment variable, like the rest of its configuration (D115).
+The server holds no keys of its own since the reset (D129). A key it needs
+later reaches it as an environment variable, like the rest of its
+configuration (D115):
 
-| Variable | Secret Manager secret | Purpose |
-| --- | --- | --- |
-| `CEREBRAS_API_KEY` | `cerebras-api-key` | The research model on Cerebras, from M3 |
-| `GROQ_API_KEY` | `groq-api-key` | The research model on Groq, from M3 |
-
-- On Cloud Run, `--set-secrets` maps each variable onto the `latest` version of
-  its secret when an instance starts. Neither the image nor the deploy command
-  holds a value.
+- On Cloud Run, `--set-secrets` maps the variable onto the `latest` version of
+  its Secret Manager secret when an instance starts. Neither the image nor the
+  deploy command holds a value.
 - The service account may access each secret it needs, not every secret in the
   project.
 - Locally the variables come from `.env`; see Local Development.
 - Read into `ServerConfig` at startup; never logged, included in errors, or sent
-  anywhere except the provider it belongs to. An empty variable means that
-  provider is not configured.
+  anywhere except the provider it belongs to.
 - A secret joins `make deploy-server` once the server reads it; deploying with a
   secret that does not exist fails.
 - Rotation adds a version, redeploys, then destroys the old version. A disabled
@@ -141,12 +136,10 @@ window, and the session limit joins with Firestore in M2.
 | `HOMEWARD_FIRST_STEP_DEADLINE` | Deadline for the first Gemini step, in seconds |
 | `HOMEWARD_MODEL_COOLDOWN` | How long an overloaded model is skipped, in seconds |
 | `HOMEWARD_MAX_CORRECTIONS` | Validation correction rounds |
-| `HOMEWARD_DEAL` | `on` to walk a buyer into the deal after choosing a home; `off`, the default, ends the journey at the chosen home (D125) |
 | `HOMEWARD_ALLOWED_ORIGINS` | CORS origins |
 | `HOMEWARD_APP_CHECK_ENFORCED` | Enforce App Check, off for local development |
 | `HOMEWARD_PUBLIC_URL` | Base URL clients call, used for the agent card's `url` |
 | `HOMEWARD_PROMPTS_DIR` | Prompt files; `/app/prompts` in the image |
-| `HOMEWARD_MARKETS_DIR` | Rule packs, rates, living costs, and places; `/app/markets` in the image |
 | `HOMEWARD_SESSION_STORE` | `firestore` or `memory`; Firestore by default on Cloud Run and with the emulator |
 | `GOOGLE_CLOUD_PROJECT` | Firebase project |
 
@@ -177,13 +170,12 @@ Secrets.
   workspace includes the Flutter app and a plain Dart image cannot resolve it.
   `make server-build` runs `dart compile exe --target-os linux --target-arch x64`
   against the committed lockfile.
-- `server/Dockerfile` copies that binary, `server/prompts/`, and `markets/` onto
+- `server/Dockerfile` copies that binary and `server/prompts/` onto
   `gcr.io/distroless/cc-debian12:nonroot`: glibc and CA certificates, no shell,
   user 65532. The image is about 31 MB.
-- The root `.dockerignore` admits only the server binary, the prompts, and the
-  markets into the build context.
-- The server loads markets and prompts once at startup and refuses to start if
-  a market file fails to parse.
+- The root `.dockerignore` admits only the server binary and the prompts into
+  the build context.
+- The server loads the prompts once at startup.
 - The server exits on SIGTERM within Cloud Run's grace period: it stops
   accepting connections, lets in-flight requests finish, and releases every
   signal watcher so the process can end.
@@ -196,21 +188,9 @@ Secrets.
   with Cloud Datastore User, Firebase Authentication Viewer, Firebase App Check
   Token Verifier, and Logs Writer, plus Secret Manager Secret Accessor on each
   server secret.
-- A server secret is created once from the developer's `.env`, with automatic
-  replication, which is billed as one location:
-
-  ```sh
-  sed -n 's/^CEREBRAS_API_KEY=//p' .env | tr -d '\n' |
-    gcloud secrets create cerebras-api-key --project homeward-genui \
-      --replication-policy automatic --data-file=-
-  gcloud secrets add-iam-policy-binding cerebras-api-key \
-    --project homeward-genui \
-    --member serviceAccount:homeward-server@homeward-genui.iam.gserviceaccount.com \
-    --role roles/secretmanager.secretAccessor
-  ```
-
-  `make deploy-server` then passes
-  `--set-secrets CEREBRAS_API_KEY=cerebras-api-key:latest`.
+- A server secret, once one is needed, is created once from the developer's
+  `.env` with automatic replication, which is billed as one location, and the
+  service account is given Secret Manager Secret Accessor on it.
 - Cloud Run deploys with `--no-invoker-iam-check`. With the check on, Cloud Run
   answers 401 to any `Authorization` bearer token that is not a Google identity
   token, including Firebase ID tokens, before the request reaches the server.
@@ -257,8 +237,7 @@ Secrets.
 
 | Variable | Read by |
 | --- | --- |
-| `HOMEWARD_EVAL_GEMINI_KEY`, `HOMEWARD_EVAL_GEMINI_MOON_KEY` | `make probe`, `make eval`, and the local server's `/dev/config` for the app's development runs, never a turn. Two keys from two Google accounts, two free quotas: each moves to the next key when a turn fails with `gemini_quota_exhausted` |
-| `CEREBRAS_API_KEY`, `GROQ_API_KEY` | The server, as in production |
+| `HOMEWARD_EVAL_GEMINI_KEY`, `HOMEWARD_EVAL_GEMINI_MOON_KEY` | `make probe` and the local server's `/dev/config` for the app's development runs, never a turn. Two keys from two Google accounts, two free quotas: each moves to the next key when a turn fails with `gemini_quota_exhausted` |
 
 The local server is the only thing that hands a key to the app, and only the two
 Gemini keys; `docs/REQUIREMENTS_APP.md` has the details.

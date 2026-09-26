@@ -4,122 +4,59 @@
 
 | Date | Event | Source |
 | --- | --- | --- |
-| 2026-09-28 | Working group and demo build session | Hilda Arteaga, 2026-09-14 |
+| 2026-09-28 | Working group and demo build session; may move after the reset (D129) | Hilda Arteaga, 2026-09-14 |
 | ~2026-10-10 | Recording deadline for Andrew Brogdon's GenUI video segment | Andrew Brogdon, 2026-09-10: "around this time next month"; confirm exact date |
 | 2026-11 | Livestream premiere, date unannounced | Andrew Brogdon, 2026-09-10 |
 
 ## Milestones
 
-### M0 Foundations — Sep 16 to Sep 20
+### Before The Reset — Sep 16 to Sep 26
 
-Deliverables:
+The foundation was built and kept: the Dart workspace, the A2A server on Cloud
+Run with Firestore sessions, the streaming Gemini client with model fallback,
+A2UI validation with correction rounds, the catalog contract and its generated
+prompt skill, the Flutter app shell with the renderer, gallery, and wire
+inspector, and the open-data clients for places and routes.
 
-- Monorepo: move the Flutter scaffold into `app/`, create `server/`, `common/`,
-  `markets/`, `tool/`, root `Makefile`, shared analysis options, a pre-push
-  hook running `make check`.
-- Firebase project `homeward-genui`: anonymous auth, Firestore `eur3`, App
-  Check providers, Hosting site, Cloud Run service shell.
-- Spikes S1 to S6 answered with a written decision in the decision log.
-- S7 started.
+On top of it came a question-by-question case (D121), sample homes (D122), a
+deal workspace with verified rule packs (D113), and evals that scored the
+case's script. On 2026-09-26 all of that was removed (D129): the server had
+taken the flow away from the model, so the app read as a filter rather than
+generated UI. It is in git history at `6faa8ab`.
 
-Exit: a `/health` deploy exists, the app builds for iOS, Android, and Web,
-every spike has a decision.
+### R1 One Living Screen — next
 
-### M1 Thin Slice — Sep 21 to Sep 27
+The first step of the rebuild, small enough to demo on its own:
 
-Deliverables:
+- The buyer tells their story in their own words.
+- Gemini composes one screen for that buyer from the catalog, and updates that
+  same screen in place as the buyer adds to the story, instead of a new card
+  per turn.
+- The server keeps checking only that what Gemini draws is valid.
 
-- `common`: money, finance core (payment, LTV, DSTI, maximum loan, binding
-  constraint, amortization tiers), rule pack models, overlay, applicability,
-  open decisions, catalog declarations for six components.
-- `markets/packs/SE.json` drafted from Tier 1 notes, review pending.
-- Server: A2A subset, turn orchestrator, stream parser, validation passes 1 to
-  8, seeding, Interactions client, tools `resolve_market`, `load_market`,
-  `propose_profile`, `propose_scenario`, `compute_affordability`.
-- App: key screen, plans, plan chat with inline surfaces, catalog items
-  `LocationPicker`, `MoneyInput`, `HouseholdInput`, `AmountSlider`,
-  `AffordabilitySummary`, `PaymentBreakdown`, client functions `withinMaxLtv`
-  and `monthlyPayment`.
-- An uncovered market gets `MarketSnapshotCard` in its uncovered state.
-- Latency re-measured with the S2 probe at two different times of day; model
-  order confirmed.
-- `tool/perf` and `make perf` against a minimal gallery page holding the M1
-  components; first run on web and on a physical Android phone. The full
-  catalog gallery follows in M2.
+Exit: two contrasting stories, such as a parent moving in and a couple who
+cycle everywhere, get two structurally different screens.
 
-Exit: at the Sep 28 session, a Stockholm buyer goes from first message to a
-live down payment slider updating payment locally, on web and one phone.
+### After R1
 
-### M2 Story Slice — Sep 24 to Sep 28
+Each of these is a step of its own, picked in order when the one before it is
+demoable. Earlier work to bring back from `6faa8ab` is named where it exists.
 
-The re-scope of 2026-09-24 (D97): the product had become a calculator for the
-pitch's last act. M2 builds the first two acts on the same pipeline.
+- The first measuring tool and a map block: places and routes on the buyer's
+  screen, from the open-data clients.
+- Homes on the screen: sample homes, and needs read from each listing with the
+  quote checked word for word (the listing reader of D126).
+- The buyer's week: how often they go where, and each home's weekly travel.
+- Evals that score facts and validity, not whether a script was followed.
 
-Deliverables:
-
-- Product, agent guide, and roadmap rewritten around the story.
-- Research tools on open data, cached and polite: `geocode` (Nominatim),
-  `route` (OSRM by car, bike, and foot; Transitous by transit), `nearby`
-  (Overpass: nearest, counts, and noise by proximity to roads, rail, airports,
-  and nightlife).
-- A story data model: why the buyer is moving, anchors, criteria with
-  thresholds, candidates, and measured results per candidate and criterion.
-- Building blocks: `Map`, `ChoiceChips`, `FactTile`, `StatusRow`,
-  `ComparisonTable`, `ProsCons`, `SourceChip`, `CandidateInput`.
-- Flow: work the story out as a case, one tapped question at a time, and write
-  it back as a paragraph they correct (D119, D121); then three sample homes
-  (D122) or suggested areas on the board.
-- The detective's cards: `Hunch`, `PhotoLineup`, `TradeOff`, `ListingCard`
-  (D123).
-- The demo cut after workshop feedback on 2026-09-26: the deal switched off
-  (D125), needs of the home read from the listings with a source for every
-  reason (D126), the routine and the week map on the Maps toolkit's property
-  names (D127), and swipe clues (D128).
-- With the deal on, a picked home opens the existing deal workspace with its
-  price.
-- A journey shell: an opening page, then one scrolling story with a section per
-  turn, and a history sheet (D106, D107, D120).
-- Measuring steps streamed while tools run (D108).
-- A board composed by code when the model's composition fails (D109).
-- Constrained A2UI output tried against the composed catalog schema, kept or
-  dropped with a decision: kept for correction rounds (D110).
-
-Exit: at the Sep 28 session, a family moving with a parent goes from its first
-message, through the detective's questions, to three sample homes, each saying
-why it fits with the source of every reason, and to their week on the map from
-the one they pick.
-
-### M3 Recording Cut — Sep 29 to Oct 7
-
-- Researcher behind one interface (D100): an OpenAI-compatible client, a Groq
-  and Cerebras bake-off against Gemini, Gemini as the fallback, the key in
-  Secret Manager.
-- Research operations: estimated rules, area ideas for a city, a pasted
-  listing's facts, toll and safety impressions; every named place verified
-  against open data (D101).
-- Google Maps grounding for ratings when the buyer asks, with attribution
-  (D102).
-- City entry: areas suggested and ranked on the map.
-- Sample homes for more cities.
-- Estimated rules outside `SE` and `PT`, labelled and editable (D98).
-- `Gauge`, `Rating`, a deal sheet, and the association's finances for Sweden.
-- `MarketSnapshotCard`, `EligibilityChecklist`, and `ForeignBuyerObstacles`
-  leave the agent's catalog; the blocks compose what they showed.
-- Eval cases re-pointed at the story: `stockholm-family`, `lisbon-city-only`,
-  `funchal-cross-border`, `unlisted-city-estimates`.
-- The hero rehearsed three times without a correction round.
-
-Exit: the hero flow in `docs/PRODUCT.md` runs reliably on web at recording
-resolution.
-
-### M4 Recording — Oct 8 to Oct 10
+### M4 Recording — around Oct 8 to Oct 10
 
 - Agree the segment outline with Andrew: the story told as UI, then the map
-  and comparison, then instant what-if, then the code that makes it possible (a
-  building block, a research tool, the composing prompt).
+  and the homes, then the code that makes it possible (a building block, a
+  tool, the composing prompt).
 - Recording build tagged; a key whose daily quota is untouched that day; the
   server warmed with one request just before recording.
-- Backup: screen capture of every hero step recorded the day before.
+- Backup: screen capture of every step recorded the day before.
 
 ### M5 Sample Complete — Oct 13 to livestream
 
@@ -131,18 +68,10 @@ resolution.
 ### M6 Voice Door — after M5
 
 - `/live` WebSocket door, Live API client, `show_ui` tool, voice composer mode.
-- Eval cases for voice turns using recorded audio.
 
 ### M7 Provider Choice — after livestream
 
-- A second model API for composing, picked by the buyer (D80), on the client
-  the researcher already brings.
-
-### Dropped On 2026-09-24
-
-Tier 2 and Tier 3 packs, coverage tiers beyond verified and estimated, the
-`get_process`, `get_loan_types`, and `release_decision` tools, eval replay
-mode, `tool/perf`, and widget tests (D104).
+- A second model API for composing, picked by the buyer (D80).
 
 ## Spikes
 
@@ -154,7 +83,7 @@ mode, `tool/perf`, and widget tests (D104).
 | S4 | Do genui client functions accept object arguments and return numbers, strings, and booleans; can a catalog item subscribe to a whole slice; is a six-component slider drag at 60 fps? | Probe app, widget test, profile web builds in headless Chrome with CPU throttling | **Answered:** bindings and functions work; charts drawn with `fl_chart` are the bottleneck; see `docs/SPIKES.md`. Android unmeasured. |
 | S5 | Is `a2ui_core` pure Dart and usable on the server for message models and validation? | Import into a console app | **Answered:** yes; used from `common`, see `docs/SPIKES.md`. |
 | S6 | Does `firebase_admin_sdk` verify anonymous ID tokens and App Check tokens and run Firestore transactions on Cloud Run with ADC? | Deploy a probe route | **Answered:** yes; clients call Cloud Run directly because Hosting rewrites cannot stream, and the invoker IAM check is off; see `docs/SPIKES.md`. |
-| S7 | Verify the high-impact Tier 1 claims: Portugal non-resident IMT, Portugal DSTI limit, Portugal non-resident LTV, Sweden top-up cap | Primary sources listed in `docs/MARKETS.md` | **Answered:** Sweden confirmed; Portugal corrected: DSTI 45% from 2026-08-01, non-resident IMT by Decree-Law 97/2026 with a refund path, non-resident 70% is lender practice; see `docs/SPIKES.md`. |
+| S7 | Verify the high-impact Tier 1 claims: Portugal non-resident IMT, Portugal DSTI limit, Portugal non-resident LTV, Sweden top-up cap | Primary sources listed in `docs/MARKETS.md`, removed in D129 and kept at `6faa8ab` | **Answered:** Sweden confirmed; Portugal corrected: DSTI 45% from 2026-08-01, non-resident IMT by Decree-Law 97/2026 with a refund path, non-resident 70% is lender practice; see `docs/SPIKES.md`. |
 | S8 | Can a buyer pick another model or API beside Gemini, and what does each route cost? | Desk research of Google and third-party provider limits, prices, APIs, and Dart libraries; one hero message on each candidate Gemini API model | **Answered:** `gemini-3.5-flash-lite` is the fallback candidate, Gemma 4 does not fit the free tier's 16k input tokens a minute, and an OpenAI-compatible provider choice follows the livestream (D80); see `docs/SPIKES.md`. |
 | S10 | Why does Gemini refuse the catalog as a response schema, and does an accepted schema constrain the output? | Bisecting the composed schema live, synthetic schemas, and chained corrections on the probe key | **Answered:** recursion and `allOf` are the obstacles; a flattened subset is enforced; see `docs/SPIKES.md` and D110. |
 | S9 | Can Homeward learn about any place on free keys: where things are, how far, how good, and what a listing says? | Open-data services and Gemini tools called around Stockholm on the probe key | **Answered:** open data covers where and how far with no key; Google Maps grounding and `url_context` work on free keys; see `docs/SPIKES.md`. |
@@ -166,25 +95,22 @@ mode, `tool/perf`, and widget tests (D104).
 | genui and A2UI change between now and recording | Rework in catalog and connector | Pin exact versions; genui confined to two places; no upgrades after M2 until recording |
 | A Google A2A client changes what it accepts | Other clients stop rendering Homeward | Server emits only `task` and `status-update`, full text snapshots; `genui_a2a` contract test in the app |
 | No official Dart GenAI SDK | Client maintenance | Thin typed client over REST, recorded fixtures from S2 |
-| Gemini latency: 7–18 s per model round on 2026-09-16 on Flash, 3–5 s on Flash-Lite on 2026-09-17 | Slow turns on camera | Flash-Lite first (D81), server pre-runs predictable steps, at most two rounds per turn, full text streamed as it grows, latency re-measured before recording |
+| Gemini latency: 7–18 s per model round on 2026-09-16 on Flash, 3–5 s on Flash-Lite on 2026-09-17 | Slow turns on camera | Flash-Lite first (D81), a small catalog, full text streamed as it grows, latency re-measured before recording |
 | Preferred model overloaded | Hung or failed turns | Deadlines, circuit breaker, fallback to the next model |
-| Android slider performance unmeasured | Sluggish drag on real phones | `make perf` on a physical phone in M1 |
 | Safari untested with `require-corp`, reCAPTCHA Enterprise, and cross-origin streaming | iPhone viewers cannot sign in or stream | Check macOS and iOS Safari in M1; fall back to single-threaded Wasm without isolation headers for Safari |
 | Scripted abuse of the web app exhausts reCAPTCHA's 10,000 free monthly assessments | $8 for the month, then $1 per 1,000 above 100,000 | One-day App Check tokens, the 25 SEK budget alert, per-UID rate limits |
 | Free-tier limits per model per Google Cloud project: 20 requests a day on Flash, 500 on Flash-Lite | Failed turns in rehearsal or on camera; about 250 turns a day per buyer on Flash-Lite | At most two requests per turn (D78); the next model takes over at a cap (D79); recording on a key unused that day; the cap explained in the app |
 | Free-tier prompts may be used by Google to improve its products and read by human reviewers; the terms ask for no sensitive or personal information | Buyers' financial details lose a privacy promise | Quoted on the key screen with advice to use round figures or a billing-enabled key (D76); no names are ever asked; terms re-read before recording |
-| Public open-data services limit and refuse heavy use: Nominatim one request a second, Overpass and OSRM fair use | Slow or failed boards when many viewers arrive | A user agent naming Homeward, a cache per query, one request at a time per service, a board that shows what it has |
-| Free research models invent places and misremember rules | Wrong facts on the board | Every named place verified against open data (D101); estimates labelled; verified packs where they exist |
-| Google Maps grounding's terms on attribution and on showing its places on another map | Ratings withdrawn or reworked | Attribution shown with every rating; pins from open data; terms read before M3 ends |
-| A shared research key reaches its daily cap after launch | Research falls back to buyers' Gemini keys | Gemini fallback (D100); caps watched after launch |
-| Curated rules change after review; Portugal changed lending limits and non-resident IMT within four months of 2026 | Stale numbers on camera | 180-day expiry, effective dates, check warnings, sources re-read in the recording week |
-| Four weeks for server, client, catalog, and two markets | Scope slip before recording | Thin slice by Sep 28; Phase 2 components and Tier 2 explicitly after recording |
+| Public open-data services limit and refuse heavy use: Nominatim one request a second, Overpass and OSRM fair use | Slow or failed screens when many viewers arrive | A user agent naming Homeward, a cache per query, one request at a time per service |
+| Gemini draws weaker screens without the server steering it | A demo that wanders | A small catalog of expressive blocks, a clear prompt, and evals on validity and facts; no server rule that picks the next question (D129) |
+| The rebuild is not demoable by the Sep 28 session | Little to show at the session | Each step demoable on its own; show the foundation and the direction if R1 is not done |
 | BYO key friction for video viewers | Fewer people try the demo | One-screen key flow with direct AI Studio link; hero prompt ready on first plan |
-| Financial data privacy in EU | Compliance exposure | Anonymous auth, `eur3`, no content in logs, delete controls, 90-day inactivity cleanup |
+| Buyers' personal details in EU | Compliance exposure | Anonymous auth, `eur3`, no content in logs, delete controls, 90-day inactivity cleanup |
 
 ## Decision Log
 
-Decisions from the planning session on 2026-09-16.
+Decisions from the planning session on 2026-09-16 onwards. Rows that D129
+superseded stay as history.
 
 | # | Decision | Chosen | Alternatives considered |
 | --- | --- | --- | --- |
@@ -263,6 +189,7 @@ Decisions from the planning session on 2026-09-16.
 | D126 | Needs of the home, read from the listing | The case can ask what the home itself must have: step-free entry, a lift, a shower or a bedroom on the entry floor, room for a home office, pets. Each sample listing carries a description of about eighty words. Gemini on the buyer's key reads the city's listings for the buyer's needs, answering per need whether the listing meets it, fails it, or says nothing, with the sentence that says so, and code keeps a quote only when it appears word for word. A home that fails a need is ruled out, and each chosen home shows why it fits and where it falls short, every reason with its source: the listing, measured, or the buyer. Workshop feedback asked for an agent that finds "stepless entry and a main-floor walk-in shower" in long descriptions for a parent moving in, and shows why each home was picked and where each reason comes from | Features tagged by hand when curating, which shows no reading; the composing model quoting without a check |
 | D127 | The routine and the week map | Each place the buyer goes gets how often, and one routine card sets the week with taps: the places the case knows, days a week for each, and places to add on the map. Code computes each home's weekly travel time from the measured trips, and the map draws each routine trip with its frequency. The routine is an essential clue once a daily place is on the map, so the case asks at most six questions, not five. The map component takes the property names of the Maps Agentic UI Toolkit's `GoogleMap`: `center`, `zoom`, `markers`, `routes` with `origin` and `destination`, and `travelMode`, drawn on OpenStreetMap. Workshop feedback asked to map the buyer's actual routine, such as three office days and a weekly clinic visit, with a weekly commute figure and the routes drawn, and pointed at the toolkit | A median over departure times, which needs several routing calls per trip; the toolkit itself, which has no Flutter client and needs a Maps Platform key with billing |
 | D128 | Swipe clues | A `HomeSwipe` card deals six of the city's sample homes that differ in type, outdoor space, style, and size. The buyer keeps or passes each with a swipe or a tap, and the server reads what the kept homes share that the passed ones lack: a kind of home, outdoor space, or style it then sets on the story, and the pattern it hands the model for its next deduction, such as every flat passed. The model draws it where it would draw the homes lineup. Stairs were planned as a fourth trait, but only a listing reading knows them, and that waits for needs | Photos alone, which carry taste but not size or price |
+| D129 | The reset | Clean the project down to what is essential and certainly correct, and rebuild in small steps around one screen per buyer that Gemini composes and updates as the buyer talks. Kept: the server platform, the agent loop with validation and correction rounds, the catalog contract with basic components only, the app shell with renderer, gallery, and wire inspector, money and geo types, the probe, and the open-data clients. Removed: the case and every question card (D121, D123, D126 to D128), the story model and its tools, the sample homes and photos (D122), the deal with its finance code, rule packs, and markets (D113, D125), the plan record, the fixed action list, and the evals (D93). Actions are now named by the model and handed back to it with their surface's data model. Reviewed on 2026-09-26, the app still felt like a filter dressed as AI: each live failure had been fixed with a server rule (must-ask lists, rejections, withheld tools, fallbacks the server drew), until the server scripted the flow and Gemini only worded it, and the evals scored the script | Stripping the guardrails but keeping the question cards; a full restart in a new repository |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.
@@ -287,15 +214,13 @@ them before M0 ends.
 
 1. Exact recording date, segment length, and production help from Andrew's
    team.
-2. What to present at the Sep 28 session and who attends.
+2. What to present at the Sep 28 session and who attends, and whether it
+   moves after the reset (D129).
 3. Whether Google wants a public deployment and where it will be linked.
-4. Who is the second reviewer for pack curation at Moonwise.
-5. Catalog ID domain: `moonwise.se/homeward` or a dedicated domain.
-6. Reply on the email thread with project details, which Hilda asked Moonwise
+4. Catalog ID domain: `moonwise.se/homeward` or a dedicated domain.
+5. Reply on the email thread with project details, which Hilda asked Moonwise
    for on 2026-09-14.
-7. Whether Google is comfortable with research on a non-Google model in a
-   GenUI sample (D100); worth one line to Abdallah before the recording.
-8. ~~The Very Good Ventures product the finish should come close to.~~
+6. ~~The Very Good Ventures product the finish should come close to.~~
    Answered on 2026-09-24. It is their GenUI Kit
    (verygood.ventures/resources/genui-kit) and the Life Goal Simulator shown
    at Google Cloud Next 2026. There is no public repo; D106 to D109 take its

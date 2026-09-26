@@ -5,20 +5,20 @@ and contributors; detailed product and implementation rules live in `docs/`.
 
 ## Project Overview
 
-Homeward is a story-driven home-buying and relocation advisor built as an A2UI
-vertical sample for the Flutter GenUI initiative. A buyer says why they are
-moving and what their days look like; Homeward turns that story into the
-criteria that matter, checks candidate homes or areas against them on a map —
-commutes, schools, activities, evenings, noise, getting around — and walks the
-buyer into the deal: what they can borrow, what it costs, and the rules that
-apply to them there.
+Homeward is a home-buying and relocation advisor built as an A2UI vertical
+sample for the Flutter GenUI initiative. A buyer tells the story of their move;
+Gemini turns it into a screen made for that buyer, composed from Homeward's
+building blocks, so two buyers with different stories see different screens.
 
 The system is agent-driven and server-owned. A Dart server on Cloud Run runs
-the composing agent, the research tools, and the rule packs. Gemini composes
-every screen from Homeward's building blocks; open map data, routing, and a
-free research model supply the facts; shared finance code does the numbers. The
-Flutter app renders A2UI surfaces from a catalog it trusts, recomputes what-if
-figures locally, and never contains market rules or prompts.
+the composing agent and its tools; open map data and routing supply the facts.
+The Flutter app renders A2UI surfaces from a catalog it trusts and never
+contains prompts.
+
+On 2026-09-26 the project was cleaned down to its foundation (D129): the
+earlier question-by-question case, the sample homes, the deal, and the evals
+were removed. The product is being rebuilt from here in small steps; see
+`docs/ROADMAP.md`.
 
 ## Repository Shape
 
@@ -29,29 +29,25 @@ includes.
 
 - `app` - Flutter client for iOS, Android, and Web; macOS for development only.
 - `server` - Dart `shelf` server on Cloud Run: A2A endpoint, agent loop, tools.
-- `common` - pure Dart package shared by `app`, `server`, and `tool`: domain
-  models, finance math, market rule pack schema, catalog contract, wire types.
-  It must never import Flutter.
-- `markets` - curated market rule packs and reference-rate snapshots. Data, not
-  code.
-- `tool` - Dart CLIs: pack validation, catalog skill generation, rate snapshot
-  refresh, eval runner. Never deployed.
-- `docs` - canonical product, architecture, protocol, catalog, agent, market,
-  data, design, quality, and roadmap documents.
+- `common` - pure Dart package shared by `app`, `server`, and `tool`: money,
+  geo, catalog contract, wire types. It must never import Flutter.
+- `tool` - Dart CLIs: catalog skill generation and checks, vendoring, the live
+  probe, the local development server. Never deployed.
+- `docs` - canonical product, architecture, protocol, catalog, agent, data,
+  design, quality, and roadmap documents.
 
 ## Canonical Docs
 
-- `docs/PRODUCT.md` - product behavior, personas, coverage tiers, hero flow.
+- `docs/PRODUCT.md` - product direction, principles, and what the demo shows.
 - `docs/ARCHITECTURE.md` - system shape, package boundaries, code rules.
 - `docs/PROTOCOL.md` - A2UI v0.9 usage and the A2A subset on the wire.
 - `docs/CATALOG.md` - the Homeward component catalog and client functions.
-- `docs/AGENT.md` - agent loop, prompts, tools, uncovered markets, voice door.
-- `docs/MARKETS.md` - rule pack schema, curation, sources, reference rates.
+- `docs/AGENT.md` - agent loop, prompts, tools, voice door.
 - `docs/REQUIREMENTS_APP.md` - client app screens and behavior.
 - `docs/REQUIREMENTS_SERVER.md` - endpoints, auth, key handling, deployment.
 - `docs/FIRESTORE.md` - collections, rules, and indexes.
 - `docs/DESIGN.md` - design tokens and how generated UI stays on-brand.
-- `docs/QUALITY.md` - code standards, tests, pack checks, agent evals.
+- `docs/QUALITY.md` - code standards, tests, catalog checks.
 - `docs/ROADMAP.md` - milestones, spikes, risks, decision log, open questions.
 - `docs/SPIKES.md` - evidence and decisions from answered spikes.
 
@@ -61,22 +57,22 @@ first.
 ## Agent Operating Rules
 
 - Gemini composes; tools measure; code computes. The composing model never
-  writes a figure a buyer relies on: distances, times, and counts come from
-  research tools, amounts from finance code.
-- Every fact carries its source kind: measured, Google Maps, estimate, verified,
-  stated by the buyer, or quoted from a listing. Estimates are labelled and
-  editable; a quote appears word for word in the listing it names.
-- Verified market rules live in rule packs; anywhere else rules are researched
-  estimates. Never in prompts, widgets, or tool bodies.
+  writes a figure a buyer relies on: distances, times, counts, and amounts come
+  from tools or shared code.
+- Gemini decides what the screen shows and asks. The server checks that what it
+  draws is valid, never which question comes next. When the model misbehaves,
+  try a smaller catalog, a clearer prompt, or a better tool before a server
+  rule that takes a decision away from it.
+- Work in small steps, each one demoable, and say what each step leaves out.
+- Every fact carries its source kind: measured, estimate, stated by the buyer,
+  or quoted from a source. Estimates are labelled; a quote appears word for
+  word in what it names.
 - Every place a model names is checked against open map data before it is shown.
-- Finance math lives once, in `common`, and is used by both server tools and
-  client functions.
-- Google requests go to composing the UI, plus Google Maps grounding when a
-  buyer asks how good a place is. Research runs on a free third-party model
-  first, with Gemini as its fallback.
-- Everything runs on free tiers: buyers' free Gemini keys, the server's free
-  research key, Google Cloud within its free allowances, no paid store
-  accounts. A feature that needs payment is not built.
+- Math lives once, in `common`, and is used by both server tools and client
+  functions.
+- Everything runs on free tiers: buyers' free Gemini keys, open map data,
+  Google Cloud within its free allowances, no paid store accounts. A feature
+  that needs payment is not built.
 - The Gemini API key belongs to the user. Never log, persist, or echo it. Keys
   the server holds live in Secret Manager and are never logged either.
 - Every key reaches code as an environment variable. A developer's keys live in
@@ -85,9 +81,9 @@ first.
 - Write no code comments. Names, small functions, and types carry the meaning.
 - Prefer composition and small reusable units over copy and paste; prefer
   waiting for a second use over speculative abstraction.
-- Tests exist for `common` math, rule packs, catalog contract, server
-  validation passes, research tools, and agent evals. No widget tests; the UI
-  is reviewed visually.
+- Tests exist for `common` money, the catalog contract, server validation
+  passes, the agent loop, and the open-data clients. No widget tests; the UI is
+  reviewed visually.
 - Do not deploy unless explicitly asked.
 - Do not revert unrelated worktree changes.
 
@@ -118,9 +114,8 @@ App and local server, started together:
 make app                # Chrome; make app DEVICE=macos or DEVICE=<android id>
 ```
 
-`make check` runs codegen-check, format-check, analyze, test, markets-check,
-and catalog-check. `eval` joins as its milestone lands; `make eval` needs
-`HOMEWARD_EVAL_GEMINI_KEY` and is never part of `check`.
+`make check` runs codegen-check, format-check, analyze, test, and
+catalog-check.
 
 `make probe SERVER=http://localhost:8080 MESSAGE="…"` signs in anonymously,
 creates a session, and streams one live turn against a running server,
@@ -153,7 +148,5 @@ Generated files are committed and never edited by hand:
 - `common/lib/money/generated/*`, from `make iso-4217`
 - `common/lib/a2ui/generated/*`, from `make a2ui-schemas`, pinned to an A2UI spec
   commit
-- `common/lib/geo/generated/*` and `server/lib/markets/generated/*`, from
-  `make territories`, pinned to a CLDR release
 - `common/lib/catalog/generated/*`, `server/prompts/generated/*`, and
   `docs/generated/*`, from `make catalog`

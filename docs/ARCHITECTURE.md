@@ -7,12 +7,12 @@
 │ features ─ controllers ─ repositories                                                    │
 │ genui SurfaceController ◄── Homeward catalog (items + client functions)                  │
 │                                   │                                                      │
-│                                   └── common/finance (pure Dart)                         │
+│                                   └── common (pure Dart)                                 │
 └───────────────┬───────────────────────────────────────────────────────────▲──────────────┘
                 │ A2A JSON-RPC message/stream + Firebase ID token + BYO key │ SSE: text + A2UI
 ┌───────────────▼───────────────────────── server (Dart, Cloud Run) ─────────┴──────────────┐
 │ middleware ─ a2a ─ agent (turn orchestrator, stream parser, validation passes)           │
-│ tools ──► common/finance · markets (curated packs)                                       │
+│ tools ──► research (open data: places, nearby, routes)                                   │
 │ gemini: Interactions API client (REST + SSE) · Live API client (phase 2, WebSocket)      │
 │ data: firebase_admin_sdk ─► Firestore                                                     │
 └──────────────────────────────────────────────────────────────────────────────────────────┘
@@ -20,14 +20,15 @@
 
 Three rules shape everything:
 
-1. **Rules in data.** Market rules live in rule packs. Code reads packs; prompts
-   describe how to use them; widgets never know a market.
-2. **Math once.** `common/finance` is the only implementation of every formula.
-   Server tools call it to seed surfaces; client functions call it to recompute
-   on drag. There is no second implementation to keep in parity.
-3. **Server owns truth.** The plan record in Firestore is the source of truth
-   for decisions. Gemini interaction history is a cache that can be rebuilt from
-   the plan record at any time.
+1. **Gemini composes.** The model decides what each buyer's screen shows and
+   asks. The server validates what it draws and never picks the next question
+   or draws the screen for it (D129).
+2. **Math once.** `common` is the only implementation of every formula. Server
+   tools call it to seed surfaces; client functions call it to recompute on the
+   device. There is no second implementation to keep in parity.
+3. **Server owns truth.** The session record in Firestore holds every turn: its
+   input, text, and the A2UI messages the server forwarded. Gemini interaction
+   history is a cache that can be rebuilt from it at any time.
 
 ## Repository Shape
 
@@ -35,7 +36,6 @@ Three rules shape everything:
 /app
 /server
 /common
-/markets
 /tool
 /docs
 AGENTS.md
@@ -77,24 +77,14 @@ Pure Dart. The only package allowed to define domain vocabulary.
 common/lib/
   common.dart
   money/          Money, Currency, Rate (parts per million), Rounding, ISO 4217 table
-  finance/        payments, amortization tiers, shares and limits, brackets
-  affordability/  maximum loan per lending rule, binding constraint, payment,
-                  interest deduction, down payment bounds, the monthly payment
-                  each rule tolerates, the stress curve, eligibility, the
-                  highest price savings reach
-  costs/          what each cost rule charges, upfront costs with their
-                  refundable part, cash needed
-  markets/        MarketRulePack models, buyer predicates, overlay resolution,
-                  obstacles, exchange rate tables and conversion
-  profile/        BuyerProfile, Residency, Citizenship, Employment
-  plan/           Plan, Scenario, ChecklistState
+  geo/            GeoPoint, TravelMode
   catalog/        ComponentApi declarations: names, schemas, function signatures,
-                  examples; generated/ skill text
+                  data model slices, examples; generated/ catalog document
   a2ui/           additions over a2ui_core: client action parsing, component
                   schema, allow-list, and tree structure validation; the server
                   adds ownership, shadow state, and seeding on top
   wire/           A2A subset models (Freezed), SSE framing, the Homeward A2A
-                  client the app uses, action names, data model paths, error codes
+                  client the app uses, turn transcripts, error codes
   errors/         HomewardError
 ```
 
@@ -126,27 +116,6 @@ Rules:
   `Catalog`, `CommonSchemas`, and `MessageProcessor`. `common/a2ui` adds only
   what it lacks. No Homeward package re-implements a type `a2ui_core` provides.
 
-## `/markets`
-
-```text
-markets/
-  packs/
-    SE.json
-    PT.json
-    PT-30.json
-  rates/
-    SE.json
-    EUR.json
-  living_costs/
-    SE.json
-  places.json
-```
-
-Packs parse strictly into the `common/markets` models, and `make markets-check`
-adds semantic checks. The server bundles `markets/` into its image. The app never
-loads packs; the values a surface needs arrive in its data model. See
-`docs/MARKETS.md`.
-
 ## `/server`
 
 Dart, `shelf` and `shelf_router`, deployed to Cloud Run.
@@ -172,20 +141,17 @@ server/
                     seeder, corrections
       validation/   validation passes
     gemini/         interactions client, live client, request/response models
-    tools/          one file per tool, each a thin adapter over common + repositories
+    tools/          the tool interface and the list of tools, one file per tool
     research/       open-data clients (Nominatim, Overpass, routing), polite
-                    and cached, and the story measurer
-    markets/        pack loader, overlay resolver, coverage
+                    and cached
     ids/            random identifiers
     data/
       models/       session record
       providers/    composition root: builds every dependency once
-      firestore/    session, plan, and turn documents
-      repository/   sessions, turns, plans; Firestore or in memory
+      firestore/    session and turn documents
+      repository/   sessions and turns, Firestore or in memory; the open-data cache
   prompts/
     role.md
-    flow.md
-    markets.md
     style.md
     generated/catalog_skill.md
   Dockerfile
@@ -213,8 +179,8 @@ Rules:
 
 ### Why A Dart Server
 
-- `common/finance` runs unchanged on the server and in the app, so seeded
-  figures and live recomputation cannot drift.
+- `common` runs unchanged on the server and in the app, so seeded figures and
+  live recomputation cannot drift.
 - `common/catalog` drives server validation, app widgets, and the prompt skill
   from one declaration.
 - Google has no official Dart GenAI SDK. The Interactions API is plain REST with
@@ -297,13 +263,13 @@ and nothing else.
 Each catalog item is three layers, and only the first knows about genui:
 
 ```text
-catalog/payment_breakdown/payment_breakdown_item.dart   CatalogItem: schema from common, reads bindings, builds the view
-catalog/payment_breakdown/payment_breakdown_view.dart   the widget, from typed values and App* widgets
-common/finance/payment.dart                             the numbers
+catalog/<component>/<component>_item.dart   CatalogItem: schema from common, reads bindings, builds the view
+catalog/<component>/<component>_view.dart   the widget, from typed values and App* widgets
+common/lib/...                              the numbers, when the component shows any
 ```
 
 The widget a catalog item builds takes plain typed values and callbacks, so it
-renders identically in the catalog gallery and on a journey page.
+renders identically in the catalog gallery and in the journey.
 
 ### Web Build
 
@@ -323,7 +289,7 @@ headers.
 | `startup` | Session restore, anonymous sign-in |
 | `api_key` | Entering, verifying, and removing the Gemini key |
 | `plans` | Plan list and creating a plan |
-| `journey` | The opening page, one page per turn, the measuring overlay, history, turn streaming |
+| `journey` | The story field, each turn's text and surfaces, the measuring card, history, turn streaming |
 | `gallery` | Every catalog item with example data |
 | `wire_inspector` | A2A frames with their sizes, the A2UI message each carried, the live data model of a surface, and the counters; every write a bound input makes is counted where the app writes it |
 | `settings` | Key, disclaimer, about, reset |
@@ -351,20 +317,20 @@ app                         server                                 gemini
  │                            │◄──────── ```a2ui JSONL ───────────────┤
  │                            │ parse → validate → seed → forward     │
  │◄── data part (A2UI) ───────┤                                       │
- │                            │ persist turn, update plan             │
+ │                            │ persist turn                          │
  │◄── status-update completed ┤                                       │
 ```
 
-What-if during a drag never leaves the device:
+A bound input never leaves the device while the buyer edits it:
 
 ```text
-AmountSlider ─► DataModel /scenario/downPayment ─► bound items rebuild
-                                                   └► common/finance recompute
+input ─► the surface's data model ─► bound components rebuild
+                                     └► client functions recompute
 ```
 
-Committing sends an A2UI action with the surface data model; the server applies
-the committed values to the plan record deterministically before the model
-sees the turn.
+An action sends its name, its context, and the surface's data model; the
+server hands them to the model as the buyer's next message, and the model
+decides what they mean.
 
 ## Firebase And Google Cloud
 
@@ -387,9 +353,9 @@ sees the turn.
   them.
 - No Gemini key is stored in the project. Keys are bring-your-own; see
   `docs/REQUIREMENTS_SERVER.md`.
-- Keys the server holds, the research model's, live in Secret Manager and reach
-  the server as environment variables at deploy (D115); locally they live in
-  the git-ignored `.env`.
+- The server holds no keys of its own today. Any it needs later live in Secret
+  Manager and reach the server as environment variables at deploy (D115);
+  locally they live in the git-ignored `.env`.
 
 ### Cost
 
@@ -421,10 +387,10 @@ Homeward is designed to cost nothing to run (D40, D42, D43):
   nearest folder both can see.
 - Functions do one thing. Prefer early returns and pattern matching over nested
   conditionals.
-- Sealed classes and exhaustive `switch` for every closed set: coverage, buyer
-  residency, cost rule kinds, tool results, wire events.
+- Sealed classes and exhaustive `switch` for every closed set: turn inputs,
+  turn events, wire events.
 - No `dynamic`. Strict casts, strict inference, strict raw types.
-- No hard-coded market, currency, or locale outside `markets/` and tests.
+- No hard-coded currency or locale outside tests.
 - No raw colors, text styles, or decorations outside `app/lib/ui/core/themes`.
 - Reuse before creating: check `common` and `app/lib/ui/core`
   first. A second copy of anything is a reason to extract; a first copy is not.

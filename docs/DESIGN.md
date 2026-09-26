@@ -91,90 +91,35 @@ Durations and the curve are tokens in `AppMotion`; `AppMotion.of` returns zero
 whenever the device asks for stillness, so every animation below is off under
 reduced motion.
 
-- Figures travel to their new value over 180 ms with an ease-out curve through
-  `AppAnimatedFigure`, which every money figure goes through, including
-  `AppFigureRow.amount`. This is what makes instant what-if visible on video:
-  drag the down payment and the payment, the costs, and the cash needed all
-  move.
 - Surfaces fade in and rise 8 dp over 200 ms as they arrive, through
   `AppSurfaceEntry` around each surface in the transcript.
-- Charts interpolate series over 180 ms.
-
-## Figures
-
-- All money formatting goes through `formatMoney(Money, locale)` in
-  `app/lib/ui/core/formats.dart`, which `AppAnimatedFigure` uses while a figure travels.
-- `AppMoneyField` groups digits in the market's own separator while the buyer
-  types, through `digitGroupingFor(locale)`, so an amount reads the same being
-  entered as it does being shown back.
-- Rates show two decimals, percentages of price show one.
-- Units and currency codes use `textTertiary`.
-
-## Coverage And Sources
-
-- `AppCoverageBadge`: curated is an `accent` outline with a check; uncovered is
-  a `warning` outline with the words "not covered yet".
-- `AppSourceDot` sits beside what a source backs: the market badge, the binding
-  constraint, the costs table. Tapping it opens `AppSourcesSheet`, which lists
-  each source as publisher, kind, and the date it was read, and opens the
-  document itself when tapped.
-
-## Status
-
-`AppStatus` has four: `pass`, `warn`, `fail`, `info`.
-
-| Status | Colour | Icon | Used for |
-| --- | --- | --- | --- |
-| `pass` | `positive` | check | Within a limit, a document already held |
-| `warn` | `warning` | alert | Close to a limit, an obstacle that takes time |
-| `fail` | `danger` | cross | Over a limit, a blocker |
-| `info` | `info` | info | Facts still needed, good to know |
-
-An obstacle's severity maps onto these, so there is one vocabulary of colour
-and icon rather than two. Colour is never the only signal: every tag carries an
-icon and words.
 
 ## Charts
 
-- `AppLineChart` is Homeward's own `CustomPainter` inside a `RepaintBoundary`,
-  repainting only when its series change. Catalog items pass typed series. No
-  chart package: in spike S4, `fl_chart` redrawn on every frame of a drag cut a
-  throttled JS build to about 23 fps, and a `CustomPainter` with the same series
-  held about 57. A stacked bar arrives if a component needs one.
-- Series 1 `accent`, series 2 `info`, limit lines `danger` dashed, markers
-  `warning`.
-- Axis labels in `caption`, gridlines in `border`.
-- Every chart takes a `summary` and exposes it as its semantics label, so a
-  screen reader hears the figures the line draws.
-
-## Photos
-
-Photos of sample homes and lineups (D122) are cropped, never letterboxed: 4:3
-in a lineup, 16:10 at the head of a listing, with the `md` radius. A thin
-scrim at the bottom carries the credit in the caption style, and a sample
-listing shows a small "Sample listing" tag in the corner. A picked lineup photo
-gets an accent ring and a check; the others dim.
+A chart, when a component needs one, is Homeward's own `CustomPainter` inside
+a `RepaintBoundary`, never a chart package: in spike S4, `fl_chart` redrawn on
+every frame of a drag cut a throttled JS build to about 23 fps, and a
+`CustomPainter` with the same series held about 57. Every chart exposes a
+summary of what it draws as its semantics label.
 
 ## Primitives (`app/lib/ui/core/ui`)
 
 Tokens: `AppColors`, `AppTextStyles`, `AppSpacing`, `AppRadii`, `AppSizes`,
 `AppMotion`, `AppTheme`.
 
-Layout and text: `AppPage`, `AppCard`, `AppSectionTitle`, `AppBulletList`,
-`AppChatBubble`, `AppSuggestion`, `AppSurfaceEntry`.
+Layout and text: `AppPage`, `AppCard`, `AppBulletList`, `AppChatBubble`,
+`AppSurfaceEntry`, `AppReveal`.
 
-Input: `AppButton`, `AppTextField`, `AppMoneyField`, `AppAmountSlider`,
-`AppSelectField`, `AppStepper`.
+Input: `AppButton`, `AppTextField`, `AppSelectField`.
 
-Figures and status: `AppFigureRow`, `AppAnimatedFigure`, `AppStatusTag`,
-`AppStatusLine`, `AppCoverageBadge`, `AppSourceDot`, `AppSourcesSheet`,
-`AppLineChart`.
+Figures and status: `AppFigureRow`, `AppStatusLine`.
 
 Feedback: `AppMessageOverlay`, `AppToast`, `AppLoadingIndicator`.
 
-A table is `AppFigureRow`s under an `AppSectionTitle`; a two-pane screen is a
-`Row` of the chat and one pane, since only plan chat has one; a sheet is
-`showModalBottomSheet` behind a named helper, as in `showHistorySheet`.
+A primitive that only a removed component used was removed with it (D129) and
+comes back with the next component that needs it. A two-pane screen is a `Row`
+of the journey and one pane; a sheet is `showModalBottomSheet` behind a named
+helper, as in `showHistorySheet`.
 
 ## Messages
 

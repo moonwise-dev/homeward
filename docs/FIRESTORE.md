@@ -16,7 +16,6 @@ default on Cloud Run and against the emulator, and in memory otherwise.
 | --- | --- | --- |
 | `ownerUid` | string | |
 | `title` | string? | The first thing the buyer wrote |
-| `marketId` | string? | |
 | `turnCount` | int | Also how many turn documents there are |
 | `lastInteractionId` | string? | Cache only; may be unusable with a different key |
 | `leaseUntil` | timestamp? | Absent unless a turn is running |
@@ -36,19 +35,12 @@ default on Cloud Run and against the emulator, and in memory otherwise.
 A turn document is written once, under an id derived from the session and the
 index, so saving a session again costs one write for the turn it just added.
 
-### `plans/{sessionId}`
-
-| Field | Type | Notes |
-| --- | --- | --- |
-| `ownerUid` | string | |
-| `planJson` | string | The whole `Plan`: market, profile, drafts, scenarios |
-| `updatedAt` | timestamp | |
-
 ### `researchCache/{sha256}`
 
 The answers open-data services gave the research tools, so a city already
 measured answers at once after a restart or while Overpass is slow (D112).
-Written only when sessions are in Firestore. The document ID is the SHA-256 of
+Written only when sessions are in Firestore, and only once a tool uses the
+open-data clients again; none does since the reset (D129). The document ID is the SHA-256 of
 the request (method, URL, and body), so no buyer text is readable from it.
 
 | Field | Type | Notes |
@@ -75,10 +67,10 @@ TTL policy on `expiresAt`.
 
 ## Reads And Writes
 
-- `find` reads the session document, then the plan and every turn by id in one
-  `getAll`, so replay needs no query and no index.
-- `save` merges the session document, writes the plan, and adds the turns past
-  the stored `turnCount`. A field that is no longer set is deleted, not left
+- `find` reads the session document, then every turn by id in one `getAll`, so
+  replay needs no query and no index.
+- `save` merges the session document and adds the turns past the stored
+  `turnCount`. A field that is no longer set is deleted, not left
   behind.
 - `lease` is a transaction over the session document: it refuses while
   `leaseUntil` is in the future, and takes it for five minutes otherwise, which
@@ -116,4 +108,5 @@ service cloud.firestore {
   `gcloud firestore fields ttls update expiresAt --collection-group=researchCache --enable-ttl`.
 - `rateLimits.expiresAt` TTL policy, when rate limits move to Firestore.
 - `/internal/cleanup` daily: sessions with `updatedAt` older than 90 days and
-  their turns and plans.
+  their turns. Plan documents written before the reset (D129) are no longer
+  read and go with their session.
