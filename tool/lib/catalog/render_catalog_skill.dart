@@ -21,21 +21,28 @@ String renderCatalogSkill() {
   return '''
 # Drawing The Interface
 
-You draw the buyer's screen by writing A2UI v0.9 messages. It is one surface, `$planSurfaceId`: you create it in your first reply and change it in place in every reply after, so it always shows what you know about this buyer and what you are asking them. Your text appears under it.
+You draw with A2UI v0.9 messages on two kinds of surface:
+
+- `$planSurfaceId`, the plan panel beside the conversation: what you know about this household so far. You create it in your first reply and change it in place in every reply after.
+- One inline ask per turn, named `t<turn>-<slug>` with the turn number from the turn context and a lowercase slug, such as `${InlineSurfaces.id(3, 'budget')}`: the one question or set of options you ask now, shown in the conversation under your text. You create and fill it in the same turn, and it never changes after.
+
+Put what you know on `$planSurfaceId` and what you ask in the inline ask. A turn may change either, both, or neither.
 
 ## Writing Messages
 
 - Write messages in one fenced block that opens with ```a2ui and closes with ```. Put one complete JSON message on each line and nothing else.
-- Each message has `"version": "v0.9"` and exactly one of `createSurface` or `updateComponents`. The server owns the data model and the screen stays for the whole plan, so never send `updateDataModel` or `deleteSurface`.
-- Every message goes to surface `$planSurfaceId`. Start every block with exactly this line. It creates the screen the first time, changes nothing after, and never carries components:
+- Each message has `"version": "v0.9"` and exactly one of `createSurface` or `updateComponents`. The server owns the data model and surfaces stay for the whole plan, so never send `updateDataModel` or `deleteSurface`.
+- Before the components of a surface, send its `createSurface` line, which never carries components. For the plan panel it is exactly this line; it creates the panel the first time and changes nothing after:
   `${jsonEncode({
     'version': 'v0.9',
     'createSurface': {'surfaceId': planSurfaceId, 'catalogId': homewardCatalogId, 'sendDataModel': true},
   })}`
-- On the next line, send the components in one `updateComponents` message: `{"version":"v0.9","updateComponents":{"surfaceId":"$planSurfaceId","components":[…]}}`.
-- The turn context's `screen` lists every component of `$planSurfaceId` as it stands now. When it is empty, `updateComponents` holds the whole screen, starting from `root`. Otherwise it holds only the components that change, and the container whose children change: a component with an ID that exists replaces it, and a new ID adds one.
-- If your text mentions something on the screen, draw it in the same turn.
-- Components are a flat list. Containers name their children by ID in `child`, `children`, `tabs`, `trigger`, or `content`. Exactly one component has the ID `root`, every referenced ID exists, and every component you send is reachable from `root`. To take something off the screen, drop its ID from its container's children.
+  An inline ask's line is the same with its own `surfaceId`.
+- On the next line, send that surface's components in one `updateComponents` message: `{"version":"v0.9","updateComponents":{"surfaceId":"…","components":[…]}}`.
+- The turn context's `screen` lists every component of `$planSurfaceId` as it stands now. When it is empty, `updateComponents` for `$planSurfaceId` holds the whole panel, starting from `root`. Otherwise it holds only the components that change, and the container whose children change: a component with an ID that exists replaces it, and a new ID adds one.
+- An inline ask's `updateComponents` holds its whole tree, starting from `root`.
+- If your text mentions something on the plan or in an ask, draw it in the same turn.
+- Components are a flat list. Containers name their children by ID in `child`, `children`, `tabs`, `trigger`, or `content`. Exactly one component has the ID `root`, every referenced ID exists, and every component you send is reachable from `root`. To take something off the plan, drop its ID from its container's children.
 - Every component validates against the catalog schema at the end: include every required property and no other.
 - If the server rejects a message, you receive a `VALIDATION_FAILED` error with the surface ID, a JSON pointer into your message, and the reason. Send only that message again, corrected.
 

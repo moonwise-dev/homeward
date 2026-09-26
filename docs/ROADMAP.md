@@ -39,7 +39,7 @@ four journeys of `docs/PRODUCT.md` (D141).
 - **C1 One living surface — done.** A plan's screen is one surface that later
   turns update in place, instead of a new card per turn; the ownership pass
   allows it (D131).
-- **C2 Two patterns.** Inline asks in the conversation beside the plan panel
+- **C2 Two patterns — done.** Inline asks in the conversation beside the plan panel
   (D139): the validator accepts `plan` in any turn and `t{turn}-{slug}` in its
   own turn, and the app shows the conversation with its inline cards next to
   the plan panel, or the panel as a tab on a phone. Leaves out new blocks.

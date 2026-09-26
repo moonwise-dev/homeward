@@ -23,7 +23,7 @@ approve.
 | Store interactions | `true` | fixed |
 | Validation correction rounds | 2 | `HOMEWARD_MAX_CORRECTIONS` |
 | Model rounds per turn | 1, plus one per tool round and one per correction round | enforced by the caps below |
-| Surfaces per plan | 1, `plan` (D131) | fixed |
+| Surfaces per plan | `plan`, and at most one inline surface per turn (D131, D139) | fixed |
 | Tool rounds per turn, cap | 3 | `TurnSettings.maxToolRounds` (D85) |
 
 Spike S2 found every listed model available on a free-tier key, but
@@ -103,7 +103,7 @@ minute and 24 of 20 a day.
   a better tool before a server rule.
 - **Code guarantees correctness.** Validation checks that every message is
   well formed, fits the catalog, binds data that exists, and stays on the
-  buyer's screen.
+  plan panel or this turn's inline ask.
 - **Deduce first.** What Gemini can infer from the buyer's words it writes
   down as deduced, with the words it came from, and shows as assumed for the
   buyer to confirm or correct.
@@ -138,13 +138,13 @@ There are no stages and no open decisions in code. The turn context tells
 Gemini the turn number and the screen as it stands: every component of the
 plan's one surface, `plan`, or an empty list before a turn has drawn it. Gemini
 changes that screen in place, sending only the components that change, the way
-a coding agent reads a file before editing it (D131).
+a coding agent reads a file before editing it (D131). A turn may also draw its
+question or options as one inline surface of its own, `t{turn}-{slug}`, which
+the app shows in the conversation under the turn's text; the plan panel keeps
+the state (D139).
 
 Planned in `docs/ROADMAP.md`:
 
-- **Inline asks (C2).** Beside the plan panel, a turn may draw its question or
-  options as an inline surface of its own, `t{turn}-{slug}`, shown in the
-  conversation; the plan panel keeps the state (D139).
 - **The brief (C4).** Gemini writes its notes on the buyer with
   `update_brief`: needs, habits, wants, places, and open questions, each with
   its source. The server stores the brief with the session and seeds it as

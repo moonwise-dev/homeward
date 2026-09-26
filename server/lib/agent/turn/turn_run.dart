@@ -52,6 +52,7 @@ final class TurnRun {
        _session = session,
        _interactionId = session.lastInteractionId,
        _validator = TurnValidator(
+         turn: session.turnCount + 1,
          catalog: catalog,
          shadow: replayShadow(session.messages),
          seeds: const {},
@@ -328,7 +329,7 @@ final class TurnRun {
       case A2uiMessageOutput(:final source):
         for (final part in splitBatchedMessages(
           source,
-          lastSurfaceId: planSurfaceId,
+          lastSurfaceId: _validator.lastSurfaceId,
         )) {
           yield* _validated(part);
         }

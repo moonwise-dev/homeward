@@ -121,8 +121,8 @@ Beside the components, `common/lib/catalog` declares:
   over JSON-shaped arguments, which the app wraps as genui `ClientFunction`s
   and the server can reuse. They serve basic components, such as a check that
   keeps a button disabled. None yet.
-- `planSurfaceId` in `common/lib/wire`: the ID of the plan's one surface
-  (D131).
+- `planSurfaceId` and `InlineSurfaces` in `common/lib/wire`: the plan panel's
+  ID, and the ID pattern and per-turn limit of inline asks (D131, D139).
 
 From the same declarations `make catalog` generates:
 

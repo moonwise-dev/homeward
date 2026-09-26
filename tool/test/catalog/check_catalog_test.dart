@@ -91,7 +91,7 @@ void main() {
         expect(skill, contains('### ${component.name}: ${example.name}'));
       }
     }
-    expect(skill, contains('surface `plan`'));
+    expect(skill, contains('`plan`, the plan panel'));
     expect(skill, isNot(contains(commonTypesId)));
   });
 }

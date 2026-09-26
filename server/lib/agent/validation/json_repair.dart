@@ -28,6 +28,9 @@ String? _repairAt(String text, int? offset) {
       (before.endsWith('}') || before.endsWith(']'))) {
     return before.substring(0, before.length - 1) + text.substring(offset);
   }
+  if ((at == '}' || at == ']') && before.endsWith(',')) {
+    return before.substring(0, before.length - 1) + text.substring(offset);
+  }
   if (at == "'") {
     final close = text.indexOf(RegExp(r"'\s*[,}\]:]"), offset + 1);
     if (close == -1) {

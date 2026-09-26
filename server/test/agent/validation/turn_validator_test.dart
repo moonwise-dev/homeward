@@ -11,6 +11,7 @@ void main() {
 
   TurnValidator validatorAfter(List<Map<String, Object?>> earlier) =>
       TurnValidator(
+        turn: 1,
         catalog: catalog,
         shadow:
             MessageProcessor<ComponentApi>(
@@ -83,17 +84,17 @@ void main() {
   });
 
   test('rejections are A2UI VALIDATION_FAILED errors', () {
-    final outcome = firstTurn().validate(create('t1-budget')) as Rejected;
+    final outcome = firstTurn().validate(create('t2-budget')) as Rejected;
 
     expect(outcome.failure.toJson(), {
       'version': 'v0.9',
       'error': {
         'code': 'VALIDATION_FAILED',
-        'surfaceId': 't1-budget',
+        'surfaceId': 't2-budget',
         'path': '/createSurface/surfaceId',
         'message':
-            'The buyer has one screen, surface "plan"; send every message to '
-            'it',
+            'Surface id "t2-budget" is neither the plan panel, "plan", nor an '
+            'inline ask of turn 1, such as "t1-budget"',
       },
     });
   });
@@ -123,7 +124,7 @@ void main() {
     (
       'ownership: another surface',
       () => [create('t2-budget')],
-      'one screen, surface "plan"',
+      'neither the plan panel',
     ),
     (
       'ownership: data model writes',

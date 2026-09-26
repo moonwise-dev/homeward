@@ -280,12 +280,15 @@ Placement is encoded in the surface ID so it survives any connector.
 
 | Surface ID | Placement | Author |
 | --- | --- | --- |
-| `plan` | The buyer's screen, the whole journey | Model, validated by server (D131) |
+| `plan` | The plan panel, for the whole plan | Model, validated by server (D131) |
+| `t{turn}-{slug}` | Inline in the conversation, under turn `{turn}`'s text | Model, validated by server (D139) |
 
-A plan has one surface, its living screen. `planSurfaceId` in
-`common/lib/wire/plan_surface.dart` names it. C2 brings back inline surfaces,
-`t{turn}-{slug}`, for the questions and options a turn asks in the
-conversation, beside `plan` (D139); these rules change then, docs first.
+A plan has two kinds of surface, the two patterns Vishal Motwani showed at the
+kickoff (D139). `plan` is the living plan panel: what Homeward understood, the
+shortlist, the map, the money. An inline surface holds the question or the
+options a turn asks, at most one per turn, and stays in the conversation as
+the record of that decision. `planSurfaceId` and `InlineSurfaces` in
+`common/lib/wire/` name them.
 
 ### Lifecycle
 
@@ -297,6 +300,9 @@ conversation, beside `plan` (D139); these rules change then, docs first.
   the surface unseen; A2UI v0.9 has no message that removes one.
 - The data model persists across turns. The server seeds new tool results into
   it; what the buyer entered stays until they change it.
+- An inline surface is created and filled in its own turn and never changed
+  after it. The app keeps it in the conversation, and only the latest turn's
+  inline surface takes taps.
 - `deleteSurface` is not used.
 
 ### Replay
@@ -342,7 +348,7 @@ pass rejects it.
    catalog skill asks for one per line, and a message spread over several lines
    is joined once its braces close. Two slips live runs on 2026-09-26 made are
    mended before anything is rejected: a closing brace too many, and a string
-   in single quotes. Anything else is rejected with the text around the error,
+   in single quotes; a third, a comma before a closing brace, followed in C2. Anything else is rejected with the text around the error,
    so the correction knows where to look.
 2. **Envelope.** `A2uiMessage.fromJson` from `a2ui_core`: exactly one message
    type, `version` is `v0.9`. It reports wrong field types as raw cast errors,
@@ -350,10 +356,11 @@ pass rejects it.
    fields the v0.9 envelope does not define, so the pass rejects them first: a
    live run on 2026-09-26 put the components inside `createSurface`, which was
    accepted and then drew nothing.
-3. **Ownership.** The surface ID is `plan`. The model may send only
-   `createSurface`, with the Homeward catalog ID, and `updateComponents` once
-   the surface exists, in this turn or an earlier one. `updateDataModel` and
-   `deleteSurface` are the server's.
+3. **Ownership.** The surface ID is `plan`, or `t{turn}-{slug}` with this
+   turn's number. The model may send only `createSurface`, with the Homeward
+   catalog ID and at most one inline surface per turn, and `updateComponents`
+   for `plan` once it exists or for this turn's inline surface.
+   `updateDataModel` and `deleteSurface` are the server's.
 4. **Allow-list.** Component is in the agent-visible catalog subset.
    `a2ui_core` does not check this, so the pass does.
 5. **Schema.** Components validate against the Homeward catalog document from

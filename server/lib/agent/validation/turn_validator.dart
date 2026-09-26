@@ -10,27 +10,34 @@ import 'validation_outcome.dart';
 
 final class TurnValidator {
   TurnValidator({
+    required this.turn,
     required this.catalog,
     required this.shadow,
     required this.seeds,
-  });
+  }) : _inlinePattern = InlineSurfaces.idPattern(turn);
 
+  final int turn;
   final CatalogValidator catalog;
   final MessageProcessor<ComponentApi> shadow;
   Map<String, Object?> seeds;
-  final _sentThisTurn = <String>{};
+  final RegExp _inlinePattern;
+  final _sentThisTurn = <String, Set<String>>{};
+  final _inlineCreated = <String>{};
+  var _lastSurfaceId = planSurfaceId;
 
-  bool get drewThisTurn => _sentThisTurn.isNotEmpty;
+  String get lastSurfaceId => _lastSurfaceId;
 
-  List<Map<String, Object?>>? get screen => switch (_screen) {
+  bool get drewThisTurn => _sentThisTurn.values.any((ids) => ids.isNotEmpty);
+
+  List<Map<String, Object?>>? get screen => switch (_surface(planSurfaceId)) {
     final surface? => [
       for (final component in surface.componentsModel.all) component.toJson(),
     ],
     null => null,
   };
 
-  SurfaceModel<ComponentApi>? get _screen =>
-      shadow.groupModel.getSurface(planSurfaceId);
+  SurfaceModel<ComponentApi>? _surface(String surfaceId) =>
+      shadow.groupModel.getSurface(surfaceId);
 
   ValidationOutcome validate(String source) {
     final Object? json;
@@ -94,10 +101,24 @@ final class TurnValidator {
         'Use catalogId $homewardCatalogId',
       );
     }
-    if (_screen != null) {
+    if (_surface(surfaceId) != null) {
       return const Unchanged();
     }
-    return _apply(message, () {});
+    final inline = surfaceId != planSurfaceId;
+    if (inline && _inlineCreated.length >= InlineSurfaces.maxPerTurn) {
+      return _reject(
+        surfaceId,
+        '/createSurface',
+        'A turn asks with at most ${InlineSurfaces.maxPerTurn} inline surface; '
+            'put everything else on $planSurfaceId',
+      );
+    }
+    return _apply(message, () {
+      if (inline) {
+        _inlineCreated.add(surfaceId);
+      }
+      _lastSurfaceId = surfaceId;
+    });
   }
 
   ValidationOutcome _updateComponents(UpdateComponentsMessage message) {
@@ -105,8 +126,8 @@ final class TurnValidator {
     if (_ownershipProblem(surfaceId) case final problem?) {
       return _reject(surfaceId, '/updateComponents/surfaceId', problem);
     }
-    final screen = _screen;
-    if (screen == null) {
+    final surface = _surface(surfaceId);
+    if (surface == null) {
       return _reject(
         surfaceId,
         '/updateComponents/surfaceId',
@@ -114,11 +135,11 @@ final class TurnValidator {
       );
     }
     final merged = {
-      for (final component in screen.componentsModel.all)
+      for (final component in surface.componentsModel.all)
         component.id: component.toJson(),
     };
     final data = {
-      ...switch (screen.dataModel.get('/')) {
+      ...switch (surface.dataModel.get('/')) {
         final Map<String, Object?> data => data,
         _ => const <String, Object?>{},
       },
@@ -155,12 +176,15 @@ final class TurnValidator {
     }
     if (structureProblem(
           merged,
-          mustReach: {..._sentThisTurn, ...sent},
+          mustReach: {...?_sentThisTurn[surfaceId], ...sent},
         )
         case final problem?) {
       return _reject(surfaceId, '/updateComponents/components', problem);
     }
-    return _apply(message, () => _sentThisTurn.addAll(sent));
+    return _apply(message, () {
+      _sentThisTurn.putIfAbsent(surfaceId, () => {}).addAll(sent);
+      _lastSurfaceId = surfaceId;
+    });
   }
 
   static String _near(String source, int? offset) {
@@ -172,10 +196,12 @@ final class TurnValidator {
     return ' at character $offset, near `${source.substring(start, end)}`';
   }
 
-  String? _ownershipProblem(String surfaceId) => surfaceId == planSurfaceId
+  String? _ownershipProblem(String surfaceId) =>
+      surfaceId == planSurfaceId || _inlinePattern.hasMatch(surfaceId)
       ? null
-      : 'The buyer has one screen, surface "$planSurfaceId"; send every '
-            'message to it';
+      : 'Surface id "$surfaceId" is neither the plan panel, '
+            '"$planSurfaceId", nor an inline ask of turn $turn, such as '
+            '"${InlineSurfaces.id(turn, 'budget')}"';
 
   ValidationOutcome _apply(A2uiMessage message, void Function() record) {
     try {
