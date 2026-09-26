@@ -3,6 +3,10 @@ import '../candidate.dart';
 import '../criterion.dart';
 import '../criterion_kind.dart';
 import '../story.dart';
+import '../../samples/home_need.dart';
+import '../../samples/listing.dart';
+import '../../samples/listing_read.dart';
+import '../../samples/outdoor_space.dart';
 import 'assess_cell.dart';
 import 'assessed_candidate.dart';
 import 'assessed_cell.dart';
@@ -11,9 +15,11 @@ import 'assessment.dart';
 import 'fit_status.dart';
 import 'map_marker.dart';
 import 'map_marker_kind.dart';
+import 'map_pin.dart';
 import 'map_route.dart';
 import 'measurement.dart';
 import 'measurements.dart';
+import 'reason.dart';
 
 const _listed = 5;
 
@@ -37,6 +43,8 @@ Assessment assessStory(Story story, Measurements measurements) {
         _assessed(
           candidate,
           rows,
+          story,
+          weeklyMinutes: weeklyMinutes(story, candidate.id, measurements),
           rank: ranked.indexOf(candidate) + 1,
           score: scores[candidate.id]!,
         ),
@@ -90,7 +98,9 @@ AssessedCell _cellOf(AssessedRow row, String candidateId) =>
 
 AssessedCandidate _assessed(
   Candidate candidate,
-  List<AssessedRow> rows, {
+  List<AssessedRow> rows,
+  Story story, {
+  int? weeklyMinutes,
   required int rank,
   required int score,
 }) {
@@ -106,6 +116,22 @@ AssessedCandidate _assessed(
           if (withDetail && cell.detail != null) cell.detail,
         ].join(', '),
   ].take(_listed).toList();
+  final pros = lines(FitStatus.fits);
+  final cons = lines(FitStatus.misses, withDetail: true);
+  final close = lines(FitStatus.close, withDetail: true);
+  final listing = candidate.listing;
+  final reads = listing == null
+      ? const <HomeNeed, ListingRead>{}
+      : {
+          for (final read in story.readings)
+            if (read.listingId == listing.id) read.need: read,
+        };
+  Reason Function(String line) measured(FitStatus status) =>
+      (line) => Reason(
+        text: line,
+        source: ReasonSource.measured,
+        status: status,
+      );
   return AssessedCandidate(
     id: candidate.id,
     label: candidate.label,
@@ -115,12 +141,67 @@ AssessedCandidate _assessed(
       (row) =>
           row.mustHave && _cellOf(row, candidate.id).status == FitStatus.misses,
     ),
-    pros: lines(FitStatus.fits),
-    cons: lines(FitStatus.misses, withDetail: true),
-    close: lines(FitStatus.close, withDetail: true),
-    listing: candidate.listing,
+    pros: pros,
+    cons: cons,
+    close: close,
+    why: [
+      for (final need in story.needs)
+        if (reads[need] case ListingRead(
+          verdict: ReadVerdict.meets,
+          :final quote,
+        ))
+          Reason(
+            text: need.label,
+            source: ReasonSource.listing,
+            status: FitStatus.fits,
+            quote: quote,
+          ),
+      if (listing != null) ..._buyerReasons(story, listing),
+      ...pros.map(measured(FitStatus.fits)),
+    ],
+    shortfalls: [
+      for (final need in story.needs)
+        switch (reads[need]) {
+          ListingRead(verdict: ReadVerdict.fails, :final quote) => Reason(
+            text: need.label,
+            source: ReasonSource.listing,
+            status: FitStatus.misses,
+            quote: quote,
+          ),
+          ListingRead(verdict: ReadVerdict.meets) => null,
+          _ when listing == null => null,
+          _ => Reason(
+            text: '${need.label}: the listing never says',
+            source: ReasonSource.listing,
+            status: FitStatus.close,
+          ),
+        },
+      ...close.map(measured(FitStatus.close)),
+      ...cons.map(measured(FitStatus.misses)),
+    ].nonNulls.toList(),
+    weeklyMinutes: weeklyMinutes,
+    listing: listing,
   );
 }
+
+List<Reason> _buyerReasons(Story story, Listing listing) => [
+  if (story.outdoor case final outdoor?
+      when outdoor != OutdoorSpace.none && listing.outdoor.satisfies(outdoor))
+    Reason(
+      text: _sentenceCase(listing.outdoor.phrase),
+      source: ReasonSource.buyer,
+      status: FitStatus.fits,
+    ),
+  if (story.areaIds.contains(listing.areaId))
+    Reason(
+      text: 'In ${listing.areaName}',
+      source: ReasonSource.buyer,
+      status: FitStatus.fits,
+    ),
+];
+
+String _sentenceCase(String phrase) =>
+    '${phrase[0].toUpperCase()}${phrase.substring(1)}';
 
 List<MapMarker> _markers(
   Story story,
@@ -178,7 +259,10 @@ List<MapRoute> _routes(
   Measurements measurements,
 ) => [
   for (final criterion in story.criteria)
-    if (criterion.anchorId case final anchorId?)
+    if (story.anchors
+            .where((anchor) => anchor.id == criterion.anchorId)
+            .firstOrNull
+        case final anchor? when anchor.point != null)
       for (final candidate in located)
         if (measurements.of(candidate.id, criterion.id) case RouteMeasurement(
           :final mode,
@@ -187,12 +271,47 @@ List<MapRoute> _routes(
         ))
           MapRoute(
             candidateId: candidate.id,
-            anchorId: anchorId,
+            anchorId: anchor.id,
             mode: mode,
             minutes: minutes,
             label: '$minutes min',
+            origin: MapPin(
+              lat: candidate.point!.lat,
+              lng: candidate.point!.lng,
+              label: candidate.label,
+            ),
+            destination: MapPin(
+              lat: anchor.point!.lat,
+              lng: anchor.point!.lng,
+              label: anchor.label,
+            ),
+            perWeek: anchor.perWeek,
             path: [
               for (final point in path) [point.lat, point.lng],
             ],
           ),
 ];
+
+int? weeklyMinutes(
+  Story story,
+  String candidateId,
+  Measurements measurements,
+) {
+  var total = 0;
+  for (final criterion in story.criteria) {
+    final anchor = story.anchors
+        .where((anchor) => anchor.id == criterion.anchorId)
+        .firstOrNull;
+    if (anchor == null) {
+      continue;
+    }
+    if (measurements.of(candidateId, criterion.id) case RouteMeasurement(
+      :final minutes,
+    )) {
+      total += 2 * minutes * anchor.perWeek;
+    } else {
+      return null;
+    }
+  }
+  return total == 0 ? null : total;
+}

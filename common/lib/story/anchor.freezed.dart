@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Anchor {
 
- String get id; String get label; String get query; GeoPoint? get point; TravelMode get mode; int get maxMinutes;
+ String get id; String get label; String get query; GeoPoint? get point; TravelMode get mode; int get maxMinutes; int get perWeek;
 /// Create a copy of Anchor
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $AnchorCopyWith<Anchor> get copyWith => _$AnchorCopyWithImpl<Anchor>(this as Anc
 @override
 bool operator ==(Object other) {
   final _this = this as Anchor;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Anchor&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.query, _this.query) || other.query == _this.query)&&(identical(other.point, _this.point) || other.point == _this.point)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.maxMinutes, _this.maxMinutes) || other.maxMinutes == _this.maxMinutes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Anchor&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.query, _this.query) || other.query == _this.query)&&(identical(other.point, _this.point) || other.point == _this.point)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.maxMinutes, _this.maxMinutes) || other.maxMinutes == _this.maxMinutes)&&(identical(other.perWeek, _this.perWeek) || other.perWeek == _this.perWeek));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Anchor;
-  return Object.hash(runtimeType,_this.id,_this.label,_this.query,_this.point,_this.mode,_this.maxMinutes);
+  return Object.hash(runtimeType,_this.id,_this.label,_this.query,_this.point,_this.mode,_this.maxMinutes,_this.perWeek);
 }
 
 @override
 String toString() {
   final _this = this as Anchor;
-  return 'Anchor(id: ${_this.id}, label: ${_this.label}, query: ${_this.query}, point: ${_this.point}, mode: ${_this.mode}, maxMinutes: ${_this.maxMinutes})';
+  return 'Anchor(id: ${_this.id}, label: ${_this.label}, query: ${_this.query}, point: ${_this.point}, mode: ${_this.mode}, maxMinutes: ${_this.maxMinutes}, perWeek: ${_this.perWeek})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $AnchorCopyWith<$Res>  {
   factory $AnchorCopyWith(Anchor value, $Res Function(Anchor) _then) = _$AnchorCopyWithImpl;
 @useResult
 $Res call({
- String id, String label, String query, GeoPoint? point, TravelMode mode, int maxMinutes
+ String id, String label, String query, GeoPoint? point, TravelMode mode, int maxMinutes, int perWeek
 });
 
 
@@ -71,7 +71,7 @@ class _$AnchorCopyWithImpl<$Res>
 
 /// Create a copy of Anchor
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? label = null,Object? query = null,Object? point = freezed,Object? mode = null,Object? maxMinutes = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? label = null,Object? query = null,Object? point = freezed,Object? mode = null,Object? maxMinutes = null,Object? perWeek = null,}) {
   return _then(Anchor(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
@@ -79,6 +79,7 @@ as String,query: null == query ? _self.query : query // ignore: cast_nullable_to
 as String,point: freezed == point ? _self.point : point // ignore: cast_nullable_to_non_nullable
 as GeoPoint?,mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
 as TravelMode,maxMinutes: null == maxMinutes ? _self.maxMinutes : maxMinutes // ignore: cast_nullable_to_non_nullable
+as int,perWeek: null == perWeek ? _self.perWeek : perWeek // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -176,10 +177,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String label,  String query,  GeoPoint? point,  TravelMode mode,  int maxMinutes)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String label,  String query,  GeoPoint? point,  TravelMode mode,  int maxMinutes,  int perWeek)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Anchor() when $default != null:
-return $default(_that.id,_that.label,_that.query,_that.point,_that.mode,_that.maxMinutes);case _:
+return $default(_that.id,_that.label,_that.query,_that.point,_that.mode,_that.maxMinutes,_that.perWeek);case _:
   return orElse();
 
 }
@@ -197,10 +198,10 @@ return $default(_that.id,_that.label,_that.query,_that.point,_that.mode,_that.ma
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String label,  String query,  GeoPoint? point,  TravelMode mode,  int maxMinutes)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String label,  String query,  GeoPoint? point,  TravelMode mode,  int maxMinutes,  int perWeek)  $default,) {final _that = this;
 switch (_that) {
 case _Anchor():
-return $default(_that.id,_that.label,_that.query,_that.point,_that.mode,_that.maxMinutes);case _:
+return $default(_that.id,_that.label,_that.query,_that.point,_that.mode,_that.maxMinutes,_that.perWeek);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -217,10 +218,10 @@ return $default(_that.id,_that.label,_that.query,_that.point,_that.mode,_that.ma
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String label,  String query,  GeoPoint? point,  TravelMode mode,  int maxMinutes)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String label,  String query,  GeoPoint? point,  TravelMode mode,  int maxMinutes,  int perWeek)?  $default,) {final _that = this;
 switch (_that) {
 case _Anchor() when $default != null:
-return $default(_that.id,_that.label,_that.query,_that.point,_that.mode,_that.maxMinutes);case _:
+return $default(_that.id,_that.label,_that.query,_that.point,_that.mode,_that.maxMinutes,_that.perWeek);case _:
   return null;
 
 }
@@ -232,7 +233,7 @@ return $default(_that.id,_that.label,_that.query,_that.point,_that.mode,_that.ma
 @JsonSerializable()
 
 class _Anchor implements Anchor {
-  const _Anchor({required this.id, required this.label, required this.query, this.point, this.mode = TravelMode.transit, this.maxMinutes = 30});
+  const _Anchor({required this.id, required this.label, required this.query, this.point, this.mode = TravelMode.transit, this.maxMinutes = 30, this.perWeek = 5});
   factory _Anchor.fromJson(Map<String, dynamic> json) => _$AnchorFromJson(json);
 
 @override final  String id;
@@ -241,6 +242,7 @@ class _Anchor implements Anchor {
 @override final  GeoPoint? point;
 @override@JsonKey() final  TravelMode mode;
 @override@JsonKey() final  int maxMinutes;
+@override@JsonKey() final  int perWeek;
 
 /// Create a copy of Anchor
 /// with the given fields replaced by the non-null parameter values.
@@ -255,18 +257,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Anchor&&(identical(other.id, id) || other.id == id)&&(identical(other.label, label) || other.label == label)&&(identical(other.query, query) || other.query == query)&&(identical(other.point, point) || other.point == point)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.maxMinutes, maxMinutes) || other.maxMinutes == maxMinutes));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Anchor&&(identical(other.id, id) || other.id == id)&&(identical(other.label, label) || other.label == label)&&(identical(other.query, query) || other.query == query)&&(identical(other.point, point) || other.point == point)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.maxMinutes, maxMinutes) || other.maxMinutes == maxMinutes)&&(identical(other.perWeek, perWeek) || other.perWeek == perWeek));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,label,query,point,mode,maxMinutes);
+    return Object.hash(runtimeType,id,label,query,point,mode,maxMinutes,perWeek);
 }
 
 @override
 String toString() {
-    return 'Anchor(id: $id, label: $label, query: $query, point: $point, mode: $mode, maxMinutes: $maxMinutes)';
+    return 'Anchor(id: $id, label: $label, query: $query, point: $point, mode: $mode, maxMinutes: $maxMinutes, perWeek: $perWeek)';
 }
 
 
@@ -277,7 +279,7 @@ abstract mixin class _$AnchorCopyWith<$Res> implements $AnchorCopyWith<$Res> {
   factory _$AnchorCopyWith(_Anchor value, $Res Function(_Anchor) _then) = __$AnchorCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String label, String query, GeoPoint? point, TravelMode mode, int maxMinutes
+ String id, String label, String query, GeoPoint? point, TravelMode mode, int maxMinutes, int perWeek
 });
 
 
@@ -294,7 +296,7 @@ class __$AnchorCopyWithImpl<$Res>
 
 /// Create a copy of Anchor
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? label = null,Object? query = null,Object? point = freezed,Object? mode = null,Object? maxMinutes = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? label = null,Object? query = null,Object? point = freezed,Object? mode = null,Object? maxMinutes = null,Object? perWeek = null,}) {
   return _then(_Anchor(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
@@ -302,6 +304,7 @@ as String,query: null == query ? _self.query : query // ignore: cast_nullable_to
 as String,point: freezed == point ? _self.point : point // ignore: cast_nullable_to_non_nullable
 as GeoPoint?,mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
 as TravelMode,maxMinutes: null == maxMinutes ? _self.maxMinutes : maxMinutes // ignore: cast_nullable_to_non_nullable
+as int,perWeek: null == perWeek ? _self.perWeek : perWeek // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }

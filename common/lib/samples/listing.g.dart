@@ -17,6 +17,7 @@ _Listing _$ListingFromJson(Map<String, dynamic> json) =>
           'name',
           'title',
           'blurb',
+          'description',
           'address',
           'point',
           'homeType',
@@ -43,6 +44,7 @@ _Listing _$ListingFromJson(Map<String, dynamic> json) =>
         name: $checkedConvert('name', (v) => v as String),
         title: $checkedConvert('title', (v) => v as String),
         blurb: $checkedConvert('blurb', (v) => v as String),
+        description: $checkedConvert('description', (v) => v as String? ?? ''),
         address: $checkedConvert('address', (v) => v as String),
         point: $checkedConvert(
           'point',
@@ -98,6 +100,7 @@ Map<String, dynamic> _$ListingToJson(_Listing instance) => <String, dynamic>{
   'name': instance.name,
   'title': instance.title,
   'blurb': instance.blurb,
+  'description': instance.description,
   'address': instance.address,
   'point': instance.point.toJson(),
   'homeType': _$HomeTypeEnumMap[instance.homeType]!,

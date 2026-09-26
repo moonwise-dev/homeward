@@ -46,7 +46,12 @@ bool _fits(CaseFacet facet, Object? value) {
     CaseFacet.style => named(HomeStyle.values),
     CaseFacet.criterion =>
       text != CriterionKind.commute.name && named(CriterionKind.values),
-    CaseFacet.household || CaseFacet.photo || CaseFacet.area => false,
+    CaseFacet.needs => HomeNeed.parse(text) != null,
+    CaseFacet.household ||
+    CaseFacet.photo ||
+    CaseFacet.area ||
+    CaseFacet.routine ||
+    CaseFacet.swipe => false,
   };
 }
 
@@ -67,7 +72,12 @@ String _expected(CaseFacet facet) => switch (facet) {
     for (final style in HomeStyle.values) style.name,
   ].join(', '),
   CaseFacet.criterion => 'a criterion kind other than commute',
+  CaseFacet.needs =>
+    'needs from ${[for (final need in HomeNeed.values) need.name].join(', ')}, '
+        'separated by commas, or ${HomeNeed.none}',
   CaseFacet.household ||
   CaseFacet.photo ||
-  CaseFacet.area => 'a facet a Hunch cannot answer',
+  CaseFacet.area ||
+  CaseFacet.routine ||
+  CaseFacet.swipe => 'a facet a Hunch cannot answer',
 };

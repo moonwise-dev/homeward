@@ -55,6 +55,14 @@ Map<String, Object?> storySeed(Story story) {
           ).toJson(),
     ],
     'anchors': [for (final anchor in story.anchors) anchor.toJson()],
+    'routine': [
+      for (final anchor in story.anchors)
+        RoutinePlace(
+          id: anchor.id,
+          label: anchor.label,
+          perWeek: anchor.perWeek,
+        ).toJson(),
+    ],
     'candidates': [
       for (final candidate in story.candidates) candidate.toJson(),
     ],

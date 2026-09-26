@@ -5,6 +5,8 @@ import 'package:json_schema_builder/json_schema_builder.dart';
 
 enum CatalogPhase { mvp, later }
 
+enum CatalogPart { story, deal }
+
 final class CatalogExample {
   const CatalogExample({
     required this.name,
@@ -28,6 +30,8 @@ abstract class CatalogComponent implements ComponentApi {
   String get description;
 
   CatalogPhase get phase;
+
+  CatalogPart get part => CatalogPart.story;
 
   bool get agentVisible;
 

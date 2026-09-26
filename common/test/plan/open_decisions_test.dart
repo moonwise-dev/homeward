@@ -59,6 +59,14 @@ void main() {
     ]);
   });
 
+  test('without the deal the story is all there is', () {
+    expect(openDecisions(const Plan(), null, deal: false), [
+      OpenDecision.story,
+      OpenDecision.caseQuestions,
+      OpenDecision.homeChoice,
+    ]);
+  });
+
   test('the story closes one decision at a time', () {
     const named = Story(
       candidates: [Candidate(id: 'c1', label: 'Odengatan', query: 'Odengatan')],

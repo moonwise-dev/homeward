@@ -5,6 +5,7 @@ import '../../affordability/scenario_payment.dart';
 import '../../markets/resolved_market.dart';
 import '../../plan/scenario.dart';
 import '../catalog_schemas.dart';
+import '../catalog_component.dart';
 import 'catalog_function.dart';
 
 final class MonthlyPaymentFunction extends CatalogFunction {
@@ -12,6 +13,9 @@ final class MonthlyPaymentFunction extends CatalogFunction {
 
   @override
   String get name => 'monthlyPayment';
+
+  @override
+  CatalogPart get part => CatalogPart.deal;
 
   @override
   String get description =>

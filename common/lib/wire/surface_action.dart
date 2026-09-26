@@ -1,3 +1,5 @@
+import '../catalog/catalog_component.dart';
+
 enum SurfaceAction {
   answer(
     'answer',
@@ -16,18 +18,25 @@ enum SurfaceAction {
   chooseHome(
     'choose_home',
     ['candidateId'],
-    'The buyer picks the home to work out the deal for.',
+    'The buyer picks the home that fits the case best.',
   ),
-  selectMarket('select_market', ['marketId'], 'The buyer picked a market.'),
+  selectMarket(
+    'select_market',
+    ['marketId'],
+    'The buyer picked a market.',
+    part: CatalogPart.deal,
+  ),
   commitProfile(
     'commit_profile',
     ['profilePath'],
     'The buyer saves the profile form; the server validates and stores it.',
+    part: CatalogPart.deal,
   ),
   commitScenario(
     'commit_scenario',
     ['scenarioPath'],
     'The buyer keeps a scenario; the server checks it against the rules.',
+    part: CatalogPart.deal,
   ),
   change(
     'change',
@@ -44,13 +53,20 @@ enum SurfaceAction {
     'compare_loan_types',
     ['scenarioPath'],
     'The buyer asks how the loan types compare for a scenario.',
+    part: CatalogPart.deal,
   );
 
-  const SurfaceAction(this.wireName, this.contextKeys, this.purpose);
+  const SurfaceAction(
+    this.wireName,
+    this.contextKeys,
+    this.purpose, {
+    this.part = CatalogPart.story,
+  });
 
   final String wireName;
   final List<String> contextKeys;
   final String purpose;
+  final CatalogPart part;
 
   static final Set<String> wireNames = {
     for (final action in values) action.wireName,

@@ -1,6 +1,7 @@
 import 'package:common/common.dart';
 
 import 'sample_data.dart';
+import 'swipe_deck.dart';
 
 final class SampleDirectory {
   const SampleDirectory(this._data);
@@ -15,6 +16,9 @@ final class SampleDirectory {
   List<Listing> listingsIn(String cityId) => _data.listings[cityId] ?? const [];
 
   Photo? photo(String id) => _data.photos.photoWith(id);
+
+  List<Listing> swipeDeckOf(String? cityId) =>
+      cityId == null ? const [] : swipeDeck(listingsIn(cityId));
 
   Map<String, List<Photo>> lineupsOf(String? cityId) => {
     for (final MapEntry(key: name, value: ids)

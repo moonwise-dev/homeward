@@ -18,6 +18,7 @@ abstract class Listing with _$Listing {
     required String name,
     required String title,
     required String blurb,
+    @Default('') String description,
     required String address,
     required GeoPoint point,
     required HomeType homeType,

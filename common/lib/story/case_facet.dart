@@ -9,7 +9,10 @@ enum CaseFacet {
   rooms,
   criterion,
   photo,
-  area;
+  area,
+  needs,
+  routine,
+  swipe;
 
   static const hunchFacets = {
     place,
@@ -19,6 +22,7 @@ enum CaseFacet {
     outdoor,
     style,
     rooms,
+    needs,
     criterion,
   };
 }

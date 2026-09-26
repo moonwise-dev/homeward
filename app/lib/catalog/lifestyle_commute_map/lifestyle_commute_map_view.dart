@@ -14,6 +14,9 @@ class LifestyleCommuteMapView extends StatelessWidget {
     required this.markers,
     this.routes = const [],
     this.focus,
+    this.center,
+    this.zoom,
+    this.travelMode,
     super.key,
   });
 
@@ -24,6 +27,9 @@ class LifestyleCommuteMapView extends StatelessWidget {
   final List<MapMarker> markers;
   final List<MapRoute> routes;
   final String? focus;
+  final GeoPoint? center;
+  final double? zoom;
+  final String? travelMode;
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +50,12 @@ class LifestyleCommuteMapView extends StatelessWidget {
     ];
     final shownRoutes = [
       for (final route in routes)
-        if (focus == null || route.candidateId == focus) route,
+        if ((focus == null || route.candidateId == focus) &&
+            (travelMode == null || route.mode.mapsName == travelMode))
+          route,
     ];
+    final center = this.center;
+    final week = focus == null ? null : weekOfTravel(shownRoutes);
     if (shown.isEmpty) {
       return SizedBox(
         height: AppSpacing.xxl * 2,
@@ -74,13 +84,20 @@ class LifestyleCommuteMapView extends StatelessWidget {
             child: FlutterMap(
               key: ValueKey(Object.hashAll(points)),
               options: MapOptions(
-                initialCenter: points.first,
-                initialZoom: onlyCity ? 12 : 14,
-                initialCameraFit: points.length < 2
+                initialCenter: center == null
+                    ? points.first
+                    : LatLng(center.lat, center.lng),
+                initialZoom: zoom ?? (onlyCity ? 12 : 14),
+                initialCameraFit: points.length < 2 || center != null
                     ? null
                     : CameraFit.coordinates(
                         coordinates: points,
-                        padding: const EdgeInsets.fromLTRB(40, 40, 160, 48),
+                        padding: EdgeInsets.fromLTRB(
+                          40,
+                          week == null ? 40 : 120,
+                          160,
+                          48,
+                        ),
                         maxZoom: 16,
                       ),
                 interactionOptions: const InteractionOptions(
@@ -123,7 +140,7 @@ class LifestyleCommuteMapView extends StatelessWidget {
                       if (route.path.isNotEmpty && !timesOnPins)
                         Marker(
                           point: _badgePoint(route.path, shown),
-                          width: 92,
+                          width: 150,
                           height: 26,
                           child: _RouteBadge(route: route),
                         ),
@@ -156,6 +173,11 @@ class LifestyleCommuteMapView extends StatelessWidget {
                           ),
                   ],
                 ),
+                if (week != null && week > 0)
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: _WeekCard(minutes: week, trips: shownRoutes),
+                  ),
                 const MapAttribution(),
               ],
             ),
@@ -191,7 +213,8 @@ class LifestyleCommuteMapView extends StatelessWidget {
     ].join(', ')}',
     for (final route in shownRoutes)
       '${route.label} from ${_labelOf(route.candidateId)} '
-          'to ${_labelOf(route.anchorId)} ${route.mode.phrase}',
+          'to ${_labelOf(route.anchorId)} ${route.mode.phrase}, '
+          '${tripsPhrase(route.perWeek)}',
   ].join('. ');
 
   String _labelOf(String id) =>
@@ -253,7 +276,7 @@ class _Pin extends StatelessWidget {
                   Icon(travelModeIcon(route.mode), size: 14, color: color),
                   const SizedBox(width: 2),
                   Text(
-                    route.label,
+                    '${route.label} · ${tripsPhrase(route.perWeek)}',
                     style: AppTextStyles.label.copyWith(color: color),
                   ),
                 ],
@@ -331,11 +354,46 @@ class _RouteBadge extends StatelessWidget {
           Icon(travelModeIcon(route.mode), size: 14, color: AppColors.onAccent),
           const SizedBox(width: 4),
           Text(
-            route.label,
+            '${route.label} · ${tripsPhrase(route.perWeek)}',
             style: AppTextStyles.label.copyWith(color: AppColors.onAccent),
           ),
         ],
       ),
     );
   }
+}
+
+class _WeekCard extends StatelessWidget {
+  const _WeekCard({required this.minutes, required this.trips});
+
+  final int minutes;
+  final List<MapRoute> trips;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    margin: const EdgeInsets.all(AppSpacing.sm),
+    padding: const EdgeInsets.symmetric(
+      horizontal: AppSpacing.sm,
+      vertical: AppSpacing.xs,
+    ),
+    decoration: BoxDecoration(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppRadii.md),
+      border: Border.all(color: AppColors.border),
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Your week in travel', style: AppTextStyles.caption),
+        Text(weekPhrase(minutes), style: AppTextStyles.figure),
+        Text(
+          trips.length == 1
+              ? 'Measured, there and back, to one place'
+              : 'Measured, there and back, to ${trips.length} places',
+          style: AppTextStyles.caption.copyWith(color: AppColors.textTertiary),
+        ),
+      ],
+    ),
+  );
 }

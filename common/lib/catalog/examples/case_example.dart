@@ -19,6 +19,21 @@ Money _kronor(int amount) => Money(minorUnits: amount * 100, currency: _sek);
 
 const _priceSource = 'Svensk Mäklarstatistik, June to August 2026';
 
+final caseRoutineDataModel = {
+  'story': {
+    'center': {'lat': 59.3293, 'lng': 18.0686},
+    'routine': [
+      {'id': 'a1', 'label': 'KTH', 'perWeek': 5},
+      {
+        'id': 'r1',
+        'label': 'The clinic',
+        'perWeek': 1,
+        'pin': {'lat': 59.3500, 'lng': 18.0300},
+      },
+    ],
+  },
+};
+
 final caseLineupDataModel = {
   'lineup': {
     'homes': [
@@ -164,5 +179,13 @@ final sampleHomesDataModel = jsonDecode(
       sampleHomesStory,
       stockholmStoryMeasurements,
     ).toJson(),
+  }),
+) as Map<String, Object?>;
+
+final caseSwipeDataModel = jsonDecode(
+  jsonEncode({
+    'swipe': {
+      'homes': [_odengatan.toJson(), _solna.toJson()],
+    },
   }),
 ) as Map<String, Object?>;

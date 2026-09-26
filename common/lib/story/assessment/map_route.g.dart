@@ -18,6 +18,9 @@ _MapRoute _$MapRouteFromJson(Map<String, dynamic> json) => $checkedCreate(
         'mode',
         'minutes',
         'label',
+        'origin',
+        'destination',
+        'perWeek',
         'path',
       ],
     );
@@ -27,6 +30,15 @@ _MapRoute _$MapRouteFromJson(Map<String, dynamic> json) => $checkedCreate(
       mode: $checkedConvert('mode', (v) => $enumDecode(_$TravelModeEnumMap, v)),
       minutes: $checkedConvert('minutes', (v) => (v as num).toInt()),
       label: $checkedConvert('label', (v) => v as String),
+      origin: $checkedConvert(
+        'origin',
+        (v) => MapPin.fromJson(v as Map<String, dynamic>),
+      ),
+      destination: $checkedConvert(
+        'destination',
+        (v) => MapPin.fromJson(v as Map<String, dynamic>),
+      ),
+      perWeek: $checkedConvert('perWeek', (v) => (v as num?)?.toInt() ?? 1),
       path: $checkedConvert(
         'path',
         (v) =>
@@ -50,6 +62,9 @@ Map<String, dynamic> _$MapRouteToJson(_MapRoute instance) => <String, dynamic>{
   'mode': _$TravelModeEnumMap[instance.mode]!,
   'minutes': instance.minutes,
   'label': instance.label,
+  'origin': instance.origin.toJson(),
+  'destination': instance.destination.toJson(),
+  'perWeek': instance.perWeek,
   'path': instance.path,
 };
 

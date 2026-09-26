@@ -9,6 +9,7 @@ import '../../ui/core/ui/app_status_tag.dart';
 import '../sample_prices.dart';
 import '../story_marks.dart';
 import 'photo_carousel.dart';
+import 'reason_list.dart';
 
 class ListingCardView extends StatelessWidget {
   const ListingCardView({
@@ -98,6 +99,31 @@ class ListingCardView extends StatelessWidget {
               'Area figure: ${listing.priceSource}',
               style: AppTextStyles.caption,
             ),
+            if (home.weeklyMinutes case final minutes?) ...[
+              const SizedBox(height: AppSpacing.xxs),
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Your week in travel ',
+                      style: AppTextStyles.label,
+                    ),
+                    TextSpan(
+                      text: weekPhrase(minutes),
+                      style: AppTextStyles.label.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '  Measured',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textTertiary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             const SizedBox(height: AppSpacing.xs),
             Text(listing.blurb, style: AppTextStyles.body),
             if (home.missesMustHave)
@@ -108,13 +134,16 @@ class ListingCardView extends StatelessWidget {
                   text: 'Misses a must-have',
                 ),
               ),
-            const SizedBox(height: AppSpacing.xs),
-            for (final line in home.pros)
-              AppStatusTag(status: AppStatus.pass, text: line),
-            for (final line in home.close)
-              AppStatusTag(status: AppStatus.warn, text: line),
-            for (final line in home.cons)
-              AppStatusTag(status: AppStatus.fail, text: line),
+            ReasonList(
+              title: 'Why it fits',
+              reasons: home.why,
+              description: listing.description,
+            ),
+            ReasonList(
+              title: 'Where it falls short',
+              reasons: home.shortfalls,
+              description: listing.description,
+            ),
             if (onChoose != null)
               Padding(
                 padding: const EdgeInsets.only(top: AppSpacing.sm),

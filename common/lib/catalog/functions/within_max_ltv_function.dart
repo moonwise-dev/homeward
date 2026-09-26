@@ -6,6 +6,7 @@ import '../../markets/rule_section.dart';
 import '../../money/rounding.dart';
 import '../../plan/scenario.dart';
 import '../catalog_schemas.dart';
+import '../catalog_component.dart';
 import 'catalog_function.dart';
 
 final class WithinMaxLtvFunction extends CatalogFunction {
@@ -13,6 +14,9 @@ final class WithinMaxLtvFunction extends CatalogFunction {
 
   @override
   String get name => 'withinMaxLtv';
+
+  @override
+  CatalogPart get part => CatalogPart.deal;
 
   @override
   String get description =>

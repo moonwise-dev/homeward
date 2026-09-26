@@ -11,8 +11,10 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `StoryDraft` | mvp | yes | `story`, `segments` | `story` | A family moving for studies |
 | `Hunch` | mvp | yes | `story`, `hunch`, `facet`, `options`, `answer` | `story` | How they will get to KTH |
 | `PhotoLineup` | mvp | yes | `photos`, `pick` | `photos` | Which feels like home in Stockholm |
+| `HomeSwipe` | mvp | yes | `homes`, `answer` | `homes` | Keep the ones that feel like yours |
 | `TradeOff` | mvp | yes | `options`, `pick` | `options` | A garden or the city |
-| `LifestyleCommuteMap` | mvp | yes | `markers` | `markers`, `routes`, `pins` | Two flats and the campus |
+| `Routine` | mvp | yes | `routine`, `story` | `routine`, `story` | Their week around KTH |
+| `LifestyleCommuteMap` | mvp | yes | `markers` | `markers`, `routes`, `pins`, `center` | Two flats and the campus |
 | `ComparisonTable` | mvp | yes | `rows`, `homes` | `rows`, `homes` | Odengatan against Solna |
 | `DynamicRecommendationStack` | mvp | yes | `homes` | `homes` | Which flat fits the move, Sample homes the case kept |
 | `ListingCard` | mvp | yes | `homes`, `home` | `homes` | A sample home in Vasastan |
@@ -40,13 +42,21 @@ One deduction about the buyer, the clue it came from, and a tap to confirm or co
 
 Four photos from the buyer's city, of homes or of ways to live there, curated with the traits each stands for. The buyer taps the one that feels like theirs, and the server reads its traits. Bind photos to a lineup the turn context lists. The app adds facet photo, the photo id as value, and its caption as label to the pick action.
 
+### HomeSwipe
+
+Six real sample homes from the buyer's city, one card at a time, that the buyer keeps or passes with a swipe or a tap. The server chose them to differ in kind, outdoor space, style, and size. Bind homes to /swipe/homes. After the last card the app adds facet swipe, the kept ids as value, a label, and the kept and passed lists to the answer action.
+
 ### TradeOff
 
 Two or three ways to live side by side, as compare_areas priced them: an area and its character, a home type and size, the estimated price from the area's price per square metre with its source, and the minutes to their daily place. The buyer picks one, which sets the area and a price range. Call compare_areas first and bind options to /tradeoff/options. The app adds facet area, the option id as value, and a label to the pick action.
 
+### Routine
+
+The buyer's week as taps: every place they go regularly with how many days a week, those the case knows already filled in, and a way to add another, such as a clinic once a week, by name and a pin on the map. Bind routine to /story/routine and story to /story, beside a Button sending answer with the facet routine and storyPath /story.
+
 ### LifestyleCommuteMap
 
-A map of the buyer's life around the homes they weigh: the places they travel to, each home, the route from each home to each place with its minutes, and the nearest place for each criterion. Before homes are measured, bind markers to /story/markers; after, bind markers to /assessment/markers and routes to /assessment/routes.
+A map of the buyer's life around the homes they weigh: the places they travel to, each home, the route from each home to each place with its minutes and how many days a week they make the trip, and the nearest place for each criterion. Before homes are measured, bind markers to /story/markers; after, bind markers to /assessment/markers and routes to /assessment/routes. With focus on one home it shows their week from there. Its properties follow the Maps Agentic UI Toolkit GoogleMap.
 
 ### ComparisonTable
 
@@ -141,6 +151,7 @@ Why and where the buyer is moving, what they care about, and the homes or areas 
 | `/story/childAges` | list of integers | Age of each child moving, for a HouseholdInput asking who moves. |
 | `/story/pins` | object read by Homeward components | Places the buyer dropped on the map, by id: label, lat, lng. The map shows them and commit_story turns them into anchors. |
 | `/story/center` | object read by Homeward components | Where the map opens: the city as lat and lng. |
+| `/story/routine` | object read by Homeward components | The places the buyer goes each week: id, label, and perWeek, the days a week; a place the buyer adds carries a pin with lat and lng. |
 | `/story/markers` | object read by Homeward components | Map markers for the city, the anchors, and the homes placed so far, for a Map before the assessment exists. |
 | `/story/anchors` | object read by Homeward components | Places the buyer travels to: id, label, mode, maxMinutes, point. |
 | `/story/candidates` | object read by Homeward components | Homes or areas being weighed: id, label, point, price. |
@@ -154,6 +165,14 @@ The buyer's city's photo lineups, read-only and seeded by the server when the ci
 | --- | --- | --- |
 | `/lineup/homes` | object read by Homeward components | Four photos of homes: id, caption, and the traits the server reads. |
 | `/lineup/life` | object read by Homeward components | Four photos of ways to live in the city: id, caption, and traits. |
+
+### `/swipe`
+
+Sample homes from the buyer's city to keep or pass, read-only and seeded by the server when the city has sample homes. Bind a HomeSwipe to it.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/swipe/homes` | object read by Homeward components | Six listings that differ in kind, outdoor space, style, and size. |
 
 ### `/tradeoff`
 
@@ -246,7 +265,7 @@ Figures the server computed for the scenario, read-only.
 | --- | --- | --- |
 | `answer` | `facet`, `value`, `label` | The buyer answers one of the detective's questions with a tap; the app adds the facet, the value, and the label of what was tapped, and the server folds it into the story. |
 | `commit_story` | `storyPath` | The buyer confirms the case summary they corrected, pins included; the server picks the sample homes that fit, where the city has them, and measures every home against the story. |
-| `choose_home` | `candidateId` | The buyer picks the home to work out the deal for. |
+| `choose_home` | `candidateId` | The buyer picks the home that fits the case best. |
 | `select_market` | `marketId` | The buyer picked a market. |
 | `commit_profile` | `profilePath` | The buyer saves the profile form; the server validates and stores it. |
 | `commit_scenario` | `scenarioPath` | The buyer keeps a scenario; the server checks it against the rules. |

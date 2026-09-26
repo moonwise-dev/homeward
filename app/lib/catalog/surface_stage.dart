@@ -7,6 +7,7 @@ final _stages = [
   (title: 'Homes', component: const ComparisonTable().name),
   (title: 'Homes', component: const DynamicRecommendationStack().name),
   (title: 'About you', component: const HouseholdInput().name),
+  (title: 'Your week', component: const Routine().name),
   (title: 'About you', component: const MoneyInput().name),
 ];
 

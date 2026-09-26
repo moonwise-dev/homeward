@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MapRoute {
 
- String get candidateId; String get anchorId; TravelMode get mode; int get minutes; String get label; List<List<double>> get path;
+ String get candidateId; String get anchorId; TravelMode get mode; int get minutes; String get label; MapPin get origin; MapPin get destination; int get perWeek; List<List<double>> get path;
 /// Create a copy of MapRoute
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $MapRouteCopyWith<MapRoute> get copyWith => _$MapRouteCopyWithImpl<MapRoute>(thi
 @override
 bool operator ==(Object other) {
   final _this = this as MapRoute;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapRoute&&(identical(other.candidateId, _this.candidateId) || other.candidateId == _this.candidateId)&&(identical(other.anchorId, _this.anchorId) || other.anchorId == _this.anchorId)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.minutes, _this.minutes) || other.minutes == _this.minutes)&&(identical(other.label, _this.label) || other.label == _this.label)&&const DeepCollectionEquality().equals(other.path, _this.path));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapRoute&&(identical(other.candidateId, _this.candidateId) || other.candidateId == _this.candidateId)&&(identical(other.anchorId, _this.anchorId) || other.anchorId == _this.anchorId)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.minutes, _this.minutes) || other.minutes == _this.minutes)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.origin, _this.origin) || other.origin == _this.origin)&&(identical(other.destination, _this.destination) || other.destination == _this.destination)&&(identical(other.perWeek, _this.perWeek) || other.perWeek == _this.perWeek)&&const DeepCollectionEquality().equals(other.path, _this.path));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as MapRoute;
-  return Object.hash(runtimeType,_this.candidateId,_this.anchorId,_this.mode,_this.minutes,_this.label,const DeepCollectionEquality().hash(_this.path));
+  return Object.hash(runtimeType,_this.candidateId,_this.anchorId,_this.mode,_this.minutes,_this.label,_this.origin,_this.destination,_this.perWeek,const DeepCollectionEquality().hash(_this.path));
 }
 
 @override
 String toString() {
   final _this = this as MapRoute;
-  return 'MapRoute(candidateId: ${_this.candidateId}, anchorId: ${_this.anchorId}, mode: ${_this.mode}, minutes: ${_this.minutes}, label: ${_this.label}, path: ${_this.path})';
+  return 'MapRoute(candidateId: ${_this.candidateId}, anchorId: ${_this.anchorId}, mode: ${_this.mode}, minutes: ${_this.minutes}, label: ${_this.label}, origin: ${_this.origin}, destination: ${_this.destination}, perWeek: ${_this.perWeek}, path: ${_this.path})';
 }
 
 
@@ -54,11 +54,11 @@ abstract mixin class $MapRouteCopyWith<$Res>  {
   factory $MapRouteCopyWith(MapRoute value, $Res Function(MapRoute) _then) = _$MapRouteCopyWithImpl;
 @useResult
 $Res call({
- String candidateId, String anchorId, TravelMode mode, int minutes, String label, List<List<double>> path
+ String candidateId, String anchorId, TravelMode mode, int minutes, String label, MapPin origin, MapPin destination, int perWeek, List<List<double>> path
 });
 
 
-
+$MapPinCopyWith<$Res> get origin;$MapPinCopyWith<$Res> get destination;
 
 }
 /// @nodoc
@@ -71,18 +71,39 @@ class _$MapRouteCopyWithImpl<$Res>
 
 /// Create a copy of MapRoute
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? candidateId = null,Object? anchorId = null,Object? mode = null,Object? minutes = null,Object? label = null,Object? path = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? candidateId = null,Object? anchorId = null,Object? mode = null,Object? minutes = null,Object? label = null,Object? origin = null,Object? destination = null,Object? perWeek = null,Object? path = null,}) {
   return _then(MapRoute(
 candidateId: null == candidateId ? _self.candidateId : candidateId // ignore: cast_nullable_to_non_nullable
 as String,anchorId: null == anchorId ? _self.anchorId : anchorId // ignore: cast_nullable_to_non_nullable
 as String,mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
 as TravelMode,minutes: null == minutes ? _self.minutes : minutes // ignore: cast_nullable_to_non_nullable
 as int,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
-as String,path: null == path ? _self.path : path // ignore: cast_nullable_to_non_nullable
+as String,origin: null == origin ? _self.origin : origin // ignore: cast_nullable_to_non_nullable
+as MapPin,destination: null == destination ? _self.destination : destination // ignore: cast_nullable_to_non_nullable
+as MapPin,perWeek: null == perWeek ? _self.perWeek : perWeek // ignore: cast_nullable_to_non_nullable
+as int,path: null == path ? _self.path : path // ignore: cast_nullable_to_non_nullable
 as List<List<double>>,
   ));
 }
-
+/// Create a copy of MapRoute
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MapPinCopyWith<$Res> get origin {
+  
+  return $MapPinCopyWith<$Res>(_self.origin, (value) {
+    return _then(_self.copyWith(origin: value));
+  });
+}/// Create a copy of MapRoute
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MapPinCopyWith<$Res> get destination {
+  
+  return $MapPinCopyWith<$Res>(_self.destination, (value) {
+    return _then(_self.copyWith(destination: value));
+  });
+}
 }
 
 
@@ -164,10 +185,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String candidateId,  String anchorId,  TravelMode mode,  int minutes,  String label,  List<List<double>> path)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String candidateId,  String anchorId,  TravelMode mode,  int minutes,  String label,  MapPin origin,  MapPin destination,  int perWeek,  List<List<double>> path)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MapRoute() when $default != null:
-return $default(_that.candidateId,_that.anchorId,_that.mode,_that.minutes,_that.label,_that.path);case _:
+return $default(_that.candidateId,_that.anchorId,_that.mode,_that.minutes,_that.label,_that.origin,_that.destination,_that.perWeek,_that.path);case _:
   return orElse();
 
 }
@@ -185,10 +206,10 @@ return $default(_that.candidateId,_that.anchorId,_that.mode,_that.minutes,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String candidateId,  String anchorId,  TravelMode mode,  int minutes,  String label,  List<List<double>> path)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String candidateId,  String anchorId,  TravelMode mode,  int minutes,  String label,  MapPin origin,  MapPin destination,  int perWeek,  List<List<double>> path)  $default,) {final _that = this;
 switch (_that) {
 case _MapRoute():
-return $default(_that.candidateId,_that.anchorId,_that.mode,_that.minutes,_that.label,_that.path);case _:
+return $default(_that.candidateId,_that.anchorId,_that.mode,_that.minutes,_that.label,_that.origin,_that.destination,_that.perWeek,_that.path);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +226,10 @@ return $default(_that.candidateId,_that.anchorId,_that.mode,_that.minutes,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String candidateId,  String anchorId,  TravelMode mode,  int minutes,  String label,  List<List<double>> path)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String candidateId,  String anchorId,  TravelMode mode,  int minutes,  String label,  MapPin origin,  MapPin destination,  int perWeek,  List<List<double>> path)?  $default,) {final _that = this;
 switch (_that) {
 case _MapRoute() when $default != null:
-return $default(_that.candidateId,_that.anchorId,_that.mode,_that.minutes,_that.label,_that.path);case _:
+return $default(_that.candidateId,_that.anchorId,_that.mode,_that.minutes,_that.label,_that.origin,_that.destination,_that.perWeek,_that.path);case _:
   return null;
 
 }
@@ -220,7 +241,7 @@ return $default(_that.candidateId,_that.anchorId,_that.mode,_that.minutes,_that.
 @JsonSerializable()
 
 class _MapRoute implements MapRoute {
-  const _MapRoute({required this.candidateId, required this.anchorId, required this.mode, required this.minutes, required this.label,  List<List<double>> path = const []}): _path = path;
+  const _MapRoute({required this.candidateId, required this.anchorId, required this.mode, required this.minutes, required this.label, required this.origin, required this.destination, this.perWeek = 1,  List<List<double>> path = const []}): _path = path;
   factory _MapRoute.fromJson(Map<String, dynamic> json) => _$MapRouteFromJson(json);
 
 @override final  String candidateId;
@@ -228,6 +249,9 @@ class _MapRoute implements MapRoute {
 @override final  TravelMode mode;
 @override final  int minutes;
 @override final  String label;
+@override final  MapPin origin;
+@override final  MapPin destination;
+@override@JsonKey() final  int perWeek;
  final  List<List<double>> _path;
 @override@JsonKey() List<List<double>> get path {
   if (_path is EqualUnmodifiableListView) return _path;
@@ -249,18 +273,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapRoute&&(identical(other.candidateId, candidateId) || other.candidateId == candidateId)&&(identical(other.anchorId, anchorId) || other.anchorId == anchorId)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.minutes, minutes) || other.minutes == minutes)&&(identical(other.label, label) || other.label == label)&&const DeepCollectionEquality().equals(other.path, _path));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapRoute&&(identical(other.candidateId, candidateId) || other.candidateId == candidateId)&&(identical(other.anchorId, anchorId) || other.anchorId == anchorId)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.minutes, minutes) || other.minutes == minutes)&&(identical(other.label, label) || other.label == label)&&(identical(other.origin, origin) || other.origin == origin)&&(identical(other.destination, destination) || other.destination == destination)&&(identical(other.perWeek, perWeek) || other.perWeek == perWeek)&&const DeepCollectionEquality().equals(other.path, _path));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,candidateId,anchorId,mode,minutes,label,const DeepCollectionEquality().hash(_path));
+    return Object.hash(runtimeType,candidateId,anchorId,mode,minutes,label,origin,destination,perWeek,const DeepCollectionEquality().hash(_path));
 }
 
 @override
 String toString() {
-    return 'MapRoute(candidateId: $candidateId, anchorId: $anchorId, mode: $mode, minutes: $minutes, label: $label, path: $path)';
+    return 'MapRoute(candidateId: $candidateId, anchorId: $anchorId, mode: $mode, minutes: $minutes, label: $label, origin: $origin, destination: $destination, perWeek: $perWeek, path: $path)';
 }
 
 
@@ -271,11 +295,11 @@ abstract mixin class _$MapRouteCopyWith<$Res> implements $MapRouteCopyWith<$Res>
   factory _$MapRouteCopyWith(_MapRoute value, $Res Function(_MapRoute) _then) = __$MapRouteCopyWithImpl;
 @override @useResult
 $Res call({
- String candidateId, String anchorId, TravelMode mode, int minutes, String label, List<List<double>> path
+ String candidateId, String anchorId, TravelMode mode, int minutes, String label, MapPin origin, MapPin destination, int perWeek, List<List<double>> path
 });
 
 
-
+@override $MapPinCopyWith<$Res> get origin;@override $MapPinCopyWith<$Res> get destination;
 
 }
 /// @nodoc
@@ -288,19 +312,40 @@ class __$MapRouteCopyWithImpl<$Res>
 
 /// Create a copy of MapRoute
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? candidateId = null,Object? anchorId = null,Object? mode = null,Object? minutes = null,Object? label = null,Object? path = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? candidateId = null,Object? anchorId = null,Object? mode = null,Object? minutes = null,Object? label = null,Object? origin = null,Object? destination = null,Object? perWeek = null,Object? path = null,}) {
   return _then(_MapRoute(
 candidateId: null == candidateId ? _self.candidateId : candidateId // ignore: cast_nullable_to_non_nullable
 as String,anchorId: null == anchorId ? _self.anchorId : anchorId // ignore: cast_nullable_to_non_nullable
 as String,mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
 as TravelMode,minutes: null == minutes ? _self.minutes : minutes // ignore: cast_nullable_to_non_nullable
 as int,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
-as String,path: null == path ? _self._path : path // ignore: cast_nullable_to_non_nullable
+as String,origin: null == origin ? _self.origin : origin // ignore: cast_nullable_to_non_nullable
+as MapPin,destination: null == destination ? _self.destination : destination // ignore: cast_nullable_to_non_nullable
+as MapPin,perWeek: null == perWeek ? _self.perWeek : perWeek // ignore: cast_nullable_to_non_nullable
+as int,path: null == path ? _self._path : path // ignore: cast_nullable_to_non_nullable
 as List<List<double>>,
   ));
 }
 
-
+/// Create a copy of MapRoute
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MapPinCopyWith<$Res> get origin {
+  
+  return $MapPinCopyWith<$Res>(_self.origin, (value) {
+    return _then(_self.copyWith(origin: value));
+  });
+}/// Create a copy of MapRoute
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MapPinCopyWith<$Res> get destination {
+  
+  return $MapPinCopyWith<$Res>(_self.destination, (value) {
+    return _then(_self.copyWith(destination: value));
+  });
+}
 }
 
 // dart format on

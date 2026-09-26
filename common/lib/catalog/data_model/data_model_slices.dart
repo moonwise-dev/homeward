@@ -1,3 +1,4 @@
+import '../catalog_component.dart';
 import '../../markets/coverage.dart';
 import '../../profile/employment.dart';
 import '../../profile/property_use.dart';
@@ -24,6 +25,7 @@ const selectionSlice = DataSlice(
       'Markets that match the place the buyer named, with coverage.',
     ),
   ],
+  part: CatalogPart.deal,
 );
 
 const profileSlice = DataSlice(
@@ -86,6 +88,7 @@ const profileSlice = DataSlice(
     SliceField('adults', FieldKind.integer, 'Adults in the household.'),
     SliceField('childAges', FieldKind.integers, 'Age of each child at home.'),
   ],
+  part: CatalogPart.deal,
 );
 
 const scenarioSlice = DataSlice(
@@ -113,6 +116,7 @@ const scenarioSlice = DataSlice(
       'Monthly fee to the housing association.',
     ),
   ],
+  part: CatalogPart.deal,
 );
 
 const marketSlice = DataSlice(
@@ -135,6 +139,7 @@ const marketSlice = DataSlice(
       'Currency of prices and loans; bind it as the currency of money inputs.',
     ),
   ],
+  part: CatalogPart.deal,
 );
 
 const derivedSlice = DataSlice(
@@ -157,6 +162,7 @@ const derivedSlice = DataSlice(
       'First monthly interest, amortization, and total.',
     ),
   ],
+  part: CatalogPart.deal,
 );
 
 final storySlice = DataSlice(
@@ -219,6 +225,12 @@ final storySlice = DataSlice(
       'Where the map opens: the city as lat and lng.',
     ),
     const SliceField(
+      'routine',
+      FieldKind.record,
+      'The places the buyer goes each week: id, label, and perWeek, the days '
+          'a week; a place the buyer adds carries a pin with lat and lng.',
+    ),
+    const SliceField(
       'markers',
       FieldKind.record,
       'Map markers for the city, the anchors, and the homes placed so far, for '
@@ -238,6 +250,19 @@ final storySlice = DataSlice(
       'criteria',
       FieldKind.record,
       'What is weighed: kind, anchorId, mustHave.',
+    ),
+  ],
+);
+
+const swipeSlice = DataSlice(
+  'swipe',
+  "Sample homes from the buyer's city to keep or pass, read-only and seeded "
+      'by the server when the city has sample homes. Bind a HomeSwipe to it.',
+  [
+    SliceField(
+      'homes',
+      FieldKind.record,
+      'Six listings that differ in kind, outdoor space, style, and size.',
     ),
   ],
 );
@@ -307,6 +332,7 @@ const assessmentSlice = DataSlice(
 final dataModelSlices = [
   storySlice,
   lineupSlice,
+  swipeSlice,
   tradeOffSlice,
   assessmentSlice,
   selectionSlice,

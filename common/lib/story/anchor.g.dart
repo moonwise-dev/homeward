@@ -17,6 +17,7 @@ _Anchor _$AnchorFromJson(Map<String, dynamic> json) =>
           'point',
           'mode',
           'maxMinutes',
+          'perWeek',
         ],
       );
       final val = _Anchor(
@@ -37,6 +38,7 @@ _Anchor _$AnchorFromJson(Map<String, dynamic> json) =>
           'maxMinutes',
           (v) => (v as num?)?.toInt() ?? 30,
         ),
+        perWeek: $checkedConvert('perWeek', (v) => (v as num?)?.toInt() ?? 5),
       );
       return val;
     });
@@ -48,6 +50,7 @@ Map<String, dynamic> _$AnchorToJson(_Anchor instance) => <String, dynamic>{
   'point': ?instance.point?.toJson(),
   'mode': _$TravelModeEnumMap[instance.mode]!,
   'maxMinutes': instance.maxMinutes,
+  'perWeek': instance.perWeek,
 };
 
 const _$TravelModeEnumMap = {

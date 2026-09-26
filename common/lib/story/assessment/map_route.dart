@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../travel_mode.dart';
+import 'map_pin.dart';
 
 part 'map_route.freezed.dart';
 part 'map_route.g.dart';
@@ -13,6 +14,9 @@ abstract class MapRoute with _$MapRoute {
     required TravelMode mode,
     required int minutes,
     required String label,
+    required MapPin origin,
+    required MapPin destination,
+    @Default(1) int perWeek,
     @Default([]) List<List<double>> path,
   }) = _MapRoute;
 

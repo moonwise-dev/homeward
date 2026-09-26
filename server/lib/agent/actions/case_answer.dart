@@ -1,6 +1,8 @@
 import 'package:common/common.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import '../../markets/market_directory.dart';
+import '../../samples/swipe_deck.dart';
 import 'action_outcome.dart';
 
 ActionOutcome caseAnswer({
@@ -38,6 +40,14 @@ ActionOutcome caseAnswer({
       'applied': true,
       'facet': facet.name,
       'label': ?label,
+      if (facet == CaseFacet.swipe)
+        'pattern': switch (_swiped(context, story, markets)) {
+          (final kept, final passed) => swipePattern(
+            kept,
+            passed,
+            readSwipe(kept, passed),
+          ),
+        },
       'stillOpen': [
         for (final gap in caseGaps(next.answering({facet, ...facets})))
           gap.name,
@@ -182,6 +192,36 @@ _Answered? _answered(
         },
         null,
       );
+    case CaseFacet.swipe:
+      final (kept, passed) = _swiped(context, story, markets);
+      if (kept.isEmpty && passed.isEmpty) {
+        return null;
+      }
+      final reading = readSwipe(kept, passed);
+      return (
+        story.copyWith(
+          homeType: reading.homeType ?? story.homeType,
+          outdoor: reading.outdoor ?? story.outdoor,
+          style: reading.style ?? story.style,
+        ),
+        {
+          if (reading.homeType != null) CaseFacet.homeType,
+          if (reading.outdoor != null) CaseFacet.outdoor,
+          if (reading.style != null) CaseFacet.style,
+        },
+        null,
+      );
+    case CaseFacet.routine:
+      final routine = form[storySlice.name]?['routine'];
+      if (routine is! List<Object?>) {
+        return null;
+      }
+      return (_withRoutine(story, routine), const {}, null);
+    case CaseFacet.needs:
+      final needs = HomeNeed.parse(value);
+      return needs == null
+          ? null
+          : (story.copyWith(needs: needs), const {}, null);
     case CaseFacet.area:
       final option = story.areaOptions
           .where((option) => option.id == value)
@@ -201,6 +241,61 @@ _Answered? _answered(
         const {CaseFacet.homeType},
         null,
       );
+  }
+}
+
+(List<Listing>, List<Listing>) _swiped(
+  Map<String, Object?> context,
+  Story story,
+  MarketDirectory markets,
+) {
+  final homes = {
+    for (final home in markets.samples.listingsIn(story.sampleCity ?? ''))
+      home.id: home,
+  };
+  List<Listing> named(Object? ids) => [
+    for (final id in ids as List<Object?>? ?? const []) ?homes[id],
+  ];
+  return (named(context['kept']), named(context['passed']));
+}
+
+Story _withRoutine(Story story, List<Object?> routine) {
+  final places = [
+    for (final json in routine)
+      if (json is Map<String, Object?>) ?_routinePlace(json),
+  ];
+  final days = {
+    for (final place in places) place.id: place.perWeek.clamp(1, 7),
+  };
+  final known = {for (final anchor in story.anchors) anchor.id};
+  final added = [
+    for (final place in places)
+      if (!known.contains(place.id) && place.pin != null) place,
+  ];
+  return story.copyWith(
+    anchors: [
+      for (final anchor in story.anchors)
+        anchor.copyWith(perWeek: days[anchor.id] ?? anchor.perWeek),
+      for (final (index, place) in added.indexed)
+        Anchor(
+          id: 'a${story.anchors.length + index + 1}',
+          label: place.label.trim(),
+          query: place.label.trim(),
+          point: place.pin,
+          mode: story.mode ?? TravelMode.transit,
+          maxMinutes: story.maxMinutes ?? 30,
+          perWeek: place.perWeek.clamp(1, 7),
+        ),
+    ],
+  );
+}
+
+RoutinePlace? _routinePlace(Map<String, Object?> json) {
+  try {
+    final place = RoutinePlace.fromJson(json);
+    return place.label.trim().isEmpty ? null : place;
+  } on CheckedFromJsonException {
+    return null;
   }
 }
 

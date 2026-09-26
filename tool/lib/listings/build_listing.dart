@@ -38,6 +38,7 @@ Listing buildListing({
     name: spec.name,
     title: spec.title,
     blurb: spec.blurb,
+    description: spec.description,
     address: spec.address,
     point: point,
     homeType: spec.homeType,

@@ -885,6 +885,7 @@
             "outdoor",
             "style",
             "rooms",
+            "needs",
             "criterion"
           ]
         },
@@ -978,6 +979,53 @@
       ],
       "additionalProperties": false
     },
+    "HomeSwipe": {
+      "type": "object",
+      "description": "Six real sample homes from the buyer's city, one card at a time, that the buyer keeps or passes with a swipe or a tap. The server chose them to differ in kind, outdoor space, style, and size. Bind homes to /swipe/homes. After the last card the app adds facet swipe, the kept ids as value, a label, and the kept and passed lists to the answer action.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "HomeSwipe"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "homes": {
+          "type": "object",
+          "description": "Always { \"path\": \"/swipe/homes\" }.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "enum": [
+                "/swipe/homes"
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "answer": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "homes",
+        "answer"
+      ],
+      "additionalProperties": false
+    },
     "TradeOff": {
       "type": "object",
       "description": "Two or three ways to live side by side, as compare_areas priced them: an area and its character, a home type and size, the estimated price from the area's price per square metre with its source, and the minutes to their daily place. The buyer picks one, which sets the area and a price range. Call compare_areas first and bind options to /tradeoff/options. The app adds facet area, the option id as value, and a label to the pick action.",
@@ -1023,9 +1071,67 @@
       ],
       "additionalProperties": false
     },
+    "Routine": {
+      "type": "object",
+      "description": "The buyer's week as taps: every place they go regularly with how many days a week, those the case knows already filled in, and a way to add another, such as a clinic once a week, by name and a pin on the map. Bind routine to /story/routine and story to /story, beside a Button sending answer with the facet routine and storyPath /story.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "Routine"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "label": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/DynamicString",
+          "description": "Represents a string"
+        },
+        "routine": {
+          "type": "object",
+          "description": "Always /story/routine.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "story": {
+          "type": "object",
+          "description": "Always /story; the map for adding a place opens on its centre.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "routine",
+        "story"
+      ],
+      "additionalProperties": false
+    },
     "LifestyleCommuteMap": {
       "type": "object",
-      "description": "A map of the buyer's life around the homes they weigh: the places they travel to, each home, the route from each home to each place with its minutes, and the nearest place for each criterion. Before homes are measured, bind markers to /story/markers; after, bind markers to /assessment/markers and routes to /assessment/routes.",
+      "description": "A map of the buyer's life around the homes they weigh: the places they travel to, each home, the route from each home to each place with its minutes and how many days a week they make the trip, and the nearest place for each criterion. Before homes are measured, bind markers to /story/markers; after, bind markers to /assessment/markers and routes to /assessment/routes. With focus on one home it shows their week from there. Its properties follow the Maps Agentic UI Toolkit GoogleMap.",
       "properties": {
         "id": {
           "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
@@ -1057,7 +1163,7 @@
         },
         "routes": {
           "type": "object",
-          "description": "Routes: /assessment/routes.",
+          "description": "Routes: /assessment/routes, each with an origin and a destination.",
           "properties": {
             "path": {
               "type": "string"
@@ -1067,6 +1173,35 @@
             "path"
           ],
           "additionalProperties": false
+        },
+        "center": {
+          "type": "object",
+          "description": "Where the map opens: /story/center. Leave it out to fit what it shows.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "zoom": {
+          "type": "number",
+          "description": "The zoom level, with center.",
+          "minimum": 3,
+          "maximum": 18
+        },
+        "travelMode": {
+          "type": "string",
+          "description": "Show only routes of this travel mode.",
+          "enum": [
+            "walking",
+            "bicycling",
+            "driving",
+            "transit"
+          ]
         },
         "pins": {
           "type": "object",
@@ -2793,7 +2928,13 @@
           "$ref": "#/components/PhotoLineup"
         },
         {
+          "$ref": "#/components/HomeSwipe"
+        },
+        {
           "$ref": "#/components/TradeOff"
+        },
+        {
+          "$ref": "#/components/Routine"
         },
         {
           "$ref": "#/components/LifestyleCommuteMap"

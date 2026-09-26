@@ -8,6 +8,7 @@ Map<String, Object?> turnSeeds(
   Plan plan,
   Iterable<Map<String, Object?>> toolSeeds, {
   Map<String, List<Photo>> lineups = const {},
+  List<Listing> swipe = const [],
 }) {
   final scenario = plan.scenarioDraft ?? plan.scenario;
   final profile = plan.profileDraft ?? plan.profile;
@@ -26,6 +27,10 @@ Map<String, Object?> turnSeeds(
                 'credit': '${photo.credit.name} / Unsplash',
               },
           ],
+      },
+    if (swipe.isNotEmpty)
+      swipeSlice.name: {
+        'homes': [for (final home in swipe) home.toJson()],
       },
     if (options.isNotEmpty)
       tradeOffSlice.name: {

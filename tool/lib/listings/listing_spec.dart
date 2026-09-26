@@ -9,6 +9,7 @@ final class ListingSpec {
     required this.address,
     required this.title,
     required this.blurb,
+    required this.description,
     required this.homeType,
     required this.rooms,
     required this.bedrooms,
@@ -30,6 +31,7 @@ final class ListingSpec {
     town: yaml['town'] as String?,
     title: yaml['title'] as String,
     blurb: yaml['blurb'] as String,
+    description: (yaml['description'] as String).trim(),
     homeType: HomeType.values.byName(yaml['type'] as String),
     rooms: yaml['rooms'] as int,
     bedrooms: yaml['bedrooms'] as int,
@@ -49,6 +51,7 @@ final class ListingSpec {
   final String? town;
   final String title;
   final String blurb;
+  final String description;
   final HomeType homeType;
   final int rooms;
   final int bedrooms;

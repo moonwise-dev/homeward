@@ -97,4 +97,100 @@ void main() {
     ]);
     expect(assessment.routes.first.path, hasLength(2));
   });
+
+  test(
+    'a sample home says why it fits and where it falls short, with sources',
+    () {
+      final sek = Currency.parse('SEK');
+      final villa = Listing(
+        id: 'sto-09',
+        areaId: 'danderyd',
+        areaName: 'Danderyd',
+        name: 'Villa',
+        title: 'A pink villa',
+        blurb: 'A villa.',
+        description:
+            'A ramp runs up beside the front steps. All bedrooms are upstairs.',
+        address: 'Edsviksvägen 20',
+        point: const GeoPoint(lat: 59.3431, lng: 18.0490),
+        homeType: HomeType.house,
+        rooms: 5,
+        bedrooms: 4,
+        sizeM2: 158,
+        outdoor: OutdoorSpace.garden,
+        style: HomeStyle.classic,
+        price: Money(minorUnits: 1400000000, currency: sek),
+        pricePerM2: Money(minorUnits: 8800000, currency: sek),
+        areaPricePerM2: Money(minorUnits: 9000000, currency: sek),
+        priceSource: 'Svensk Mäklarstatistik',
+        photos: const [],
+      );
+      final withListing = story.copyWith(
+        candidates: [story.candidates.first.copyWith(listing: villa)],
+        outdoor: OutdoorSpace.garden,
+        areaIds: const ['danderyd'],
+        needs: const [
+          HomeNeed.stepFree,
+          HomeNeed.entryLevelBedroom,
+          HomeNeed.pets,
+        ],
+        readings: const [
+          ListingRead(
+            listingId: 'sto-09',
+            need: HomeNeed.stepFree,
+            verdict: ReadVerdict.meets,
+            quote: 'A ramp runs up beside the front steps',
+          ),
+          ListingRead(
+            listingId: 'sto-09',
+            need: HomeNeed.entryLevelBedroom,
+            verdict: ReadVerdict.fails,
+            quote: 'All bedrooms are upstairs',
+          ),
+          ListingRead(
+            listingId: 'sto-09',
+            need: HomeNeed.pets,
+            verdict: ReadVerdict.silent,
+          ),
+        ],
+      );
+
+      final home = assessStory(withListing, measurements).candidates.single;
+
+      expect(home.why.map((reason) => (reason.text, reason.source)).take(3), [
+        ('Step-free entry', ReasonSource.listing),
+        ('A garden', ReasonSource.buyer),
+        ('In Danderyd', ReasonSource.buyer),
+      ]);
+      expect(home.why.first.quote, 'A ramp runs up beside the front steps');
+      expect(
+        home.why.skip(3).map((reason) => reason.source),
+        everyElement(ReasonSource.measured),
+      );
+      expect(home.shortfalls.take(2).map((reason) => reason.status), [
+        FitStatus.misses,
+        FitStatus.close,
+      ]);
+      expect(home.shortfalls.first.quote, 'All bedrooms are upstairs');
+    },
+  );
+
+  test('a week in travel is every trip there and back, as often as the '
+      'buyer goes', () {
+    final threeDays = story.copyWith(
+      anchors: [story.anchors.single.copyWith(perWeek: 3)],
+    );
+    final assessed = assessStory(threeDays, measurements);
+    final byId = {for (final home in assessed.candidates) home.id: home};
+
+    expect(byId['c1']!.weeklyMinutes, 2 * 12 * 3);
+    expect(byId['c2']!.weeklyMinutes, 2 * 40 * 3);
+    expect(
+      assessed.routes.firstWhere((route) => route.candidateId == 'c1'),
+      isA<MapRoute>()
+          .having((route) => route.perWeek, 'perWeek', 3)
+          .having((route) => route.destination.label, 'destination', 'KTH')
+          .having((route) => route.origin.label, 'origin', 'Odengatan'),
+    );
+  });
 }

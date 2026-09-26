@@ -23,20 +23,28 @@ final lifestyleCommuteMapItem = catalogItemFor(const LifestyleCommuteMap(), (
         dataContext: dataContext,
         value: data['pins'],
         parse: storyPinsOf,
-        builder: (context, pins) => LifestyleCommuteMapView(
-          markers: [
-            ...?markers,
-            for (final MapEntry(:key, :value) in (pins ?? const {}).entries)
-              MapMarker(
-                id: 'pin-$key',
-                label: value.label,
-                kind: MapMarkerKind.anchor,
-                lat: value.lat,
-                lng: value.lng,
-              ),
-          ],
-          routes: routes ?? const [],
-          focus: data['focus'] as String?,
+        builder: (context, pins) => BoundParsed<GeoPoint>(
+          dataContext: dataContext,
+          value: data['center'],
+          parse: (value) => jsonModelOf(value, GeoPoint.fromJson),
+          builder: (context, center) => LifestyleCommuteMapView(
+            center: center,
+            zoom: (data['zoom'] as num?)?.toDouble(),
+            travelMode: data['travelMode'] as String?,
+            markers: [
+              ...?markers,
+              for (final MapEntry(:key, :value) in (pins ?? const {}).entries)
+                MapMarker(
+                  id: 'pin-$key',
+                  label: value.label,
+                  kind: MapMarkerKind.anchor,
+                  lat: value.lat,
+                  lng: value.lng,
+                ),
+            ],
+            routes: routes ?? const [],
+            focus: data['focus'] as String?,
+          ),
         ),
       ),
     ),

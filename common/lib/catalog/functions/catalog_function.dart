@@ -1,10 +1,14 @@
 import 'package:a2ui_core/a2ui_core.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../catalog_component.dart';
+
 abstract class CatalogFunction implements FunctionApi {
   const CatalogFunction();
 
   String get description;
+
+  CatalogPart get part => CatalogPart.story;
 
   Object? evaluate(Map<String, Object?> args);
 }

@@ -2,6 +2,7 @@ import 'package:json_schema_builder/json_schema_builder.dart';
 
 import '../catalog_component.dart';
 import '../catalog_schemas.dart';
+import '../../story/travel_mode.dart';
 import '../examples/stockholm_story_example.dart';
 
 final class LifestyleCommuteMap extends CatalogComponent {
@@ -14,9 +15,11 @@ final class LifestyleCommuteMap extends CatalogComponent {
   String get description =>
       "A map of the buyer's life around the homes they weigh: the places they "
       'travel to, each home, the route from each home to each place with its '
-      'minutes, and the nearest place for each criterion. Before homes are '
-      'measured, bind markers to /story/markers; after, bind markers to '
-      '/assessment/markers and routes to /assessment/routes.';
+      'minutes and how many days a week they make the trip, and the nearest '
+      'place for each criterion. Before homes are measured, bind markers to '
+      '/story/markers; after, bind markers to /assessment/markers and routes '
+      'to /assessment/routes. With focus on one home it shows their week from '
+      'there. Its properties follow the Maps Agentic UI Toolkit GoogleMap.';
 
   @override
   CatalogPhase get phase => CatalogPhase.mvp;
@@ -29,7 +32,21 @@ final class LifestyleCommuteMap extends CatalogComponent {
     'markers': CatalogSchemas.bound(
       'Markers: /story/markers or /assessment/markers.',
     ),
-    'routes': CatalogSchemas.bound('Routes: /assessment/routes.'),
+    'routes': CatalogSchemas.bound(
+      'Routes: /assessment/routes, each with an origin and a destination.',
+    ),
+    'center': CatalogSchemas.bound(
+      'Where the map opens: /story/center. Leave it out to fit what it shows.',
+    ),
+    'zoom': Schema.number(
+      description: 'The zoom level, with center.',
+      minimum: 3,
+      maximum: 18,
+    ),
+    'travelMode': Schema.string(
+      description: 'Show only routes of this travel mode.',
+      enumValues: [for (final mode in TravelMode.values) mode.mapsName],
+    ),
     'pins': CatalogSchemas.bound(
       'Places the buyer dropped: /story/pins. Bind it on the living story.',
     ),
@@ -44,7 +61,7 @@ final class LifestyleCommuteMap extends CatalogComponent {
   List<String> get requiredProperties => ['markers'];
 
   @override
-  List<String> get boundProperties => ['markers', 'routes', 'pins'];
+  List<String> get boundProperties => ['markers', 'routes', 'pins', 'center'];
 
   @override
   List<CatalogExample> get examples => [

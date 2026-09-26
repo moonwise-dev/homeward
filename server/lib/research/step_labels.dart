@@ -13,6 +13,10 @@ String nearbyLabel(Iterable<CriterionKind> kinds, Iterable<Candidate> homes) {
 String routeLabel(Anchor anchor) =>
     'Timing the trip to ${anchor.label} ${anchor.mode.phrase}';
 
+String readingLabel(String city, int homes, List<HomeNeed> needs) =>
+    'Reading $homes $city listings for '
+    '${_listed([for (final need in needs) need.label.toLowerCase()])}';
+
 String _listed(List<String> items) => switch (items) {
   [] => '',
   [final only] => only,

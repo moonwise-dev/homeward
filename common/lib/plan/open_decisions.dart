@@ -6,9 +6,13 @@ import '../story/story.dart';
 import 'open_decision.dart';
 import 'plan.dart';
 
-List<OpenDecision> openDecisions(Plan plan, ResolvedMarket? market) => [
+List<OpenDecision> openDecisions(
+  Plan plan,
+  ResolvedMarket? market, {
+  bool deal = true,
+}) => [
   ...storyDecisions(plan.story),
-  ...financeDecisions(plan, market),
+  if (deal) ...financeDecisions(plan, market),
 ];
 
 List<OpenDecision> storyDecisions(Story story) => [

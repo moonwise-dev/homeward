@@ -156,6 +156,16 @@ final class ProposeStoryTool extends ModelTool {
         'description':
             'The rooms the buyer said they need, living room included.',
       },
+      'needs': {
+        'type': 'array',
+        'description':
+            'What the home itself must have, only when the buyer said so, '
+            'such as step-free entry for a parent or pets for their dog.',
+        'items': {
+          'type': 'string',
+          'enum': [for (final need in HomeNeed.values) need.name],
+        },
+      },
     },
   };
 
@@ -228,6 +238,12 @@ final class ProposeStoryTool extends ModelTool {
     final homeType = _enum(HomeType.values, arguments['homeType']);
     final outdoor = _enum(OutdoorSpace.values, arguments['outdoor']);
     final rooms = (arguments['rooms'] as num?)?.toInt();
+    final needs = arguments['needs'] is List<Object?>
+        ? [
+            for (final name in arguments['needs'] as List<Object?>)
+              ?_enum(HomeNeed.values, name),
+          ]
+        : null;
     final sampleCity = city == null
         ? null
         : context.markets.samples.cityNamed(city)?.id;
@@ -237,6 +253,7 @@ final class ProposeStoryTool extends ModelTool {
           if (homeType != null) CaseFacet.homeType,
           if (outdoor != null) CaseFacet.outdoor,
           if (rooms != null) CaseFacet.rooms,
+          if (needs != null && needs.isNotEmpty) CaseFacet.needs,
         })
         .copyWith(
           reason: _reason(arguments['reason']) ?? previous.reason,
@@ -252,6 +269,7 @@ final class ProposeStoryTool extends ModelTool {
           homeType: homeType ?? previous.homeType,
           outdoor: outdoor ?? previous.outdoor,
           rooms: rooms ?? previous.rooms,
+          needs: needs == null || needs.isEmpty ? previous.needs : needs,
           cityPoint:
               cityPlace?.point ??
               (city == previous.city ? previous.cityPoint : null),

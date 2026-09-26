@@ -9,6 +9,7 @@ import 'dynamic_recommendation_stack/dynamic_recommendation_stack_item.dart';
 import 'eligibility_checklist/eligibility_checklist_item.dart';
 import 'foreign_buyer_obstacles/foreign_buyer_obstacles_item.dart';
 import 'household_input/household_input_item.dart';
+import 'home_swipe/home_swipe_item.dart';
 import 'hunch/hunch_item.dart';
 import 'lifestyle_commute_map/lifestyle_commute_map_item.dart';
 import 'listing_card/listing_card_item.dart';
@@ -21,6 +22,7 @@ import 'purchase_costs_table/purchase_costs_table_item.dart';
 import 'story_draft/story_draft_item.dart';
 import 'stress_test_chart/stress_test_chart_item.dart';
 import 'trade_off/trade_off_item.dart';
+import 'routine/routine_item.dart';
 
 Catalog homewardGenuiCatalog() {
   final basic = BasicCatalogItems.asNoAssetCatalog();
@@ -42,7 +44,9 @@ final _homewardCatalogItems = <CatalogItem>[
   storyDraftItem,
   hunchItem,
   photoLineupItem,
+  homeSwipeItem,
   tradeOffItem,
+  routineItem,
   lifestyleCommuteMapItem,
   comparisonTableItem,
   dynamicRecommendationStackItem,

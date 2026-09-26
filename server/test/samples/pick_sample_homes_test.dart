@@ -112,4 +112,74 @@ void main() {
       greaterThan(estimatedMinutes(from, far, TravelMode.bike)),
     );
   });
+
+  test('a home that fails a need is ruled out, and one that meets it wins', () {
+    ListingRead read(String id, ReadVerdict verdict) => ListingRead(
+      listingId: id,
+      need: HomeNeed.stepFree,
+      verdict: verdict,
+      quote: verdict == ReadVerdict.silent ? null : 'a quote',
+    );
+    final houses = [
+      for (final listing in stockholm)
+        if (listing.homeType == HomeType.house) listing,
+    ];
+    final pick = pickSampleHomes(
+      Story(
+        homeType: HomeType.house,
+        needs: const [HomeNeed.stepFree],
+        readings: [
+          read('sto-07', ReadVerdict.meets),
+          read('sto-09', ReadVerdict.meets),
+          read('sto-08', ReadVerdict.fails),
+          read('sto-10', ReadVerdict.fails),
+          read('sto-11', ReadVerdict.fails),
+          for (final house in houses)
+            if (!{
+              'sto-07',
+              'sto-09',
+              'sto-08',
+              'sto-10',
+              'sto-11',
+            }.contains(house.id))
+              read(house.id, ReadVerdict.silent),
+        ],
+      ),
+      stockholm,
+    );
+
+    expect(pick.ruledOut['needs'], 3);
+    expect(
+      pick.homes.take(2).map((home) => home.id),
+      containsAll(['sto-07', 'sto-09']),
+    );
+    expect(pick.homes.map((home) => home.id), isNot(contains('sto-08')));
+  });
+
+  test('a house a room short is kept before any flat', () {
+    ListingRead read(String id, ReadVerdict verdict) =>
+        ListingRead(listingId: id, need: HomeNeed.stepFree, verdict: verdict);
+    final pick = pickSampleHomes(
+      Story(
+        homeType: HomeType.house,
+        areaIds: const ['solna'],
+        rooms: 5,
+        needs: const [HomeNeed.stepFree],
+        readings: [
+          read('sto-07', ReadVerdict.meets),
+          read('sto-09', ReadVerdict.meets),
+          read('sto-08', ReadVerdict.fails),
+          read('sto-10', ReadVerdict.fails),
+          read('sto-11', ReadVerdict.fails),
+          read('sto-13', ReadVerdict.silent),
+        ],
+      ),
+      stockholm,
+    );
+
+    expect(pick.homes.every((home) => home.homeType == HomeType.house), isTrue);
+    expect(pick.ruledOut, {'type': 8, 'needs': 3});
+    expect(pick.fitLessWell, 0);
+    expect(pick.relaxed, ['area', 'rooms']);
+  });
 }

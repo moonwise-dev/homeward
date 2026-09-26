@@ -30,31 +30,50 @@ typedef _Pass = ({
   bool area,
   bool type,
   bool rooms,
+  bool needs,
 });
 
 const _passes = <_Pass>[
-  (relaxed: [], stretch: 1.1, area: true, type: true, rooms: true),
-  (relaxed: ['price'], stretch: 1.25, area: true, type: true, rooms: true),
+  (relaxed: [], stretch: 1.1, area: true, type: true, rooms: true, needs: true),
+  (
+    relaxed: ['price'],
+    stretch: 1.25,
+    area: true,
+    type: true,
+    rooms: true,
+    needs: true,
+  ),
   (
     relaxed: ['price', 'area'],
     stretch: 1.25,
     area: false,
     type: true,
     rooms: true,
+    needs: true,
   ),
   (
-    relaxed: ['price', 'area', 'type'],
+    relaxed: ['price', 'area', 'rooms'],
     stretch: 1.25,
     area: false,
-    type: false,
-    rooms: true,
+    type: true,
+    rooms: false,
+    needs: true,
   ),
   (
-    relaxed: ['price', 'area', 'type', 'rooms'],
+    relaxed: ['price', 'area', 'rooms', 'type'],
     stretch: double.infinity,
     area: false,
     type: false,
     rooms: false,
+    needs: true,
+  ),
+  (
+    relaxed: ['price', 'area', 'rooms', 'type', 'needs'],
+    stretch: double.infinity,
+    area: false,
+    type: false,
+    rooms: false,
+    needs: false,
   ),
 ];
 
@@ -65,6 +84,13 @@ SamplePick pickSampleHomes(
   List<Listing> listings, {
   int keep = 3,
 }) {
+  final verdicts = {
+    for (final read in story.readings)
+      (read.listingId, read.need): read.verdict,
+  };
+  bool fails(Listing listing) => story.needs.any(
+    (need) => verdicts[(listing.id, need)] == ReadVerdict.fails,
+  );
   String? missed(Listing listing, _Pass pass) {
     if (pass.type &&
         story.homeType != null &&
@@ -82,6 +108,9 @@ SamplePick pickSampleHomes(
     }
     if (pass.rooms && story.rooms != null && listing.rooms < story.rooms!) {
       return 'rooms';
+    }
+    if (pass.needs && fails(listing)) {
+      return 'needs';
     }
     return null;
   }
@@ -104,7 +133,10 @@ SamplePick pickSampleHomes(
     }
   }
   final scores = {
-    for (final listing in survivors) listing.id: _score(story, listing),
+    for (final listing in survivors)
+      listing.id:
+          _score(story, listing) +
+          _needsScore(story.needs, (need) => verdicts[(listing.id, need)]),
   };
   survivors.sort((a, b) => scores[b.id]!.compareTo(scores[a.id]!));
   final kept = <Listing>[];
@@ -135,6 +167,7 @@ SamplePick pickSampleHomes(
           'price' => story.priceMax != null,
           'area' => story.areaIds.isNotEmpty,
           'type' => story.homeType != null,
+          'needs' => story.needs.isNotEmpty,
           _ => story.rooms != null,
         })
           filter,
@@ -174,6 +207,20 @@ double _score(Story story, Listing listing) {
   }
   return score - listing.percentFromAreaMedian / 20;
 }
+
+double _needsScore(
+  List<HomeNeed> needs,
+  ReadVerdict? Function(HomeNeed need) verdictOf,
+) => needs.fold(
+  0,
+  (score, need) =>
+      score +
+      switch (verdictOf(need)) {
+        ReadVerdict.meets => 2,
+        ReadVerdict.fails => -3,
+        ReadVerdict.silent || null => -1,
+      },
+);
 
 int estimatedMinutes(GeoPoint from, GeoPoint to, TravelMode mode) {
   final meters = from.metersTo(to) * 1.3;

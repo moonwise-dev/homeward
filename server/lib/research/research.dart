@@ -4,6 +4,7 @@ import 'open_data/nominatim.dart';
 import 'open_data/overpass.dart';
 import 'open_data/polite_client.dart';
 import 'open_data/research_cache.dart';
+import '../samples/listing_reader.dart';
 import 'open_data/routing.dart';
 import 'story_measurer.dart';
 
@@ -12,7 +13,8 @@ final class Research {
     required this.nominatim,
     required this.measurer,
     required this.routing,
-  });
+    ListingReader? listings,
+  }) : listings = listings ?? ListingReader();
 
   factory Research.open(
     http.Client client, {
@@ -31,4 +33,5 @@ final class Research {
   final Nominatim nominatim;
   final StoryMeasurer measurer;
   final Routing routing;
+  final ListingReader listings;
 }

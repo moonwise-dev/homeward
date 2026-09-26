@@ -21,6 +21,9 @@ final class ForeignBuyerObstacles extends CatalogComponent {
   CatalogPhase get phase => CatalogPhase.mvp;
 
   @override
+  CatalogPart get part => CatalogPart.deal;
+
+  @override
   bool get agentVisible => true;
 
   @override

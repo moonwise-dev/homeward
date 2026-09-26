@@ -193,4 +193,78 @@ void main() {
     expect(homes.map((home) => home.id), ['c1', 'c2', 'c3']);
     expect(outcome.summary['sampleHomes'], containsPair('kept', 3));
   });
+
+  test('needs name what the home must have, and none clears them', () {
+    final needs = apply({
+      'facet': 'needs',
+      'value': 'stepFree,entryLevelShower',
+      'label': 'Step-free, with a shower on the entry floor',
+    });
+    final none = apply({
+      'facet': 'needs',
+      'value': 'none',
+    }, story: needs.story);
+    final wrong = apply({'facet': 'needs', 'value': 'stepFree,sauna'});
+
+    expect(needs.story.needs, [HomeNeed.stepFree, HomeNeed.entryLevelShower]);
+    expect(needs.story.answered, contains(CaseFacet.needs));
+    expect(none.story.needs, isEmpty);
+    expect(wrong.summary['applied'], isFalse);
+  });
+
+  test('the routine sets how often and adds the places the buyer pinned', () {
+    final result = apply(
+      {'facet': 'routine', 'storyPath': '/story'},
+      surfaceData: {
+        'story': {
+          'routine': [
+            {'id': 'a1', 'label': 'KTH', 'perWeek': 3},
+            {
+              'id': 'r1',
+              'label': 'The clinic',
+              'perWeek': 1,
+              'pin': {'lat': 59.35, 'lng': 18.03},
+            },
+            {'id': 'r2', 'label': 'Nowhere', 'perWeek': 2},
+          ],
+        },
+      },
+    );
+
+    expect(
+      result.story.anchors.map((anchor) => (anchor.label, anchor.perWeek)),
+      [
+        ('KTH', 3),
+        ('The clinic', 1),
+      ],
+    );
+    expect(
+      result.story.anchors.last.point,
+      const GeoPoint(lat: 59.35, lng: 18.03),
+    );
+    expect(result.story.answered, contains(CaseFacet.routine));
+  });
+
+  test('a swipe sets what every kept home shares and tells the pattern', () {
+    final result = apply({
+      'facet': 'swipe',
+      'value': 'sto-07,sto-09',
+      'label': 'Kept 2 of 5',
+      'kept': ['sto-07', 'sto-09'],
+      'passed': ['sto-01', 'sto-02', 'sto-06'],
+    });
+
+    expect(result.story.homeType, HomeType.house);
+    expect(result.story.outdoor, OutdoorSpace.garden);
+    expect(
+      result.story.answered,
+      containsAll([CaseFacet.swipe, CaseFacet.homeType, CaseFacet.outdoor]),
+    );
+    expect(result.summary['pattern'], {
+      'kept': 2,
+      'passed': 3,
+      'everyKeptHome': {'homeType': 'house', 'outdoor': 'garden'},
+      'keptAreas': ['Solna', 'Danderyd'],
+    });
+  });
 }

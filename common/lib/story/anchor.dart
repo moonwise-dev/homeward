@@ -15,6 +15,7 @@ abstract class Anchor with _$Anchor {
     GeoPoint? point,
     @Default(TravelMode.transit) TravelMode mode,
     @Default(30) int maxMinutes,
+    @Default(5) int perWeek,
   }) = _Anchor;
 
   factory Anchor.fromJson(Map<String, Object?> json) => _$AnchorFromJson(json);

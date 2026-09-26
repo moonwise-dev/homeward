@@ -5,6 +5,7 @@ import '../../costs/purchase_costs.dart';
 import '../../markets/resolved_market.dart';
 import '../../plan/scenario.dart';
 import '../catalog_schemas.dart';
+import '../catalog_component.dart';
 import 'catalog_function.dart';
 
 final class CashNeededFunction extends CatalogFunction {
@@ -12,6 +13,9 @@ final class CashNeededFunction extends CatalogFunction {
 
   @override
   String get name => 'cashNeeded';
+
+  @override
+  CatalogPart get part => CatalogPart.deal;
 
   @override
   String get description =>

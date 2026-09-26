@@ -4,7 +4,9 @@ import '../geo/geo_point.dart';
 import '../money/money.dart';
 import '../samples/area_option.dart';
 import '../samples/home_style.dart';
+import '../samples/home_need.dart';
 import '../samples/home_type.dart';
+import '../samples/listing_read.dart';
 import '../samples/outdoor_space.dart';
 import 'anchor.dart';
 import 'candidate.dart';
@@ -39,6 +41,8 @@ abstract class Story with _$Story {
     Money? priceMax,
     String? sampleCity,
     @Default([]) List<AreaOption> areaOptions,
+    @Default([]) List<HomeNeed> needs,
+    @Default([]) List<ListingRead> readings,
     @Default([]) List<CaseFacet> answered,
     @Default(0) int questions,
   }) = _Story;

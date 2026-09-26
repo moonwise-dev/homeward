@@ -51,3 +51,37 @@ List<String> homesFallback(String surfaceId, {required bool create}) {
     ),
   ];
 }
+
+List<String> weekFallback(
+  String surfaceId,
+  String candidateId, {
+  required bool create,
+}) => [
+  if (create)
+    jsonEncode(
+      CreateSurfaceMessage(
+        surfaceId: surfaceId,
+        catalogId: homewardCatalogId,
+        sendDataModel: true,
+      ).toJson(),
+    ),
+  jsonEncode(
+    UpdateComponentsMessage(
+      surfaceId: surfaceId,
+      components: [
+        {
+          'id': 'root',
+          'component': 'Column',
+          'children': ['week'],
+        },
+        {
+          'id': 'week',
+          'component': 'LifestyleCommuteMap',
+          'markers': {'path': assessmentSlice.pathOf('markers')},
+          'routes': {'path': assessmentSlice.pathOf('routes')},
+          'focus': candidateId,
+        },
+      ],
+    ).toJson(),
+  ),
+];

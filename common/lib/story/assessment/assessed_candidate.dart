@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../samples/listing.dart';
+import 'reason.dart';
 
 part 'assessed_candidate.freezed.dart';
 part 'assessed_candidate.g.dart';
@@ -16,6 +17,9 @@ abstract class AssessedCandidate with _$AssessedCandidate {
     @Default([]) List<String> pros,
     @Default([]) List<String> cons,
     @Default([]) List<String> close,
+    @Default([]) List<Reason> why,
+    @Default([]) List<Reason> shortfalls,
+    int? weeklyMinutes,
     Listing? listing,
   }) = _AssessedCandidate;
 

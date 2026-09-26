@@ -20,6 +20,9 @@ _AssessedCandidate _$AssessedCandidateFromJson(
       'pros',
       'cons',
       'close',
+      'why',
+      'shortfalls',
+      'weeklyMinutes',
       'listing',
     ],
   );
@@ -44,6 +47,26 @@ _AssessedCandidate _$AssessedCandidateFromJson(
       (v) =>
           (v as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
     ),
+    why: $checkedConvert(
+      'why',
+      (v) =>
+          (v as List<dynamic>?)
+              ?.map((e) => Reason.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    ),
+    shortfalls: $checkedConvert(
+      'shortfalls',
+      (v) =>
+          (v as List<dynamic>?)
+              ?.map((e) => Reason.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    ),
+    weeklyMinutes: $checkedConvert(
+      'weeklyMinutes',
+      (v) => (v as num?)?.toInt(),
+    ),
     listing: $checkedConvert(
       'listing',
       (v) => v == null ? null : Listing.fromJson(v as Map<String, dynamic>),
@@ -62,5 +85,8 @@ Map<String, dynamic> _$AssessedCandidateToJson(_AssessedCandidate instance) =>
       'pros': instance.pros,
       'cons': instance.cons,
       'close': instance.close,
+      'why': instance.why.map((e) => e.toJson()).toList(),
+      'shortfalls': instance.shortfalls.map((e) => e.toJson()).toList(),
+      'weeklyMinutes': ?instance.weeklyMinutes,
       'listing': ?instance.listing?.toJson(),
     };

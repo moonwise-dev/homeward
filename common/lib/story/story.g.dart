@@ -33,6 +33,8 @@ _Story _$StoryFromJson(Map<String, dynamic> json) => $checkedCreate(
         'priceMax',
         'sampleCity',
         'areaOptions',
+        'needs',
+        'readings',
         'answered',
         'questions',
       ],
@@ -117,6 +119,22 @@ _Story _$StoryFromJson(Map<String, dynamic> json) => $checkedCreate(
                 .toList() ??
             const [],
       ),
+      needs: $checkedConvert(
+        'needs',
+        (v) =>
+            (v as List<dynamic>?)
+                ?.map((e) => $enumDecode(_$HomeNeedEnumMap, e))
+                .toList() ??
+            const [],
+      ),
+      readings: $checkedConvert(
+        'readings',
+        (v) =>
+            (v as List<dynamic>?)
+                ?.map((e) => ListingRead.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            const [],
+      ),
       answered: $checkedConvert(
         'answered',
         (v) =>
@@ -152,6 +170,8 @@ Map<String, dynamic> _$StoryToJson(_Story instance) => <String, dynamic>{
   'priceMax': ?instance.priceMax?.toJson(),
   'sampleCity': ?instance.sampleCity,
   'areaOptions': instance.areaOptions.map((e) => e.toJson()).toList(),
+  'needs': instance.needs.map((e) => _$HomeNeedEnumMap[e]!).toList(),
+  'readings': instance.readings.map((e) => e.toJson()).toList(),
   'answered': instance.answered.map((e) => _$CaseFacetEnumMap[e]!).toList(),
   'questions': instance.questions,
 };
@@ -186,6 +206,15 @@ const _$HomeStyleEnumMap = {
   HomeStyle.modern: 'modern',
 };
 
+const _$HomeNeedEnumMap = {
+  HomeNeed.stepFree: 'stepFree',
+  HomeNeed.lift: 'lift',
+  HomeNeed.entryLevelShower: 'entryLevelShower',
+  HomeNeed.entryLevelBedroom: 'entryLevelBedroom',
+  HomeNeed.homeOffice: 'homeOffice',
+  HomeNeed.pets: 'pets',
+};
+
 const _$CaseFacetEnumMap = {
   CaseFacet.place: 'place',
   CaseFacet.household: 'household',
@@ -198,4 +227,7 @@ const _$CaseFacetEnumMap = {
   CaseFacet.criterion: 'criterion',
   CaseFacet.photo: 'photo',
   CaseFacet.area: 'area',
+  CaseFacet.needs: 'needs',
+  CaseFacet.routine: 'routine',
+  CaseFacet.swipe: 'swipe',
 };
