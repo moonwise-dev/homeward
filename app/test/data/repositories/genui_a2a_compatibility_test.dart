@@ -78,7 +78,7 @@ void main() {
       ['CreateSurfaceMessage', 'UpdateComponentsMessage'],
     );
     final components = surfaces
-        .contextFor('t1-story')
+        .contextFor(planSurfaceId)
         .definition
         .value!
         .components;

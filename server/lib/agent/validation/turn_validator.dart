@@ -10,28 +10,27 @@ import 'validation_outcome.dart';
 
 final class TurnValidator {
   TurnValidator({
-    required this.turn,
     required this.catalog,
     required this.shadow,
     required this.seeds,
-  }) : _surfacePattern = InlineSurfaces.idPattern(turn);
+  });
 
-  final int turn;
   final CatalogValidator catalog;
   final MessageProcessor<ComponentApi> shadow;
   Map<String, Object?> seeds;
-  final RegExp _surfacePattern;
-  final _components = <String, Map<String, Map<String, Object?>>>{};
+  final _sentThisTurn = <String>{};
 
-  Set<String> get surfacesCreated => _components.keys.toSet();
+  bool get drewThisTurn => _sentThisTurn.isNotEmpty;
 
-  bool get drewComponents =>
-      _components.values.any((components) => components.isNotEmpty);
+  List<Map<String, Object?>>? get screen => switch (_screen) {
+    final surface? => [
+      for (final component in surface.componentsModel.all) component.toJson(),
+    ],
+    null => null,
+  };
 
-  Iterable<String> get emptySurfaces => [
-    for (final MapEntry(:key, :value) in _components.entries)
-      if (value.isEmpty) key,
-  ];
+  SurfaceModel<ComponentApi>? get _screen =>
+      shadow.groupModel.getSurface(planSurfaceId);
 
   ValidationOutcome validate(String source) {
     final Object? json;
@@ -49,6 +48,9 @@ final class TurnValidator {
     }
     if (json is! Map<String, Object?>) {
       return _reject('', '', 'Each a2ui message must be one JSON object');
+    }
+    if (_unknownEnvelopeField(json) case (final path, final problem)) {
+      return _reject(_surfaceIdIn(json), path, problem);
     }
     final A2uiMessage message;
     try {
@@ -92,17 +94,10 @@ final class TurnValidator {
         'Use catalogId $homewardCatalogId',
       );
     }
-    if (_components.containsKey(surfaceId)) {
+    if (_screen != null) {
       return const Unchanged();
     }
-    if (_components.length >= InlineSurfaces.maxPerTurn) {
-      return _reject(
-        surfaceId,
-        '/createSurface',
-        'A turn may create at most ${InlineSurfaces.maxPerTurn} surfaces',
-      );
-    }
-    return _apply(message, () => _components[surfaceId] = {});
+    return _apply(message, () {});
   }
 
   ValidationOutcome _updateComponents(UpdateComponentsMessage message) {
@@ -110,15 +105,26 @@ final class TurnValidator {
     if (_ownershipProblem(surfaceId) case final problem?) {
       return _reject(surfaceId, '/updateComponents/surfaceId', problem);
     }
-    final existing = _components[surfaceId];
-    if (existing == null) {
+    final screen = _screen;
+    if (screen == null) {
       return _reject(
         surfaceId,
         '/updateComponents/surfaceId',
-        'Create surface $surfaceId in this turn before adding components',
+        'Create surface $surfaceId before adding components',
       );
     }
-    final merged = {...existing};
+    final merged = {
+      for (final component in screen.componentsModel.all)
+        component.id: component.toJson(),
+    };
+    final data = {
+      ...switch (screen.dataModel.get('/')) {
+        final Map<String, Object?> data => data,
+        _ => const <String, Object?>{},
+      },
+      ...seeds,
+    };
+    final sent = <String>{};
     for (final (index, component) in message.components.indexed) {
       final path = '/updateComponents/components/$index';
       final name = component['component'];
@@ -139,16 +145,22 @@ final class TurnValidator {
         );
       }
       for (final bound in boundPaths(component)) {
-        if (!resolvesForBinding(seeds, bound)) {
+        if (!resolvesForBinding(data, bound)) {
           return _reject(surfaceId, path, '$bound is not in the data model');
         }
       }
-      merged[component['id']! as String] = component;
+      final id = component['id']! as String;
+      merged[id] = component;
+      sent.add(id);
     }
-    if (structureProblem(merged) case final problem?) {
+    if (structureProblem(
+          merged,
+          mustReach: {..._sentThisTurn, ...sent},
+        )
+        case final problem?) {
       return _reject(surfaceId, '/updateComponents/components', problem);
     }
-    return _apply(message, () => _components[surfaceId] = merged);
+    return _apply(message, () => _sentThisTurn.addAll(sent));
   }
 
   static String _near(String source, int? offset) {
@@ -160,12 +172,10 @@ final class TurnValidator {
     return ' at character $offset, near `${source.substring(start, end)}`';
   }
 
-  String? _ownershipProblem(String surfaceId) =>
-      _surfacePattern.hasMatch(surfaceId)
+  String? _ownershipProblem(String surfaceId) => surfaceId == planSurfaceId
       ? null
-      : 'Surface id "$surfaceId" does not fit turn $turn: surface ids in '
-            'turn $turn look like ${InlineSurfaces.id(turn, 'clue')}, lowercase '
-            'letters and digits joined by hyphens';
+      : 'The buyer has one screen, surface "$planSurfaceId"; send every '
+            'message to it';
 
   ValidationOutcome _apply(A2uiMessage message, void Function() record) {
     try {
@@ -182,6 +192,23 @@ final class TurnValidator {
     return Accepted(message);
   }
 
+  static (String, String)? _unknownEnvelopeField(Map<String, Object?> json) {
+    for (final MapEntry(key: type, value: fields) in _envelopeFields.entries) {
+      if (json[type] case final Map<String, Object?> body) {
+        for (final field in body.keys) {
+          if (!fields.contains(field)) {
+            return (
+              '/$type/$field',
+              '$type has no field "$field"; it takes ${fields.join(', ')}'
+                  '${type == 'createSurface' ? ', and components go in their own updateComponents message' : ''}',
+            );
+          }
+        }
+      }
+    }
+    return null;
+  }
+
   Rejected _reject(String surfaceId, String path, String message) => Rejected(
     ValidationFailure(surfaceId: surfaceId, path: path, message: message),
   );
@@ -192,3 +219,8 @@ final class TurnValidator {
     _ => '',
   };
 }
+
+const _envelopeFields = {
+  'createSurface': {'surfaceId', 'catalogId', 'theme', 'sendDataModel'},
+  'updateComponents': {'surfaceId', 'components'},
+};

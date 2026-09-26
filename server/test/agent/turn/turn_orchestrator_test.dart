@@ -7,6 +7,7 @@ import 'package:homeward_server/agent/prompt/prompt_assembler.dart';
 import 'package:homeward_server/agent/turn/tool_belt.dart';
 import 'package:homeward_server/agent/turn/tools_done_note.dart';
 import 'package:homeward_server/agent/turn/turn_event.dart';
+import 'package:homeward_server/agent/turn/retry_notice.dart';
 import 'package:homeward_server/agent/turn/turn_input.dart';
 import 'package:homeward_server/agent/turn/turn_orchestrator.dart';
 import 'package:homeward_server/agent/turn/turn_settings.dart';
@@ -90,7 +91,7 @@ void main() {
           'i2',
           text:
               'KTH it is.\n'
-              '${a2ui('t1-place', [
+              '${a2ui('plan', [
                 {
                   'id': 'root',
                   'component': 'Text',
@@ -210,7 +211,7 @@ void main() {
             input: const TurnInput.action(
               ClientAction(
                 name: 'keep_home',
-                surfaceId: 't0-homes',
+                surfaceId: 'plan',
                 sourceComponentId: 'keep',
                 context: {'homeId': 'h1'},
               ),
@@ -257,11 +258,8 @@ void main() {
 
     final events = await send(orchestrator(script)).toList();
 
-    expect(
-      [for (final message in messagesIn(events)) jsonEncode(message)],
-      [contains('"t1-retry"'), contains('"t1-retry"')],
-    );
-    expect(events.last, const TurnEvent.completed(''));
+    expect(messagesIn(events), isEmpty);
+    expect(events.last, const TurnEvent.completed(retryNotice));
   });
 
   test(
@@ -306,7 +304,7 @@ void main() {
     () async {
       await sessions.create('uid-1');
       final script = ScriptedInteractions([
-        reply('i1', text: a2ui('t1-note', note(property: 'label'))),
+        reply('i1', text: a2ui('plan', note(property: 'label'))),
         reply(
           'i2',
           text: jsonEncode({
@@ -314,7 +312,7 @@ void main() {
               {
                 'version': 'v0.9',
                 'updateComponents': {
-                  'surfaceId': 't1-note',
+                  'surfaceId': 'plan',
                   'components': note(),
                 },
               },
@@ -327,7 +325,7 @@ void main() {
 
       final correction = (script.requests[1].input as TextInput).text;
       expect(correction, contains('VALIDATION_FAILED'));
-      expect(correction, contains('t1-note'));
+      expect(correction, contains('plan'));
       expect(script.requests[1].previousInteractionId, 'i1');
       expect(script.requests[0].responseSchema, isNull);
       expect(
@@ -345,7 +343,7 @@ void main() {
   test('a correction Gemini refuses to constrain runs again freely', () async {
     await sessions.create('uid-1');
     final script = ScriptedInteractions([
-      reply('i1', text: a2ui('t1-note', note(property: 'label'))),
+      reply('i1', text: a2ui('plan', note(property: 'label'))),
       failing(
         const GeminiRequestInvalid('Request contains an invalid argument.'),
       ),
@@ -355,7 +353,7 @@ void main() {
           '```a2ui',
           jsonEncode({
             'version': 'v0.9',
-            'updateComponents': {'surfaceId': 't1-note', 'components': note()},
+            'updateComponents': {'surfaceId': 'plan', 'components': note()},
           }),
           '```',
           '',
@@ -378,7 +376,7 @@ void main() {
     await sessions.create('uid-1');
     final invalid = reply(
       'i1',
-      text: a2ui('t1-note', note(property: 'label')),
+      text: a2ui('plan', note(property: 'label')),
     );
     final script = ScriptedInteractions([invalid, invalid]);
 
@@ -387,11 +385,15 @@ void main() {
     ).toList();
 
     expect(script.requests, hasLength(2));
+    expect(messagesIn(events), isEmpty);
     expect(
-      [for (final message in messagesIn(events)) jsonEncode(message)],
-      [contains('"t1-retry"'), contains('"t1-retry"')],
+      events.last,
+      isA<TurnCompleted>().having(
+        (completed) => completed.text,
+        'text',
+        endsWith(retryNotice),
+      ),
     );
-    expect(events.last, isA<TurnCompleted>());
   });
 
   test('fails a turn on a quota error and releases the session', () async {

@@ -29,7 +29,7 @@ import 'create_interaction.dart';
 import 'drawn_components.dart';
 import 'progress_log.dart';
 import 'replay_shadow.dart';
-import 'retry_surface.dart';
+import 'retry_notice.dart';
 import 'surface_seeder.dart';
 import 'tool_belt.dart';
 import 'tools_done_note.dart';
@@ -52,7 +52,6 @@ final class TurnRun {
        _session = session,
        _interactionId = session.lastInteractionId,
        _validator = TurnValidator(
-         turn: session.turnCount + 1,
          catalog: catalog,
          shadow: replayShadow(session.messages),
          seeds: const {},
@@ -253,7 +252,7 @@ final class TurnRun {
             'modelRounds': _rounds,
             'toolRounds': toolRounds,
             'corrections': corrections,
-            'surfaces': _validator.surfacesCreated.length,
+            'drewScreen': _validator.drewThisTurn,
           },
         ),
       );
@@ -300,13 +299,7 @@ final class TurnRun {
   }) => InteractionRequest(
     input: input,
     systemInstruction: prompts.systemInstruction(
-      turnContext(
-        turn: turn,
-        surfacesUsed: {
-          ..._surfaceIds(_session.messages),
-          ..._validator.surfacesCreated,
-        },
-      ),
+      turnContext(turn: turn, screen: _validator.screen ?? const []),
     ),
     tools: tools.declarations,
     toolChoice: allowToolCalls ? null : ToolChoice.none,
@@ -335,7 +328,7 @@ final class TurnRun {
       case A2uiMessageOutput(:final source):
         for (final part in splitBatchedMessages(
           source,
-          lastSurfaceId: _validator.surfacesCreated.lastOrNull,
+          lastSurfaceId: planSurfaceId,
         )) {
           yield* _validated(part);
         }
@@ -377,12 +370,13 @@ final class TurnRun {
 
   Stream<TurnEvent> _retry() async* {
     _log.info(
-      LogEntry('Retry notice drawn in turn $turn', fields: {'turn': turn}),
+      LogEntry('Retry notice added in turn $turn', fields: {'turn': turn}),
     );
-    for (final message in retrySurface(turn)) {
-      _forwarded.add(message);
-      yield TurnEvent.message(message);
+    if (_text.isNotEmpty) {
+      _text.write('\n\n');
     }
+    _text.write(retryNotice);
+    yield* _emitText();
   }
 
   Future<FunctionResult> _runCall(FunctionCall call) async {
@@ -398,9 +392,4 @@ final class TurnRun {
       result: result.modelResult,
     );
   }
-
-  static Iterable<String> _surfaceIds(List<Map<String, Object?>> messages) => [
-    for (final message in messages)
-      if (message case {'createSurface': {'surfaceId': final String id}}) id,
-  ];
 }

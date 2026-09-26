@@ -37,7 +37,10 @@ Iterable<String> boundPaths(Object? json) sync* {
   }
 }
 
-String? structureProblem(Map<String, Map<String, Object?>> components) {
+String? structureProblem(
+  Map<String, Map<String, Object?>> components, {
+  required Set<String> mustReach,
+}) {
   if (!components.containsKey('root')) {
     return 'The surface needs a component with id "root"';
   }
@@ -70,7 +73,7 @@ String? structureProblem(Map<String, Map<String, Object?>> components) {
   if (visit('root') case final problem?) {
     return problem;
   }
-  final orphans = components.keys.where((id) => !reached.contains(id));
+  final orphans = mustReach.where((id) => !reached.contains(id));
   return orphans.isEmpty
       ? null
       : 'Components not reachable from root: ${orphans.join(', ')}';

@@ -34,7 +34,7 @@ look; no new unit tests are written (D137). Earlier work to bring back from
 
 #### R1 The Brief And The Living Screen — next
 
-- **C1 One living surface.** A plan's screen is one surface that later turns
+- **C1 One living surface — done.** A plan's screen is one surface that later turns
   update in place, instead of a new card per turn; the ownership pass allows
   it (D131). Leaves out the brief and new blocks.
 - **C2 The brief.** An `update_brief` tool and a `/brief` slice, stored with

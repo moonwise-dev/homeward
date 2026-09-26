@@ -29,7 +29,7 @@ void main() {
     expect(
       instruction,
       endsWith(
-        '# Turn Context\n\n```json\n${const JsonEncoder.withIndent('  ').convert({'turn': 3})}\n```\n',
+        '# Turn Context\n\n```json\n${jsonEncode({'turn': 3})}\n```\n',
       ),
     );
   });

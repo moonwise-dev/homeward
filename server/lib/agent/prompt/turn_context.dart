@@ -1,4 +1,4 @@
 Map<String, Object?> turnContext({
   required int turn,
-  Set<String> surfacesUsed = const {},
-}) => {'turn': turn, 'surfacesUsed': surfacesUsed.toList()};
+  required List<Map<String, Object?>> screen,
+}) => {'turn': turn, 'screen': screen};

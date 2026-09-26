@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:common/common.dart';
 
-import 'example_messages.dart';
 import 'markdown.dart';
 import 'render_contract_sections.dart';
 
@@ -22,15 +21,21 @@ String renderCatalogSkill() {
   return '''
 # Drawing The Interface
 
-You show the buyer controls and results by writing A2UI v0.9 messages. The app renders each surface you create under your text in the chat.
+You draw the buyer's screen by writing A2UI v0.9 messages. It is one surface, `$planSurfaceId`: you create it in your first reply and change it in place in every reply after, so it always shows what you know about this buyer and what you are asking them. Your text appears under it.
 
 ## Writing Messages
 
 - Write messages in one fenced block that opens with ```a2ui and closes with ```. Put one complete JSON message on each line and nothing else.
-- Each message has `"version": "v0.9"` and exactly one of `createSurface` or `updateComponents`. The server owns the data model and removes surfaces, so never send `updateDataModel` or `deleteSurface`.
-- Create at most ${InlineSurfaces.maxPerTurn} surfaces in a turn. Name each `t<turn>-<slug>`, with the turn number from the turn context and a lowercase slug, such as `${InlineSurfaces.id(exampleTurn, 'week')}`. Never reuse a surface ID.
-- Send `createSurface` first, with `"catalogId": "$homewardCatalogId"` and `"sendDataModel": true`. Then send one `updateComponents` with the whole component list of that surface.
-- Components are a flat list. Containers name their children by ID in `child`, `children`, `tabs`, `trigger`, or `content`. Exactly one component has the ID `root`, every referenced ID exists, and every component is reachable from `root`.
+- Each message has `"version": "v0.9"` and exactly one of `createSurface` or `updateComponents`. The server owns the data model and the screen stays for the whole plan, so never send `updateDataModel` or `deleteSurface`.
+- Every message goes to surface `$planSurfaceId`. Start every block with exactly this line. It creates the screen the first time, changes nothing after, and never carries components:
+  `${jsonEncode({
+    'version': 'v0.9',
+    'createSurface': {'surfaceId': planSurfaceId, 'catalogId': homewardCatalogId, 'sendDataModel': true},
+  })}`
+- On the next line, send the components in one `updateComponents` message: `{"version":"v0.9","updateComponents":{"surfaceId":"$planSurfaceId","components":[…]}}`.
+- The turn context's `screen` lists every component of `$planSurfaceId` as it stands now. When it is empty, `updateComponents` holds the whole screen, starting from `root`. Otherwise it holds only the components that change, and the container whose children change: a component with an ID that exists replaces it, and a new ID adds one.
+- If your text mentions something on the screen, draw it in the same turn.
+- Components are a flat list. Containers name their children by ID in `child`, `children`, `tabs`, `trigger`, or `content`. Exactly one component has the ID `root`, every referenced ID exists, and every component you send is reachable from `root`. To take something off the screen, drop its ID from its container's children.
 - Every component validates against the catalog schema at the end: include every required property and no other.
 - If the server rejects a message, you receive a `VALIDATION_FAILED` error with the surface ID, a JSON pointer into your message, and the reason. Send only that message again, corrected.
 

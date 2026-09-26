@@ -9,25 +9,21 @@ import 'package:test/test.dart';
 void main() {
   final catalog = CatalogValidator(homewardCatalogDocument());
 
-  TurnValidator validatorForTurn(int turn) {
-    final shadow =
-        MessageProcessor<ComponentApi>(
-          catalogs: [Catalog(id: homewardCatalogId, components: const [])],
-        )..processMessages([
-          CreateSurfaceMessage(
-            surfaceId: 't0-earlier',
-            catalogId: homewardCatalogId,
-          ),
-        ]);
-    return TurnValidator(
-      turn: turn,
-      catalog: catalog,
-      shadow: shadow,
-      seeds: const {
-        'home': {'name': 'Flat on Odengatan', 'rooms': 3},
-      },
-    );
-  }
+  TurnValidator validatorAfter(List<Map<String, Object?>> earlier) =>
+      TurnValidator(
+        catalog: catalog,
+        shadow:
+            MessageProcessor<ComponentApi>(
+              catalogs: [Catalog(id: homewardCatalogId, components: const [])],
+            )..processMessages([
+              for (final json in earlier) A2uiMessage.fromJson(json),
+            ]),
+        seeds: const {
+          'home': {'name': 'Flat on Odengatan', 'rooms': 3},
+        },
+      );
+
+  TurnValidator firstTurn() => validatorAfter(const []);
 
   String create(String surfaceId, {String catalogId = homewardCatalogId}) =>
       jsonEncode({
@@ -77,33 +73,27 @@ void main() {
         Unchanged() => 'unchanged',
       };
 
-  test('accepts a surface and its component tree', () {
-    final validator = validatorForTurn(3);
+  test('accepts the screen and its component tree', () {
+    final validator = firstTurn();
 
-    expect(validator.validate(create('t3-budget')), isA<Accepted>());
-    expect(validator.validate(update('t3-budget', validTree)), isA<Accepted>());
-    expect(validator.surfacesCreated, {'t3-budget'});
-    expect(
-      validator.shadow.groupModel
-          .getSurface('t3-budget')
-          ?.componentsModel
-          .get('keep'),
-      isNotNull,
-    );
+    expect(validator.validate(create('plan')), isA<Accepted>());
+    expect(validator.validate(update('plan', validTree)), isA<Accepted>());
+    expect(validator.drewThisTurn, isTrue);
+    expect(validator.screen, hasLength(validTree.length));
   });
 
   test('rejections are A2UI VALIDATION_FAILED errors', () {
-    final outcome = validatorForTurn(1).validate(create('plan')) as Rejected;
+    final outcome = firstTurn().validate(create('t1-budget')) as Rejected;
 
     expect(outcome.failure.toJson(), {
       'version': 'v0.9',
       'error': {
         'code': 'VALIDATION_FAILED',
-        'surfaceId': 'plan',
+        'surfaceId': 't1-budget',
         'path': '/createSurface/surfaceId',
         'message':
-            'Surface id "plan" does not fit turn 1: surface ids in turn 1 '
-            'look like t1-clue, lowercase letters and digits joined by hyphens',
+            'The buyer has one screen, surface "plan"; send every message to '
+            'it',
       },
     });
   });
@@ -131,27 +121,27 @@ void main() {
       'wrong type',
     ),
     (
-      'ownership: another turn',
+      'ownership: another surface',
       () => [create('t2-budget')],
-      'look like t1-clue',
+      'one screen, surface "plan"',
     ),
     (
       'ownership: data model writes',
       () => [
-        '{"version":"v0.9","updateDataModel":{"surfaceId":"t1-a","path":"/x","value":1}}',
+        '{"version":"v0.9","updateDataModel":{"surfaceId":"plan","path":"/x","value":1}}',
       ],
       'bind components to paths',
     ),
     (
       'ownership: deleting',
-      () => ['{"version":"v0.9","deleteSurface":{"surfaceId":"t1-a"}}'],
+      () => ['{"version":"v0.9","deleteSurface":{"surfaceId":"plan"}}'],
       'cannot be deleted',
     ),
     (
       'ownership: another catalog',
       () => [
         create(
-          't1-a',
+          'plan',
           catalogId:
               'https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json',
         ),
@@ -159,25 +149,15 @@ void main() {
       'Use catalogId',
     ),
     (
-      'ownership: a third surface',
-      () => [create('t1-a'), create('t1-b'), create('t1-c')],
-      'at most 2 surfaces',
-    ),
-    (
-      'ownership: an earlier surface',
-      () => [update('t0-earlier', validTree)],
-      'look like t1-clue',
-    ),
-    (
       'ownership: components before the surface',
-      () => [update('t1-a', validTree)],
+      () => [update('plan', validTree)],
       'before adding components',
     ),
     (
       'allow-list: Slider',
       () => [
-        create('t1-a'),
-        update('t1-a', [
+        create('plan'),
+        update('plan', [
           {'id': 'root', 'component': 'Slider', 'value': 1},
         ]),
       ],
@@ -186,8 +166,8 @@ void main() {
     (
       'schema: misspelled property',
       () => [
-        create('t1-a'),
-        update('t1-a', [
+        create('plan'),
+        update('plan', [
           {'id': 'root', 'component': 'Text', 'label': 'Hi'},
         ]),
       ],
@@ -196,8 +176,8 @@ void main() {
     (
       'structure: no root',
       () => [
-        create('t1-a'),
-        update('t1-a', [
+        create('plan'),
+        update('plan', [
           {'id': 'title', 'component': 'Text', 'text': 'Hi'},
         ]),
       ],
@@ -206,8 +186,8 @@ void main() {
     (
       'structure: missing child',
       () => [
-        create('t1-a'),
-        update('t1-a', [
+        create('plan'),
+        update('plan', [
           {'id': 'root', 'component': 'Card', 'child': 'body'},
         ]),
       ],
@@ -216,8 +196,8 @@ void main() {
     (
       'structure: cycle',
       () => [
-        create('t1-a'),
-        update('t1-a', [
+        create('plan'),
+        update('plan', [
           {'id': 'root', 'component': 'Card', 'child': 'inner'},
           {'id': 'inner', 'component': 'Card', 'child': 'root'},
         ]),
@@ -227,8 +207,8 @@ void main() {
     (
       'structure: orphan',
       () => [
-        create('t1-a'),
-        update('t1-a', [
+        create('plan'),
+        update('plan', [
           {'id': 'root', 'component': 'Text', 'text': 'Hi'},
           {'id': 'stray', 'component': 'Text', 'text': 'Lost'},
         ]),
@@ -238,8 +218,8 @@ void main() {
     (
       'paths: unknown slice',
       () => [
-        create('t1-a'),
-        update('t1-a', [
+        create('plan'),
+        update('plan', [
           {
             'id': 'root',
             'component': 'Text',
@@ -253,7 +233,7 @@ void main() {
 
   for (final (name, lines, expected) in cases) {
     test('rejects $name', () {
-      final validator = validatorForTurn(1);
+      final validator = firstTurn();
       final all = lines();
       for (final line in all.take(all.length - 1)) {
         expect(validator.validate(line), isA<Accepted>(), reason: line);
@@ -263,11 +243,11 @@ void main() {
   }
 
   test('an input may bind to a field not yet written', () {
-    final validator = validatorForTurn(1)..validate(create('t1-a'));
+    final validator = firstTurn()..validate(create('plan'));
 
     expect(
       validator.validate(
-        update('t1-a', [
+        update('plan', [
           {
             'id': 'root',
             'component': 'TextField',
@@ -281,11 +261,11 @@ void main() {
   });
 
   test('a button may send any action the model names', () {
-    final validator = validatorForTurn(1)..validate(create('t1-a'));
+    final validator = firstTurn()..validate(create('plan'));
 
     expect(
       validator.validate(
-        update('t1-a', [
+        update('plan', [
           {
             'id': 'root',
             'component': 'Button',
@@ -302,11 +282,95 @@ void main() {
   });
 
   test('a repeated createSurface in the same turn changes nothing', () {
-    final validator = validatorForTurn(1);
+    final validator = firstTurn();
 
-    expect(validator.validate(create('t1-a')), isA<Accepted>());
-    expect(validator.validate(update('t1-a', validTree)), isA<Accepted>());
-    expect(validator.validate(create('t1-a')), isA<Unchanged>());
-    expect(validator.validate(update('t1-a', validTree)), isA<Accepted>());
+    expect(validator.validate(create('plan')), isA<Accepted>());
+    expect(validator.validate(update('plan', validTree)), isA<Accepted>());
+    expect(validator.validate(create('plan')), isA<Unchanged>());
+    expect(validator.validate(update('plan', validTree)), isA<Accepted>());
+  });
+
+  final earlierScreen = [
+    jsonDecode(create('plan')) as Map<String, Object?>,
+    {
+      'version': 'v0.9',
+      'updateDataModel': {
+        'surfaceId': 'plan',
+        'path': '/week',
+        'value': {'office': 'KTH', 'days': 3},
+      },
+    },
+    jsonDecode(
+      update('plan', [
+        {
+          'id': 'root',
+          'component': 'Column',
+          'children': ['office', 'note'],
+        },
+        {
+          'id': 'office',
+          'component': 'Text',
+          'text': {'path': '/week/office'},
+        },
+        {'id': 'note', 'component': 'Text', 'text': 'Tell me more'},
+      ]),
+    ) as Map<String, Object?>,
+  ];
+
+  test('a later turn changes the screen in place', () {
+    final validator = validatorAfter(earlierScreen);
+
+    expect(validator.validate(create('plan')), isA<Unchanged>());
+    expect(
+      validator.validate(
+        update('plan', [
+          {'id': 'note', 'component': 'Text', 'text': 'Which office days?'},
+        ]),
+      ),
+      isA<Accepted>(),
+    );
+    expect(validator.screen, hasLength(3));
+  });
+
+  test('what an earlier turn left unreachable is not an orphan', () {
+    expect(
+      validatorAfter(earlierScreen).validate(
+        update('plan', [
+          {
+            'id': 'root',
+            'component': 'Column',
+            'children': ['office'],
+          },
+        ]),
+      ),
+      isA<Accepted>(),
+    );
+  });
+
+  test('a component sent this turn must be reachable from root', () {
+    expect(
+      rejection(
+        validatorAfter(earlierScreen),
+        update('plan', [
+          {'id': 'stray', 'component': 'Text', 'text': 'Lost'},
+        ]),
+      ),
+      contains('not reachable from root: stray'),
+    );
+  });
+
+  test('bindings resolve in the data model earlier turns seeded', () {
+    expect(
+      validatorAfter(earlierScreen).validate(
+        update('plan', [
+          {
+            'id': 'note',
+            'component': 'Text',
+            'text': {'path': '/week/days'},
+          },
+        ]),
+      ),
+      isA<Accepted>(),
+    );
   });
 }

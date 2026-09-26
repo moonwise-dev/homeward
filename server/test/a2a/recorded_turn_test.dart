@@ -88,7 +88,7 @@ List<Map<String, Object?>> _surface() => [
   {
     'version': 'v0.9',
     'createSurface': {
-      'surfaceId': 't1-story',
+      'surfaceId': 'plan',
       'catalogId': homewardCatalogId,
       'sendDataModel': true,
     },
@@ -96,7 +96,7 @@ List<Map<String, Object?>> _surface() => [
   {
     'version': 'v0.9',
     'updateComponents': {
-      'surfaceId': 't1-story',
+      'surfaceId': 'plan',
       'components': [
         {
           'id': 'root',

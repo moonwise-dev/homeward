@@ -22,5 +22,5 @@ final class PromptAssembler {
   String systemInstruction(Map<String, Object?> turnContext) =>
       '$instructions\n\n'
       '# Turn Context\n\n'
-      '```json\n${const JsonEncoder.withIndent('  ').convert(turnContext)}\n```\n';
+      '```json\n${jsonEncode(turnContext)}\n```\n';
 }

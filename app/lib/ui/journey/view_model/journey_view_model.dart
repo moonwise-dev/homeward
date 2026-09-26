@@ -125,35 +125,28 @@ abstract class JourneyState with _$JourneyState {
 
   const JourneyState._();
 
-  List<JourneySection> get sections => [
-    for (final (index, entry) in conversation.entries.indexed)
-      if (entry case final AgentEntry agent
-          when agent.status != AgentTurnStatus.streaming ||
-              agent.surfaceIds.isNotEmpty)
-        JourneySection(
-          entry: agent,
-          prompt: switch (conversation.entries.elementAtOrNull(index - 1)) {
-            final BuyerEntry prompt => prompt,
-            final BuyerActionEntry prompt => prompt,
-            _ => null,
-          },
-        ),
-  ];
+  AgentEntry? get latest =>
+      conversation.entries.whereType<AgentEntry>().lastOrNull;
 
-  AgentEntry? get pending => switch (conversation.entries.lastOrNull) {
-    final AgentEntry entry
-        when entry.status == AgentTurnStatus.streaming &&
-            entry.surfaceIds.isEmpty =>
+  TranscriptEntry? get latestPrompt {
+    final entries = conversation.entries;
+    final index = entries.lastIndexWhere((entry) => entry is AgentEntry);
+    return switch (entries.elementAtOrNull(index - 1)) {
+      final BuyerEntry prompt => prompt,
+      final BuyerActionEntry prompt => prompt,
+      _ => null,
+    };
+  }
+
+  bool get hasScreen => conversation.entries.any(
+    (entry) => entry is AgentEntry && entry.surfaceIds.contains(planSurfaceId),
+  );
+
+  AgentEntry? get pending => switch (latest) {
+    final AgentEntry entry when entry.status == AgentTurnStatus.streaming =>
       entry,
     _ => null,
   };
-}
-
-final class JourneySection {
-  const JourneySection({required this.entry, this.prompt});
-
-  final AgentEntry entry;
-  final TranscriptEntry? prompt;
 }
 
 String _quotaResetMessage(Duration? retryAfter, DateTime now) {

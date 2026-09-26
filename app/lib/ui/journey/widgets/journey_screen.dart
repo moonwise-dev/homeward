@@ -8,7 +8,8 @@ import '../../core/themes/text_styles.dart';
 import '../../wire_inspector/widgets/wire_inspector_pane.dart';
 import '../view_model/journey_view_model.dart';
 import 'history_sheet.dart';
-import 'journey_story.dart';
+import 'latest_exchange.dart';
+import 'living_screen.dart';
 import 'tell_more_field.dart';
 import 'turn_overlay.dart';
 
@@ -23,21 +24,23 @@ class JourneyScreen extends HookConsumerWidget {
     final state = ref.watch(provider);
     final viewModel = ref.read(provider.notifier);
     final conversation = state.conversation;
-    final sections = state.sections;
-    final isWide = MediaQuery.sizeOf(context).width >= AppSizes.twoPane;
+    final latest = state.latest;
+    final pending = state.pending;
+    final size = MediaQuery.sizeOf(context);
+    final isWide = size.width >= AppSizes.twoPane;
     final showsWire = useState(false);
     final wirePane = isWide && showsWire.value;
+    final overlaid = !state.hasScreen && pending != null;
 
-    final current = sections.isEmpty
-        ? const _EmptyJourney(key: ValueKey('empty'))
-        : JourneyStory(
-            key: const ValueKey('story'),
+    final screen = state.hasScreen
+        ? LivingScreen(
+            key: const ValueKey('screen'),
             sessionId: sessionId,
-            sections: sections,
-            pending: state.pending,
-            onRetry: viewModel.retry,
-            onStop: viewModel.stop,
-          );
+            isRunning: conversation.isRunning,
+          )
+        : conversation.entries.isEmpty
+        ? const _EmptyJourney(key: ValueKey('empty'))
+        : const SizedBox.shrink(key: ValueKey('waiting'));
     final journey = Column(
       children: [
         Expanded(
@@ -61,14 +64,13 @@ class JourneyScreen extends HookConsumerWidget {
                       child: child,
                     ),
                   ),
-                  child: current,
+                  child: screen,
                 ),
               ),
-              if (sections.isEmpty)
-                if (state.pending case final pending?)
-                  Positioned.fill(
-                    child: TurnOverlay(entry: pending, onStop: viewModel.stop),
-                  ),
+              if (overlaid)
+                Positioned.fill(
+                  child: TurnOverlay(entry: pending, onStop: viewModel.stop),
+                ),
             ],
           ),
         ),
@@ -79,12 +81,37 @@ class JourneyScreen extends HookConsumerWidget {
             ),
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
-              child: TellMoreField(
-                draft: state.draft,
-                isRunning: conversation.isRunning,
-                onChanged: viewModel.updateDraft,
-                onSend: viewModel.send,
-                onStop: viewModel.stop,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (latest != null && !overlaid)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: size.height * 0.4,
+                        ),
+                        child: SingleChildScrollView(
+                          child: LatestExchange(
+                            key: ValueKey(latest.id),
+                            entry: latest,
+                            prompt: state.latestPrompt,
+                            showsWork: true,
+                            onRetry: () => viewModel.retry(latest.id),
+                            onStop: viewModel.stop,
+                          ),
+                        ),
+                      ),
+                    ),
+                  TellMoreField(
+                    draft: state.draft,
+                    isRunning: conversation.isRunning,
+                    onChanged: viewModel.updateDraft,
+                    onSend: viewModel.send,
+                    onStop: viewModel.stop,
+                  ),
+                ],
               ),
             ),
           ),

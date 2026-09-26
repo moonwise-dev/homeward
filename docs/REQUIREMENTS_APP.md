@@ -21,15 +21,15 @@ the buyer's Gemini key. It contains no prompts or agent logic.
 
 ## Layout
 
-A plan is one scrolling journey (D120). Every turn adds a section: what the
-buyer said or tapped, then the agent's text and the surfaces the turn created,
-centred and at most 640 dp wide. The one living screen of R1 in
-`docs/ROADMAP.md` replaces this layout next.
+A plan is one living screen (D131): Gemini's one surface on top, changed in
+place each turn, then the latest exchange and the text field under it,
+centred and at most 640 dp wide. Turns add nothing to the page; earlier
+exchanges are in the history sheet.
 
 | Width | Layout |
 | --- | --- |
-| < 900 dp | The story fills the screen. The wire inspector opens as a sheet. |
-| ≥ 900 dp | The story is centred. The wire inspector can open as a right pane, 380–440 dp wide, from the app bar. |
+| < 900 dp | The journey fills the screen. The wire inspector opens as a sheet. |
+| ≥ 900 dp | The journey is centred. The wire inspector can open as a right pane, 380–440 dp wide, from the app bar. |
 
 ## Routes
 
@@ -97,24 +97,26 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 - **Empty plan**: one line asking the buyer to tell Homeward about their move,
   and the text field under it. The first message is whatever they write; there
   is no opening form (D129).
-- **Sections** (D120): one per turn that has text, a surface, or a failure, in
-  one scrolling story with no page count, pager, or next button. Each opens
-  with what the buyer said, or the action they took named in words, then the
-  agent's text and the turn's surfaces. The newest section scrolls into view
-  when it arrives. Sections fade and rise into place.
-- **While a turn runs**, the newest section stays slightly dimmed, and a working
-  card under it takes its place until the first surface arrives or the turn
-  ends; on an empty plan the card sits over the page:
+- **The screen** (D131): the plan's one surface, `plan`, at the top of the
+  page. Each turn changes it in place as the turn streams, so components
+  appear and change without the page being rebuilt, and nothing is added per
+  turn. It scrolls with the page when taller than the window.
+- **The latest exchange**, under the screen and just above the text field:
+  what the buyer last said, or the action they took named in words, as a
+  bubble, then Homeward's reply. Earlier exchanges are in the history sheet.
+- **While a turn runs**, the screen takes no taps while it changes, and a
+  working card under the reply shows the turn; before the screen exists the
+  card sits over the page:
   - While tools run, the card lists the measuring steps from the server's
     progress data part, each running, done, or unavailable (D108).
   - Otherwise it shows a thinking line with the agent's text so far.
   - Stop cancels the turn.
-- **Tell Homeward more**: a one-line field under the story sends free text.
+- **Tell Homeward more**: a one-line field at the bottom sends free text.
 - **History**: an app bar action opens the transcript as a sheet, with buyer
   messages, the actions they took, and each turn's text.
 - Opening an existing plan replays stored A2UI messages into a fresh surface
-  controller before the sections are shown.
-- Turn failures show a toast, and the failed section offers retry.
+  controller before the screen is shown.
+- Turn failures show a toast, and the latest exchange offers retry.
 - `gemini_key_invalid` routes to `/key`. `gemini_quota_exhausted` explains that
   the buyer's free key has hit a request limit, asks them to try again in a
   minute, and shows when the daily limit resets. In a development run with

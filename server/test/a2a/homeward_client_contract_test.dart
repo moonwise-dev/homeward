@@ -43,9 +43,9 @@ void main() {
           text:
               'Where are you buying?\n'
               '```a2ui\n'
-              '{"version":"v0.9","createSurface":{"surfaceId":"t1-place",'
+              '{"version":"v0.9","createSurface":{"surfaceId":"plan",'
               '"catalogId":"$homewardCatalogId","sendDataModel":true}}\n'
-              '{"version":"v0.9","updateComponents":{"surfaceId":"t1-place",'
+              '{"version":"v0.9","updateComponents":{"surfaceId":"plan",'
               '"components":[{"id":"root","component":"Text",'
               '"text":"Tell me the city"}]}}\n'
               '```\n',

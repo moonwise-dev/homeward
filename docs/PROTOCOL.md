@@ -280,17 +280,22 @@ Placement is encoded in the surface ID so it survives any connector.
 
 | Surface ID | Placement | Author |
 | --- | --- | --- |
-| `t{turn}-{slug}` | In the journey, with turn `{turn}` | Model, validated by server; `t{turn}-retry` is the server's notice when a turn draws nothing (D129) |
+| `plan` | The buyer's screen, the whole journey | Model, validated by server (D131) |
 
-- At most two inline surfaces per turn.
-- Surface IDs are unique per session.
+A plan has one surface, its living screen. `planSurfaceId` in
+`common/lib/wire/plan_surface.dart` names it.
 
 ### Lifecycle
 
-- An inline surface is created in its turn and never updated by a later turn.
-  One living screen updated across turns is the next chunk (C1 in
-  `docs/ROADMAP.md`, D131), and will change this rule.
-- `deleteSurface` is used only when a turn is canceled mid-stream.
+- The first turn that draws creates `plan`. A `createSurface` for it after that
+  changes nothing and is not forwarded, so the model may send one every turn.
+- Every later turn changes the same surface in place with `updateComponents`:
+  a component whose ID exists replaces it, a new ID adds one, and the model
+  sends only what changes. A component no longer reachable from `root` stays in
+  the surface unseen; A2UI v0.9 has no message that removes one.
+- The data model persists across turns. The server seeds new tool results into
+  it; what the buyer entered stays until they change it.
+- `deleteSurface` is not used.
 
 ### Replay
 
@@ -339,11 +344,14 @@ pass rejects it.
    so the correction knows where to look.
 2. **Envelope.** `A2uiMessage.fromJson` from `a2ui_core`: exactly one message
    type, `version` is `v0.9`. It reports wrong field types as raw cast errors,
-   so the pass maps any `TypeError` to a `VALIDATION_FAILED` error.
-3. **Ownership.** Surface ID matches the turn namespace.
-   The model may send only `createSurface`, with the Homeward catalog ID and at
-   most two per turn, and `updateComponents` for a surface it created in this
-   turn. `updateDataModel` and `deleteSurface` are the server's.
+   so the pass maps any `TypeError` to a `VALIDATION_FAILED` error. It ignores
+   fields the v0.9 envelope does not define, so the pass rejects them first: a
+   live run on 2026-09-26 put the components inside `createSurface`, which was
+   accepted and then drew nothing.
+3. **Ownership.** The surface ID is `plan`. The model may send only
+   `createSurface`, with the Homeward catalog ID, and `updateComponents` once
+   the surface exists, in this turn or an earlier one. `updateDataModel` and
+   `deleteSurface` are the server's.
 4. **Allow-list.** Component is in the agent-visible catalog subset.
    `a2ui_core` does not check this, so the pass does.
 5. **Schema.** Components validate against the Homeward catalog document from
@@ -357,19 +365,22 @@ pass rejects it.
    `CommonSchemas.dataBinding` or a function call in the schema, so a literal
    fails pass 5. This pass exists as a separate test fixture, not separate
    code.
-7. **Structure.** Exactly one `root`, every child ID exists, no cycles, no
-   orphans. `a2ui_core` does not check this, so the pass does. The check runs
-   on the surface's components after merging each `updateComponents`, so every
-   message must leave a complete tree; references are read from `child`,
-   `children`, `tabs[].child`, `trigger`, and `content` as the v0.9 basic
-   catalog defines them.
+7. **Structure.** Exactly one `root`, every child ID exists, no cycles, and
+   every component sent this turn is reachable from `root`. `a2ui_core` does
+   not check this, so the pass does. The check runs on the whole screen, every
+   component from earlier turns merged with each `updateComponents`, so every
+   message must leave a complete tree; components earlier turns left
+   unreachable are not orphans. References are read from `child`, `children`,
+   `tabs[].child`, `trigger`, and `content` as the v0.9 basic catalog defines
+   them.
 8. **Paths.** The session's stored messages are replayed into an `a2ui_core`
    `MessageProcessor` at the start of the turn. Each candidate message goes
    through that shadow processor: an update to an unknown surface fails, and
-   every bound absolute path must resolve in the data model the server will
-   seed. A `createSurface` repeating one accepted earlier in the turn changes
-   nothing and is not forwarded, since models resend it when correcting. An input may bind to a missing field of an
-   existing object, which it will write; relative template paths are skipped.
+   every bound absolute path must resolve in the surface's data model as
+   earlier turns left it or in what this turn's tools seed. A `createSurface`
+   for a surface that exists changes nothing and is not forwarded. An input may
+   bind to a missing field of an existing object, which it will write; relative
+   template paths are skipped.
 9. **Seed.** The server prepends `createSurface` with `sendDataModel: true` if
     the model omitted it, and emits `updateDataModel` for the slices the
     components bind to.
@@ -378,7 +389,7 @@ Measured in spike S5: schema validation costs about 12 µs per component in the
 AOT server binary.
 
 After two failed correction rounds the turn ends with the model's text and a
-single `Text` surface offering to retry.
+line of text asking the buyer to send the message again.
 
 The passes check only that a message is valid. None of them decides what the
 screen should show or which question comes next (D129).

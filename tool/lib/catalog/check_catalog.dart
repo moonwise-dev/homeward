@@ -61,7 +61,6 @@ List<Finding> checkCatalogExamples({
 
 String? _firstRejection(CatalogValidator catalog, CatalogExample example) {
   final validator = TurnValidator(
-    turn: exampleTurn,
     catalog: catalog,
     shadow: MessageProcessor<ComponentApi>(
       catalogs: [Catalog(id: homewardCatalogId, components: const [])],
