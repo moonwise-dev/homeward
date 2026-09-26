@@ -5,19 +5,23 @@ and contributors; detailed product and implementation rules live in `docs/`.
 
 ## Project Overview
 
-Homeward is a home-buying and relocation advisor built as an A2UI vertical
-sample for the Flutter GenUI initiative. A buyer tells the story of their move;
-Gemini turns it into a screen made for that buyer, composed from Homeward's
-building blocks, so two buyers with different stories see different screens.
+Homeward is a relocation agent built as an A2UI vertical sample for the
+Flutter GenUI initiative. It works on a move the way a coding agent works on a
+codebase: a buyer tells it a little, Gemini deduces what it can, looks up what
+it can find out, asks one decision at a time, keeps a brief of what it learned,
+and offers areas, homes, and research once it knows enough. The screen is
+composed from Homeward's building blocks as the conversation goes, so two
+buyers with different stories see different screens. Nothing is scripted.
 
 The system is agent-driven and server-owned. A Dart server on Cloud Run runs
 the composing agent and its tools; open map data and routing supply the facts.
-The Flutter app renders A2UI surfaces from a catalog it trusts and never
+The Flutter app renders A2UI surfaces from a catalog it trusts, maps included
+through a Flutter renderer of the Maps Agentic UI Toolkit's catalog, and never
 contains prompts.
 
 On 2026-09-26 the project was cleaned down to its foundation (D129): the
 earlier question-by-question case, the sample homes, the deal, and the evals
-were removed. The product is being rebuilt from here in small steps; see
+were removed. The product is being rebuilt from here in small chunks; see
 `docs/ROADMAP.md`.
 
 ## Repository Shape
@@ -63,16 +67,21 @@ first.
   draws is valid, never which question comes next. When the model misbehaves,
   try a smaller catalog, a clearer prompt, or a better tool before a server
   rule that takes a decision away from it.
-- Work in small steps, each one demoable, and say what each step leaves out.
-- Every fact carries its source kind: measured, estimate, stated by the buyer,
-  or quoted from a source. Estimates are labelled; a quote appears word for
-  word in what it names.
+- Homeward works like a coding agent (D130): it deduces first, never asks what
+  a tool can find out, asks one decision at a time with its recommendation,
+  and keeps a brief of what it learned. No scenario or scripted flow goes in
+  the product; the catalog holds building blocks, not screens.
+- Work in small chunks, each one demoable, and say what each leaves out.
+- Every fact carries its source kind: stated by the buyer, deduced from their
+  words, measured, estimate, or quoted from a source. Estimates are labelled;
+  a quote appears word for word in what it names.
 - Every place a model names is checked against open map data before it is shown.
 - Math lives once, in `common`, and is used by both server tools and client
   functions.
 - Everything runs on free tiers: buyers' free Gemini keys, open map data,
-  Google Cloud within its free allowances, no paid store accounts. A feature
-  that needs payment is not built.
+  Google Cloud and Google Maps Platform within their free monthly allowances
+  with quotas capped there, no paid store accounts. A feature that needs
+  payment is not built.
 - The Gemini API key belongs to the user. Never log, persist, or echo it. Keys
   the server holds live in Secret Manager and are never logged either.
 - Every key reaches code as an environment variable. A developer's keys live in
@@ -81,9 +90,11 @@ first.
 - Write no code comments. Names, small functions, and types carry the meaning.
 - Prefer composition and small reusable units over copy and paste; prefer
   waiting for a second use over speculative abstraction.
-- Tests exist for `common` money, the catalog contract, server validation
-  passes, the agent loop, and the open-data clients. No widget tests; the UI is
-  reviewed visually.
+- No new unit tests during the rebuild (D137). Existing tests for `common`
+  money, the catalog contract, server validation passes, the agent loop, and
+  the open-data clients keep running, and a test goes when the behaviour it
+  covers changes. No widget tests; the UI is reviewed visually. Each chunk
+  ends with `make check` green, a live probe, and a visual look.
 - Do not deploy unless explicitly asked.
 - Do not revert unrelated worktree changes.
 

@@ -58,12 +58,18 @@ the root file.
 | `server` | `homeward_server` |
 | `tool` | `homeward_tool` |
 
+C5 adds a Flutter package that renders the Maps Agentic UI Toolkit's catalog
+for genui (D133). It depends on genui and `google_maps_flutter`, never on
+`app`, `server`, or `common`, so apps other than Homeward can use it; `app`
+adds its items to Homeward's catalog, and `common` vendors the same pinned
+schema for validation.
+
 ### Dependency Direction
 
 ```text
 app ────► common
 server ─► common
-tool ───► common, server (eval runner boots the server in-process)
+tool ───► common, server (the catalog check runs the server's validator)
 common ─► nothing Homeward-specific, never Flutter
 ```
 
@@ -374,7 +380,12 @@ Homeward is designed to cost nothing to run (D40, D42, D43):
 - Secret Manager stays within its free 6 active secret versions and 10,000
   accesses a month: one version per key with automatic replication, one access
   per instance start.
-- No paid Gemini features such as Google Search grounding.
+- Google Maps Platform, from C5, stays within its free monthly allowances with
+  quotas capped there: the Maps SDKs for Android and iOS are free without
+  limit, and web maps have 10,000 free loads a month (D133). The key is
+  restricted by referrer and bundle ID.
+- No paid Gemini features such as Google Search grounding, and no third-party
+  model that needs a payment method (D136).
 - No paid store accounts: builds reach devices as web, simulators, sideloaded
   Android APKs, and personally provisioned iPhones.
 

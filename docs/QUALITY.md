@@ -39,6 +39,11 @@ constructors, super parameters, generated files excluded. Additionally:
 Tests exist where a wrong answer misleads a buyer or breaks the protocol.
 There are no widget tests and no golden image tests.
 
+During the rebuild no new unit tests are written (D137). The tests below keep
+running in `make check`, and a test goes when the behaviour it covers changes.
+Each chunk ends with `make check` green, a live `make probe` with a few test
+stories, and a visual look at the result.
+
 ### `common`
 
 | Area | What is pinned |
@@ -116,8 +121,8 @@ Removed with the reset (D129): the case set scored whether Gemini followed the
 case's script, which is what the reset undid. Evals return with the rebuild,
 driving `TurnOrchestrator` in process with the real prompts and catalog (D93)
 and scoring what matters when Gemini composes freely: every message valid,
-every figure from a tool, every place checked, and two contrasting stories
-getting different screens. They never score which question came when.
+every figure from a tool, every place checked, and different stories getting
+structurally different screens. They never score which question came when.
 
 Until then `make probe` runs one live turn against a running server; see
 `AGENTS.md`.

@@ -6,6 +6,11 @@ Gemini calls, and forwards the surfaces Gemini draws once they validate. Gemini
 decides what the buyer's screen shows and what it asks; the server decides
 only whether what Gemini drew is valid (D129).
 
+The agent works on a move the way a coding agent works on a codebase (D130):
+it keeps notes, looks things up before it asks, asks one decision at a time
+with its recommendation, shows its work, and proposes for the buyer to
+approve.
+
 ## Model Configuration
 
 | Setting | Default | Config key |
@@ -99,8 +104,17 @@ minute and 24 of 20 a day.
 - **Code guarantees correctness.** Validation checks that every message is
   well formed, fits the catalog, binds data that exists, and stays on the
   surfaces this turn owns.
-- **Controls are the question.** When a tap is quicker than typing, the
-  question is a control on the screen.
+- **Deduce first.** What Gemini can infer from the buyer's words it writes
+  down as deduced, with the words it came from, and shows as assumed for the
+  buyer to confirm or correct.
+- **Never ask what a tool can find out.** Places, distances, travel times, and
+  what a listing says are looked up.
+- **One decision at a time.** When Gemini must ask, it asks the one decision
+  that matters most next, as a control on the screen with its recommendation
+  first. Typing stays open for any other answer.
+- **Propose, then build.** Gemini offers solutions when it judges it knows
+  enough, and the buyer's confirmation or correction decides what grows next.
+  Money is offered as research, never assumed (D135).
 - **Never telegraph.** "Let me check…" is not a turn. Call the tool and draw the
   result in the same turn.
 - **Figures live in components.** Chat text refers to results in words and
@@ -119,6 +133,16 @@ A turn starts from one of two inputs:
 
 There are no stages and no open decisions in code. The turn context tells
 Gemini only the turn number and the surface IDs already used.
+
+Planned in `docs/ROADMAP.md`:
+
+- **The living surface (C1).** A plan's screen is one surface that later turns
+  update in place, rather than a new surface per turn (D131).
+- **The brief (C2).** Gemini writes its notes on the buyer with
+  `update_brief`: needs, habits, wants, places, and open questions, each with
+  its source. The server stores the brief with the session and seeds it as
+  `/brief`, where the screen shows it and the buyer edits it; tools read it.
+  The server never decides from it (D132).
 
 ## Tools
 
@@ -143,6 +167,19 @@ it.
 - Every place a model names is checked against open data before it is shown
   (D101).
 
+Planned tools, each arriving with its chunk:
+
+| Tool | Chunk | What it does |
+| --- | --- | --- |
+| `update_brief` | C2 | Records what Gemini learned or deduced, with its source |
+| `find_place` | C6 | Resolves a place the buyer names, with Nominatim |
+| `measure_week` | C8 | Measures each trip of the buyer's week from a location, and the weekly total |
+| `search_homes` | C9 | Searches the labelled sample homes |
+| Listing reader | C10 | Reads listings for the buyer's needs; code keeps a quote only when it appears word for word |
+| `suggest_areas` | C11 | Scores areas of any city against the week and the needs |
+| Pasted listing | C12 | Reads a listing the buyer pastes, after S13 |
+| Research | C13 | Researches money and local rules on request, after S12 |
+
 ## Prompt Assembly
 
 `server/lib/agent/prompt/prompt_assembler.dart` loads, once at startup, and
@@ -156,6 +193,10 @@ joins in order:
    `make catalog`.
 4. A per-turn context block from `server/lib/agent/prompt/turn_context.dart`:
    the turn number and the surface IDs already used.
+
+When `GoogleMap` joins the catalog (C5, C6), the prompt adapts the Maps
+Agentic UI Toolkit's guidance on when a map helps, roadmap or satellite, tilt,
+and anchor or markers, with attribution to `googlemaps/a2ui` (Apache-2.0).
 
 Everything, the context block included, is sent as `system_instruction`, which
 goes out again with every request of the turn, tool-result rounds included, and

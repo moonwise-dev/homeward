@@ -7,25 +7,29 @@ once in `common/lib/catalog`, implemented in `app/lib/catalog`, validated in
 Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 Since the reset (D129) the catalog holds the agent-visible basic components
-only. Homeward's own blocks come back one at a time, each with the step of
+only. Homeward's own blocks come back one at a time, each with the chunk of
 `docs/ROADMAP.md` that needs it.
 
 ## Design Principles
 
-1. **Few blocks, each expressive.** A small catalog keeps the prompt short and
+1. **Building blocks, not screens.** The catalog never holds a screen, a step,
+   or a flow. Gemini composes every screen from blocks as the conversation
+   goes, so two buyers end up on structurally different screens.
+2. **Few blocks, each expressive.** A small catalog keeps the prompt short and
    Gemini reliable without server rules steering it. A block earns its place
    when basic components cannot show what a buyer's story needs, such as a
    map of their week or a home with the reasons it fits.
-2. **Blocks carry the design, Gemini carries the layout.** A block draws one
+3. **Blocks carry the design, Gemini carries the layout.** A block draws one
    thing well with Homeward's tokens; Gemini decides which blocks a buyer's
    screen needs and how they sit together.
-3. **Figures are bound, never literal.** A figure a buyer relies on comes from
+4. **Figures are bound, never literal.** A figure a buyer relies on comes from
    a tool or from `common`, reaches the surface through the data model, and is
    bound by path. The schema marks such properties as bound, and the server
    refuses a literal.
-4. **Every fact shows its source.** A block that shows a fact shows whether it
-   was measured, estimated, said by the buyer, or quoted.
-5. **One widget, two places.** The widget behind each item renders the same in
+5. **Every fact shows its source.** A block that shows a fact shows whether it
+   was said by the buyer, deduced from their words, measured, estimated, or
+   quoted.
+6. **One widget, two places.** The widget behind each item renders the same in
    the journey and in the gallery.
 
 ## Basic Components
@@ -38,6 +42,26 @@ Agent-visible basic components:
 Not agent-visible: `Image`, `Video`, `AudioPlayer`, `Modal`, `Slider`.
 
 Buttons send actions the model names itself (`docs/PROTOCOL.md`).
+
+## Planned Blocks
+
+Candidates, each confirmed, reshaped, or dropped by the chunk of
+`docs/ROADMAP.md` that needs it:
+
+| Block | Chunk | What it shows |
+| --- | --- | --- |
+| `Fact` | C4 | A statement with its source (said, deduced, measured, estimated, or quoted) and a way to confirm or correct it; the unit of the brief and of a home's reasons |
+| `GoogleMap` | C5 | The Maps Agentic UI Toolkit's map, with its schema vendored at a pinned commit from `googlemaps/a2ui` (`agent/python_agent/shared/schema/maps_catalog_extension.json`) and drawn by Homeward's Flutter Maps package (D133) |
+| Weekly travel | C8 | Each place in the buyer's week with how often they go and the measured trip, and the weekly total from one location |
+| Home | C10 | A sample or pasted home with its reasons and shortfalls as facts, and the listing text with each quote highlighted |
+| `PlaceDetailsCompact` | Later | The toolkit's place card, after S14 |
+| Cost estimate | C13 | Researched rules and rates with their sources, and the figures `common` computes from them |
+
+`GoogleMap` keeps the toolkit's schema exactly, so a surface that uses it
+stays readable by the toolkit's own clients. Its `markers` and `routes` take
+literal coordinates, which a validation pass checks against the places tools
+returned rather than a data binding. Its schema is built with `allOf`, which
+keeps it out of the correction round's enforced schema (D110).
 
 ## Declaring A Component
 

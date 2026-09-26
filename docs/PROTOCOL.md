@@ -288,8 +288,8 @@ Placement is encoded in the surface ID so it survives any connector.
 ### Lifecycle
 
 - An inline surface is created in its turn and never updated by a later turn.
-  One living screen updated across turns is the next step (R1 in
-  `docs/ROADMAP.md`), and will change this rule.
+  One living screen updated across turns is the next chunk (C1 in
+  `docs/ROADMAP.md`, D131), and will change this rule.
 - `deleteSurface` is used only when a turn is canceled mid-stream.
 
 ### Replay
