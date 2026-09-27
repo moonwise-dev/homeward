@@ -27,3 +27,11 @@ chunk, and add new ones when a chunk needs a kind of move not covered here.
     monthly avgift. I'm 36, she's 34, no kids, no debts; I take home 41,000
     kronor of 55,000, and she takes home 2,600 euros of 3,500. We have 600,000
     kronor saved. What would it cost us each month?
+
+The four journeys in the README (D141, D161) are rehearsed with the openings
+written there, each turn as its own argument to the probe:
+
+```sh
+set -a; . ./.env; set +a
+dart run tool/bin/probe_turn.dart http://localhost:8080 "first turn" "second turn"
+```

@@ -193,6 +193,8 @@ final class SearchHomes extends AgentTool {
           for (final listing in matches)
             {
               'id': listing.id,
+              'address': listing.address,
+              'title': listing.title,
               'area': listing.areaName,
               'homeType': listing.homeType.name,
               'rooms': listing.rooms,

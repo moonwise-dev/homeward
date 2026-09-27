@@ -57,11 +57,15 @@ final class ComputeAffordability extends AgentTool {
         name: {
           'type': 'array',
           'items': perPeriodParameter,
-          'description': name == 'savings'
-              ? 'Each amount saved, in the currency it is held in.'
-              : 'Each amount as the buyer stated it, per person or '
-                    'combined, in its own currency; never split or add '
-                    'them.',
+          'description': switch (name) {
+            'savings' => 'Each amount saved, in the currency it is held in.',
+            'debtPayments' =>
+              'Each debt payment as the buyer stated it; [] when they said '
+                  'they have none.',
+            _ =>
+              'Each amount as the buyer stated it, per person or combined, '
+                  'in its own currency; never split or add them.',
+          },
         },
       'home': {
         'type': 'string',
@@ -90,10 +94,18 @@ final class ComputeAffordability extends AgentTool {
         'type': 'integer',
         'description': 'Age of the oldest borrower.',
       },
-      'adults': {'type': 'integer'},
+      'adults': {
+        'type': 'integer',
+        'description':
+            'How many adults will live in the home, borrowers or not; a '
+            'small count you may deduce from their words.',
+      },
       'childAges': {
         'type': 'array',
         'items': {'type': 'integer'},
+        'description':
+            'The age of each child who will live in the home; [] when there '
+            'are none.',
       },
       'borrowers': {'type': 'integer'},
       'taxResidence': {

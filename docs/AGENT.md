@@ -295,8 +295,9 @@ home that matches for the household the last `compute_affordability` run
 kept in `/affordability`, its profile and whether the down payment was the
 buyer's: at the home's price and fee, with that down payment or the minimum
 the rules allow, the same rate, and the same term, from the same code. It
-answers with each home's ID, area, kind, rooms, and whether it is within the
-rules and the savings, and seeds `/homes`, an object of homes by ID that
+answers with each home's ID, address, title, area, kind, rooms, and whether
+it is within the rules and the savings, so Gemini can tell which home the
+buyer means by its street, and seeds `/homes`, an object of homes by ID that
 `HomeCard` binds. Before any affordability run in that market it seeds the
 homes with their price and fee only and says pricing needs the household;
 when nothing matches, it answers with how many homes each filter ruled out,
