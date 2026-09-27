@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AffordabilitySlice {
 
- String get marketId; String get marketName; bool get sample; Money get price; Money? get maxPrice; Money get loan; Money get maxLoan; Money get downPayment; Money? get cashNeeded; Money? get savings;@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate get annualRate; int get termYears; String get loanType; MonthlyFigures get monthly; RuleCheck? get binding; List<RuleCheck> get checks; List<ExchangeRate> get exchangeRates; StressCurve? get stress; List<CostLine> get purchaseCosts; Money? get purchaseCostsTotal;
+ String get marketId; String get marketName; bool get sample; Money get price; Money? get maxPrice; Money get loan; Money get maxLoan; Money get downPayment; Money? get cashNeeded; Money? get savings;@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate get annualRate; int get termYears; String get loanType; MonthlyFigures get monthly; RuleCheck? get binding; List<RuleCheck> get checks; List<ExchangeRate> get exchangeRates; StressCurve? get stress; List<CostLine> get purchaseCosts; Money? get purchaseCostsTotal; DownPaymentWhatIf? get whatIf;
 /// Create a copy of AffordabilitySlice
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $AffordabilitySliceCopyWith<AffordabilitySlice> get copyWith => _$AffordabilityS
 @override
 bool operator ==(Object other) {
   final _this = this as AffordabilitySlice;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AffordabilitySlice&&(identical(other.marketId, _this.marketId) || other.marketId == _this.marketId)&&(identical(other.marketName, _this.marketName) || other.marketName == _this.marketName)&&(identical(other.sample, _this.sample) || other.sample == _this.sample)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.maxPrice, _this.maxPrice) || other.maxPrice == _this.maxPrice)&&(identical(other.loan, _this.loan) || other.loan == _this.loan)&&(identical(other.maxLoan, _this.maxLoan) || other.maxLoan == _this.maxLoan)&&(identical(other.downPayment, _this.downPayment) || other.downPayment == _this.downPayment)&&(identical(other.cashNeeded, _this.cashNeeded) || other.cashNeeded == _this.cashNeeded)&&(identical(other.savings, _this.savings) || other.savings == _this.savings)&&(identical(other.annualRate, _this.annualRate) || other.annualRate == _this.annualRate)&&(identical(other.termYears, _this.termYears) || other.termYears == _this.termYears)&&(identical(other.loanType, _this.loanType) || other.loanType == _this.loanType)&&(identical(other.monthly, _this.monthly) || other.monthly == _this.monthly)&&(identical(other.binding, _this.binding) || other.binding == _this.binding)&&const DeepCollectionEquality().equals(other.checks, _this.checks)&&const DeepCollectionEquality().equals(other.exchangeRates, _this.exchangeRates)&&(identical(other.stress, _this.stress) || other.stress == _this.stress)&&const DeepCollectionEquality().equals(other.purchaseCosts, _this.purchaseCosts)&&(identical(other.purchaseCostsTotal, _this.purchaseCostsTotal) || other.purchaseCostsTotal == _this.purchaseCostsTotal));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AffordabilitySlice&&(identical(other.marketId, _this.marketId) || other.marketId == _this.marketId)&&(identical(other.marketName, _this.marketName) || other.marketName == _this.marketName)&&(identical(other.sample, _this.sample) || other.sample == _this.sample)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.maxPrice, _this.maxPrice) || other.maxPrice == _this.maxPrice)&&(identical(other.loan, _this.loan) || other.loan == _this.loan)&&(identical(other.maxLoan, _this.maxLoan) || other.maxLoan == _this.maxLoan)&&(identical(other.downPayment, _this.downPayment) || other.downPayment == _this.downPayment)&&(identical(other.cashNeeded, _this.cashNeeded) || other.cashNeeded == _this.cashNeeded)&&(identical(other.savings, _this.savings) || other.savings == _this.savings)&&(identical(other.annualRate, _this.annualRate) || other.annualRate == _this.annualRate)&&(identical(other.termYears, _this.termYears) || other.termYears == _this.termYears)&&(identical(other.loanType, _this.loanType) || other.loanType == _this.loanType)&&(identical(other.monthly, _this.monthly) || other.monthly == _this.monthly)&&(identical(other.binding, _this.binding) || other.binding == _this.binding)&&const DeepCollectionEquality().equals(other.checks, _this.checks)&&const DeepCollectionEquality().equals(other.exchangeRates, _this.exchangeRates)&&(identical(other.stress, _this.stress) || other.stress == _this.stress)&&const DeepCollectionEquality().equals(other.purchaseCosts, _this.purchaseCosts)&&(identical(other.purchaseCostsTotal, _this.purchaseCostsTotal) || other.purchaseCostsTotal == _this.purchaseCostsTotal)&&(identical(other.whatIf, _this.whatIf) || other.whatIf == _this.whatIf));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as AffordabilitySlice;
-  return Object.hashAll([runtimeType,_this.marketId,_this.marketName,_this.sample,_this.price,_this.maxPrice,_this.loan,_this.maxLoan,_this.downPayment,_this.cashNeeded,_this.savings,_this.annualRate,_this.termYears,_this.loanType,_this.monthly,_this.binding,const DeepCollectionEquality().hash(_this.checks),const DeepCollectionEquality().hash(_this.exchangeRates),_this.stress,const DeepCollectionEquality().hash(_this.purchaseCosts),_this.purchaseCostsTotal]);
+  return Object.hashAll([runtimeType,_this.marketId,_this.marketName,_this.sample,_this.price,_this.maxPrice,_this.loan,_this.maxLoan,_this.downPayment,_this.cashNeeded,_this.savings,_this.annualRate,_this.termYears,_this.loanType,_this.monthly,_this.binding,const DeepCollectionEquality().hash(_this.checks),const DeepCollectionEquality().hash(_this.exchangeRates),_this.stress,const DeepCollectionEquality().hash(_this.purchaseCosts),_this.purchaseCostsTotal,_this.whatIf]);
 }
 
 @override
 String toString() {
   final _this = this as AffordabilitySlice;
-  return 'AffordabilitySlice(marketId: ${_this.marketId}, marketName: ${_this.marketName}, sample: ${_this.sample}, price: ${_this.price}, maxPrice: ${_this.maxPrice}, loan: ${_this.loan}, maxLoan: ${_this.maxLoan}, downPayment: ${_this.downPayment}, cashNeeded: ${_this.cashNeeded}, savings: ${_this.savings}, annualRate: ${_this.annualRate}, termYears: ${_this.termYears}, loanType: ${_this.loanType}, monthly: ${_this.monthly}, binding: ${_this.binding}, checks: ${_this.checks}, exchangeRates: ${_this.exchangeRates}, stress: ${_this.stress}, purchaseCosts: ${_this.purchaseCosts}, purchaseCostsTotal: ${_this.purchaseCostsTotal})';
+  return 'AffordabilitySlice(marketId: ${_this.marketId}, marketName: ${_this.marketName}, sample: ${_this.sample}, price: ${_this.price}, maxPrice: ${_this.maxPrice}, loan: ${_this.loan}, maxLoan: ${_this.maxLoan}, downPayment: ${_this.downPayment}, cashNeeded: ${_this.cashNeeded}, savings: ${_this.savings}, annualRate: ${_this.annualRate}, termYears: ${_this.termYears}, loanType: ${_this.loanType}, monthly: ${_this.monthly}, binding: ${_this.binding}, checks: ${_this.checks}, exchangeRates: ${_this.exchangeRates}, stress: ${_this.stress}, purchaseCosts: ${_this.purchaseCosts}, purchaseCostsTotal: ${_this.purchaseCostsTotal}, whatIf: ${_this.whatIf})';
 }
 
 
@@ -54,11 +54,11 @@ abstract mixin class $AffordabilitySliceCopyWith<$Res>  {
   factory $AffordabilitySliceCopyWith(AffordabilitySlice value, $Res Function(AffordabilitySlice) _then) = _$AffordabilitySliceCopyWithImpl;
 @useResult
 $Res call({
- String marketId, String marketName, bool sample, Money price, Money? maxPrice, Money loan, Money maxLoan, Money downPayment, Money? cashNeeded, Money? savings,@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate annualRate, int termYears, String loanType, MonthlyFigures monthly, RuleCheck? binding, List<RuleCheck> checks, List<ExchangeRate> exchangeRates, StressCurve? stress, List<CostLine> purchaseCosts, Money? purchaseCostsTotal
+ String marketId, String marketName, bool sample, Money price, Money? maxPrice, Money loan, Money maxLoan, Money downPayment, Money? cashNeeded, Money? savings,@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate annualRate, int termYears, String loanType, MonthlyFigures monthly, RuleCheck? binding, List<RuleCheck> checks, List<ExchangeRate> exchangeRates, StressCurve? stress, List<CostLine> purchaseCosts, Money? purchaseCostsTotal, DownPaymentWhatIf? whatIf
 });
 
 
-$MoneyCopyWith<$Res> get price;$MoneyCopyWith<$Res>? get maxPrice;$MoneyCopyWith<$Res> get loan;$MoneyCopyWith<$Res> get maxLoan;$MoneyCopyWith<$Res> get downPayment;$MoneyCopyWith<$Res>? get cashNeeded;$MoneyCopyWith<$Res>? get savings;$MonthlyFiguresCopyWith<$Res> get monthly;$RuleCheckCopyWith<$Res>? get binding;$StressCurveCopyWith<$Res>? get stress;$MoneyCopyWith<$Res>? get purchaseCostsTotal;
+$MoneyCopyWith<$Res> get price;$MoneyCopyWith<$Res>? get maxPrice;$MoneyCopyWith<$Res> get loan;$MoneyCopyWith<$Res> get maxLoan;$MoneyCopyWith<$Res> get downPayment;$MoneyCopyWith<$Res>? get cashNeeded;$MoneyCopyWith<$Res>? get savings;$MonthlyFiguresCopyWith<$Res> get monthly;$RuleCheckCopyWith<$Res>? get binding;$StressCurveCopyWith<$Res>? get stress;$MoneyCopyWith<$Res>? get purchaseCostsTotal;$DownPaymentWhatIfCopyWith<$Res>? get whatIf;
 
 }
 /// @nodoc
@@ -71,7 +71,7 @@ class _$AffordabilitySliceCopyWithImpl<$Res>
 
 /// Create a copy of AffordabilitySlice
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? marketId = null,Object? marketName = null,Object? sample = null,Object? price = null,Object? maxPrice = freezed,Object? loan = null,Object? maxLoan = null,Object? downPayment = null,Object? cashNeeded = freezed,Object? savings = freezed,Object? annualRate = null,Object? termYears = null,Object? loanType = null,Object? monthly = null,Object? binding = freezed,Object? checks = null,Object? exchangeRates = null,Object? stress = freezed,Object? purchaseCosts = null,Object? purchaseCostsTotal = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? marketId = null,Object? marketName = null,Object? sample = null,Object? price = null,Object? maxPrice = freezed,Object? loan = null,Object? maxLoan = null,Object? downPayment = null,Object? cashNeeded = freezed,Object? savings = freezed,Object? annualRate = null,Object? termYears = null,Object? loanType = null,Object? monthly = null,Object? binding = freezed,Object? checks = null,Object? exchangeRates = null,Object? stress = freezed,Object? purchaseCosts = null,Object? purchaseCostsTotal = freezed,Object? whatIf = freezed,}) {
   return _then(AffordabilitySlice(
 marketId: null == marketId ? _self.marketId : marketId // ignore: cast_nullable_to_non_nullable
 as String,marketName: null == marketName ? _self.marketName : marketName // ignore: cast_nullable_to_non_nullable
@@ -93,7 +93,8 @@ as List<RuleCheck>,exchangeRates: null == exchangeRates ? _self.exchangeRates : 
 as List<ExchangeRate>,stress: freezed == stress ? _self.stress : stress // ignore: cast_nullable_to_non_nullable
 as StressCurve?,purchaseCosts: null == purchaseCosts ? _self.purchaseCosts : purchaseCosts // ignore: cast_nullable_to_non_nullable
 as List<CostLine>,purchaseCostsTotal: freezed == purchaseCostsTotal ? _self.purchaseCostsTotal : purchaseCostsTotal // ignore: cast_nullable_to_non_nullable
-as Money?,
+as Money?,whatIf: freezed == whatIf ? _self.whatIf : whatIf // ignore: cast_nullable_to_non_nullable
+as DownPaymentWhatIf?,
   ));
 }
 /// Create a copy of AffordabilitySlice
@@ -212,6 +213,18 @@ $MoneyCopyWith<$Res>? get purchaseCostsTotal {
 
   return $MoneyCopyWith<$Res>(_self.purchaseCostsTotal!, (value) {
     return _then(_self.copyWith(purchaseCostsTotal: value));
+  });
+}/// Create a copy of AffordabilitySlice
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DownPaymentWhatIfCopyWith<$Res>? get whatIf {
+    if (_self.whatIf == null) {
+    return null;
+  }
+
+  return $DownPaymentWhatIfCopyWith<$Res>(_self.whatIf!, (value) {
+    return _then(_self.copyWith(whatIf: value));
   });
 }
 }
@@ -295,10 +308,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal,  DownPaymentWhatIf? whatIf)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AffordabilitySlice() when $default != null:
-return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal);case _:
+return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal,_that.whatIf);case _:
   return orElse();
 
 }
@@ -316,10 +329,10 @@ return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.m
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal,  DownPaymentWhatIf? whatIf)  $default,) {final _that = this;
 switch (_that) {
 case _AffordabilitySlice():
-return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal);case _:
+return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal,_that.whatIf);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -336,10 +349,10 @@ return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.m
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal,  DownPaymentWhatIf? whatIf)?  $default,) {final _that = this;
 switch (_that) {
 case _AffordabilitySlice() when $default != null:
-return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal);case _:
+return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal,_that.whatIf);case _:
   return null;
 
 }
@@ -351,7 +364,7 @@ return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.m
 @JsonSerializable()
 
 class _AffordabilitySlice implements AffordabilitySlice {
-  const _AffordabilitySlice({required this.marketId, required this.marketName, this.sample = true, required this.price, this.maxPrice, required this.loan, required this.maxLoan, required this.downPayment, this.cashNeeded, this.savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter() required this.annualRate, required this.termYears, required this.loanType, required this.monthly, this.binding, required  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates = const [], this.stress,  List<CostLine> purchaseCosts = const [], this.purchaseCostsTotal}): _checks = checks,_exchangeRates = exchangeRates,_purchaseCosts = purchaseCosts;
+  const _AffordabilitySlice({required this.marketId, required this.marketName, this.sample = true, required this.price, this.maxPrice, required this.loan, required this.maxLoan, required this.downPayment, this.cashNeeded, this.savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter() required this.annualRate, required this.termYears, required this.loanType, required this.monthly, this.binding, required  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates = const [], this.stress,  List<CostLine> purchaseCosts = const [], this.purchaseCostsTotal, this.whatIf}): _checks = checks,_exchangeRates = exchangeRates,_purchaseCosts = purchaseCosts;
   factory _AffordabilitySlice.fromJson(Map<String, dynamic> json) => _$AffordabilitySliceFromJson(json);
 
 @override final  String marketId;
@@ -392,6 +405,7 @@ class _AffordabilitySlice implements AffordabilitySlice {
 }
 
 @override final  Money? purchaseCostsTotal;
+@override final  DownPaymentWhatIf? whatIf;
 
 /// Create a copy of AffordabilitySlice
 /// with the given fields replaced by the non-null parameter values.
@@ -406,18 +420,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AffordabilitySlice&&(identical(other.marketId, marketId) || other.marketId == marketId)&&(identical(other.marketName, marketName) || other.marketName == marketName)&&(identical(other.sample, sample) || other.sample == sample)&&(identical(other.price, price) || other.price == price)&&(identical(other.maxPrice, maxPrice) || other.maxPrice == maxPrice)&&(identical(other.loan, loan) || other.loan == loan)&&(identical(other.maxLoan, maxLoan) || other.maxLoan == maxLoan)&&(identical(other.downPayment, downPayment) || other.downPayment == downPayment)&&(identical(other.cashNeeded, cashNeeded) || other.cashNeeded == cashNeeded)&&(identical(other.savings, savings) || other.savings == savings)&&(identical(other.annualRate, annualRate) || other.annualRate == annualRate)&&(identical(other.termYears, termYears) || other.termYears == termYears)&&(identical(other.loanType, loanType) || other.loanType == loanType)&&(identical(other.monthly, monthly) || other.monthly == monthly)&&(identical(other.binding, binding) || other.binding == binding)&&const DeepCollectionEquality().equals(other.checks, _checks)&&const DeepCollectionEquality().equals(other.exchangeRates, _exchangeRates)&&(identical(other.stress, stress) || other.stress == stress)&&const DeepCollectionEquality().equals(other.purchaseCosts, _purchaseCosts)&&(identical(other.purchaseCostsTotal, purchaseCostsTotal) || other.purchaseCostsTotal == purchaseCostsTotal));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AffordabilitySlice&&(identical(other.marketId, marketId) || other.marketId == marketId)&&(identical(other.marketName, marketName) || other.marketName == marketName)&&(identical(other.sample, sample) || other.sample == sample)&&(identical(other.price, price) || other.price == price)&&(identical(other.maxPrice, maxPrice) || other.maxPrice == maxPrice)&&(identical(other.loan, loan) || other.loan == loan)&&(identical(other.maxLoan, maxLoan) || other.maxLoan == maxLoan)&&(identical(other.downPayment, downPayment) || other.downPayment == downPayment)&&(identical(other.cashNeeded, cashNeeded) || other.cashNeeded == cashNeeded)&&(identical(other.savings, savings) || other.savings == savings)&&(identical(other.annualRate, annualRate) || other.annualRate == annualRate)&&(identical(other.termYears, termYears) || other.termYears == termYears)&&(identical(other.loanType, loanType) || other.loanType == loanType)&&(identical(other.monthly, monthly) || other.monthly == monthly)&&(identical(other.binding, binding) || other.binding == binding)&&const DeepCollectionEquality().equals(other.checks, _checks)&&const DeepCollectionEquality().equals(other.exchangeRates, _exchangeRates)&&(identical(other.stress, stress) || other.stress == stress)&&const DeepCollectionEquality().equals(other.purchaseCosts, _purchaseCosts)&&(identical(other.purchaseCostsTotal, purchaseCostsTotal) || other.purchaseCostsTotal == purchaseCostsTotal)&&(identical(other.whatIf, whatIf) || other.whatIf == whatIf));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,marketId,marketName,sample,price,maxPrice,loan,maxLoan,downPayment,cashNeeded,savings,annualRate,termYears,loanType,monthly,binding,const DeepCollectionEquality().hash(_checks),const DeepCollectionEquality().hash(_exchangeRates),stress,const DeepCollectionEquality().hash(_purchaseCosts),purchaseCostsTotal]);
+    return Object.hashAll([runtimeType,marketId,marketName,sample,price,maxPrice,loan,maxLoan,downPayment,cashNeeded,savings,annualRate,termYears,loanType,monthly,binding,const DeepCollectionEquality().hash(_checks),const DeepCollectionEquality().hash(_exchangeRates),stress,const DeepCollectionEquality().hash(_purchaseCosts),purchaseCostsTotal,whatIf]);
 }
 
 @override
 String toString() {
-    return 'AffordabilitySlice(marketId: $marketId, marketName: $marketName, sample: $sample, price: $price, maxPrice: $maxPrice, loan: $loan, maxLoan: $maxLoan, downPayment: $downPayment, cashNeeded: $cashNeeded, savings: $savings, annualRate: $annualRate, termYears: $termYears, loanType: $loanType, monthly: $monthly, binding: $binding, checks: $checks, exchangeRates: $exchangeRates, stress: $stress, purchaseCosts: $purchaseCosts, purchaseCostsTotal: $purchaseCostsTotal)';
+    return 'AffordabilitySlice(marketId: $marketId, marketName: $marketName, sample: $sample, price: $price, maxPrice: $maxPrice, loan: $loan, maxLoan: $maxLoan, downPayment: $downPayment, cashNeeded: $cashNeeded, savings: $savings, annualRate: $annualRate, termYears: $termYears, loanType: $loanType, monthly: $monthly, binding: $binding, checks: $checks, exchangeRates: $exchangeRates, stress: $stress, purchaseCosts: $purchaseCosts, purchaseCostsTotal: $purchaseCostsTotal, whatIf: $whatIf)';
 }
 
 
@@ -428,11 +442,11 @@ abstract mixin class _$AffordabilitySliceCopyWith<$Res> implements $Affordabilit
   factory _$AffordabilitySliceCopyWith(_AffordabilitySlice value, $Res Function(_AffordabilitySlice) _then) = __$AffordabilitySliceCopyWithImpl;
 @override @useResult
 $Res call({
- String marketId, String marketName, bool sample, Money price, Money? maxPrice, Money loan, Money maxLoan, Money downPayment, Money? cashNeeded, Money? savings,@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate annualRate, int termYears, String loanType, MonthlyFigures monthly, RuleCheck? binding, List<RuleCheck> checks, List<ExchangeRate> exchangeRates, StressCurve? stress, List<CostLine> purchaseCosts, Money? purchaseCostsTotal
+ String marketId, String marketName, bool sample, Money price, Money? maxPrice, Money loan, Money maxLoan, Money downPayment, Money? cashNeeded, Money? savings,@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate annualRate, int termYears, String loanType, MonthlyFigures monthly, RuleCheck? binding, List<RuleCheck> checks, List<ExchangeRate> exchangeRates, StressCurve? stress, List<CostLine> purchaseCosts, Money? purchaseCostsTotal, DownPaymentWhatIf? whatIf
 });
 
 
-@override $MoneyCopyWith<$Res> get price;@override $MoneyCopyWith<$Res>? get maxPrice;@override $MoneyCopyWith<$Res> get loan;@override $MoneyCopyWith<$Res> get maxLoan;@override $MoneyCopyWith<$Res> get downPayment;@override $MoneyCopyWith<$Res>? get cashNeeded;@override $MoneyCopyWith<$Res>? get savings;@override $MonthlyFiguresCopyWith<$Res> get monthly;@override $RuleCheckCopyWith<$Res>? get binding;@override $StressCurveCopyWith<$Res>? get stress;@override $MoneyCopyWith<$Res>? get purchaseCostsTotal;
+@override $MoneyCopyWith<$Res> get price;@override $MoneyCopyWith<$Res>? get maxPrice;@override $MoneyCopyWith<$Res> get loan;@override $MoneyCopyWith<$Res> get maxLoan;@override $MoneyCopyWith<$Res> get downPayment;@override $MoneyCopyWith<$Res>? get cashNeeded;@override $MoneyCopyWith<$Res>? get savings;@override $MonthlyFiguresCopyWith<$Res> get monthly;@override $RuleCheckCopyWith<$Res>? get binding;@override $StressCurveCopyWith<$Res>? get stress;@override $MoneyCopyWith<$Res>? get purchaseCostsTotal;@override $DownPaymentWhatIfCopyWith<$Res>? get whatIf;
 
 }
 /// @nodoc
@@ -445,7 +459,7 @@ class __$AffordabilitySliceCopyWithImpl<$Res>
 
 /// Create a copy of AffordabilitySlice
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? marketId = null,Object? marketName = null,Object? sample = null,Object? price = null,Object? maxPrice = freezed,Object? loan = null,Object? maxLoan = null,Object? downPayment = null,Object? cashNeeded = freezed,Object? savings = freezed,Object? annualRate = null,Object? termYears = null,Object? loanType = null,Object? monthly = null,Object? binding = freezed,Object? checks = null,Object? exchangeRates = null,Object? stress = freezed,Object? purchaseCosts = null,Object? purchaseCostsTotal = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? marketId = null,Object? marketName = null,Object? sample = null,Object? price = null,Object? maxPrice = freezed,Object? loan = null,Object? maxLoan = null,Object? downPayment = null,Object? cashNeeded = freezed,Object? savings = freezed,Object? annualRate = null,Object? termYears = null,Object? loanType = null,Object? monthly = null,Object? binding = freezed,Object? checks = null,Object? exchangeRates = null,Object? stress = freezed,Object? purchaseCosts = null,Object? purchaseCostsTotal = freezed,Object? whatIf = freezed,}) {
   return _then(_AffordabilitySlice(
 marketId: null == marketId ? _self.marketId : marketId // ignore: cast_nullable_to_non_nullable
 as String,marketName: null == marketName ? _self.marketName : marketName // ignore: cast_nullable_to_non_nullable
@@ -467,7 +481,8 @@ as List<RuleCheck>,exchangeRates: null == exchangeRates ? _self._exchangeRates :
 as List<ExchangeRate>,stress: freezed == stress ? _self.stress : stress // ignore: cast_nullable_to_non_nullable
 as StressCurve?,purchaseCosts: null == purchaseCosts ? _self._purchaseCosts : purchaseCosts // ignore: cast_nullable_to_non_nullable
 as List<CostLine>,purchaseCostsTotal: freezed == purchaseCostsTotal ? _self.purchaseCostsTotal : purchaseCostsTotal // ignore: cast_nullable_to_non_nullable
-as Money?,
+as Money?,whatIf: freezed == whatIf ? _self.whatIf : whatIf // ignore: cast_nullable_to_non_nullable
+as DownPaymentWhatIf?,
   ));
 }
 
@@ -587,6 +602,18 @@ $MoneyCopyWith<$Res>? get purchaseCostsTotal {
 
   return $MoneyCopyWith<$Res>(_self.purchaseCostsTotal!, (value) {
     return _then(_self.copyWith(purchaseCostsTotal: value));
+  });
+}/// Create a copy of AffordabilitySlice
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$DownPaymentWhatIfCopyWith<$Res>? get whatIf {
+    if (_self.whatIf == null) {
+    return null;
+  }
+
+  return $DownPaymentWhatIfCopyWith<$Res>(_self.whatIf!, (value) {
+    return _then(_self.copyWith(whatIf: value));
   });
 }
 }
@@ -1676,6 +1703,663 @@ $SourceCopyWith<$Res>? get source {
 
   return $SourceCopyWith<$Res>(_self.source!, (value) {
     return _then(_self.copyWith(source: value));
+  });
+}
+}
+
+
+/// @nodoc
+mixin _$DownPaymentWhatIf {
+
+ Money get step; List<WhatIfStep> get steps;
+/// Create a copy of DownPaymentWhatIf
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DownPaymentWhatIfCopyWith<DownPaymentWhatIf> get copyWith => _$DownPaymentWhatIfCopyWithImpl<DownPaymentWhatIf>(this as DownPaymentWhatIf, _$identity);
+
+  /// Serializes this DownPaymentWhatIf to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as DownPaymentWhatIf;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DownPaymentWhatIf&&(identical(other.step, _this.step) || other.step == _this.step)&&const DeepCollectionEquality().equals(other.steps, _this.steps));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as DownPaymentWhatIf;
+  return Object.hash(runtimeType,_this.step,const DeepCollectionEquality().hash(_this.steps));
+}
+
+@override
+String toString() {
+  final _this = this as DownPaymentWhatIf;
+  return 'DownPaymentWhatIf(step: ${_this.step}, steps: ${_this.steps})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $DownPaymentWhatIfCopyWith<$Res>  {
+  factory $DownPaymentWhatIfCopyWith(DownPaymentWhatIf value, $Res Function(DownPaymentWhatIf) _then) = _$DownPaymentWhatIfCopyWithImpl;
+@useResult
+$Res call({
+ Money step, List<WhatIfStep> steps
+});
+
+
+$MoneyCopyWith<$Res> get step;
+
+}
+/// @nodoc
+class _$DownPaymentWhatIfCopyWithImpl<$Res>
+    implements $DownPaymentWhatIfCopyWith<$Res> {
+  _$DownPaymentWhatIfCopyWithImpl(this._self, this._then);
+
+  final DownPaymentWhatIf _self;
+  final $Res Function(DownPaymentWhatIf) _then;
+
+/// Create a copy of DownPaymentWhatIf
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? step = null,Object? steps = null,}) {
+  return _then(DownPaymentWhatIf(
+step: null == step ? _self.step : step // ignore: cast_nullable_to_non_nullable
+as Money,steps: null == steps ? _self.steps : steps // ignore: cast_nullable_to_non_nullable
+as List<WhatIfStep>,
+  ));
+}
+/// Create a copy of DownPaymentWhatIf
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res> get step {
+  
+  return $MoneyCopyWith<$Res>(_self.step, (value) {
+    return _then(_self.copyWith(step: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [DownPaymentWhatIf].
+extension DownPaymentWhatIfPatterns on DownPaymentWhatIf {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _DownPaymentWhatIf value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _DownPaymentWhatIf() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _DownPaymentWhatIf value)  $default,){
+final _that = this;
+switch (_that) {
+case _DownPaymentWhatIf():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _DownPaymentWhatIf value)?  $default,){
+final _that = this;
+switch (_that) {
+case _DownPaymentWhatIf() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Money step,  List<WhatIfStep> steps)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _DownPaymentWhatIf() when $default != null:
+return $default(_that.step,_that.steps);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Money step,  List<WhatIfStep> steps)  $default,) {final _that = this;
+switch (_that) {
+case _DownPaymentWhatIf():
+return $default(_that.step,_that.steps);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Money step,  List<WhatIfStep> steps)?  $default,) {final _that = this;
+switch (_that) {
+case _DownPaymentWhatIf() when $default != null:
+return $default(_that.step,_that.steps);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _DownPaymentWhatIf implements DownPaymentWhatIf {
+  const _DownPaymentWhatIf({required this.step, required  List<WhatIfStep> steps}): _steps = steps;
+  factory _DownPaymentWhatIf.fromJson(Map<String, dynamic> json) => _$DownPaymentWhatIfFromJson(json);
+
+@override final  Money step;
+ final  List<WhatIfStep> _steps;
+@override List<WhatIfStep> get steps {
+  if (_steps is EqualUnmodifiableListView) return _steps;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_steps);
+}
+
+
+/// Create a copy of DownPaymentWhatIf
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DownPaymentWhatIfCopyWith<_DownPaymentWhatIf> get copyWith => __$DownPaymentWhatIfCopyWithImpl<_DownPaymentWhatIf>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$DownPaymentWhatIfToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DownPaymentWhatIf&&(identical(other.step, step) || other.step == step)&&const DeepCollectionEquality().equals(other.steps, _steps));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,step,const DeepCollectionEquality().hash(_steps));
+}
+
+@override
+String toString() {
+    return 'DownPaymentWhatIf(step: $step, steps: $steps)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DownPaymentWhatIfCopyWith<$Res> implements $DownPaymentWhatIfCopyWith<$Res> {
+  factory _$DownPaymentWhatIfCopyWith(_DownPaymentWhatIf value, $Res Function(_DownPaymentWhatIf) _then) = __$DownPaymentWhatIfCopyWithImpl;
+@override @useResult
+$Res call({
+ Money step, List<WhatIfStep> steps
+});
+
+
+@override $MoneyCopyWith<$Res> get step;
+
+}
+/// @nodoc
+class __$DownPaymentWhatIfCopyWithImpl<$Res>
+    implements _$DownPaymentWhatIfCopyWith<$Res> {
+  __$DownPaymentWhatIfCopyWithImpl(this._self, this._then);
+
+  final _DownPaymentWhatIf _self;
+  final $Res Function(_DownPaymentWhatIf) _then;
+
+/// Create a copy of DownPaymentWhatIf
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? step = null,Object? steps = null,}) {
+  return _then(_DownPaymentWhatIf(
+step: null == step ? _self.step : step // ignore: cast_nullable_to_non_nullable
+as Money,steps: null == steps ? _self._steps : steps // ignore: cast_nullable_to_non_nullable
+as List<WhatIfStep>,
+  ));
+}
+
+/// Create a copy of DownPaymentWhatIf
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res> get step {
+  
+  return $MoneyCopyWith<$Res>(_self.step, (value) {
+    return _then(_self.copyWith(step: value));
+  });
+}
+}
+
+
+/// @nodoc
+mixin _$WhatIfStep {
+
+ Money get downPayment; Money get loan; MonthlyFigures get monthly; Money? get cashNeeded; bool get withinRules;
+/// Create a copy of WhatIfStep
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$WhatIfStepCopyWith<WhatIfStep> get copyWith => _$WhatIfStepCopyWithImpl<WhatIfStep>(this as WhatIfStep, _$identity);
+
+  /// Serializes this WhatIfStep to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as WhatIfStep;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WhatIfStep&&(identical(other.downPayment, _this.downPayment) || other.downPayment == _this.downPayment)&&(identical(other.loan, _this.loan) || other.loan == _this.loan)&&(identical(other.monthly, _this.monthly) || other.monthly == _this.monthly)&&(identical(other.cashNeeded, _this.cashNeeded) || other.cashNeeded == _this.cashNeeded)&&(identical(other.withinRules, _this.withinRules) || other.withinRules == _this.withinRules));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as WhatIfStep;
+  return Object.hash(runtimeType,_this.downPayment,_this.loan,_this.monthly,_this.cashNeeded,_this.withinRules);
+}
+
+@override
+String toString() {
+  final _this = this as WhatIfStep;
+  return 'WhatIfStep(downPayment: ${_this.downPayment}, loan: ${_this.loan}, monthly: ${_this.monthly}, cashNeeded: ${_this.cashNeeded}, withinRules: ${_this.withinRules})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $WhatIfStepCopyWith<$Res>  {
+  factory $WhatIfStepCopyWith(WhatIfStep value, $Res Function(WhatIfStep) _then) = _$WhatIfStepCopyWithImpl;
+@useResult
+$Res call({
+ Money downPayment, Money loan, MonthlyFigures monthly, Money? cashNeeded, bool withinRules
+});
+
+
+$MoneyCopyWith<$Res> get downPayment;$MoneyCopyWith<$Res> get loan;$MonthlyFiguresCopyWith<$Res> get monthly;$MoneyCopyWith<$Res>? get cashNeeded;
+
+}
+/// @nodoc
+class _$WhatIfStepCopyWithImpl<$Res>
+    implements $WhatIfStepCopyWith<$Res> {
+  _$WhatIfStepCopyWithImpl(this._self, this._then);
+
+  final WhatIfStep _self;
+  final $Res Function(WhatIfStep) _then;
+
+/// Create a copy of WhatIfStep
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? downPayment = null,Object? loan = null,Object? monthly = null,Object? cashNeeded = freezed,Object? withinRules = null,}) {
+  return _then(WhatIfStep(
+downPayment: null == downPayment ? _self.downPayment : downPayment // ignore: cast_nullable_to_non_nullable
+as Money,loan: null == loan ? _self.loan : loan // ignore: cast_nullable_to_non_nullable
+as Money,monthly: null == monthly ? _self.monthly : monthly // ignore: cast_nullable_to_non_nullable
+as MonthlyFigures,cashNeeded: freezed == cashNeeded ? _self.cashNeeded : cashNeeded // ignore: cast_nullable_to_non_nullable
+as Money?,withinRules: null == withinRules ? _self.withinRules : withinRules // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+/// Create a copy of WhatIfStep
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res> get downPayment {
+  
+  return $MoneyCopyWith<$Res>(_self.downPayment, (value) {
+    return _then(_self.copyWith(downPayment: value));
+  });
+}/// Create a copy of WhatIfStep
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res> get loan {
+  
+  return $MoneyCopyWith<$Res>(_self.loan, (value) {
+    return _then(_self.copyWith(loan: value));
+  });
+}/// Create a copy of WhatIfStep
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MonthlyFiguresCopyWith<$Res> get monthly {
+  
+  return $MonthlyFiguresCopyWith<$Res>(_self.monthly, (value) {
+    return _then(_self.copyWith(monthly: value));
+  });
+}/// Create a copy of WhatIfStep
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res>? get cashNeeded {
+    if (_self.cashNeeded == null) {
+    return null;
+  }
+
+  return $MoneyCopyWith<$Res>(_self.cashNeeded!, (value) {
+    return _then(_self.copyWith(cashNeeded: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [WhatIfStep].
+extension WhatIfStepPatterns on WhatIfStep {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _WhatIfStep value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _WhatIfStep() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _WhatIfStep value)  $default,){
+final _that = this;
+switch (_that) {
+case _WhatIfStep():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _WhatIfStep value)?  $default,){
+final _that = this;
+switch (_that) {
+case _WhatIfStep() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Money downPayment,  Money loan,  MonthlyFigures monthly,  Money? cashNeeded,  bool withinRules)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _WhatIfStep() when $default != null:
+return $default(_that.downPayment,_that.loan,_that.monthly,_that.cashNeeded,_that.withinRules);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Money downPayment,  Money loan,  MonthlyFigures monthly,  Money? cashNeeded,  bool withinRules)  $default,) {final _that = this;
+switch (_that) {
+case _WhatIfStep():
+return $default(_that.downPayment,_that.loan,_that.monthly,_that.cashNeeded,_that.withinRules);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Money downPayment,  Money loan,  MonthlyFigures monthly,  Money? cashNeeded,  bool withinRules)?  $default,) {final _that = this;
+switch (_that) {
+case _WhatIfStep() when $default != null:
+return $default(_that.downPayment,_that.loan,_that.monthly,_that.cashNeeded,_that.withinRules);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _WhatIfStep implements WhatIfStep {
+  const _WhatIfStep({required this.downPayment, required this.loan, required this.monthly, this.cashNeeded, required this.withinRules});
+  factory _WhatIfStep.fromJson(Map<String, dynamic> json) => _$WhatIfStepFromJson(json);
+
+@override final  Money downPayment;
+@override final  Money loan;
+@override final  MonthlyFigures monthly;
+@override final  Money? cashNeeded;
+@override final  bool withinRules;
+
+/// Create a copy of WhatIfStep
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$WhatIfStepCopyWith<_WhatIfStep> get copyWith => __$WhatIfStepCopyWithImpl<_WhatIfStep>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$WhatIfStepToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _WhatIfStep&&(identical(other.downPayment, downPayment) || other.downPayment == downPayment)&&(identical(other.loan, loan) || other.loan == loan)&&(identical(other.monthly, monthly) || other.monthly == monthly)&&(identical(other.cashNeeded, cashNeeded) || other.cashNeeded == cashNeeded)&&(identical(other.withinRules, withinRules) || other.withinRules == withinRules));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,downPayment,loan,monthly,cashNeeded,withinRules);
+}
+
+@override
+String toString() {
+    return 'WhatIfStep(downPayment: $downPayment, loan: $loan, monthly: $monthly, cashNeeded: $cashNeeded, withinRules: $withinRules)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$WhatIfStepCopyWith<$Res> implements $WhatIfStepCopyWith<$Res> {
+  factory _$WhatIfStepCopyWith(_WhatIfStep value, $Res Function(_WhatIfStep) _then) = __$WhatIfStepCopyWithImpl;
+@override @useResult
+$Res call({
+ Money downPayment, Money loan, MonthlyFigures monthly, Money? cashNeeded, bool withinRules
+});
+
+
+@override $MoneyCopyWith<$Res> get downPayment;@override $MoneyCopyWith<$Res> get loan;@override $MonthlyFiguresCopyWith<$Res> get monthly;@override $MoneyCopyWith<$Res>? get cashNeeded;
+
+}
+/// @nodoc
+class __$WhatIfStepCopyWithImpl<$Res>
+    implements _$WhatIfStepCopyWith<$Res> {
+  __$WhatIfStepCopyWithImpl(this._self, this._then);
+
+  final _WhatIfStep _self;
+  final $Res Function(_WhatIfStep) _then;
+
+/// Create a copy of WhatIfStep
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? downPayment = null,Object? loan = null,Object? monthly = null,Object? cashNeeded = freezed,Object? withinRules = null,}) {
+  return _then(_WhatIfStep(
+downPayment: null == downPayment ? _self.downPayment : downPayment // ignore: cast_nullable_to_non_nullable
+as Money,loan: null == loan ? _self.loan : loan // ignore: cast_nullable_to_non_nullable
+as Money,monthly: null == monthly ? _self.monthly : monthly // ignore: cast_nullable_to_non_nullable
+as MonthlyFigures,cashNeeded: freezed == cashNeeded ? _self.cashNeeded : cashNeeded // ignore: cast_nullable_to_non_nullable
+as Money?,withinRules: null == withinRules ? _self.withinRules : withinRules // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+/// Create a copy of WhatIfStep
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res> get downPayment {
+  
+  return $MoneyCopyWith<$Res>(_self.downPayment, (value) {
+    return _then(_self.copyWith(downPayment: value));
+  });
+}/// Create a copy of WhatIfStep
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res> get loan {
+  
+  return $MoneyCopyWith<$Res>(_self.loan, (value) {
+    return _then(_self.copyWith(loan: value));
+  });
+}/// Create a copy of WhatIfStep
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MonthlyFiguresCopyWith<$Res> get monthly {
+  
+  return $MonthlyFiguresCopyWith<$Res>(_self.monthly, (value) {
+    return _then(_self.copyWith(monthly: value));
+  });
+}/// Create a copy of WhatIfStep
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res>? get cashNeeded {
+    if (_self.cashNeeded == null) {
+    return null;
+  }
+
+  return $MoneyCopyWith<$Res>(_self.cashNeeded!, (value) {
+    return _then(_self.copyWith(cashNeeded: value));
   });
 }
 }

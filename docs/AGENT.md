@@ -236,6 +236,14 @@ every upfront cost the pack lists, each with its source and what is
 refundable. `StressTestChart` and `PurchaseCostsTable` bind them in
 `/affordability`.
 
+It also works out the down payment what-if (C6b, D149): steps from the
+minimum the rules allow at that price up to what the savings reach after
+the costs on the day, at most 40, each with the loan, the monthly cost, the
+cash needed, and whether it is within the rules, all from the same code.
+`DownPaymentSlider` moves through them on the device. When the buyer taps
+"Use this down payment", its action carries the amount, which the number
+check accepts as the buyer's words, and Gemini calls the tool again with it.
+
 A tool reads the turn through its `ToolContext`: the progress steps, the
 slices as they stand, and the buyer's words in this plan.
 
@@ -378,7 +386,10 @@ a tool result. The same tool calls replayed on a fresh chain continue
 normally, so the fault is in what Gemini stored, not in the request. When a
 request carrying `previous_interaction_id` is refused this way before the turn
 has drawn anything, the orchestrator starts the turn over once on a new
-conversation, from the turn's first input. The new chain replaces the stored
+conversation, from the turn's first input. A continued request answered with
+nothing at all, no text and no tool call, is handled the same way (C6b): it
+happened on three later turns on 2026-09-27, twice in a row in one session,
+so the fault sits in the stored chain. The new chain replaces the stored
 one, so later turns are clean.
 
 ### Interactions API Client

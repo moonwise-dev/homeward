@@ -14,6 +14,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `MonthlyCostBreakdown` | yes | `affordability` | `affordability` | A Stockholm flat with an association fee |
 | `StressTestChart` | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
 | `PurchaseCostsTable` | yes | `affordability` | `affordability` | A Funchal flat |
+| `DownPaymentSlider` | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
 | `RuleNote` | yes | `rule` | `rule` | The rule that limits the loan |
 
 ### Fact
@@ -39,6 +40,10 @@ The monthly cost as rates rise past the rate lenders test, against the most this
 ### PurchaseCostsTable
 
 Every upfront cost the buyer owes on the day, with its source, the total, and the cash needed with the down payment, from compute_affordability.
+
+### DownPaymentSlider
+
+Lets the buyer try down payments for the price in /affordability and see the loan, the monthly cost, and the cash needed; its apply action sends the one they use, with downPayment added to its context.
 
 ### RuleNote
 

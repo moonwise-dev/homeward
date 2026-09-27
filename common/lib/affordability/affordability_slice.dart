@@ -37,6 +37,7 @@ abstract class AffordabilitySlice with _$AffordabilitySlice {
     StressCurve? stress,
     @Default([]) List<CostLine> purchaseCosts,
     Money? purchaseCostsTotal,
+    DownPaymentWhatIf? whatIf,
   }) = _AffordabilitySlice;
 
   factory AffordabilitySlice.fromJson(Map<String, Object?> json) =>
@@ -102,4 +103,29 @@ abstract class CostLine with _$CostLine {
 
   factory CostLine.fromJson(Map<String, Object?> json) =>
       _$CostLineFromJson(json);
+}
+
+@freezed
+abstract class DownPaymentWhatIf with _$DownPaymentWhatIf {
+  const factory DownPaymentWhatIf({
+    required Money step,
+    required List<WhatIfStep> steps,
+  }) = _DownPaymentWhatIf;
+
+  factory DownPaymentWhatIf.fromJson(Map<String, Object?> json) =>
+      _$DownPaymentWhatIfFromJson(json);
+}
+
+@freezed
+abstract class WhatIfStep with _$WhatIfStep {
+  const factory WhatIfStep({
+    required Money downPayment,
+    required Money loan,
+    required MonthlyFigures monthly,
+    Money? cashNeeded,
+    required bool withinRules,
+  }) = _WhatIfStep;
+
+  factory WhatIfStep.fromJson(Map<String, Object?> json) =>
+      _$WhatIfStepFromJson(json);
 }

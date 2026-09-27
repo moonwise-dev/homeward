@@ -3,6 +3,7 @@ import 'package:a2ui_core/a2ui_core.dart';
 import 'catalog_component.dart';
 import 'components/affordability_summary.dart';
 import 'components/choice.dart';
+import 'components/down_payment_slider.dart';
 import 'components/fact.dart';
 import 'components/monthly_cost_breakdown.dart';
 import 'components/purchase_costs_table.dart';
@@ -20,6 +21,7 @@ const homewardComponents = <CatalogComponent>[
   MonthlyCostBreakdown(),
   StressTestChart(),
   PurchaseCostsTable(),
+  DownPaymentSlider(),
   RuleNote(),
 ];
 

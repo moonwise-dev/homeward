@@ -3,6 +3,7 @@ import 'parsed_output.dart';
 
 const _openingFence = '```a2ui';
 const _closingFence = '```';
+const _newMessage = '{"version"';
 
 final class StreamParser implements OutputParser {
   final _pending = StringBuffer();
@@ -90,6 +91,9 @@ final class StreamParser implements OutputParser {
   }
 
   void _appendToMessage(String line, List<ParsedOutput> outputs) {
+    if (_message.isNotEmpty && !_insideString && line.startsWith(_newMessage)) {
+      _emitMessage(outputs);
+    }
     if (_message.isNotEmpty) {
       _message.write('\n');
     }

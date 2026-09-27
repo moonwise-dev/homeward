@@ -39,8 +39,8 @@ final class ComputeAffordability extends AgentTool {
       'Pass only figures the buyer stated, as they stated them; a figure not '
       'in their words is refused. It answers with the facts it still needs '
       'and why, or seeds /affordability for AffordabilitySummary, RuleNote, '
-      'MonthlyCostBreakdown, StressTestChart, and PurchaseCostsTable, and '
-      'lists what it assumed that is the '
+      'MonthlyCostBreakdown, StressTestChart, PurchaseCostsTable, and '
+      'DownPaymentSlider, and lists what it assumed that is the '
       "buyer's to decide. For a home anywhere else, tell the buyer the "
       'sample does not cover it.';
 
@@ -302,7 +302,8 @@ final class ComputeAffordability extends AgentTool {
               'PurchaseCostsTable; never write them in your text. What was '
               "assumed is the buyer's to decide; nothing else can be "
               'computed yet, so offer no other choice, such as another kind '
-              'of rate.',
+              'of rate. DownPaymentSlider lets them try down payments; when '
+              'they apply one, call this tool again with it as downPayment.',
         },
         seeds: {'affordability': jsonDecode(jsonEncode(slice.toJson()))},
       ),

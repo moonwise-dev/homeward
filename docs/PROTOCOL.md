@@ -354,7 +354,10 @@ pass rejects it.
    mended before anything is rejected: a closing brace too many, and a string
    in single quotes; a third, a comma before a closing brace, followed in C2,
    and in C4 a stray character where a JSON token belongs, and braces left
-   open at the end of a message. Anything
+   open at the end of a message. Since C6b a line that starts a new message
+   ends the one before it, so a message a closing brace short, as a nested
+   action at the end of a component invites, is mended as braces left open
+   rather than joined to the next. Anything
    else is rejected with the text around the error and the surface ID the
    text names, so the correction knows which message to send again.
 2. **Envelope.** `A2uiMessage.fromJson` from `a2ui_core`: exactly one message

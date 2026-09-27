@@ -18,6 +18,9 @@ const _symbols = {'EUR': '€', 'USD': r'$', 'GBP': '£'};
 String percentText(Rate rate) =>
     '${NumberFormat('0.##', 'en').format(rate.partsPerMillion / 10000)}%';
 
+String wholePercentText(Rate rate) =>
+    NumberFormat.percentPattern('en').format(rate.fraction);
+
 String ruleLabel(ConstraintKind kind) => switch (kind) {
   ConstraintKind.loanToValue => 'Loan-to-value cap',
   ConstraintKind.loanToIncome => 'Income multiple cap',

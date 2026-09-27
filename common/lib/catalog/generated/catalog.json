@@ -1021,6 +1021,50 @@
       ],
       "additionalProperties": false
     },
+    "DownPaymentSlider": {
+      "type": "object",
+      "description": "Lets the buyer try down payments for the price in /affordability and see the loan, the monthly cost, and the cash needed; its apply action sends the one they use, with downPayment added to its context.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "DownPaymentSlider"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "affordability": {
+          "type": "object",
+          "description": "Always { \"path\": \"/affordability\" }, after compute_affordability answered.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/affordability"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "apply": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "affordability"
+      ],
+      "additionalProperties": false
+    },
     "RuleNote": {
       "type": "object",
       "description": "One lending rule, the largest loan it allows, and its source, from compute_affordability.",
@@ -1673,6 +1717,9 @@
         },
         {
           "$ref": "#/components/PurchaseCostsTable"
+        },
+        {
+          "$ref": "#/components/DownPaymentSlider"
         },
         {
           "$ref": "#/components/RuleNote"

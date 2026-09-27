@@ -1,8 +1,6 @@
 import 'dart:math';
 
 import '../costs/purchase_costs.dart';
-import '../finance/amortization_tier.dart';
-import '../finance/repayment_style.dart';
 import '../markets/resolved_market.dart';
 import '../markets/rule_section.dart';
 import '../money/currency.dart';
@@ -14,7 +12,9 @@ import 'affordability.dart';
 import 'affordability_slice.dart';
 import 'assess_affordability.dart';
 import 'constraint_check.dart';
+import 'down_payment_what_if.dart';
 import 'maximum_price.dart';
+import 'monthly_figures_of.dart';
 import 'stress_curve.dart';
 
 const defaultTermYears = 30;
@@ -132,20 +132,7 @@ AffordabilityAnswer answerAffordability({
       annualRate: assessed.annualRate,
       termYears: term,
       loanType: loanType.label,
-      monthly: MonthlyFigures(
-        interest: assessed.payment.interest,
-        amortization: assessed.payment.amortization,
-        total: assessed.payment.total,
-        afterDeduction: assessed.paymentAfterDeduction,
-        amortizationRate: termMovesPayment(market)
-            ? null
-            : requiredAmortizationRate(
-                loan: assessed.loan,
-                value: target,
-                tiers: market.lending.amortization.map((rule) => rule.tier),
-              ),
-        fee: monthlyFee,
-      ),
+      monthly: monthlyFiguresOf(assessed, scenario, market),
       binding: switch (assessed.binding) {
         final binding? => rule(binding),
         null => null,
@@ -165,6 +152,14 @@ AffordabilityAnswer answerAffordability({
           ),
       ],
       purchaseCostsTotal: costs?.total,
+      whatIf: downPaymentWhatIf(
+        market: market,
+        profile: profile,
+        scenarioWith: (downPayment) => at(target, downPayment),
+        price: target,
+        minimum: open.maxLoan < target ? target - open.maxLoan : zero,
+        savings: savings,
+      ),
     ),
   );
 }
@@ -180,10 +175,6 @@ StressCurve? _stressCurve(
     return null;
   }
 }
-
-bool termMovesPayment(ResolvedMarket market) =>
-    (market.lending.repaymentStyle ?? RepaymentStyle.annuity) ==
-    RepaymentStyle.annuity;
 
 int termYearsFor(ResolvedMarket market, BuyerProfile profile) {
   final lending = market.lending;

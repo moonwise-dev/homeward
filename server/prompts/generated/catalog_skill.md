@@ -68,6 +68,7 @@ The catalog schema below holds the full schemas of the components every plan use
 - `MonthlyCostBreakdown`: What the home at the price in /affordability costs each month: interest, amortization, the fee the buyer stated, and the total, from compute_affordability.
 - `StressTestChart`: The monthly cost as rates rise past the rate lenders test, against the most this household can carry, from compute_affordability.
 - `PurchaseCostsTable`: Every upfront cost the buyer owes on the day, with its source, the total, and the cash needed with the down payment, from compute_affordability.
+- `DownPaymentSlider`: Lets the buyer try down payments for the price in /affordability and see the loan, the monthly cost, and the cash needed; its apply action sends the one they use, with downPayment added to its context.
 
 ## Examples
 

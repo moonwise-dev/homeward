@@ -70,9 +70,10 @@ four journeys of `docs/PRODUCT.md` (D141).
   `PurchaseCostsTable`, restored: `compute_affordability` adds the monthly
   cost as rates rise, against the most the household can carry, and every
   upfront cost with its source to `/affordability` (D148).
-- **C6b Down payment what-if.** `DownPaymentSlider`, recomputed on the
-  device between the minimum the rules allow and what the savings reach
-  after the upfront costs.
+- **C6b Down payment what-if — done.** `DownPaymentSlider`: the buyer drags the
+  down payment between the minimum the rules allow and what the savings
+  reach after the costs on the day, through steps `compute_affordability`
+  worked out, and uses the amount they settle on (D149).
 - **C6c Mortgage options.** `MortgageOptions`: fixed against variable and
   terms side by side, once sourced sample fixed rates join the packs.
 - **C7 Homes.** The restored sample homes of Stockholm and Lisbon, a
@@ -280,6 +281,7 @@ superseded stay as history.
 | D146 | Money core | C5 splits into what the household can borrow (C5) and what a price costs them a month (C5b). `compute_affordability` takes the household's figures as arguments, the ones the buyer stated, and refuses a figure that does not appear in their words, the same check as the brief; it answers with the facts it still needs and why, from the pack, so Gemini asks. It resolves the Swedish or Portuguese sample pack, runs the restored `assessAffordability` and `maximumPrice`, and seeds `/affordability`. Other cities are not covered by the sample and the tool says so. Incomes, debts, and savings come as lists in their own currencies, converted with the sample exchange rates the summary names. `AffordabilitySummary` and `RuleNote` join the core components, and a block bound to a slice no tool has seeded yet is refused | One chunk with the monthly cost; figures read from structured money items in the brief |
 | D147 | The buyer's preferences | What a home costs a month depends on choices that are the buyer's: the down payment, the term where it moves the payment, and the home's monthly fee. Rather than only calculating with defaults, `compute_affordability` answers with what it assumed, and Gemini shows the result, then asks one of those choices with `Choice`, recording the answer in the brief. A choice about money carries no recommendation: Homeward explains and does not advise. `MonthlyCostBreakdown` is the first Homeward block left out of the core components, read through `component_docs`; a round that only reads `component_docs` does not count toward the three tool rounds, at most two such rounds a turn, so reading a block's docs never costs the turn its tools | Always in the prompt like the C4 and C5 blocks; calculating with defaults only |
 | D148 | Mortgage options split | C6 splits into stress and upfront costs (C6), the down payment what-if (C6b), and fixed against variable (C6c), since fixed rates need new sourced sample data. The stress curve and the upfront costs are computed by `compute_affordability` with the rest of `/affordability`, not on the device as before the reset. `MoneyInput` moves to C10: buyers state amounts in their own words, which the tools check | One chunk with all five blocks; the slider first |
+| D149 | Down payment what-if | `compute_affordability` works out up to 40 down payment steps between the minimum the rules allow and what the savings reach after the costs on the day, each with the loan, the monthly cost, the cash needed, and whether it is within the rules, from the same code as the rest of `/affordability`. `DownPaymentSlider` moves between them on the device and recomputes nothing. A "Use this down payment" button sends the amount as an action, so Gemini calls the tool with it and every block updates; the amount comes from the buyer's tap, so the number check accepts it | Recomputing on the device with the rules sent to the app; a slider that never changes the rest of the plan |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

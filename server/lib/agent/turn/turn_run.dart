@@ -227,6 +227,18 @@ final class TurnRun {
           },
         ),
       );
+      if (calls.isEmpty &&
+          textChars == 0 &&
+          mayStartOver &&
+          request.previousInteractionId != null &&
+          !_validator.drewThisTurn) {
+        mayStartOver = false;
+        _startOver();
+        input = firstInput;
+        toolRounds = 0;
+        yield* _emitText();
+        continue;
+      }
       for (final output in parser.close()) {
         yield* _emit(output);
       }

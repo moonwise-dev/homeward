@@ -4,6 +4,7 @@ import 'package:genui/genui.dart';
 import 'affordability_summary/affordability_summary_item.dart';
 import 'choice/choice_item.dart';
 import 'client_functions.dart';
+import 'down_payment_slider/down_payment_slider_item.dart';
 import 'fact/fact_item.dart';
 import 'monthly_cost_breakdown/monthly_cost_breakdown_item.dart';
 import 'purchase_costs_table/purchase_costs_table_item.dart';
@@ -22,6 +23,7 @@ Catalog homewardGenuiCatalog() {
       monthlyCostBreakdownItem,
       stressTestChartItem,
       purchaseCostsTableItem,
+      downPaymentSliderItem,
       ruleNoteItem,
     ],
     functions: [

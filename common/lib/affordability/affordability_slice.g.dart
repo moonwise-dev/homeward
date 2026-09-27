@@ -31,6 +31,7 @@ _AffordabilitySlice _$AffordabilitySliceFromJson(Map<String, dynamic> json) =>
           'stress',
           'purchaseCosts',
           'purchaseCostsTotal',
+          'whatIf',
         ],
       );
       final val = _AffordabilitySlice(
@@ -112,6 +113,12 @@ _AffordabilitySlice _$AffordabilitySliceFromJson(Map<String, dynamic> json) =>
           'purchaseCostsTotal',
           (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
         ),
+        whatIf: $checkedConvert(
+          'whatIf',
+          (v) => v == null
+              ? null
+              : DownPaymentWhatIf.fromJson(v as Map<String, dynamic>),
+        ),
       );
       return val;
     }, fieldKeyMap: const {'annualRate': 'annualRatePpm'});
@@ -138,6 +145,7 @@ Map<String, dynamic> _$AffordabilitySliceToJson(_AffordabilitySlice instance) =>
       'stress': ?instance.stress?.toJson(),
       'purchaseCosts': instance.purchaseCosts.map((e) => e.toJson()).toList(),
       'purchaseCostsTotal': ?instance.purchaseCostsTotal?.toJson(),
+      'whatIf': ?instance.whatIf?.toJson(),
     };
 
 _MonthlyFigures _$MonthlyFiguresFromJson(Map<String, dynamic> json) =>
@@ -303,3 +311,70 @@ Map<String, dynamic> _$CostLineToJson(_CostLine instance) => <String, dynamic>{
   'refund': ?instance.refund?.toJson(),
   'source': ?instance.source?.toJson(),
 };
+
+_DownPaymentWhatIf _$DownPaymentWhatIfFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_DownPaymentWhatIf', json, ($checkedConvert) {
+      $checkKeys(json, allowedKeys: const ['step', 'steps']);
+      final val = _DownPaymentWhatIf(
+        step: $checkedConvert(
+          'step',
+          (v) => Money.fromJson(v as Map<String, dynamic>),
+        ),
+        steps: $checkedConvert(
+          'steps',
+          (v) => (v as List<dynamic>)
+              .map((e) => WhatIfStep.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        ),
+      );
+      return val;
+    });
+
+Map<String, dynamic> _$DownPaymentWhatIfToJson(_DownPaymentWhatIf instance) =>
+    <String, dynamic>{
+      'step': instance.step.toJson(),
+      'steps': instance.steps.map((e) => e.toJson()).toList(),
+    };
+
+_WhatIfStep _$WhatIfStepFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_WhatIfStep', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        allowedKeys: const [
+          'downPayment',
+          'loan',
+          'monthly',
+          'cashNeeded',
+          'withinRules',
+        ],
+      );
+      final val = _WhatIfStep(
+        downPayment: $checkedConvert(
+          'downPayment',
+          (v) => Money.fromJson(v as Map<String, dynamic>),
+        ),
+        loan: $checkedConvert(
+          'loan',
+          (v) => Money.fromJson(v as Map<String, dynamic>),
+        ),
+        monthly: $checkedConvert(
+          'monthly',
+          (v) => MonthlyFigures.fromJson(v as Map<String, dynamic>),
+        ),
+        cashNeeded: $checkedConvert(
+          'cashNeeded',
+          (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
+        ),
+        withinRules: $checkedConvert('withinRules', (v) => v as bool),
+      );
+      return val;
+    });
+
+Map<String, dynamic> _$WhatIfStepToJson(_WhatIfStep instance) =>
+    <String, dynamic>{
+      'downPayment': instance.downPayment.toJson(),
+      'loan': instance.loan.toJson(),
+      'monthly': instance.monthly.toJson(),
+      'cashNeeded': ?instance.cashNeeded?.toJson(),
+      'withinRules': instance.withinRules,
+    };
