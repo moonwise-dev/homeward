@@ -4,6 +4,7 @@ import 'catalog_component.dart';
 import 'components/affordability_summary.dart';
 import 'components/choice.dart';
 import 'components/fact.dart';
+import 'components/monthly_cost_breakdown.dart';
 import 'components/rule_note.dart';
 import 'functions/catalog_function.dart';
 
@@ -14,6 +15,7 @@ const homewardComponents = <CatalogComponent>[
   Fact(),
   Choice(),
   AffordabilitySummary(),
+  MonthlyCostBreakdown(),
   RuleNote(),
 ];
 

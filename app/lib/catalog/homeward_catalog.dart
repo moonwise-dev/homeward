@@ -5,6 +5,7 @@ import 'affordability_summary/affordability_summary_item.dart';
 import 'choice/choice_item.dart';
 import 'client_functions.dart';
 import 'fact/fact_item.dart';
+import 'monthly_cost_breakdown/monthly_cost_breakdown_item.dart';
 import 'rule_note/rule_note_item.dart';
 
 Catalog homewardGenuiCatalog() {
@@ -16,6 +17,7 @@ Catalog homewardGenuiCatalog() {
       factItem,
       choiceItem,
       affordabilitySummaryItem,
+      monthlyCostBreakdownItem,
       ruleNoteItem,
     ],
     functions: [

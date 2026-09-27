@@ -119,6 +119,7 @@ final class TurnRun {
     });
     InteractionInput input = firstInput;
     var toolRounds = 0;
+    var catalogRounds = 0;
     var corrections = 0;
     var mayStartOver = true;
     var correcting = false;
@@ -229,8 +230,16 @@ final class TurnRun {
       for (final output in parser.close()) {
         yield* _emit(output);
       }
-      if (calls.isNotEmpty && toolRounds < settings.maxToolRounds) {
-        toolRounds++;
+      final readsCatalog =
+          catalogRounds < settings.maxCatalogRounds &&
+          tools.onlyReadCatalog([for (final call in calls) call.name]);
+      if (readsCatalog ||
+          (calls.isNotEmpty && toolRounds < settings.maxToolRounds)) {
+        if (readsCatalog) {
+          catalogRounds++;
+        } else {
+          toolRounds++;
+        }
         final results = <FunctionResult>[];
         yield* _progress.whileRunning(() async {
           for (final call in calls) {
@@ -243,6 +252,17 @@ final class TurnRun {
           note: toolRounds < settings.maxToolRounds ? null : toolsDoneNote,
         );
         continue;
+      }
+      for (final surfaceId in _seeder.awaitingComponents) {
+        _reject(
+          ValidationFailure(
+            surfaceId: surfaceId,
+            path: '/updateComponents',
+            message:
+                'Surface $surfaceId was created but has no components; send '
+                'its updateComponents message',
+          ),
+        );
       }
       if (_pendingFailures.isNotEmpty &&
           corrections < settings.maxCorrections) {
@@ -363,20 +383,20 @@ final class TurnRun {
           yield TurnEvent.message(json);
         }
       case Rejected(:final failure):
-        _log.info(
-          LogEntry(
-            'A2UI message rejected',
-            fields: {
-              'turn': turn,
-              'path': failure.path,
-              'reason': failure.message,
-            },
-          ),
-        );
-        _pendingFailures.add(failure);
+        _reject(failure);
         _rejectedSources.add(source);
       case Unchanged():
     }
+  }
+
+  void _reject(ValidationFailure failure) {
+    _log.info(
+      LogEntry(
+        'A2UI message rejected',
+        fields: {'turn': turn, 'path': failure.path, 'reason': failure.message},
+      ),
+    );
+    _pendingFailures.add(failure);
   }
 
   Stream<TurnEvent> _emitText() async* {

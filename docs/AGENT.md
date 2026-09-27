@@ -25,6 +25,7 @@ approve.
 | Model rounds per turn | 1, plus one per tool round and one per correction round | enforced by the caps below |
 | Surfaces per plan | `plan`, and at most one inline surface per turn (D131, D139) | fixed |
 | Tool rounds per turn, cap | 3 | `TurnSettings.maxToolRounds` (D85) |
+| Catalog rounds per turn, cap | 2; a round whose calls only read `component_docs` counts here, not as a tool round | `TurnSettings.maxCatalogRounds` (D147) |
 
 Spike S2 found every listed model available on a free-tier key, but
 `gemini-3.8-flash` overloaded on the day: `generateContent` answered 503, and
@@ -214,6 +215,20 @@ debts, and savings are lists in their own currencies, converted with the
 sample exchange rates the summary names. It logs the facts it still needs,
 never the figures.
 
+The buyer's preferences shape what a home costs them a month (C5b, D147):
+the price of a home they name, the down payment they want to make, and the
+monthly fee they stated, such as a Swedish association fee or a Portuguese
+condominium fee, all checked against their words like the other amounts, and
+the term. The fee also counts in the Swedish left-to-live-on check. Where the
+buyer has not said, the tool assumes the minimum down payment the rules allow
+and, where the term moves the payment, the longest term they allow, and its
+answer lists what it assumed. Gemini shows the result, then asks about one
+assumption that matters to this household with `Choice`, and records the
+answer in the brief. It offers no choice the tool cannot compute, such as a
+fixed rate, and a choice about money carries no recommendation, since
+Homeward explains and does not advise. `MonthlyCostBreakdown`
+binds the same `/affordability`.
+
 A tool reads the turn through its `ToolContext`: the progress steps, the
 slices as they stand, and the buyer's words in this plan.
 
@@ -221,7 +236,6 @@ Planned tools, each arriving with its chunk:
 
 | Tool | Chunk | What it does |
 | --- | --- | --- |
-| Monthly cost | C5b | What a given price costs the household each month, from the same packs |
 | Mortgage options | C6 | Monthly cost, stress curve, and upfront costs for a price, a down payment, and a term |
 | `search_homes` | C7 | Searches the labelled sample homes and prices each for this household |
 | `find_place` | C8 | Resolves a place the buyer names, with Nominatim |
@@ -292,10 +306,13 @@ owner, and leases it; `turn_run.dart` runs one turn:
    until its first valid `updateComponents`, then sent with
    `sendDataModel: true`, followed by one `updateDataModel` for each slice a
    tool seeded that its components bind, then the components. A surface whose
-   tree never validates never reaches the buyer.
+   tree never validates never reaches the buyer. A round that ends with a
+   surface created but no components counts as a rejected message, so the
+   correction round asks for its `updateComponents` (C5b).
 8. When the round ended with function calls, run them in the order the model
    made them and continue the interaction with every result at once, at most
-   three tool rounds. The request after the last allowed round ends with a note
+   three tool rounds, plus at most two rounds that only read `component_docs`.
+   The request after the last allowed tool round ends with a note
    that tools are done and sets `tool_choice` to `none` (D85). Every round is
    logged with its status, the names of the tools called, and its duration.
 9. When messages were rejected, continue with one text input listing each
@@ -405,7 +422,10 @@ one, so later turns are clean.
   and maps to `gemini_credits_depleted`; any other is `gemini_quota_exhausted`
   with the next midnight Pacific as its reset, computed from the US daylight
   saving rules, and is per model when it names
-  `generate_content_free_tier_requests`.
+  `generate_content_free_tier_requests`. An in-stream error whose code is
+  none of these but whose message starts `Rate limit exceeded` is a quota
+  error too, per model when it reads `Rate limit exceeded for model …`,
+  recorded from a live turn on 2026-09-27 at Flash-Lite's 500 requests a day.
 - Recorded streams and error bodies live in
   `server/test/fixtures/interactions/`.
 

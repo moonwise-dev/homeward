@@ -10,6 +10,9 @@ final class ComponentDocs extends AgentTool {
   String get name => 'component_docs';
 
   @override
+  bool get readsCatalog => true;
+
+  @override
   String get description =>
       'Returns the full JSON Schema and examples of catalog components listed '
       'in the index of the catalog skill. Call it once with every such '

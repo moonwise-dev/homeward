@@ -23,3 +23,7 @@ chunk, and add new ones when a chunk needs a kind of move not covered here.
    We have 600,000 kronor saved.
 9. Two of us want to buy our first flat in Lisbon. We take home 2,800 euros a
    month together and have 40,000 euros saved.
+10. We found a flat in Stockholm for 4,200,000 kronor with a 3,900 kronor
+    monthly avgift. I'm 36, she's 34, no kids, no debts; I take home 41,000
+    kronor of 55,000, and she takes home 2,600 euros of 3,500. We have 600,000
+    kronor saved. What would it cost us each month?

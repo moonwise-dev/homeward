@@ -45,7 +45,25 @@ abstract class MonthlyFigures with _$MonthlyFigures {
     required Money amortization,
     required Money total,
     Money? afterDeduction,
+    @JsonKey(name: 'amortizationRatePpm')
+    @PpmJsonConverter()
+    Rate? amortizationRate,
+    Money? fee,
   }) = _MonthlyFigures;
+
+  const MonthlyFigures._();
+
+  Money get totalWithFee => _withFee(total);
+
+  Money? get afterDeductionWithFee => switch (afterDeduction) {
+    final amount? => _withFee(amount),
+    null => null,
+  };
+
+  Money _withFee(Money amount) => switch (fee) {
+    final fee? => amount + fee,
+    null => amount,
+  };
 
   factory MonthlyFigures.fromJson(Map<String, Object?> json) =>
       _$MonthlyFiguresFromJson(json);

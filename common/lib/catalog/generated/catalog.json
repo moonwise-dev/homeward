@@ -898,6 +898,47 @@
       ],
       "additionalProperties": false
     },
+    "MonthlyCostBreakdown": {
+      "type": "object",
+      "description": "What the home at the price in /affordability costs each month: interest, amortization, the fee the buyer stated, and the total, from compute_affordability.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "MonthlyCostBreakdown"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "affordability": {
+          "type": "object",
+          "description": "Always { \"path\": \"/affordability\" }, after compute_affordability answered.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/affordability"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "affordability"
+      ],
+      "additionalProperties": false
+    },
     "RuleNote": {
       "type": "object",
       "description": "One lending rule, the largest loan it allows, and its source, from compute_affordability.",
@@ -1541,6 +1582,9 @@
         },
         {
           "$ref": "#/components/AffordabilitySummary"
+        },
+        {
+          "$ref": "#/components/MonthlyCostBreakdown"
         },
         {
           "$ref": "#/components/RuleNote"

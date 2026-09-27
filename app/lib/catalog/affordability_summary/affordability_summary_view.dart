@@ -60,8 +60,8 @@ class AffordabilitySummaryView extends StatelessWidget {
           AppFigureRow(label: 'Your savings', figure: moneyText(savings)),
         AppFigureRow(
           label:
-              'A month at ${percentText(slice.annualRate)} over '
-              '${slice.termYears} years',
+              'Loan payment a month at ${percentText(slice.annualRate)}, '
+              '${repaymentText(slice)}',
           figure: moneyText(slice.monthly.total),
           isTotal: true,
         ),

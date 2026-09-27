@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TurnSettings {
 
- int get maxCorrections; int get maxToolRounds; String get thinkingLevel;
+ int get maxCorrections; int get maxToolRounds; int get maxCatalogRounds; String get thinkingLevel;
 /// Create a copy of TurnSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $TurnSettingsCopyWith<TurnSettings> get copyWith => _$TurnSettingsCopyWithImpl<T
 @override
 bool operator ==(Object other) {
   final _this = this as TurnSettings;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TurnSettings&&(identical(other.maxCorrections, _this.maxCorrections) || other.maxCorrections == _this.maxCorrections)&&(identical(other.maxToolRounds, _this.maxToolRounds) || other.maxToolRounds == _this.maxToolRounds)&&(identical(other.thinkingLevel, _this.thinkingLevel) || other.thinkingLevel == _this.thinkingLevel));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TurnSettings&&(identical(other.maxCorrections, _this.maxCorrections) || other.maxCorrections == _this.maxCorrections)&&(identical(other.maxToolRounds, _this.maxToolRounds) || other.maxToolRounds == _this.maxToolRounds)&&(identical(other.maxCatalogRounds, _this.maxCatalogRounds) || other.maxCatalogRounds == _this.maxCatalogRounds)&&(identical(other.thinkingLevel, _this.thinkingLevel) || other.thinkingLevel == _this.thinkingLevel));
 }
 
 
 @override
 int get hashCode {
   final _this = this as TurnSettings;
-  return Object.hash(runtimeType,_this.maxCorrections,_this.maxToolRounds,_this.thinkingLevel);
+  return Object.hash(runtimeType,_this.maxCorrections,_this.maxToolRounds,_this.maxCatalogRounds,_this.thinkingLevel);
 }
 
 @override
 String toString() {
   final _this = this as TurnSettings;
-  return 'TurnSettings(maxCorrections: ${_this.maxCorrections}, maxToolRounds: ${_this.maxToolRounds}, thinkingLevel: ${_this.thinkingLevel})';
+  return 'TurnSettings(maxCorrections: ${_this.maxCorrections}, maxToolRounds: ${_this.maxToolRounds}, maxCatalogRounds: ${_this.maxCatalogRounds}, thinkingLevel: ${_this.thinkingLevel})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $TurnSettingsCopyWith<$Res>  {
   factory $TurnSettingsCopyWith(TurnSettings value, $Res Function(TurnSettings) _then) = _$TurnSettingsCopyWithImpl;
 @useResult
 $Res call({
- int maxCorrections, int maxToolRounds, String thinkingLevel
+ int maxCorrections, int maxToolRounds, int maxCatalogRounds, String thinkingLevel
 });
 
 
@@ -68,10 +68,11 @@ class _$TurnSettingsCopyWithImpl<$Res>
 
 /// Create a copy of TurnSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? maxCorrections = null,Object? maxToolRounds = null,Object? thinkingLevel = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? maxCorrections = null,Object? maxToolRounds = null,Object? maxCatalogRounds = null,Object? thinkingLevel = null,}) {
   return _then(TurnSettings(
 maxCorrections: null == maxCorrections ? _self.maxCorrections : maxCorrections // ignore: cast_nullable_to_non_nullable
 as int,maxToolRounds: null == maxToolRounds ? _self.maxToolRounds : maxToolRounds // ignore: cast_nullable_to_non_nullable
+as int,maxCatalogRounds: null == maxCatalogRounds ? _self.maxCatalogRounds : maxCatalogRounds // ignore: cast_nullable_to_non_nullable
 as int,thinkingLevel: null == thinkingLevel ? _self.thinkingLevel : thinkingLevel // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int maxCorrections,  int maxToolRounds,  String thinkingLevel)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int maxCorrections,  int maxToolRounds,  int maxCatalogRounds,  String thinkingLevel)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TurnSettings() when $default != null:
-return $default(_that.maxCorrections,_that.maxToolRounds,_that.thinkingLevel);case _:
+return $default(_that.maxCorrections,_that.maxToolRounds,_that.maxCatalogRounds,_that.thinkingLevel);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.maxCorrections,_that.maxToolRounds,_that.thinkingLevel);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int maxCorrections,  int maxToolRounds,  String thinkingLevel)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int maxCorrections,  int maxToolRounds,  int maxCatalogRounds,  String thinkingLevel)  $default,) {final _that = this;
 switch (_that) {
 case _TurnSettings():
-return $default(_that.maxCorrections,_that.maxToolRounds,_that.thinkingLevel);case _:
+return $default(_that.maxCorrections,_that.maxToolRounds,_that.maxCatalogRounds,_that.thinkingLevel);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.maxCorrections,_that.maxToolRounds,_that.thinkingLevel);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int maxCorrections,  int maxToolRounds,  String thinkingLevel)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int maxCorrections,  int maxToolRounds,  int maxCatalogRounds,  String thinkingLevel)?  $default,) {final _that = this;
 switch (_that) {
 case _TurnSettings() when $default != null:
-return $default(_that.maxCorrections,_that.maxToolRounds,_that.thinkingLevel);case _:
+return $default(_that.maxCorrections,_that.maxToolRounds,_that.maxCatalogRounds,_that.thinkingLevel);case _:
   return null;
 
 }
@@ -214,11 +215,12 @@ return $default(_that.maxCorrections,_that.maxToolRounds,_that.thinkingLevel);ca
 
 
 class _TurnSettings implements TurnSettings {
-  const _TurnSettings({this.maxCorrections = 2, this.maxToolRounds = 3, this.thinkingLevel = 'low'});
+  const _TurnSettings({this.maxCorrections = 2, this.maxToolRounds = 3, this.maxCatalogRounds = 2, this.thinkingLevel = 'low'});
   
 
 @override@JsonKey() final  int maxCorrections;
 @override@JsonKey() final  int maxToolRounds;
+@override@JsonKey() final  int maxCatalogRounds;
 @override@JsonKey() final  String thinkingLevel;
 
 /// Create a copy of TurnSettings
@@ -231,18 +233,18 @@ _$TurnSettingsCopyWith<_TurnSettings> get copyWith => __$TurnSettingsCopyWithImp
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TurnSettings&&(identical(other.maxCorrections, maxCorrections) || other.maxCorrections == maxCorrections)&&(identical(other.maxToolRounds, maxToolRounds) || other.maxToolRounds == maxToolRounds)&&(identical(other.thinkingLevel, thinkingLevel) || other.thinkingLevel == thinkingLevel));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TurnSettings&&(identical(other.maxCorrections, maxCorrections) || other.maxCorrections == maxCorrections)&&(identical(other.maxToolRounds, maxToolRounds) || other.maxToolRounds == maxToolRounds)&&(identical(other.maxCatalogRounds, maxCatalogRounds) || other.maxCatalogRounds == maxCatalogRounds)&&(identical(other.thinkingLevel, thinkingLevel) || other.thinkingLevel == thinkingLevel));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,maxCorrections,maxToolRounds,thinkingLevel);
+    return Object.hash(runtimeType,maxCorrections,maxToolRounds,maxCatalogRounds,thinkingLevel);
 }
 
 @override
 String toString() {
-    return 'TurnSettings(maxCorrections: $maxCorrections, maxToolRounds: $maxToolRounds, thinkingLevel: $thinkingLevel)';
+    return 'TurnSettings(maxCorrections: $maxCorrections, maxToolRounds: $maxToolRounds, maxCatalogRounds: $maxCatalogRounds, thinkingLevel: $thinkingLevel)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$TurnSettingsCopyWith<$Res> implements $TurnSettingsCopyWi
   factory _$TurnSettingsCopyWith(_TurnSettings value, $Res Function(_TurnSettings) _then) = __$TurnSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- int maxCorrections, int maxToolRounds, String thinkingLevel
+ int maxCorrections, int maxToolRounds, int maxCatalogRounds, String thinkingLevel
 });
 
 
@@ -270,10 +272,11 @@ class __$TurnSettingsCopyWithImpl<$Res>
 
 /// Create a copy of TurnSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? maxCorrections = null,Object? maxToolRounds = null,Object? thinkingLevel = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? maxCorrections = null,Object? maxToolRounds = null,Object? maxCatalogRounds = null,Object? thinkingLevel = null,}) {
   return _then(_TurnSettings(
 maxCorrections: null == maxCorrections ? _self.maxCorrections : maxCorrections // ignore: cast_nullable_to_non_nullable
 as int,maxToolRounds: null == maxToolRounds ? _self.maxToolRounds : maxToolRounds // ignore: cast_nullable_to_non_nullable
+as int,maxCatalogRounds: null == maxCatalogRounds ? _self.maxCatalogRounds : maxCatalogRounds // ignore: cast_nullable_to_non_nullable
 as int,thinkingLevel: null == thinkingLevel ? _self.thinkingLevel : thinkingLevel // ignore: cast_nullable_to_non_nullable
 as String,
   ));

@@ -532,7 +532,7 @@ $RuleCheckCopyWith<$Res>? get binding {
 /// @nodoc
 mixin _$MonthlyFigures {
 
- Money get interest; Money get amortization; Money get total; Money? get afterDeduction;
+ Money get interest; Money get amortization; Money get total; Money? get afterDeduction;@JsonKey(name: 'amortizationRatePpm')@PpmJsonConverter() Rate? get amortizationRate; Money? get fee;
 /// Create a copy of MonthlyFigures
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -546,20 +546,20 @@ $MonthlyFiguresCopyWith<MonthlyFigures> get copyWith => _$MonthlyFiguresCopyWith
 @override
 bool operator ==(Object other) {
   final _this = this as MonthlyFigures;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MonthlyFigures&&(identical(other.interest, _this.interest) || other.interest == _this.interest)&&(identical(other.amortization, _this.amortization) || other.amortization == _this.amortization)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.afterDeduction, _this.afterDeduction) || other.afterDeduction == _this.afterDeduction));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MonthlyFigures&&(identical(other.interest, _this.interest) || other.interest == _this.interest)&&(identical(other.amortization, _this.amortization) || other.amortization == _this.amortization)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.afterDeduction, _this.afterDeduction) || other.afterDeduction == _this.afterDeduction)&&(identical(other.amortizationRate, _this.amortizationRate) || other.amortizationRate == _this.amortizationRate)&&(identical(other.fee, _this.fee) || other.fee == _this.fee));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as MonthlyFigures;
-  return Object.hash(runtimeType,_this.interest,_this.amortization,_this.total,_this.afterDeduction);
+  return Object.hash(runtimeType,_this.interest,_this.amortization,_this.total,_this.afterDeduction,_this.amortizationRate,_this.fee);
 }
 
 @override
 String toString() {
   final _this = this as MonthlyFigures;
-  return 'MonthlyFigures(interest: ${_this.interest}, amortization: ${_this.amortization}, total: ${_this.total}, afterDeduction: ${_this.afterDeduction})';
+  return 'MonthlyFigures(interest: ${_this.interest}, amortization: ${_this.amortization}, total: ${_this.total}, afterDeduction: ${_this.afterDeduction}, amortizationRate: ${_this.amortizationRate}, fee: ${_this.fee})';
 }
 
 
@@ -570,11 +570,11 @@ abstract mixin class $MonthlyFiguresCopyWith<$Res>  {
   factory $MonthlyFiguresCopyWith(MonthlyFigures value, $Res Function(MonthlyFigures) _then) = _$MonthlyFiguresCopyWithImpl;
 @useResult
 $Res call({
- Money interest, Money amortization, Money total, Money? afterDeduction
+ Money interest, Money amortization, Money total, Money? afterDeduction,@JsonKey(name: 'amortizationRatePpm')@PpmJsonConverter() Rate? amortizationRate, Money? fee
 });
 
 
-$MoneyCopyWith<$Res> get interest;$MoneyCopyWith<$Res> get amortization;$MoneyCopyWith<$Res> get total;$MoneyCopyWith<$Res>? get afterDeduction;
+$MoneyCopyWith<$Res> get interest;$MoneyCopyWith<$Res> get amortization;$MoneyCopyWith<$Res> get total;$MoneyCopyWith<$Res>? get afterDeduction;$MoneyCopyWith<$Res>? get fee;
 
 }
 /// @nodoc
@@ -587,12 +587,14 @@ class _$MonthlyFiguresCopyWithImpl<$Res>
 
 /// Create a copy of MonthlyFigures
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? interest = null,Object? amortization = null,Object? total = null,Object? afterDeduction = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? interest = null,Object? amortization = null,Object? total = null,Object? afterDeduction = freezed,Object? amortizationRate = freezed,Object? fee = freezed,}) {
   return _then(MonthlyFigures(
 interest: null == interest ? _self.interest : interest // ignore: cast_nullable_to_non_nullable
 as Money,amortization: null == amortization ? _self.amortization : amortization // ignore: cast_nullable_to_non_nullable
 as Money,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as Money,afterDeduction: freezed == afterDeduction ? _self.afterDeduction : afterDeduction // ignore: cast_nullable_to_non_nullable
+as Money?,amortizationRate: freezed == amortizationRate ? _self.amortizationRate : amortizationRate // ignore: cast_nullable_to_non_nullable
+as Rate?,fee: freezed == fee ? _self.fee : fee // ignore: cast_nullable_to_non_nullable
 as Money?,
   ));
 }
@@ -634,6 +636,18 @@ $MoneyCopyWith<$Res>? get afterDeduction {
 
   return $MoneyCopyWith<$Res>(_self.afterDeduction!, (value) {
     return _then(_self.copyWith(afterDeduction: value));
+  });
+}/// Create a copy of MonthlyFigures
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res>? get fee {
+    if (_self.fee == null) {
+    return null;
+  }
+
+  return $MoneyCopyWith<$Res>(_self.fee!, (value) {
+    return _then(_self.copyWith(fee: value));
   });
 }
 }
@@ -717,10 +731,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Money interest,  Money amortization,  Money total,  Money? afterDeduction)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Money interest,  Money amortization,  Money total,  Money? afterDeduction, @JsonKey(name: 'amortizationRatePpm')@PpmJsonConverter()  Rate? amortizationRate,  Money? fee)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MonthlyFigures() when $default != null:
-return $default(_that.interest,_that.amortization,_that.total,_that.afterDeduction);case _:
+return $default(_that.interest,_that.amortization,_that.total,_that.afterDeduction,_that.amortizationRate,_that.fee);case _:
   return orElse();
 
 }
@@ -738,10 +752,10 @@ return $default(_that.interest,_that.amortization,_that.total,_that.afterDeducti
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Money interest,  Money amortization,  Money total,  Money? afterDeduction)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Money interest,  Money amortization,  Money total,  Money? afterDeduction, @JsonKey(name: 'amortizationRatePpm')@PpmJsonConverter()  Rate? amortizationRate,  Money? fee)  $default,) {final _that = this;
 switch (_that) {
 case _MonthlyFigures():
-return $default(_that.interest,_that.amortization,_that.total,_that.afterDeduction);case _:
+return $default(_that.interest,_that.amortization,_that.total,_that.afterDeduction,_that.amortizationRate,_that.fee);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -758,10 +772,10 @@ return $default(_that.interest,_that.amortization,_that.total,_that.afterDeducti
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Money interest,  Money amortization,  Money total,  Money? afterDeduction)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Money interest,  Money amortization,  Money total,  Money? afterDeduction, @JsonKey(name: 'amortizationRatePpm')@PpmJsonConverter()  Rate? amortizationRate,  Money? fee)?  $default,) {final _that = this;
 switch (_that) {
 case _MonthlyFigures() when $default != null:
-return $default(_that.interest,_that.amortization,_that.total,_that.afterDeduction);case _:
+return $default(_that.interest,_that.amortization,_that.total,_that.afterDeduction,_that.amortizationRate,_that.fee);case _:
   return null;
 
 }
@@ -772,14 +786,16 @@ return $default(_that.interest,_that.amortization,_that.total,_that.afterDeducti
 /// @nodoc
 @JsonSerializable()
 
-class _MonthlyFigures implements MonthlyFigures {
-  const _MonthlyFigures({required this.interest, required this.amortization, required this.total, this.afterDeduction});
+class _MonthlyFigures extends MonthlyFigures {
+  const _MonthlyFigures({required this.interest, required this.amortization, required this.total, this.afterDeduction, @JsonKey(name: 'amortizationRatePpm')@PpmJsonConverter() this.amortizationRate, this.fee}): super._();
   factory _MonthlyFigures.fromJson(Map<String, dynamic> json) => _$MonthlyFiguresFromJson(json);
 
 @override final  Money interest;
 @override final  Money amortization;
 @override final  Money total;
 @override final  Money? afterDeduction;
+@override@JsonKey(name: 'amortizationRatePpm')@PpmJsonConverter() final  Rate? amortizationRate;
+@override final  Money? fee;
 
 /// Create a copy of MonthlyFigures
 /// with the given fields replaced by the non-null parameter values.
@@ -794,18 +810,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MonthlyFigures&&(identical(other.interest, interest) || other.interest == interest)&&(identical(other.amortization, amortization) || other.amortization == amortization)&&(identical(other.total, total) || other.total == total)&&(identical(other.afterDeduction, afterDeduction) || other.afterDeduction == afterDeduction));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MonthlyFigures&&(identical(other.interest, interest) || other.interest == interest)&&(identical(other.amortization, amortization) || other.amortization == amortization)&&(identical(other.total, total) || other.total == total)&&(identical(other.afterDeduction, afterDeduction) || other.afterDeduction == afterDeduction)&&(identical(other.amortizationRate, amortizationRate) || other.amortizationRate == amortizationRate)&&(identical(other.fee, fee) || other.fee == fee));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,interest,amortization,total,afterDeduction);
+    return Object.hash(runtimeType,interest,amortization,total,afterDeduction,amortizationRate,fee);
 }
 
 @override
 String toString() {
-    return 'MonthlyFigures(interest: $interest, amortization: $amortization, total: $total, afterDeduction: $afterDeduction)';
+    return 'MonthlyFigures(interest: $interest, amortization: $amortization, total: $total, afterDeduction: $afterDeduction, amortizationRate: $amortizationRate, fee: $fee)';
 }
 
 
@@ -816,11 +832,11 @@ abstract mixin class _$MonthlyFiguresCopyWith<$Res> implements $MonthlyFiguresCo
   factory _$MonthlyFiguresCopyWith(_MonthlyFigures value, $Res Function(_MonthlyFigures) _then) = __$MonthlyFiguresCopyWithImpl;
 @override @useResult
 $Res call({
- Money interest, Money amortization, Money total, Money? afterDeduction
+ Money interest, Money amortization, Money total, Money? afterDeduction,@JsonKey(name: 'amortizationRatePpm')@PpmJsonConverter() Rate? amortizationRate, Money? fee
 });
 
 
-@override $MoneyCopyWith<$Res> get interest;@override $MoneyCopyWith<$Res> get amortization;@override $MoneyCopyWith<$Res> get total;@override $MoneyCopyWith<$Res>? get afterDeduction;
+@override $MoneyCopyWith<$Res> get interest;@override $MoneyCopyWith<$Res> get amortization;@override $MoneyCopyWith<$Res> get total;@override $MoneyCopyWith<$Res>? get afterDeduction;@override $MoneyCopyWith<$Res>? get fee;
 
 }
 /// @nodoc
@@ -833,12 +849,14 @@ class __$MonthlyFiguresCopyWithImpl<$Res>
 
 /// Create a copy of MonthlyFigures
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? interest = null,Object? amortization = null,Object? total = null,Object? afterDeduction = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? interest = null,Object? amortization = null,Object? total = null,Object? afterDeduction = freezed,Object? amortizationRate = freezed,Object? fee = freezed,}) {
   return _then(_MonthlyFigures(
 interest: null == interest ? _self.interest : interest // ignore: cast_nullable_to_non_nullable
 as Money,amortization: null == amortization ? _self.amortization : amortization // ignore: cast_nullable_to_non_nullable
 as Money,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as Money,afterDeduction: freezed == afterDeduction ? _self.afterDeduction : afterDeduction // ignore: cast_nullable_to_non_nullable
+as Money?,amortizationRate: freezed == amortizationRate ? _self.amortizationRate : amortizationRate // ignore: cast_nullable_to_non_nullable
+as Rate?,fee: freezed == fee ? _self.fee : fee // ignore: cast_nullable_to_non_nullable
 as Money?,
   ));
 }
@@ -881,6 +899,18 @@ $MoneyCopyWith<$Res>? get afterDeduction {
 
   return $MoneyCopyWith<$Res>(_self.afterDeduction!, (value) {
     return _then(_self.copyWith(afterDeduction: value));
+  });
+}/// Create a copy of MonthlyFigures
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res>? get fee {
+    if (_self.fee == null) {
+    return null;
+  }
+
+  return $MoneyCopyWith<$Res>(_self.fee!, (value) {
+    return _then(_self.copyWith(fee: value));
   });
 }
 }

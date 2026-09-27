@@ -16,6 +16,12 @@ final class ToolBelt {
     for (final tool in tools) tool.declaration,
   ];
 
+  bool onlyReadCatalog(Iterable<String> names) =>
+      names.isNotEmpty &&
+      names.every(
+        (name) => tools.any((tool) => tool.name == name && tool.readsCatalog),
+      );
+
   Future<ToolResult> call(
     String name,
     Map<String, Object?> arguments, {

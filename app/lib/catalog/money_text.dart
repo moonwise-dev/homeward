@@ -21,3 +21,10 @@ String ruleLabel(ConstraintKind kind) => switch (kind) {
   ConstraintKind.debtServiceToIncome => 'Debt-service limit',
   ConstraintKind.leftToLiveOn => 'Left-to-live-on calculation',
 };
+
+String repaymentText(AffordabilitySlice slice) =>
+    switch (slice.monthly.amortizationRate) {
+      null => 'over ${slice.termYears} years',
+      final rate when rate.partsPerMillion == 0 => 'no amortization required',
+      final rate => 'amortizing ${percentText(rate)} a year',
+    };

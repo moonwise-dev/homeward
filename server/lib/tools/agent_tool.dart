@@ -25,6 +25,8 @@ abstract class AgentTool {
 
   Map<String, Object?> get parameters;
 
+  bool get readsCatalog => false;
+
   FunctionDeclaration get declaration => FunctionDeclaration(
     name: name,
     description: description,

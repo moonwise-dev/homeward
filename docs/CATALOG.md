@@ -8,7 +8,8 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 Since the reset (D129) Homeward's own blocks come back one at a time, each
 with the chunk of `docs/ROADMAP.md` that needs it: `Fact` (C4), `Choice`
-(C4b), and `AffordabilitySummary` and `RuleNote` (C5) so far.
+(C4b), `AffordabilitySummary` and `RuleNote` (C5), and
+`MonthlyCostBreakdown` (C5b) so far.
 
 ## Design Principles
 
@@ -49,7 +50,9 @@ The core components, `coreComponents`: the layout components `Column`,
 `Row`, `Card`, `Text`, `Button`, and `Divider`, `Fact`, which every plan
 uses, `Choice`, which every ask uses, and `AffordabilitySummary` and
 `RuleNote`, since money is in every plan. The skill always carries their full
-schemas, and correction rounds offer them (D110, D143 to D146).
+schemas, and correction rounds offer them (D110, D143 to D146). Every other
+component, `MonthlyCostBreakdown` first, is in the index only, and Gemini
+reads it through `component_docs` when it wants it.
 
 Not agent-visible: `Image`, `Video`, `AudioPlayer`, `Modal`, `Slider`.
 
@@ -62,6 +65,7 @@ Buttons send actions the model names itself (`docs/PROTOCOL.md`).
 | Understanding | `Fact` | One item of the brief: the sentence, and where it came from: "You said", "Deduced from" with the buyer's words, or "You confirmed". A deduction with an `answer` action offers Right and Not quite (D144) | `fact`, bound to one item, `{ "path": "/brief/<id>" }`; `answer`, an optional action |
 | Understanding | `Choice` | One decision as an inline ask: the question, two to five options, the recommended one first with why, and a line pointing at the text field for any other answer (D145) | `question`; `options`, each a `label` and an optional `detail`; `recommended`, the label of one option; `because`; `answer`, an action |
 | Money | `AffordabilitySummary` | What the household can borrow, the highest price their savings and the sample rules allow, the down payment and cash needed, the monthly payment, and which rule limits the loan, labelled as a sample estimate (D146) | `affordability`, always `{ "path": "/affordability" }` |
+| Money | `MonthlyCostBreakdown` | What the home at the slice's price costs each month: interest at the rate, amortization at the rate the rules require or over the term, the monthly fee the buyer stated, the total, and in Sweden the total after the interest deduction, labelled as a sample estimate (D147) | `affordability`, always `{ "path": "/affordability" }` |
 | Trust | `RuleNote` | One lending rule: what it is, the largest loan it allows, whether the loan is within it, and its source with the date it was read, labelled as a sample rule (D146) | `rule`, bound to one rule, such as `{ "path": "/affordability/binding" }` or `/affordability/checks/0` |
 
 A `Choice` tap sends its `answer` action at once, with `choice` and `label`,
@@ -86,7 +90,6 @@ marked restored come back from `6faa8ab`.
 | --- | --- | --- | --- |
 | Understanding | `Brief` | C10 | A section of the brief: the household, its needs, its week, or what is open |
 | Understanding | `HouseholdSummary` | C10 | Who moves, incomes and savings as stated, and who shares the costs |
-| Money | `MonthlyCostBreakdown` | C5b | What a home costs each month: interest, amortization, fees, and running costs; restored as `PaymentBreakdown` |
 | Money | `MortgageOptions` | C6 | Fixed against variable, down payment levels, and terms, side by side |
 | Money | `DownPaymentSlider` | C6 | A what-if recomputed on the device, bound to the seeded bounds |
 | Money | `StressTestChart` | C6 | The monthly cost as rates rise, against what the household can carry; restored |

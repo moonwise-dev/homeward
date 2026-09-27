@@ -65,6 +65,7 @@ The catalog schema below holds the full schemas of the components every plan use
 - `ChoicePicker`: Options to pick one or several of, as checkboxes or chips, bound to a list
 - `TextField`: A labelled text input, short, long, numeric, or obscured
 - `DateTimeInput`: A labelled date, time, or both, in ISO 8601
+- `MonthlyCostBreakdown`: What the home at the price in /affordability costs each month: interest, amortization, the fee the buyer stated, and the total, from compute_affordability.
 
 ## Examples
 

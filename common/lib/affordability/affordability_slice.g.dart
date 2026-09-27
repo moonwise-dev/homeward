@@ -125,6 +125,8 @@ _MonthlyFigures _$MonthlyFiguresFromJson(Map<String, dynamic> json) =>
           'amortization',
           'total',
           'afterDeduction',
+          'amortizationRatePpm',
+          'fee',
         ],
       );
       final val = _MonthlyFigures(
@@ -144,9 +146,20 @@ _MonthlyFigures _$MonthlyFiguresFromJson(Map<String, dynamic> json) =>
           'afterDeduction',
           (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
         ),
+        amortizationRate: $checkedConvert(
+          'amortizationRatePpm',
+          (v) => _$JsonConverterFromJson<int, Rate>(
+            v,
+            const PpmJsonConverter().fromJson,
+          ),
+        ),
+        fee: $checkedConvert(
+          'fee',
+          (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
+        ),
       );
       return val;
-    });
+    }, fieldKeyMap: const {'amortizationRate': 'amortizationRatePpm'});
 
 Map<String, dynamic> _$MonthlyFiguresToJson(_MonthlyFigures instance) =>
     <String, dynamic>{
@@ -154,7 +167,22 @@ Map<String, dynamic> _$MonthlyFiguresToJson(_MonthlyFigures instance) =>
       'amortization': instance.amortization.toJson(),
       'total': instance.total.toJson(),
       'afterDeduction': ?instance.afterDeduction?.toJson(),
+      'amortizationRatePpm': ?_$JsonConverterToJson<int, Rate>(
+        instance.amortizationRate,
+        const PpmJsonConverter().toJson,
+      ),
+      'fee': ?instance.fee?.toJson(),
     };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) => json == null ? null : fromJson(json as Json);
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) => value == null ? null : toJson(value);
 
 _RuleCheck _$RuleCheckFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_RuleCheck', json, ($checkedConvert) {

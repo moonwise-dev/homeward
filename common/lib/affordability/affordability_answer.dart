@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import '../costs/purchase_costs.dart';
+import '../finance/amortization_tier.dart';
+import '../finance/repayment_style.dart';
 import '../markets/resolved_market.dart';
 import '../markets/rule_section.dart';
 import '../money/currency.dart';
@@ -45,6 +47,7 @@ AffordabilityAnswer answerAffordability({
   required BuyerProfile profile,
   Money? price,
   Money? downPayment,
+  Money? monthlyFee,
   int? termYears,
 }) {
   final zero = Money.zero(market.currency);
@@ -56,6 +59,7 @@ AffordabilityAnswer answerAffordability({
     termYears: term,
     loanTypeId: loanType.id,
     rateSpread: loanType.defaultSpread,
+    associationFee: monthlyFee,
   );
   final savings = market.converted(profile.savings);
   final probe = at(price ?? savings ?? zero, zero);
@@ -132,6 +136,14 @@ AffordabilityAnswer answerAffordability({
         amortization: assessed.payment.amortization,
         total: assessed.payment.total,
         afterDeduction: assessed.paymentAfterDeduction,
+        amortizationRate: termMovesPayment(market)
+            ? null
+            : requiredAmortizationRate(
+                loan: assessed.loan,
+                value: target,
+                tiers: market.lending.amortization.map((rule) => rule.tier),
+              ),
+        fee: monthlyFee,
       ),
       binding: switch (assessed.binding) {
         final binding? => rule(binding),
@@ -142,6 +154,10 @@ AffordabilityAnswer answerAffordability({
     ),
   );
 }
+
+bool termMovesPayment(ResolvedMarket market) =>
+    (market.lending.repaymentStyle ?? RepaymentStyle.annuity) ==
+    RepaymentStyle.annuity;
 
 int termYearsFor(ResolvedMarket market, BuyerProfile profile) {
   final lending = market.lending;

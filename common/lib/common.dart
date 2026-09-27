@@ -23,6 +23,7 @@ export 'catalog/catalog_schemas.dart';
 export 'catalog/components/affordability_summary.dart';
 export 'catalog/components/choice.dart';
 export 'catalog/components/fact.dart';
+export 'catalog/components/monthly_cost_breakdown.dart';
 export 'catalog/components/rule_note.dart';
 export 'catalog/core_components.dart';
 export 'catalog/data_model/affordability_data_slice.dart';

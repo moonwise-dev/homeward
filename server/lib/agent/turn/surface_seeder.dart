@@ -12,6 +12,8 @@ final class SurfaceSeeder {
   final _pendingCreates = <String, CreateSurfaceMessage>{};
   final _sent = <String, Map<String, Object?>>{};
 
+  Iterable<String> get awaitingComponents => _pendingCreates.keys;
+
   List<Map<String, Object?>> forward(
     A2uiMessage message,
     Map<String, Object?> seeds,

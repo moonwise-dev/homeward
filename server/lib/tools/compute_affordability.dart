@@ -20,6 +20,14 @@ final class ComputeAffordability extends AgentTool {
     'savings',
   ];
 
+  static const _homeAmounts = ['price', 'downPayment', 'homeFee'];
+
+  static const _argumentFor = {
+    'netMonthlyIncome': 'netIncomes',
+    'grossMonthlyIncome': 'grossIncomes',
+    'monthlyDebtPayments': 'debtPayments',
+  };
+
   @override
   String get name => 'compute_affordability';
 
@@ -30,9 +38,10 @@ final class ComputeAffordability extends AgentTool {
       'market: ${[for (final MapEntry(:key, :value) in markets.covered.entries) '$value ($key)'].join(', ')}. '
       'Pass only figures the buyer stated, as they stated them; a figure not '
       'in their words is refused. It answers with the facts it still needs '
-      'and why, or seeds /affordability for AffordabilitySummary and '
-      'RuleNote. For a home anywhere else, tell the buyer the sample does '
-      'not cover it.';
+      'and why, or seeds /affordability for AffordabilitySummary, RuleNote, '
+      'and MonthlyCostBreakdown, and lists what it assumed that is the '
+      "buyer's to decide. For a home anywhere else, tell the buyer the "
+      'sample does not cover it.';
 
   @override
   Map<String, Object?> get parameters => {
@@ -55,6 +64,18 @@ final class ComputeAffordability extends AgentTool {
       'price': {
         ...amountParameter,
         'description': 'Optional. The price of a home the buyer named.',
+      },
+      'downPayment': {
+        ...amountParameter,
+        'description':
+            'Optional. The down payment the buyer wants to make; without it '
+            'the minimum the rules allow is assumed.',
+      },
+      'homeFee': {
+        ..._perPeriod,
+        'description':
+            "Optional. The home's own recurring fee the buyer stated, such "
+            'as a Swedish association fee or a Portuguese condominium fee.',
       },
       'age': {
         'type': 'integer',
@@ -83,7 +104,12 @@ final class ComputeAffordability extends AgentTool {
         'enum': [for (final intent in ResidencyIntent.values) intent.name],
       },
       'formerResident': {'type': 'boolean'},
-      'termYears': {'type': 'integer'},
+      'termYears': {
+        'type': 'integer',
+        'description':
+            'Optional. The term the buyer chose; without it the longest the '
+            'rules allow is assumed.',
+      },
     },
     'required': ['market'],
   };
@@ -121,7 +147,7 @@ final class ComputeAffordability extends AgentTool {
     }
     final said = numbersIn(context.buyerWords.join('\n'));
     final unsaid = {
-      for (final name in [..._lists, 'price'])
+      for (final name in [..._lists, ..._homeAmounts])
         for (final argument in _argumentsOf(arguments[name]))
           if (argument case {'amount': final num amount}
               when amount != 0 && !said.contains(_plain(amount)))
@@ -144,9 +170,10 @@ final class ComputeAffordability extends AgentTool {
               _monthlyOf(moneyFromArgument(argument, currency), argument),
           ],
     };
-    final price = switch (arguments['price']) {
-      null => null,
-      final argument => moneyFromArgument(argument, currency),
+    final home = {
+      for (final name in _homeAmounts)
+        if (arguments[name] case final argument?)
+          name: _monthlyOf(moneyFromArgument(argument, currency), argument),
     };
     final base = BuyerProfile(
       age: arguments['age'] as int?,
@@ -174,17 +201,24 @@ final class ComputeAffordability extends AgentTool {
     final currencies = {
       for (final list in amounts.values)
         for (final money in list) money.currency,
+      for (final money in home.values) money.currency,
     };
     final rates = markets.resolveFor(id, base, currencies: currencies)!;
     final totals = {
       for (final MapEntry(key: name, value: list) in amounts.entries)
         name: totalInMarket(rates, list),
     };
+    final inMarket = {
+      for (final MapEntry(key: name, value: money) in home.entries)
+        name: rates.converted(money)!,
+    };
     final unconverted = {
       for (final MapEntry(key: name, value: list) in amounts.entries)
         if (totals[name] == null)
           for (final money in list)
             if (money.currency != currency) money.currency.code,
+      for (final money in inMarket.values)
+        if (money.currency != currency) money.currency.code,
     };
     if (unconverted.isNotEmpty) {
       return ToolResult(
@@ -206,7 +240,9 @@ final class ComputeAffordability extends AgentTool {
     return switch (answerAffordability(
       market: market,
       profile: profile,
-      price: price,
+      price: inMarket['price'],
+      downPayment: inMarket['downPayment'],
+      monthlyFee: inMarket['homeFee'],
       termYears: arguments['termYears'] as int?,
     )) {
       AffordabilityNeeds(:final missing, :final unconverted) => ToolResult(
@@ -217,7 +253,9 @@ final class ComputeAffordability extends AgentTool {
           'needs': [
             for (final field in missing)
               {
-                'fact': field.name,
+                'arguments': {
+                  for (final key in field.profileKeys) _argumentFor[key] ?? key,
+                }.toList(),
                 'why': ?market.profileFields
                     .where((requirement) => requirement.field == field)
                     .firstOrNull
@@ -237,10 +275,23 @@ final class ComputeAffordability extends AgentTool {
             (final cash?, final saved?) => cash <= saved,
             _ => null,
           },
+          'withinRules': slice.loan <= slice.maxLoan,
+          'assumed': {
+            if (inMarket['price'] == null)
+              'price': 'the highest price the savings reach',
+            if (inMarket['downPayment'] == null)
+              'downPayment': 'the minimum the rules allow',
+            if (termMovesPayment(market) && arguments['termYears'] == null)
+              'termYears': slice.termYears,
+            if (inMarket['homeFee'] == null) 'homeFee': 'none',
+          },
           'note':
               'The figures are in /affordability. Show them with '
-              'AffordabilitySummary and the limiting rule with RuleNote; '
-              'never write them in your text.',
+              'AffordabilitySummary, the limiting rule with RuleNote, and '
+              'what a month costs with MonthlyCostBreakdown; never write '
+              'them in your text. What was assumed is the buyer\'s to '
+              'decide; nothing else can be computed yet, so offer no other '
+              'choice, such as another kind of rate.',
         },
         seeds: {'affordability': jsonDecode(jsonEncode(slice.toJson()))},
       ),

@@ -75,10 +75,13 @@ GeminiException geminiStreamError({
   return switch (error['code']) {
     'api_error' => GeminiUnavailable(message, model: model),
     'quota_exceeded' || 'too_many_requests' => _quotaError(message, now),
+    _ when message.startsWith(_rateLimited) => _quotaError(message, now),
     _ when _isOverloaded(message) => GeminiUnavailable(message, model: model),
     _ => GeminiRequestInvalid(message),
   };
 }
+
+const _rateLimited = 'Rate limit exceeded';
 
 bool _isOverloaded(String message) =>
     message.contains('high demand') || message.contains('overloaded');
@@ -89,7 +92,9 @@ GeminiException _quotaError(String message, DateTime now) =>
     : GeminiQuotaExhausted(
         message,
         resetsAt: nextPacificMidnight(now),
-        perModel: message.contains('generate_content_free_tier_requests'),
+        perModel:
+            message.contains('generate_content_free_tier_requests') ||
+            message.startsWith('$_rateLimited for model'),
       );
 
 (Object?, String, Set<String>) _errorOf(String body) {

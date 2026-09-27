@@ -11,6 +11,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `Fact` | yes | `fact` | `fact` | What Homeward understood |
 | `Choice` | yes | `question`, `options`, `answer` |  | Rent first or buy |
 | `AffordabilitySummary` | yes | `affordability` | `affordability` | A Stockholm couple |
+| `MonthlyCostBreakdown` | yes | `affordability` | `affordability` | A Stockholm flat with an association fee |
 | `RuleNote` | yes | `rule` | `rule` | The rule that limits the loan |
 
 ### Fact
@@ -24,6 +25,10 @@ One decision to ask: its options, the one you recommend first with why, and a ta
 ### AffordabilitySummary
 
 What the household can borrow, the highest price it allows, and the rule that limits it, from compute_affordability.
+
+### MonthlyCostBreakdown
+
+What the home at the price in /affordability costs each month: interest, amortization, the fee the buyer stated, and the total, from compute_affordability.
 
 ### RuleNote
 
