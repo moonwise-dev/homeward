@@ -12,6 +12,7 @@ abstract class ToolResult with _$ToolResult {
   const factory ToolResult({
     required Map<String, Object?> modelResult,
     @Default({}) Map<String, Object?> seeds,
+    @Default({}) Map<String, Object?> logFields,
   }) = _ToolResult;
 }
 

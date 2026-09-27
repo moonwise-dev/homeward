@@ -10,6 +10,8 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | --- | --- | --- | --- | --- |
 | `Fact` | yes | `fact` | `fact` | What Homeward understood |
 | `Choice` | yes | `question`, `options`, `answer` |  | Rent first or buy |
+| `AffordabilitySummary` | yes | `affordability` | `affordability` | A Stockholm couple |
+| `RuleNote` | yes | `rule` | `rule` | The rule that limits the loan |
 
 ### Fact
 
@@ -18,6 +20,14 @@ One item of the brief, with where it came from; a deduction offers Right and Not
 ### Choice
 
 One decision to ask: its options, the one you recommend first with why, and a tap that answers at once.
+
+### AffordabilitySummary
+
+What the household can borrow, the highest price it allows, and the rule that limits it, from compute_affordability.
+
+### RuleNote
+
+One lending rule, the largest loan it allows, and its source, from compute_affordability.
 ## Basic Components
 
 Agent-visible from the A2UI v0.9 basic catalog: `Text`, `Row`, `Column`, `Card`, `Divider`, `List`, `Tabs`, `Icon`, `Button`, `CheckBox`, `ChoicePicker`, `TextField`, `DateTimeInput`.
@@ -32,8 +42,20 @@ Every function of the A2UI v0.9 basic catalog is available too.
 
 ### `/brief`
 
-What Homeward learned about the household, written with update_brief: an object of items by ID.
+What Homeward learned about the household, written with update_brief: an object of items by ID. Seeded by `update_brief`.
 
 | Path | Value | Meaning |
 | --- | --- | --- |
 | `/brief/<id>` | object read by Homeward components | One item: { id, kind, text, source, words }. Bind it whole to a Fact. |
+
+### `/affordability`
+
+What compute_affordability found for this household, from sample rules. Seeded by `compute_affordability`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/affordability/price` | money object { "minorUnits": integer, "currency": ISO 4217 code } | The price assessed |
+| `/affordability/maxPrice` | money object { "minorUnits": integer, "currency": ISO 4217 code } | The highest price the savings and rules allow |
+| `/affordability/maxLoan` | money object { "minorUnits": integer, "currency": ISO 4217 code } | The largest loan the rules allow at the price |
+| `/affordability/binding` | object read by Homeward components | The rule that limits the loan; bind it to a RuleNote |
+| `/affordability/checks` | object read by Homeward components | Every rule checked, in order; bind one to a RuleNote as /affordability/checks/<n> |

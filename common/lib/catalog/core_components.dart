@@ -7,4 +7,6 @@ const coreComponents = {
   'Divider',
   'Fact',
   'Choice',
+  'AffordabilitySummary',
+  'RuleNote',
 };

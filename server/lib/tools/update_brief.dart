@@ -49,7 +49,8 @@ final class UpdateBrief extends AgentTool {
               'description':
                   'One thing you learned, one short sentence to the buyer. '
                   'Keep what the buyer said and what you conclude from it as '
-                  'separate items. Any number in it must appear in words.',
+                  'separate items. Write a figure in digits as the buyer '
+                  'wrote it, such as 55,000 kronor; it must appear in words.',
             },
             'source': {
               'type': 'string',
@@ -92,7 +93,10 @@ final class UpdateBrief extends AgentTool {
     ];
     if (problems.isNotEmpty) {
       return ToolResult(
-        modelResult: {'error': 'Nothing was recorded. ${problems.join(' ')}'},
+        modelResult: {
+          'error': 'Nothing was recorded; fix the problems and call again.',
+          'problems': problems,
+        },
       );
     }
     final brief = {
@@ -140,14 +144,26 @@ final class UpdateBrief extends AgentTool {
     if (words is! String || !_appearsIn(words, buyerWords)) {
       return 'words must be copied exactly from something the buyer wrote.';
     }
-    if (!numbersIn(words).containsAll(numbersIn(text))) {
-      return 'text has a number that is not in words; write numbers only '
-          'as the buyer wrote them.';
+    final unsaid =
+        numbersIn(
+              text,
+            )
+            .where((number) => !_isSmallCount(number))
+            .toSet()
+            .difference(numbersIn(words));
+    if (unsaid.isNotEmpty) {
+      return 'text has ${unsaid.join(', ')}, which is not in words; write '
+          'figures only as the buyer wrote them.';
     }
     return null;
   }
 
   static final _idPattern = RegExp(r'^[a-z0-9]+(-[a-z0-9]+)*$');
+
+  static bool _isSmallCount(String number) =>
+      (int.tryParse(number) ?? smallCountLimit + 1) <= smallCountLimit;
+
+  static const smallCountLimit = 12;
 
   static bool _appearsIn(String words, List<String> buyerWords) {
     final quote = _normalized(words).replaceAll(_edges, '');

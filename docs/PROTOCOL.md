@@ -396,7 +396,9 @@ pass rejects it.
    earlier turns left it or in what this turn's tools seed. A `createSurface`
    for a surface that exists changes nothing and is not forwarded. An input may
    bind to a missing field of an existing object, which it will write; relative
-   template paths are skipped.
+   template paths are skipped. A binding a Homeward block declares, such as
+   `AffordabilitySummary`'s `/affordability`, must resolve in full, so the
+   block waits for the tool that seeds it.
 9. **Seed.** The server prepends `createSurface` with `sendDataModel: true` if
     the model omitted it, and emits `updateDataModel` for the slices the
     components bind to, unless the surface already holds that value. After a

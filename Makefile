@@ -34,6 +34,7 @@ help:
 	@echo "  make codegen       Run build_runner in app, common, and server"
 	@echo "  make codegen-check Fail if build_runner changes a committed generated file"
 	@echo "  make iso-4217      Regenerate the ISO 4217 currency table from SIX"
+	@echo "  make country-names Regenerate the country name table from CLDR"
 	@echo "  make a2ui-schemas  Vendor the pinned A2UI v0.9 basic catalog and common types"
 	@echo "  make fonts         Vendor the pinned font faces the app draws with"
 	@echo "  make emulator      Run the Firestore emulator on port 8081"
@@ -111,6 +112,11 @@ codegen-check:
 iso-4217:
 	@dart run tool/bin/generate_iso_4217.dart common/lib/money/generated/iso_4217.dart
 	@dart format common/lib/money/generated/iso_4217.dart
+
+.PHONY: country-names
+country-names:
+	@dart run tool/bin/generate_country_names.dart common/lib/geo/generated/country_names.dart
+	@dart format common/lib/geo/generated/country_names.dart
 
 .PHONY: a2ui-schemas
 a2ui-schemas:

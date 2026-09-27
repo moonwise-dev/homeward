@@ -1,9 +1,15 @@
 import 'slice_field.dart';
 
 final class DataSlice {
-  const DataSlice(this.name, this.description, this.fields);
+  const DataSlice(
+    this.name,
+    this.description,
+    this.fields, {
+    required this.seededBy,
+  });
 
   final String name;
+  final String seededBy;
   final String description;
   final List<SliceField> fields;
 

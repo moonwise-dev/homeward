@@ -8,6 +8,7 @@ import 'package:homeward_server/data/providers/providers.dart';
 import 'package:homeward_server/gemini/gemini_exception.dart';
 
 import '../agent/turn/scripted_interactions.dart';
+import 'test_markets.dart';
 
 final class TokenIdentityVerifier implements IdentityVerifier {
   const TokenIdentityVerifier(this.uids);
@@ -44,4 +45,5 @@ Providers testProviders({
     }
   },
   prompts: PromptAssembler.load(Directory('prompts')),
+  markets: testMarkets,
 );

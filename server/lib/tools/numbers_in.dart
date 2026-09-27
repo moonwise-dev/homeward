@@ -1,8 +1,33 @@
 Set<String> numbersIn(String text) => {
-  for (final match in RegExp(r"\d(?:[\d,.' ]*\d)?").allMatches(text))
-    match[0]!.replaceAll(RegExp(r'\D'), ''),
-  for (final run in _spelledRuns(text.toLowerCase())) '${_valueOf(run)}',
+  for (final match in _written.allMatches(text))
+    _writtenValue(match[1]!, match[2]?.toLowerCase()),
+  for (final run in _spelledRuns(text.replaceAll(_written, ' ').toLowerCase()))
+    '${_valueOf(run)}',
 };
+
+final _written = RegExp(
+  r"(\d(?:[\d,.' ]*\d)?)(?:\s*(k|m|mn|bn|thousand|million|billion)\b)?",
+  caseSensitive: false,
+);
+
+String _writtenValue(String digits, String? scale) {
+  final plain = digits.replaceAll(RegExp("[ ']"), '');
+  final last = plain.lastIndexOf(RegExp('[.,]'));
+  final decimal = last != -1 && plain.length - last - 1 != 3;
+  final whole = plain
+      .substring(0, decimal ? last : plain.length)
+      .replaceAll(RegExp('[.,]'), '');
+  final fraction = decimal ? plain.substring(last + 1) : '';
+  final value =
+      num.parse(fraction.isEmpty ? whole : '$whole.$fraction') *
+      switch (scale) {
+        'k' || 'thousand' => 1000,
+        'm' || 'mn' || 'million' => 1000000,
+        'bn' || 'billion' => 1000000000,
+        _ => 1,
+      };
+  return value == value.roundToDouble() ? '${value.round()}' : '$value';
+}
 
 List<List<int>> _spelledRuns(String text) {
   final tokens = [

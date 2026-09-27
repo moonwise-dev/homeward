@@ -136,6 +136,8 @@ final class TurnRun {
       _rounds++;
       final roundClock = Stopwatch()..start();
       String? status;
+      Map<String, Object?>? usage;
+      var textChars = 0;
       final request = _request(
         input,
         allowToolCalls: toolRounds < settings.maxToolRounds,
@@ -150,6 +152,7 @@ final class TurnRun {
         )) {
           switch (event) {
             case TextDelta(:final text):
+              textChars += text.length;
               for (final output in parser.add(text)) {
                 yield* _emit(output);
               }
@@ -158,6 +161,7 @@ final class TurnRun {
             case InteractionCompleted(:final interactionId):
               _interactionId = interactionId;
               status = event.status;
+              usage = event.usage;
             case ModelFailed(:final model, :final reason):
               _log.warning(
                 LogEntry(
@@ -215,6 +219,9 @@ final class TurnRun {
             'round': _rounds,
             'status': status,
             'functionCalls': [for (final call in calls) call.name],
+            'textChars': textChars,
+            'outputTokens': ?usage?['total_output_tokens'],
+            'thoughtTokens': ?usage?['total_thought_tokens'],
             'durationMs': roundClock.elapsedMilliseconds,
           },
         ),

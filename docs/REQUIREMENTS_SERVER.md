@@ -140,6 +140,7 @@ window, and the session limit joins with Firestore in M2.
 | `HOMEWARD_APP_CHECK_ENFORCED` | Enforce App Check, off for local development |
 | `HOMEWARD_PUBLIC_URL` | Base URL clients call, used for the agent card's `url` |
 | `HOMEWARD_PROMPTS_DIR` | Prompt files; `/app/prompts` in the image |
+| `HOMEWARD_MARKETS_DIR` | Sample market packs, rates, living costs, and exchange rates; `markets` from the repository root locally, `/app/markets` in the image |
 | `HOMEWARD_SESSION_STORE` | `firestore` or `memory`; Firestore by default on Cloud Run and with the emulator |
 | `GOOGLE_CLOUD_PROJECT` | Firebase project |
 

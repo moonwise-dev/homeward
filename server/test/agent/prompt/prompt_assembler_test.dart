@@ -6,6 +6,8 @@ import 'package:homeward_server/agent/prompt/prompt_assembler.dart';
 import 'package:homeward_server/tools/homeward_tools.dart';
 import 'package:test/test.dart';
 
+import '../../support/test_markets.dart';
+
 void main() {
   final prompts = Directory('prompts');
   final assembler = PromptAssembler.load(prompts);
@@ -42,7 +44,7 @@ void main() {
   });
 
   test('hand-written prompts name only tools and components that exist', () {
-    final tools = {for (final tool in homewardTools) tool.name};
+    final tools = {for (final tool in homewardTools(testMarkets)) tool.name};
     final components = {
       ...agentVisibleBasicComponents,
       for (final component in homewardComponents) component.name,

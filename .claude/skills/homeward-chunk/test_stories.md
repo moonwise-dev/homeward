@@ -18,3 +18,8 @@ chunk, and add new ones when a chunk needs a kind of move not covered here.
    Barcelona.
 6. Can I afford a flat in Madrid on 3,000 euros a month?
 7. Here's a flat we like: <paste a listing link>. My partner uses a wheelchair.
+8. We're moving to Stockholm for my job. I'll earn 55,000 kronor a month
+   before tax, and my partner keeps her remote job paying 3,500 euros a month.
+   We have 600,000 kronor saved.
+9. Two of us want to buy our first flat in Lisbon. We take home 2,800 euros a
+   month together and have 40,000 euros saved.

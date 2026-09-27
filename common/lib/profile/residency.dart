@@ -1,0 +1,1 @@
+enum Residency { resident, nonResident }

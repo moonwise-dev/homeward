@@ -13,4 +13,5 @@ const briefSlice = DataSlice(
       'One item: { id, kind, text, source, words }. Bind it whole to a Fact.',
     ),
   ],
+  seededBy: 'update_brief',
 );

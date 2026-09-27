@@ -183,6 +183,21 @@ final class TurnValidator {
           return _reject(surfaceId, path, '$bound is not in the data model');
         }
       }
+      if (_unseeded(component, data) case final bound?) {
+        final tool = dataModelSlices
+            .where(
+              (slice) =>
+                  bound.startsWith('${slice.path}/') || bound == slice.path,
+            )
+            .firstOrNull
+            ?.seededBy;
+        return _reject(
+          surfaceId,
+          path,
+          '$bound is not in the data model yet; call ${tool ?? 'the tool that '
+                  'seeds it'} first, then send this message again',
+        );
+      }
       final id = component['id']! as String;
       merged[id] = component;
       sent.add(id);
@@ -251,6 +266,22 @@ final class TurnValidator {
   Rejected _reject(String surfaceId, String path, String message) => Rejected(
     ValidationFailure(surfaceId: surfaceId, path: path, message: message),
   );
+
+  String? _unseeded(
+    Map<String, Object?> component,
+    Map<String, Object?> data,
+  ) {
+    final declared = homewardComponents
+        .where((declared) => declared.name == component['component'])
+        .firstOrNull;
+    for (final property in declared?.boundProperties ?? const <String>[]) {
+      if (component[property] case {'path': final String bound}
+          when !resolvesFully(data, bound)) {
+        return bound;
+      }
+    }
+    return null;
+  }
 
   static final _surfaceIdPattern = RegExp(r'"surfaceId"\s*:\s*"([^"]+)"');
 

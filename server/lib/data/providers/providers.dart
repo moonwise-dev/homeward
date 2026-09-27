@@ -22,6 +22,9 @@ import '../../gemini/model_caps.dart';
 import '../../gemini/model_circuits.dart';
 import '../../gemini/models_client.dart';
 import '../../keys/verify_gemini_key.dart';
+import '../../markets/finding.dart';
+import '../../markets/load_markets.dart';
+import '../../markets/market_directory.dart';
 import '../../rate_limit/fixed_window_limiter.dart';
 import '../../tools/homeward_tools.dart';
 import '../repository/firestore_session_repository.dart';
@@ -36,6 +39,7 @@ final class Providers {
     required CreateInteraction createInteraction,
     required VerifyGeminiKey verifyKey,
     required PromptAssembler prompts,
+    required MarketDirectory markets,
     SessionRepository? sessions,
     DateTime Function()? now,
   }) {
@@ -56,7 +60,7 @@ final class Providers {
         sessions: repository,
         createInteraction: createInteraction,
         prompts: prompts,
-        tools: const ToolBelt(homewardTools),
+        tools: ToolBelt(homewardTools(markets)),
         catalog: CatalogValidator(homewardCatalogDocument()),
         settings: TurnSettings(
           maxCorrections: config.maxCorrections,
@@ -79,6 +83,15 @@ final class Providers {
   });
 
   factory Providers.production(ServerConfig config, http.Client httpClient) {
+    final marketsData = loadMarkets(Directory(config.marketsDirectory));
+    final errors = [
+      for (final finding in marketsData.loadFindings)
+        if (finding.severity == FindingSeverity.error)
+          '${finding.subject}: ${finding.message}',
+    ];
+    if (errors.isNotEmpty) {
+      throw StateError('Markets failed to load: ${errors.join('; ')}');
+    }
     final firebase = FirebaseApp.initializeApp(
       options: AppOptions(projectId: config.projectId),
     );
@@ -128,6 +141,7 @@ final class Providers {
         model: config.turnModels.first,
       ),
       prompts: PromptAssembler.load(Directory(config.promptsDirectory)),
+      markets: MarketDirectory(marketsData),
     );
   }
 

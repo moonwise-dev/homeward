@@ -1,0 +1,1 @@
+enum Coverage { curated, uncovered }

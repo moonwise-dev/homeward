@@ -15,6 +15,9 @@ final class JsonReplyParser implements OutputParser {
   @override
   List<ParsedOutput> close() {
     final source = _reply.toString();
+    if (source.trim().isEmpty) {
+      return const [];
+    }
     return switch (_decoded(source)) {
       {'messages': final List<Object?> messages} => [
         for (final message in messages)

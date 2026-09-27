@@ -45,13 +45,16 @@ final class ToolBelt {
       );
     } finally {
       _log.log(
-        result?.modelResult['error'] == null ? Level.FINE : Level.INFO,
+        result?.modelResult['error'] == null && result!.logFields.isEmpty
+            ? Level.FINE
+            : Level.INFO,
         LogEntry(
           'Tool ${tool.name}',
           fields: {
             'tool': tool.name,
             'durationMs': stopwatch.elapsedMilliseconds,
             'error': ?result?.modelResult['error'],
+            ...?result?.logFields,
           },
         ),
       );

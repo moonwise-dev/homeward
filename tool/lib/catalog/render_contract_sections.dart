@@ -6,7 +6,7 @@ String renderDataModelSlices(String heading) => [
   for (final slice in dataModelSlices)
     [
       '$heading ${code(slice.path)}',
-      slice.description,
+      '${slice.description} Seeded by ${code(slice.seededBy)}.',
       markdownTable(
         ['Path', 'Value', 'Meaning'],
         [

@@ -53,11 +53,15 @@ four journeys of `docs/PRODUCT.md` (D141).
   coding agent (D130). Leaves out `Choice`.
 - **C4b Choice — done.** The `Choice` block, one decision with Gemini's
   recommendation first, and the prompt that asks one decision at a time.
-- **C5 Money core.** Restored from `6faa8ab`: `common/lib/finance`,
+- **C5 Money core — done.** Restored from `6faa8ab`: `common/lib/finance`,
   `common/lib/affordability`, `common/lib/costs`, and the market model with
-  the Swedish and Portuguese packs, rates, and living costs, reduced to the
-  demo cities and labelled as samples. An affordability tool, and the
-  `AffordabilitySummary`, `MonthlyCostBreakdown`, and `RuleNote` blocks.
+  the Swedish and Portuguese packs, rates, and living costs, labelled as
+  samples. A `compute_affordability` tool that takes the figures the buyer
+  stated, and the `AffordabilitySummary` and `RuleNote` blocks: what the
+  household can borrow, the highest price it allows, and which rule limits
+  it, with its source (D146).
+- **C5b Monthly cost.** `MonthlyCostBreakdown`: what a given price costs the
+  household each month, restored as `PaymentBreakdown`.
 - **C6 Mortgage options.** `MortgageOptions`, `DownPaymentSlider`,
   `StressTestChart`, and `PurchaseCostsTable`, recomputed on the device.
 - **C7 Homes.** The restored sample homes of Stockholm and Lisbon, a
@@ -262,6 +266,7 @@ superseded stay as history.
 | D143 | Progressive disclosure of the catalog | S16 found the full skill fits the free tier at 25 to 30 blocks and costs no measurable time; progressive disclosure is built anyway, by the user's choice. The skill carries the full schemas of the layout components correction rounds use (`Column`, `Row`, `Card`, `Text`, `Button`, `Divider`), the functions, and the common types, and an index of every other component with its one-line description. `component_docs` returns the full schemas and examples of the components Gemini names. Amends D69 | The full schema in the prompt; deciding at C10 |
 | D144 | The brief on screen | C4 splits into the brief and then `Choice` (C4b), smaller chunks. The brief is kept as the `/brief` slice in each turn's record, the way every slice persists, and seeded again into the plan whenever a tool changes it. `Fact` binds one item and joins the core components, whose schemas the skill always carries, since every plan shows the brief; on a deduction it offers Right and Not quite, which reach Gemini as an action with the item's ID, and Gemini updates the brief with `update_brief`. `update_brief` stores an item only when its words appear word for word in what the buyer wrote or tapped, and every number in its sentence appears in those words | Editing a fact in place, stored by the server as said; correcting only by typing; the brief as a field of the session document |
 | D145 | Choice | One decision per `Choice`: a question, two to five options, the recommended one first with why. A tap sends the option at once, the way a coding agent takes a one-key answer, and the option stays marked. The text field under the conversation is the room to type; the `Choice` points at it rather than holding a field of its own. `Choice` joins the core components, so asking never costs a `component_docs` round. The chosen label counts as the buyer's words for `update_brief`. A `Choice` is for a decision; a fact only the buyer knows, such as savings, is asked in text, and `update_brief` checks numbers written in words as well as digits, since Gemini spelled figures out to get past the check | Select, then Continue; several choices at once; an Other field inside the card |
+| D146 | Money core | C5 splits into what the household can borrow (C5) and what a price costs them a month (C5b). `compute_affordability` takes the household's figures as arguments, the ones the buyer stated, and refuses a figure that does not appear in their words, the same check as the brief; it answers with the facts it still needs and why, from the pack, so Gemini asks. It resolves the Swedish or Portuguese sample pack, runs the restored `assessAffordability` and `maximumPrice`, and seeds `/affordability`. Other cities are not covered by the sample and the tool says so. Incomes, debts, and savings come as lists in their own currencies, converted with the sample exchange rates the summary names. `AffordabilitySummary` and `RuleNote` join the core components, and a block bound to a slice no tool has seeded yet is refused | One chunk with the monthly cost; figures read from structured money items in the brief |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

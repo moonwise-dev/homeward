@@ -83,6 +83,16 @@ Pure Dart. The only package allowed to define domain vocabulary.
 common/lib/
   common.dart
   money/          Money, Currency, Rate (parts per million), Rounding, ISO 4217 table
+  finance/        annuity and straight amortization, monthly payment, amortization
+                  tiers, brackets
+  affordability/  largest loan, maximum price, monthly ceilings, stress rate,
+                  down payment bounds, the binding rule
+  costs/          purchase costs from a market's cost rules
+  markets/        market rule packs, reference rates, living costs, exchange
+                  rates, resolved for one buyer
+  profile/        BuyerProfile, the facts the rules read; plan/Scenario, a price,
+                  down payment, term, and loan type
+  time/           CalendarDate, Period
   geo/            GeoPoint, TravelMode
   catalog/        ComponentApi declarations: names, schemas, function signatures,
                   data model slices, examples; generated/ catalog document
@@ -148,6 +158,7 @@ server/
       validation/   validation passes
     gemini/         interactions client, live client, request/response models
     tools/          the tool interface and the list of tools, one file per tool
+    markets/        loads the sample market packs from `markets/` at startup
     research/       open-data clients (Nominatim, Overpass, routing), polite
                     and cached
     ids/            random identifiers

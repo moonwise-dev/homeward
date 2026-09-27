@@ -7,8 +7,8 @@ once in `common/lib/catalog`, implemented in `app/lib/catalog`, validated in
 Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 Since the reset (D129) Homeward's own blocks come back one at a time, each
-with the chunk of `docs/ROADMAP.md` that needs it: `Fact` (C4) and `Choice`
-(C4b) so far.
+with the chunk of `docs/ROADMAP.md` that needs it: `Fact` (C4), `Choice`
+(C4b), and `AffordabilitySummary` and `RuleNote` (C5) so far.
 
 ## Design Principles
 
@@ -47,8 +47,9 @@ in `basicComponentSummaries`:
 
 The core components, `coreComponents`: the layout components `Column`,
 `Row`, `Card`, `Text`, `Button`, and `Divider`, `Fact`, which every plan
-uses, and `Choice`, which every ask uses. The skill always carries their full
-schemas, and correction rounds offer them (D110, D143, D144, D145).
+uses, `Choice`, which every ask uses, and `AffordabilitySummary` and
+`RuleNote`, since money is in every plan. The skill always carries their full
+schemas, and correction rounds offer them (D110, D143 to D146).
 
 Not agent-visible: `Image`, `Video`, `AudioPlayer`, `Modal`, `Slider`.
 
@@ -60,14 +61,20 @@ Buttons send actions the model names itself (`docs/PROTOCOL.md`).
 | --- | --- | --- | --- |
 | Understanding | `Fact` | One item of the brief: the sentence, and where it came from: "You said", "Deduced from" with the buyer's words, or "You confirmed". A deduction with an `answer` action offers Right and Not quite (D144) | `fact`, bound to one item, `{ "path": "/brief/<id>" }`; `answer`, an optional action |
 | Understanding | `Choice` | One decision as an inline ask: the question, two to five options, the recommended one first with why, and a line pointing at the text field for any other answer (D145) | `question`; `options`, each a `label` and an optional `detail`; `recommended`, the label of one option; `because`; `answer`, an action |
+| Money | `AffordabilitySummary` | What the household can borrow, the highest price their savings and the sample rules allow, the down payment and cash needed, the monthly payment, and which rule limits the loan, labelled as a sample estimate (D146) | `affordability`, always `{ "path": "/affordability" }` |
+| Trust | `RuleNote` | One lending rule: what it is, the largest loan it allows, whether the loan is within it, and its source with the date it was read, labelled as a sample rule (D146) | `rule`, bound to one rule, such as `{ "path": "/affordability/binding" }` or `/affordability/checks/0` |
 
 A `Choice` tap sends its `answer` action at once, with `choice` and `label`,
 the option's label, added to its context; the tapped option stays marked.
 
+A block that binds a slice, such as `AffordabilitySummary` or `Fact`, is
+refused until the tool that seeds it has run: its whole path must be in the
+data model, unlike an input, which may bind a field it will write.
+
 A `Fact` tap sends its `answer` action with `fact`, the item's ID, `answer`,
 `right` or `not_quite`, and `label`, the words the conversation shows, such as
 "Right: Your mum can't manage stairs". A `Fact` bound to an item the brief
-does not hold draws nothing.
+does not hold is refused.
 
 ## Planned Blocks
 
@@ -79,9 +86,7 @@ marked restored come back from `6faa8ab`.
 | --- | --- | --- | --- |
 | Understanding | `Brief` | C10 | A section of the brief: the household, its needs, its week, or what is open |
 | Understanding | `HouseholdSummary` | C10 | Who moves, incomes and savings as stated, and who shares the costs |
-| Money | `AffordabilitySummary` | C5 | What the household can borrow and the price range it allows, and which rule limits it; restored |
-| Money | `MonthlyCostBreakdown` | C5 | What a home costs each month: interest, amortization, fees, and running costs; restored as `PaymentBreakdown` |
-| Money | `RuleNote` | C5 | A local lending rule or fee, with its source and whether it is a sample |
+| Money | `MonthlyCostBreakdown` | C5b | What a home costs each month: interest, amortization, fees, and running costs; restored as `PaymentBreakdown` |
 | Money | `MortgageOptions` | C6 | Fixed against variable, down payment levels, and terms, side by side |
 | Money | `DownPaymentSlider` | C6 | A what-if recomputed on the device, bound to the seeded bounds |
 | Money | `StressTestChart` | C6 | The monthly cost as rates rise, against what the household can carry; restored |
@@ -139,7 +144,12 @@ Beside the components, `common/lib/catalog` declares:
 - `data_model/`: the slices the server seeds from tool results and the fields
   components may bind, with value shapes and meanings. `brief` (C4, D132): an
   object of the brief's items by ID, each `{ id, kind, text, source, words }`,
-  declared with `BriefItem` in `common/lib/brief`.
+  declared with `BriefItem` in `common/lib/brief`. `affordability` (C5,
+  D146): what `compute_affordability` found, declared with
+  `AffordabilitySlice` in `common/lib/affordability`: the market, the price,
+  the highest price, the loan and largest loan, the down payment, cash
+  needed, savings, rate, term, loan type, the monthly payment, the binding
+  rule, and every rule checked, each with its source.
 - `functions/`: client functions, `CatalogFunction`s with a pure `evaluate`
   over JSON-shaped arguments, which the app wraps as genui `ClientFunction`s
   and the server can reuse. They serve basic components, such as a check that

@@ -189,12 +189,30 @@ source (`said`, `deduced`, or `confirmed`, a deduction the buyer tapped Right
 on), and the buyer's words it came from. An item with an existing ID replaces
 it; `remove` drops items. The tool checks every item before it stores any:
 the words must appear word for word in what the buyer wrote or tapped in this
-plan, and every number in the sentence, in digits or spelled out, must have
-the same value as one in the words, so a figure in the brief is always the
-buyer's own, and a count Gemini worked out is refused. A failed check answers with the
+plan, and every number above twelve in the sentence, in digits or spelled
+out, must have the same value as one in the words, so a figure in the brief
+is always the buyer's own; a small count, such as two adults, may be
+deduced. A failed check names each problem to Gemini and stores nothing;
+only the summary is logged, never the buyer's figures. A failed check answers with the
 reason and stores nothing. It returns the whole brief and seeds it as
 `/brief`. Measured, quoted, and estimated items come from the tools that
 measure, quote, or estimate, never from `update_brief`.
+
+`compute_affordability` (C5, D146) works out what the household can borrow
+from the sample rules of a covered market, Sweden or Portugal, which the
+server loads from `markets/` at startup. Its arguments are the figures the
+buyer stated, such as incomes, savings, and debts, each with its currency and
+period, and the household: adults, children's ages, borrowers, residency, and
+use of the home. Every amount other than zero must appear in the buyer's words, as
+`update_brief` checks. It returns what it still needs, each fact with the
+pack's reason, or the result: the largest loan, the highest price the savings
+and the rules allow, and the rule that limits it, with its source. It seeds
+`/affordability`, which `AffordabilitySummary` and `RuleNote` bind. Its
+market is one of the covered packs, listed in its description, so for a home
+anywhere else Gemini tells the buyer the sample does not cover it. Incomes,
+debts, and savings are lists in their own currencies, converted with the
+sample exchange rates the summary names. It logs the facts it still needs,
+never the figures.
 
 A tool reads the turn through its `ToolContext`: the progress steps, the
 slices as they stand, and the buyer's words in this plan.
@@ -203,7 +221,7 @@ Planned tools, each arriving with its chunk:
 
 | Tool | Chunk | What it does |
 | --- | --- | --- |
-| Affordability | C5 | What the household can borrow and the price range, from `common` and the sample market pack; seeds the money slices |
+| Monthly cost | C5b | What a given price costs the household each month, from the same packs |
 | Mortgage options | C6 | Monthly cost, stress curve, and upfront costs for a price, a down payment, and a term |
 | `search_homes` | C7 | Searches the labelled sample homes and prices each for this household |
 | `find_place` | C8 | Resolves a place the buyer names, with Nominatim |

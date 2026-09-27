@@ -84,6 +84,25 @@ String? structureProblem(
       : 'Components not reachable from root: ${orphans.join(', ')}';
 }
 
+bool resolvesFully(Map<String, Object?> dataModel, String path) {
+  Object? current = dataModel;
+  for (final segment in path.split('/').skip(1)) {
+    current = switch (current) {
+      final Map<String, Object?> map when map.containsKey(segment) =>
+        map[segment],
+      final List<Object?> list
+          when (int.tryParse(segment) ?? -1) >= 0 &&
+              int.parse(segment) < list.length =>
+        list[int.parse(segment)],
+      _ => null,
+    };
+    if (current == null) {
+      return false;
+    }
+  }
+  return true;
+}
+
 bool resolvesForBinding(Map<String, Object?> dataModel, String path) {
   if (!path.startsWith('/')) {
     return true;

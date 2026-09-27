@@ -15,6 +15,7 @@ import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
 import '../agent/turn/scripted_interactions.dart';
+import '../support/test_markets.dart';
 
 void main() {
   final recording = File('../app/test/fixtures/recorded_turn.sse');
@@ -38,7 +39,7 @@ void main() {
           ),
         ]).call,
         prompts: PromptAssembler.load(Directory('prompts')),
-        tools: const ToolBelt(homewardTools),
+        tools: ToolBelt(homewardTools(testMarkets)),
         catalog: CatalogValidator(homewardCatalogDocument()),
         now: () => DateTime.utc(2026, 9, 17, 12),
       ),

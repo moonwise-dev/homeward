@@ -856,6 +856,87 @@
         "answer"
       ],
       "additionalProperties": false
+    },
+    "AffordabilitySummary": {
+      "type": "object",
+      "description": "What the household can borrow, the highest price it allows, and the rule that limits it, from compute_affordability.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "AffordabilitySummary"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "affordability": {
+          "type": "object",
+          "description": "Always { \"path\": \"/affordability\" }, after compute_affordability answered.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/affordability"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "affordability"
+      ],
+      "additionalProperties": false
+    },
+    "RuleNote": {
+      "type": "object",
+      "description": "One lending rule, the largest loan it allows, and its source, from compute_affordability.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "RuleNote"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "rule": {
+          "type": "object",
+          "description": "One rule compute_affordability checked: { \"path\": \"/affordability/binding\" } for the rule that limits the loan, or { \"path\": \"/affordability/checks/<n>\" }.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "rule"
+      ],
+      "additionalProperties": false
     }
   },
   "functions": {
@@ -1457,6 +1538,12 @@
         },
         {
           "$ref": "#/components/Choice"
+        },
+        {
+          "$ref": "#/components/AffordabilitySummary"
+        },
+        {
+          "$ref": "#/components/RuleNote"
         }
       ]
     },

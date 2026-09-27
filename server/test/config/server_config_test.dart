@@ -28,6 +28,7 @@ void main() {
         ],
         appCheckEnforced: true,
         promptsDirectory: 'server/prompts',
+        marketsDirectory: 'markets',
         sessionStore: SessionStore.memory,
       ),
     );

@@ -42,6 +42,8 @@ void main() {
           'TextField',
           'Fact',
           'Choice',
+          'AffordabilitySummary',
+          'RuleNote',
         ])
           '#/\$defs/component_$name',
       ],

@@ -1,0 +1,15 @@
+[
+  {
+    "id": "PT.EURIBOR6M_MONTHLY_AVERAGE",
+    "rate": "2.713%",
+    "asOf": "2026-09-16",
+    "source": {
+      "id": "bpi-indexante-2026-09",
+      "publisher": "Banco BPI",
+      "title": "Preçário 18: indexante Euribor a 6 meses, média aritmética simples das cotações diárias do mês anterior",
+      "url": "https://www.bancobpi.pt/contentservice/getContent?documentName=PP_WCS01_UCM01002197",
+      "kind": "lenderNorm",
+      "retrievedAt": "2026-09-17"
+    }
+  }
+]
