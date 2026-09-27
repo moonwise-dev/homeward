@@ -1376,6 +1376,46 @@
       ],
       "additionalProperties": false
     },
+    "ListingQuote": {
+      "type": "object",
+      "description": "One sample home read for the household's needs, from read_listings: each need with whether the listing meets it, rules it out, or says nothing, and the listing's own words highlighted.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "ListingQuote"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "reading": {
+          "type": "object",
+          "description": "One home read_listings read, { \"path\": \"/reads/<id>\" }.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "reading"
+      ],
+      "additionalProperties": false
+    },
     "WeeklyTravel": {
       "type": "object",
       "description": "The buyer's week from one starting point, from measure_week: each place, how often and how they go, the measured minutes, and the week's total.",
@@ -2092,6 +2132,9 @@
         },
         {
           "$ref": "#/components/HomeComparison"
+        },
+        {
+          "$ref": "#/components/ListingQuote"
         },
         {
           "$ref": "#/components/WeeklyTravel"

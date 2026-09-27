@@ -58,6 +58,14 @@ The sample homes search_homes found, each priced for the household: an object of
 | --- | --- | --- |
 | `/homes/<id>` | object read by Homeward components | One home: { listing, cost }. Bind it whole to a HomeCard. |
 
+### `/reads`
+
+Sample homes read_listings read for the household's needs: an object by home ID. Seeded by `read_listings`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/reads/<id>` | object read by Homeward components | One home: { homeName, description, readings }. Bind it whole to a ListingQuote. |
+
 ### `/places`
 
 The places the buyer named, found with find_place: an object of places by ID. Seeded by `find_place`.
@@ -121,6 +129,7 @@ The catalog schema below holds the full schemas of the components every plan use
 - `HomeCard`: One sample home from search_homes: photos, facts, price, and what it costs this household each month; its choose action sends the home to work out, and its keep action the home to keep or drop, with home, its ID, and keep, true or false, added to its context.
 - `Shortlist`: The homes the household kept with keep_homes, each with what it costs them a month; its choose action sends a home to work out and its drop action one to drop, with home, its ID, added to its context.
 - `HomeComparison`: Two or three homes from search_homes side by side: price, what each costs a month, the cash needed, and size; its choose action sends the one the buyer picks, with home, its ID, added to its context.
+- `ListingQuote`: One sample home read for the household's needs, from read_listings: each need with whether the listing meets it, rules it out, or says nothing, and the listing's own words highlighted.
 - `WeeklyTravel`: The buyer's week from one starting point, from measure_week: each place, how often and how they go, the measured minutes, and the week's total.
 - `RouteSummary`: One trip measure_week measured: where to, how they go, the minutes and distance, and how often.
 

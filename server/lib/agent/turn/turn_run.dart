@@ -12,6 +12,8 @@ import '../../gemini/interaction_input.dart';
 import '../../gemini/interaction_request.dart';
 import '../../gemini/tool_choice.dart';
 import '../../logging/log_entry.dart';
+import '../../research/gemini_researcher.dart';
+import '../../research/researcher.dart';
 import '../../tools/tool_context.dart';
 import '../actions/action_input.dart';
 import '../json_reply_parser.dart';
@@ -253,9 +255,15 @@ final class TurnRun {
           toolRounds++;
         }
         final results = <FunctionResult>[];
+        final researcher = GeminiResearcher(
+          createInteraction: createInteraction,
+          apiKey: apiKey,
+          thinkingLevel: settings.thinkingLevel,
+          cancellation: cancellation,
+        );
         yield* _progress.whileRunning(() async {
           for (final call in calls) {
-            results.add(await _runCall(call));
+            results.add(await _runCall(call, researcher));
           }
         });
         yield* _refreshSlices();
@@ -446,7 +454,10 @@ final class TurnRun {
     }
   }
 
-  Future<FunctionResult> _runCall(FunctionCall call) async {
+  Future<FunctionResult> _runCall(
+    FunctionCall call,
+    Researcher researcher,
+  ) async {
     final result = await tools.call(
       call.name,
       call.arguments,
@@ -457,6 +468,7 @@ final class TurnRun {
           for (final record in _session.turns) record.input,
           _turnRequest,
         ]),
+        researcher: researcher,
       ),
     );
     _validator.seeds = {..._validator.seeds, ...result.seeds};

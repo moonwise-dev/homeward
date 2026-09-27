@@ -345,14 +345,26 @@ today's price, for 30 years. It seeds `/buyVsRent` for `BuyVsRent` and
 answers with both totals at the years chosen and the year buying comes out
 cheaper. Before any affordability run it says it needs the household.
 
+`read_listings` (C9b, D156) reads sample homes for what the household
+needs the home itself to have. It takes the IDs of the homes, or a city to
+read every sample home there, and up to six needs Gemini names from the
+buyer's story: an ID, the buyer's short words, such as "A bath for the
+kids", and what counts as meeting it. One structured request on the
+buyer's key, fast model first, answers per home and need whether the
+description meets it, rules it out, or says nothing, with the sentence that
+decides it. Code keeps a quote only when it appears in the description word
+for word; a verdict without one becomes says nothing. Readings are kept per
+home and need, so asking again costs no request. It seeds `/reads/<home>`
+with the description and every need read so far, which `ListingQuote`
+binds, and answers per home with the needs met, ruled out, and not
+mentioned. Gemini decides which homes to show or leave out. It shows one
+progress step for the read and logs counts, never the needs or quotes.
+
 A tool reads the turn through its `ToolContext`: the progress steps, the
-slices as they stand, and the buyer's words in this plan.
+slices as they stand, the buyer's words in this plan, and a researcher that
+asks Gemini one structured question on the turn's key.
 
-Planned tools, each arriving with its chunk:
-
-| Tool | Chunk | What it does |
-| --- | --- | --- |
-| Listing reader | C9b | Reads listings for the household's needs; code keeps a quote only when it appears word for word |
+No other tools are planned before the recording.
 
 After the recording (D142): on-the-spot research of rules and rates (S12),
 reading a listing the buyer pastes (S13), and areas for any city.

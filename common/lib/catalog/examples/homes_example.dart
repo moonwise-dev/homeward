@@ -50,6 +50,7 @@ const _stockholmHomesJson = '''
     "name": "Järla sjö",
     "title": "A loft-style flat by the lake",
     "blurb": "A spiral stair to a sleeping loft, with the trails around Järlasjön outside.",
+    "description": "A loft-style flat on the fifth floor of a 2019 building by Järlasjön. The living room rises two storeys, and a spiral stair leads to a sleeping loft; the second bedroom is on the entry level. The building is step-free from the street, with a lift to every floor. The bathroom has a walk-in shower and underfloor heating. The balcony looks over the lake and the trails of the Nacka nature reserve. The association allows pets.",
     "address": "Järla Gårdsväg 12",
     "point": {
       "lat": 59.3060154,

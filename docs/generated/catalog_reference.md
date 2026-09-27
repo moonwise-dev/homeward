@@ -22,6 +22,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `HomeCard` | yes | `home` | `home` | Two Stockholm flats |
 | `Shortlist` | yes | `homes` | `homes` | Two kept flats |
 | `HomeComparison` | yes | `homes` | `homes` | Nacka against Vasastan |
+| `ListingQuote` | yes | `reading` | `reading` | A flat in Nacka read for three needs |
 | `WeeklyTravel` | yes | `week` | `week` | A week from a flat in Nacka |
 | `RouteSummary` | yes | `trip` | `trip` | To KTH by public transport |
 
@@ -81,6 +82,10 @@ The homes the household kept with keep_homes, each with what it costs them a mon
 
 Two or three homes from search_homes side by side: price, what each costs a month, the cash needed, and size; its choose action sends the one the buyer picks, with home, its ID, added to its context.
 
+### ListingQuote
+
+One sample home read for the household's needs, from read_listings: each need with whether the listing meets it, rules it out, or says nothing, and the listing's own words highlighted.
+
 ### WeeklyTravel
 
 The buyer's week from one starting point, from measure_week: each place, how often and how they go, the measured minutes, and the week's total.
@@ -127,6 +132,14 @@ The sample homes search_homes found, each priced for the household: an object of
 | Path | Value | Meaning |
 | --- | --- | --- |
 | `/homes/<id>` | object read by Homeward components | One home: { listing, cost }. Bind it whole to a HomeCard. |
+
+### `/reads`
+
+Sample homes read_listings read for the household's needs: an object by home ID. Seeded by `read_listings`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/reads/<id>` | object read by Homeward components | One home: { homeName, description, readings }. Bind it whole to a ListingQuote. |
 
 ### `/places`
 
