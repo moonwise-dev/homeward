@@ -13,6 +13,39 @@ final class MarketDirectory {
   final Map<MarketId, MarketRulePack> _packsById;
   final _resolved = <MarketId, MarketRulePack>{};
 
+  Map<String, ListingInventory> get cities => _data.cities;
+
+  ({ListingInventory city, Listing listing})? home(String id) {
+    for (final city in _data.cities.values) {
+      for (final listing in city.listings) {
+        if (listing.id == id) {
+          return (city: city, listing: listing);
+        }
+      }
+    }
+    return null;
+  }
+
+  Map<String, PricedHome> pricedHomes(
+    Iterable<String> ids,
+    AffordabilitySlice? household,
+  ) {
+    final profile = household?.profile;
+    final market = household == null || profile == null
+        ? null
+        : resolveFor(MarketId.parse(household.marketId), profile);
+    return {
+      for (final id in ids)
+        if (home(id) case (:final city, :final listing))
+          id: PricedHome(
+            listing: listing.copyWith(description: ''),
+            cost: market != null && city.marketId == household!.marketId
+                ? homeCostFor(listing, market: market, household: household)
+                : null,
+          ),
+    };
+  }
+
   Map<String, String> get covered => {
     for (final MapEntry(key: id, value: pack) in _packsById.entries)
       id.code: pack.name,

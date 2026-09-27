@@ -7,6 +7,7 @@ import '../markets/source.dart';
 import '../money/money.dart';
 import '../money/ppm_json_converter.dart';
 import '../money/rate.dart';
+import '../profile/buyer_profile.dart';
 import 'constraint_kind.dart';
 import 'stress_curve.dart';
 
@@ -41,6 +42,10 @@ abstract class AffordabilitySlice with _$AffordabilitySlice {
     Money? purchaseCostsTotal,
     DownPaymentWhatIf? whatIf,
     @Default([]) List<MortgageOption> mortgageOptions,
+    BuyerProfile? profile,
+    @Default(false) bool downPaymentStated,
+    String? homeId,
+    String? homeName,
   }) = _AffordabilitySlice;
 
   factory AffordabilitySlice.fromJson(Map<String, Object?> json) =>

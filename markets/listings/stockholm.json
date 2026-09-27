@@ -1,0 +1,610 @@
+{
+  "cityId": "stockholm",
+  "name": "Stockholm",
+  "marketId": "SE",
+  "listings": [
+    {
+      "id": "sto-01",
+      "areaId": "vasastan",
+      "areaName": "Vasastan",
+      "name": "Odengatan",
+      "title": "A bright corner flat above Vasaparken",
+      "blurb": "Three rooms with tall windows, a tiled stove, and a balcony over the park.",
+      "description": "A corner flat on the fourth floor of a 1911 building on Odengatan, with tall windows on two sides and Vasaparken below. The living room keeps its tiled stove and plaster cornices, and the two bedrooms face the quiet courtyard. The kitchen was renovated in 2019 and has room for a table of six. The bathroom has a tub with a shower over it. A small lift runs from the half-landing, so there are six steps up from the street door before you reach it. The balcony faces the park and takes the evening sun. The association allows pets and has a bicycle room in the courtyard.",
+      "address": "Odengatan 64",
+      "point": {
+        "lat": 59.3468782,
+        "lng": 18.0666359
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 78,
+      "floor": 4,
+      "yearBuilt": 1911,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1031000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 468000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 13217900,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 13486000,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-01-1",
+        "sto-01-2",
+        "sto-01-3",
+        "sto-01-4"
+      ],
+      "photoCredit": "Photos: Oscar Nord, Taitopia Render, Andrew V / Unsplash"
+    },
+    {
+      "id": "sto-02",
+      "areaId": "vasastan",
+      "areaName": "Vasastan",
+      "name": "Dalagatan",
+      "title": "Two light rooms with a sleeping loft",
+      "blurb": "High ceilings, an arched window onto the street, and a loft for the bed.",
+      "description": "Two light rooms on the third floor of a 1904 stone building on Dalagatan. Ceilings of almost four metres made room for a sleeping loft above the kitchen, reached by a steep ladder stair, which leaves the room below free for a desk by the arched window. The bathroom was tiled in 2021 and has a walk-in shower. There is no lift; the stairwell is wide and bright, with a window on every landing. Laundry and storage are in the cellar. Dogs and cats are welcome in the association.",
+      "address": "Dalagatan 32",
+      "point": {
+        "lat": 59.3401446,
+        "lng": 18.0474039
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 56,
+      "floor": 3,
+      "yearBuilt": 1904,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 770000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 336000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 13750000,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 13486000,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-02-1",
+        "sto-02-2",
+        "sto-02-3"
+      ],
+      "photoCredit": "Photos: Damir Yakupov, Lisa Anna / Unsplash"
+    },
+    {
+      "id": "sto-03",
+      "areaId": "ostermalm",
+      "areaName": "Östermalm",
+      "name": "Karlavägen",
+      "title": "A grand top-floor flat with a spiral stair",
+      "blurb": "Arched windows, a stair to a roof room, and a balcony above the lime trees of Karlavägen.",
+      "description": "The top floor of an 1890 building on Karlavägen, with arched windows above the lime trees. Three bedrooms, a dining room with parquet and a tiled stove, and a spiral stair up to a roof room that works as a study. A lift from the entrance hall goes all the way to the fifth floor, and the entrance is level with the pavement. The main bathroom has a bath and a separate walk-in shower, and a guest toilet sits by the front door. The balcony faces the avenue. The association does not allow pets.",
+      "address": "Karlavägen 58",
+      "point": {
+        "lat": 59.3389853,
+        "lng": 18.0827281
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 118,
+      "floor": 5,
+      "yearBuilt": 1890,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1581000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 708000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 13398300,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 12762900,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-03-1",
+        "sto-03-2",
+        "sto-03-3"
+      ],
+      "photoCredit": "Photos: Samuel Horn af Rantzien, Davide Colonna, Erika Osberg / Unsplash"
+    },
+    {
+      "id": "sto-04",
+      "areaId": "sodermalm",
+      "areaName": "Södermalm",
+      "name": "Sankt Paulsgatan",
+      "title": "Three rooms on the hill above the water",
+      "blurb": "Open shelving and warm wood, with Mariatorget and its cafés down the street.",
+      "description": "Three rooms on the third floor of a 1925 building on the hill above Mariatorget. Open shelving and warm pine floors run through the flat, and the kitchen looks down over the trees of the square. The two bedrooms face the courtyard, and one is just big enough for a desk under the window. The bathroom has a shower cabinet and a washing machine. The building has no lift, and the stairs up from the street are steep. Cafés, the metro, and the waterfront at Söder Mälarstrand are a few minutes' walk away.",
+      "address": "Sankt Paulsgatan 21",
+      "point": {
+        "lat": 59.3179211,
+        "lng": 18.0662516
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 72,
+      "floor": 3,
+      "yearBuilt": 1925,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 792000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 432000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 11000000,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 11458500,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-04-1",
+        "sto-04-2",
+        "sto-04-3"
+      ],
+      "photoCredit": "Photos: Enza Brunero, Puscas Adryan, Jon Flobrant / Unsplash"
+    },
+    {
+      "id": "sto-05",
+      "areaId": "kungsholmen",
+      "areaName": "Kungsholmen",
+      "name": "Norr Mälarstrand",
+      "title": "A 1930s flat with a glazed balcony",
+      "blurb": "Herringbone floors, two bedrooms, and the waterside walk two minutes away.",
+      "description": "A 1934 functionalist flat on the third floor, a block from the Norr Mälarstrand waterside walk. Herringbone oak floors, two bedrooms, and a living room that opens onto a glazed balcony. The lift was replaced in 2020 and stops at every floor, and a ramp runs beside the three steps at the front door. The bathroom has a bath and no separate shower. A small study alcove opens off the hall. The association allows pets, and the courtyard has a playground.",
+      "address": "Norr Mälarstrand 30",
+      "point": {
+        "lat": 59.3268665,
+        "lng": 18.0437297
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 81,
+      "floor": 3,
+      "yearBuilt": 1934,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 899000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 486000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 11098800,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 11211500,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-05-1",
+        "sto-05-2",
+        "sto-05-3"
+      ],
+      "photoCredit": "Photos: Spencer James Lucas, Uffe One, Wemel Wood / Unsplash"
+    },
+    {
+      "id": "sto-06",
+      "areaId": "solna",
+      "areaName": "Solna",
+      "name": "Arenastaden",
+      "title": "A new-build four-room flat with a big balcony",
+      "blurb": "An open kitchen, three bedrooms, and a south-west balcony over the rooftops.",
+      "description": "A four-room flat on the sixth floor of a 2021 building near Solna station. The entrance, the lift, and the flat's own door are all step-free, and the lift is large enough for a wheelchair. An open kitchen and living room lead to a south-west balcony over the rooftops. There are three bedrooms, one of them next to the bathroom, which has a walk-in shower with a fold- down seat. A second bathroom has a tub. The association welcomes pets and has a shared roof terrace and a bicycle garage.",
+      "address": "Evenemangsgatan 21",
+      "point": {
+        "lat": 59.3701161,
+        "lng": 18.0008644
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 96,
+      "floor": 6,
+      "yearBuilt": 2021,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 644000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 576000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 6708300,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6451800,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-06-1",
+        "sto-06-2",
+        "sto-06-3",
+        "sto-06-4"
+      ],
+      "photoCredit": "Photos: Samuel Bryngelsson, Steven Ungermann, Bluewater Sweden, Caroline Badran / Unsplash"
+    },
+    {
+      "id": "sto-07",
+      "areaId": "solna",
+      "areaName": "Solna",
+      "name": "Bergshamra",
+      "title": "A family house at the edge of the woods",
+      "blurb": "Vaulted ceilings, an open kitchen, and the Ulriksdal woods at the end of the garden.",
+      "description": "A 2012 family house at the edge of the Ulriksdal woods, built on one and a half floors. The front door is level with the paved path from the drive. On the entry floor are the open kitchen and living room under a vaulted ceiling, a bedroom, and a bathroom with a walk-in shower; three more bedrooms and a family bathroom are upstairs. A small home office with its own window sits off the hall. The garden runs down to the woods, with a deck on the south side and two parking places on the drive.",
+      "address": "Björnstigen 83",
+      "point": {
+        "lat": 59.3824567,
+        "lng": 18.0276181
+      },
+      "homeType": "house",
+      "rooms": 5,
+      "bedrooms": 4,
+      "sizeM2": 142,
+      "yearBuilt": 2012,
+      "outdoor": "garden",
+      "style": "modern",
+      "price": {
+        "minorUnits": 1132000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 7971800,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 8390600,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-07-1",
+        "sto-07-2",
+        "sto-07-3",
+        "sto-07-4"
+      ],
+      "photoCredit": "Photos: Emil Widlund, Bailey Alexander / Unsplash"
+    },
+    {
+      "id": "sto-08",
+      "areaId": "danderyd",
+      "areaName": "Danderyd",
+      "name": "Vasavägen",
+      "title": "A 1912 villa with a garden all the way round",
+      "blurb": "A carved wooden villa, carefully restored, with a formal dining room and a stair to five bedrooms.",
+      "description": "A carved wooden villa from 1912, restored with care, on a large plot with a garden all the way round. A flight of stone steps leads up to the veranda and the front door. The ground floor holds a formal dining room, a drawing room with a tiled stove, a kitchen with a pantry, and a guest toilet; all five bedrooms and both bathrooms are up the main stair. The cellar has a sauna and a workshop. Danderyd's schools and the Mörby centre are a short bike ride away.",
+      "address": "Vasavägen 30",
+      "point": {
+        "lat": 59.3853415,
+        "lng": 18.0569089
+      },
+      "homeType": "house",
+      "rooms": 6,
+      "bedrooms": 5,
+      "sizeM2": 190,
+      "yearBuilt": 1912,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1804000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 9494700,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 9220400,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-08-1",
+        "sto-08-2",
+        "sto-08-3"
+      ],
+      "photoCredit": "Photos: Frantisek Duris, Clay Banks / Unsplash"
+    },
+    {
+      "id": "sto-09",
+      "areaId": "danderyd",
+      "areaName": "Danderyd",
+      "name": "Stocksund",
+      "title": "A pink 1920s villa near the schools",
+      "blurb": "A plastered villa with a wood stove in the living room, and schools you can walk to.",
+      "description": "A pink plastered villa from 1927 on a quiet street, a walk from Danderyd's schools. A ramp runs up beside the front steps, added for the previous owner, so the house can be entered without steps. The ground floor has a living room with a wood stove, the kitchen, and a bedroom with a shower room next to it, with a walk-in shower. Three more bedrooms are upstairs. A glazed veranda looks over an old apple garden. The garage has been turned into a study with its own door.",
+      "address": "Edsviksvägen 20",
+      "point": {
+        "lat": 59.4001984,
+        "lng": 18.0298112
+      },
+      "homeType": "house",
+      "rooms": 5,
+      "bedrooms": 4,
+      "sizeM2": 158,
+      "yearBuilt": 1927,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1340000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 8481000,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 9220400,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-09-1",
+        "sto-09-2",
+        "sto-09-3"
+      ],
+      "photoCredit": "Photos: Samuel Bryngelsson, Clay Banks / Unsplash"
+    },
+    {
+      "id": "sto-10",
+      "areaId": "lidingo",
+      "areaName": "Lidingö",
+      "name": "Lidingö",
+      "title": "A yellow villa on the rocks by the water",
+      "blurb": "A living room above the pines, an attic bedroom, and a path down to the water.",
+      "description": "A yellow 1935 villa on the rocks above the water, reached from the road by forty steps through the pines. The living room sits high above the trees, with the kitchen and a small bedroom beside it, and the other three bedrooms are in the attic under the eaves. There is a bathroom on each floor, both with tubs. A path leads down through the garden to a shared jetty. The house is ten minutes by car from Lidingö centre and the Ropsten metro.",
+      "address": "Kottlavägen 90",
+      "point": {
+        "lat": 59.3465888,
+        "lng": 18.1756139
+      },
+      "homeType": "house",
+      "rooms": 6,
+      "bedrooms": 4,
+      "sizeM2": 176,
+      "yearBuilt": 1935,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1958000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 11125000,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 10397100,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-10-1",
+        "sto-10-2",
+        "sto-10-3"
+      ],
+      "photoCredit": "Photos: Nick Russill, Hans, Bluewater Sweden / Unsplash"
+    },
+    {
+      "id": "sto-11",
+      "areaId": "bromma",
+      "areaName": "Bromma",
+      "name": "Äppelviken",
+      "title": "A red wooden house with a porch",
+      "blurb": "A wood stove, a country kitchen, and a porch on a street of gardens.",
+      "description": "A red wooden house from 1931 on a street of gardens in Bromma. Three steps lead up to the porch, where you can sit and watch the street. Inside are a country kitchen with a wood stove, a living room, and a bedroom on the ground floor; two more bedrooms and the bathroom are upstairs. The ground floor has only a toilet and a laundry room. The garden has fruit trees and a playhouse, and it is fenced all the way round.",
+      "address": "Äppelviksvägen 40",
+      "point": {
+        "lat": 59.3247106,
+        "lng": 17.9805579
+      },
+      "homeType": "house",
+      "rooms": 5,
+      "bedrooms": 3,
+      "sizeM2": 148,
+      "yearBuilt": 1931,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1025000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 6925700,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 7136800,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-11-1",
+        "sto-11-2",
+        "sto-11-3"
+      ],
+      "photoCredit": "Photos: Rebecca Johansson, Sven Brandsma, Bluewater Sweden / Unsplash"
+    },
+    {
+      "id": "sto-12",
+      "areaId": "nacka",
+      "areaName": "Nacka",
+      "name": "Järla sjö",
+      "title": "A loft-style flat by the lake",
+      "blurb": "A spiral stair to a sleeping loft, with the trails around Järlasjön outside.",
+      "description": "A loft-style flat on the fifth floor of a 2019 building by Järlasjön. The living room rises two storeys, and a spiral stair leads to a sleeping loft; the second bedroom is on the entry level. The building is step-free from the street, with a lift to every floor. The bathroom has a walk-in shower and underfloor heating. The balcony looks over the lake and the trails of the Nacka nature reserve. The association allows pets.",
+      "address": "Järla Gårdsväg 12",
+      "point": {
+        "lat": 59.3060154,
+        "lng": 18.1542551
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 77,
+      "floor": 5,
+      "yearBuilt": 2019,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 441000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 462000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 5727300,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6033400,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-12-1",
+        "sto-12-2",
+        "sto-12-3"
+      ],
+      "photoCredit": "Photos: Tobias Wilden, Alex Tyson / Unsplash"
+    },
+    {
+      "id": "sto-13",
+      "areaId": "sundbyberg",
+      "areaName": "Sundbyberg",
+      "name": "Lötsjön",
+      "title": "An orange wooden house with a flower garden",
+      "blurb": "A vaulted living room and a garden of flowers, near the commuter train.",
+      "description": "An orange wooden house from 1918 with a flower garden, five minutes from the commuter train. The living room has a vaulted ceiling and doors to the garden, and the kitchen was renewed in 2018. All three bedrooms and the bathroom are on the upper floor, under a steep roof. The cellar holds a laundry and storage. The garden has perennial beds, a greenhouse, and a gate onto a footpath to the school.",
+      "address": "Lötsjövägen 10",
+      "point": {
+        "lat": 59.3745516,
+        "lng": 17.9690225
+      },
+      "homeType": "house",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 118,
+      "yearBuilt": 1918,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 742000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 6288100,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6689000,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-13-1",
+        "sto-13-2",
+        "sto-13-3"
+      ],
+      "photoCredit": "Photos: Emil Widlund, Clay Banks, Franco Debartolo / Unsplash"
+    },
+    {
+      "id": "sto-14",
+      "areaId": "liljeholmen",
+      "areaName": "Liljeholmen",
+      "name": "Liljeholmskajen",
+      "title": "Two rooms on the waterfront",
+      "blurb": "A compact kitchen, a quiet bedroom, and a balcony over the water.",
+      "description": "Two rooms on the seventh floor of a 2016 building on the Liljeholmen waterfront. The whole building is step-free, with two lifts from the entrance hall. A compact kitchen opens onto the living room and a balcony over the water, and the bedroom faces the quiet side. The bathroom has a walk-in shower and a washing machine. The metro and the tram stop are across the square. Pets are allowed.",
+      "address": "Liljeholmsstranden 3",
+      "point": {
+        "lat": 59.3138073,
+        "lng": 18.0281058
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 58,
+      "floor": 7,
+      "yearBuilt": 2016,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 469000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 348000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 8086200,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 8088100,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "photos": [
+        "sto-14-1",
+        "sto-14-2",
+        "sto-14-3"
+      ],
+      "photoCredit": "Photos: Valeriia Kryshchuk, Irena Oze / Unsplash"
+    }
+  ]
+}

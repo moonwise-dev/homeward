@@ -177,6 +177,8 @@ AffordabilityAnswer answerAffordability({
         minimum: open.maxLoan < target ? target - open.maxLoan : zero,
         savings: savings,
       ),
+      profile: profile,
+      downPaymentStated: downPayment != null,
     ),
   );
 }

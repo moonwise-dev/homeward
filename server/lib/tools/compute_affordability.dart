@@ -63,6 +63,13 @@ final class ComputeAffordability extends AgentTool {
                     'combined, in its own currency; never split or add '
                     'them.',
         },
+      'home': {
+        'type': 'string',
+        'description':
+            'Optional. The ID of a sample home from search_homes the buyer '
+            'picked; its price and fee come from the listing, so pass no '
+            'price or homeFee with it.',
+      },
       'price': {
         ...amountParameter,
         'description': 'Optional. The price of a home the buyer named.',
@@ -183,13 +190,34 @@ final class ComputeAffordability extends AgentTool {
         },
       );
     }
+    final sample = switch (arguments['home']) {
+      final String id => markets.home(id),
+      _ => null,
+    };
+    if (arguments['home'] case final String homeId when sample == null) {
+      return ToolResult(
+        modelResult: {
+          'error': 'No sample home $homeId; take the ID from search_homes.',
+        },
+      );
+    }
+    if (sample != null && sample.city.marketId != id.code) {
+      return ToolResult(
+        modelResult: {
+          'error':
+              '${sample.listing.id} is in ${sample.city.name}, market '
+              '${sample.city.marketId}.',
+        },
+      );
+    }
     final said = numbersIn(context.buyerWords.join('\n'));
     final unsaid = {
-      for (final name in [..._lists, ..._homeAmounts])
+      for (final name in [
+        ..._lists,
+        ...sample == null ? _homeAmounts : const ['downPayment'],
+      ])
         for (final argument in _argumentsOf(arguments[name]))
-          if (argument case {'amount': final num amount}
-              when amount != 0 && !said.contains(_plain(amount)))
-            name,
+          if (isUnsaid(argument, said)) name,
     };
     if (unsaid.isNotEmpty) {
       return ToolResult(
@@ -212,6 +240,10 @@ final class ComputeAffordability extends AgentTool {
       for (final name in _homeAmounts)
         if (arguments[name] case final argument?)
           name: _monthlyOf(moneyFromArgument(argument, currency), argument),
+      if (sample?.listing case final listing?) ...{
+        'price': listing.price,
+        'homeFee': ?listing.monthlyFee,
+      },
     };
     final base = BuyerProfile(
       age: arguments['age'] as int?,
@@ -305,59 +337,92 @@ final class ComputeAffordability extends AgentTool {
             'noExchangeRateFor': [for (final c in unconverted) c.code],
         },
       ),
-      AffordabilityAnswered(:final assessed, :final slice) => ToolResult(
-        logFields: {'answered': true},
-        modelResult: {
-          'answered': true,
-          'limitingRule': assessed.binding?.kind.name,
-          'withinSavings': switch ((slice.cashNeeded, slice.savings)) {
-            (final cash?, final saved?) => cash <= saved,
-            _ => null,
-          },
-          'withinRules': slice.loan <= slice.maxLoan,
-          'passesStressTest': switch (slice.stress) {
-            StressCurve(:final limit?, :final stressRate, :final points) =>
-              points
-                  .where((point) => point.annualRate == stressRate)
-                  .every((point) => point.cost <= limit),
-            _ => null,
-          },
-          'purchaseCosts': slice.purchaseCosts.length,
-          'assumed': {
-            if (inMarket['price'] == null)
-              'price': 'the highest price the savings reach',
-            if (inMarket['downPayment'] == null)
-              'downPayment': 'the minimum the rules allow',
-            if (termMovesPayment(market) && arguments['termYears'] == null)
-              'termYears': slice.termYears,
-            if (inMarket['homeFee'] == null) 'homeFee': 'none',
-            if (arguments['loanType'] == null) 'loanType': slice.loanTypeId,
-          },
-          'note':
-              'The figures are in /affordability. Show them with '
-              'AffordabilitySummary, the limiting rule with RuleNote, what a '
-              'month costs with MonthlyCostBreakdown, rising rates with '
-              'StressTestChart, and the costs on the day with '
-              'PurchaseCostsTable; never write them in your text. What was '
-              "assumed is the buyer's to decide; nothing else can be "
-              'computed yet, so offer no other choice. DownPaymentSlider lets '
-              'them try down payments, and MortgageOptions compares the '
-              'rates; when they apply one, call this tool again with it as '
-              'downPayment or loanType.',
-        },
-        seeds: {'affordability': jsonDecode(jsonEncode(slice.toJson()))},
-      ),
+      AffordabilityAnswered(:final assessed, slice: final answered) =>
+        _answered(
+          assessed,
+          _withHome(answered, sample?.listing),
+          arguments,
+          inMarket,
+          market,
+          context,
+        ),
     };
   }
+
+  ToolResult _answered(
+    AssessedAffordability assessed,
+    AffordabilitySlice slice,
+    Map<String, Object?> arguments,
+    Map<String, Money> inMarket,
+    ResolvedMarket market,
+    ToolContext context,
+  ) => ToolResult(
+    logFields: {'answered': true},
+    modelResult: {
+      'answered': true,
+      'limitingRule': assessed.binding?.kind.name,
+      'withinSavings': switch ((slice.cashNeeded, slice.savings)) {
+        (final cash?, final saved?) => cash <= saved,
+        _ => null,
+      },
+      'withinRules': slice.loan <= slice.maxLoan,
+      'passesStressTest': switch (slice.stress) {
+        StressCurve(:final limit?, :final stressRate, :final points) =>
+          points
+              .where((point) => point.annualRate == stressRate)
+              .every((point) => point.cost <= limit),
+        _ => null,
+      },
+      'purchaseCosts': slice.purchaseCosts.length,
+      'assumed': {
+        if (inMarket['price'] == null)
+          'price': 'the highest price the savings reach',
+        if (inMarket['downPayment'] == null)
+          'downPayment': 'the minimum the rules allow',
+        if (termMovesPayment(market) && arguments['termYears'] == null)
+          'termYears': slice.termYears,
+        if (inMarket['homeFee'] == null) 'homeFee': 'none',
+        if (arguments['loanType'] == null) 'loanType': slice.loanTypeId,
+      },
+      'note':
+          'The figures are in /affordability. Show them with '
+          'AffordabilitySummary, the limiting rule with RuleNote, what a '
+          'month costs with MonthlyCostBreakdown, rising rates with '
+          'StressTestChart, and the costs on the day with '
+          'PurchaseCostsTable; never write them in your text. What was '
+          "assumed is the buyer's to decide; nothing else can be "
+          'computed yet, so offer no other choice. DownPaymentSlider lets '
+          'them try down payments, and MortgageOptions compares the '
+          'rates; when they apply one, call this tool again with it as '
+          'downPayment or loanType.',
+    },
+    seeds: {
+      'affordability': jsonDecode(jsonEncode(slice.toJson())),
+      if (context.slices[homesSlice.name] case final Map<String, Object?> homes)
+        homesSlice.name: {
+          for (final MapEntry(:key, :value)
+              in markets.pricedHomes(homes.keys, slice).entries)
+            key: jsonDecode(jsonEncode(value.toJson())),
+        },
+    },
+  );
+
+  static AffordabilitySlice _withHome(
+    AffordabilitySlice slice,
+    Listing? listing,
+  ) => switch (listing) {
+    final listing? => slice.copyWith(
+      homeId: listing.id,
+      homeName: '${listing.address}, ${listing.areaName}',
+    ),
+    null => slice,
+  };
 
   static List<Object?> _argumentsOf(Object? value) => switch (value) {
     final List<Object?> list => list,
     null => const [],
     final single => [single],
   };
-
-  static String _plain(num amount) =>
-      amount == amount.roundToDouble() ? '${amount.round()}' : '$amount';
 
   static Money _monthlyOf(Money money, Object? argument) =>
       argument is Map<String, Object?> && argument['per'] == 'year'

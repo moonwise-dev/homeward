@@ -88,11 +88,23 @@ MarketsData loadMarkets(Directory root) {
     }
   }
 
+  final cities = <String, ListingInventory>{};
+  for (final file in _jsonFiles(Directory('${root.path}/listings'))) {
+    final inventory = parse(
+      file,
+      (json) => ListingInventory.fromJson(json! as Map<String, Object?>),
+    );
+    if (inventory != null) {
+      cities[inventory.cityId] = inventory;
+    }
+  }
+
   return (
     packsByFile: packsByFile,
     rates: rates,
     exchangeRates: exchangeRates,
     livingCosts: livingCosts,
+    cities: cities,
     loadFindings: findings,
   );
 }

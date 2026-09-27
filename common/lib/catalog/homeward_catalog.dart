@@ -5,6 +5,7 @@ import 'components/affordability_summary.dart';
 import 'components/choice.dart';
 import 'components/down_payment_slider.dart';
 import 'components/fact.dart';
+import 'components/home_card.dart';
 import 'components/monthly_cost_breakdown.dart';
 import 'components/mortgage_options.dart';
 import 'components/purchase_costs_table.dart';
@@ -25,6 +26,7 @@ const homewardComponents = <CatalogComponent>[
   DownPaymentSlider(),
   MortgageOptions(),
   RuleNote(),
+  HomeCard(),
 ];
 
 const homewardFunctions = <CatalogFunction>[];

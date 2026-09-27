@@ -254,6 +254,25 @@ applies to variable and mixed rates only. Its `loanType` argument takes the
 option the buyer chose; without it the variable rate is assumed. Rates come
 from the pack and the rates file; Gemini never names one.
 
+`search_homes` (C7, D151) searches the labelled sample homes of Stockholm
+and Lisbon, which the server loads from `markets/listings/` at startup. Its
+arguments are what the buyer asked for: the city, the kind of home, the
+fewest rooms or bedrooms, areas, outdoor space, and a highest price they
+stated, checked against their words like the other amounts. It prices each
+home that matches for the household the last `compute_affordability` run
+kept in `/affordability`, its profile and whether the down payment was the
+buyer's: at the home's price and fee, with that down payment or the minimum
+the rules allow, the same rate, and the same term, from the same code. It
+answers with each home's ID, area, kind, rooms, and whether it is within the
+rules and the savings, and seeds `/homes`, an object of homes by ID that
+`HomeCard` binds. Before any affordability run in that market it seeds the
+homes with their price and fee only and says pricing needs the household;
+when nothing matches, it answers with how many homes each filter ruled out,
+so Gemini can ask which to loosen. When the buyer taps a `HomeCard`, Gemini
+calls `compute_affordability` with `home`, the home's ID, whose price and
+fee come from the listing rather than the buyer's words, so every money
+block follows that home.
+
 A tool reads the turn through its `ToolContext`: the progress steps, the
 slices as they stand, and the buyer's words in this plan.
 
@@ -261,8 +280,6 @@ Planned tools, each arriving with its chunk:
 
 | Tool | Chunk | What it does |
 | --- | --- | --- |
-| Mortgage options | C6c | Fixed against variable and terms for a price and a down payment, from sourced sample fixed rates |
-| `search_homes` | C7 | Searches the labelled sample homes and prices each for this household |
 | `find_place` | C8 | Resolves a place the buyer names, with Nominatim |
 | `measure_week` | C8 | Measures each trip of the week from a home, and the weekly total |
 | Listing reader | C9 | Reads listings for the household's needs; code keeps a quote only when it appears word for word |

@@ -90,6 +90,8 @@ common/lib/
   costs/          purchase costs from a market's cost rules
   markets/        market rule packs, reference rates, living costs, exchange
                   rates, resolved for one buyer
+  samples/        the labelled sample homes: Listing, kind of home, outdoor space,
+                  style, and a home priced for one household
   profile/        BuyerProfile, the facts the rules read; plan/Scenario, a price,
                   down payment, term, and loan type
   time/           CalendarDate, Period
@@ -158,7 +160,8 @@ server/
       validation/   validation passes
     gemini/         interactions client, live client, request/response models
     tools/          the tool interface and the list of tools, one file per tool
-    markets/        loads the sample market packs from `markets/` at startup
+    markets/        loads the sample market packs and sample homes from
+                    `markets/` at startup
     research/       open-data clients (Nominatim, Overpass, routing), polite
                     and cached
     ids/            random identifiers

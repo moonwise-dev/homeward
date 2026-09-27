@@ -35,6 +35,10 @@ _AffordabilitySlice _$AffordabilitySliceFromJson(
       'purchaseCostsTotal',
       'whatIf',
       'mortgageOptions',
+      'profile',
+      'downPaymentStated',
+      'homeId',
+      'homeName',
     ],
   );
   final val = _AffordabilitySlice(
@@ -128,6 +132,17 @@ _AffordabilitySlice _$AffordabilitySliceFromJson(
               .toList() ??
           const [],
     ),
+    profile: $checkedConvert(
+      'profile',
+      (v) =>
+          v == null ? null : BuyerProfile.fromJson(v as Map<String, dynamic>),
+    ),
+    downPaymentStated: $checkedConvert(
+      'downPaymentStated',
+      (v) => v as bool? ?? false,
+    ),
+    homeId: $checkedConvert('homeId', (v) => v as String?),
+    homeName: $checkedConvert('homeName', (v) => v as String?),
   );
   return val;
 }, fieldKeyMap: const {'annualRate': 'annualRatePpm'});
@@ -158,6 +173,10 @@ Map<String, dynamic> _$AffordabilitySliceToJson(
   'purchaseCostsTotal': ?instance.purchaseCostsTotal?.toJson(),
   'whatIf': ?instance.whatIf?.toJson(),
   'mortgageOptions': instance.mortgageOptions.map((e) => e.toJson()).toList(),
+  'profile': ?instance.profile?.toJson(),
+  'downPaymentStated': instance.downPaymentStated,
+  'homeId': ?instance.homeId,
+  'homeName': ?instance.homeName,
 };
 
 _MonthlyFigures _$MonthlyFiguresFromJson(Map<String, dynamic> json) =>

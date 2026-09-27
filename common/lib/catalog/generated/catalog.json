@@ -1148,6 +1148,49 @@
         "rule"
       ],
       "additionalProperties": false
+    },
+    "HomeCard": {
+      "type": "object",
+      "description": "One sample home from search_homes: photos, facts, price, and what it costs this household each month; its choose action sends the home, with home, its ID, added to its context.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "HomeCard"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "home": {
+          "type": "object",
+          "description": "One home search_homes found, { \"path\": \"/homes/<id>\" }.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "choose": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "home"
+      ],
+      "additionalProperties": false
     }
   },
   "functions": {
@@ -1770,6 +1813,9 @@
         },
         {
           "$ref": "#/components/RuleNote"
+        },
+        {
+          "$ref": "#/components/HomeCard"
         }
       ]
     },

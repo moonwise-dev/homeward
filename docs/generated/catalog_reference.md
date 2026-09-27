@@ -17,6 +17,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `DownPaymentSlider` | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
 | `MortgageOptions` | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
 | `RuleNote` | yes | `rule` | `rule` | The rule that limits the loan |
+| `HomeCard` | yes | `home` | `home` | Two Stockholm flats |
 
 ### Fact
 
@@ -53,6 +54,10 @@ The sample lender's variable, fixed, and mixed rates side by side with the month
 ### RuleNote
 
 One lending rule, the largest loan it allows, and its source, from compute_affordability.
+
+### HomeCard
+
+One sample home from search_homes: photos, facts, price, and what it costs this household each month; its choose action sends the home, with home, its ID, added to its context.
 ## Basic Components
 
 Agent-visible from the A2UI v0.9 basic catalog: `Text`, `Row`, `Column`, `Card`, `Divider`, `List`, `Tabs`, `Icon`, `Button`, `CheckBox`, `ChoicePicker`, `TextField`, `DateTimeInput`.
@@ -84,3 +89,11 @@ What compute_affordability found for this household, from sample rules. Seeded b
 | `/affordability/maxLoan` | money object { "minorUnits": integer, "currency": ISO 4217 code } | The largest loan the rules allow at the price |
 | `/affordability/binding` | object read by Homeward components | The rule that limits the loan; bind it to a RuleNote |
 | `/affordability/checks` | object read by Homeward components | Every rule checked, in order; bind one to a RuleNote as /affordability/checks/<n> |
+
+### `/homes`
+
+The sample homes search_homes found, each priced for the household: an object of homes by ID. Seeded by `search_homes`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/homes/<id>` | object read by Homeward components | One home: { listing, cost }. Bind it whole to a HomeCard. |

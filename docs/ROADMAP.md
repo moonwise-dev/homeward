@@ -78,9 +78,13 @@ four journeys of `docs/PRODUCT.md` (D141).
   fixed, and mixed rates side by side for the plan's price and down payment,
   from SBAB's list rates and Banco BPI's price list added to the packs, and
   the one the buyer uses (D150).
-- **C7 Homes.** The restored sample homes of Stockholm and Lisbon, a
-  `search_homes` tool, and `HomeCard` with its monthly cost, `HomeComparison`,
-  and `Shortlist`.
+- **C7 Homes — done.** The sample homes of Stockholm and Lisbon restored with their
+  photos, a `search_homes` tool that prices each for the household the last
+  `compute_affordability` run kept, and `HomeCard` with its monthly cost,
+  whose tap works out every money block for that home (D151). Leaves out
+  keeping homes and comparing them, and why a home fits beyond the money.
+- **C7b Shortlist and comparison.** `Shortlist`, the homes the household
+  kept, and `HomeComparison`, two or three of them side by side.
 - **C8 Place.** After S11: the Maps renderer package with the toolkit's
   `GoogleMap` (D133), a `find_place` tool, `WeeklyTravel`, and
   `RouteSummary`.
@@ -285,6 +289,7 @@ superseded stay as history.
 | D148 | Mortgage options split | C6 splits into stress and upfront costs (C6), the down payment what-if (C6b), and fixed against variable (C6c), since fixed rates need new sourced sample data. The stress curve and the upfront costs are computed by `compute_affordability` with the rest of `/affordability`, not on the device as before the reset. `MoneyInput` moves to C10: buyers state amounts in their own words, which the tools check | One chunk with all five blocks; the slider first |
 | D149 | Down payment what-if | `compute_affordability` works out up to 40 down payment steps between the minimum the rules allow and what the savings reach after the costs on the day, each with the loan, the monthly cost, the cash needed, and whether it is within the rules, from the same code as the rest of `/affordability`. `DownPaymentSlider` moves between them on the device and recomputes nothing. A "Use this down payment" button sends the amount as an action, so Gemini calls the tool with it and every block updates; the amount comes from the buyer's tap, so the number check accepts it | Recomputing on the device with the rules sent to the app; a slider that never changes the rest of the plan |
 | D150 | Mortgage options | One sample lender per market prices every option, so the rates compare like with like: SBAB's list rates in Sweden, whose three-month rate is the variable rate D65 set, and Banco BPI's price list in Portugal, whose variable rate the pack already used. Sweden offers variable and fixed for 1, 3, and 5 years; Portugal variable, mixed with the rate fixed for 3 or 5 years, and fixed for the whole term. `compute_affordability` works out each at the plan's price, down payment, and term, and takes the buyer's pick as `loanType`, so every block follows it. The terms are not compared: the term is already a preference (D147). No option is recommended, and what a rate does after its fixed period is not forecast | SCB's average rates by fixation period, which mix every lender and sit below list rates; comparing terms too |
+| D151 | Sample homes | The fourteen sample homes of Stockholm and the fourteen of Lisbon come back from `6faa8ab` as D122 made them, labelled as samples, with their photos bundled in the app. `search_homes` filters a city's homes by what the buyer asked, such as the kind of home, rooms, areas, outdoor space, and a price they stated, and prices each for the household: `compute_affordability` keeps the household and preferences it used in `/affordability`, and each home is worked out with the same code at its own price and fee, with the down payment the buyer chose or else the minimum the rules allow, and the same rate and term. Before any affordability run, homes come with their price and fee, and the tool says what pricing needs. When nothing matches, it says which filter ruled the homes out, and Gemini asks. A `HomeCard` tap sends the home, and `compute_affordability` takes it as `home`, the price and fee from the listing, so every money block follows that home. Why a home fits beyond the money waits for the listing reader (C9); keeping and comparing homes is C7b | search_homes taking the household's figures as arguments, which doubles what Gemini sends each call; homes with price only and the monthly cost on a tap; photos from the Unsplash CDN at runtime |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

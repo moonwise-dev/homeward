@@ -26,7 +26,7 @@ class MonthlyCostBreakdownView extends StatelessWidget {
           style: AppTextStyles.figureLarge,
         ),
         Text(
-          'For a home at ${moneyText(slice.price)} with '
+          'For ${slice.homeName ?? 'a home'} at ${moneyText(slice.price)} with '
           '${moneyText(slice.downPayment)} down',
           style: AppTextStyles.caption,
         ),

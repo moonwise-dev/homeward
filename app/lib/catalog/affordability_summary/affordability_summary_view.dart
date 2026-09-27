@@ -29,7 +29,8 @@ class AffordabilitySummaryView extends StatelessWidget {
         Text(
           atHighest
               ? 'The largest loan, for a home at the highest price you reach'
-              : 'The largest loan for a home at ${moneyText(slice.price)}',
+              : 'The largest loan for ${slice.homeName ?? 'a home'} at '
+                    '${moneyText(slice.price)}',
           style: AppTextStyles.caption,
         ),
         const SizedBox(height: AppSpacing.sm),

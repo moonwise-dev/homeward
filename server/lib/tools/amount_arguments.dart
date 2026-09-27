@@ -38,3 +38,11 @@ Money moneyFromArgument(Object? argument, Currency? marketCurrency) {
     'Expected { "amount": number, "currency"?: code }',
   );
 }
+
+bool isUnsaid(Object? argument, Set<String> said) => switch (argument) {
+  {'amount': final num amount} => amount != 0 && !said.contains(_plain(amount)),
+  _ => false,
+};
+
+String _plain(num amount) =>
+    amount == amount.roundToDouble() ? '${amount.round()}' : '$amount';

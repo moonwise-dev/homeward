@@ -50,6 +50,14 @@ What compute_affordability found for this household, from sample rules. Seeded b
 | `/affordability/binding` | object read by Homeward components | The rule that limits the loan; bind it to a RuleNote |
 | `/affordability/checks` | object read by Homeward components | Every rule checked, in order; bind one to a RuleNote as /affordability/checks/<n> |
 
+### `/homes`
+
+The sample homes search_homes found, each priced for the household: an object of homes by ID. Seeded by `search_homes`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/homes/<id>` | object read by Homeward components | One home: { listing, cost }. Bind it whole to a HomeCard. |
+
 ## Actions
 
 Buttons send actions as `{ "event": { "name": …, "context": { … } } }`. Name each action for what the buyer does, in lowercase words joined by underscores, such as `keep_home`. Context values are literals or bindings. You receive the action's name, its context, and the data model of its surface as the buyer's next message.
@@ -70,6 +78,7 @@ The catalog schema below holds the full schemas of the components every plan use
 - `PurchaseCostsTable`: Every upfront cost the buyer owes on the day, with its source, the total, and the cash needed with the down payment, from compute_affordability.
 - `DownPaymentSlider`: Lets the buyer try down payments for the price in /affordability and see the loan, the monthly cost, and the cash needed; its apply action sends the one they use, with downPayment added to its context.
 - `MortgageOptions`: The sample lender's variable, fixed, and mixed rates side by side with the monthly cost of each, from compute_affordability; its choose action sends the one the buyer takes, with loanType added to its context.
+- `HomeCard`: One sample home from search_homes: photos, facts, price, and what it costs this household each month; its choose action sends the home, with home, its ID, added to its context.
 
 ## Examples
 
