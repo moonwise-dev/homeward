@@ -41,10 +41,9 @@ final class ComputeAffordability extends AgentTool {
       'in their words is refused. It answers with the facts it still needs '
       'and why, or seeds /affordability for AffordabilitySummary, RuleNote, '
       'MonthlyCostBreakdown, StressTestChart, PurchaseCostsTable, '
-      'DownPaymentSlider, and MortgageOptions, and lists what it assumed '
-      'that is the '
-      "buyer's to decide. For a home anywhere else, tell the buyer the "
-      'sample does not cover it.';
+      'DownPaymentSlider, MortgageOptions, and LoanBalanceChart, and lists '
+      "what it assumed that is the buyer's to decide. For a home anywhere "
+      'else, tell the buyer the sample does not cover it.';
 
   @override
   Map<String, Object?> get parameters => {
@@ -57,7 +56,7 @@ final class ComputeAffordability extends AgentTool {
       for (final name in _lists)
         name: {
           'type': 'array',
-          'items': _perPeriod,
+          'items': perPeriodParameter,
           'description': name == 'savings'
               ? 'Each amount saved, in the currency it is held in.'
               : 'Each amount as the buyer stated it, per person or '
@@ -82,7 +81,7 @@ final class ComputeAffordability extends AgentTool {
             'the minimum the rules allow is assumed.',
       },
       'homeFee': {
-        ..._perPeriod,
+        ...perPeriodParameter,
         'description':
             "Optional. The home's own recurring fee the buyer stated, such "
             'as a Swedish association fee or a Portuguese condominium fee.',
@@ -146,25 +145,6 @@ final class ComputeAffordability extends AgentTool {
     for (final MapEntry(:key, :value) in _ratesByMarket.entries)
       '$key: ${value.join(', ')}',
   ].join('; ');
-
-  static const _perPeriod = {
-    'type': 'object',
-    'properties': {
-      'amount': {
-        'type': 'number',
-        'description': 'The amount in major units as the buyer said it.',
-      },
-      'currency': {
-        'type': 'string',
-        'description': 'ISO 4217 code; omit for the market currency.',
-      },
-      'per': {
-        'type': 'string',
-        'enum': ['month', 'year'],
-      },
-    },
-    'required': ['amount'],
-  };
 
   @override
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {
@@ -234,13 +214,13 @@ final class ComputeAffordability extends AgentTool {
         if (arguments[name] != null)
           name: [
             for (final argument in _argumentsOf(arguments[name]))
-              _monthlyOf(moneyFromArgument(argument, currency), argument),
+              monthlyOf(moneyFromArgument(argument, currency), argument),
           ],
     };
     final home = {
       for (final name in _homeAmounts)
         if (arguments[name] case final argument?)
-          name: _monthlyOf(moneyFromArgument(argument, currency), argument),
+          name: monthlyOf(moneyFromArgument(argument, currency), argument),
       if (sample?.listing case final listing?) ...{
         'price': listing.price,
         'homeFee': ?listing.monthlyFee,
@@ -394,8 +374,9 @@ final class ComputeAffordability extends AgentTool {
           'The figures are in /affordability. Show them with '
           'AffordabilitySummary, the limiting rule with RuleNote, what a '
           'month costs with MonthlyCostBreakdown, rising rates with '
-          'StressTestChart, and the costs on the day with '
-          'PurchaseCostsTable; never write them in your text. What was '
+          'StressTestChart, the costs on the day with '
+          'PurchaseCostsTable, and the loan paid down year by year with '
+          'LoanBalanceChart; never write them in your text. What was '
           "assumed is the buyer's to decide; nothing else can be "
           'computed yet, so offer no other choice. DownPaymentSlider lets '
           'them try down payments, and MortgageOptions compares the '
@@ -431,13 +412,6 @@ final class ComputeAffordability extends AgentTool {
     null => const [],
     final single => [single],
   };
-
-  static Money _monthlyOf(Money money, Object? argument) =>
-      argument is Map<String, Object?> && argument['per'] == 'year'
-      ? money.copyWith(
-          minorUnits: Rounding.halfUp.divide(money.minorUnits, monthsPerYear),
-        )
-      : money;
 
   static T? _enum<T extends Enum>(List<T> values, Object? name) =>
       values.where((value) => value.name == name).firstOrNull;

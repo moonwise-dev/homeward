@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AffordabilitySlice {
 
- String get marketId; String get marketName; bool get sample; Money get price; Money? get maxPrice; Money get loan; Money get maxLoan; Money get downPayment; Money? get cashNeeded; Money? get savings;@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate get annualRate; int get termYears; String get loanType; String? get loanTypeId; MonthlyFigures get monthly; RuleCheck? get binding; List<RuleCheck> get checks; List<ExchangeRate> get exchangeRates; StressCurve? get stress; List<CostLine> get purchaseCosts; Money? get purchaseCostsTotal; DownPaymentWhatIf? get whatIf; List<MortgageOption> get mortgageOptions; BuyerProfile? get profile; bool get downPaymentStated; String? get homeId; String? get homeName;
+ String get marketId; String get marketName; bool get sample; Money get price; Money? get maxPrice; Money get loan; Money get maxLoan; Money get downPayment; Money? get cashNeeded; Money? get savings;@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate get annualRate; int get termYears; String get loanType; String? get loanTypeId; MonthlyFigures get monthly; RuleCheck? get binding; List<RuleCheck> get checks; List<ExchangeRate> get exchangeRates; StressCurve? get stress; List<CostLine> get purchaseCosts; Money? get purchaseCostsTotal; DownPaymentWhatIf? get whatIf; List<MortgageOption> get mortgageOptions; LoanSchedule? get schedule; BuyerProfile? get profile; bool get downPaymentStated; String? get homeId; String? get homeName;
 /// Create a copy of AffordabilitySlice
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $AffordabilitySliceCopyWith<AffordabilitySlice> get copyWith => _$AffordabilityS
 @override
 bool operator ==(Object other) {
   final _this = this as AffordabilitySlice;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AffordabilitySlice&&(identical(other.marketId, _this.marketId) || other.marketId == _this.marketId)&&(identical(other.marketName, _this.marketName) || other.marketName == _this.marketName)&&(identical(other.sample, _this.sample) || other.sample == _this.sample)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.maxPrice, _this.maxPrice) || other.maxPrice == _this.maxPrice)&&(identical(other.loan, _this.loan) || other.loan == _this.loan)&&(identical(other.maxLoan, _this.maxLoan) || other.maxLoan == _this.maxLoan)&&(identical(other.downPayment, _this.downPayment) || other.downPayment == _this.downPayment)&&(identical(other.cashNeeded, _this.cashNeeded) || other.cashNeeded == _this.cashNeeded)&&(identical(other.savings, _this.savings) || other.savings == _this.savings)&&(identical(other.annualRate, _this.annualRate) || other.annualRate == _this.annualRate)&&(identical(other.termYears, _this.termYears) || other.termYears == _this.termYears)&&(identical(other.loanType, _this.loanType) || other.loanType == _this.loanType)&&(identical(other.loanTypeId, _this.loanTypeId) || other.loanTypeId == _this.loanTypeId)&&(identical(other.monthly, _this.monthly) || other.monthly == _this.monthly)&&(identical(other.binding, _this.binding) || other.binding == _this.binding)&&const DeepCollectionEquality().equals(other.checks, _this.checks)&&const DeepCollectionEquality().equals(other.exchangeRates, _this.exchangeRates)&&(identical(other.stress, _this.stress) || other.stress == _this.stress)&&const DeepCollectionEquality().equals(other.purchaseCosts, _this.purchaseCosts)&&(identical(other.purchaseCostsTotal, _this.purchaseCostsTotal) || other.purchaseCostsTotal == _this.purchaseCostsTotal)&&(identical(other.whatIf, _this.whatIf) || other.whatIf == _this.whatIf)&&const DeepCollectionEquality().equals(other.mortgageOptions, _this.mortgageOptions)&&(identical(other.profile, _this.profile) || other.profile == _this.profile)&&(identical(other.downPaymentStated, _this.downPaymentStated) || other.downPaymentStated == _this.downPaymentStated)&&(identical(other.homeId, _this.homeId) || other.homeId == _this.homeId)&&(identical(other.homeName, _this.homeName) || other.homeName == _this.homeName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AffordabilitySlice&&(identical(other.marketId, _this.marketId) || other.marketId == _this.marketId)&&(identical(other.marketName, _this.marketName) || other.marketName == _this.marketName)&&(identical(other.sample, _this.sample) || other.sample == _this.sample)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.maxPrice, _this.maxPrice) || other.maxPrice == _this.maxPrice)&&(identical(other.loan, _this.loan) || other.loan == _this.loan)&&(identical(other.maxLoan, _this.maxLoan) || other.maxLoan == _this.maxLoan)&&(identical(other.downPayment, _this.downPayment) || other.downPayment == _this.downPayment)&&(identical(other.cashNeeded, _this.cashNeeded) || other.cashNeeded == _this.cashNeeded)&&(identical(other.savings, _this.savings) || other.savings == _this.savings)&&(identical(other.annualRate, _this.annualRate) || other.annualRate == _this.annualRate)&&(identical(other.termYears, _this.termYears) || other.termYears == _this.termYears)&&(identical(other.loanType, _this.loanType) || other.loanType == _this.loanType)&&(identical(other.loanTypeId, _this.loanTypeId) || other.loanTypeId == _this.loanTypeId)&&(identical(other.monthly, _this.monthly) || other.monthly == _this.monthly)&&(identical(other.binding, _this.binding) || other.binding == _this.binding)&&const DeepCollectionEquality().equals(other.checks, _this.checks)&&const DeepCollectionEquality().equals(other.exchangeRates, _this.exchangeRates)&&(identical(other.stress, _this.stress) || other.stress == _this.stress)&&const DeepCollectionEquality().equals(other.purchaseCosts, _this.purchaseCosts)&&(identical(other.purchaseCostsTotal, _this.purchaseCostsTotal) || other.purchaseCostsTotal == _this.purchaseCostsTotal)&&(identical(other.whatIf, _this.whatIf) || other.whatIf == _this.whatIf)&&const DeepCollectionEquality().equals(other.mortgageOptions, _this.mortgageOptions)&&(identical(other.schedule, _this.schedule) || other.schedule == _this.schedule)&&(identical(other.profile, _this.profile) || other.profile == _this.profile)&&(identical(other.downPaymentStated, _this.downPaymentStated) || other.downPaymentStated == _this.downPaymentStated)&&(identical(other.homeId, _this.homeId) || other.homeId == _this.homeId)&&(identical(other.homeName, _this.homeName) || other.homeName == _this.homeName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as AffordabilitySlice;
-  return Object.hashAll([runtimeType,_this.marketId,_this.marketName,_this.sample,_this.price,_this.maxPrice,_this.loan,_this.maxLoan,_this.downPayment,_this.cashNeeded,_this.savings,_this.annualRate,_this.termYears,_this.loanType,_this.loanTypeId,_this.monthly,_this.binding,const DeepCollectionEquality().hash(_this.checks),const DeepCollectionEquality().hash(_this.exchangeRates),_this.stress,const DeepCollectionEquality().hash(_this.purchaseCosts),_this.purchaseCostsTotal,_this.whatIf,const DeepCollectionEquality().hash(_this.mortgageOptions),_this.profile,_this.downPaymentStated,_this.homeId,_this.homeName]);
+  return Object.hashAll([runtimeType,_this.marketId,_this.marketName,_this.sample,_this.price,_this.maxPrice,_this.loan,_this.maxLoan,_this.downPayment,_this.cashNeeded,_this.savings,_this.annualRate,_this.termYears,_this.loanType,_this.loanTypeId,_this.monthly,_this.binding,const DeepCollectionEquality().hash(_this.checks),const DeepCollectionEquality().hash(_this.exchangeRates),_this.stress,const DeepCollectionEquality().hash(_this.purchaseCosts),_this.purchaseCostsTotal,_this.whatIf,const DeepCollectionEquality().hash(_this.mortgageOptions),_this.schedule,_this.profile,_this.downPaymentStated,_this.homeId,_this.homeName]);
 }
 
 @override
 String toString() {
   final _this = this as AffordabilitySlice;
-  return 'AffordabilitySlice(marketId: ${_this.marketId}, marketName: ${_this.marketName}, sample: ${_this.sample}, price: ${_this.price}, maxPrice: ${_this.maxPrice}, loan: ${_this.loan}, maxLoan: ${_this.maxLoan}, downPayment: ${_this.downPayment}, cashNeeded: ${_this.cashNeeded}, savings: ${_this.savings}, annualRate: ${_this.annualRate}, termYears: ${_this.termYears}, loanType: ${_this.loanType}, loanTypeId: ${_this.loanTypeId}, monthly: ${_this.monthly}, binding: ${_this.binding}, checks: ${_this.checks}, exchangeRates: ${_this.exchangeRates}, stress: ${_this.stress}, purchaseCosts: ${_this.purchaseCosts}, purchaseCostsTotal: ${_this.purchaseCostsTotal}, whatIf: ${_this.whatIf}, mortgageOptions: ${_this.mortgageOptions}, profile: ${_this.profile}, downPaymentStated: ${_this.downPaymentStated}, homeId: ${_this.homeId}, homeName: ${_this.homeName})';
+  return 'AffordabilitySlice(marketId: ${_this.marketId}, marketName: ${_this.marketName}, sample: ${_this.sample}, price: ${_this.price}, maxPrice: ${_this.maxPrice}, loan: ${_this.loan}, maxLoan: ${_this.maxLoan}, downPayment: ${_this.downPayment}, cashNeeded: ${_this.cashNeeded}, savings: ${_this.savings}, annualRate: ${_this.annualRate}, termYears: ${_this.termYears}, loanType: ${_this.loanType}, loanTypeId: ${_this.loanTypeId}, monthly: ${_this.monthly}, binding: ${_this.binding}, checks: ${_this.checks}, exchangeRates: ${_this.exchangeRates}, stress: ${_this.stress}, purchaseCosts: ${_this.purchaseCosts}, purchaseCostsTotal: ${_this.purchaseCostsTotal}, whatIf: ${_this.whatIf}, mortgageOptions: ${_this.mortgageOptions}, schedule: ${_this.schedule}, profile: ${_this.profile}, downPaymentStated: ${_this.downPaymentStated}, homeId: ${_this.homeId}, homeName: ${_this.homeName})';
 }
 
 
@@ -54,11 +54,11 @@ abstract mixin class $AffordabilitySliceCopyWith<$Res>  {
   factory $AffordabilitySliceCopyWith(AffordabilitySlice value, $Res Function(AffordabilitySlice) _then) = _$AffordabilitySliceCopyWithImpl;
 @useResult
 $Res call({
- String marketId, String marketName, bool sample, Money price, Money? maxPrice, Money loan, Money maxLoan, Money downPayment, Money? cashNeeded, Money? savings,@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate annualRate, int termYears, String loanType, String? loanTypeId, MonthlyFigures monthly, RuleCheck? binding, List<RuleCheck> checks, List<ExchangeRate> exchangeRates, StressCurve? stress, List<CostLine> purchaseCosts, Money? purchaseCostsTotal, DownPaymentWhatIf? whatIf, List<MortgageOption> mortgageOptions, BuyerProfile? profile, bool downPaymentStated, String? homeId, String? homeName
+ String marketId, String marketName, bool sample, Money price, Money? maxPrice, Money loan, Money maxLoan, Money downPayment, Money? cashNeeded, Money? savings,@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate annualRate, int termYears, String loanType, String? loanTypeId, MonthlyFigures monthly, RuleCheck? binding, List<RuleCheck> checks, List<ExchangeRate> exchangeRates, StressCurve? stress, List<CostLine> purchaseCosts, Money? purchaseCostsTotal, DownPaymentWhatIf? whatIf, List<MortgageOption> mortgageOptions, LoanSchedule? schedule, BuyerProfile? profile, bool downPaymentStated, String? homeId, String? homeName
 });
 
 
-$MoneyCopyWith<$Res> get price;$MoneyCopyWith<$Res>? get maxPrice;$MoneyCopyWith<$Res> get loan;$MoneyCopyWith<$Res> get maxLoan;$MoneyCopyWith<$Res> get downPayment;$MoneyCopyWith<$Res>? get cashNeeded;$MoneyCopyWith<$Res>? get savings;$MonthlyFiguresCopyWith<$Res> get monthly;$RuleCheckCopyWith<$Res>? get binding;$StressCurveCopyWith<$Res>? get stress;$MoneyCopyWith<$Res>? get purchaseCostsTotal;$DownPaymentWhatIfCopyWith<$Res>? get whatIf;$BuyerProfileCopyWith<$Res>? get profile;
+$MoneyCopyWith<$Res> get price;$MoneyCopyWith<$Res>? get maxPrice;$MoneyCopyWith<$Res> get loan;$MoneyCopyWith<$Res> get maxLoan;$MoneyCopyWith<$Res> get downPayment;$MoneyCopyWith<$Res>? get cashNeeded;$MoneyCopyWith<$Res>? get savings;$MonthlyFiguresCopyWith<$Res> get monthly;$RuleCheckCopyWith<$Res>? get binding;$StressCurveCopyWith<$Res>? get stress;$MoneyCopyWith<$Res>? get purchaseCostsTotal;$DownPaymentWhatIfCopyWith<$Res>? get whatIf;$LoanScheduleCopyWith<$Res>? get schedule;$BuyerProfileCopyWith<$Res>? get profile;
 
 }
 /// @nodoc
@@ -71,7 +71,7 @@ class _$AffordabilitySliceCopyWithImpl<$Res>
 
 /// Create a copy of AffordabilitySlice
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? marketId = null,Object? marketName = null,Object? sample = null,Object? price = null,Object? maxPrice = freezed,Object? loan = null,Object? maxLoan = null,Object? downPayment = null,Object? cashNeeded = freezed,Object? savings = freezed,Object? annualRate = null,Object? termYears = null,Object? loanType = null,Object? loanTypeId = freezed,Object? monthly = null,Object? binding = freezed,Object? checks = null,Object? exchangeRates = null,Object? stress = freezed,Object? purchaseCosts = null,Object? purchaseCostsTotal = freezed,Object? whatIf = freezed,Object? mortgageOptions = null,Object? profile = freezed,Object? downPaymentStated = null,Object? homeId = freezed,Object? homeName = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? marketId = null,Object? marketName = null,Object? sample = null,Object? price = null,Object? maxPrice = freezed,Object? loan = null,Object? maxLoan = null,Object? downPayment = null,Object? cashNeeded = freezed,Object? savings = freezed,Object? annualRate = null,Object? termYears = null,Object? loanType = null,Object? loanTypeId = freezed,Object? monthly = null,Object? binding = freezed,Object? checks = null,Object? exchangeRates = null,Object? stress = freezed,Object? purchaseCosts = null,Object? purchaseCostsTotal = freezed,Object? whatIf = freezed,Object? mortgageOptions = null,Object? schedule = freezed,Object? profile = freezed,Object? downPaymentStated = null,Object? homeId = freezed,Object? homeName = freezed,}) {
   return _then(AffordabilitySlice(
 marketId: null == marketId ? _self.marketId : marketId // ignore: cast_nullable_to_non_nullable
 as String,marketName: null == marketName ? _self.marketName : marketName // ignore: cast_nullable_to_non_nullable
@@ -96,7 +96,8 @@ as StressCurve?,purchaseCosts: null == purchaseCosts ? _self.purchaseCosts : pur
 as List<CostLine>,purchaseCostsTotal: freezed == purchaseCostsTotal ? _self.purchaseCostsTotal : purchaseCostsTotal // ignore: cast_nullable_to_non_nullable
 as Money?,whatIf: freezed == whatIf ? _self.whatIf : whatIf // ignore: cast_nullable_to_non_nullable
 as DownPaymentWhatIf?,mortgageOptions: null == mortgageOptions ? _self.mortgageOptions : mortgageOptions // ignore: cast_nullable_to_non_nullable
-as List<MortgageOption>,profile: freezed == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
+as List<MortgageOption>,schedule: freezed == schedule ? _self.schedule : schedule // ignore: cast_nullable_to_non_nullable
+as LoanSchedule?,profile: freezed == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
 as BuyerProfile?,downPaymentStated: null == downPaymentStated ? _self.downPaymentStated : downPaymentStated // ignore: cast_nullable_to_non_nullable
 as bool,homeId: freezed == homeId ? _self.homeId : homeId // ignore: cast_nullable_to_non_nullable
 as String?,homeName: freezed == homeName ? _self.homeName : homeName // ignore: cast_nullable_to_non_nullable
@@ -231,6 +232,18 @@ $DownPaymentWhatIfCopyWith<$Res>? get whatIf {
 
   return $DownPaymentWhatIfCopyWith<$Res>(_self.whatIf!, (value) {
     return _then(_self.copyWith(whatIf: value));
+  });
+}/// Create a copy of AffordabilitySlice
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$LoanScheduleCopyWith<$Res>? get schedule {
+    if (_self.schedule == null) {
+    return null;
+  }
+
+  return $LoanScheduleCopyWith<$Res>(_self.schedule!, (value) {
+    return _then(_self.copyWith(schedule: value));
   });
 }/// Create a copy of AffordabilitySlice
 /// with the given fields replaced by the non-null parameter values.
@@ -326,10 +339,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  String? loanTypeId,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal,  DownPaymentWhatIf? whatIf,  List<MortgageOption> mortgageOptions,  BuyerProfile? profile,  bool downPaymentStated,  String? homeId,  String? homeName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  String? loanTypeId,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal,  DownPaymentWhatIf? whatIf,  List<MortgageOption> mortgageOptions,  LoanSchedule? schedule,  BuyerProfile? profile,  bool downPaymentStated,  String? homeId,  String? homeName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AffordabilitySlice() when $default != null:
-return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.loanTypeId,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal,_that.whatIf,_that.mortgageOptions,_that.profile,_that.downPaymentStated,_that.homeId,_that.homeName);case _:
+return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.loanTypeId,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal,_that.whatIf,_that.mortgageOptions,_that.schedule,_that.profile,_that.downPaymentStated,_that.homeId,_that.homeName);case _:
   return orElse();
 
 }
@@ -347,10 +360,10 @@ return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.m
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  String? loanTypeId,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal,  DownPaymentWhatIf? whatIf,  List<MortgageOption> mortgageOptions,  BuyerProfile? profile,  bool downPaymentStated,  String? homeId,  String? homeName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  String? loanTypeId,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal,  DownPaymentWhatIf? whatIf,  List<MortgageOption> mortgageOptions,  LoanSchedule? schedule,  BuyerProfile? profile,  bool downPaymentStated,  String? homeId,  String? homeName)  $default,) {final _that = this;
 switch (_that) {
 case _AffordabilitySlice():
-return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.loanTypeId,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal,_that.whatIf,_that.mortgageOptions,_that.profile,_that.downPaymentStated,_that.homeId,_that.homeName);case _:
+return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.loanTypeId,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal,_that.whatIf,_that.mortgageOptions,_that.schedule,_that.profile,_that.downPaymentStated,_that.homeId,_that.homeName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -367,10 +380,10 @@ return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.m
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  String? loanTypeId,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal,  DownPaymentWhatIf? whatIf,  List<MortgageOption> mortgageOptions,  BuyerProfile? profile,  bool downPaymentStated,  String? homeId,  String? homeName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  String? loanTypeId,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal,  DownPaymentWhatIf? whatIf,  List<MortgageOption> mortgageOptions,  LoanSchedule? schedule,  BuyerProfile? profile,  bool downPaymentStated,  String? homeId,  String? homeName)?  $default,) {final _that = this;
 switch (_that) {
 case _AffordabilitySlice() when $default != null:
-return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.loanTypeId,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal,_that.whatIf,_that.mortgageOptions,_that.profile,_that.downPaymentStated,_that.homeId,_that.homeName);case _:
+return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.loanTypeId,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal,_that.whatIf,_that.mortgageOptions,_that.schedule,_that.profile,_that.downPaymentStated,_that.homeId,_that.homeName);case _:
   return null;
 
 }
@@ -382,7 +395,7 @@ return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.m
 @JsonSerializable()
 
 class _AffordabilitySlice implements AffordabilitySlice {
-  const _AffordabilitySlice({required this.marketId, required this.marketName, this.sample = true, required this.price, this.maxPrice, required this.loan, required this.maxLoan, required this.downPayment, this.cashNeeded, this.savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter() required this.annualRate, required this.termYears, required this.loanType, this.loanTypeId, required this.monthly, this.binding, required  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates = const [], this.stress,  List<CostLine> purchaseCosts = const [], this.purchaseCostsTotal, this.whatIf,  List<MortgageOption> mortgageOptions = const [], this.profile, this.downPaymentStated = false, this.homeId, this.homeName}): _checks = checks,_exchangeRates = exchangeRates,_purchaseCosts = purchaseCosts,_mortgageOptions = mortgageOptions;
+  const _AffordabilitySlice({required this.marketId, required this.marketName, this.sample = true, required this.price, this.maxPrice, required this.loan, required this.maxLoan, required this.downPayment, this.cashNeeded, this.savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter() required this.annualRate, required this.termYears, required this.loanType, this.loanTypeId, required this.monthly, this.binding, required  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates = const [], this.stress,  List<CostLine> purchaseCosts = const [], this.purchaseCostsTotal, this.whatIf,  List<MortgageOption> mortgageOptions = const [], this.schedule, this.profile, this.downPaymentStated = false, this.homeId, this.homeName}): _checks = checks,_exchangeRates = exchangeRates,_purchaseCosts = purchaseCosts,_mortgageOptions = mortgageOptions;
   factory _AffordabilitySlice.fromJson(Map<String, dynamic> json) => _$AffordabilitySliceFromJson(json);
 
 @override final  String marketId;
@@ -432,6 +445,7 @@ class _AffordabilitySlice implements AffordabilitySlice {
   return EqualUnmodifiableListView(_mortgageOptions);
 }
 
+@override final  LoanSchedule? schedule;
 @override final  BuyerProfile? profile;
 @override@JsonKey() final  bool downPaymentStated;
 @override final  String? homeId;
@@ -450,18 +464,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AffordabilitySlice&&(identical(other.marketId, marketId) || other.marketId == marketId)&&(identical(other.marketName, marketName) || other.marketName == marketName)&&(identical(other.sample, sample) || other.sample == sample)&&(identical(other.price, price) || other.price == price)&&(identical(other.maxPrice, maxPrice) || other.maxPrice == maxPrice)&&(identical(other.loan, loan) || other.loan == loan)&&(identical(other.maxLoan, maxLoan) || other.maxLoan == maxLoan)&&(identical(other.downPayment, downPayment) || other.downPayment == downPayment)&&(identical(other.cashNeeded, cashNeeded) || other.cashNeeded == cashNeeded)&&(identical(other.savings, savings) || other.savings == savings)&&(identical(other.annualRate, annualRate) || other.annualRate == annualRate)&&(identical(other.termYears, termYears) || other.termYears == termYears)&&(identical(other.loanType, loanType) || other.loanType == loanType)&&(identical(other.loanTypeId, loanTypeId) || other.loanTypeId == loanTypeId)&&(identical(other.monthly, monthly) || other.monthly == monthly)&&(identical(other.binding, binding) || other.binding == binding)&&const DeepCollectionEquality().equals(other.checks, _checks)&&const DeepCollectionEquality().equals(other.exchangeRates, _exchangeRates)&&(identical(other.stress, stress) || other.stress == stress)&&const DeepCollectionEquality().equals(other.purchaseCosts, _purchaseCosts)&&(identical(other.purchaseCostsTotal, purchaseCostsTotal) || other.purchaseCostsTotal == purchaseCostsTotal)&&(identical(other.whatIf, whatIf) || other.whatIf == whatIf)&&const DeepCollectionEquality().equals(other.mortgageOptions, _mortgageOptions)&&(identical(other.profile, profile) || other.profile == profile)&&(identical(other.downPaymentStated, downPaymentStated) || other.downPaymentStated == downPaymentStated)&&(identical(other.homeId, homeId) || other.homeId == homeId)&&(identical(other.homeName, homeName) || other.homeName == homeName));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AffordabilitySlice&&(identical(other.marketId, marketId) || other.marketId == marketId)&&(identical(other.marketName, marketName) || other.marketName == marketName)&&(identical(other.sample, sample) || other.sample == sample)&&(identical(other.price, price) || other.price == price)&&(identical(other.maxPrice, maxPrice) || other.maxPrice == maxPrice)&&(identical(other.loan, loan) || other.loan == loan)&&(identical(other.maxLoan, maxLoan) || other.maxLoan == maxLoan)&&(identical(other.downPayment, downPayment) || other.downPayment == downPayment)&&(identical(other.cashNeeded, cashNeeded) || other.cashNeeded == cashNeeded)&&(identical(other.savings, savings) || other.savings == savings)&&(identical(other.annualRate, annualRate) || other.annualRate == annualRate)&&(identical(other.termYears, termYears) || other.termYears == termYears)&&(identical(other.loanType, loanType) || other.loanType == loanType)&&(identical(other.loanTypeId, loanTypeId) || other.loanTypeId == loanTypeId)&&(identical(other.monthly, monthly) || other.monthly == monthly)&&(identical(other.binding, binding) || other.binding == binding)&&const DeepCollectionEquality().equals(other.checks, _checks)&&const DeepCollectionEquality().equals(other.exchangeRates, _exchangeRates)&&(identical(other.stress, stress) || other.stress == stress)&&const DeepCollectionEquality().equals(other.purchaseCosts, _purchaseCosts)&&(identical(other.purchaseCostsTotal, purchaseCostsTotal) || other.purchaseCostsTotal == purchaseCostsTotal)&&(identical(other.whatIf, whatIf) || other.whatIf == whatIf)&&const DeepCollectionEquality().equals(other.mortgageOptions, _mortgageOptions)&&(identical(other.schedule, schedule) || other.schedule == schedule)&&(identical(other.profile, profile) || other.profile == profile)&&(identical(other.downPaymentStated, downPaymentStated) || other.downPaymentStated == downPaymentStated)&&(identical(other.homeId, homeId) || other.homeId == homeId)&&(identical(other.homeName, homeName) || other.homeName == homeName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,marketId,marketName,sample,price,maxPrice,loan,maxLoan,downPayment,cashNeeded,savings,annualRate,termYears,loanType,loanTypeId,monthly,binding,const DeepCollectionEquality().hash(_checks),const DeepCollectionEquality().hash(_exchangeRates),stress,const DeepCollectionEquality().hash(_purchaseCosts),purchaseCostsTotal,whatIf,const DeepCollectionEquality().hash(_mortgageOptions),profile,downPaymentStated,homeId,homeName]);
+    return Object.hashAll([runtimeType,marketId,marketName,sample,price,maxPrice,loan,maxLoan,downPayment,cashNeeded,savings,annualRate,termYears,loanType,loanTypeId,monthly,binding,const DeepCollectionEquality().hash(_checks),const DeepCollectionEquality().hash(_exchangeRates),stress,const DeepCollectionEquality().hash(_purchaseCosts),purchaseCostsTotal,whatIf,const DeepCollectionEquality().hash(_mortgageOptions),schedule,profile,downPaymentStated,homeId,homeName]);
 }
 
 @override
 String toString() {
-    return 'AffordabilitySlice(marketId: $marketId, marketName: $marketName, sample: $sample, price: $price, maxPrice: $maxPrice, loan: $loan, maxLoan: $maxLoan, downPayment: $downPayment, cashNeeded: $cashNeeded, savings: $savings, annualRate: $annualRate, termYears: $termYears, loanType: $loanType, loanTypeId: $loanTypeId, monthly: $monthly, binding: $binding, checks: $checks, exchangeRates: $exchangeRates, stress: $stress, purchaseCosts: $purchaseCosts, purchaseCostsTotal: $purchaseCostsTotal, whatIf: $whatIf, mortgageOptions: $mortgageOptions, profile: $profile, downPaymentStated: $downPaymentStated, homeId: $homeId, homeName: $homeName)';
+    return 'AffordabilitySlice(marketId: $marketId, marketName: $marketName, sample: $sample, price: $price, maxPrice: $maxPrice, loan: $loan, maxLoan: $maxLoan, downPayment: $downPayment, cashNeeded: $cashNeeded, savings: $savings, annualRate: $annualRate, termYears: $termYears, loanType: $loanType, loanTypeId: $loanTypeId, monthly: $monthly, binding: $binding, checks: $checks, exchangeRates: $exchangeRates, stress: $stress, purchaseCosts: $purchaseCosts, purchaseCostsTotal: $purchaseCostsTotal, whatIf: $whatIf, mortgageOptions: $mortgageOptions, schedule: $schedule, profile: $profile, downPaymentStated: $downPaymentStated, homeId: $homeId, homeName: $homeName)';
 }
 
 
@@ -472,11 +486,11 @@ abstract mixin class _$AffordabilitySliceCopyWith<$Res> implements $Affordabilit
   factory _$AffordabilitySliceCopyWith(_AffordabilitySlice value, $Res Function(_AffordabilitySlice) _then) = __$AffordabilitySliceCopyWithImpl;
 @override @useResult
 $Res call({
- String marketId, String marketName, bool sample, Money price, Money? maxPrice, Money loan, Money maxLoan, Money downPayment, Money? cashNeeded, Money? savings,@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate annualRate, int termYears, String loanType, String? loanTypeId, MonthlyFigures monthly, RuleCheck? binding, List<RuleCheck> checks, List<ExchangeRate> exchangeRates, StressCurve? stress, List<CostLine> purchaseCosts, Money? purchaseCostsTotal, DownPaymentWhatIf? whatIf, List<MortgageOption> mortgageOptions, BuyerProfile? profile, bool downPaymentStated, String? homeId, String? homeName
+ String marketId, String marketName, bool sample, Money price, Money? maxPrice, Money loan, Money maxLoan, Money downPayment, Money? cashNeeded, Money? savings,@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate annualRate, int termYears, String loanType, String? loanTypeId, MonthlyFigures monthly, RuleCheck? binding, List<RuleCheck> checks, List<ExchangeRate> exchangeRates, StressCurve? stress, List<CostLine> purchaseCosts, Money? purchaseCostsTotal, DownPaymentWhatIf? whatIf, List<MortgageOption> mortgageOptions, LoanSchedule? schedule, BuyerProfile? profile, bool downPaymentStated, String? homeId, String? homeName
 });
 
 
-@override $MoneyCopyWith<$Res> get price;@override $MoneyCopyWith<$Res>? get maxPrice;@override $MoneyCopyWith<$Res> get loan;@override $MoneyCopyWith<$Res> get maxLoan;@override $MoneyCopyWith<$Res> get downPayment;@override $MoneyCopyWith<$Res>? get cashNeeded;@override $MoneyCopyWith<$Res>? get savings;@override $MonthlyFiguresCopyWith<$Res> get monthly;@override $RuleCheckCopyWith<$Res>? get binding;@override $StressCurveCopyWith<$Res>? get stress;@override $MoneyCopyWith<$Res>? get purchaseCostsTotal;@override $DownPaymentWhatIfCopyWith<$Res>? get whatIf;@override $BuyerProfileCopyWith<$Res>? get profile;
+@override $MoneyCopyWith<$Res> get price;@override $MoneyCopyWith<$Res>? get maxPrice;@override $MoneyCopyWith<$Res> get loan;@override $MoneyCopyWith<$Res> get maxLoan;@override $MoneyCopyWith<$Res> get downPayment;@override $MoneyCopyWith<$Res>? get cashNeeded;@override $MoneyCopyWith<$Res>? get savings;@override $MonthlyFiguresCopyWith<$Res> get monthly;@override $RuleCheckCopyWith<$Res>? get binding;@override $StressCurveCopyWith<$Res>? get stress;@override $MoneyCopyWith<$Res>? get purchaseCostsTotal;@override $DownPaymentWhatIfCopyWith<$Res>? get whatIf;@override $LoanScheduleCopyWith<$Res>? get schedule;@override $BuyerProfileCopyWith<$Res>? get profile;
 
 }
 /// @nodoc
@@ -489,7 +503,7 @@ class __$AffordabilitySliceCopyWithImpl<$Res>
 
 /// Create a copy of AffordabilitySlice
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? marketId = null,Object? marketName = null,Object? sample = null,Object? price = null,Object? maxPrice = freezed,Object? loan = null,Object? maxLoan = null,Object? downPayment = null,Object? cashNeeded = freezed,Object? savings = freezed,Object? annualRate = null,Object? termYears = null,Object? loanType = null,Object? loanTypeId = freezed,Object? monthly = null,Object? binding = freezed,Object? checks = null,Object? exchangeRates = null,Object? stress = freezed,Object? purchaseCosts = null,Object? purchaseCostsTotal = freezed,Object? whatIf = freezed,Object? mortgageOptions = null,Object? profile = freezed,Object? downPaymentStated = null,Object? homeId = freezed,Object? homeName = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? marketId = null,Object? marketName = null,Object? sample = null,Object? price = null,Object? maxPrice = freezed,Object? loan = null,Object? maxLoan = null,Object? downPayment = null,Object? cashNeeded = freezed,Object? savings = freezed,Object? annualRate = null,Object? termYears = null,Object? loanType = null,Object? loanTypeId = freezed,Object? monthly = null,Object? binding = freezed,Object? checks = null,Object? exchangeRates = null,Object? stress = freezed,Object? purchaseCosts = null,Object? purchaseCostsTotal = freezed,Object? whatIf = freezed,Object? mortgageOptions = null,Object? schedule = freezed,Object? profile = freezed,Object? downPaymentStated = null,Object? homeId = freezed,Object? homeName = freezed,}) {
   return _then(_AffordabilitySlice(
 marketId: null == marketId ? _self.marketId : marketId // ignore: cast_nullable_to_non_nullable
 as String,marketName: null == marketName ? _self.marketName : marketName // ignore: cast_nullable_to_non_nullable
@@ -514,7 +528,8 @@ as StressCurve?,purchaseCosts: null == purchaseCosts ? _self._purchaseCosts : pu
 as List<CostLine>,purchaseCostsTotal: freezed == purchaseCostsTotal ? _self.purchaseCostsTotal : purchaseCostsTotal // ignore: cast_nullable_to_non_nullable
 as Money?,whatIf: freezed == whatIf ? _self.whatIf : whatIf // ignore: cast_nullable_to_non_nullable
 as DownPaymentWhatIf?,mortgageOptions: null == mortgageOptions ? _self._mortgageOptions : mortgageOptions // ignore: cast_nullable_to_non_nullable
-as List<MortgageOption>,profile: freezed == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
+as List<MortgageOption>,schedule: freezed == schedule ? _self.schedule : schedule // ignore: cast_nullable_to_non_nullable
+as LoanSchedule?,profile: freezed == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
 as BuyerProfile?,downPaymentStated: null == downPaymentStated ? _self.downPaymentStated : downPaymentStated // ignore: cast_nullable_to_non_nullable
 as bool,homeId: freezed == homeId ? _self.homeId : homeId // ignore: cast_nullable_to_non_nullable
 as String?,homeName: freezed == homeName ? _self.homeName : homeName // ignore: cast_nullable_to_non_nullable
@@ -650,6 +665,18 @@ $DownPaymentWhatIfCopyWith<$Res>? get whatIf {
 
   return $DownPaymentWhatIfCopyWith<$Res>(_self.whatIf!, (value) {
     return _then(_self.copyWith(whatIf: value));
+  });
+}/// Create a copy of AffordabilitySlice
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$LoanScheduleCopyWith<$Res>? get schedule {
+    if (_self.schedule == null) {
+    return null;
+  }
+
+  return $LoanScheduleCopyWith<$Res>(_self.schedule!, (value) {
+    return _then(_self.copyWith(schedule: value));
   });
 }/// Create a copy of AffordabilitySlice
 /// with the given fields replaced by the non-null parameter values.

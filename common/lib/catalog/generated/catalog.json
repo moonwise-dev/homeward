@@ -1271,6 +1271,128 @@
       ],
       "additionalProperties": false
     },
+    "LoanBalanceChart": {
+      "type": "object",
+      "description": "The loan paid down and the equity built year by year over the term at today's rate, from compute_affordability, with a slider over the years and, in Sweden, the years the amortization steps down.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "LoanBalanceChart"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "affordability": {
+          "type": "object",
+          "description": "Always { \"path\": \"/affordability\" }, after compute_affordability answered.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/affordability"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "affordability"
+      ],
+      "additionalProperties": false
+    },
+    "SavingsPlan": {
+      "type": "object",
+      "description": "How long until the savings cover the cash the home in /affordability needs on the day, at the monthly saving the buyer stated, from plan_savings: what is still to save, the months to go, and the month they get there.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "SavingsPlan"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "plan": {
+          "type": "object",
+          "description": "Always { \"path\": \"/savingsPlan\" }, after plan_savings answered.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/savingsPlan"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "plan"
+      ],
+      "additionalProperties": false
+    },
+    "MarketSnapshotCard": {
+      "type": "object",
+      "description": "A city at a glance before anything is known about the household, from look_up_market: the sample lender's rates, the lending rules, what the other rules wait on, and each area's median price and rent per square metre, each with its source.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "MarketSnapshotCard"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "market": {
+          "type": "object",
+          "description": "One city look_up_market described, { \"path\": \"/markets/<city>\" }.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "market"
+      ],
+      "additionalProperties": false
+    },
     "RentSplit": {
       "type": "object",
       "description": "A home's rent and bills split between the people sharing it, from split_rent: equally, by income, or by room size, which the buyer switches between; its choose action sends the rule they take, with rule added to its context.",
@@ -2330,6 +2452,15 @@
         },
         {
           "$ref": "#/components/MortgageOptions"
+        },
+        {
+          "$ref": "#/components/LoanBalanceChart"
+        },
+        {
+          "$ref": "#/components/SavingsPlan"
+        },
+        {
+          "$ref": "#/components/MarketSnapshotCard"
         },
         {
           "$ref": "#/components/RentSplit"

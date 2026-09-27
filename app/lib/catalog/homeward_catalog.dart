@@ -13,6 +13,8 @@ import 'home_comparison/home_comparison_item.dart';
 import 'home_swipe/home_swipe_item.dart';
 import 'household_summary/household_summary_item.dart';
 import 'listing_quote/listing_quote_item.dart';
+import 'loan_balance_chart/loan_balance_chart_item.dart';
+import 'market_snapshot_card/market_snapshot_card_item.dart';
 import 'monthly_cost_breakdown/monthly_cost_breakdown_item.dart';
 import 'money_input/money_input_item.dart';
 import 'mortgage_options/mortgage_options_item.dart';
@@ -20,6 +22,7 @@ import 'purchase_costs_table/purchase_costs_table_item.dart';
 import 'rent_split/rent_split_item.dart';
 import 'route_summary/route_summary_item.dart';
 import 'rule_note/rule_note_item.dart';
+import 'savings_plan/savings_plan_item.dart';
 import 'shortlist/shortlist_item.dart';
 import 'stress_test_chart/stress_test_chart_item.dart';
 import 'weekly_travel/weekly_travel_item.dart';
@@ -41,6 +44,9 @@ Catalog homewardGenuiCatalog() {
       purchaseCostsTableItem,
       downPaymentSliderItem,
       mortgageOptionsItem,
+      loanBalanceChartItem,
+      savingsPlanItem,
+      marketSnapshotCardItem,
       rentSplitItem,
       buyVsRentItem,
       ruleNoteItem,

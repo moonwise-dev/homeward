@@ -35,6 +35,7 @@ _AffordabilitySlice _$AffordabilitySliceFromJson(
       'purchaseCostsTotal',
       'whatIf',
       'mortgageOptions',
+      'schedule',
       'profile',
       'downPaymentStated',
       'homeId',
@@ -132,6 +133,11 @@ _AffordabilitySlice _$AffordabilitySliceFromJson(
               .toList() ??
           const [],
     ),
+    schedule: $checkedConvert(
+      'schedule',
+      (v) =>
+          v == null ? null : LoanSchedule.fromJson(v as Map<String, dynamic>),
+    ),
     profile: $checkedConvert(
       'profile',
       (v) =>
@@ -173,6 +179,7 @@ Map<String, dynamic> _$AffordabilitySliceToJson(
   'purchaseCostsTotal': ?instance.purchaseCostsTotal?.toJson(),
   'whatIf': ?instance.whatIf?.toJson(),
   'mortgageOptions': instance.mortgageOptions.map((e) => e.toJson()).toList(),
+  'schedule': ?instance.schedule?.toJson(),
   'profile': ?instance.profile?.toJson(),
   'downPaymentStated': instance.downPaymentStated,
   'homeId': ?instance.homeId,

@@ -15,6 +15,7 @@ import 'assess_affordability.dart';
 import 'assumed_down_payment.dart';
 import 'constraint_check.dart';
 import 'down_payment_what_if.dart';
+import 'loan_months.dart';
 import 'maximum_price.dart';
 import 'monthly_figures_of.dart';
 import 'stress_curve.dart';
@@ -130,64 +131,67 @@ AffordabilityAnswer answerAffordability({
     marketName: market.name,
     source: market.sourceOf(check.sourceId),
   );
+  final slice = AffordabilitySlice(
+    marketId: market.id.code,
+    marketName: market.name,
+    price: target,
+    maxPrice: highest,
+    loan: assessed.loan,
+    maxLoan: assessed.maxLoan,
+    downPayment: down,
+    cashNeeded: costs?.cashNeeded,
+    savings: savings,
+    annualRate: assessed.annualRate,
+    termYears: term,
+    loanType: loanType.label,
+    loanTypeId: loanType.id,
+    monthly: monthlyFiguresOf(assessed, scenario, market),
+    binding: switch (assessed.binding) {
+      final binding? => rule(binding),
+      null => null,
+    },
+    checks: [for (final check in assessed.checks) rule(check)],
+    exchangeRates: [...market.exchangeRates.values],
+    stress: _stressCurve(scenario, market, profile),
+    purchaseCosts: [
+      for (final charge in costs?.charges ?? const <PurchaseCharge>[])
+        CostLine(
+          label: charge.label,
+          localTerm: charge.localTerm,
+          amount: charge.amount,
+          refundable: charge.refundable,
+          refund: charge.refund,
+          source: market.sourceOf(charge.sourceId),
+        ),
+    ],
+    purchaseCostsTotal: costs?.total,
+    mortgageOptions: [
+      for (final option in market.loanTypes)
+        _mortgageOption(
+          scenario.copyWith(
+            loanTypeId: option.id,
+            rateSpread: option.defaultSpread,
+          ),
+          option,
+          market,
+          profile,
+        ),
+    ],
+    whatIf: downPaymentWhatIf(
+      market: market,
+      profile: profile,
+      scenarioWith: (downPayment) => at(target, downPayment),
+      price: target,
+      minimum: minimum,
+      savings: savings,
+    ),
+    profile: profile,
+    downPaymentStated: downPayment != null,
+  );
   return AffordabilityAnswered(
     assessed: assessed,
-    slice: AffordabilitySlice(
-      marketId: market.id.code,
-      marketName: market.name,
-      price: target,
-      maxPrice: highest,
-      loan: assessed.loan,
-      maxLoan: assessed.maxLoan,
-      downPayment: down,
-      cashNeeded: costs?.cashNeeded,
-      savings: savings,
-      annualRate: assessed.annualRate,
-      termYears: term,
-      loanType: loanType.label,
-      loanTypeId: loanType.id,
-      monthly: monthlyFiguresOf(assessed, scenario, market),
-      binding: switch (assessed.binding) {
-        final binding? => rule(binding),
-        null => null,
-      },
-      checks: [for (final check in assessed.checks) rule(check)],
-      exchangeRates: [...market.exchangeRates.values],
-      stress: _stressCurve(scenario, market, profile),
-      purchaseCosts: [
-        for (final charge in costs?.charges ?? const <PurchaseCharge>[])
-          CostLine(
-            label: charge.label,
-            localTerm: charge.localTerm,
-            amount: charge.amount,
-            refundable: charge.refundable,
-            refund: charge.refund,
-            source: market.sourceOf(charge.sourceId),
-          ),
-      ],
-      purchaseCostsTotal: costs?.total,
-      mortgageOptions: [
-        for (final option in market.loanTypes)
-          _mortgageOption(
-            scenario.copyWith(
-              loanTypeId: option.id,
-              rateSpread: option.defaultSpread,
-            ),
-            option,
-            market,
-            profile,
-          ),
-      ],
-      whatIf: downPaymentWhatIf(
-        market: market,
-        profile: profile,
-        scenarioWith: (downPayment) => at(target, downPayment),
-        price: target,
-        minimum: minimum,
-        savings: savings,
-      ),
-      profile: profile,
-      downPaymentStated: downPayment != null,
+    slice: slice.copyWith(
+      schedule: loanSchedule(home: slice, market: market),
     ),
   );
 }

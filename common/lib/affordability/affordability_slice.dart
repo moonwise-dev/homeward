@@ -9,6 +9,7 @@ import '../money/ppm_json_converter.dart';
 import '../money/rate.dart';
 import '../profile/buyer_profile.dart';
 import 'constraint_kind.dart';
+import 'loan_schedule.dart';
 import 'stress_curve.dart';
 
 part 'affordability_slice.freezed.dart';
@@ -42,6 +43,7 @@ abstract class AffordabilitySlice with _$AffordabilitySlice {
     Money? purchaseCostsTotal,
     DownPaymentWhatIf? whatIf,
     @Default([]) List<MortgageOption> mortgageOptions,
+    LoanSchedule? schedule,
     BuyerProfile? profile,
     @Default(false) bool downPaymentStated,
     String? homeId,

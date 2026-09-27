@@ -12,6 +12,8 @@ import 'components/home_comparison.dart';
 import 'components/home_swipe.dart';
 import 'components/household_summary.dart';
 import 'components/listing_quote.dart';
+import 'components/loan_balance_chart.dart';
+import 'components/market_snapshot_card.dart';
 import 'components/monthly_cost_breakdown.dart';
 import 'components/money_input.dart';
 import 'components/mortgage_options.dart';
@@ -19,6 +21,7 @@ import 'components/purchase_costs_table.dart';
 import 'components/rent_split.dart';
 import 'components/route_summary.dart';
 import 'components/rule_note.dart';
+import 'components/savings_plan.dart';
 import 'components/shortlist.dart';
 import 'components/stress_test_chart.dart';
 import 'components/weekly_travel.dart';
@@ -39,6 +42,9 @@ const homewardComponents = <CatalogComponent>[
   PurchaseCostsTable(),
   DownPaymentSlider(),
   MortgageOptions(),
+  LoanBalanceChart(),
+  SavingsPlan(),
+  MarketSnapshotCard(),
   RentSplit(),
   BuyVsRent(),
   RuleNote(),

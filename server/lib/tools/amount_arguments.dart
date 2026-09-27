@@ -16,6 +16,32 @@ const amountParameter = {
   'required': ['amount'],
 };
 
+const perPeriodParameter = {
+  'type': 'object',
+  'properties': {
+    'amount': {
+      'type': 'number',
+      'description': 'The amount in major units as the buyer said it.',
+    },
+    'currency': {
+      'type': 'string',
+      'description': 'ISO 4217 code; omit for the market currency.',
+    },
+    'per': {
+      'type': 'string',
+      'enum': ['month', 'year'],
+    },
+  },
+  'required': ['amount'],
+};
+
+Money monthlyOf(Money money, Object? argument) =>
+    argument is Map<String, Object?> && argument['per'] == 'year'
+    ? money.copyWith(
+        minorUnits: Rounding.halfUp.divide(money.minorUnits, monthsPerYear),
+      )
+    : money;
+
 Money moneyFromArgument(Object? argument, Currency? marketCurrency) {
   if (argument case {'amount': final num amount}) {
     final currency = switch (argument['currency']) {

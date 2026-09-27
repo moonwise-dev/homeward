@@ -112,6 +112,24 @@ Buying a sample home against renting one like it, year by year, from compare_buy
 | `/buyVsRent/years` | integer | The years the buyer expects to stay |
 | `/buyVsRent/points` | object read by Homeward components | What buying and renting have cost by each year; bind the whole slice to a BuyVsRent |
 
+### `/savingsPlan`
+
+How long until the savings cover the cash the home in /affordability needs on the day, from plan_savings. Seeded by `plan_savings`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/savingsPlan/cashNeeded` | money object { "minorUnits": integer, "currency": ISO 4217 code } | The cash the home needs on the day |
+| `/savingsPlan/toSave` | money object { "minorUnits": integer, "currency": ISO 4217 code } | What is still to save |
+| `/savingsPlan/months` | integer | The months to go at the monthly saving; bind the whole slice to a SavingsPlan |
+
+### `/markets`
+
+Cities at a glance from look_up_market: an object by city ID. Seeded by `look_up_market`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/markets/<city>` | object read by Homeward components | One city: the sample lender's rates, the lending rules, and each area's median price and rent per square metre. Bind it whole to a MarketSnapshotCard. |
+
 ## Actions
 
 Buttons send actions as `{ "event": { "name": …, "context": { … } } }`. Name each action for what the buyer does, in lowercase words joined by underscores, such as `keep_home`. Context values are literals or bindings. You receive the action's name, its context, and the data model of its surface as the buyer's next message.
@@ -135,6 +153,9 @@ The catalog schema below holds the full schemas of the components every plan use
 - `PurchaseCostsTable`: Every upfront cost the buyer owes on the day, with its source, the total, and the cash needed with the down payment, from compute_affordability.
 - `DownPaymentSlider`: Lets the buyer try down payments for the price in /affordability and see the loan, the monthly cost, and the cash needed; its apply action sends the one they use, with downPayment added to its context.
 - `MortgageOptions`: The sample lender's variable, fixed, and mixed rates side by side with the monthly cost of each, from compute_affordability; its choose action sends the one the buyer takes, with loanType added to its context.
+- `LoanBalanceChart`: The loan paid down and the equity built year by year over the term at today's rate, from compute_affordability, with a slider over the years and, in Sweden, the years the amortization steps down.
+- `SavingsPlan`: How long until the savings cover the cash the home in /affordability needs on the day, at the monthly saving the buyer stated, from plan_savings: what is still to save, the months to go, and the month they get there.
+- `MarketSnapshotCard`: A city at a glance before anything is known about the household, from look_up_market: the sample lender's rates, the lending rules, what the other rules wait on, and each area's median price and rent per square metre, each with its source.
 - `RentSplit`: A home's rent and bills split between the people sharing it, from split_rent: equally, by income, or by room size, which the buyer switches between; its choose action sends the rule they take, with rule added to its context.
 - `BuyVsRent`: Buying a sample home against renting one like it, from compare_buy_rent: what each has cost by every year, the equity built, and the year buying comes out cheaper, with a slider over the years the buyer expects to stay.
 - `HomeCard`: One sample home from search_homes: photos, facts, price, and what it costs this household each month; its choose action sends the home to work out, and its keep action the home to keep or drop, with home, its ID, and keep, true or false, added to its context.

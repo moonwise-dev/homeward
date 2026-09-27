@@ -1,14 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../affordability/affordability_slice.dart';
-import '../affordability/interest_deduction.dart';
+import '../affordability/loan_months.dart';
 import '../finance/monthly_amount.dart';
-import '../finance/repayment_style.dart';
 import '../markets/resolved_market.dart';
 import '../money/money.dart';
 import '../money/ppm_json_converter.dart';
 import '../money/rate.dart';
-import '../money/rounding.dart';
 import 'rent_figure.dart';
 
 part 'buy_vs_rent.freezed.dart';
@@ -73,10 +71,6 @@ BuyVsRentSlice compareBuyAndRent({
   int? years,
 }) {
   final zero = Money.zero(home.price.currency);
-  final deducts = home.monthly.afterDeduction != null;
-  final borrowers = home.profile?.borrowers ?? 1;
-  final straight = market.lending.repaymentStyle == RepaymentStyle.straight;
-  var balance = home.loan;
   var buying = home.purchaseCostsTotal ?? zero;
   var renting = zero;
   final points = [
@@ -87,38 +81,19 @@ BuyVsRentSlice compareBuyAndRent({
       equity: home.downPayment,
     ),
   ];
-  for (var month = 1; month <= buyVsRentYears * monthsPerYear; month++) {
-    final interest = monthlyAmountAtAnnualRate(
-      amount: balance,
-      annualRate: home.annualRate,
-      rounding: Rounding.halfUp,
-    );
-    final due = straight
-        ? home.monthly.amortization
-        : home.monthly.total - interest;
-    final amortization = due > balance ? balance : due;
-    final deduction = deducts
-        ? market.lending.interestDeduction.fold(
-            zero,
-            (total, rule) =>
-                total +
-                monthlyInterestDeduction(
-                  monthlyInterest: interest,
-                  rule: rule,
-                  borrowers: borrowers,
-                ),
-          )
-        : zero;
-    buying += interest - deduction + (home.monthly.fee ?? zero);
+  for (final month in loanMonths(
+    home: home,
+    market: market,
+  ).take(buyVsRentYears * monthsPerYear)) {
+    buying += month.interest - month.deduction + (home.monthly.fee ?? zero);
     renting += rent.monthly;
-    balance -= amortization;
-    if (month % monthsPerYear == 0) {
+    if (month.month % monthsPerYear == 0) {
       points.add(
         BuyRentYear(
-          year: month ~/ monthsPerYear,
+          year: month.month ~/ monthsPerYear,
           buying: buying,
           renting: renting,
-          equity: home.price - balance,
+          equity: home.price - month.balance,
         ),
       );
     }
@@ -134,7 +109,7 @@ BuyVsRentSlice compareBuyAndRent({
     loanType: home.loanType,
     purchaseCosts: home.purchaseCostsTotal ?? zero,
     fee: home.monthly.fee,
-    deducts: deducts,
+    deducts: home.monthly.afterDeduction != null,
     rent: rent,
     years: (years ?? assumedStayYears).clamp(1, buyVsRentYears),
     yearsAssumed: years == null,

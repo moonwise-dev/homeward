@@ -259,6 +259,33 @@ applies to variable and mixed rates only. Its `loanType` argument takes the
 option the buyer chose; without it the variable rate is assumed. Rates come
 from the pack and the rates file; Gemini never names one.
 
+It also works out the loan year by year (C10b, D159) at today's rate over
+the term: the balance, the equity at today's price, and the interest paid
+by then after any deduction, into `/affordability` for `LoanBalanceChart`.
+The schedule lives once in `common` and `compare_buy_rent` uses it too. In
+Sweden each year's amortization is the rules' share of the loan as first
+taken for the tier the balance is in, 2% while it is above 70% of the price,
+1% above 50%, and none below; in Portugal it is the annuity over the term.
+
+`plan_savings` (C10b, D159) works out how long until the household's
+savings cover the cash the home in `/affordability` needs on the day. It
+takes the monthly saving the buyer stated, from their words or a
+`MoneyInput`, checked like every amount. The target is the cash needed at
+the down payment they chose, or at the minimum the rules allow. It seeds
+`/savingsPlan` for `SavingsPlan` with what is still to save, the months to
+go, and the month they get there, and answers with the months. It leaves out
+what the savings earn and prices and incomes changing, and says so. Before any
+affordability run it says it needs the household.
+
+`look_up_market` (C10b, D159) describes a city from the sample data before
+anything is known about the household: the currency, the sample lender's
+rates with the date read, the lending rules that set the loan for a buyer
+Homeward knows nothing about yet, the rules that wait on the household, and
+each area's median price and rent per square metre from the sample homes,
+each with its source. It takes one of the cities `search_homes` covers, seeds
+`/markets/<city>` for `MarketSnapshotCard`, and answers with the areas and
+the rules, never the figures.
+
 `search_homes` (C7, D151) searches the labelled sample homes of Stockholm
 and Lisbon, which the server loads from `markets/listings/` at startup. Its
 arguments are what the buyer asked for: the city, the kind of home, the
@@ -352,7 +379,8 @@ the household the last `compute_affordability` run kept, like
 `search_homes`, then adds month by month what buying costs, the costs on
 the day, interest after any deduction, and the home's fee, against the
 rent, with the equity built from the down payment and the loan paid off at
-today's price, for 30 years. It seeds `/buyVsRent` for `BuyVsRent` and
+today's price, for 30 years, on the loan schedule
+`compute_affordability` uses. It seeds `/buyVsRent` for `BuyVsRent` and
 answers with both totals at the years chosen and the year buying comes out
 cheaper. Before any affordability run it says it needs the household.
 

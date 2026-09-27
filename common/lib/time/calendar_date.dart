@@ -13,11 +13,18 @@ extension type const CalendarDate._(String isoDate) {
     return CalendarDate._(text);
   }
 
+  factory CalendarDate.ofUtc(DateTime time) =>
+      CalendarDate._(time.toIso8601String().substring(0, 10));
+
   DateTime get utcMidnight => DateTime.parse('${isoDate}T00:00:00Z');
 
-  CalendarDate plusDays(int days) => CalendarDate._(
-    utcMidnight.add(Duration(days: days)).toIso8601String().substring(0, 10),
-  );
+  CalendarDate plusDays(int days) =>
+      CalendarDate.ofUtc(utcMidnight.add(Duration(days: days)));
+
+  CalendarDate monthStartIn(int months) {
+    final date = utcMidnight;
+    return CalendarDate.ofUtc(DateTime.utc(date.year, date.month + months));
+  }
 
   bool isBefore(CalendarDate other) => isoDate.compareTo(other.isoDate) < 0;
 }

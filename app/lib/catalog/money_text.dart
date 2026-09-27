@@ -58,7 +58,20 @@ String periodText(Period period) => [
   if (period.days > 0) _count(period.days, 'day'),
 ].join(' and ');
 
+String yearsText(int years) => _count(years, 'year');
+
+String monthsText(int months) => [
+  if (months ~/ monthsPerYear > 0) _count(months ~/ monthsPerYear, 'year'),
+  if (months % monthsPerYear > 0) _count(months % monthsPerYear, 'month'),
+].join(' and ');
+
 String _count(int count, String unit) => '$count $unit${count == 1 ? '' : 's'}';
+
+String dateText(CalendarDate date) =>
+    DateFormat('d MMMM y', 'en_US').format(date.utcMidnight);
+
+String monthText(CalendarDate date) =>
+    DateFormat('MMMM y', 'en_US').format(date.utcMidnight);
 
 String exchangeRateText(ExchangeRate rate) =>
     'Your ${rate.from.code} counted at 1 ${rate.from.code} = ${rate.rate} '

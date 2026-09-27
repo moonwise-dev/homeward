@@ -5,8 +5,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../ui/core/themes/colors.dart';
 import '../../ui/core/themes/dimens.dart';
 import '../../ui/core/themes/text_styles.dart';
+import '../../ui/core/ui/app_chart_key.dart';
 import '../../ui/core/ui/app_figure_row.dart';
 import '../../ui/core/ui/app_line_chart.dart';
+import '../list_text.dart';
 import '../money_text.dart';
 import '../rent_text.dart';
 
@@ -43,7 +45,7 @@ class BuyVsRentView extends HookWidget {
         const SizedBox(height: AppSpacing.sm),
         AppLineChart(
           summary:
-              'Over ${_yearsText(last)}, buying costs '
+              'Over ${yearsText(last)}, buying costs '
               '${moneyText(slice.points.last.buying)} and renting '
               '${moneyText(slice.points.last.renting)}. '
               '${_breakEvenText(breakEven, last)}',
@@ -61,7 +63,7 @@ class BuyVsRentView extends HookWidget {
           markers: [
             ChartMarker(
               x: years.value.toDouble(),
-              label: _yearsText(years.value),
+              label: yearsText(years.value),
               color: AppColors.accent,
             ),
           ],
@@ -69,14 +71,14 @@ class BuyVsRentView extends HookWidget {
         const SizedBox(height: AppSpacing.xs),
         const Row(
           children: [
-            _Key(label: 'Buying', color: AppColors.accent),
+            AppChartKey(label: 'Buying', color: AppColors.accent),
             SizedBox(width: AppSpacing.md),
-            _Key(label: 'Renting', color: AppColors.warning),
+            AppChartKey(label: 'Renting', color: AppColors.warning),
           ],
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
-          'If you stay ${_yearsText(years.value)}',
+          'If you stay ${yearsText(years.value)}',
           style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
         ),
         Slider(
@@ -84,12 +86,12 @@ class BuyVsRentView extends HookWidget {
           min: 1,
           max: last.toDouble(),
           divisions: last - 1,
-          semanticFormatterCallback: (value) => _yearsText(value.round()),
+          semanticFormatterCallback: (value) => yearsText(value.round()),
           onChanged: (value) => years.value = value.round(),
         ),
         if (slice.yearsAssumed && years.value == slice.years)
           Text(
-            '${_yearsText(slice.years)} assumed; move it to how long you '
+            '${yearsText(slice.years)} assumed; move it to how long you '
             'expect to stay.',
             style: AppTextStyles.caption,
           ),
@@ -108,7 +110,7 @@ class BuyVsRentView extends HookWidget {
         const SizedBox(height: AppSpacing.xs),
         Text(
           '${buyingCheaper ? 'Buying' : 'Renting'} costs '
-          '${moneyText(difference)} less over ${_yearsText(years.value)}.',
+          '${moneyText(difference)} less over ${yearsText(years.value)}.',
           style: AppTextStyles.label.copyWith(
             color: buyingCheaper ? AppColors.positive : AppColors.warning,
           ),
@@ -132,38 +134,13 @@ class BuyVsRentView extends HookWidget {
       slice.deducts ? 'interest after the deduction' : 'interest',
       if (slice.fee != null) "the home's fee",
     ];
-    final text = parts.length < 2
-        ? parts.single
-        : '${parts.take(parts.length - 1).join(', ')} and ${parts.last}';
+    final text = listText(parts);
     return '${text[0].toUpperCase()}${text.substring(1)}.';
   }
 
-  static String _yearsText(int years) => years == 1 ? '1 year' : '$years years';
-
   static String _breakEvenText(int? year, int last) => switch (year) {
-    null => 'Within ${_yearsText(last)}, renting stays cheaper.',
+    null => 'Within ${yearsText(last)}, renting stays cheaper.',
     1 => 'Buying comes out cheaper from the first year.',
     final year => 'Buying comes out cheaper from year $year.',
   };
-}
-
-class _Key extends StatelessWidget {
-  const _Key({required this.label, required this.color});
-
-  final String label;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      SizedBox(
-        width: 12,
-        height: 3,
-        child: ColoredBox(color: color),
-      ),
-      const SizedBox(width: AppSpacing.xxs),
-      Text(label, style: AppTextStyles.caption),
-    ],
-  );
 }
