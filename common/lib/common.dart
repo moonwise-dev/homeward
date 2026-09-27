@@ -24,6 +24,7 @@ export 'catalog/agent_visible_basic_components.dart';
 export 'catalog/catalog_component.dart';
 export 'catalog/catalog_disclosure.dart';
 export 'catalog/catalog_schemas.dart';
+export 'catalog/component_parameters.dart';
 export 'catalog/components/affordability_summary.dart';
 export 'catalog/components/brief.dart';
 export 'catalog/components/buy_vs_rent.dart';

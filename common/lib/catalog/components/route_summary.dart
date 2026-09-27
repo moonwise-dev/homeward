@@ -11,6 +11,9 @@ final class RouteSummary extends CatalogComponent {
   String get name => 'RouteSummary';
 
   @override
+  CatalogFamily get family => CatalogFamily.placeAndTravel;
+
+  @override
   String get description =>
       'One trip measure_week measured: where to, how they go, the minutes '
       'and distance, and how often.';

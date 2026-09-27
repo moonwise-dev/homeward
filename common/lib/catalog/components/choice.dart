@@ -10,6 +10,9 @@ final class Choice extends CatalogComponent {
   String get name => 'Choice';
 
   @override
+  CatalogFamily get family => CatalogFamily.understanding;
+
+  @override
   String get description =>
       'One decision to ask: its options, the one you recommend first with '
       'why, and a tap that answers at once.';

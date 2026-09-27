@@ -40,10 +40,12 @@ place each turn.
 | `/plans` | Plans |
 | `/plans/:sessionId` | Journey |
 | `/gallery` | Catalog gallery |
+| `/gallery/:component` | One catalog component |
 | `/settings` | Settings |
 
 Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
-`/gallery` needs neither, because it renders declared examples offline.
+`/gallery` and its component pages need neither, because they render
+declared examples offline.
 
 ## Screens
 
@@ -132,9 +134,20 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 
 ### Catalog Gallery
 
-- Lists every Homeward component and renders each declared example with its
-  example data model. Empty since the reset (D129) until the first component
-  returns.
+- `/gallery` is an index of every Homeward component grouped by family,
+  understanding, money, homes, place and travel, and trust, each with its
+  one-line description, linking to its page (C10c, D160).
+- `/gallery/:component` shows one component: its name, family, and
+  description; its declared examples, one at a time with a switcher, each
+  drawn from its example data model as the journey draws it; and its
+  parameters, read from the declaration so they cannot drift:
+  - each property with its type, whether it is required, and whether it is
+    bound, with the path it binds and the tool that seeds that slice;
+  - the example's A2UI components and data model as JSON, each with a copy
+    button.
+- An unknown component name shows the index with a note.
+- On a wide window the index stays beside the page; on a narrow one the page
+  replaces it with a back button.
 - Reachable from settings when developer tools are enabled.
 
 ### Wire Inspector
@@ -199,7 +212,7 @@ the quota cap are what protect the bill.
 | `api_key` | Input state, verify, save, remove |
 | `plans` | Stream plans, create, delete |
 | `journey` | Send text, stop, stream turn events and progress, replay, retry |
-| `gallery` | Selected component and example |
+| `gallery` | Components by family, the selected component, and its selected example |
 | `wire_inspector` | Frame timeline with sizes, A2UI messages, live data model, counters |
 | `settings` | Developer tools flag, delete all data |
 

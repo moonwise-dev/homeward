@@ -11,6 +11,9 @@ final class RuleNote extends CatalogComponent {
   String get name => 'RuleNote';
 
   @override
+  CatalogFamily get family => CatalogFamily.trust;
+
+  @override
   String get description =>
       'One lending rule, the largest loan it allows, and its source, from '
       'compute_affordability.';

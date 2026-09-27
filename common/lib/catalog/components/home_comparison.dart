@@ -11,6 +11,9 @@ final class HomeComparison extends CatalogComponent {
   String get name => 'HomeComparison';
 
   @override
+  CatalogFamily get family => CatalogFamily.homes;
+
+  @override
   String get description =>
       'Two or three homes from search_homes side by side: price, what each '
       'costs a month, the cash needed, and size; its choose action sends the '

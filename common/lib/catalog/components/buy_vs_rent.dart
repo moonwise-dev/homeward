@@ -11,6 +11,9 @@ final class BuyVsRent extends CatalogComponent {
   String get name => 'BuyVsRent';
 
   @override
+  CatalogFamily get family => CatalogFamily.money;
+
+  @override
   String get description =>
       'Buying a sample home against renting one like it, from '
       'compare_buy_rent: what each has cost by every year, the equity built, '

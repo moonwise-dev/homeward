@@ -12,6 +12,9 @@ final class Brief extends CatalogComponent {
   String get name => 'Brief';
 
   @override
+  CatalogFamily get family => CatalogFamily.understanding;
+
+  @override
   String get description =>
       'Sections of the brief update_brief kept, one kind or several, each '
       'item with where it came from; a deduction offers Right and Not quite '

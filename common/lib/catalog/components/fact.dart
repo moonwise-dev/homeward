@@ -11,6 +11,9 @@ final class Fact extends CatalogComponent {
   String get name => 'Fact';
 
   @override
+  CatalogFamily get family => CatalogFamily.understanding;
+
+  @override
   String get description =>
       'One item of the brief, with where it came from; a deduction offers '
       'Right and Not quite when it has an answer action.';

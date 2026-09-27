@@ -11,6 +11,9 @@ final class ListingQuote extends CatalogComponent {
   String get name => 'ListingQuote';
 
   @override
+  CatalogFamily get family => CatalogFamily.homes;
+
+  @override
   String get description =>
       "One sample home read for the household's needs, from read_listings: "
       'each need with whether the listing meets it, rules it out, or says '

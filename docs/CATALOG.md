@@ -37,7 +37,8 @@ with the chunk of `docs/ROADMAP.md` that needs it: `Fact` (C4), `Choice`
    was said by the buyer, deduced from their words, measured, estimated, or
    quoted.
 6. **One widget, two places.** The widget behind each item renders the same in
-   the journey and in the gallery.
+   the journey and in the gallery, where each block has its own page with its
+   examples and its parameters, read from the declaration (D160).
 
 ## Basic Components
 
@@ -153,6 +154,8 @@ In `common/lib/catalog/components/`, each component is one declaration: a
 interface genui uses internally for its catalog items. It carries:
 
 - Name.
+- Family: understanding, money, homes, place and travel, or trust, which the
+  gallery groups by (D160).
 - Properties built with `json_schema_builder`, `CommonSchemas`, and
   `CatalogSchemas`. The schema adds the v0.9 envelope (`id`, `component`,
   `weight`, `accessibility`) and sets `additionalProperties: false`.

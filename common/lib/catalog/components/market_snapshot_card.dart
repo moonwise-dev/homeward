@@ -11,6 +11,9 @@ final class MarketSnapshotCard extends CatalogComponent {
   String get name => 'MarketSnapshotCard';
 
   @override
+  CatalogFamily get family => CatalogFamily.money;
+
+  @override
   String get description =>
       'A city at a glance before anything is known about the household, '
       "from look_up_market: the sample lender's rates, the lending rules, "

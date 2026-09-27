@@ -11,6 +11,9 @@ final class WeeklyTravel extends CatalogComponent {
   String get name => 'WeeklyTravel';
 
   @override
+  CatalogFamily get family => CatalogFamily.placeAndTravel;
+
+  @override
   String get description =>
       "The buyer's week from one starting point, from measure_week: each "
       'place, how often and how they go, the measured minutes, and the '

@@ -23,6 +23,7 @@ story needs.
   `common/lib/catalog/components/<component>.dart`, a `CatalogComponent`,
   which implements `ComponentApi` from `a2ui_core`. It carries:
   - the name;
+  - its family: understanding, money, homes, place and travel, or trust;
   - properties built with `json_schema_builder`, `CommonSchemas`, and
     `CatalogSchemas` (`common/lib/catalog/catalog_schemas.dart`);
   - bound properties, which accept only `{ "path" }` for any figure a buyer
@@ -84,6 +85,7 @@ Never edit them by hand.
   - an item has no declaration;
   - a declaration has no item.
 - Then run `make check`.
-- Serve the web app and open `/gallery` in the Chrome DevTools MCP to
-  screenshot the block beside its examples (see `homeward-chunk`, step 7).
+- Serve the web app and open `/gallery/<Block>` in the Chrome DevTools MCP
+  to screenshot the block, its examples, and its parameters (see
+  `homeward-chunk`, step 7).
 - No widget or golden tests (D137).

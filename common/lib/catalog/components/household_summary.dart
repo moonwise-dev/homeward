@@ -11,6 +11,9 @@ final class HouseholdSummary extends CatalogComponent {
   String get name => 'HouseholdSummary';
 
   @override
+  CatalogFamily get family => CatalogFamily.understanding;
+
+  @override
   String get description =>
       'Who the household is and the figures they stated, as '
       'compute_affordability kept them: the people, residency, work, and '

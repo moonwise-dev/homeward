@@ -10,6 +10,9 @@ final class MoneyInput extends CatalogComponent {
   String get name => 'MoneyInput';
 
   @override
+  CatalogFamily get family => CatalogFamily.money;
+
+  @override
   String get description =>
       'An amount field that writes { amount, currency, per }, the shape the '
       'money tools take, to the path it binds; a Button beside it sends that '

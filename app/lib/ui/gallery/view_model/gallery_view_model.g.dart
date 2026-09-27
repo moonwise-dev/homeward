@@ -10,23 +10,30 @@ part of 'gallery_view_model.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(GalleryViewModel)
-final galleryViewModelProvider = GalleryViewModelProvider._();
+final galleryViewModelProvider = GalleryViewModelFamily._();
 
 final class GalleryViewModelProvider
     extends $NotifierProvider<GalleryViewModel, GalleryState> {
-  GalleryViewModelProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'galleryViewModelProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  GalleryViewModelProvider._({
+    required GalleryViewModelFamily super.from,
+    required String? super.argument,
+  }) : super(
+         retry: null,
+         name: r'galleryViewModelProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$galleryViewModelHash();
+
+  @override
+  String toString() {
+    return r'galleryViewModelProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -39,12 +46,50 @@ final class GalleryViewModelProvider
       providerOverride: $SyncValueProvider<GalleryState>(value),
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is GalleryViewModelProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
-String _$galleryViewModelHash() => r'f746eefc2bd890aaf1b39da0f5f2da194e5b0130';
+String _$galleryViewModelHash() => r'337c091844213238c5b385b3c137505ef3d79129';
+
+final class GalleryViewModelFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          GalleryViewModel,
+          GalleryState,
+          GalleryState,
+          GalleryState,
+          String?
+        > {
+  GalleryViewModelFamily._()
+    : super(
+        retry: null,
+        name: r'galleryViewModelProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  GalleryViewModelProvider call(String? componentName) =>
+      GalleryViewModelProvider._(argument: componentName, from: this);
+
+  @override
+  String toString() => r'galleryViewModelProvider';
+}
 
 abstract class _$GalleryViewModel extends $Notifier<GalleryState> {
-  GalleryState build();
+  late final _$args = ref.$arg as String?;
+  String? get componentName => _$args;
+
+  GalleryState build(String? componentName);
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
@@ -57,6 +102,6 @@ abstract class _$GalleryViewModel extends $Notifier<GalleryState> {
               Object?,
               Object?
             >;
-    return element.handleCreate(ref, build);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

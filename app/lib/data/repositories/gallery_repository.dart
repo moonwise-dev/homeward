@@ -6,12 +6,12 @@ import 'package:genui/genui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../catalog/homeward_catalog.dart';
-import '../../domain/models/gallery_entry.dart';
+import '../../domain/models/gallery_component.dart';
 
 part 'gallery_repository.g.dart';
 
 abstract interface class GalleryRepository {
-  List<GalleryEntry> get entries;
+  List<GalleryComponent> get components;
 
   SurfaceContext surfaceContext(String surfaceId);
 }
@@ -20,31 +20,32 @@ class GenUiGalleryRepository implements GalleryRepository {
   GenUiGalleryRepository(Catalog catalog)
     : _surfaces = SurfaceController(catalogs: [catalog]) {
     for (final component in homewardComponents) {
-      for (final (index, example) in component.examples.indexed) {
-        _show(
-          GalleryEntry(
-            surfaceId: 'gallery-${component.name}-$index',
-            title: component.name,
-            subtitle: example.name,
-          ),
-          example,
-        );
-      }
+      _components.add(
+        GalleryComponent(
+          name: component.name,
+          family: component.family,
+          description: component.description,
+          parameters: componentParameters(component),
+          examples: [
+            for (final (index, example) in component.examples.indexed)
+              _show('gallery-${component.name}-$index', example),
+          ],
+        ),
+      );
     }
   }
 
   final SurfaceController _surfaces;
-  final _entries = <GalleryEntry>[];
+  final _components = <GalleryComponent>[];
 
   @override
-  List<GalleryEntry> get entries => List.unmodifiable(_entries);
+  List<GalleryComponent> get components => List.unmodifiable(_components);
 
   @override
   SurfaceContext surfaceContext(String surfaceId) =>
       _surfaces.contextFor(surfaceId);
 
-  void _show(GalleryEntry entry, CatalogExample example) {
-    final surfaceId = entry.surfaceId;
+  GalleryExample _show(String surfaceId, CatalogExample example) {
     for (final message in [
       {
         'createSurface': {
@@ -74,7 +75,12 @@ class GenUiGalleryRepository implements GalleryRepository {
         ),
       );
     }
-    _entries.add(entry);
+    return GalleryExample(
+      surfaceId: surfaceId,
+      name: example.name,
+      components: example.components,
+      dataModel: example.dataModel,
+    );
   }
 }
 

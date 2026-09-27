@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GalleryState {
 
- List<GalleryEntry> get entries;
+ List<GalleryComponent> get components; GalleryComponent? get selected; String? get unknown; int get exampleIndex;
 /// Create a copy of GalleryState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $GalleryStateCopyWith<GalleryState> get copyWith => _$GalleryStateCopyWithImpl<G
 @override
 bool operator ==(Object other) {
   final _this = this as GalleryState;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GalleryState&&const DeepCollectionEquality().equals(other.entries, _this.entries));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GalleryState&&const DeepCollectionEquality().equals(other.components, _this.components)&&(identical(other.selected, _this.selected) || other.selected == _this.selected)&&(identical(other.unknown, _this.unknown) || other.unknown == _this.unknown)&&(identical(other.exampleIndex, _this.exampleIndex) || other.exampleIndex == _this.exampleIndex));
 }
 
 
 @override
 int get hashCode {
   final _this = this as GalleryState;
-  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.entries));
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.components),_this.selected,_this.unknown,_this.exampleIndex);
 }
 
 @override
 String toString() {
   final _this = this as GalleryState;
-  return 'GalleryState(entries: ${_this.entries})';
+  return 'GalleryState(components: ${_this.components}, selected: ${_this.selected}, unknown: ${_this.unknown}, exampleIndex: ${_this.exampleIndex})';
 }
 
 
@@ -51,11 +51,11 @@ abstract mixin class $GalleryStateCopyWith<$Res>  {
   factory $GalleryStateCopyWith(GalleryState value, $Res Function(GalleryState) _then) = _$GalleryStateCopyWithImpl;
 @useResult
 $Res call({
- List<GalleryEntry> entries
+ List<GalleryComponent> components, GalleryComponent? selected, String? unknown, int exampleIndex
 });
 
 
-
+$GalleryComponentCopyWith<$Res>? get selected;
 
 }
 /// @nodoc
@@ -68,13 +68,28 @@ class _$GalleryStateCopyWithImpl<$Res>
 
 /// Create a copy of GalleryState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? entries = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? components = null,Object? selected = freezed,Object? unknown = freezed,Object? exampleIndex = null,}) {
   return _then(GalleryState(
-entries: null == entries ? _self.entries : entries // ignore: cast_nullable_to_non_nullable
-as List<GalleryEntry>,
+components: null == components ? _self.components : components // ignore: cast_nullable_to_non_nullable
+as List<GalleryComponent>,selected: freezed == selected ? _self.selected : selected // ignore: cast_nullable_to_non_nullable
+as GalleryComponent?,unknown: freezed == unknown ? _self.unknown : unknown // ignore: cast_nullable_to_non_nullable
+as String?,exampleIndex: null == exampleIndex ? _self.exampleIndex : exampleIndex // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
+/// Create a copy of GalleryState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$GalleryComponentCopyWith<$Res>? get selected {
+    if (_self.selected == null) {
+    return null;
+  }
 
+  return $GalleryComponentCopyWith<$Res>(_self.selected!, (value) {
+    return _then(_self.copyWith(selected: value));
+  });
+}
 }
 
 
@@ -92,10 +107,10 @@ extension GalleryStatePatterns on GalleryState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CatalogGalleryState value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GalleryState value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _CatalogGalleryState() when $default != null:
+case _GalleryState() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -114,10 +129,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CatalogGalleryState value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GalleryState value)  $default,){
 final _that = this;
 switch (_that) {
-case _CatalogGalleryState():
+case _GalleryState():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -135,10 +150,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CatalogGalleryState value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GalleryState value)?  $default,){
 final _that = this;
 switch (_that) {
-case _CatalogGalleryState() when $default != null:
+case _GalleryState() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -156,10 +171,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<GalleryEntry> entries)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<GalleryComponent> components,  GalleryComponent? selected,  String? unknown,  int exampleIndex)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _CatalogGalleryState() when $default != null:
-return $default(_that.entries);case _:
+case _GalleryState() when $default != null:
+return $default(_that.components,_that.selected,_that.unknown,_that.exampleIndex);case _:
   return orElse();
 
 }
@@ -177,10 +192,10 @@ return $default(_that.entries);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<GalleryEntry> entries)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<GalleryComponent> components,  GalleryComponent? selected,  String? unknown,  int exampleIndex)  $default,) {final _that = this;
 switch (_that) {
-case _CatalogGalleryState():
-return $default(_that.entries);case _:
+case _GalleryState():
+return $default(_that.components,_that.selected,_that.unknown,_that.exampleIndex);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +212,10 @@ return $default(_that.entries);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<GalleryEntry> entries)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<GalleryComponent> components,  GalleryComponent? selected,  String? unknown,  int exampleIndex)?  $default,) {final _that = this;
 switch (_that) {
-case _CatalogGalleryState() when $default != null:
-return $default(_that.entries);case _:
+case _GalleryState() when $default != null:
+return $default(_that.components,_that.selected,_that.unknown,_that.exampleIndex);case _:
   return null;
 
 }
@@ -211,75 +226,93 @@ return $default(_that.entries);case _:
 /// @nodoc
 
 
-class _CatalogGalleryState implements GalleryState {
-  const _CatalogGalleryState({required  List<GalleryEntry> entries}): _entries = entries;
+class _GalleryState extends GalleryState {
+  const _GalleryState({required  List<GalleryComponent> components, this.selected, this.unknown, this.exampleIndex = 0}): _components = components,super._();
   
 
- final  List<GalleryEntry> _entries;
-@override List<GalleryEntry> get entries {
-  if (_entries is EqualUnmodifiableListView) return _entries;
+ final  List<GalleryComponent> _components;
+@override List<GalleryComponent> get components {
+  if (_components is EqualUnmodifiableListView) return _components;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_entries);
+  return EqualUnmodifiableListView(_components);
 }
 
+@override final  GalleryComponent? selected;
+@override final  String? unknown;
+@override@JsonKey() final  int exampleIndex;
 
 /// Create a copy of GalleryState
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$CatalogGalleryStateCopyWith<_CatalogGalleryState> get copyWith => __$CatalogGalleryStateCopyWithImpl<_CatalogGalleryState>(this, _$identity);
+_$GalleryStateCopyWith<_GalleryState> get copyWith => __$GalleryStateCopyWithImpl<_GalleryState>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CatalogGalleryState&&const DeepCollectionEquality().equals(other.entries, _entries));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _GalleryState&&const DeepCollectionEquality().equals(other.components, _components)&&(identical(other.selected, selected) || other.selected == selected)&&(identical(other.unknown, unknown) || other.unknown == unknown)&&(identical(other.exampleIndex, exampleIndex) || other.exampleIndex == exampleIndex));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_entries));
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_components),selected,unknown,exampleIndex);
 }
 
 @override
 String toString() {
-    return 'GalleryState(entries: $entries)';
+    return 'GalleryState(components: $components, selected: $selected, unknown: $unknown, exampleIndex: $exampleIndex)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$CatalogGalleryStateCopyWith<$Res> implements $GalleryStateCopyWith<$Res> {
-  factory _$CatalogGalleryStateCopyWith(_CatalogGalleryState value, $Res Function(_CatalogGalleryState) _then) = __$CatalogGalleryStateCopyWithImpl;
+abstract mixin class _$GalleryStateCopyWith<$Res> implements $GalleryStateCopyWith<$Res> {
+  factory _$GalleryStateCopyWith(_GalleryState value, $Res Function(_GalleryState) _then) = __$GalleryStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<GalleryEntry> entries
+ List<GalleryComponent> components, GalleryComponent? selected, String? unknown, int exampleIndex
 });
 
 
-
+@override $GalleryComponentCopyWith<$Res>? get selected;
 
 }
 /// @nodoc
-class __$CatalogGalleryStateCopyWithImpl<$Res>
-    implements _$CatalogGalleryStateCopyWith<$Res> {
-  __$CatalogGalleryStateCopyWithImpl(this._self, this._then);
+class __$GalleryStateCopyWithImpl<$Res>
+    implements _$GalleryStateCopyWith<$Res> {
+  __$GalleryStateCopyWithImpl(this._self, this._then);
 
-  final _CatalogGalleryState _self;
-  final $Res Function(_CatalogGalleryState) _then;
+  final _GalleryState _self;
+  final $Res Function(_GalleryState) _then;
 
 /// Create a copy of GalleryState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? entries = null,}) {
-  return _then(_CatalogGalleryState(
-entries: null == entries ? _self._entries : entries // ignore: cast_nullable_to_non_nullable
-as List<GalleryEntry>,
+@override @pragma('vm:prefer-inline') $Res call({Object? components = null,Object? selected = freezed,Object? unknown = freezed,Object? exampleIndex = null,}) {
+  return _then(_GalleryState(
+components: null == components ? _self._components : components // ignore: cast_nullable_to_non_nullable
+as List<GalleryComponent>,selected: freezed == selected ? _self.selected : selected // ignore: cast_nullable_to_non_nullable
+as GalleryComponent?,unknown: freezed == unknown ? _self.unknown : unknown // ignore: cast_nullable_to_non_nullable
+as String?,exampleIndex: null == exampleIndex ? _self.exampleIndex : exampleIndex // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
+/// Create a copy of GalleryState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$GalleryComponentCopyWith<$Res>? get selected {
+    if (_self.selected == null) {
+    return null;
+  }
 
+  return $GalleryComponentCopyWith<$Res>(_self.selected!, (value) {
+    return _then(_self.copyWith(selected: value));
+  });
+}
 }
 
 // dart format on

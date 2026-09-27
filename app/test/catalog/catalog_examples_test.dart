@@ -14,36 +14,41 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(420, 2400));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    for (final entry in repository.entries) {
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [galleryRepositoryProvider.overrideWithValue(repository)],
-          child: MaterialApp(
-            home: Scaffold(
-              backgroundColor: AppColors.background,
-              body: SingleChildScrollView(
-                child: GallerySurfaceView(surfaceId: entry.surfaceId),
+    for (final component in repository.components) {
+      for (final example in component.examples) {
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              galleryRepositoryProvider.overrideWithValue(repository),
+            ],
+            child: MaterialApp(
+              home: Scaffold(
+                backgroundColor: AppColors.background,
+                body: SingleChildScrollView(
+                  child: GallerySurfaceView(surfaceId: example.surfaceId),
+                ),
               ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(
-        tester.takeException(),
-        isNull,
-        reason: '${entry.title}: ${entry.subtitle}',
-      );
+        expect(
+          tester.takeException(),
+          isNull,
+          reason: '${component.name}: ${example.name}',
+        );
+      }
     }
   });
 
   test('the gallery shows every component example', () {
     expect(
-      repository.entries.map((entry) => entry.title),
-      containsAll([
-        for (final component in homewardComponents) component.name,
-      ]),
+      [
+        for (final component in repository.components)
+          if (component.examples.isNotEmpty) component.name,
+      ],
+      [for (final component in homewardComponents) component.name],
     );
   });
 }

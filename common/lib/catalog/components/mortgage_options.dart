@@ -11,6 +11,9 @@ final class MortgageOptions extends CatalogComponent {
   String get name => 'MortgageOptions';
 
   @override
+  CatalogFamily get family => CatalogFamily.money;
+
+  @override
   String get description =>
       "The sample lender's variable, fixed, and mixed rates side by side "
       'with the monthly cost of each, from compute_affordability; its choose '

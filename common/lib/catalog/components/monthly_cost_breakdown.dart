@@ -11,6 +11,9 @@ final class MonthlyCostBreakdown extends CatalogComponent {
   String get name => 'MonthlyCostBreakdown';
 
   @override
+  CatalogFamily get family => CatalogFamily.money;
+
+  @override
   String get description =>
       'What the home at the price in /affordability costs each month: '
       'interest, amortization, the fee the buyer stated, and the total, from '

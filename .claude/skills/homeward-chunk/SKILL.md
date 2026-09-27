@@ -76,7 +76,9 @@ declaration, run `make catalog`.
   flutter run -d web-server --web-port 8090
   ```
 - In the Chrome DevTools MCP:
-  - open `http://localhost:8090`, or `/gallery` for a block on its own;
+  - open `http://localhost:8090`, or `/gallery/<Block>` for a block on its
+    own, which needs no server; the canvas does not scroll under automation,
+    so resize the page tall instead;
   - take a screenshot;
   - read the console messages;
   - for a turn, read the network request that streams SSE.

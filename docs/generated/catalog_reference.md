@@ -6,128 +6,244 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 ## Homeward Components
 
-| Component | Agent visible | Required | Bound | Examples |
-| --- | --- | --- | --- | --- |
-| `Fact` | yes | `fact` | `fact` | What Homeward understood |
-| `Brief` | yes | `brief` | `brief` | The household and its needs |
-| `Choice` | yes | `question`, `options`, `answer` |  | Rent first or buy |
-| `HouseholdSummary` | yes | `affordability` | `affordability` | A Stockholm couple, A household buying in Funchal |
-| `MoneyInput` | yes | `label`, `value`, `currency` |  | Take-home pay |
-| `AffordabilitySummary` | yes | `affordability` | `affordability` | A Stockholm couple |
-| `MonthlyCostBreakdown` | yes | `affordability` | `affordability` | A Stockholm flat with an association fee |
-| `StressTestChart` | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
-| `PurchaseCostsTable` | yes | `affordability` | `affordability` | A Funchal flat |
-| `DownPaymentSlider` | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
-| `MortgageOptions` | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
-| `LoanBalanceChart` | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
-| `SavingsPlan` | yes | `plan` | `plan` | Saving for a flat in Nacka, Savings that already cover it |
-| `MarketSnapshotCard` | yes | `market` | `market` | Stockholm |
-| `RentSplit` | yes | `split` | `split` | Two friends in Graça |
-| `BuyVsRent` | yes | `comparison` | `comparison` | A flat in Nacka over seven years |
-| `RuleNote` | yes | `rule` | `rule` | The rule that limits the loan |
-| `HomeCard` | yes | `home` | `home` | Two Stockholm flats |
-| `Shortlist` | yes | `homes` | `homes` | Two kept flats |
-| `HomeComparison` | yes | `homes` | `homes` | Nacka against Vasastan |
-| `HomeSwipe` | yes | `homes`, `done` | `homes` | Keep the ones that feel like yours |
-| `ListingQuote` | yes | `reading` | `reading` | A flat in Nacka read for three needs |
-| `WeeklyTravel` | yes | `week` | `week` | A week from a flat in Nacka |
-| `RouteSummary` | yes | `trip` | `trip` | To KTH by public transport |
+| Component | Family | Agent visible | Required | Bound | Examples |
+| --- | --- | --- | --- | --- | --- |
+| `Fact` | Understanding | yes | `fact` | `fact` | What Homeward understood |
+| `Brief` | Understanding | yes | `brief` | `brief` | The household and its needs |
+| `Choice` | Understanding | yes | `question`, `options`, `answer` |  | Rent first or buy |
+| `HouseholdSummary` | Understanding | yes | `affordability` | `affordability` | A Stockholm couple, A household buying in Funchal |
+| `MoneyInput` | Money | yes | `label`, `value`, `currency` |  | Take-home pay |
+| `AffordabilitySummary` | Money | yes | `affordability` | `affordability` | A Stockholm couple |
+| `MonthlyCostBreakdown` | Money | yes | `affordability` | `affordability` | A Stockholm flat with an association fee |
+| `StressTestChart` | Money | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
+| `PurchaseCostsTable` | Money | yes | `affordability` | `affordability` | A Funchal flat |
+| `DownPaymentSlider` | Money | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
+| `MortgageOptions` | Money | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
+| `LoanBalanceChart` | Money | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
+| `SavingsPlan` | Money | yes | `plan` | `plan` | Saving for a flat in Nacka, Savings that already cover it |
+| `MarketSnapshotCard` | Money | yes | `market` | `market` | Stockholm |
+| `RentSplit` | Money | yes | `split` | `split` | Two friends in Graça |
+| `BuyVsRent` | Money | yes | `comparison` | `comparison` | A flat in Nacka over seven years |
+| `RuleNote` | Trust | yes | `rule` | `rule` | The rule that limits the loan |
+| `HomeCard` | Homes | yes | `home` | `home` | Two Stockholm flats |
+| `Shortlist` | Homes | yes | `homes` | `homes` | Two kept flats |
+| `HomeComparison` | Homes | yes | `homes` | `homes` | Nacka against Vasastan |
+| `HomeSwipe` | Homes | yes | `homes`, `done` | `homes` | Keep the ones that feel like yours |
+| `ListingQuote` | Homes | yes | `reading` | `reading` | A flat in Nacka read for three needs |
+| `WeeklyTravel` | Place and travel | yes | `week` | `week` | A week from a flat in Nacka |
+| `RouteSummary` | Place and travel | yes | `trip` | `trip` | To KTH by public transport |
 
 ### Fact
 
 One item of the brief, with where it came from; a deduction offers Right and Not quite when it has an answer action.
 
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `fact` | binding | yes | `/brief/<id>` | `update_brief` |
+| `answer` | action | no |  |  |
+
 ### Brief
 
 Sections of the brief update_brief kept, one kind or several, each item with where it came from; a deduction offers Right and Not quite when it has an answer action.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `brief` | binding | yes | `/brief` | `update_brief` |
+| `kinds` | list: household, money, need, habit, want, place, open | no |  |  |
+| `title` | text | no |  |  |
+| `answer` | action | no |  |  |
 
 ### Choice
 
 One decision to ask: its options, the one you recommend first with why, and a tap that answers at once.
 
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `question` | text | yes |  |  |
+| `options` | list | yes |  |  |
+| `recommended` | text | no |  |  |
+| `because` | text | no |  |  |
+| `answer` | action | yes |  |  |
+
 ### HouseholdSummary
 
 Who the household is and the figures they stated, as compute_affordability kept them: the people, residency, work, and the incomes, debts, and savings they gave.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `affordability` | binding | yes | `/affordability` | `compute_affordability` |
 
 ### MoneyInput
 
 An amount field that writes { amount, currency, per }, the shape the money tools take, to the path it binds; a Button beside it sends that path in its action context. Use it to ask for an income, savings, a debt, a rent, or a fee.
 
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `label` | text | yes |  |  |
+| `value` | input | yes | `/answers/income` |  |
+| `currency` | text | yes |  |  |
+| `period` | choice: once, month, year | no |  |  |
+
 ### AffordabilitySummary
 
 What the household can borrow, the highest price it allows, and the rule that limits it, from compute_affordability.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `affordability` | binding | yes | `/affordability` | `compute_affordability` |
 
 ### MonthlyCostBreakdown
 
 What the home at the price in /affordability costs each month: interest, amortization, the fee the buyer stated, and the total, from compute_affordability.
 
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `affordability` | binding | yes | `/affordability` | `compute_affordability` |
+
 ### StressTestChart
 
 The monthly cost as rates rise past the rate lenders test, against the most this household can carry, from compute_affordability.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `affordability` | binding | yes | `/affordability` | `compute_affordability` |
 
 ### PurchaseCostsTable
 
 Every upfront cost the buyer owes on the day, with its source, the total, and the cash needed with the down payment, from compute_affordability.
 
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `affordability` | binding | yes | `/affordability` | `compute_affordability` |
+
 ### DownPaymentSlider
 
 Lets the buyer try down payments for the price in /affordability and see the loan, the monthly cost, and the cash needed; its apply action sends the one they use, with downPayment added to its context.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `affordability` | binding | yes | `/affordability` | `compute_affordability` |
+| `apply` | action | no |  |  |
 
 ### MortgageOptions
 
 The sample lender's variable, fixed, and mixed rates side by side with the monthly cost of each, from compute_affordability; its choose action sends the one the buyer takes, with loanType added to its context.
 
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `affordability` | binding | yes | `/affordability` | `compute_affordability` |
+| `choose` | action | no |  |  |
+
 ### LoanBalanceChart
 
 The loan paid down and the equity built year by year over the term at today's rate, from compute_affordability, with a slider over the years and, in Sweden, the years the amortization steps down.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `affordability` | binding | yes | `/affordability` | `compute_affordability` |
 
 ### SavingsPlan
 
 How long until the savings cover the cash the home in /affordability needs on the day, at the monthly saving the buyer stated, from plan_savings: what is still to save, the months to go, and the month they get there.
 
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `plan` | binding | yes | `/savingsPlan` | `plan_savings` |
+
 ### MarketSnapshotCard
 
 A city at a glance before anything is known about the household, from look_up_market: the sample lender's rates, the lending rules, what the other rules wait on, and each area's median price and rent per square metre, each with its source.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `market` | binding | yes | `/markets/<city>` | `look_up_market` |
 
 ### RentSplit
 
 A home's rent and bills split between the people sharing it, from split_rent: equally, by income, or by room size, which the buyer switches between; its choose action sends the rule they take, with rule added to its context.
 
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `split` | binding | yes | `/rentSplit` | `split_rent` |
+| `choose` | action | no |  |  |
+
 ### BuyVsRent
 
 Buying a sample home against renting one like it, from compare_buy_rent: what each has cost by every year, the equity built, and the year buying comes out cheaper, with a slider over the years the buyer expects to stay.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `comparison` | binding | yes | `/buyVsRent` | `compare_buy_rent` |
 
 ### RuleNote
 
 One lending rule, the largest loan it allows, and its source, from compute_affordability.
 
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `rule` | binding | yes | `/affordability/binding` | `compute_affordability` |
+
 ### HomeCard
 
 One sample home from search_homes: photos, facts, price, and what it costs this household each month; its choose action sends the home to work out, and its keep action the home to keep or drop, with home, its ID, and keep, true or false, added to its context.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `home` | binding | yes | `/homes/<id>` | `search_homes` |
+| `choose` | action | no |  |  |
+| `keep` | action | no |  |  |
 
 ### Shortlist
 
 The homes the household kept with keep_homes, each with what it costs them a month; its choose action sends a home to work out and its drop action one to drop, with home, its ID, added to its context.
 
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `homes` | binding | yes | `/homes` | `search_homes` |
+| `choose` | action | no |  |  |
+| `drop` | action | no |  |  |
+
 ### HomeComparison
 
 Two or three homes from search_homes side by side: price, what each costs a month, the cash needed, and size; its choose action sends the one the buyer picks, with home, its ID, added to its context.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `homes` | binding | yes | `/homes/<id>` | `search_homes` |
+| `choose` | action | no |  |  |
 
 ### HomeSwipe
 
 The deck search_homes dealt with deal, one sample home at a time, that the buyer keeps or passes with a swipe or a tap; after the last card its done action sends the kept and passed IDs.
 
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `homes` | binding | yes | `/swipe/homes` | `search_homes` |
+| `done` | action | yes |  |  |
+
 ### ListingQuote
 
 One sample home read for the household's needs, from read_listings: each need with whether the listing meets it, rules it out, or says nothing, and the listing's own words highlighted.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `reading` | binding | yes | `/reads/<id>` | `read_listings` |
 
 ### WeeklyTravel
 
 The buyer's week from one starting point, from measure_week: each place, how often and how they go, the measured minutes, and the week's total.
 
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `week` | binding | yes | `/week/<from>` | `measure_week` |
+
 ### RouteSummary
 
 One trip measure_week measured: where to, how they go, the minutes and distance, and how often.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `trip` | binding | yes | `/week/<from>/trips/<n>` | `measure_week` |
 ## Basic Components
 
 Agent-visible from the A2UI v0.9 basic catalog: `Text`, `Row`, `Column`, `Card`, `Divider`, `List`, `Tabs`, `Icon`, `Button`, `CheckBox`, `ChoicePicker`, `TextField`, `DateTimeInput`.

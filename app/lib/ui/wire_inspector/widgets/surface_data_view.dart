@@ -1,14 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:genui/genui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../data/repositories/agent_repository.dart';
-import '../../core/themes/colors.dart';
-import '../../core/themes/dimens.dart';
-import '../../core/themes/text_styles.dart';
+import '../../core/ui/app_json_block.dart';
 
 class SurfaceDataView extends HookConsumerWidget {
   const SurfaceDataView({
@@ -16,8 +12,6 @@ class SurfaceDataView extends HookConsumerWidget {
     required this.surfaceId,
     super.key,
   });
-
-  static const _indented = JsonEncoder.withIndent('  ');
 
   final String sessionId;
   final String surfaceId;
@@ -34,17 +28,6 @@ class SurfaceDataView extends HookConsumerWidget {
     );
     useEffect(() => data.dispose, [data]);
     final value = useValueListenable(data);
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.sm),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceMuted,
-        borderRadius: BorderRadius.circular(AppRadii.sm),
-      ),
-      child: SelectableText(
-        value == null ? 'Nothing bound yet' : _indented.convert(value),
-        style: AppTextStyles.code,
-      ),
-    );
+    return AppJsonBlock(value: value, empty: 'Nothing bound yet');
   }
 }

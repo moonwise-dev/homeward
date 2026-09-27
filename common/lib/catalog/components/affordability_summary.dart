@@ -11,6 +11,9 @@ final class AffordabilitySummary extends CatalogComponent {
   String get name => 'AffordabilitySummary';
 
   @override
+  CatalogFamily get family => CatalogFamily.money;
+
+  @override
   String get description =>
       'What the household can borrow, the highest price it allows, and the '
       'rule that limits it, from compute_affordability.';

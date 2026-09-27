@@ -11,6 +11,9 @@ final class Shortlist extends CatalogComponent {
   String get name => 'Shortlist';
 
   @override
+  CatalogFamily get family => CatalogFamily.homes;
+
+  @override
   String get description =>
       'The homes the household kept with keep_homes, each with what it costs '
       'them a month; its choose action sends a home to work out and its drop '

@@ -11,6 +11,9 @@ final class PurchaseCostsTable extends CatalogComponent {
   String get name => 'PurchaseCostsTable';
 
   @override
+  CatalogFamily get family => CatalogFamily.money;
+
+  @override
   String get description =>
       'Every upfront cost the buyer owes on the day, with its source, the '
       'total, and the cash needed with the down payment, from '

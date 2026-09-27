@@ -11,6 +11,9 @@ final class HomeSwipe extends CatalogComponent {
   String get name => 'HomeSwipe';
 
   @override
+  CatalogFamily get family => CatalogFamily.homes;
+
+  @override
   String get description =>
       'The deck search_homes dealt with deal, one sample home at a time, '
       'that the buyer keeps or passes with a swipe or a tap; after the last '

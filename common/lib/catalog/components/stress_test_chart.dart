@@ -11,6 +11,9 @@ final class StressTestChart extends CatalogComponent {
   String get name => 'StressTestChart';
 
   @override
+  CatalogFamily get family => CatalogFamily.money;
+
+  @override
   String get description =>
       'The monthly cost as rates rise past the rate lenders test, against '
       'the most this household can carry, from compute_affordability.';

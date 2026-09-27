@@ -11,6 +11,9 @@ final class RentSplit extends CatalogComponent {
   String get name => 'RentSplit';
 
   @override
+  CatalogFamily get family => CatalogFamily.money;
+
+  @override
   String get description =>
       "A home's rent and bills split between the people sharing it, from "
       'split_rent: equally, by income, or by room size, which the buyer '

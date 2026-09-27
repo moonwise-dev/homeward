@@ -13,16 +13,17 @@ Catalog ID: `$homewardCatalogId`
 
 ## Homeward Components
 
-${homewardComponents.isEmpty ? 'None yet.' : markdownTable(['Component', 'Agent visible', 'Required', 'Bound', 'Examples'], [
+${homewardComponents.isEmpty ? 'None yet.' : markdownTable(['Component', 'Family', 'Agent visible', 'Required', 'Bound', 'Examples'], [
             for (final component in homewardComponents) [
                 code(component.name),
+                component.family.label,
                 component.agentVisible ? 'yes' : 'no',
                 codeList(component.requiredProperties),
                 codeList(component.boundProperties),
                 component.examples.map((example) => example.name).join(', '),
               ],
           ])}
-${[for (final component in homewardComponents) '\n### ${component.name}\n\n${component.description}'].join('\n')}
+${[for (final component in homewardComponents) '\n### ${component.name}\n\n${component.description}\n\n${_parameterTable(component)}'].join('\n')}
 ## Basic Components
 
 Agent-visible from the A2UI v0.9 basic catalog: ${codeList(agentVisibleBasicComponents)}.
@@ -49,3 +50,26 @@ Iterable<String> _argumentNames(CatalogFunction function) =>
     ((function.argumentSchema.value['properties'] as Map<String, Object?>?) ??
             const {})
         .keys;
+
+String _parameterTable(CatalogComponent component) => markdownTable(
+  ['Property', 'Kind', 'Required', 'Path', 'Seeded by'],
+  [
+    for (final parameter in componentParameters(component))
+      [
+        code(parameter.name),
+        [
+          parameter.kind.name,
+          if (parameter.choices.isNotEmpty) parameter.choices.join(', '),
+        ].join(': '),
+        parameter.required ? 'yes' : 'no',
+        switch (parameter.path) {
+          final path? => code(path),
+          null => '',
+        },
+        switch (parameter.seededBy) {
+          final tool? => code(tool),
+          null => '',
+        },
+      ],
+  ],
+);

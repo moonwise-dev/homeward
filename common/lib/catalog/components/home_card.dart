@@ -11,6 +11,9 @@ final class HomeCard extends CatalogComponent {
   String get name => 'HomeCard';
 
   @override
+  CatalogFamily get family => CatalogFamily.homes;
+
+  @override
   String get description =>
       'One sample home from search_homes: photos, facts, price, and what it '
       'costs this household each month; its choose action sends the home to '

@@ -11,6 +11,9 @@ final class DownPaymentSlider extends CatalogComponent {
   String get name => 'DownPaymentSlider';
 
   @override
+  CatalogFamily get family => CatalogFamily.money;
+
+  @override
   String get description =>
       'Lets the buyer try down payments for the price in /affordability and '
       'see the loan, the monthly cost, and the cash needed; its apply action '

@@ -20,8 +20,22 @@ final class CatalogExample {
   ];
 }
 
+enum CatalogFamily {
+  understanding('Understanding'),
+  money('Money'),
+  homes('Homes'),
+  placeAndTravel('Place and travel'),
+  trust('Trust');
+
+  const CatalogFamily(this.label);
+
+  final String label;
+}
+
 abstract class CatalogComponent implements ComponentApi {
   const CatalogComponent();
+
+  CatalogFamily get family;
 
   String get description;
 

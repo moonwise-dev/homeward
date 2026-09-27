@@ -11,6 +11,9 @@ final class LoanBalanceChart extends CatalogComponent {
   String get name => 'LoanBalanceChart';
 
   @override
+  CatalogFamily get family => CatalogFamily.money;
+
+  @override
   String get description =>
       'The loan paid down and the equity built year by year over the term '
       'at today\'s rate, from compute_affordability, with a slider over the '

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -7,12 +5,12 @@ import '../../../data/services/wire_log.dart';
 import '../../core/themes/colors.dart';
 import '../../core/themes/dimens.dart';
 import '../../core/themes/text_styles.dart';
+import '../../core/ui/app_json_block.dart';
 
 class WireFrameRow extends StatelessWidget {
   const WireFrameRow({required this.entry, this.since, super.key});
 
   static final _time = DateFormat.Hms();
-  static const _indented = JsonEncoder.withIndent('  ');
 
   final WireEntry entry;
   final Duration? since;
@@ -57,18 +55,7 @@ class WireFrameRow extends StatelessWidget {
                 childrenPadding: const EdgeInsets.only(bottom: AppSpacing.sm),
                 shape: const Border(),
                 children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(AppSpacing.sm),
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceMuted,
-                      borderRadius: BorderRadius.circular(AppRadii.sm),
-                    ),
-                    child: SelectableText(
-                      _indented.convert(payload),
-                      style: AppTextStyles.code,
-                    ),
-                  ),
+                  AppJsonBlock(value: payload),
                 ],
               ),
             ),

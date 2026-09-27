@@ -42,6 +42,11 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) => const GalleryScreen(),
       ),
       GoRoute(
+        path: AppRoutes.galleryComponent,
+        builder: (context, state) =>
+            GalleryScreen(componentName: state.pathParameters['component']),
+      ),
+      GoRoute(
         path: AppRoutes.plan,
         builder: (context, state) =>
             JourneyScreen(sessionId: state.pathParameters['sessionId']!),
@@ -60,7 +65,7 @@ String? _redirect(
   AsyncValue<void> session,
   AsyncValue<String?> geminiKey,
 ) {
-  if (path == AppRoutes.gallery) {
+  if (path == AppRoutes.gallery || path.startsWith('${AppRoutes.gallery}/')) {
     return null;
   }
   if (!session.hasValue || !geminiKey.hasValue) {

@@ -11,6 +11,9 @@ final class SavingsPlan extends CatalogComponent {
   String get name => 'SavingsPlan';
 
   @override
+  CatalogFamily get family => CatalogFamily.money;
+
+  @override
   String get description =>
       'How long until the savings cover the cash the home in /affordability '
       'needs on the day, at the monthly saving the buyer stated, from '
