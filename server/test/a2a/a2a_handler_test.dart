@@ -17,6 +17,7 @@ import 'package:test/test.dart';
 
 import '../agent/turn/scripted_interactions.dart';
 import '../support/test_markets.dart';
+import '../support/test_research.dart';
 
 void main() {
   final prompts = PromptAssembler.load(Directory('prompts'));
@@ -33,7 +34,7 @@ void main() {
       sessions: sessions,
       createInteraction: script.call,
       prompts: prompts,
-      tools: ToolBelt(homewardTools(testMarkets)),
+      tools: ToolBelt(homewardTools(testMarkets, testResearch)),
       catalog: catalog,
       now: () => DateTime.utc(2026, 9, 17, 12),
     ),

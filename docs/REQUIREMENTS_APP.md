@@ -160,6 +160,37 @@ Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 - About, with links to A2UI, genui, and the repository.
 - Delete all my data: deletes every plan and signs out the anonymous user.
 
+## Maps Keys
+
+The toolkit's `GoogleMap` (C8b, D133) draws on Google Maps, which needs Maps
+Platform keys on the project's billing account. Moonwise's billing account is
+in Sweden, so the Google Maps Platform EEA terms apply. The owner creates the
+keys before C8b, in the Google Cloud console of the Firebase project:
+
+1. **APIs:** enable the Maps JavaScript API, the Maps SDK for Android, and the
+   Maps SDK for iOS, nothing else.
+2. **One key per platform,** so a leaked key is limited to one app:
+   - web, restricted to HTTP referrers `http://localhost:8090/*` and the
+     Firebase Hosting domains, and to the Maps JavaScript API;
+   - Android, restricted to the package `se.moonwise.homeward` with the SHA-1
+     fingerprints of the debug and release signing certificates, and to the
+     Maps SDK for Android;
+   - iOS, restricted to the bundle ID `se.moonwise.homeward`, and to the Maps
+     SDK for iOS.
+3. **Quotas:** the Maps SDKs for Android and iOS are free without limit;
+   dynamic maps on the web have 10,000 free loads a month (checked
+   2026-09-27). Cap the Maps JavaScript API's map loads per day at 300, which
+   keeps a month under the free loads.
+4. **Budget:** a budget alert on the billing account at a small amount, such
+   as 1 euro, emailing the owner.
+5. **Where they go:** the variables `HOMEWARD_MAPS_WEB_KEY`,
+   `HOMEWARD_MAPS_ANDROID_KEY`, and `HOMEWARD_MAPS_IOS_KEY` in the git-ignored
+   `.env`, named in `.env.example` without values. How each reaches its
+   platform build is spike S11's question.
+
+A key the app ships is visible to anyone who has the app; its restrictions and
+the quota cap are what protect the bill.
+
 ## Features And Controllers
 
 | Feature | View model responsibilities |

@@ -10,9 +10,11 @@ import 'components/home_comparison.dart';
 import 'components/monthly_cost_breakdown.dart';
 import 'components/mortgage_options.dart';
 import 'components/purchase_costs_table.dart';
+import 'components/route_summary.dart';
 import 'components/rule_note.dart';
 import 'components/shortlist.dart';
 import 'components/stress_test_chart.dart';
+import 'components/weekly_travel.dart';
 import 'functions/catalog_function.dart';
 
 const homewardCatalogId =
@@ -31,6 +33,8 @@ const homewardComponents = <CatalogComponent>[
   HomeCard(),
   Shortlist(),
   HomeComparison(),
+  WeeklyTravel(),
+  RouteSummary(),
 ];
 
 const homewardFunctions = <CatalogFunction>[];

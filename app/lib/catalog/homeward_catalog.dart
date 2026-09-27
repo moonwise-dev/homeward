@@ -11,9 +11,11 @@ import 'home_comparison/home_comparison_item.dart';
 import 'monthly_cost_breakdown/monthly_cost_breakdown_item.dart';
 import 'mortgage_options/mortgage_options_item.dart';
 import 'purchase_costs_table/purchase_costs_table_item.dart';
+import 'route_summary/route_summary_item.dart';
 import 'rule_note/rule_note_item.dart';
 import 'shortlist/shortlist_item.dart';
 import 'stress_test_chart/stress_test_chart_item.dart';
+import 'weekly_travel/weekly_travel_item.dart';
 
 Catalog homewardGenuiCatalog() {
   final basic = BasicCatalogItems.asNoAssetCatalog();
@@ -33,6 +35,8 @@ Catalog homewardGenuiCatalog() {
       homeCardItem,
       shortlistItem,
       homeComparisonItem,
+      weeklyTravelItem,
+      routeSummaryItem,
     ],
     functions: [
       ...basic.functions,

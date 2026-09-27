@@ -1290,6 +1290,86 @@
         "homes"
       ],
       "additionalProperties": false
+    },
+    "WeeklyTravel": {
+      "type": "object",
+      "description": "The buyer's week from one starting point, from measure_week: each place, how often and how they go, the measured minutes, and the week's total.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "WeeklyTravel"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "week": {
+          "type": "object",
+          "description": "One starting point measure_week measured, { \"path\": \"/week/<from>\" }.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "week"
+      ],
+      "additionalProperties": false
+    },
+    "RouteSummary": {
+      "type": "object",
+      "description": "One trip measure_week measured: where to, how they go, the minutes and distance, and how often.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "RouteSummary"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "trip": {
+          "type": "object",
+          "description": "One trip, { \"path\": \"/week/<from>/trips/<n>\" }.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "trip"
+      ],
+      "additionalProperties": false
     }
   },
   "functions": {
@@ -1921,6 +2001,12 @@
         },
         {
           "$ref": "#/components/HomeComparison"
+        },
+        {
+          "$ref": "#/components/WeeklyTravel"
+        },
+        {
+          "$ref": "#/components/RouteSummary"
         }
       ]
     },

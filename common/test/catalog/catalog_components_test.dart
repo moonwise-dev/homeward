@@ -93,10 +93,14 @@ Iterable<String> _boundPaths(Object? json) sync* {
 Object? _resolve(Map<String, Object?> dataModel, String path) {
   Object? current = dataModel;
   for (final segment in path.split('/').skip(1)) {
-    if (current is! Map<String, Object?>) {
-      return null;
-    }
-    current = current[segment];
+    current = switch (current) {
+      final Map<String, Object?> map => map[segment],
+      final List<Object?> list => switch (int.tryParse(segment)) {
+        final index? when index >= 0 && index < list.length => list[index],
+        _ => null,
+      },
+      _ => null,
+    };
   }
   return current;
 }

@@ -20,6 +20,8 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `HomeCard` | yes | `home` | `home` | Two Stockholm flats |
 | `Shortlist` | yes | `homes` | `homes` | Two kept flats |
 | `HomeComparison` | yes | `homes` | `homes` | Nacka against Vasastan |
+| `WeeklyTravel` | yes | `week` | `week` | A week from a flat in Nacka |
+| `RouteSummary` | yes | `trip` | `trip` | To KTH by public transport |
 
 ### Fact
 
@@ -68,6 +70,14 @@ The homes the household kept with keep_homes, each with what it costs them a mon
 ### HomeComparison
 
 Two or three homes from search_homes side by side: price, what each costs a month, the cash needed, and size; its choose action sends the one the buyer picks, with home, its ID, added to its context.
+
+### WeeklyTravel
+
+The buyer's week from one starting point, from measure_week: each place, how often and how they go, the measured minutes, and the week's total.
+
+### RouteSummary
+
+One trip measure_week measured: where to, how they go, the minutes and distance, and how often.
 ## Basic Components
 
 Agent-visible from the A2UI v0.9 basic catalog: `Text`, `Row`, `Column`, `Card`, `Divider`, `List`, `Tabs`, `Icon`, `Button`, `CheckBox`, `ChoicePicker`, `TextField`, `DateTimeInput`.
@@ -107,3 +117,20 @@ The sample homes search_homes found, each priced for the household: an object of
 | Path | Value | Meaning |
 | --- | --- | --- |
 | `/homes/<id>` | object read by Homeward components | One home: { listing, cost }. Bind it whole to a HomeCard. |
+
+### `/places`
+
+The places the buyer named, found with find_place: an object of places by ID. Seeded by `find_place`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/places/<id>` | object read by Homeward components | One place: { id, name, address, point }. |
+
+### `/week`
+
+The buyer's week measured with measure_week: an object by starting point, a sample home or a place ID. Seeded by `measure_week`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/week/<from>` | object read by Homeward components | One week: { fromId, fromName, from, trips }. Bind it whole to a WeeklyTravel. |
+| `/week/<from>/trips/<n>` | object read by Homeward components | One trip: { placeName, perWeek, mode, minutes, meters }. Bind it to a RouteSummary. |

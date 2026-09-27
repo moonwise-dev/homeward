@@ -88,9 +88,14 @@ four journeys of `docs/PRODUCT.md` (D141).
   the household kept, and `HomeComparison`, two or three homes Gemini names
   side by side on price, monthly cost, cash, and size (D152). Leaves out
   comparing needs and the week, which come with C8 and C9.
-- **C8 Place.** After S11: the Maps renderer package with the toolkit's
-  `GoogleMap` (D133), a `find_place` tool, `WeeklyTravel`, and
-  `RouteSummary`.
+- **C8 Places and the week — done.** A `find_place` tool that checks each place the
+  buyer names against open data and seeds `/places`, a `measure_week` tool
+  that measures the week's trips from a sample home or a place by open
+  routing and seeds `/week`, and the `WeeklyTravel` and `RouteSummary` blocks
+  (D154). Leaves out the map, and the week in `HomeComparison`.
+- **C8b The map.** After S11 and the Maps keys: the Maps renderer package
+  with the toolkit's `GoogleMap` (D133), drawing the places and the measured
+  trips. Blocked until the keys exist; see Open Questions.
 - **C9 Sharing and choosing.** `RentSplit`, `BuyVsRent`, `HomeSwipe`, and
   `ListingQuote`, with needs read from each listing and quotes checked word
   for word (D126's reader).
@@ -151,7 +156,7 @@ four journeys of `docs/PRODUCT.md` (D141).
 | S8 | Can a buyer pick another model or API beside Gemini, and what does each route cost? | Desk research of Google and third-party provider limits, prices, APIs, and Dart libraries; one hero message on each candidate Gemini API model | **Answered:** `gemini-3.5-flash-lite` is the fallback candidate, Gemma 4 does not fit the free tier's 16k input tokens a minute, and an OpenAI-compatible provider choice follows the livestream (D80); see `docs/SPIKES.md`. |
 | S10 | Why does Gemini refuse the catalog as a response schema, and does an accepted schema constrain the output? | Bisecting the composed schema live, synthetic schemas, and chained corrections on the probe key | **Answered:** recursion and `allOf` are the obstacles; a flattened subset is enforced; see `docs/SPIKES.md` and D110. |
 | S9 | Can Homeward learn about any place on free keys: where things are, how far, how good, and what a listing says? | Open-data services and Gemini tools called around Stockholm on the probe key | **Answered:** open data covers where and how far with no key; Google Maps grounding and `url_context` work on free keys; see `docs/SPIKES.md`. |
-| S11 | Does `google_maps_flutter` draw the toolkit's `GoogleMap` on web, Android, and iOS: markers, anchor, satellite, tilt, and routes from a resolver? How does the Maps key reach each platform from the environment, and do the quotas cap at the free allowances? | A throwaway app on each platform with a restricted key | Before C8. |
+| S11 | Does `google_maps_flutter` draw the toolkit's `GoogleMap` on web, Android, and iOS: markers, anchor, satellite, tilt, and routes from a resolver? How does the Maps key reach each platform from the environment, and do the quotas cap at the free allowances? Does the Maps JavaScript API load under the web app's `Cross-Origin-Embedder-Policy: require-corp`, and what do the EEA terms, which apply to Moonwise's Swedish billing account, allow when open-data routes are drawn on a Google map? | A throwaway app on each platform with the keys from `docs/REQUIREMENTS_APP.md` | Before C8b. |
 | S12 | Which sources answer money and local-rule questions on free keys, and how is each quote checked? | `url_context` on official pages, Google Search grounding on the models that have a free tier, our own fetch for checking quotes | After the recording (D142). |
 | S13 | Can Homeward read a listing the buyer pastes, and check its quotes? | `url_context` against our own fetch, on listing sites in the demo cities | After the recording (D142). |
 | S14 | Can Grounding Lite give Google place IDs for `PlaceDetailsCompact`, and how does Flutter show the place card? | Grounding Lite `search_places`; the `gmp-place-details-compact` element on web | Before `PlaceDetailsCompact`. |
@@ -295,6 +300,7 @@ superseded stay as history.
 | D151 | Sample homes | The fourteen sample homes of Stockholm and the fourteen of Lisbon come back from `6faa8ab` as D122 made them, labelled as samples, with their photos bundled in the app. `search_homes` filters a city's homes by what the buyer asked, such as the kind of home, rooms, areas, outdoor space, and a price they stated, and prices each for the household: `compute_affordability` keeps the household and preferences it used in `/affordability`, and each home is worked out with the same code at its own price and fee, with the down payment the buyer chose or else the minimum the rules allow, and the same rate and term. Before any affordability run, homes come with their price and fee, and the tool says what pricing needs. When nothing matches, it says which filter ruled the homes out, and Gemini asks. A `HomeCard` tap sends the home, and `compute_affordability` takes it as `home`, the price and fee from the listing, so every money block follows that home. Why a home fits beyond the money waits for the listing reader (C9); keeping and comparing homes is C7b | search_homes taking the household's figures as arguments, which doubles what Gemini sends each call; homes with price only and the monthly cost on a tap; photos from the Unsplash CDN at runtime |
 | D152 | Shortlist and comparison | A household keeps a home with a Keep button on `HomeCard` or in its own words. The tap reaches Gemini like every action, and Gemini records it with `keep_homes`, which marks homes kept or dropped in `/homes`, pricing a sample home the plan has not shown yet; the flag survives every repricing. `Shortlist` binds `/homes` and lists the kept homes, each with its monthly cost, a tap to work it out, and one to drop it. `HomeComparison` binds two or three homes Gemini names, each `{ "path": "/homes/<id>" }`, so it compares kept homes or any the buyer asks about, on price, monthly cost, down payment, cash against savings, the rules, size, rooms, and the price per square metre against the area. The check that a bound slice was seeded reads a list of paths | Keeping homes as brief items; a comparison that always shows the whole shortlist; keeping the shortlist on the device only |
 | D153 | Down payment within savings | Found comparing homes in C7b: the down payment assumed when the buyer has not stated one was the smallest every rule allows, so a home whose loan an income rule caps was priced with a down payment the savings could not reach, and read cheaper a month than a home half its price. It stays the smallest the rules allow while the savings reach it; when they do not, it is the most the savings can put down after the costs on the day, in the what-if's steps and never below the loan-to-value minimum, and the loan is shown over the limit by what is missing. The same code prices `compute_affordability`, `HomeCard`, `Shortlist`, and `HomeComparison`. Amends D147 | Keeping the figure and labelling it; the loan-to-value minimum always, which marks homes over the limit that the savings could bring within it |
+| D154 | Places and the week before the map | C8 splits into places and the week (C8) and the map (C8b), since the map needs S11 and a Maps key on the billing account that the owner creates. `find_place` resolves each place the buyer names with Nominatim, so every place shown was checked against open data (D101), and seeds `/places`. `measure_week` routes from a sample home or a place to each of the week's places by foot, bike, car, or public transport, on the FOSSGIS routers and Transitous, with how many times a week the buyer goes there and back, and seeds `/week`, one entry for each starting point: every trip's minutes and distance, and the weekly total. How often is a small count Gemini may deduce, as the brief allows. `WeeklyTravel` shows one starting point's week and `RouteSummary` one trip; both say they were measured and by what. The route geometry waits for the map | The map first, blocked on the key; the week added to every priced home, which would route every sample home against every place |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.
@@ -330,3 +336,14 @@ them before M0 ends.
    (verygood.ventures/resources/genui-kit) and the Life Goal Simulator shown
    at Google Cloud Next 2026. There is no public repo; D106 to D109 take its
    lessons.
+7. The Maps keys, which block S11 and C8b. Only the Google account that owns
+   `homeward-genui` can create them, and its holder is not available yet. To
+   do, signed in as that account, following "Maps Keys" in
+   `docs/REQUIREMENTS_APP.md`:
+   - enable the Maps JavaScript API and the Maps SDKs for Android and iOS;
+   - create the web, Android, and iOS keys with their restrictions, the
+     Android key with the debug SHA-1 from `./gradlew signingReport` until a
+     release keystore exists;
+   - cap the Maps JavaScript API at 300 map loads a day;
+   - add the budget alert;
+   - put the keys in `.env`.

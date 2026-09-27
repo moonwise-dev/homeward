@@ -285,6 +285,35 @@ gets an error naming it. It answers with the kept IDs and seeds `/homes`,
 which `Shortlist` binds. `search_homes` and `compute_affordability` keep the
 flag when they reprice the homes.
 
+`find_place` (C8, D154) resolves the places the buyer names: work, a
+school, a parent's home, a clinic. It takes the city the places are in and
+looks it up first, then searches for each place within the city's bounds,
+since the first match for a name can be another city's: "KTH Royal Institute
+of Technology" alone finds the Södertälje campus. Each place has an ID, a
+short name for the screen, and a search in the buyer's words. Nominatim looks
+each one up, so every place shown was checked against open data (D101), and
+the answer gives each address so Gemini can search again when it is not the
+place the buyer means; one it cannot find
+comes back unresolved and is not stored, and Gemini asks the buyer where it
+is. It seeds `/places`, an object of places by ID with the name, the address
+OpenStreetMap gives, and the point, and answers with what it found. It shows
+a progress step for each lookup and logs how many it found, never the
+places.
+
+`measure_week` (C8, D154) measures the buyer's week from one starting point:
+a sample home's ID from `/homes` or a place's ID from `/places`. Each trip
+names a place from `/places`, how many times a week the buyer goes there and
+back, from 1 to 14, a small count Gemini may deduce, and how they travel:
+walking, bike, car, or public transport. The FOSSGIS routers measure walking,
+cycling, and driving, and Transitous public transport on a weekday morning.
+The tool seeds `/week/<from>` with the starting point, each trip's minutes
+and distance one way, and the weekly total, there and back; a trip no router
+can measure is kept without figures and named in the answer. It answers with
+each trip's minutes and the weekly total, and shows a progress step for each
+trip. `WeeklyTravel` binds `/week/<from>` and `RouteSummary` one trip,
+`/week/<from>/trips/<n>`. The route geometry is left out until the map
+(C8b).
+
 A tool reads the turn through its `ToolContext`: the progress steps, the
 slices as they stand, and the buyer's words in this plan.
 
@@ -292,8 +321,6 @@ Planned tools, each arriving with its chunk:
 
 | Tool | Chunk | What it does |
 | --- | --- | --- |
-| `find_place` | C8 | Resolves a place the buyer names, with Nominatim |
-| `measure_week` | C8 | Measures each trip of the week from a home, and the weekly total |
 | Listing reader | C9 | Reads listings for the household's needs; code keeps a quote only when it appears word for word |
 | Rent split | C9 | Splits rent and bills between people sharing by the rule they pick |
 
