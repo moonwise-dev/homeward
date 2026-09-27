@@ -15,6 +15,7 @@ import 'affordability_slice.dart';
 import 'assess_affordability.dart';
 import 'constraint_check.dart';
 import 'maximum_price.dart';
+import 'stress_curve.dart';
 
 const defaultTermYears = 30;
 
@@ -101,11 +102,11 @@ AffordabilityAnswer answerAffordability({
     market: market,
     profile: profile,
   ) as AssessedAffordability;
-  final cashNeeded = switch (estimatePurchaseCosts(
+  final costs = switch (estimatePurchaseCosts(
     scenario: scenario,
     market: market,
   )) {
-    EstimatedPurchaseCosts(:final cashNeeded) => cashNeeded,
+    final EstimatedPurchaseCosts costs => costs,
     IncompletePurchaseCosts() => null,
   };
   RuleCheck rule(ConstraintCheck check) => RuleCheck(
@@ -126,7 +127,7 @@ AffordabilityAnswer answerAffordability({
       loan: assessed.loan,
       maxLoan: assessed.maxLoan,
       downPayment: down,
-      cashNeeded: cashNeeded,
+      cashNeeded: costs?.cashNeeded,
       savings: savings,
       annualRate: assessed.annualRate,
       termYears: term,
@@ -151,8 +152,33 @@ AffordabilityAnswer answerAffordability({
       },
       checks: [for (final check in assessed.checks) rule(check)],
       exchangeRates: [...market.exchangeRates.values],
+      stress: _stressCurve(scenario, market, profile),
+      purchaseCosts: [
+        for (final charge in costs?.charges ?? const <PurchaseCharge>[])
+          CostLine(
+            label: charge.label,
+            localTerm: charge.localTerm,
+            amount: charge.amount,
+            refundable: charge.refundable,
+            refund: charge.refund,
+            source: market.sourceOf(charge.sourceId),
+          ),
+      ],
+      purchaseCostsTotal: costs?.total,
     ),
   );
+}
+
+StressCurve? _stressCurve(
+  Scenario scenario,
+  ResolvedMarket market,
+  BuyerProfile profile,
+) {
+  try {
+    return stressCurveFor(scenario: scenario, market: market, profile: profile);
+  } on ArgumentError {
+    return null;
+  }
 }
 
 bool termMovesPayment(ResolvedMarket market) =>

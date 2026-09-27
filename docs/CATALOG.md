@@ -9,7 +9,8 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 Since the reset (D129) Homeward's own blocks come back one at a time, each
 with the chunk of `docs/ROADMAP.md` that needs it: `Fact` (C4), `Choice`
 (C4b), `AffordabilitySummary` and `RuleNote` (C5), and
-`MonthlyCostBreakdown` (C5b) so far.
+`MonthlyCostBreakdown` (C5b), and `StressTestChart` and `PurchaseCostsTable`
+(C6) so far.
 
 ## Design Principles
 
@@ -66,6 +67,8 @@ Buttons send actions the model names itself (`docs/PROTOCOL.md`).
 | Understanding | `Choice` | One decision as an inline ask: the question, two to five options, the recommended one first with why, and a line pointing at the text field for any other answer (D145) | `question`; `options`, each a `label` and an optional `detail`; `recommended`, the label of one option; `because`; `answer`, an action |
 | Money | `AffordabilitySummary` | What the household can borrow, the highest price their savings and the sample rules allow, the down payment and cash needed, the monthly payment, and which rule limits the loan, labelled as a sample estimate (D146) | `affordability`, always `{ "path": "/affordability" }` |
 | Money | `MonthlyCostBreakdown` | What the home at the slice's price costs each month: interest at the rate, amortization at the rate the rules require or over the term, the monthly fee the buyer stated, the total, and in Sweden the total after the interest deduction, labelled as a sample estimate (D147) | `affordability`, always `{ "path": "/affordability" }` |
+| Money | `StressTestChart` | The monthly cost from today's rate up past the rate lenders test, as a line against the most the household can carry each month and the rule that sets it, with today and the tested rate marked; in Sweden after the interest deduction (D148) | `affordability`, always `{ "path": "/affordability" }` |
+| Money | `PurchaseCostsTable` | Every upfront cost the buyer owes on the day, each with its local term and source, what is refundable and what earns it back, the total, and the cash needed with the down payment; says so when the sample rules list none (D148) | `affordability`, always `{ "path": "/affordability" }` |
 | Trust | `RuleNote` | One lending rule: what it is, the largest loan it allows, whether the loan is within it, and its source with the date it was read, labelled as a sample rule (D146) | `rule`, bound to one rule, such as `{ "path": "/affordability/binding" }` or `/affordability/checks/0` |
 
 A `Choice` tap sends its `answer` action at once, with `choice` and `label`,
@@ -90,11 +93,9 @@ marked restored come back from `6faa8ab`.
 | --- | --- | --- | --- |
 | Understanding | `Brief` | C10 | A section of the brief: the household, its needs, its week, or what is open |
 | Understanding | `HouseholdSummary` | C10 | Who moves, incomes and savings as stated, and who shares the costs |
-| Money | `MortgageOptions` | C6 | Fixed against variable, down payment levels, and terms, side by side |
-| Money | `DownPaymentSlider` | C6 | A what-if recomputed on the device, bound to the seeded bounds |
-| Money | `StressTestChart` | C6 | The monthly cost as rates rise, against what the household can carry; restored |
-| Money | `PurchaseCostsTable` | C6 | The upfront costs: down payment, taxes, and fees; restored |
-| Money | `MoneyInput` | C6 | An amount in a currency, for incomes and savings; restored |
+| Money | `DownPaymentSlider` | C6b | A what-if recomputed on the device, between the minimum the rules allow and what the savings reach after the upfront costs |
+| Money | `MortgageOptions` | C6c | Fixed against variable and terms, side by side, from sourced sample fixed rates |
+| Money | `MoneyInput` | C10 | An amount in a currency, for incomes and savings; restored |
 | Money | `RentSplit` | C9 | Rent and bills split between people sharing, by the rule they choose |
 | Money | `BuyVsRent` | C9 | Buying a home against renting one like it, over the years they expect to stay |
 | Homes | `HomeCard` | C7 | A sample home with its monthly cost for this household and why it fits |

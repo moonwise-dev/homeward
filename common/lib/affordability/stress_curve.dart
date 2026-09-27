@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../markets/resolved_market.dart';
 import '../money/money.dart';
+import '../money/ppm_json_converter.dart';
 import '../money/rate.dart';
 import '../plan/scenario.dart';
 import '../profile/buyer_profile.dart';
@@ -12,25 +13,36 @@ import 'scenario_payment.dart';
 import 'stress_rate.dart';
 
 part 'stress_curve.freezed.dart';
+part 'stress_curve.g.dart';
 
 @freezed
 abstract class StressCurve with _$StressCurve {
   const factory StressCurve({
     required List<StressPoint> points,
-    required Rate todayRate,
+    @JsonKey(name: 'todayRatePpm') @PpmJsonConverter() required Rate todayRate,
+    @JsonKey(name: 'stressRatePpm')
+    @PpmJsonConverter()
     required Rate stressRate,
     required bool afterDeduction,
     Money? limit,
     ConstraintKind? limitKind,
   }) = _StressCurve;
+
+  factory StressCurve.fromJson(Map<String, Object?> json) =>
+      _$StressCurveFromJson(json);
 }
 
 @freezed
 abstract class StressPoint with _$StressPoint {
   const factory StressPoint({
+    @JsonKey(name: 'annualRatePpm')
+    @PpmJsonConverter()
     required Rate annualRate,
     required Money cost,
   }) = _StressPoint;
+
+  factory StressPoint.fromJson(Map<String, Object?> json) =>
+      _$StressPointFromJson(json);
 }
 
 const stressCurveStep = Rate.ppm(5000);

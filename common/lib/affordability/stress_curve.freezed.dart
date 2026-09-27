@@ -12,16 +12,19 @@ part of 'stress_curve.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$StressCurve {
 
- List<StressPoint> get points; Rate get todayRate; Rate get stressRate; bool get afterDeduction; Money? get limit; ConstraintKind? get limitKind;
+ List<StressPoint> get points;@JsonKey(name: 'todayRatePpm')@PpmJsonConverter() Rate get todayRate;@JsonKey(name: 'stressRatePpm')@PpmJsonConverter() Rate get stressRate; bool get afterDeduction; Money? get limit; ConstraintKind? get limitKind;
 /// Create a copy of StressCurve
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $StressCurveCopyWith<StressCurve> get copyWith => _$StressCurveCopyWithImpl<StressCurve>(this as StressCurve, _$identity);
 
+  /// Serializes this StressCurve to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -30,7 +33,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is StressCurve&&const DeepCollectionEquality().equals(other.points, _this.points)&&(identical(other.todayRate, _this.todayRate) || other.todayRate == _this.todayRate)&&(identical(other.stressRate, _this.stressRate) || other.stressRate == _this.stressRate)&&(identical(other.afterDeduction, _this.afterDeduction) || other.afterDeduction == _this.afterDeduction)&&(identical(other.limit, _this.limit) || other.limit == _this.limit)&&(identical(other.limitKind, _this.limitKind) || other.limitKind == _this.limitKind));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as StressCurve;
@@ -51,7 +54,7 @@ abstract mixin class $StressCurveCopyWith<$Res>  {
   factory $StressCurveCopyWith(StressCurve value, $Res Function(StressCurve) _then) = _$StressCurveCopyWithImpl;
 @useResult
 $Res call({
- List<StressPoint> points, Rate todayRate, Rate stressRate, bool afterDeduction, Money? limit, ConstraintKind? limitKind
+ List<StressPoint> points,@JsonKey(name: 'todayRatePpm')@PpmJsonConverter() Rate todayRate,@JsonKey(name: 'stressRatePpm')@PpmJsonConverter() Rate stressRate, bool afterDeduction, Money? limit, ConstraintKind? limitKind
 });
 
 
@@ -173,7 +176,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<StressPoint> points,  Rate todayRate,  Rate stressRate,  bool afterDeduction,  Money? limit,  ConstraintKind? limitKind)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<StressPoint> points, @JsonKey(name: 'todayRatePpm')@PpmJsonConverter()  Rate todayRate, @JsonKey(name: 'stressRatePpm')@PpmJsonConverter()  Rate stressRate,  bool afterDeduction,  Money? limit,  ConstraintKind? limitKind)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StressCurve() when $default != null:
 return $default(_that.points,_that.todayRate,_that.stressRate,_that.afterDeduction,_that.limit,_that.limitKind);case _:
@@ -194,7 +197,7 @@ return $default(_that.points,_that.todayRate,_that.stressRate,_that.afterDeducti
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<StressPoint> points,  Rate todayRate,  Rate stressRate,  bool afterDeduction,  Money? limit,  ConstraintKind? limitKind)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<StressPoint> points, @JsonKey(name: 'todayRatePpm')@PpmJsonConverter()  Rate todayRate, @JsonKey(name: 'stressRatePpm')@PpmJsonConverter()  Rate stressRate,  bool afterDeduction,  Money? limit,  ConstraintKind? limitKind)  $default,) {final _that = this;
 switch (_that) {
 case _StressCurve():
 return $default(_that.points,_that.todayRate,_that.stressRate,_that.afterDeduction,_that.limit,_that.limitKind);case _:
@@ -214,7 +217,7 @@ return $default(_that.points,_that.todayRate,_that.stressRate,_that.afterDeducti
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<StressPoint> points,  Rate todayRate,  Rate stressRate,  bool afterDeduction,  Money? limit,  ConstraintKind? limitKind)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<StressPoint> points, @JsonKey(name: 'todayRatePpm')@PpmJsonConverter()  Rate todayRate, @JsonKey(name: 'stressRatePpm')@PpmJsonConverter()  Rate stressRate,  bool afterDeduction,  Money? limit,  ConstraintKind? limitKind)?  $default,) {final _that = this;
 switch (_that) {
 case _StressCurve() when $default != null:
 return $default(_that.points,_that.todayRate,_that.stressRate,_that.afterDeduction,_that.limit,_that.limitKind);case _:
@@ -226,11 +229,11 @@ return $default(_that.points,_that.todayRate,_that.stressRate,_that.afterDeducti
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _StressCurve implements StressCurve {
-  const _StressCurve({required  List<StressPoint> points, required this.todayRate, required this.stressRate, required this.afterDeduction, this.limit, this.limitKind}): _points = points;
-  
+  const _StressCurve({required  List<StressPoint> points, @JsonKey(name: 'todayRatePpm')@PpmJsonConverter() required this.todayRate, @JsonKey(name: 'stressRatePpm')@PpmJsonConverter() required this.stressRate, required this.afterDeduction, this.limit, this.limitKind}): _points = points;
+  factory _StressCurve.fromJson(Map<String, dynamic> json) => _$StressCurveFromJson(json);
 
  final  List<StressPoint> _points;
 @override List<StressPoint> get points {
@@ -239,8 +242,8 @@ class _StressCurve implements StressCurve {
   return EqualUnmodifiableListView(_points);
 }
 
-@override final  Rate todayRate;
-@override final  Rate stressRate;
+@override@JsonKey(name: 'todayRatePpm')@PpmJsonConverter() final  Rate todayRate;
+@override@JsonKey(name: 'stressRatePpm')@PpmJsonConverter() final  Rate stressRate;
 @override final  bool afterDeduction;
 @override final  Money? limit;
 @override final  ConstraintKind? limitKind;
@@ -251,14 +254,17 @@ class _StressCurve implements StressCurve {
 @pragma('vm:prefer-inline')
 _$StressCurveCopyWith<_StressCurve> get copyWith => __$StressCurveCopyWithImpl<_StressCurve>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$StressCurveToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType&&other is _StressCurve&&const DeepCollectionEquality().equals(other.points, _points)&&(identical(other.todayRate, todayRate) || other.todayRate == todayRate)&&(identical(other.stressRate, stressRate) || other.stressRate == stressRate)&&(identical(other.afterDeduction, afterDeduction) || other.afterDeduction == afterDeduction)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.limitKind, limitKind) || other.limitKind == limitKind));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
     return Object.hash(runtimeType,const DeepCollectionEquality().hash(_points),todayRate,stressRate,afterDeduction,limit,limitKind);
@@ -277,7 +283,7 @@ abstract mixin class _$StressCurveCopyWith<$Res> implements $StressCurveCopyWith
   factory _$StressCurveCopyWith(_StressCurve value, $Res Function(_StressCurve) _then) = __$StressCurveCopyWithImpl;
 @override @useResult
 $Res call({
- List<StressPoint> points, Rate todayRate, Rate stressRate, bool afterDeduction, Money? limit, ConstraintKind? limitKind
+ List<StressPoint> points,@JsonKey(name: 'todayRatePpm')@PpmJsonConverter() Rate todayRate,@JsonKey(name: 'stressRatePpm')@PpmJsonConverter() Rate stressRate, bool afterDeduction, Money? limit, ConstraintKind? limitKind
 });
 
 
@@ -321,16 +327,19 @@ $MoneyCopyWith<$Res>? get limit {
 }
 }
 
+
 /// @nodoc
 mixin _$StressPoint {
 
- Rate get annualRate; Money get cost;
+@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate get annualRate; Money get cost;
 /// Create a copy of StressPoint
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $StressPointCopyWith<StressPoint> get copyWith => _$StressPointCopyWithImpl<StressPoint>(this as StressPoint, _$identity);
 
+  /// Serializes this StressPoint to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -339,7 +348,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is StressPoint&&(identical(other.annualRate, _this.annualRate) || other.annualRate == _this.annualRate)&&(identical(other.cost, _this.cost) || other.cost == _this.cost));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as StressPoint;
@@ -360,7 +369,7 @@ abstract mixin class $StressPointCopyWith<$Res>  {
   factory $StressPointCopyWith(StressPoint value, $Res Function(StressPoint) _then) = _$StressPointCopyWithImpl;
 @useResult
 $Res call({
- Rate annualRate, Money cost
+@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate annualRate, Money cost
 });
 
 
@@ -475,7 +484,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Rate annualRate,  Money cost)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  Money cost)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StressPoint() when $default != null:
 return $default(_that.annualRate,_that.cost);case _:
@@ -496,7 +505,7 @@ return $default(_that.annualRate,_that.cost);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Rate annualRate,  Money cost)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  Money cost)  $default,) {final _that = this;
 switch (_that) {
 case _StressPoint():
 return $default(_that.annualRate,_that.cost);case _:
@@ -516,7 +525,7 @@ return $default(_that.annualRate,_that.cost);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Rate annualRate,  Money cost)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  Money cost)?  $default,) {final _that = this;
 switch (_that) {
 case _StressPoint() when $default != null:
 return $default(_that.annualRate,_that.cost);case _:
@@ -528,13 +537,13 @@ return $default(_that.annualRate,_that.cost);case _:
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _StressPoint implements StressPoint {
-  const _StressPoint({required this.annualRate, required this.cost});
-  
+  const _StressPoint({@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() required this.annualRate, required this.cost});
+  factory _StressPoint.fromJson(Map<String, dynamic> json) => _$StressPointFromJson(json);
 
-@override final  Rate annualRate;
+@override@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() final  Rate annualRate;
 @override final  Money cost;
 
 /// Create a copy of StressPoint
@@ -543,14 +552,17 @@ class _StressPoint implements StressPoint {
 @pragma('vm:prefer-inline')
 _$StressPointCopyWith<_StressPoint> get copyWith => __$StressPointCopyWithImpl<_StressPoint>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$StressPointToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType&&other is _StressPoint&&(identical(other.annualRate, annualRate) || other.annualRate == annualRate)&&(identical(other.cost, cost) || other.cost == cost));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
     return Object.hash(runtimeType,annualRate,cost);
@@ -569,7 +581,7 @@ abstract mixin class _$StressPointCopyWith<$Res> implements $StressPointCopyWith
   factory _$StressPointCopyWith(_StressPoint value, $Res Function(_StressPoint) _then) = __$StressPointCopyWithImpl;
 @override @useResult
 $Res call({
- Rate annualRate, Money cost
+@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate annualRate, Money cost
 });
 
 

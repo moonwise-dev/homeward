@@ -229,6 +229,13 @@ fixed rate, and a choice about money carries no recommendation, since
 Homeward explains and does not advise. `MonthlyCostBreakdown`
 binds the same `/affordability`.
 
+With the result, the tool adds the stress curve and the upfront costs (C6,
+D148): the monthly cost at today's rate, at the rate lenders test, and past
+it, against the most the household can carry and the rule that sets it; and
+every upfront cost the pack lists, each with its source and what is
+refundable. `StressTestChart` and `PurchaseCostsTable` bind them in
+`/affordability`.
+
 A tool reads the turn through its `ToolContext`: the progress steps, the
 slices as they stand, and the buyer's words in this plan.
 
@@ -236,7 +243,7 @@ Planned tools, each arriving with its chunk:
 
 | Tool | Chunk | What it does |
 | --- | --- | --- |
-| Mortgage options | C6 | Monthly cost, stress curve, and upfront costs for a price, a down payment, and a term |
+| Mortgage options | C6c | Fixed against variable and terms for a price and a down payment, from sourced sample fixed rates |
 | `search_homes` | C7 | Searches the labelled sample homes and prices each for this household |
 | `find_place` | C8 | Resolves a place the buyer names, with Nominatim |
 | `measure_week` | C8 | Measures each trip of the week from a home, and the weekly total |

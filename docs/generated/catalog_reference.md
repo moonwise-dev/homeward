@@ -12,6 +12,8 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `Choice` | yes | `question`, `options`, `answer` |  | Rent first or buy |
 | `AffordabilitySummary` | yes | `affordability` | `affordability` | A Stockholm couple |
 | `MonthlyCostBreakdown` | yes | `affordability` | `affordability` | A Stockholm flat with an association fee |
+| `StressTestChart` | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
+| `PurchaseCostsTable` | yes | `affordability` | `affordability` | A Funchal flat |
 | `RuleNote` | yes | `rule` | `rule` | The rule that limits the loan |
 
 ### Fact
@@ -29,6 +31,14 @@ What the household can borrow, the highest price it allows, and the rule that li
 ### MonthlyCostBreakdown
 
 What the home at the price in /affordability costs each month: interest, amortization, the fee the buyer stated, and the total, from compute_affordability.
+
+### StressTestChart
+
+The monthly cost as rates rise past the rate lenders test, against the most this household can carry, from compute_affordability.
+
+### PurchaseCostsTable
+
+Every upfront cost the buyer owes on the day, with its source, the total, and the cash needed with the down payment, from compute_affordability.
 
 ### RuleNote
 

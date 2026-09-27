@@ -253,7 +253,11 @@ final class TurnRun {
         );
         continue;
       }
-      for (final surfaceId in _seeder.awaitingComponents) {
+      for (final surfaceId in _seeder.awaitingComponents.where(
+        (surfaceId) => !_pendingFailures.any(
+          (failure) => failure.surfaceId == surfaceId,
+        ),
+      )) {
         _reject(
           ValidationFailure(
             surfaceId: surfaceId,

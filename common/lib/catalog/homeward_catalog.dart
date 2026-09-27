@@ -5,7 +5,9 @@ import 'components/affordability_summary.dart';
 import 'components/choice.dart';
 import 'components/fact.dart';
 import 'components/monthly_cost_breakdown.dart';
+import 'components/purchase_costs_table.dart';
 import 'components/rule_note.dart';
+import 'components/stress_test_chart.dart';
 import 'functions/catalog_function.dart';
 
 const homewardCatalogId =
@@ -16,6 +18,8 @@ const homewardComponents = <CatalogComponent>[
   Choice(),
   AffordabilitySummary(),
   MonthlyCostBreakdown(),
+  StressTestChart(),
+  PurchaseCostsTable(),
   RuleNote(),
 ];
 

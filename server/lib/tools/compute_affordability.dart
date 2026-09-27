@@ -39,7 +39,8 @@ final class ComputeAffordability extends AgentTool {
       'Pass only figures the buyer stated, as they stated them; a figure not '
       'in their words is refused. It answers with the facts it still needs '
       'and why, or seeds /affordability for AffordabilitySummary, RuleNote, '
-      'and MonthlyCostBreakdown, and lists what it assumed that is the '
+      'MonthlyCostBreakdown, StressTestChart, and PurchaseCostsTable, and '
+      'lists what it assumed that is the '
       "buyer's to decide. For a home anywhere else, tell the buyer the "
       'sample does not cover it.';
 
@@ -276,6 +277,14 @@ final class ComputeAffordability extends AgentTool {
             _ => null,
           },
           'withinRules': slice.loan <= slice.maxLoan,
+          'passesStressTest': switch (slice.stress) {
+            StressCurve(:final limit?, :final stressRate, :final points) =>
+              points
+                  .where((point) => point.annualRate == stressRate)
+                  .every((point) => point.cost <= limit),
+            _ => null,
+          },
+          'purchaseCosts': slice.purchaseCosts.length,
           'assumed': {
             if (inMarket['price'] == null)
               'price': 'the highest price the savings reach',
@@ -287,11 +296,13 @@ final class ComputeAffordability extends AgentTool {
           },
           'note':
               'The figures are in /affordability. Show them with '
-              'AffordabilitySummary, the limiting rule with RuleNote, and '
-              'what a month costs with MonthlyCostBreakdown; never write '
-              'them in your text. What was assumed is the buyer\'s to '
-              'decide; nothing else can be computed yet, so offer no other '
-              'choice, such as another kind of rate.',
+              'AffordabilitySummary, the limiting rule with RuleNote, what a '
+              'month costs with MonthlyCostBreakdown, rising rates with '
+              'StressTestChart, and the costs on the day with '
+              'PurchaseCostsTable; never write them in your text. What was '
+              "assumed is the buyer's to decide; nothing else can be "
+              'computed yet, so offer no other choice, such as another kind '
+              'of rate.',
         },
         seeds: {'affordability': jsonDecode(jsonEncode(slice.toJson()))},
       ),

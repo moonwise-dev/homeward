@@ -8,7 +8,10 @@ String moneyText(Money money) => NumberFormat.currency(
   name: money.currency.code,
   symbol: _symbols[money.currency.code] ?? '${money.currency.code} ',
   decimalDigits: 0,
-).format(money.minorUnits / pow(10, money.currency.minorDigits));
+).format(majorUnits(money));
+
+double majorUnits(Money money) =>
+    money.minorUnits / pow(10, money.currency.minorDigits);
 
 const _symbols = {'EUR': '€', 'USD': r'$', 'GBP': '£'};
 
@@ -28,3 +31,26 @@ String repaymentText(AffordabilitySlice slice) =>
       final rate when rate.partsPerMillion == 0 => 'no amortization required',
       final rate => 'amortizing ${percentText(rate)} a year',
     };
+
+String refundText(RefundRule refund) {
+  final conditions = [
+    if (refund.recomputeAs.residency == Residency.resident)
+      'become a tax resident',
+    if (refund.recomputeAs.use == PropertyUse.primary)
+      'make it your permanent home',
+  ];
+  final claim = 'claimed within ${periodText(refund.claimWindow)}';
+  return conditions.isEmpty
+      ? 'Refundable, $claim.'
+      : 'Comes back if you ${conditions.join(' and ')} within '
+            '${periodText(refund.deadline)}, $claim.';
+}
+
+String periodText(Period period) => [
+  if (period.years > 0) _count(period.years, 'year'),
+  if (period.months > 0) _count(period.months, 'month'),
+  if (period.weeks > 0) _count(period.weeks, 'week'),
+  if (period.days > 0) _count(period.days, 'day'),
+].join(' and ');
+
+String _count(int count, String unit) => '$count $unit${count == 1 ? '' : 's'}';

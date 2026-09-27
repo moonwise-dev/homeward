@@ -66,8 +66,15 @@ four journeys of `docs/PRODUCT.md` (D141).
   payment and monthly fee the buyer states and says what it assumed, so
   Gemini asks the buyer's preference (D147). Reading a block's docs no longer
   counts as a tool round.
-- **C6 Mortgage options.** `MortgageOptions`, `DownPaymentSlider`,
-  `StressTestChart`, and `PurchaseCostsTable`, recomputed on the device.
+- **C6 Stress and upfront costs — done.** `StressTestChart` and
+  `PurchaseCostsTable`, restored: `compute_affordability` adds the monthly
+  cost as rates rise, against the most the household can carry, and every
+  upfront cost with its source to `/affordability` (D148).
+- **C6b Down payment what-if.** `DownPaymentSlider`, recomputed on the
+  device between the minimum the rules allow and what the savings reach
+  after the upfront costs.
+- **C6c Mortgage options.** `MortgageOptions`: fixed against variable and
+  terms side by side, once sourced sample fixed rates join the packs.
 - **C7 Homes.** The restored sample homes of Stockholm and Lisbon, a
   `search_homes` tool, and `HomeCard` with its monthly cost, `HomeComparison`,
   and `Shortlist`.
@@ -272,6 +279,7 @@ superseded stay as history.
 | D145 | Choice | One decision per `Choice`: a question, two to five options, the recommended one first with why. A tap sends the option at once, the way a coding agent takes a one-key answer, and the option stays marked. The text field under the conversation is the room to type; the `Choice` points at it rather than holding a field of its own. `Choice` joins the core components, so asking never costs a `component_docs` round. The chosen label counts as the buyer's words for `update_brief`. A `Choice` is for a decision; a fact only the buyer knows, such as savings, is asked in text, and `update_brief` checks numbers written in words as well as digits, since Gemini spelled figures out to get past the check | Select, then Continue; several choices at once; an Other field inside the card |
 | D146 | Money core | C5 splits into what the household can borrow (C5) and what a price costs them a month (C5b). `compute_affordability` takes the household's figures as arguments, the ones the buyer stated, and refuses a figure that does not appear in their words, the same check as the brief; it answers with the facts it still needs and why, from the pack, so Gemini asks. It resolves the Swedish or Portuguese sample pack, runs the restored `assessAffordability` and `maximumPrice`, and seeds `/affordability`. Other cities are not covered by the sample and the tool says so. Incomes, debts, and savings come as lists in their own currencies, converted with the sample exchange rates the summary names. `AffordabilitySummary` and `RuleNote` join the core components, and a block bound to a slice no tool has seeded yet is refused | One chunk with the monthly cost; figures read from structured money items in the brief |
 | D147 | The buyer's preferences | What a home costs a month depends on choices that are the buyer's: the down payment, the term where it moves the payment, and the home's monthly fee. Rather than only calculating with defaults, `compute_affordability` answers with what it assumed, and Gemini shows the result, then asks one of those choices with `Choice`, recording the answer in the brief. A choice about money carries no recommendation: Homeward explains and does not advise. `MonthlyCostBreakdown` is the first Homeward block left out of the core components, read through `component_docs`; a round that only reads `component_docs` does not count toward the three tool rounds, at most two such rounds a turn, so reading a block's docs never costs the turn its tools | Always in the prompt like the C4 and C5 blocks; calculating with defaults only |
+| D148 | Mortgage options split | C6 splits into stress and upfront costs (C6), the down payment what-if (C6b), and fixed against variable (C6c), since fixed rates need new sourced sample data. The stress curve and the upfront costs are computed by `compute_affordability` with the rest of `/affordability`, not on the device as before the reset. `MoneyInput` moves to C10: buyers state amounts in their own words, which the tools check | One chunk with all five blocks; the slider first |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

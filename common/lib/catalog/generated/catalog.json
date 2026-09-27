@@ -939,6 +939,88 @@
       ],
       "additionalProperties": false
     },
+    "StressTestChart": {
+      "type": "object",
+      "description": "The monthly cost as rates rise past the rate lenders test, against the most this household can carry, from compute_affordability.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "StressTestChart"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "affordability": {
+          "type": "object",
+          "description": "Always { \"path\": \"/affordability\" }, after compute_affordability answered.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/affordability"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "affordability"
+      ],
+      "additionalProperties": false
+    },
+    "PurchaseCostsTable": {
+      "type": "object",
+      "description": "Every upfront cost the buyer owes on the day, with its source, the total, and the cash needed with the down payment, from compute_affordability.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "PurchaseCostsTable"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "affordability": {
+          "type": "object",
+          "description": "Always { \"path\": \"/affordability\" }, after compute_affordability answered.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/affordability"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "affordability"
+      ],
+      "additionalProperties": false
+    },
     "RuleNote": {
       "type": "object",
       "description": "One lending rule, the largest loan it allows, and its source, from compute_affordability.",
@@ -1585,6 +1667,12 @@
         },
         {
           "$ref": "#/components/MonthlyCostBreakdown"
+        },
+        {
+          "$ref": "#/components/StressTestChart"
+        },
+        {
+          "$ref": "#/components/PurchaseCostsTable"
         },
         {
           "$ref": "#/components/RuleNote"

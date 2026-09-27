@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AffordabilitySlice {
 
- String get marketId; String get marketName; bool get sample; Money get price; Money? get maxPrice; Money get loan; Money get maxLoan; Money get downPayment; Money? get cashNeeded; Money? get savings;@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate get annualRate; int get termYears; String get loanType; MonthlyFigures get monthly; RuleCheck? get binding; List<RuleCheck> get checks; List<ExchangeRate> get exchangeRates;
+ String get marketId; String get marketName; bool get sample; Money get price; Money? get maxPrice; Money get loan; Money get maxLoan; Money get downPayment; Money? get cashNeeded; Money? get savings;@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate get annualRate; int get termYears; String get loanType; MonthlyFigures get monthly; RuleCheck? get binding; List<RuleCheck> get checks; List<ExchangeRate> get exchangeRates; StressCurve? get stress; List<CostLine> get purchaseCosts; Money? get purchaseCostsTotal;
 /// Create a copy of AffordabilitySlice
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $AffordabilitySliceCopyWith<AffordabilitySlice> get copyWith => _$AffordabilityS
 @override
 bool operator ==(Object other) {
   final _this = this as AffordabilitySlice;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AffordabilitySlice&&(identical(other.marketId, _this.marketId) || other.marketId == _this.marketId)&&(identical(other.marketName, _this.marketName) || other.marketName == _this.marketName)&&(identical(other.sample, _this.sample) || other.sample == _this.sample)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.maxPrice, _this.maxPrice) || other.maxPrice == _this.maxPrice)&&(identical(other.loan, _this.loan) || other.loan == _this.loan)&&(identical(other.maxLoan, _this.maxLoan) || other.maxLoan == _this.maxLoan)&&(identical(other.downPayment, _this.downPayment) || other.downPayment == _this.downPayment)&&(identical(other.cashNeeded, _this.cashNeeded) || other.cashNeeded == _this.cashNeeded)&&(identical(other.savings, _this.savings) || other.savings == _this.savings)&&(identical(other.annualRate, _this.annualRate) || other.annualRate == _this.annualRate)&&(identical(other.termYears, _this.termYears) || other.termYears == _this.termYears)&&(identical(other.loanType, _this.loanType) || other.loanType == _this.loanType)&&(identical(other.monthly, _this.monthly) || other.monthly == _this.monthly)&&(identical(other.binding, _this.binding) || other.binding == _this.binding)&&const DeepCollectionEquality().equals(other.checks, _this.checks)&&const DeepCollectionEquality().equals(other.exchangeRates, _this.exchangeRates));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AffordabilitySlice&&(identical(other.marketId, _this.marketId) || other.marketId == _this.marketId)&&(identical(other.marketName, _this.marketName) || other.marketName == _this.marketName)&&(identical(other.sample, _this.sample) || other.sample == _this.sample)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.maxPrice, _this.maxPrice) || other.maxPrice == _this.maxPrice)&&(identical(other.loan, _this.loan) || other.loan == _this.loan)&&(identical(other.maxLoan, _this.maxLoan) || other.maxLoan == _this.maxLoan)&&(identical(other.downPayment, _this.downPayment) || other.downPayment == _this.downPayment)&&(identical(other.cashNeeded, _this.cashNeeded) || other.cashNeeded == _this.cashNeeded)&&(identical(other.savings, _this.savings) || other.savings == _this.savings)&&(identical(other.annualRate, _this.annualRate) || other.annualRate == _this.annualRate)&&(identical(other.termYears, _this.termYears) || other.termYears == _this.termYears)&&(identical(other.loanType, _this.loanType) || other.loanType == _this.loanType)&&(identical(other.monthly, _this.monthly) || other.monthly == _this.monthly)&&(identical(other.binding, _this.binding) || other.binding == _this.binding)&&const DeepCollectionEquality().equals(other.checks, _this.checks)&&const DeepCollectionEquality().equals(other.exchangeRates, _this.exchangeRates)&&(identical(other.stress, _this.stress) || other.stress == _this.stress)&&const DeepCollectionEquality().equals(other.purchaseCosts, _this.purchaseCosts)&&(identical(other.purchaseCostsTotal, _this.purchaseCostsTotal) || other.purchaseCostsTotal == _this.purchaseCostsTotal));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as AffordabilitySlice;
-  return Object.hash(runtimeType,_this.marketId,_this.marketName,_this.sample,_this.price,_this.maxPrice,_this.loan,_this.maxLoan,_this.downPayment,_this.cashNeeded,_this.savings,_this.annualRate,_this.termYears,_this.loanType,_this.monthly,_this.binding,const DeepCollectionEquality().hash(_this.checks),const DeepCollectionEquality().hash(_this.exchangeRates));
+  return Object.hashAll([runtimeType,_this.marketId,_this.marketName,_this.sample,_this.price,_this.maxPrice,_this.loan,_this.maxLoan,_this.downPayment,_this.cashNeeded,_this.savings,_this.annualRate,_this.termYears,_this.loanType,_this.monthly,_this.binding,const DeepCollectionEquality().hash(_this.checks),const DeepCollectionEquality().hash(_this.exchangeRates),_this.stress,const DeepCollectionEquality().hash(_this.purchaseCosts),_this.purchaseCostsTotal]);
 }
 
 @override
 String toString() {
   final _this = this as AffordabilitySlice;
-  return 'AffordabilitySlice(marketId: ${_this.marketId}, marketName: ${_this.marketName}, sample: ${_this.sample}, price: ${_this.price}, maxPrice: ${_this.maxPrice}, loan: ${_this.loan}, maxLoan: ${_this.maxLoan}, downPayment: ${_this.downPayment}, cashNeeded: ${_this.cashNeeded}, savings: ${_this.savings}, annualRate: ${_this.annualRate}, termYears: ${_this.termYears}, loanType: ${_this.loanType}, monthly: ${_this.monthly}, binding: ${_this.binding}, checks: ${_this.checks}, exchangeRates: ${_this.exchangeRates})';
+  return 'AffordabilitySlice(marketId: ${_this.marketId}, marketName: ${_this.marketName}, sample: ${_this.sample}, price: ${_this.price}, maxPrice: ${_this.maxPrice}, loan: ${_this.loan}, maxLoan: ${_this.maxLoan}, downPayment: ${_this.downPayment}, cashNeeded: ${_this.cashNeeded}, savings: ${_this.savings}, annualRate: ${_this.annualRate}, termYears: ${_this.termYears}, loanType: ${_this.loanType}, monthly: ${_this.monthly}, binding: ${_this.binding}, checks: ${_this.checks}, exchangeRates: ${_this.exchangeRates}, stress: ${_this.stress}, purchaseCosts: ${_this.purchaseCosts}, purchaseCostsTotal: ${_this.purchaseCostsTotal})';
 }
 
 
@@ -54,11 +54,11 @@ abstract mixin class $AffordabilitySliceCopyWith<$Res>  {
   factory $AffordabilitySliceCopyWith(AffordabilitySlice value, $Res Function(AffordabilitySlice) _then) = _$AffordabilitySliceCopyWithImpl;
 @useResult
 $Res call({
- String marketId, String marketName, bool sample, Money price, Money? maxPrice, Money loan, Money maxLoan, Money downPayment, Money? cashNeeded, Money? savings,@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate annualRate, int termYears, String loanType, MonthlyFigures monthly, RuleCheck? binding, List<RuleCheck> checks, List<ExchangeRate> exchangeRates
+ String marketId, String marketName, bool sample, Money price, Money? maxPrice, Money loan, Money maxLoan, Money downPayment, Money? cashNeeded, Money? savings,@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate annualRate, int termYears, String loanType, MonthlyFigures monthly, RuleCheck? binding, List<RuleCheck> checks, List<ExchangeRate> exchangeRates, StressCurve? stress, List<CostLine> purchaseCosts, Money? purchaseCostsTotal
 });
 
 
-$MoneyCopyWith<$Res> get price;$MoneyCopyWith<$Res>? get maxPrice;$MoneyCopyWith<$Res> get loan;$MoneyCopyWith<$Res> get maxLoan;$MoneyCopyWith<$Res> get downPayment;$MoneyCopyWith<$Res>? get cashNeeded;$MoneyCopyWith<$Res>? get savings;$MonthlyFiguresCopyWith<$Res> get monthly;$RuleCheckCopyWith<$Res>? get binding;
+$MoneyCopyWith<$Res> get price;$MoneyCopyWith<$Res>? get maxPrice;$MoneyCopyWith<$Res> get loan;$MoneyCopyWith<$Res> get maxLoan;$MoneyCopyWith<$Res> get downPayment;$MoneyCopyWith<$Res>? get cashNeeded;$MoneyCopyWith<$Res>? get savings;$MonthlyFiguresCopyWith<$Res> get monthly;$RuleCheckCopyWith<$Res>? get binding;$StressCurveCopyWith<$Res>? get stress;$MoneyCopyWith<$Res>? get purchaseCostsTotal;
 
 }
 /// @nodoc
@@ -71,7 +71,7 @@ class _$AffordabilitySliceCopyWithImpl<$Res>
 
 /// Create a copy of AffordabilitySlice
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? marketId = null,Object? marketName = null,Object? sample = null,Object? price = null,Object? maxPrice = freezed,Object? loan = null,Object? maxLoan = null,Object? downPayment = null,Object? cashNeeded = freezed,Object? savings = freezed,Object? annualRate = null,Object? termYears = null,Object? loanType = null,Object? monthly = null,Object? binding = freezed,Object? checks = null,Object? exchangeRates = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? marketId = null,Object? marketName = null,Object? sample = null,Object? price = null,Object? maxPrice = freezed,Object? loan = null,Object? maxLoan = null,Object? downPayment = null,Object? cashNeeded = freezed,Object? savings = freezed,Object? annualRate = null,Object? termYears = null,Object? loanType = null,Object? monthly = null,Object? binding = freezed,Object? checks = null,Object? exchangeRates = null,Object? stress = freezed,Object? purchaseCosts = null,Object? purchaseCostsTotal = freezed,}) {
   return _then(AffordabilitySlice(
 marketId: null == marketId ? _self.marketId : marketId // ignore: cast_nullable_to_non_nullable
 as String,marketName: null == marketName ? _self.marketName : marketName // ignore: cast_nullable_to_non_nullable
@@ -90,7 +90,10 @@ as String,monthly: null == monthly ? _self.monthly : monthly // ignore: cast_nul
 as MonthlyFigures,binding: freezed == binding ? _self.binding : binding // ignore: cast_nullable_to_non_nullable
 as RuleCheck?,checks: null == checks ? _self.checks : checks // ignore: cast_nullable_to_non_nullable
 as List<RuleCheck>,exchangeRates: null == exchangeRates ? _self.exchangeRates : exchangeRates // ignore: cast_nullable_to_non_nullable
-as List<ExchangeRate>,
+as List<ExchangeRate>,stress: freezed == stress ? _self.stress : stress // ignore: cast_nullable_to_non_nullable
+as StressCurve?,purchaseCosts: null == purchaseCosts ? _self.purchaseCosts : purchaseCosts // ignore: cast_nullable_to_non_nullable
+as List<CostLine>,purchaseCostsTotal: freezed == purchaseCostsTotal ? _self.purchaseCostsTotal : purchaseCostsTotal // ignore: cast_nullable_to_non_nullable
+as Money?,
   ));
 }
 /// Create a copy of AffordabilitySlice
@@ -185,6 +188,30 @@ $RuleCheckCopyWith<$Res>? get binding {
 
   return $RuleCheckCopyWith<$Res>(_self.binding!, (value) {
     return _then(_self.copyWith(binding: value));
+  });
+}/// Create a copy of AffordabilitySlice
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$StressCurveCopyWith<$Res>? get stress {
+    if (_self.stress == null) {
+    return null;
+  }
+
+  return $StressCurveCopyWith<$Res>(_self.stress!, (value) {
+    return _then(_self.copyWith(stress: value));
+  });
+}/// Create a copy of AffordabilitySlice
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res>? get purchaseCostsTotal {
+    if (_self.purchaseCostsTotal == null) {
+    return null;
+  }
+
+  return $MoneyCopyWith<$Res>(_self.purchaseCostsTotal!, (value) {
+    return _then(_self.copyWith(purchaseCostsTotal: value));
   });
 }
 }
@@ -268,10 +295,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AffordabilitySlice() when $default != null:
-return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.monthly,_that.binding,_that.checks,_that.exchangeRates);case _:
+return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal);case _:
   return orElse();
 
 }
@@ -289,10 +316,10 @@ return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.m
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal)  $default,) {final _that = this;
 switch (_that) {
 case _AffordabilitySlice():
-return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.monthly,_that.binding,_that.checks,_that.exchangeRates);case _:
+return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -309,10 +336,10 @@ return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.m
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String marketId,  String marketName,  bool sample,  Money price,  Money? maxPrice,  Money loan,  Money maxLoan,  Money downPayment,  Money? cashNeeded,  Money? savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter()  Rate annualRate,  int termYears,  String loanType,  MonthlyFigures monthly,  RuleCheck? binding,  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates,  StressCurve? stress,  List<CostLine> purchaseCosts,  Money? purchaseCostsTotal)?  $default,) {final _that = this;
 switch (_that) {
 case _AffordabilitySlice() when $default != null:
-return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.monthly,_that.binding,_that.checks,_that.exchangeRates);case _:
+return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.maxPrice,_that.loan,_that.maxLoan,_that.downPayment,_that.cashNeeded,_that.savings,_that.annualRate,_that.termYears,_that.loanType,_that.monthly,_that.binding,_that.checks,_that.exchangeRates,_that.stress,_that.purchaseCosts,_that.purchaseCostsTotal);case _:
   return null;
 
 }
@@ -324,7 +351,7 @@ return $default(_that.marketId,_that.marketName,_that.sample,_that.price,_that.m
 @JsonSerializable()
 
 class _AffordabilitySlice implements AffordabilitySlice {
-  const _AffordabilitySlice({required this.marketId, required this.marketName, this.sample = true, required this.price, this.maxPrice, required this.loan, required this.maxLoan, required this.downPayment, this.cashNeeded, this.savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter() required this.annualRate, required this.termYears, required this.loanType, required this.monthly, this.binding, required  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates = const []}): _checks = checks,_exchangeRates = exchangeRates;
+  const _AffordabilitySlice({required this.marketId, required this.marketName, this.sample = true, required this.price, this.maxPrice, required this.loan, required this.maxLoan, required this.downPayment, this.cashNeeded, this.savings, @JsonKey(name: 'annualRatePpm')@PpmJsonConverter() required this.annualRate, required this.termYears, required this.loanType, required this.monthly, this.binding, required  List<RuleCheck> checks,  List<ExchangeRate> exchangeRates = const [], this.stress,  List<CostLine> purchaseCosts = const [], this.purchaseCostsTotal}): _checks = checks,_exchangeRates = exchangeRates,_purchaseCosts = purchaseCosts;
   factory _AffordabilitySlice.fromJson(Map<String, dynamic> json) => _$AffordabilitySliceFromJson(json);
 
 @override final  String marketId;
@@ -356,6 +383,15 @@ class _AffordabilitySlice implements AffordabilitySlice {
   return EqualUnmodifiableListView(_exchangeRates);
 }
 
+@override final  StressCurve? stress;
+ final  List<CostLine> _purchaseCosts;
+@override@JsonKey() List<CostLine> get purchaseCosts {
+  if (_purchaseCosts is EqualUnmodifiableListView) return _purchaseCosts;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_purchaseCosts);
+}
+
+@override final  Money? purchaseCostsTotal;
 
 /// Create a copy of AffordabilitySlice
 /// with the given fields replaced by the non-null parameter values.
@@ -370,18 +406,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AffordabilitySlice&&(identical(other.marketId, marketId) || other.marketId == marketId)&&(identical(other.marketName, marketName) || other.marketName == marketName)&&(identical(other.sample, sample) || other.sample == sample)&&(identical(other.price, price) || other.price == price)&&(identical(other.maxPrice, maxPrice) || other.maxPrice == maxPrice)&&(identical(other.loan, loan) || other.loan == loan)&&(identical(other.maxLoan, maxLoan) || other.maxLoan == maxLoan)&&(identical(other.downPayment, downPayment) || other.downPayment == downPayment)&&(identical(other.cashNeeded, cashNeeded) || other.cashNeeded == cashNeeded)&&(identical(other.savings, savings) || other.savings == savings)&&(identical(other.annualRate, annualRate) || other.annualRate == annualRate)&&(identical(other.termYears, termYears) || other.termYears == termYears)&&(identical(other.loanType, loanType) || other.loanType == loanType)&&(identical(other.monthly, monthly) || other.monthly == monthly)&&(identical(other.binding, binding) || other.binding == binding)&&const DeepCollectionEquality().equals(other.checks, _checks)&&const DeepCollectionEquality().equals(other.exchangeRates, _exchangeRates));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AffordabilitySlice&&(identical(other.marketId, marketId) || other.marketId == marketId)&&(identical(other.marketName, marketName) || other.marketName == marketName)&&(identical(other.sample, sample) || other.sample == sample)&&(identical(other.price, price) || other.price == price)&&(identical(other.maxPrice, maxPrice) || other.maxPrice == maxPrice)&&(identical(other.loan, loan) || other.loan == loan)&&(identical(other.maxLoan, maxLoan) || other.maxLoan == maxLoan)&&(identical(other.downPayment, downPayment) || other.downPayment == downPayment)&&(identical(other.cashNeeded, cashNeeded) || other.cashNeeded == cashNeeded)&&(identical(other.savings, savings) || other.savings == savings)&&(identical(other.annualRate, annualRate) || other.annualRate == annualRate)&&(identical(other.termYears, termYears) || other.termYears == termYears)&&(identical(other.loanType, loanType) || other.loanType == loanType)&&(identical(other.monthly, monthly) || other.monthly == monthly)&&(identical(other.binding, binding) || other.binding == binding)&&const DeepCollectionEquality().equals(other.checks, _checks)&&const DeepCollectionEquality().equals(other.exchangeRates, _exchangeRates)&&(identical(other.stress, stress) || other.stress == stress)&&const DeepCollectionEquality().equals(other.purchaseCosts, _purchaseCosts)&&(identical(other.purchaseCostsTotal, purchaseCostsTotal) || other.purchaseCostsTotal == purchaseCostsTotal));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,marketId,marketName,sample,price,maxPrice,loan,maxLoan,downPayment,cashNeeded,savings,annualRate,termYears,loanType,monthly,binding,const DeepCollectionEquality().hash(_checks),const DeepCollectionEquality().hash(_exchangeRates));
+    return Object.hashAll([runtimeType,marketId,marketName,sample,price,maxPrice,loan,maxLoan,downPayment,cashNeeded,savings,annualRate,termYears,loanType,monthly,binding,const DeepCollectionEquality().hash(_checks),const DeepCollectionEquality().hash(_exchangeRates),stress,const DeepCollectionEquality().hash(_purchaseCosts),purchaseCostsTotal]);
 }
 
 @override
 String toString() {
-    return 'AffordabilitySlice(marketId: $marketId, marketName: $marketName, sample: $sample, price: $price, maxPrice: $maxPrice, loan: $loan, maxLoan: $maxLoan, downPayment: $downPayment, cashNeeded: $cashNeeded, savings: $savings, annualRate: $annualRate, termYears: $termYears, loanType: $loanType, monthly: $monthly, binding: $binding, checks: $checks, exchangeRates: $exchangeRates)';
+    return 'AffordabilitySlice(marketId: $marketId, marketName: $marketName, sample: $sample, price: $price, maxPrice: $maxPrice, loan: $loan, maxLoan: $maxLoan, downPayment: $downPayment, cashNeeded: $cashNeeded, savings: $savings, annualRate: $annualRate, termYears: $termYears, loanType: $loanType, monthly: $monthly, binding: $binding, checks: $checks, exchangeRates: $exchangeRates, stress: $stress, purchaseCosts: $purchaseCosts, purchaseCostsTotal: $purchaseCostsTotal)';
 }
 
 
@@ -392,11 +428,11 @@ abstract mixin class _$AffordabilitySliceCopyWith<$Res> implements $Affordabilit
   factory _$AffordabilitySliceCopyWith(_AffordabilitySlice value, $Res Function(_AffordabilitySlice) _then) = __$AffordabilitySliceCopyWithImpl;
 @override @useResult
 $Res call({
- String marketId, String marketName, bool sample, Money price, Money? maxPrice, Money loan, Money maxLoan, Money downPayment, Money? cashNeeded, Money? savings,@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate annualRate, int termYears, String loanType, MonthlyFigures monthly, RuleCheck? binding, List<RuleCheck> checks, List<ExchangeRate> exchangeRates
+ String marketId, String marketName, bool sample, Money price, Money? maxPrice, Money loan, Money maxLoan, Money downPayment, Money? cashNeeded, Money? savings,@JsonKey(name: 'annualRatePpm')@PpmJsonConverter() Rate annualRate, int termYears, String loanType, MonthlyFigures monthly, RuleCheck? binding, List<RuleCheck> checks, List<ExchangeRate> exchangeRates, StressCurve? stress, List<CostLine> purchaseCosts, Money? purchaseCostsTotal
 });
 
 
-@override $MoneyCopyWith<$Res> get price;@override $MoneyCopyWith<$Res>? get maxPrice;@override $MoneyCopyWith<$Res> get loan;@override $MoneyCopyWith<$Res> get maxLoan;@override $MoneyCopyWith<$Res> get downPayment;@override $MoneyCopyWith<$Res>? get cashNeeded;@override $MoneyCopyWith<$Res>? get savings;@override $MonthlyFiguresCopyWith<$Res> get monthly;@override $RuleCheckCopyWith<$Res>? get binding;
+@override $MoneyCopyWith<$Res> get price;@override $MoneyCopyWith<$Res>? get maxPrice;@override $MoneyCopyWith<$Res> get loan;@override $MoneyCopyWith<$Res> get maxLoan;@override $MoneyCopyWith<$Res> get downPayment;@override $MoneyCopyWith<$Res>? get cashNeeded;@override $MoneyCopyWith<$Res>? get savings;@override $MonthlyFiguresCopyWith<$Res> get monthly;@override $RuleCheckCopyWith<$Res>? get binding;@override $StressCurveCopyWith<$Res>? get stress;@override $MoneyCopyWith<$Res>? get purchaseCostsTotal;
 
 }
 /// @nodoc
@@ -409,7 +445,7 @@ class __$AffordabilitySliceCopyWithImpl<$Res>
 
 /// Create a copy of AffordabilitySlice
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? marketId = null,Object? marketName = null,Object? sample = null,Object? price = null,Object? maxPrice = freezed,Object? loan = null,Object? maxLoan = null,Object? downPayment = null,Object? cashNeeded = freezed,Object? savings = freezed,Object? annualRate = null,Object? termYears = null,Object? loanType = null,Object? monthly = null,Object? binding = freezed,Object? checks = null,Object? exchangeRates = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? marketId = null,Object? marketName = null,Object? sample = null,Object? price = null,Object? maxPrice = freezed,Object? loan = null,Object? maxLoan = null,Object? downPayment = null,Object? cashNeeded = freezed,Object? savings = freezed,Object? annualRate = null,Object? termYears = null,Object? loanType = null,Object? monthly = null,Object? binding = freezed,Object? checks = null,Object? exchangeRates = null,Object? stress = freezed,Object? purchaseCosts = null,Object? purchaseCostsTotal = freezed,}) {
   return _then(_AffordabilitySlice(
 marketId: null == marketId ? _self.marketId : marketId // ignore: cast_nullable_to_non_nullable
 as String,marketName: null == marketName ? _self.marketName : marketName // ignore: cast_nullable_to_non_nullable
@@ -428,7 +464,10 @@ as String,monthly: null == monthly ? _self.monthly : monthly // ignore: cast_nul
 as MonthlyFigures,binding: freezed == binding ? _self.binding : binding // ignore: cast_nullable_to_non_nullable
 as RuleCheck?,checks: null == checks ? _self._checks : checks // ignore: cast_nullable_to_non_nullable
 as List<RuleCheck>,exchangeRates: null == exchangeRates ? _self._exchangeRates : exchangeRates // ignore: cast_nullable_to_non_nullable
-as List<ExchangeRate>,
+as List<ExchangeRate>,stress: freezed == stress ? _self.stress : stress // ignore: cast_nullable_to_non_nullable
+as StressCurve?,purchaseCosts: null == purchaseCosts ? _self._purchaseCosts : purchaseCosts // ignore: cast_nullable_to_non_nullable
+as List<CostLine>,purchaseCostsTotal: freezed == purchaseCostsTotal ? _self.purchaseCostsTotal : purchaseCostsTotal // ignore: cast_nullable_to_non_nullable
+as Money?,
   ));
 }
 
@@ -524,6 +563,30 @@ $RuleCheckCopyWith<$Res>? get binding {
 
   return $RuleCheckCopyWith<$Res>(_self.binding!, (value) {
     return _then(_self.copyWith(binding: value));
+  });
+}/// Create a copy of AffordabilitySlice
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$StressCurveCopyWith<$Res>? get stress {
+    if (_self.stress == null) {
+    return null;
+  }
+
+  return $StressCurveCopyWith<$Res>(_self.stress!, (value) {
+    return _then(_self.copyWith(stress: value));
+  });
+}/// Create a copy of AffordabilitySlice
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res>? get purchaseCostsTotal {
+    if (_self.purchaseCostsTotal == null) {
+    return null;
+  }
+
+  return $MoneyCopyWith<$Res>(_self.purchaseCostsTotal!, (value) {
+    return _then(_self.copyWith(purchaseCostsTotal: value));
   });
 }
 }
@@ -1228,6 +1291,381 @@ $MoneyCopyWith<$Res> get maxLoan {
     return _then(_self.copyWith(maxLoan: value));
   });
 }/// Create a copy of RuleCheck
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SourceCopyWith<$Res>? get source {
+    if (_self.source == null) {
+    return null;
+  }
+
+  return $SourceCopyWith<$Res>(_self.source!, (value) {
+    return _then(_self.copyWith(source: value));
+  });
+}
+}
+
+
+/// @nodoc
+mixin _$CostLine {
+
+ String get label; String? get localTerm; Money get amount; Money? get refundable; RefundRule? get refund; Source? get source;
+/// Create a copy of CostLine
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CostLineCopyWith<CostLine> get copyWith => _$CostLineCopyWithImpl<CostLine>(this as CostLine, _$identity);
+
+  /// Serializes this CostLine to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as CostLine;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CostLine&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.localTerm, _this.localTerm) || other.localTerm == _this.localTerm)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.refundable, _this.refundable) || other.refundable == _this.refundable)&&(identical(other.refund, _this.refund) || other.refund == _this.refund)&&(identical(other.source, _this.source) || other.source == _this.source));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as CostLine;
+  return Object.hash(runtimeType,_this.label,_this.localTerm,_this.amount,_this.refundable,_this.refund,_this.source);
+}
+
+@override
+String toString() {
+  final _this = this as CostLine;
+  return 'CostLine(label: ${_this.label}, localTerm: ${_this.localTerm}, amount: ${_this.amount}, refundable: ${_this.refundable}, refund: ${_this.refund}, source: ${_this.source})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CostLineCopyWith<$Res>  {
+  factory $CostLineCopyWith(CostLine value, $Res Function(CostLine) _then) = _$CostLineCopyWithImpl;
+@useResult
+$Res call({
+ String label, String? localTerm, Money amount, Money? refundable, RefundRule? refund, Source? source
+});
+
+
+$MoneyCopyWith<$Res> get amount;$MoneyCopyWith<$Res>? get refundable;$RefundRuleCopyWith<$Res>? get refund;$SourceCopyWith<$Res>? get source;
+
+}
+/// @nodoc
+class _$CostLineCopyWithImpl<$Res>
+    implements $CostLineCopyWith<$Res> {
+  _$CostLineCopyWithImpl(this._self, this._then);
+
+  final CostLine _self;
+  final $Res Function(CostLine) _then;
+
+/// Create a copy of CostLine
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? label = null,Object? localTerm = freezed,Object? amount = null,Object? refundable = freezed,Object? refund = freezed,Object? source = freezed,}) {
+  return _then(CostLine(
+label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
+as String,localTerm: freezed == localTerm ? _self.localTerm : localTerm // ignore: cast_nullable_to_non_nullable
+as String?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as Money,refundable: freezed == refundable ? _self.refundable : refundable // ignore: cast_nullable_to_non_nullable
+as Money?,refund: freezed == refund ? _self.refund : refund // ignore: cast_nullable_to_non_nullable
+as RefundRule?,source: freezed == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as Source?,
+  ));
+}
+/// Create a copy of CostLine
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res> get amount {
+  
+  return $MoneyCopyWith<$Res>(_self.amount, (value) {
+    return _then(_self.copyWith(amount: value));
+  });
+}/// Create a copy of CostLine
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res>? get refundable {
+    if (_self.refundable == null) {
+    return null;
+  }
+
+  return $MoneyCopyWith<$Res>(_self.refundable!, (value) {
+    return _then(_self.copyWith(refundable: value));
+  });
+}/// Create a copy of CostLine
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RefundRuleCopyWith<$Res>? get refund {
+    if (_self.refund == null) {
+    return null;
+  }
+
+  return $RefundRuleCopyWith<$Res>(_self.refund!, (value) {
+    return _then(_self.copyWith(refund: value));
+  });
+}/// Create a copy of CostLine
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SourceCopyWith<$Res>? get source {
+    if (_self.source == null) {
+    return null;
+  }
+
+  return $SourceCopyWith<$Res>(_self.source!, (value) {
+    return _then(_self.copyWith(source: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [CostLine].
+extension CostLinePatterns on CostLine {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CostLine value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CostLine() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CostLine value)  $default,){
+final _that = this;
+switch (_that) {
+case _CostLine():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CostLine value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CostLine() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String label,  String? localTerm,  Money amount,  Money? refundable,  RefundRule? refund,  Source? source)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CostLine() when $default != null:
+return $default(_that.label,_that.localTerm,_that.amount,_that.refundable,_that.refund,_that.source);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String label,  String? localTerm,  Money amount,  Money? refundable,  RefundRule? refund,  Source? source)  $default,) {final _that = this;
+switch (_that) {
+case _CostLine():
+return $default(_that.label,_that.localTerm,_that.amount,_that.refundable,_that.refund,_that.source);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String label,  String? localTerm,  Money amount,  Money? refundable,  RefundRule? refund,  Source? source)?  $default,) {final _that = this;
+switch (_that) {
+case _CostLine() when $default != null:
+return $default(_that.label,_that.localTerm,_that.amount,_that.refundable,_that.refund,_that.source);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _CostLine implements CostLine {
+  const _CostLine({required this.label, this.localTerm, required this.amount, this.refundable, this.refund, this.source});
+  factory _CostLine.fromJson(Map<String, dynamic> json) => _$CostLineFromJson(json);
+
+@override final  String label;
+@override final  String? localTerm;
+@override final  Money amount;
+@override final  Money? refundable;
+@override final  RefundRule? refund;
+@override final  Source? source;
+
+/// Create a copy of CostLine
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CostLineCopyWith<_CostLine> get copyWith => __$CostLineCopyWithImpl<_CostLine>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$CostLineToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CostLine&&(identical(other.label, label) || other.label == label)&&(identical(other.localTerm, localTerm) || other.localTerm == localTerm)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.refundable, refundable) || other.refundable == refundable)&&(identical(other.refund, refund) || other.refund == refund)&&(identical(other.source, source) || other.source == source));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,label,localTerm,amount,refundable,refund,source);
+}
+
+@override
+String toString() {
+    return 'CostLine(label: $label, localTerm: $localTerm, amount: $amount, refundable: $refundable, refund: $refund, source: $source)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CostLineCopyWith<$Res> implements $CostLineCopyWith<$Res> {
+  factory _$CostLineCopyWith(_CostLine value, $Res Function(_CostLine) _then) = __$CostLineCopyWithImpl;
+@override @useResult
+$Res call({
+ String label, String? localTerm, Money amount, Money? refundable, RefundRule? refund, Source? source
+});
+
+
+@override $MoneyCopyWith<$Res> get amount;@override $MoneyCopyWith<$Res>? get refundable;@override $RefundRuleCopyWith<$Res>? get refund;@override $SourceCopyWith<$Res>? get source;
+
+}
+/// @nodoc
+class __$CostLineCopyWithImpl<$Res>
+    implements _$CostLineCopyWith<$Res> {
+  __$CostLineCopyWithImpl(this._self, this._then);
+
+  final _CostLine _self;
+  final $Res Function(_CostLine) _then;
+
+/// Create a copy of CostLine
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? label = null,Object? localTerm = freezed,Object? amount = null,Object? refundable = freezed,Object? refund = freezed,Object? source = freezed,}) {
+  return _then(_CostLine(
+label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
+as String,localTerm: freezed == localTerm ? _self.localTerm : localTerm // ignore: cast_nullable_to_non_nullable
+as String?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as Money,refundable: freezed == refundable ? _self.refundable : refundable // ignore: cast_nullable_to_non_nullable
+as Money?,refund: freezed == refund ? _self.refund : refund // ignore: cast_nullable_to_non_nullable
+as RefundRule?,source: freezed == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as Source?,
+  ));
+}
+
+/// Create a copy of CostLine
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res> get amount {
+  
+  return $MoneyCopyWith<$Res>(_self.amount, (value) {
+    return _then(_self.copyWith(amount: value));
+  });
+}/// Create a copy of CostLine
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res>? get refundable {
+    if (_self.refundable == null) {
+    return null;
+  }
+
+  return $MoneyCopyWith<$Res>(_self.refundable!, (value) {
+    return _then(_self.copyWith(refundable: value));
+  });
+}/// Create a copy of CostLine
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RefundRuleCopyWith<$Res>? get refund {
+    if (_self.refund == null) {
+    return null;
+  }
+
+  return $RefundRuleCopyWith<$Res>(_self.refund!, (value) {
+    return _then(_self.copyWith(refund: value));
+  });
+}/// Create a copy of CostLine
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

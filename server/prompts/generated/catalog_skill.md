@@ -66,6 +66,8 @@ The catalog schema below holds the full schemas of the components every plan use
 - `TextField`: A labelled text input, short, long, numeric, or obscured
 - `DateTimeInput`: A labelled date, time, or both, in ISO 8601
 - `MonthlyCostBreakdown`: What the home at the price in /affordability costs each month: interest, amortization, the fee the buyer stated, and the total, from compute_affordability.
+- `StressTestChart`: The monthly cost as rates rise past the rate lenders test, against the most this household can carry, from compute_affordability.
+- `PurchaseCostsTable`: Every upfront cost the buyer owes on the day, with its source, the total, and the cash needed with the down payment, from compute_affordability.
 
 ## Examples
 

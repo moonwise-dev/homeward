@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import '../../affordability/affordability_answer.dart';
+import 'funchal_example.dart';
 import 'stockholm_example.dart';
 
 final affordabilityDataModel = _dataModel(
@@ -13,6 +14,14 @@ final monthlyCostDataModel = _dataModel(
     profile: stockholmProfile,
     price: stockholmScenario.price,
     monthlyFee: stockholmScenario.associationFee,
+  ),
+);
+
+final funchalAffordabilityDataModel = _dataModel(
+  answerAffordability(
+    market: funchalMarket,
+    profile: funchalProfile,
+    price: funchalScenario.price,
   ),
 );
 

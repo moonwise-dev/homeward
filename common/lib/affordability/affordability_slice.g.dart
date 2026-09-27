@@ -28,6 +28,9 @@ _AffordabilitySlice _$AffordabilitySliceFromJson(Map<String, dynamic> json) =>
           'binding',
           'checks',
           'exchangeRates',
+          'stress',
+          'purchaseCosts',
+          'purchaseCostsTotal',
         ],
       );
       final val = _AffordabilitySlice(
@@ -91,6 +94,24 @@ _AffordabilitySlice _$AffordabilitySliceFromJson(Map<String, dynamic> json) =>
                   .toList() ??
               const [],
         ),
+        stress: $checkedConvert(
+          'stress',
+          (v) => v == null
+              ? null
+              : StressCurve.fromJson(v as Map<String, dynamic>),
+        ),
+        purchaseCosts: $checkedConvert(
+          'purchaseCosts',
+          (v) =>
+              (v as List<dynamic>?)
+                  ?.map((e) => CostLine.fromJson(e as Map<String, dynamic>))
+                  .toList() ??
+              const [],
+        ),
+        purchaseCostsTotal: $checkedConvert(
+          'purchaseCostsTotal',
+          (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
+        ),
       );
       return val;
     }, fieldKeyMap: const {'annualRate': 'annualRatePpm'});
@@ -114,6 +135,9 @@ Map<String, dynamic> _$AffordabilitySliceToJson(_AffordabilitySlice instance) =>
       'binding': ?instance.binding?.toJson(),
       'checks': instance.checks.map((e) => e.toJson()).toList(),
       'exchangeRates': instance.exchangeRates.map((e) => e.toJson()).toList(),
+      'stress': ?instance.stress?.toJson(),
+      'purchaseCosts': instance.purchaseCosts.map((e) => e.toJson()).toList(),
+      'purchaseCostsTotal': ?instance.purchaseCostsTotal?.toJson(),
     };
 
 _MonthlyFigures _$MonthlyFiguresFromJson(Map<String, dynamic> json) =>
@@ -232,4 +256,50 @@ const _$ConstraintKindEnumMap = {
   ConstraintKind.loanToIncome: 'loanToIncome',
   ConstraintKind.debtServiceToIncome: 'debtServiceToIncome',
   ConstraintKind.leftToLiveOn: 'leftToLiveOn',
+};
+
+_CostLine _$CostLineFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_CostLine', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        allowedKeys: const [
+          'label',
+          'localTerm',
+          'amount',
+          'refundable',
+          'refund',
+          'source',
+        ],
+      );
+      final val = _CostLine(
+        label: $checkedConvert('label', (v) => v as String),
+        localTerm: $checkedConvert('localTerm', (v) => v as String?),
+        amount: $checkedConvert(
+          'amount',
+          (v) => Money.fromJson(v as Map<String, dynamic>),
+        ),
+        refundable: $checkedConvert(
+          'refundable',
+          (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
+        ),
+        refund: $checkedConvert(
+          'refund',
+          (v) =>
+              v == null ? null : RefundRule.fromJson(v as Map<String, dynamic>),
+        ),
+        source: $checkedConvert(
+          'source',
+          (v) => v == null ? null : Source.fromJson(v as Map<String, dynamic>),
+        ),
+      );
+      return val;
+    });
+
+Map<String, dynamic> _$CostLineToJson(_CostLine instance) => <String, dynamic>{
+  'label': instance.label,
+  'localTerm': ?instance.localTerm,
+  'amount': instance.amount.toJson(),
+  'refundable': ?instance.refundable?.toJson(),
+  'refund': ?instance.refund?.toJson(),
+  'source': ?instance.source?.toJson(),
 };

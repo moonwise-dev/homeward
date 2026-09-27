@@ -1,11 +1,13 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../markets/exchange_rate.dart';
+import '../markets/refund_rule.dart';
 import '../markets/source.dart';
 import '../money/money.dart';
 import '../money/ppm_json_converter.dart';
 import '../money/rate.dart';
 import 'constraint_kind.dart';
+import 'stress_curve.dart';
 
 part 'affordability_slice.freezed.dart';
 part 'affordability_slice.g.dart';
@@ -32,6 +34,9 @@ abstract class AffordabilitySlice with _$AffordabilitySlice {
     RuleCheck? binding,
     required List<RuleCheck> checks,
     @Default([]) List<ExchangeRate> exchangeRates,
+    StressCurve? stress,
+    @Default([]) List<CostLine> purchaseCosts,
+    Money? purchaseCostsTotal,
   }) = _AffordabilitySlice;
 
   factory AffordabilitySlice.fromJson(Map<String, Object?> json) =>
@@ -82,4 +87,19 @@ abstract class RuleCheck with _$RuleCheck {
 
   factory RuleCheck.fromJson(Map<String, Object?> json) =>
       _$RuleCheckFromJson(json);
+}
+
+@freezed
+abstract class CostLine with _$CostLine {
+  const factory CostLine({
+    required String label,
+    String? localTerm,
+    required Money amount,
+    Money? refundable,
+    RefundRule? refund,
+    Source? source,
+  }) = _CostLine;
+
+  factory CostLine.fromJson(Map<String, Object?> json) =>
+      _$CostLineFromJson(json);
 }
