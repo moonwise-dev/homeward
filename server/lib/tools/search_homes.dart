@@ -5,6 +5,8 @@ import 'package:common/common.dart';
 import '../markets/market_directory.dart';
 import 'agent_tool.dart';
 import 'amount_arguments.dart';
+import 'household_in.dart';
+import 'kept_homes.dart';
 import 'numbers_in.dart';
 import 'tool_context.dart';
 
@@ -109,10 +111,7 @@ final class SearchHomes extends AgentTool {
         'or leave it out.',
       );
     }
-    final household = switch (context.slices[affordabilityDataSlice.name]) {
-      final Map<String, Object?> json => AffordabilitySlice.fromJson(json),
-      _ => null,
-    };
+    final household = householdIn(context.slices);
     final forHousehold =
         household?.profile != null && household!.marketId == city.marketId;
     if (arguments['affordable'] == true && !forHousehold) {
@@ -133,10 +132,11 @@ final class SearchHomes extends AgentTool {
       final Map<String, Object?> homes => homes.keys,
       _ => const <String>[],
     };
-    final priced = markets.pricedHomes({
-      ...earlier,
-      for (final listing in city.listings) listing.id,
-    }, household);
+    final priced = markets.pricedHomes(
+      {...earlier, for (final listing in city.listings) listing.id},
+      household,
+      kept: keptHomesIn(context.slices[homesSlice.name]),
+    );
     final filters = <String, bool Function(Listing listing)>{
       if (arguments['homeType'] case final String type)
         'homeType': (listing) => listing.homeType.name == type,
@@ -152,7 +152,7 @@ final class SearchHomes extends AgentTool {
       if (maxPrice != null) 'maxPrice': (listing) => listing.price <= maxPrice,
       if (arguments['affordable'] == true)
         'affordable': (listing) => switch (priced[listing.id]?.cost) {
-          final cost? => cost.withinRules && cost.withinSavings != false,
+          final cost? => cost.withinReach,
           null => false,
         },
     };
@@ -201,7 +201,7 @@ final class SearchHomes extends AgentTool {
             'never write their figures in your text. '
             '${forHousehold ? 'Each is priced for this household. ' : 'They are not priced for this household: compute_affordability has not run in this market. '}'
             'When the buyer picks one, call compute_affordability with it as '
-            'home.',
+            'home; when they keep or drop one, call keep_homes.',
       },
       seeds: {
         homesSlice.name: {

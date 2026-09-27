@@ -18,6 +18,8 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `MortgageOptions` | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
 | `RuleNote` | yes | `rule` | `rule` | The rule that limits the loan |
 | `HomeCard` | yes | `home` | `home` | Two Stockholm flats |
+| `Shortlist` | yes | `homes` | `homes` | Two kept flats |
+| `HomeComparison` | yes | `homes` | `homes` | Nacka against Vasastan |
 
 ### Fact
 
@@ -57,7 +59,15 @@ One lending rule, the largest loan it allows, and its source, from compute_affor
 
 ### HomeCard
 
-One sample home from search_homes: photos, facts, price, and what it costs this household each month; its choose action sends the home, with home, its ID, added to its context.
+One sample home from search_homes: photos, facts, price, and what it costs this household each month; its choose action sends the home to work out, and its keep action the home to keep or drop, with home, its ID, and keep, true or false, added to its context.
+
+### Shortlist
+
+The homes the household kept with keep_homes, each with what it costs them a month; its choose action sends a home to work out and its drop action one to drop, with home, its ID, added to its context.
+
+### HomeComparison
+
+Two or three homes from search_homes side by side: price, what each costs a month, the cash needed, and size; its choose action sends the one the buyer picks, with home, its ID, added to its context.
 ## Basic Components
 
 Agent-visible from the A2UI v0.9 basic catalog: `Text`, `Row`, `Column`, `Card`, `Divider`, `List`, `Tabs`, `Icon`, `Button`, `CheckBox`, `ChoicePicker`, `TextField`, `DateTimeInput`.

@@ -220,8 +220,11 @@ the price of a home they name, the down payment they want to make, and the
 monthly fee they stated, such as a Swedish association fee or a Portuguese
 condominium fee, all checked against their words like the other amounts, and
 the term. The fee also counts in the Swedish left-to-live-on check. Where the
-buyer has not said, the tool assumes the minimum down payment the rules allow
-and, where the term moves the payment, the longest term they allow, and its
+buyer has not said, the tool assumes the minimum down payment the rules allow,
+or, when the savings cannot reach it, the most the savings can put down, never
+below the loan-to-value minimum, so a home out of reach shows what it would
+really cost and how far the loan is over the limit (D153); and, where the term
+moves the payment, the longest term they allow, and its
 answer lists what it assumed. Gemini shows the result, then asks about one
 assumption that matters to this household with `Choice`, and records the
 answer in the brief. It offers no choice the tool cannot compute, such as a
@@ -272,6 +275,15 @@ so Gemini can ask which to loosen. When the buyer taps a `HomeCard`, Gemini
 calls `compute_affordability` with `home`, the home's ID, whose price and
 fee come from the listing rather than the buyer's words, so every money
 block follows that home.
+
+`keep_homes` (C7b, D152) keeps and drops homes on the household's
+shortlist. Its arguments are the IDs to keep and the IDs to drop, from a
+`HomeCard` or `Shortlist` tap or the buyer's words. It marks each home kept
+or not in `/homes`; a sample home the plan has not shown yet is priced and
+added first, the way `search_homes` prices it. An ID that is no sample home
+gets an error naming it. It answers with the kept IDs and seeds `/homes`,
+which `Shortlist` binds. `search_homes` and `compute_affordability` keep the
+flag when they reprice the homes.
 
 A tool reads the turn through its `ToolContext`: the progress steps, the
 slices as they stand, and the buyer's words in this plan.

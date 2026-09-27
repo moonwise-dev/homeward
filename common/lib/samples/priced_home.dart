@@ -11,8 +11,11 @@ part 'priced_home.g.dart';
 
 @freezed
 abstract class PricedHome with _$PricedHome {
-  const factory PricedHome({required Listing listing, HomeCost? cost}) =
-      _PricedHome;
+  const factory PricedHome({
+    required Listing listing,
+    HomeCost? cost,
+    @Default(false) bool kept,
+  }) = _PricedHome;
 
   factory PricedHome.fromJson(Map<String, Object?> json) =>
       _$PricedHomeFromJson(json);
@@ -57,4 +60,13 @@ abstract class HomeCost with _$HomeCost {
     (final cash?, final saved?) => cash <= saved,
     _ => null,
   };
+
+  Money? get overLimit => withinRules ? null : loan - maxLoan;
+
+  Money? get shortOfSavings => switch ((cashNeeded, savings)) {
+    (final cash?, final saved?) when cash > saved => cash - saved,
+    _ => null,
+  };
+
+  bool get withinReach => overLimit == null && shortOfSavings == null;
 }

@@ -6,10 +6,12 @@ import 'components/choice.dart';
 import 'components/down_payment_slider.dart';
 import 'components/fact.dart';
 import 'components/home_card.dart';
+import 'components/home_comparison.dart';
 import 'components/monthly_cost_breakdown.dart';
 import 'components/mortgage_options.dart';
 import 'components/purchase_costs_table.dart';
 import 'components/rule_note.dart';
+import 'components/shortlist.dart';
 import 'components/stress_test_chart.dart';
 import 'functions/catalog_function.dart';
 
@@ -27,6 +29,8 @@ const homewardComponents = <CatalogComponent>[
   MortgageOptions(),
   RuleNote(),
   HomeCard(),
+  Shortlist(),
+  HomeComparison(),
 ];
 
 const homewardFunctions = <CatalogFunction>[];

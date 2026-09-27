@@ -1151,7 +1151,7 @@
     },
     "HomeCard": {
       "type": "object",
-      "description": "One sample home from search_homes: photos, facts, price, and what it costs this household each month; its choose action sends the home, with home, its ID, added to its context.",
+      "description": "One sample home from search_homes: photos, facts, price, and what it costs this household each month; its choose action sends the home to work out, and its keep action the home to keep or drop, with home, its ID, and keep, true or false, added to its context.",
       "properties": {
         "id": {
           "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
@@ -1183,12 +1183,111 @@
         },
         "choose": {
           "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        },
+        "keep": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
         }
       },
       "required": [
         "id",
         "component",
         "home"
+      ],
+      "additionalProperties": false
+    },
+    "Shortlist": {
+      "type": "object",
+      "description": "The homes the household kept with keep_homes, each with what it costs them a month; its choose action sends a home to work out and its drop action one to drop, with home, its ID, added to its context.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "Shortlist"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "homes": {
+          "type": "object",
+          "description": "Always { \"path\": \"/homes\" }, after search_homes or keep_homes.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/homes"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "choose": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        },
+        "drop": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "homes"
+      ],
+      "additionalProperties": false
+    },
+    "HomeComparison": {
+      "type": "object",
+      "description": "Two or three homes from search_homes side by side: price, what each costs a month, the cash needed, and size; its choose action sends the one the buyer picks, with home, its ID, added to its context.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "HomeComparison"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "homes": {
+          "type": "array",
+          "description": "Two or three homes, each { \"path\": \"/homes/<id>\" }.",
+          "items": {
+            "type": "object",
+            "description": "One home, { \"path\": \"/homes/<id>\" }.",
+            "properties": {
+              "path": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "path"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 2,
+          "maxItems": 3
+        },
+        "choose": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "homes"
       ],
       "additionalProperties": false
     }
@@ -1816,6 +1915,12 @@
         },
         {
           "$ref": "#/components/HomeCard"
+        },
+        {
+          "$ref": "#/components/Shortlist"
+        },
+        {
+          "$ref": "#/components/HomeComparison"
         }
       ]
     },

@@ -6,26 +6,39 @@ import '../../ui/core/themes/colors.dart';
 import '../../ui/core/themes/dimens.dart';
 import '../../ui/core/themes/text_styles.dart';
 import '../../ui/core/ui/app_figure_row.dart';
+import '../home_text.dart';
 import '../money_text.dart';
 import 'photo_carousel.dart';
 
 class HomeCardView extends HookWidget {
-  const HomeCardView({required this.home, this.onChoose, super.key});
+  const HomeCardView({
+    required this.home,
+    this.onChoose,
+    this.onKeep,
+    super.key,
+  });
 
   final PricedHome home;
   final VoidCallback? onChoose;
+  final ValueChanged<bool>? onKeep;
 
   @override
   Widget build(BuildContext context) {
-    final chosen = useState(false);
+    final sent = useState(false);
     useEffect(() {
-      chosen.value = false;
+      sent.value = false;
       return null;
     }, [home]);
     final listing = home.listing;
     final cost = home.cost;
     final fee = listing.monthlyFee;
     final onChoose = this.onChoose;
+    final onKeep = this.onKeep;
+    void send(VoidCallback action) {
+      sent.value = true;
+      action();
+    }
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: AppColors.surface,
@@ -52,10 +65,10 @@ class HomeCardView extends HookWidget {
             Text(listing.title, style: AppTextStyles.title),
             const SizedBox(height: AppSpacing.xs),
             Text(moneyText(listing.price), style: AppTextStyles.figure),
-            Text(_facts(listing), style: AppTextStyles.label),
+            Text(homeFacts(listing), style: AppTextStyles.label),
             const SizedBox(height: AppSpacing.xxs),
             Text(
-              '${moneyText(listing.pricePerM2)} per m², ${_againstArea(listing)}. '
+              '${moneyText(listing.pricePerM2)} per m², ${againstArea(listing)}. '
               'Area figure: ${listing.priceSource}.',
               style: AppTextStyles.caption,
             ),
@@ -75,19 +88,30 @@ class HomeCardView extends HookWidget {
               ),
             ] else
               _Cost(cost: cost),
-            if (onChoose != null)
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton(
-                  onPressed: chosen.value
-                      ? null
-                      : () {
-                          chosen.value = true;
-                          onChoose();
-                        },
-                  child: const Text('Work out this home'),
+            if (home.kept)
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.xs),
+                child: Text(
+                  'On your shortlist',
+                  style: AppTextStyles.label.copyWith(color: AppColors.accent),
                 ),
               ),
+            Wrap(
+              children: [
+                if (onChoose != null)
+                  TextButton(
+                    onPressed: sent.value ? null : () => send(onChoose),
+                    child: const Text('Work out this home'),
+                  ),
+                if (onKeep != null)
+                  TextButton(
+                    onPressed: sent.value
+                        ? null
+                        : () => send(() => onKeep(!home.kept)),
+                    child: Text(home.kept ? 'Drop from shortlist' : 'Keep'),
+                  ),
+              ],
+            ),
             const SizedBox(height: AppSpacing.xxs),
             Text(
               'A sample listing, not for sale. An estimate, not advice.',
@@ -97,23 +121,6 @@ class HomeCardView extends HookWidget {
         ),
       ),
     );
-  }
-
-  static String _facts(Listing listing) => [
-    '${listing.rooms} rooms, ${listing.bedrooms} '
-        'bedroom${listing.bedrooms == 1 ? '' : 's'}',
-    '${listing.sizeM2} m² ${listing.homeType.noun}',
-    if (listing.floor case final floor?) 'floor $floor',
-    if (listing.outdoor != OutdoorSpace.none) listing.outdoor.phrase,
-    if (listing.yearBuilt case final year?) 'built $year',
-  ].join(' · ');
-
-  static String _againstArea(Listing listing) {
-    final percent = listing.percentFromAreaMedian;
-    final median = "${listing.areaName}'s median";
-    return percent.abs() < 2
-        ? 'in line with $median'
-        : '${percent.abs()}% ${percent < 0 ? 'below' : 'above'} $median';
   }
 }
 
@@ -125,12 +132,8 @@ class _Cost extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final afterDeduction = cost.monthly.afterDeductionWithFee;
-    final cashNeeded = cost.cashNeeded;
-    final savings = cost.savings;
-    final short = switch ((cashNeeded, savings)) {
-      (final cash?, final saved?) when cash > saved => cash - saved,
-      _ => null,
-    };
+    final over = cost.overLimit;
+    final short = cost.shortOfSavings;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -152,11 +155,9 @@ class _Cost extends StatelessWidget {
             figure: moneyText(afterDeduction),
           ),
         const SizedBox(height: AppSpacing.xxs),
-        if (!cost.withinRules)
+        if (over != null)
           _Verdict(
-            text:
-                'The loan is over the lending limit by '
-                '${moneyText(cost.loan - cost.maxLoan)}.',
+            text: 'The loan is over the lending limit by ${moneyText(over)}.',
             color: AppColors.danger,
           ),
         if (short != null)
@@ -166,9 +167,9 @@ class _Cost extends StatelessWidget {
                 'savings.',
             color: AppColors.danger,
           ),
-        if (cost.withinRules && short == null)
+        if (cost.withinReach)
           _Verdict(
-            text: savings == null
+            text: cost.savings == null
                 ? 'Within the lending rules.'
                 : 'Within the lending rules and your savings.',
             color: AppColors.positive,

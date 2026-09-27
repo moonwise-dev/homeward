@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PricedHome {
 
- Listing get listing; HomeCost? get cost;
+ Listing get listing; HomeCost? get cost; bool get kept;
 /// Create a copy of PricedHome
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $PricedHomeCopyWith<PricedHome> get copyWith => _$PricedHomeCopyWithImpl<PricedH
 @override
 bool operator ==(Object other) {
   final _this = this as PricedHome;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PricedHome&&(identical(other.listing, _this.listing) || other.listing == _this.listing)&&(identical(other.cost, _this.cost) || other.cost == _this.cost));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PricedHome&&(identical(other.listing, _this.listing) || other.listing == _this.listing)&&(identical(other.cost, _this.cost) || other.cost == _this.cost)&&(identical(other.kept, _this.kept) || other.kept == _this.kept));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as PricedHome;
-  return Object.hash(runtimeType,_this.listing,_this.cost);
+  return Object.hash(runtimeType,_this.listing,_this.cost,_this.kept);
 }
 
 @override
 String toString() {
   final _this = this as PricedHome;
-  return 'PricedHome(listing: ${_this.listing}, cost: ${_this.cost})';
+  return 'PricedHome(listing: ${_this.listing}, cost: ${_this.cost}, kept: ${_this.kept})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $PricedHomeCopyWith<$Res>  {
   factory $PricedHomeCopyWith(PricedHome value, $Res Function(PricedHome) _then) = _$PricedHomeCopyWithImpl;
 @useResult
 $Res call({
- Listing listing, HomeCost? cost
+ Listing listing, HomeCost? cost, bool kept
 });
 
 
@@ -71,11 +71,12 @@ class _$PricedHomeCopyWithImpl<$Res>
 
 /// Create a copy of PricedHome
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? listing = null,Object? cost = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? listing = null,Object? cost = freezed,Object? kept = null,}) {
   return _then(PricedHome(
 listing: null == listing ? _self.listing : listing // ignore: cast_nullable_to_non_nullable
 as Listing,cost: freezed == cost ? _self.cost : cost // ignore: cast_nullable_to_non_nullable
-as HomeCost?,
+as HomeCost?,kept: null == kept ? _self.kept : kept // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 /// Create a copy of PricedHome
@@ -181,10 +182,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Listing listing,  HomeCost? cost)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Listing listing,  HomeCost? cost,  bool kept)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PricedHome() when $default != null:
-return $default(_that.listing,_that.cost);case _:
+return $default(_that.listing,_that.cost,_that.kept);case _:
   return orElse();
 
 }
@@ -202,10 +203,10 @@ return $default(_that.listing,_that.cost);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Listing listing,  HomeCost? cost)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Listing listing,  HomeCost? cost,  bool kept)  $default,) {final _that = this;
 switch (_that) {
 case _PricedHome():
-return $default(_that.listing,_that.cost);case _:
+return $default(_that.listing,_that.cost,_that.kept);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -222,10 +223,10 @@ return $default(_that.listing,_that.cost);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Listing listing,  HomeCost? cost)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Listing listing,  HomeCost? cost,  bool kept)?  $default,) {final _that = this;
 switch (_that) {
 case _PricedHome() when $default != null:
-return $default(_that.listing,_that.cost);case _:
+return $default(_that.listing,_that.cost,_that.kept);case _:
   return null;
 
 }
@@ -237,11 +238,12 @@ return $default(_that.listing,_that.cost);case _:
 @JsonSerializable()
 
 class _PricedHome implements PricedHome {
-  const _PricedHome({required this.listing, this.cost});
+  const _PricedHome({required this.listing, this.cost, this.kept = false});
   factory _PricedHome.fromJson(Map<String, dynamic> json) => _$PricedHomeFromJson(json);
 
 @override final  Listing listing;
 @override final  HomeCost? cost;
+@override@JsonKey() final  bool kept;
 
 /// Create a copy of PricedHome
 /// with the given fields replaced by the non-null parameter values.
@@ -256,18 +258,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PricedHome&&(identical(other.listing, listing) || other.listing == listing)&&(identical(other.cost, cost) || other.cost == cost));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PricedHome&&(identical(other.listing, listing) || other.listing == listing)&&(identical(other.cost, cost) || other.cost == cost)&&(identical(other.kept, kept) || other.kept == kept));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,listing,cost);
+    return Object.hash(runtimeType,listing,cost,kept);
 }
 
 @override
 String toString() {
-    return 'PricedHome(listing: $listing, cost: $cost)';
+    return 'PricedHome(listing: $listing, cost: $cost, kept: $kept)';
 }
 
 
@@ -278,7 +280,7 @@ abstract mixin class _$PricedHomeCopyWith<$Res> implements $PricedHomeCopyWith<$
   factory _$PricedHomeCopyWith(_PricedHome value, $Res Function(_PricedHome) _then) = __$PricedHomeCopyWithImpl;
 @override @useResult
 $Res call({
- Listing listing, HomeCost? cost
+ Listing listing, HomeCost? cost, bool kept
 });
 
 
@@ -295,11 +297,12 @@ class __$PricedHomeCopyWithImpl<$Res>
 
 /// Create a copy of PricedHome
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? listing = null,Object? cost = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? listing = null,Object? cost = freezed,Object? kept = null,}) {
   return _then(_PricedHome(
 listing: null == listing ? _self.listing : listing // ignore: cast_nullable_to_non_nullable
 as Listing,cost: freezed == cost ? _self.cost : cost // ignore: cast_nullable_to_non_nullable
-as HomeCost?,
+as HomeCost?,kept: null == kept ? _self.kept : kept // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

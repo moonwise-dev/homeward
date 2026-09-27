@@ -12,6 +12,7 @@ import '../profile/profile_field.dart';
 import 'affordability.dart';
 import 'affordability_slice.dart';
 import 'assess_affordability.dart';
+import 'assumed_down_payment.dart';
 import 'constraint_check.dart';
 import 'down_payment_what_if.dart';
 import 'maximum_price.dart';
@@ -98,8 +99,16 @@ AffordabilityAnswer answerAffordability({
     market: market,
     profile: profile,
   ) as AssessedAffordability;
+  final minimum = open.maxLoan < target ? target - open.maxLoan : zero;
   final down =
-      downPayment ?? (open.maxLoan < target ? target - open.maxLoan : zero);
+      downPayment ??
+      assumedDownPayment(
+        market: market,
+        scenarioWith: (downPayment) => at(target, downPayment),
+        price: target,
+        minimum: minimum,
+        savings: savings,
+      );
   final scenario = at(target, down);
   final assessed = assessAffordability(
     scenario: scenario,
@@ -174,7 +183,7 @@ AffordabilityAnswer answerAffordability({
         profile: profile,
         scenarioWith: (downPayment) => at(target, downPayment),
         price: target,
-        minimum: open.maxLoan < target ? target - open.maxLoan : zero,
+        minimum: minimum,
         savings: savings,
       ),
       profile: profile,

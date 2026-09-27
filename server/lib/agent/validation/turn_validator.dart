@@ -275,9 +275,10 @@ final class TurnValidator {
         .where((declared) => declared.name == component['component'])
         .firstOrNull;
     for (final property in declared?.boundProperties ?? const <String>[]) {
-      if (component[property] case {'path': final String bound}
-          when !resolvesFully(data, bound)) {
-        return bound;
+      for (final bound in boundPaths(component[property])) {
+        if (!resolvesFully(data, bound)) {
+          return bound;
+        }
       }
     }
     return null;

@@ -5,6 +5,7 @@ import 'package:common/common.dart';
 import '../markets/market_directory.dart';
 import 'agent_tool.dart';
 import 'amount_arguments.dart';
+import 'kept_homes.dart';
 import 'numbers_in.dart';
 import 'tool_context.dart';
 
@@ -378,7 +379,12 @@ final class ComputeAffordability extends AgentTool {
         if (inMarket['price'] == null)
           'price': 'the highest price the savings reach',
         if (inMarket['downPayment'] == null)
-          'downPayment': 'the minimum the rules allow',
+          'downPayment': switch (slice.whatIf?.steps.first.downPayment) {
+            final minimum? when slice.downPayment < minimum =>
+              'the most the savings can put down, less than the rules '
+                  'require',
+            _ => 'the minimum the rules allow',
+          },
         if (termMovesPayment(market) && arguments['termYears'] == null)
           'termYears': slice.termYears,
         if (inMarket['homeFee'] == null) 'homeFee': 'none',
@@ -401,7 +407,9 @@ final class ComputeAffordability extends AgentTool {
       if (context.slices[homesSlice.name] case final Map<String, Object?> homes)
         homesSlice.name: {
           for (final MapEntry(:key, :value)
-              in markets.pricedHomes(homes.keys, slice).entries)
+              in markets
+                  .pricedHomes(homes.keys, slice, kept: keptHomesIn(homes))
+                  .entries)
             key: jsonDecode(jsonEncode(value.toJson())),
         },
     },

@@ -6,7 +6,13 @@ import '../../samples/listing.dart';
 import '../../samples/priced_home.dart';
 import 'stockholm_example.dart';
 
-final stockholmHomesDataModel = {
+final stockholmHomesDataModel = _homesDataModel();
+
+final stockholmShortlistDataModel = _homesDataModel(
+  kept: {for (final listing in _stockholmHomes) listing.id},
+);
+
+Map<String, Object?> _homesDataModel({Set<String> kept = const {}}) => {
   'homes': {
     for (final listing in _stockholmHomes)
       listing.id: jsonDecode(
@@ -18,6 +24,7 @@ final stockholmHomesDataModel = {
               market: stockholmMarket,
               household: _household,
             ),
+            kept: kept.contains(listing.id),
           ).toJson(),
         ),
       ),

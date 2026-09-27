@@ -71,15 +71,18 @@ Buttons send actions the model names itself (`docs/PROTOCOL.md`).
 | Money | `PurchaseCostsTable` | Every upfront cost the buyer owes on the day, each with its local term and source, what is refundable and what earns it back, the total, and the cash needed with the down payment; says so when the sample rules list none (D148) | `affordability`, always `{ "path": "/affordability" }` |
 | Money | `DownPaymentSlider` | A what-if on the down payment for the price in the slice: the slider moves through the steps `compute_affordability` worked out, from the minimum the rules allow to what the savings reach after the costs on the day, and shows for each the share of the price, the loan, the monthly cost, the cash needed against the savings, and whether it is within the rules; a button uses the amount (D149) | `affordability`, always `{ "path": "/affordability" }`; `apply`, an optional action |
 | Money | `MortgageOptions` | The sample lender's rates side by side for the price and down payment in the slice: variable, fixed for a period, and in Portugal mixed and fixed for the whole term, each with its rate, how long it holds, the monthly cost, and whether the loan is within the rules at it, the one in use marked; a button uses another (D150) | `affordability`, always `{ "path": "/affordability" }`; `choose`, an optional action |
-| Homes | `HomeCard` | One sample home: its photos, title, area and address, price and monthly fee, rooms, size, floor, and outdoor space, the price per square metre against its area's median with the source, and, once `compute_affordability` has run, what it costs this household each month with the down payment, rate, and term, and whether the loan is within the rules and the cash within their savings; labelled as a sample listing (D151) | `home`, bound to one home, `{ "path": "/homes/<id>" }`; `choose`, an optional action |
+| Homes | `HomeCard` | One sample home: its photos, title, area and address, price and monthly fee, rooms, size, floor, and outdoor space, the price per square metre against its area's median with the source, and, once `compute_affordability` has run, what it costs this household each month with the down payment, rate, and term, and whether the loan is within the rules and the cash within their savings, and whether it is on the shortlist; labelled as a sample listing (D151) | `home`, bound to one home, `{ "path": "/homes/<id>" }`; `choose` and `keep`, optional actions |
+| Homes | `Shortlist` | The homes the household kept, each with a photo, its area and address, its price, what it costs them a month, and whether it is within reach, with a tap to work it out and one to drop it; says so when nothing is kept yet (D152) | `homes`, always `{ "path": "/homes" }`; `choose` and `drop`, optional actions |
+| Homes | `HomeComparison` | Two or three homes side by side: price, what each costs a month, the down payment, the cash needed against savings, whether the loan is within the rules, size, rooms, floor, outdoor space, and the price per square metre against its area, labelled as sample listings (D152) | `homes`, a list of two or three, each `{ "path": "/homes/<id>" }`; `choose`, an optional action |
 | Trust | `RuleNote` | One lending rule: what it is, the largest loan it allows, whether the loan is within it, and its source with the date it was read, labelled as a sample rule (D146) | `rule`, bound to one rule, such as `{ "path": "/affordability/binding" }` or `/affordability/checks/0` |
 
 A `Choice` tap sends its `answer` action at once, with `choice` and `label`,
 the option's label, added to its context; the tapped option stays marked.
 
 A block that binds a slice, such as `AffordabilitySummary` or `Fact`, is
-refused until the tool that seeds it has run: its whole path must be in the
-data model, unlike an input, which may bind a field it will write.
+refused until the tool that seeds it has run: its whole path, or every path
+of a list such as `HomeComparison`'s, must be in the data model, unlike an
+input, which may bind a field it will write.
 
 A `DownPaymentSlider` sends its `apply` action when the buyer taps "Use this
 down payment", with `downPayment`, the amount as the buyer saw it, such as
@@ -92,7 +95,11 @@ for 3 years", added to its context.
 
 A `HomeCard` button sends its `choose` action with `home`, the home's ID,
 such as `sto-01`, and `label`, such as "Work out Odengatan 64", added to its
-context.
+context. Its Keep button sends `keep` with `home`, `keep`, `true` to keep it
+or `false` to drop it, and `label`, such as "Keep Odengatan 64". A
+`Shortlist` row sends `choose` the same way and `drop` with `home` and
+`label`, such as "Drop Odengatan 64"; a `HomeComparison` column sends
+`choose` like a `HomeCard`.
 
 A `Fact` tap sends its `answer` action with `fact`, the item's ID, `answer`,
 `right` or `not_quite`, and `label`, the words the conversation shows, such as
@@ -112,8 +119,6 @@ marked restored come back from `6faa8ab`.
 | Money | `MoneyInput` | C10 | An amount in a currency, for incomes and savings; restored |
 | Money | `RentSplit` | C9 | Rent and bills split between people sharing, by the rule they choose |
 | Money | `BuyVsRent` | C9 | Buying a home against renting one like it, over the years they expect to stay |
-| Homes | `HomeComparison` | C7b | Two or three homes side by side on cost, needs, and the week |
-| Homes | `Shortlist` | C7b | The homes the household kept, on the plan panel |
 | Homes | `HomeSwipe` | C9 | Keep or pass through homes to learn taste |
 | Homes | `ListingQuote` | C9 | The listing text with the sentence that meets a need highlighted |
 | Place and travel | `GoogleMap` | C8 | The Maps Agentic UI Toolkit's map, with its schema vendored at a pinned commit from `googlemaps/a2ui` (`agent/python_agent/shared/schema/maps_catalog_extension.json`) and drawn by Homeward's Flutter Maps package (D133) |

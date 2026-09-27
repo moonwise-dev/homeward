@@ -28,6 +28,18 @@ final homeCardItem = catalogItemFor(const HomeCard(), (itemContext) {
                       'label': 'Work out ${home.listing.address}',
                     },
                   ),
+            onKeep: data['keep'] == null
+                ? null
+                : (keep) => dispatchAction(
+                    itemContext,
+                    data['keep'],
+                    adding: {
+                      'home': home.listing.id,
+                      'keep': keep,
+                      'label':
+                          '${keep ? 'Keep' : 'Drop'} ${home.listing.address}',
+                    },
+                  ),
           ),
   );
 });

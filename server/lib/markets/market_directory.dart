@@ -28,8 +28,9 @@ final class MarketDirectory {
 
   Map<String, PricedHome> pricedHomes(
     Iterable<String> ids,
-    AffordabilitySlice? household,
-  ) {
+    AffordabilitySlice? household, {
+    Set<String> kept = const {},
+  }) {
     final profile = household?.profile;
     final market = household == null || profile == null
         ? null
@@ -42,6 +43,7 @@ final class MarketDirectory {
             cost: market != null && city.marketId == household!.marketId
                 ? homeCostFor(listing, market: market, household: household)
                 : null,
+            kept: kept.contains(id),
           ),
     };
   }
