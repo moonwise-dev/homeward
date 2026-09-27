@@ -791,6 +791,70 @@
       ],
       "additionalProperties": false
     },
+    "Brief": {
+      "type": "object",
+      "description": "Sections of the brief update_brief kept, one kind or several, each item with where it came from; a deduction offers Right and Not quite when it has an answer action.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "Brief"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "brief": {
+          "type": "object",
+          "description": "Always { \"path\": \"/brief\" }, after update_brief recorded an item.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/brief"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "kinds": {
+          "type": "array",
+          "description": "Optional. The kinds to show, in this order; all without it.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "household",
+              "money",
+              "need",
+              "habit",
+              "want",
+              "place",
+              "open"
+            ]
+          }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional. A heading for the section."
+        },
+        "answer": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "brief"
+      ],
+      "additionalProperties": false
+    },
     "Choice": {
       "type": "object",
       "description": "One decision to ask: its options, the one you recommend first with why, and a tap that answers at once.",
@@ -854,6 +918,104 @@
         "question",
         "options",
         "answer"
+      ],
+      "additionalProperties": false
+    },
+    "HouseholdSummary": {
+      "type": "object",
+      "description": "Who the household is and the figures they stated, as compute_affordability kept them: the people, residency, work, and the incomes, debts, and savings they gave.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "HouseholdSummary"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "affordability": {
+          "type": "object",
+          "description": "Always { \"path\": \"/affordability\" }, after compute_affordability answered.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/affordability"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "affordability"
+      ],
+      "additionalProperties": false
+    },
+    "MoneyInput": {
+      "type": "object",
+      "description": "An amount field that writes { amount, currency, per }, the shape the money tools take, to the path it binds; a Button beside it sends that path in its action context. Use it to ask for an income, savings, a debt, a rent, or a fee.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "MoneyInput"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object",
+          "description": "Where the amount is written, such as { \"path\": \"/answers/income\" }.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "currency": {
+          "type": "string",
+          "description": "The ISO 4217 code the buyer uses, such as SEK or EUR."
+        },
+        "period": {
+          "type": "string",
+          "enum": [
+            "once",
+            "month",
+            "year"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "label",
+        "value",
+        "currency"
       ],
       "additionalProperties": false
     },
@@ -2140,7 +2302,16 @@
           "$ref": "#/components/Fact"
         },
         {
+          "$ref": "#/components/Brief"
+        },
+        {
           "$ref": "#/components/Choice"
+        },
+        {
+          "$ref": "#/components/HouseholdSummary"
+        },
+        {
+          "$ref": "#/components/MoneyInput"
         },
         {
           "$ref": "#/components/AffordabilitySummary"

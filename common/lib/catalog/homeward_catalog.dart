@@ -2,6 +2,7 @@ import 'package:a2ui_core/a2ui_core.dart';
 
 import 'catalog_component.dart';
 import 'components/affordability_summary.dart';
+import 'components/brief.dart';
 import 'components/buy_vs_rent.dart';
 import 'components/choice.dart';
 import 'components/down_payment_slider.dart';
@@ -9,8 +10,10 @@ import 'components/fact.dart';
 import 'components/home_card.dart';
 import 'components/home_comparison.dart';
 import 'components/home_swipe.dart';
+import 'components/household_summary.dart';
 import 'components/listing_quote.dart';
 import 'components/monthly_cost_breakdown.dart';
+import 'components/money_input.dart';
 import 'components/mortgage_options.dart';
 import 'components/purchase_costs_table.dart';
 import 'components/rent_split.dart';
@@ -26,7 +29,10 @@ const homewardCatalogId =
 
 const homewardComponents = <CatalogComponent>[
   Fact(),
+  Brief(),
   Choice(),
+  HouseholdSummary(),
+  MoneyInput(),
   AffordabilitySummary(),
   MonthlyCostBreakdown(),
   StressTestChart(),

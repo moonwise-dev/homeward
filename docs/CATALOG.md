@@ -65,6 +65,9 @@ Buttons send actions the model names itself (`docs/PROTOCOL.md`).
 | --- | --- | --- | --- |
 | Understanding | `Fact` | One item of the brief: the sentence, and where it came from: "You said", "Deduced from" with the buyer's words, or "You confirmed". A deduction with an `answer` action offers Right and Not quite (D144) | `fact`, bound to one item, `{ "path": "/brief/<id>" }`; `answer`, an optional action |
 | Understanding | `Choice` | One decision as an inline ask: the question, two to five options, the recommended one first with why, and a line pointing at the text field for any other answer (D145) | `question`; `options`, each a `label` and an optional `detail`; `recommended`, the label of one option; `because`; `answer`, an action |
+| Understanding | `Brief` | Sections of the brief, one kind or several: the household, money, needs, habits, wants, places, and what is open, each item with where it came from, as `Fact` shows it; a deduction offers Right and Not quite when the block has an `answer` action (D158) | `brief`, always `{ "path": "/brief" }`; `kinds`, an optional list of kinds; `title`, optional; `answer`, an optional action |
+| Understanding | `HouseholdSummary` | Who the household is and what they stated, as `compute_affordability` kept it: adults, children's ages, borrowers, age, tax residence, work, and use of the home, then the monthly incomes, debts, and savings as they gave them, with the sample exchange rates used (D158) | `affordability`, always `{ "path": "/affordability" }` |
+| Money | `MoneyInput` | An amount field with its currency and period that writes `{ amount, currency, per }`, the shape the money tools take, to the path it binds; a `Button` beside it sends the path in its action's context; restored (D158) | `label`; `value`, a path the field writes, such as `{ "path": "/answers/income" }`; `currency`, an ISO 4217 code; `period`, `once`, `month`, or `year` |
 | Money | `AffordabilitySummary` | What the household can borrow, the highest price their savings and the sample rules allow, the down payment and cash needed, the monthly payment, and which rule limits the loan, labelled as a sample estimate (D146) | `affordability`, always `{ "path": "/affordability" }` |
 | Money | `MonthlyCostBreakdown` | What the home at the slice's price costs each month: interest at the rate, amortization at the rate the rules require or over the term, the monthly fee the buyer stated, the total, and in Sweden the total after the interest deduction, labelled as a sample estimate (D147) | `affordability`, always `{ "path": "/affordability" }` |
 | Money | `StressTestChart` | The monthly cost from today's rate up past the rate lenders test, as a line against the most the household can carry each month and the rule that sets it, with today and the tested rate marked; in Sweden after the interest deduction (D148) | `affordability`, always `{ "path": "/affordability" }` |
@@ -115,6 +118,9 @@ A `HomeSwipe` sends its `done` action after the last card, with `kept`
 and `passed`, the lists of home IDs, and `label`, such as "Kept 2 of 6",
 added to its context.
 
+A `Brief` answer sends its action like a `Fact`, with `fact`, `answer`,
+and `label` added to its context.
+
 A `Fact` tap sends its `answer` action with `fact`, the item's ID, `answer`,
 `right` or `not_quite`, and `label`, the words the conversation shows, such as
 "Right: Your mum can't manage stairs". A `Fact` bound to an item the brief
@@ -128,13 +134,11 @@ marked restored come back from `6faa8ab`.
 
 | Family | Block | Chunk | What it shows |
 | --- | --- | --- | --- |
-| Understanding | `Brief` | C10 | A section of the brief: the household, its needs, its week, or what is open |
-| Understanding | `HouseholdSummary` | C10 | Who moves, incomes and savings as stated, and who shares the costs |
-| Money | `MoneyInput` | C10 | An amount in a currency, for incomes and savings; restored |
 | Place and travel | `GoogleMap` | C8b | The Maps Agentic UI Toolkit's map, with its schema vendored at a pinned commit from `googlemaps/a2ui` (`agent/python_agent/shared/schema/maps_catalog_extension.json`) and drawn by Homeward's Flutter Maps package (D133) |
-| Place and travel | `MarketSnapshotCard` | C10 | The city's reference rates and typical costs, as samples; restored |
+| Place and travel | `MarketSnapshotCard` | C10b | The city's reference rates and typical costs, as samples; restored |
+| Money | `SavingsPlan` | C10b | How long until the savings cover the cash a home needs, at a monthly saving the buyer states |
+| Money | `LoanBalanceChart` | C10b | The loan paid down and the equity built, year by year |
 | Place and travel | `PlaceDetailsCompact` | Later | The toolkit's place card, after S14 |
-| Trust | `EstimateNote` | C5 | Marks a figure as an estimate from sample rates, and says what would change it |
 
 `GoogleMap` keeps the toolkit's schema exactly, so a surface that uses it
 stays readable by the toolkit's own clients. Its `markers` and `routes` take

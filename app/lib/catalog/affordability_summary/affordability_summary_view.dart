@@ -77,12 +77,7 @@ class AffordabilitySummaryView extends StatelessWidget {
         for (final rate in slice.exchangeRates)
           Padding(
             padding: const EdgeInsets.only(top: AppSpacing.xxs),
-            child: Text(
-              'Your ${rate.from.code} counted at 1 ${rate.from.code} = '
-              '${rate.rate} ${rate.to.code}, ${rate.source.publisher}, '
-              '${rate.asOf}.',
-              style: AppTextStyles.caption,
-            ),
+            child: Text(exchangeRateText(rate), style: AppTextStyles.caption),
           ),
         const SizedBox(height: AppSpacing.sm),
         Text(

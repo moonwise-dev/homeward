@@ -12,6 +12,8 @@ Iterable<String> _strings(Object? json) sync* {
   switch (json) {
     case final String text:
       yield text;
+    case final num number:
+      yield '$number';
     case final Map<String, Object?> map:
       for (final MapEntry(:key, :value) in map.entries) {
         if (key != 'label') {

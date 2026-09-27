@@ -2,6 +2,7 @@ import 'package:json_schema_builder/json_schema_builder.dart';
 
 import '../catalog_component.dart';
 import '../catalog_schemas.dart';
+import '../examples/brief_example.dart';
 
 final class Fact extends CatalogComponent {
   const Fact();
@@ -63,24 +64,7 @@ final class Fact extends CatalogComponent {
   { "id": "city", "component": "Fact", "fact": { "path": "/brief/city" } }
 ]
 ''',
-      dataModel: {
-        'brief': {
-          'step-free': {
-            'id': 'step-free',
-            'kind': 'need',
-            'text': 'The home needs step-free access for your mum.',
-            'source': 'deduced',
-            'words': "she can't really do stairs anymore",
-          },
-          'city': {
-            'id': 'city',
-            'kind': 'place',
-            'text': 'You are looking around Stockholm.',
-            'source': 'said',
-            'words': "We're looking around Stockholm",
-          },
-        },
-      },
+      dataModel: stockholmBriefDataModel,
     ),
   ];
 }

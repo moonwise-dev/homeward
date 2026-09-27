@@ -83,7 +83,7 @@ class FactView extends StatelessWidget {
     final quoted = words == null ? '' : ' “$words”';
     return switch (fact.source) {
       FactSource.said => 'You said$quoted',
-      FactSource.deduced => 'Deduced from$quoted',
+      FactSource.deduced => words == null ? 'Deduced' : 'Deduced from$quoted',
       FactSource.confirmed => 'You confirmed',
       FactSource.measured => 'Measured',
       FactSource.quoted => 'Quoted$quoted',

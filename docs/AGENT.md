@@ -205,7 +205,9 @@ server loads from `markets/` at startup. Its arguments are the figures the
 buyer stated, such as incomes, savings, and debts, each with its currency and
 period, and the household: adults, children's ages, borrowers, residency, and
 use of the home. Every amount other than zero must appear in the buyer's words, as
-`update_brief` checks. It returns what it still needs, each fact with the
+`update_brief` checks. The buyer's words include what an action's context
+carries, its text and its numbers, such as an amount typed into a
+`MoneyInput` (D158). It returns what it still needs, each fact with the
 pack's reason, or the result: the largest loan, the highest price the savings
 and the rules allow, and the rule that limits it, with its source. It seeds
 `/affordability`, which `AffordabilitySummary` and `RuleNote` bind. Its

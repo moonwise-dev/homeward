@@ -59,3 +59,7 @@ String periodText(Period period) => [
 ].join(' and ');
 
 String _count(int count, String unit) => '$count $unit${count == 1 ? '' : 's'}';
+
+String exchangeRateText(ExchangeRate rate) =>
+    'Your ${rate.from.code} counted at 1 ${rate.from.code} = ${rate.rate} '
+    '${rate.to.code}, ${rate.source.publisher}, ${rate.asOf}.';

@@ -6,6 +6,7 @@ import '../bindings/binding_actions.dart';
 import '../bindings/binding_parsers.dart';
 import '../bindings/bound_parsed.dart';
 import '../catalog_item_for.dart';
+import 'fact_answer.dart';
 import 'fact_view.dart';
 
 final factItem = catalogItemFor(const Fact(), (itemContext) {
@@ -24,11 +25,7 @@ final factItem = catalogItemFor(const Fact(), (itemContext) {
                 : (right) => dispatchAction(
                     itemContext,
                     answer,
-                    adding: {
-                      'fact': fact.id,
-                      'answer': right ? 'right' : 'not_quite',
-                      'label': '${right ? 'Right' : 'Not quite'}: ${fact.text}',
-                    },
+                    adding: factAnswer(fact, right),
                   ),
           ),
   );

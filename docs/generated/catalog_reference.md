@@ -9,7 +9,10 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | Component | Agent visible | Required | Bound | Examples |
 | --- | --- | --- | --- | --- |
 | `Fact` | yes | `fact` | `fact` | What Homeward understood |
+| `Brief` | yes | `brief` | `brief` | The household and its needs |
 | `Choice` | yes | `question`, `options`, `answer` |  | Rent first or buy |
+| `HouseholdSummary` | yes | `affordability` | `affordability` | A Stockholm couple, A household buying in Funchal |
+| `MoneyInput` | yes | `label`, `value`, `currency` |  | Take-home pay |
 | `AffordabilitySummary` | yes | `affordability` | `affordability` | A Stockholm couple |
 | `MonthlyCostBreakdown` | yes | `affordability` | `affordability` | A Stockholm flat with an association fee |
 | `StressTestChart` | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
@@ -31,9 +34,21 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 One item of the brief, with where it came from; a deduction offers Right and Not quite when it has an answer action.
 
+### Brief
+
+Sections of the brief update_brief kept, one kind or several, each item with where it came from; a deduction offers Right and Not quite when it has an answer action.
+
 ### Choice
 
 One decision to ask: its options, the one you recommend first with why, and a tap that answers at once.
+
+### HouseholdSummary
+
+Who the household is and the figures they stated, as compute_affordability kept them: the people, residency, work, and the incomes, debts, and savings they gave.
+
+### MoneyInput
+
+An amount field that writes { amount, currency, per }, the shape the money tools take, to the path it binds; a Button beside it sends that path in its action context. Use it to ask for an income, savings, a debt, a rent, or a fee.
 
 ### AffordabilitySummary
 
