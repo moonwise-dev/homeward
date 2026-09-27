@@ -2,6 +2,7 @@ import 'package:a2ui_core/a2ui_core.dart';
 
 import 'catalog_component.dart';
 import 'components/affordability_summary.dart';
+import 'components/buy_vs_rent.dart';
 import 'components/choice.dart';
 import 'components/down_payment_slider.dart';
 import 'components/fact.dart';
@@ -10,6 +11,7 @@ import 'components/home_comparison.dart';
 import 'components/monthly_cost_breakdown.dart';
 import 'components/mortgage_options.dart';
 import 'components/purchase_costs_table.dart';
+import 'components/rent_split.dart';
 import 'components/route_summary.dart';
 import 'components/rule_note.dart';
 import 'components/shortlist.dart';
@@ -29,6 +31,8 @@ const homewardComponents = <CatalogComponent>[
   PurchaseCostsTable(),
   DownPaymentSlider(),
   MortgageOptions(),
+  RentSplit(),
+  BuyVsRent(),
   RuleNote(),
   HomeCard(),
   Shortlist(),

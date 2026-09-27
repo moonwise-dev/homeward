@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../geo/geo_point.dart';
 import '../money/money.dart';
+import '../money/rounding.dart';
 import 'home_style.dart';
 import 'home_type.dart';
 import 'outdoor_space.dart';
@@ -34,6 +35,8 @@ abstract class Listing with _$Listing {
     required Money pricePerM2,
     required Money areaPricePerM2,
     required String priceSource,
+    required Money areaRentPerM2,
+    required String rentSource,
     required List<String> photos,
     String? photoCredit,
   }) = _Listing;
@@ -42,6 +45,16 @@ abstract class Listing with _$Listing {
 
   factory Listing.fromJson(Map<String, Object?> json) =>
       _$ListingFromJson(json);
+
+  String get addressLine => '$address, $areaName';
+
+  Money get rentLikeThis {
+    final rent = areaRentPerM2 * sizeM2;
+    final unit = rent.currency.majorUnit;
+    return rent.copyWith(
+      minorUnits: Rounding.halfUp.divide(rent.minorUnits, unit) * unit,
+    );
+  }
 
   int get percentFromAreaMedian =>
       ((pricePerM2.minorUnits - areaPricePerM2.minorUnits) *

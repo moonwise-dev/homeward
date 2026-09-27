@@ -72,7 +72,7 @@ final class MeasureWeek extends AgentTool {
     final fromId = '${arguments['from']}';
     final start = switch (markets.home(fromId)) {
       (city: _, :final listing) => (
-        name: '${listing.address}, ${listing.areaName}',
+        name: listing.addressLine,
         point: listing.point,
       ),
       null => switch (places[fromId]) {

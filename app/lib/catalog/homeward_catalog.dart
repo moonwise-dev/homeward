@@ -2,6 +2,7 @@ import 'package:common/common.dart';
 import 'package:genui/genui.dart';
 
 import 'affordability_summary/affordability_summary_item.dart';
+import 'buy_vs_rent/buy_vs_rent_item.dart';
 import 'choice/choice_item.dart';
 import 'client_functions.dart';
 import 'down_payment_slider/down_payment_slider_item.dart';
@@ -11,6 +12,7 @@ import 'home_comparison/home_comparison_item.dart';
 import 'monthly_cost_breakdown/monthly_cost_breakdown_item.dart';
 import 'mortgage_options/mortgage_options_item.dart';
 import 'purchase_costs_table/purchase_costs_table_item.dart';
+import 'rent_split/rent_split_item.dart';
 import 'route_summary/route_summary_item.dart';
 import 'rule_note/rule_note_item.dart';
 import 'shortlist/shortlist_item.dart';
@@ -31,6 +33,8 @@ Catalog homewardGenuiCatalog() {
       purchaseCostsTableItem,
       downPaymentSliderItem,
       mortgageOptionsItem,
+      rentSplitItem,
+      buyVsRentItem,
       ruleNoteItem,
       homeCardItem,
       shortlistItem,

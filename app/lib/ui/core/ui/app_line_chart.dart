@@ -26,6 +26,7 @@ class AppLineChart extends StatelessWidget {
   const AppLineChart({
     required this.points,
     required this.summary,
+    this.comparison = const [],
     this.markers = const [],
     this.limit,
     this.limitLabel,
@@ -34,6 +35,7 @@ class AppLineChart extends StatelessWidget {
   });
 
   final List<ChartPoint> points;
+  final List<ChartPoint> comparison;
   final String summary;
   final List<ChartMarker> markers;
   final double? limit;
@@ -51,6 +53,7 @@ class AppLineChart extends StatelessWidget {
           size: Size.infinite,
           painter: _LineChartPainter(
             points: points,
+            comparison: comparison,
             markers: markers,
             limit: limit,
             limitLabel: limitLabel,
@@ -65,6 +68,7 @@ class AppLineChart extends StatelessWidget {
 class _LineChartPainter extends CustomPainter {
   _LineChartPainter({
     required this.points,
+    required this.comparison,
     required this.markers,
     required this.limit,
     required this.limitLabel,
@@ -75,6 +79,7 @@ class _LineChartPainter extends CustomPainter {
   static const _markerRadius = 4.0;
 
   final List<ChartPoint> points;
+  final List<ChartPoint> comparison;
   final List<ChartMarker> markers;
   final double? limit;
   final String? limitLabel;
@@ -91,9 +96,11 @@ class _LineChartPainter extends CustomPainter {
       size.width - _padding.right,
       size.height - _padding.bottom,
     );
-    final xs = [for (final point in points) point.x];
+    final xs = [
+      for (final point in [...points, ...comparison]) point.x,
+    ];
     final ys = [
-      for (final point in points) point.y,
+      for (final point in [...points, ...comparison]) point.y,
       ?limit,
     ];
     final minX = xs.reduce((a, b) => a < b ? a : b);
@@ -108,12 +115,17 @@ class _LineChartPainter extends CustomPainter {
               : (y - minY) / (maxY - minY) * plot.height),
     );
 
-    final start = at(points.first.x, points.first.y);
-    final line = Path()..moveTo(start.dx, start.dy);
-    for (final point in points.skip(1)) {
-      final offset = at(point.x, point.y);
-      line.lineTo(offset.dx, offset.dy);
+    Path pathOf(List<ChartPoint> points) {
+      final start = at(points.first.x, points.first.y);
+      final path = Path()..moveTo(start.dx, start.dy);
+      for (final point in points.skip(1)) {
+        final offset = at(point.x, point.y);
+        path.lineTo(offset.dx, offset.dy);
+      }
+      return path;
     }
+
+    final line = pathOf(points);
     canvas
       ..drawPath(
         Path.from(line)
@@ -130,6 +142,16 @@ class _LineChartPainter extends CustomPainter {
           ..strokeWidth = 2
           ..strokeJoin = StrokeJoin.round,
       );
+    if (comparison.length > 1) {
+      canvas.drawPath(
+        pathOf(comparison),
+        Paint()
+          ..color = AppColors.warning
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2
+          ..strokeJoin = StrokeJoin.round,
+      );
+    }
 
     if (limit case final limit?) {
       final y = at(minX, limit).dy;
@@ -199,6 +221,7 @@ class _LineChartPainter extends CustomPainter {
   @override
   bool shouldRepaint(_LineChartPainter old) =>
       old.points != points ||
+      old.comparison != comparison ||
       old.markers != markers ||
       old.limit != limit ||
       old.limitLabel != limitLabel;

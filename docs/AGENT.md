@@ -314,6 +314,37 @@ trip. `WeeklyTravel` binds `/week/<from>` and `RouteSummary` one trip,
 `/week/<from>/trips/<n>`. The route geometry is left out until the map
 (C8b).
 
+Each sample home carries its area's median rent per square metre with its
+source (C9, D155): Statistics Sweden's 2025 figure for first-hand leases in
+Stockholm, which a newcomer rarely gets without years in the queue, and
+INE's median for new leases in Lisbon. A home like it rents for that figure
+times its size, an estimate; a rent the buyer states replaces it.
+
+`split_rent` (C9, D155) splits a home's rent and bills between two to eight
+people sharing. It takes a sample home's ID, whose area gives the rent, or
+the rent the buyer stated, the monthly bills they stated, and each person:
+a label in the buyer's words, such as "You" or "Your friend", their income
+and their room's size when the buyer gave them. Every amount and size is
+checked against the buyer's words. It works out each rule it has the
+figures for: equally; by income, rent and bills in proportion to the
+incomes; and by room size, rent in proportion to each room plus an equal
+part of the shared space, bills equally. The parts add up to the total to
+the cent. It seeds `/rentSplit` for `RentSplit` and answers with the rules
+it could work out and which figures would add the others. When the buyer
+takes a rule, Gemini calls it again with `rule`.
+
+`compare_buy_rent` (C9, D155) compares buying a sample home with renting
+one like it. It takes the home's ID, the rent the buyer stated if any, and
+how many years they expect to stay, 1 to 30, a small count Gemini may
+deduce; without it ten years is assumed and said. It prices the home for
+the household the last `compute_affordability` run kept, like
+`search_homes`, then adds month by month what buying costs, the costs on
+the day, interest after any deduction, and the home's fee, against the
+rent, with the equity built from the down payment and the loan paid off at
+today's price, for 30 years. It seeds `/buyVsRent` for `BuyVsRent` and
+answers with both totals at the years chosen and the year buying comes out
+cheaper. Before any affordability run it says it needs the household.
+
 A tool reads the turn through its `ToolContext`: the progress steps, the
 slices as they stand, and the buyer's words in this plan.
 
@@ -321,8 +352,7 @@ Planned tools, each arriving with its chunk:
 
 | Tool | Chunk | What it does |
 | --- | --- | --- |
-| Listing reader | C9 | Reads listings for the household's needs; code keeps a quote only when it appears word for word |
-| Rent split | C9 | Splits rent and bills between people sharing by the rule they pick |
+| Listing reader | C9b | Reads listings for the household's needs; code keeps a quote only when it appears word for word |
 
 After the recording (D142): on-the-spot research of rules and rates (S12),
 reading a listing the buyer pastes (S13), and areas for any city.

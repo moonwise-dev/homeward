@@ -41,6 +41,11 @@
         "currency": "SEK"
       },
       "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15700,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Norra innerstaden in 2025, which take years in the housing queue",
       "photos": [
         "sto-01-1",
         "sto-01-2",
@@ -87,6 +92,11 @@
         "currency": "SEK"
       },
       "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15700,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Norra innerstaden in 2025, which take years in the housing queue",
       "photos": [
         "sto-02-1",
         "sto-02-2",
@@ -132,6 +142,11 @@
         "currency": "SEK"
       },
       "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15700,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Norra innerstaden in 2025, which take years in the housing queue",
       "photos": [
         "sto-03-1",
         "sto-03-2",
@@ -177,6 +192,11 @@
         "currency": "SEK"
       },
       "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 16225,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Södermalm in 2025, which take years in the housing queue",
       "photos": [
         "sto-04-1",
         "sto-04-2",
@@ -222,6 +242,11 @@
         "currency": "SEK"
       },
       "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15717,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Kungsholmen in 2025, which take years in the housing queue",
       "photos": [
         "sto-05-1",
         "sto-05-2",
@@ -267,6 +292,11 @@
         "currency": "SEK"
       },
       "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 13883,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Solna in 2025, which take years in the housing queue",
       "photos": [
         "sto-06-1",
         "sto-06-2",
@@ -308,6 +338,11 @@
         "currency": "SEK"
       },
       "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 13883,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Solna in 2025, which take years in the housing queue",
       "photos": [
         "sto-07-1",
         "sto-07-2",
@@ -349,6 +384,11 @@
         "currency": "SEK"
       },
       "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15225,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Danderyd in 2025, which take years in the housing queue",
       "photos": [
         "sto-08-1",
         "sto-08-2",
@@ -389,6 +429,11 @@
         "currency": "SEK"
       },
       "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15225,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Danderyd in 2025, which take years in the housing queue",
       "photos": [
         "sto-09-1",
         "sto-09-2",
@@ -429,6 +474,11 @@
         "currency": "SEK"
       },
       "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 14725,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Lidingö in 2025, which take years in the housing queue",
       "photos": [
         "sto-10-1",
         "sto-10-2",
@@ -469,6 +519,11 @@
         "currency": "SEK"
       },
       "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15442,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Bromma in 2025, which take years in the housing queue",
       "photos": [
         "sto-11-1",
         "sto-11-2",
@@ -514,6 +569,11 @@
         "currency": "SEK"
       },
       "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15158,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Nacka in 2025, which take years in the housing queue",
       "photos": [
         "sto-12-1",
         "sto-12-2",
@@ -554,6 +614,11 @@
         "currency": "SEK"
       },
       "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 12825,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Sundbyberg in 2025, which take years in the housing queue",
       "photos": [
         "sto-13-1",
         "sto-13-2",
@@ -599,6 +664,11 @@
         "currency": "SEK"
       },
       "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15508,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Hägersten-Älvsjö in 2025, which take years in the housing queue",
       "photos": [
         "sto-14-1",
         "sto-14-2",

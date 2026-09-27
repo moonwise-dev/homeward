@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Listing {
 
- String get id; String get areaId; String get areaName; String get name; String get title; String get blurb; String get description; String get address; GeoPoint get point; HomeType get homeType; int get rooms; int get bedrooms; int get sizeM2; int? get floor; int? get yearBuilt; OutdoorSpace get outdoor; HomeStyle get style; Money get price; Money? get monthlyFee; Money get pricePerM2; Money get areaPricePerM2; String get priceSource; List<String> get photos; String? get photoCredit;
+ String get id; String get areaId; String get areaName; String get name; String get title; String get blurb; String get description; String get address; GeoPoint get point; HomeType get homeType; int get rooms; int get bedrooms; int get sizeM2; int? get floor; int? get yearBuilt; OutdoorSpace get outdoor; HomeStyle get style; Money get price; Money? get monthlyFee; Money get pricePerM2; Money get areaPricePerM2; String get priceSource; Money get areaRentPerM2; String get rentSource; List<String> get photos; String? get photoCredit;
 /// Create a copy of Listing
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $ListingCopyWith<Listing> get copyWith => _$ListingCopyWithImpl<Listing>(this as
 @override
 bool operator ==(Object other) {
   final _this = this as Listing;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Listing&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.areaId, _this.areaId) || other.areaId == _this.areaId)&&(identical(other.areaName, _this.areaName) || other.areaName == _this.areaName)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.blurb, _this.blurb) || other.blurb == _this.blurb)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.address, _this.address) || other.address == _this.address)&&(identical(other.point, _this.point) || other.point == _this.point)&&(identical(other.homeType, _this.homeType) || other.homeType == _this.homeType)&&(identical(other.rooms, _this.rooms) || other.rooms == _this.rooms)&&(identical(other.bedrooms, _this.bedrooms) || other.bedrooms == _this.bedrooms)&&(identical(other.sizeM2, _this.sizeM2) || other.sizeM2 == _this.sizeM2)&&(identical(other.floor, _this.floor) || other.floor == _this.floor)&&(identical(other.yearBuilt, _this.yearBuilt) || other.yearBuilt == _this.yearBuilt)&&(identical(other.outdoor, _this.outdoor) || other.outdoor == _this.outdoor)&&(identical(other.style, _this.style) || other.style == _this.style)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.monthlyFee, _this.monthlyFee) || other.monthlyFee == _this.monthlyFee)&&(identical(other.pricePerM2, _this.pricePerM2) || other.pricePerM2 == _this.pricePerM2)&&(identical(other.areaPricePerM2, _this.areaPricePerM2) || other.areaPricePerM2 == _this.areaPricePerM2)&&(identical(other.priceSource, _this.priceSource) || other.priceSource == _this.priceSource)&&const DeepCollectionEquality().equals(other.photos, _this.photos)&&(identical(other.photoCredit, _this.photoCredit) || other.photoCredit == _this.photoCredit));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Listing&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.areaId, _this.areaId) || other.areaId == _this.areaId)&&(identical(other.areaName, _this.areaName) || other.areaName == _this.areaName)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.blurb, _this.blurb) || other.blurb == _this.blurb)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.address, _this.address) || other.address == _this.address)&&(identical(other.point, _this.point) || other.point == _this.point)&&(identical(other.homeType, _this.homeType) || other.homeType == _this.homeType)&&(identical(other.rooms, _this.rooms) || other.rooms == _this.rooms)&&(identical(other.bedrooms, _this.bedrooms) || other.bedrooms == _this.bedrooms)&&(identical(other.sizeM2, _this.sizeM2) || other.sizeM2 == _this.sizeM2)&&(identical(other.floor, _this.floor) || other.floor == _this.floor)&&(identical(other.yearBuilt, _this.yearBuilt) || other.yearBuilt == _this.yearBuilt)&&(identical(other.outdoor, _this.outdoor) || other.outdoor == _this.outdoor)&&(identical(other.style, _this.style) || other.style == _this.style)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.monthlyFee, _this.monthlyFee) || other.monthlyFee == _this.monthlyFee)&&(identical(other.pricePerM2, _this.pricePerM2) || other.pricePerM2 == _this.pricePerM2)&&(identical(other.areaPricePerM2, _this.areaPricePerM2) || other.areaPricePerM2 == _this.areaPricePerM2)&&(identical(other.priceSource, _this.priceSource) || other.priceSource == _this.priceSource)&&(identical(other.areaRentPerM2, _this.areaRentPerM2) || other.areaRentPerM2 == _this.areaRentPerM2)&&(identical(other.rentSource, _this.rentSource) || other.rentSource == _this.rentSource)&&const DeepCollectionEquality().equals(other.photos, _this.photos)&&(identical(other.photoCredit, _this.photoCredit) || other.photoCredit == _this.photoCredit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Listing;
-  return Object.hashAll([runtimeType,_this.id,_this.areaId,_this.areaName,_this.name,_this.title,_this.blurb,_this.description,_this.address,_this.point,_this.homeType,_this.rooms,_this.bedrooms,_this.sizeM2,_this.floor,_this.yearBuilt,_this.outdoor,_this.style,_this.price,_this.monthlyFee,_this.pricePerM2,_this.areaPricePerM2,_this.priceSource,const DeepCollectionEquality().hash(_this.photos),_this.photoCredit]);
+  return Object.hashAll([runtimeType,_this.id,_this.areaId,_this.areaName,_this.name,_this.title,_this.blurb,_this.description,_this.address,_this.point,_this.homeType,_this.rooms,_this.bedrooms,_this.sizeM2,_this.floor,_this.yearBuilt,_this.outdoor,_this.style,_this.price,_this.monthlyFee,_this.pricePerM2,_this.areaPricePerM2,_this.priceSource,_this.areaRentPerM2,_this.rentSource,const DeepCollectionEquality().hash(_this.photos),_this.photoCredit]);
 }
 
 @override
 String toString() {
   final _this = this as Listing;
-  return 'Listing(id: ${_this.id}, areaId: ${_this.areaId}, areaName: ${_this.areaName}, name: ${_this.name}, title: ${_this.title}, blurb: ${_this.blurb}, description: ${_this.description}, address: ${_this.address}, point: ${_this.point}, homeType: ${_this.homeType}, rooms: ${_this.rooms}, bedrooms: ${_this.bedrooms}, sizeM2: ${_this.sizeM2}, floor: ${_this.floor}, yearBuilt: ${_this.yearBuilt}, outdoor: ${_this.outdoor}, style: ${_this.style}, price: ${_this.price}, monthlyFee: ${_this.monthlyFee}, pricePerM2: ${_this.pricePerM2}, areaPricePerM2: ${_this.areaPricePerM2}, priceSource: ${_this.priceSource}, photos: ${_this.photos}, photoCredit: ${_this.photoCredit})';
+  return 'Listing(id: ${_this.id}, areaId: ${_this.areaId}, areaName: ${_this.areaName}, name: ${_this.name}, title: ${_this.title}, blurb: ${_this.blurb}, description: ${_this.description}, address: ${_this.address}, point: ${_this.point}, homeType: ${_this.homeType}, rooms: ${_this.rooms}, bedrooms: ${_this.bedrooms}, sizeM2: ${_this.sizeM2}, floor: ${_this.floor}, yearBuilt: ${_this.yearBuilt}, outdoor: ${_this.outdoor}, style: ${_this.style}, price: ${_this.price}, monthlyFee: ${_this.monthlyFee}, pricePerM2: ${_this.pricePerM2}, areaPricePerM2: ${_this.areaPricePerM2}, priceSource: ${_this.priceSource}, areaRentPerM2: ${_this.areaRentPerM2}, rentSource: ${_this.rentSource}, photos: ${_this.photos}, photoCredit: ${_this.photoCredit})';
 }
 
 
@@ -54,11 +54,11 @@ abstract mixin class $ListingCopyWith<$Res>  {
   factory $ListingCopyWith(Listing value, $Res Function(Listing) _then) = _$ListingCopyWithImpl;
 @useResult
 $Res call({
- String id, String areaId, String areaName, String name, String title, String blurb, String description, String address, GeoPoint point, HomeType homeType, int rooms, int bedrooms, int sizeM2, int? floor, int? yearBuilt, OutdoorSpace outdoor, HomeStyle style, Money price, Money? monthlyFee, Money pricePerM2, Money areaPricePerM2, String priceSource, List<String> photos, String? photoCredit
+ String id, String areaId, String areaName, String name, String title, String blurb, String description, String address, GeoPoint point, HomeType homeType, int rooms, int bedrooms, int sizeM2, int? floor, int? yearBuilt, OutdoorSpace outdoor, HomeStyle style, Money price, Money? monthlyFee, Money pricePerM2, Money areaPricePerM2, String priceSource, Money areaRentPerM2, String rentSource, List<String> photos, String? photoCredit
 });
 
 
-$GeoPointCopyWith<$Res> get point;$MoneyCopyWith<$Res> get price;$MoneyCopyWith<$Res>? get monthlyFee;$MoneyCopyWith<$Res> get pricePerM2;$MoneyCopyWith<$Res> get areaPricePerM2;
+$GeoPointCopyWith<$Res> get point;$MoneyCopyWith<$Res> get price;$MoneyCopyWith<$Res>? get monthlyFee;$MoneyCopyWith<$Res> get pricePerM2;$MoneyCopyWith<$Res> get areaPricePerM2;$MoneyCopyWith<$Res> get areaRentPerM2;
 
 }
 /// @nodoc
@@ -71,7 +71,7 @@ class _$ListingCopyWithImpl<$Res>
 
 /// Create a copy of Listing
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? areaId = null,Object? areaName = null,Object? name = null,Object? title = null,Object? blurb = null,Object? description = null,Object? address = null,Object? point = null,Object? homeType = null,Object? rooms = null,Object? bedrooms = null,Object? sizeM2 = null,Object? floor = freezed,Object? yearBuilt = freezed,Object? outdoor = null,Object? style = null,Object? price = null,Object? monthlyFee = freezed,Object? pricePerM2 = null,Object? areaPricePerM2 = null,Object? priceSource = null,Object? photos = null,Object? photoCredit = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? areaId = null,Object? areaName = null,Object? name = null,Object? title = null,Object? blurb = null,Object? description = null,Object? address = null,Object? point = null,Object? homeType = null,Object? rooms = null,Object? bedrooms = null,Object? sizeM2 = null,Object? floor = freezed,Object? yearBuilt = freezed,Object? outdoor = null,Object? style = null,Object? price = null,Object? monthlyFee = freezed,Object? pricePerM2 = null,Object? areaPricePerM2 = null,Object? priceSource = null,Object? areaRentPerM2 = null,Object? rentSource = null,Object? photos = null,Object? photoCredit = freezed,}) {
   return _then(Listing(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,areaId: null == areaId ? _self.areaId : areaId // ignore: cast_nullable_to_non_nullable
@@ -95,6 +95,8 @@ as Money,monthlyFee: freezed == monthlyFee ? _self.monthlyFee : monthlyFee // ig
 as Money?,pricePerM2: null == pricePerM2 ? _self.pricePerM2 : pricePerM2 // ignore: cast_nullable_to_non_nullable
 as Money,areaPricePerM2: null == areaPricePerM2 ? _self.areaPricePerM2 : areaPricePerM2 // ignore: cast_nullable_to_non_nullable
 as Money,priceSource: null == priceSource ? _self.priceSource : priceSource // ignore: cast_nullable_to_non_nullable
+as String,areaRentPerM2: null == areaRentPerM2 ? _self.areaRentPerM2 : areaRentPerM2 // ignore: cast_nullable_to_non_nullable
+as Money,rentSource: null == rentSource ? _self.rentSource : rentSource // ignore: cast_nullable_to_non_nullable
 as String,photos: null == photos ? _self.photos : photos // ignore: cast_nullable_to_non_nullable
 as List<String>,photoCredit: freezed == photoCredit ? _self.photoCredit : photoCredit // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -147,6 +149,15 @@ $MoneyCopyWith<$Res> get areaPricePerM2 {
   
   return $MoneyCopyWith<$Res>(_self.areaPricePerM2, (value) {
     return _then(_self.copyWith(areaPricePerM2: value));
+  });
+}/// Create a copy of Listing
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res> get areaRentPerM2 {
+  
+  return $MoneyCopyWith<$Res>(_self.areaRentPerM2, (value) {
+    return _then(_self.copyWith(areaRentPerM2: value));
   });
 }
 }
@@ -230,10 +241,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String areaId,  String areaName,  String name,  String title,  String blurb,  String description,  String address,  GeoPoint point,  HomeType homeType,  int rooms,  int bedrooms,  int sizeM2,  int? floor,  int? yearBuilt,  OutdoorSpace outdoor,  HomeStyle style,  Money price,  Money? monthlyFee,  Money pricePerM2,  Money areaPricePerM2,  String priceSource,  List<String> photos,  String? photoCredit)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String areaId,  String areaName,  String name,  String title,  String blurb,  String description,  String address,  GeoPoint point,  HomeType homeType,  int rooms,  int bedrooms,  int sizeM2,  int? floor,  int? yearBuilt,  OutdoorSpace outdoor,  HomeStyle style,  Money price,  Money? monthlyFee,  Money pricePerM2,  Money areaPricePerM2,  String priceSource,  Money areaRentPerM2,  String rentSource,  List<String> photos,  String? photoCredit)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Listing() when $default != null:
-return $default(_that.id,_that.areaId,_that.areaName,_that.name,_that.title,_that.blurb,_that.description,_that.address,_that.point,_that.homeType,_that.rooms,_that.bedrooms,_that.sizeM2,_that.floor,_that.yearBuilt,_that.outdoor,_that.style,_that.price,_that.monthlyFee,_that.pricePerM2,_that.areaPricePerM2,_that.priceSource,_that.photos,_that.photoCredit);case _:
+return $default(_that.id,_that.areaId,_that.areaName,_that.name,_that.title,_that.blurb,_that.description,_that.address,_that.point,_that.homeType,_that.rooms,_that.bedrooms,_that.sizeM2,_that.floor,_that.yearBuilt,_that.outdoor,_that.style,_that.price,_that.monthlyFee,_that.pricePerM2,_that.areaPricePerM2,_that.priceSource,_that.areaRentPerM2,_that.rentSource,_that.photos,_that.photoCredit);case _:
   return orElse();
 
 }
@@ -251,10 +262,10 @@ return $default(_that.id,_that.areaId,_that.areaName,_that.name,_that.title,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String areaId,  String areaName,  String name,  String title,  String blurb,  String description,  String address,  GeoPoint point,  HomeType homeType,  int rooms,  int bedrooms,  int sizeM2,  int? floor,  int? yearBuilt,  OutdoorSpace outdoor,  HomeStyle style,  Money price,  Money? monthlyFee,  Money pricePerM2,  Money areaPricePerM2,  String priceSource,  List<String> photos,  String? photoCredit)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String areaId,  String areaName,  String name,  String title,  String blurb,  String description,  String address,  GeoPoint point,  HomeType homeType,  int rooms,  int bedrooms,  int sizeM2,  int? floor,  int? yearBuilt,  OutdoorSpace outdoor,  HomeStyle style,  Money price,  Money? monthlyFee,  Money pricePerM2,  Money areaPricePerM2,  String priceSource,  Money areaRentPerM2,  String rentSource,  List<String> photos,  String? photoCredit)  $default,) {final _that = this;
 switch (_that) {
 case _Listing():
-return $default(_that.id,_that.areaId,_that.areaName,_that.name,_that.title,_that.blurb,_that.description,_that.address,_that.point,_that.homeType,_that.rooms,_that.bedrooms,_that.sizeM2,_that.floor,_that.yearBuilt,_that.outdoor,_that.style,_that.price,_that.monthlyFee,_that.pricePerM2,_that.areaPricePerM2,_that.priceSource,_that.photos,_that.photoCredit);case _:
+return $default(_that.id,_that.areaId,_that.areaName,_that.name,_that.title,_that.blurb,_that.description,_that.address,_that.point,_that.homeType,_that.rooms,_that.bedrooms,_that.sizeM2,_that.floor,_that.yearBuilt,_that.outdoor,_that.style,_that.price,_that.monthlyFee,_that.pricePerM2,_that.areaPricePerM2,_that.priceSource,_that.areaRentPerM2,_that.rentSource,_that.photos,_that.photoCredit);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -271,10 +282,10 @@ return $default(_that.id,_that.areaId,_that.areaName,_that.name,_that.title,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String areaId,  String areaName,  String name,  String title,  String blurb,  String description,  String address,  GeoPoint point,  HomeType homeType,  int rooms,  int bedrooms,  int sizeM2,  int? floor,  int? yearBuilt,  OutdoorSpace outdoor,  HomeStyle style,  Money price,  Money? monthlyFee,  Money pricePerM2,  Money areaPricePerM2,  String priceSource,  List<String> photos,  String? photoCredit)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String areaId,  String areaName,  String name,  String title,  String blurb,  String description,  String address,  GeoPoint point,  HomeType homeType,  int rooms,  int bedrooms,  int sizeM2,  int? floor,  int? yearBuilt,  OutdoorSpace outdoor,  HomeStyle style,  Money price,  Money? monthlyFee,  Money pricePerM2,  Money areaPricePerM2,  String priceSource,  Money areaRentPerM2,  String rentSource,  List<String> photos,  String? photoCredit)?  $default,) {final _that = this;
 switch (_that) {
 case _Listing() when $default != null:
-return $default(_that.id,_that.areaId,_that.areaName,_that.name,_that.title,_that.blurb,_that.description,_that.address,_that.point,_that.homeType,_that.rooms,_that.bedrooms,_that.sizeM2,_that.floor,_that.yearBuilt,_that.outdoor,_that.style,_that.price,_that.monthlyFee,_that.pricePerM2,_that.areaPricePerM2,_that.priceSource,_that.photos,_that.photoCredit);case _:
+return $default(_that.id,_that.areaId,_that.areaName,_that.name,_that.title,_that.blurb,_that.description,_that.address,_that.point,_that.homeType,_that.rooms,_that.bedrooms,_that.sizeM2,_that.floor,_that.yearBuilt,_that.outdoor,_that.style,_that.price,_that.monthlyFee,_that.pricePerM2,_that.areaPricePerM2,_that.priceSource,_that.areaRentPerM2,_that.rentSource,_that.photos,_that.photoCredit);case _:
   return null;
 
 }
@@ -286,7 +297,7 @@ return $default(_that.id,_that.areaId,_that.areaName,_that.name,_that.title,_tha
 @JsonSerializable()
 
 class _Listing extends Listing {
-  const _Listing({required this.id, required this.areaId, required this.areaName, required this.name, required this.title, required this.blurb, this.description = '', required this.address, required this.point, required this.homeType, required this.rooms, required this.bedrooms, required this.sizeM2, this.floor, this.yearBuilt, required this.outdoor, required this.style, required this.price, this.monthlyFee, required this.pricePerM2, required this.areaPricePerM2, required this.priceSource, required  List<String> photos, this.photoCredit}): _photos = photos,super._();
+  const _Listing({required this.id, required this.areaId, required this.areaName, required this.name, required this.title, required this.blurb, this.description = '', required this.address, required this.point, required this.homeType, required this.rooms, required this.bedrooms, required this.sizeM2, this.floor, this.yearBuilt, required this.outdoor, required this.style, required this.price, this.monthlyFee, required this.pricePerM2, required this.areaPricePerM2, required this.priceSource, required this.areaRentPerM2, required this.rentSource, required  List<String> photos, this.photoCredit}): _photos = photos,super._();
   factory _Listing.fromJson(Map<String, dynamic> json) => _$ListingFromJson(json);
 
 @override final  String id;
@@ -311,6 +322,8 @@ class _Listing extends Listing {
 @override final  Money pricePerM2;
 @override final  Money areaPricePerM2;
 @override final  String priceSource;
+@override final  Money areaRentPerM2;
+@override final  String rentSource;
  final  List<String> _photos;
 @override List<String> get photos {
   if (_photos is EqualUnmodifiableListView) return _photos;
@@ -333,18 +346,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Listing&&(identical(other.id, id) || other.id == id)&&(identical(other.areaId, areaId) || other.areaId == areaId)&&(identical(other.areaName, areaName) || other.areaName == areaName)&&(identical(other.name, name) || other.name == name)&&(identical(other.title, title) || other.title == title)&&(identical(other.blurb, blurb) || other.blurb == blurb)&&(identical(other.description, description) || other.description == description)&&(identical(other.address, address) || other.address == address)&&(identical(other.point, point) || other.point == point)&&(identical(other.homeType, homeType) || other.homeType == homeType)&&(identical(other.rooms, rooms) || other.rooms == rooms)&&(identical(other.bedrooms, bedrooms) || other.bedrooms == bedrooms)&&(identical(other.sizeM2, sizeM2) || other.sizeM2 == sizeM2)&&(identical(other.floor, floor) || other.floor == floor)&&(identical(other.yearBuilt, yearBuilt) || other.yearBuilt == yearBuilt)&&(identical(other.outdoor, outdoor) || other.outdoor == outdoor)&&(identical(other.style, style) || other.style == style)&&(identical(other.price, price) || other.price == price)&&(identical(other.monthlyFee, monthlyFee) || other.monthlyFee == monthlyFee)&&(identical(other.pricePerM2, pricePerM2) || other.pricePerM2 == pricePerM2)&&(identical(other.areaPricePerM2, areaPricePerM2) || other.areaPricePerM2 == areaPricePerM2)&&(identical(other.priceSource, priceSource) || other.priceSource == priceSource)&&const DeepCollectionEquality().equals(other.photos, _photos)&&(identical(other.photoCredit, photoCredit) || other.photoCredit == photoCredit));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Listing&&(identical(other.id, id) || other.id == id)&&(identical(other.areaId, areaId) || other.areaId == areaId)&&(identical(other.areaName, areaName) || other.areaName == areaName)&&(identical(other.name, name) || other.name == name)&&(identical(other.title, title) || other.title == title)&&(identical(other.blurb, blurb) || other.blurb == blurb)&&(identical(other.description, description) || other.description == description)&&(identical(other.address, address) || other.address == address)&&(identical(other.point, point) || other.point == point)&&(identical(other.homeType, homeType) || other.homeType == homeType)&&(identical(other.rooms, rooms) || other.rooms == rooms)&&(identical(other.bedrooms, bedrooms) || other.bedrooms == bedrooms)&&(identical(other.sizeM2, sizeM2) || other.sizeM2 == sizeM2)&&(identical(other.floor, floor) || other.floor == floor)&&(identical(other.yearBuilt, yearBuilt) || other.yearBuilt == yearBuilt)&&(identical(other.outdoor, outdoor) || other.outdoor == outdoor)&&(identical(other.style, style) || other.style == style)&&(identical(other.price, price) || other.price == price)&&(identical(other.monthlyFee, monthlyFee) || other.monthlyFee == monthlyFee)&&(identical(other.pricePerM2, pricePerM2) || other.pricePerM2 == pricePerM2)&&(identical(other.areaPricePerM2, areaPricePerM2) || other.areaPricePerM2 == areaPricePerM2)&&(identical(other.priceSource, priceSource) || other.priceSource == priceSource)&&(identical(other.areaRentPerM2, areaRentPerM2) || other.areaRentPerM2 == areaRentPerM2)&&(identical(other.rentSource, rentSource) || other.rentSource == rentSource)&&const DeepCollectionEquality().equals(other.photos, _photos)&&(identical(other.photoCredit, photoCredit) || other.photoCredit == photoCredit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,id,areaId,areaName,name,title,blurb,description,address,point,homeType,rooms,bedrooms,sizeM2,floor,yearBuilt,outdoor,style,price,monthlyFee,pricePerM2,areaPricePerM2,priceSource,const DeepCollectionEquality().hash(_photos),photoCredit]);
+    return Object.hashAll([runtimeType,id,areaId,areaName,name,title,blurb,description,address,point,homeType,rooms,bedrooms,sizeM2,floor,yearBuilt,outdoor,style,price,monthlyFee,pricePerM2,areaPricePerM2,priceSource,areaRentPerM2,rentSource,const DeepCollectionEquality().hash(_photos),photoCredit]);
 }
 
 @override
 String toString() {
-    return 'Listing(id: $id, areaId: $areaId, areaName: $areaName, name: $name, title: $title, blurb: $blurb, description: $description, address: $address, point: $point, homeType: $homeType, rooms: $rooms, bedrooms: $bedrooms, sizeM2: $sizeM2, floor: $floor, yearBuilt: $yearBuilt, outdoor: $outdoor, style: $style, price: $price, monthlyFee: $monthlyFee, pricePerM2: $pricePerM2, areaPricePerM2: $areaPricePerM2, priceSource: $priceSource, photos: $photos, photoCredit: $photoCredit)';
+    return 'Listing(id: $id, areaId: $areaId, areaName: $areaName, name: $name, title: $title, blurb: $blurb, description: $description, address: $address, point: $point, homeType: $homeType, rooms: $rooms, bedrooms: $bedrooms, sizeM2: $sizeM2, floor: $floor, yearBuilt: $yearBuilt, outdoor: $outdoor, style: $style, price: $price, monthlyFee: $monthlyFee, pricePerM2: $pricePerM2, areaPricePerM2: $areaPricePerM2, priceSource: $priceSource, areaRentPerM2: $areaRentPerM2, rentSource: $rentSource, photos: $photos, photoCredit: $photoCredit)';
 }
 
 
@@ -355,11 +368,11 @@ abstract mixin class _$ListingCopyWith<$Res> implements $ListingCopyWith<$Res> {
   factory _$ListingCopyWith(_Listing value, $Res Function(_Listing) _then) = __$ListingCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String areaId, String areaName, String name, String title, String blurb, String description, String address, GeoPoint point, HomeType homeType, int rooms, int bedrooms, int sizeM2, int? floor, int? yearBuilt, OutdoorSpace outdoor, HomeStyle style, Money price, Money? monthlyFee, Money pricePerM2, Money areaPricePerM2, String priceSource, List<String> photos, String? photoCredit
+ String id, String areaId, String areaName, String name, String title, String blurb, String description, String address, GeoPoint point, HomeType homeType, int rooms, int bedrooms, int sizeM2, int? floor, int? yearBuilt, OutdoorSpace outdoor, HomeStyle style, Money price, Money? monthlyFee, Money pricePerM2, Money areaPricePerM2, String priceSource, Money areaRentPerM2, String rentSource, List<String> photos, String? photoCredit
 });
 
 
-@override $GeoPointCopyWith<$Res> get point;@override $MoneyCopyWith<$Res> get price;@override $MoneyCopyWith<$Res>? get monthlyFee;@override $MoneyCopyWith<$Res> get pricePerM2;@override $MoneyCopyWith<$Res> get areaPricePerM2;
+@override $GeoPointCopyWith<$Res> get point;@override $MoneyCopyWith<$Res> get price;@override $MoneyCopyWith<$Res>? get monthlyFee;@override $MoneyCopyWith<$Res> get pricePerM2;@override $MoneyCopyWith<$Res> get areaPricePerM2;@override $MoneyCopyWith<$Res> get areaRentPerM2;
 
 }
 /// @nodoc
@@ -372,7 +385,7 @@ class __$ListingCopyWithImpl<$Res>
 
 /// Create a copy of Listing
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? areaId = null,Object? areaName = null,Object? name = null,Object? title = null,Object? blurb = null,Object? description = null,Object? address = null,Object? point = null,Object? homeType = null,Object? rooms = null,Object? bedrooms = null,Object? sizeM2 = null,Object? floor = freezed,Object? yearBuilt = freezed,Object? outdoor = null,Object? style = null,Object? price = null,Object? monthlyFee = freezed,Object? pricePerM2 = null,Object? areaPricePerM2 = null,Object? priceSource = null,Object? photos = null,Object? photoCredit = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? areaId = null,Object? areaName = null,Object? name = null,Object? title = null,Object? blurb = null,Object? description = null,Object? address = null,Object? point = null,Object? homeType = null,Object? rooms = null,Object? bedrooms = null,Object? sizeM2 = null,Object? floor = freezed,Object? yearBuilt = freezed,Object? outdoor = null,Object? style = null,Object? price = null,Object? monthlyFee = freezed,Object? pricePerM2 = null,Object? areaPricePerM2 = null,Object? priceSource = null,Object? areaRentPerM2 = null,Object? rentSource = null,Object? photos = null,Object? photoCredit = freezed,}) {
   return _then(_Listing(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,areaId: null == areaId ? _self.areaId : areaId // ignore: cast_nullable_to_non_nullable
@@ -396,6 +409,8 @@ as Money,monthlyFee: freezed == monthlyFee ? _self.monthlyFee : monthlyFee // ig
 as Money?,pricePerM2: null == pricePerM2 ? _self.pricePerM2 : pricePerM2 // ignore: cast_nullable_to_non_nullable
 as Money,areaPricePerM2: null == areaPricePerM2 ? _self.areaPricePerM2 : areaPricePerM2 // ignore: cast_nullable_to_non_nullable
 as Money,priceSource: null == priceSource ? _self.priceSource : priceSource // ignore: cast_nullable_to_non_nullable
+as String,areaRentPerM2: null == areaRentPerM2 ? _self.areaRentPerM2 : areaRentPerM2 // ignore: cast_nullable_to_non_nullable
+as Money,rentSource: null == rentSource ? _self.rentSource : rentSource // ignore: cast_nullable_to_non_nullable
 as String,photos: null == photos ? _self._photos : photos // ignore: cast_nullable_to_non_nullable
 as List<String>,photoCredit: freezed == photoCredit ? _self.photoCredit : photoCredit // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -449,6 +464,15 @@ $MoneyCopyWith<$Res> get areaPricePerM2 {
   
   return $MoneyCopyWith<$Res>(_self.areaPricePerM2, (value) {
     return _then(_self.copyWith(areaPricePerM2: value));
+  });
+}/// Create a copy of Listing
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MoneyCopyWith<$Res> get areaRentPerM2 {
+  
+  return $MoneyCopyWith<$Res>(_self.areaRentPerM2, (value) {
+    return _then(_self.copyWith(areaRentPerM2: value));
   });
 }
 }

@@ -4,7 +4,7 @@ import '../markets/resolved_market.dart';
 import 'listing.dart';
 import 'priced_home.dart';
 
-HomeCost? homeCostFor(
+AffordabilitySlice? homeAffordability(
   Listing listing, {
   required ResolvedMarket market,
   required AffordabilitySlice household,
@@ -22,7 +22,23 @@ HomeCost? homeCostFor(
     termYears: household.termYears,
     loanTypeId: household.loanTypeId,
   )) {
-    AffordabilityAnswered(:final slice) => HomeCost.of(slice),
+    AffordabilityAnswered(:final slice) => slice.copyWith(
+      homeId: listing.id,
+      homeName: listing.addressLine,
+    ),
     AffordabilityNeeds() => null,
   };
 }
+
+HomeCost? homeCostFor(
+  Listing listing, {
+  required ResolvedMarket market,
+  required AffordabilitySlice household,
+}) => switch (homeAffordability(
+  listing,
+  market: market,
+  household: household,
+)) {
+  final slice? => HomeCost.of(slice),
+  null => null,
+};

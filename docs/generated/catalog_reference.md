@@ -16,6 +16,8 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `PurchaseCostsTable` | yes | `affordability` | `affordability` | A Funchal flat |
 | `DownPaymentSlider` | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
 | `MortgageOptions` | yes | `affordability` | `affordability` | A Stockholm flat, A Funchal flat |
+| `RentSplit` | yes | `split` | `split` | Two friends in Graça |
+| `BuyVsRent` | yes | `comparison` | `comparison` | A flat in Nacka over seven years |
 | `RuleNote` | yes | `rule` | `rule` | The rule that limits the loan |
 | `HomeCard` | yes | `home` | `home` | Two Stockholm flats |
 | `Shortlist` | yes | `homes` | `homes` | Two kept flats |
@@ -54,6 +56,14 @@ Lets the buyer try down payments for the price in /affordability and see the loa
 ### MortgageOptions
 
 The sample lender's variable, fixed, and mixed rates side by side with the monthly cost of each, from compute_affordability; its choose action sends the one the buyer takes, with loanType added to its context.
+
+### RentSplit
+
+A home's rent and bills split between the people sharing it, from split_rent: equally, by income, or by room size, which the buyer switches between; its choose action sends the rule they take, with rule added to its context.
+
+### BuyVsRent
+
+Buying a sample home against renting one like it, from compare_buy_rent: what each has cost by every year, the equity built, and the year buying comes out cheaper, with a slider over the years the buyer expects to stay.
 
 ### RuleNote
 
@@ -134,3 +144,24 @@ The buyer's week measured with measure_week: an object by starting point, a samp
 | --- | --- | --- |
 | `/week/<from>` | object read by Homeward components | One week: { fromId, fromName, from, trips }. Bind it whole to a WeeklyTravel. |
 | `/week/<from>/trips/<n>` | object read by Homeward components | One trip: { placeName, perWeek, mode, minutes, meters }. Bind it to a RouteSummary. |
+
+### `/rentSplit`
+
+A home's rent and bills split between the people sharing it, by each rule split_rent could work out. Seeded by `split_rent`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/rentSplit/rent` | object read by Homeward components | The rent a month: the buyer's or an estimate from the area, with its source |
+| `/rentSplit/bills` | money object { "minorUnits": integer, "currency": ISO 4217 code } | The bills a month the buyer stated |
+| `/rentSplit/splits` | object read by Homeward components | Each rule's parts per person; bind the whole slice to a RentSplit |
+
+### `/buyVsRent`
+
+Buying a sample home against renting one like it, year by year, from compare_buy_rent. Seeded by `compare_buy_rent`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/buyVsRent/price` | money object { "minorUnits": integer, "currency": ISO 4217 code } | The price of the home |
+| `/buyVsRent/rent` | object read by Homeward components | The rent a month: the buyer's or an estimate from the area, with its source |
+| `/buyVsRent/years` | integer | The years the buyer expects to stay |
+| `/buyVsRent/points` | object read by Homeward components | What buying and renting have cost by each year; bind the whole slice to a BuyVsRent |

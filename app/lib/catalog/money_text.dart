@@ -3,11 +3,13 @@ import 'dart:math';
 import 'package:common/common.dart';
 import 'package:intl/intl.dart';
 
-String moneyText(Money money) => NumberFormat.currency(
+String moneyText(Money money, {bool exact = false}) => NumberFormat.currency(
   locale: 'en',
   name: money.currency.code,
   symbol: _symbols[money.currency.code] ?? '${money.currency.code} ',
-  decimalDigits: 0,
+  decimalDigits: exact && money.minorUnits % money.currency.majorUnit != 0
+      ? money.currency.minorDigits
+      : 0,
 ).format(majorUnits(money));
 
 double majorUnits(Money money) =>

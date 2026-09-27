@@ -33,6 +33,8 @@ _Listing _$ListingFromJson(Map<String, dynamic> json) =>
           'pricePerM2',
           'areaPricePerM2',
           'priceSource',
+          'areaRentPerM2',
+          'rentSource',
           'photos',
           'photoCredit',
         ],
@@ -84,6 +86,11 @@ _Listing _$ListingFromJson(Map<String, dynamic> json) =>
           (v) => Money.fromJson(v as Map<String, dynamic>),
         ),
         priceSource: $checkedConvert('priceSource', (v) => v as String),
+        areaRentPerM2: $checkedConvert(
+          'areaRentPerM2',
+          (v) => Money.fromJson(v as Map<String, dynamic>),
+        ),
+        rentSource: $checkedConvert('rentSource', (v) => v as String),
         photos: $checkedConvert(
           'photos',
           (v) => (v as List<dynamic>).map((e) => e as String).toList(),
@@ -116,6 +123,8 @@ Map<String, dynamic> _$ListingToJson(_Listing instance) => <String, dynamic>{
   'pricePerM2': instance.pricePerM2.toJson(),
   'areaPricePerM2': instance.areaPricePerM2.toJson(),
   'priceSource': instance.priceSource,
+  'areaRentPerM2': instance.areaRentPerM2.toJson(),
+  'rentSource': instance.rentSource,
   'photos': instance.photos,
   'photoCredit': ?instance.photoCredit,
 };

@@ -1109,6 +1109,91 @@
       ],
       "additionalProperties": false
     },
+    "RentSplit": {
+      "type": "object",
+      "description": "A home's rent and bills split between the people sharing it, from split_rent: equally, by income, or by room size, which the buyer switches between; its choose action sends the rule they take, with rule added to its context.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "RentSplit"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "split": {
+          "type": "object",
+          "description": "Always { \"path\": \"/rentSplit\" }, after split_rent answered.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/rentSplit"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "choose": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "split"
+      ],
+      "additionalProperties": false
+    },
+    "BuyVsRent": {
+      "type": "object",
+      "description": "Buying a sample home against renting one like it, from compare_buy_rent: what each has cost by every year, the equity built, and the year buying comes out cheaper, with a slider over the years the buyer expects to stay.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "BuyVsRent"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "comparison": {
+          "type": "object",
+          "description": "Always { \"path\": \"/buyVsRent\" }, after compare_buy_rent answered.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/buyVsRent"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "comparison"
+      ],
+      "additionalProperties": false
+    },
     "RuleNote": {
       "type": "object",
       "description": "One lending rule, the largest loan it allows, and its source, from compute_affordability.",
@@ -1989,6 +2074,12 @@
         },
         {
           "$ref": "#/components/MortgageOptions"
+        },
+        {
+          "$ref": "#/components/RentSplit"
+        },
+        {
+          "$ref": "#/components/BuyVsRent"
         },
         {
           "$ref": "#/components/RuleNote"

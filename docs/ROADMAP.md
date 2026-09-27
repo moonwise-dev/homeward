@@ -96,9 +96,16 @@ four journeys of `docs/PRODUCT.md` (D141).
 - **C8b The map.** After S11 and the Maps keys: the Maps renderer package
   with the toolkit's `GoogleMap` (D133), drawing the places and the measured
   trips. Blocked until the keys exist; see Open Questions.
-- **C9 Sharing and choosing.** `RentSplit`, `BuyVsRent`, `HomeSwipe`, and
-  `ListingQuote`, with needs read from each listing and quotes checked word
-  for word (D126's reader).
+- **C9 Rent — done.** Sample rents per area for the sample homes, from Statistics
+  Sweden and INE, which the rent the buyer states replaces; a `split_rent`
+  tool and `RentSplit`, rent and bills split equally, by income, or by room
+  size; a `compare_buy_rent` tool and `BuyVsRent`, the running cost of
+  buying a home against renting one like it, year by year (D155). Leaves out
+  the home's price changing, what the savings would earn, selling costs, and
+  a house's upkeep.
+- **C9b Needs from listings.** The listing reader restored from `6faa8ab`,
+  with quotes checked word for word (D126), and `ListingQuote`.
+- **C9c Swiping.** `HomeSwipe`, restored from `6faa8ab`.
 - **C10 Complete.** The catalog filled to 25 to 30, the gallery showing each
   component beside its parameters, the README with the journeys, and the
   journeys rehearsed.
@@ -189,6 +196,7 @@ four journeys of `docs/PRODUCT.md` (D141).
 | Homeward reads as a relocation app, not a finance sample | Google's finance vertical goes unmet; field engineers find no reusable finance components | Money in every journey and in the recording, finance blocks first in the build order (D138) |
 | 25 to 30 components in about twelve days | Unfinished blocks on camera | Finance math and six finance blocks restored from `6faa8ab`; each chunk demoable; the gallery shows only finished blocks |
 | A catalog of 25 to 30 components outgrows the prompt | Slower turns, more corrections, the free tier's token limits | Progressive disclosure after S16 (D140) |
+| Area samples miss the household's own situation: Stockholm's official rents are first-hand leases a newcomer rarely gets without years in the queue, while second-hand rents run about 2.5 times higher, so `BuyVsRent` makes renting look cheaper there than a newcomer finds it | A comparison that is sourced yet wrong for the buyer in front of it | Each figure carries its source and what it measures, and Gemini sees it; a rent the buyer states replaces the estimate; valuing each situation on the spot from the buyer's story is Open Question 8 |
 | The restored finance was the slowest and least reliable part before (D125) | Money turns fail on camera | The math returns without the scripted deal: Gemini composes the finance blocks freely, and tools seed the figures |
 | BYO key friction for video viewers | Fewer people try the demo | One-screen key flow with direct AI Studio link; hero prompt ready on first plan |
 | Buyers' personal details in EU | Compliance exposure | Anonymous auth, `eur3`, no content in logs, delete controls, 90-day inactivity cleanup |
@@ -301,6 +309,7 @@ superseded stay as history.
 | D152 | Shortlist and comparison | A household keeps a home with a Keep button on `HomeCard` or in its own words. The tap reaches Gemini like every action, and Gemini records it with `keep_homes`, which marks homes kept or dropped in `/homes`, pricing a sample home the plan has not shown yet; the flag survives every repricing. `Shortlist` binds `/homes` and lists the kept homes, each with its monthly cost, a tap to work it out, and one to drop it. `HomeComparison` binds two or three homes Gemini names, each `{ "path": "/homes/<id>" }`, so it compares kept homes or any the buyer asks about, on price, monthly cost, down payment, cash against savings, the rules, size, rooms, and the price per square metre against the area. The check that a bound slice was seeded reads a list of paths | Keeping homes as brief items; a comparison that always shows the whole shortlist; keeping the shortlist on the device only |
 | D153 | Down payment within savings | Found comparing homes in C7b: the down payment assumed when the buyer has not stated one was the smallest every rule allows, so a home whose loan an income rule caps was priced with a down payment the savings could not reach, and read cheaper a month than a home half its price. It stays the smallest the rules allow while the savings reach it; when they do not, it is the most the savings can put down after the costs on the day, in the what-if's steps and never below the loan-to-value minimum, and the loan is shown over the limit by what is missing. The same code prices `compute_affordability`, `HomeCard`, `Shortlist`, and `HomeComparison`. Amends D147 | Keeping the figure and labelling it; the loan-to-value minimum always, which marks homes over the limit that the savings could bring within it |
 | D154 | Places and the week before the map | C8 splits into places and the week (C8) and the map (C8b), since the map needs S11 and a Maps key on the billing account that the owner creates. `find_place` resolves each place the buyer names with Nominatim, so every place shown was checked against open data (D101), and seeds `/places`. `measure_week` routes from a sample home or a place to each of the week's places by foot, bike, car, or public transport, on the FOSSGIS routers and Transitous, with how many times a week the buyer goes there and back, and seeds `/week`, one entry for each starting point: every trip's minutes and distance, and the weekly total. How often is a small count Gemini may deduce, as the brief allows. `WeeklyTravel` shows one starting point's week and `RouteSummary` one trip; both say they were measured and by what. The route geometry waits for the map | The map first, blocked on the key; the week added to every priced home, which would route every sample home against every place |
+| D155 | Rent from area statistics | C9 is the rent money: `RentSplit` and `BuyVsRent` before the listing reader (C9b) and `HomeSwipe` (C9c), since money is the spine (D138) and journeys 3 and 4 need them. No listing site offers rents for free, so each sample home carries its area's median rent per square metre: in Stockholm, Statistics Sweden's 2025 figure for first-hand leases in the district or municipality, which a newcomer rarely gets without years in the housing queue, so the source says so; in Lisbon, INE's median for new leases in the 12 months to March 2026 in the parish, or the municipality or sub-region where INE gives no parish figure, each named. A home like it rents for that figure times its size, labelled as an estimate with its source; a rent the buyer states replaces it and is labelled as theirs. `split_rent` splits rent and bills between two to eight people equally, by the incomes they stated, or by room size with the shared space split equally, and `RentSplit` lets them switch rule and send the one they take. `compare_buy_rent` prices the home for the household the last `compute_affordability` run kept and adds, month by month, the costs on the day, interest after any deduction, and the home's fee, against the rent, with the equity built at today's price; `BuyVsRent` shows the two totals over the years they expect to stay, which a slider moves, and the year buying comes out cheaper. It leaves out the home's price changing, what the savings would earn, selling costs, and a house's upkeep, and says so | The listing reader first, for journey 2; rents the buyer states only, which adds a question to every rent screen; sample rental listings, a data job that widens the chunk |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.
@@ -347,3 +356,7 @@ them before M0 ends.
    - cap the Maps JavaScript API at 300 map loads a day;
    - add the budget alert;
    - put the keys in `.env`.
+8. Whether figures should be valued on the spot for each household's story
+   rather than from area samples. The Stockholm rent gotcha (D155, Risks)
+   shows the limit: a sourced median can be the wrong figure for this buyer.
+   Revisit with S12 and the brief, or sooner if the recording needs it.

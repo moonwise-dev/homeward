@@ -421,7 +421,7 @@ final class ComputeAffordability extends AgentTool {
   ) => switch (listing) {
     final listing? => slice.copyWith(
       homeId: listing.id,
-      homeName: '${listing.address}, ${listing.areaName}',
+      homeName: listing.addressLine,
     ),
     null => slice,
   };

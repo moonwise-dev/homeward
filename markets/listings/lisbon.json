@@ -41,6 +41,11 @@
         "currency": "EUR"
       },
       "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 2133,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Santo António parish, 12 months to March 2026",
       "photos": [
         "lis-01-1",
         "lis-01-2",
@@ -86,6 +91,11 @@
         "currency": "EUR"
       },
       "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 2000,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Misericórdia parish, 12 months to March 2026",
       "photos": [
         "lis-02-1",
         "lis-02-2",
@@ -132,6 +142,11 @@
         "currency": "EUR"
       },
       "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1964,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Estrela parish, 12 months to March 2026",
       "photos": [
         "lis-03-1",
         "lis-03-2",
@@ -177,6 +192,11 @@
         "currency": "EUR"
       },
       "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1909,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Campo de Ourique parish, 12 months to March 2026",
       "photos": [
         "lis-04-1",
         "lis-04-2",
@@ -223,6 +243,11 @@
         "currency": "EUR"
       },
       "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1944,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Santa Maria Maior parish, 12 months to March 2026",
       "photos": [
         "lis-05-1",
         "lis-05-2",
@@ -268,6 +293,11 @@
         "currency": "EUR"
       },
       "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1844,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in São Vicente parish, 12 months to March 2026",
       "photos": [
         "lis-06-1",
         "lis-06-2",
@@ -313,6 +343,11 @@
         "currency": "EUR"
       },
       "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1868,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Parque das Nações parish, 12 months to March 2026",
       "photos": [
         "lis-07-1",
         "lis-07-2",
@@ -359,6 +394,11 @@
         "currency": "EUR"
       },
       "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1722,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Lisbon municipality, since INE puts Alvalade below it without a figure, 12 months to March 2026",
       "photos": [
         "lis-08-1",
         "lis-08-2",
@@ -404,6 +444,11 @@
         "currency": "EUR"
       },
       "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1650,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Cascais municipality, 12 months to March 2026",
       "photos": [
         "lis-09-1",
         "lis-09-2",
@@ -444,6 +489,11 @@
         "currency": "EUR"
       },
       "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1650,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Cascais municipality, 12 months to March 2026",
       "photos": [
         "lis-10-1",
         "lis-10-2",
@@ -489,6 +539,11 @@
         "currency": "EUR"
       },
       "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1364,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Almada municipality, first quarter of 2026",
       "photos": [
         "lis-11-1",
         "lis-11-2",
@@ -529,6 +584,11 @@
         "currency": "EUR"
       },
       "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1443,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in the Grande Lisboa sub-region, 12 months to March 2026",
       "photos": [
         "lis-12-1",
         "lis-12-2",
@@ -569,6 +629,11 @@
         "currency": "EUR"
       },
       "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1650,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Cascais municipality, 12 months to March 2026",
       "photos": [
         "lis-13-1",
         "lis-13-2",
@@ -609,6 +674,11 @@
         "currency": "EUR"
       },
       "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1650,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Cascais municipality, 12 months to March 2026",
       "photos": [
         "lis-14-1",
         "lis-14-2",

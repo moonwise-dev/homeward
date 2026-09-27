@@ -9,12 +9,12 @@ import 'stockholm_example.dart';
 final stockholmHomesDataModel = _homesDataModel();
 
 final stockholmShortlistDataModel = _homesDataModel(
-  kept: {for (final listing in _stockholmHomes) listing.id},
+  kept: {for (final listing in stockholmSampleHomes) listing.id},
 );
 
 Map<String, Object?> _homesDataModel({Set<String> kept = const {}}) => {
   'homes': {
-    for (final listing in _stockholmHomes)
+    for (final listing in stockholmSampleHomes)
       listing.id: jsonDecode(
         jsonEncode(
           PricedHome(
@@ -22,7 +22,7 @@ Map<String, Object?> _homesDataModel({Set<String> kept = const {}}) => {
             cost: homeCostFor(
               listing,
               market: stockholmMarket,
-              household: _household,
+              household: stockholmHousehold,
             ),
             kept: kept.contains(listing.id),
           ).toJson(),
@@ -31,12 +31,12 @@ Map<String, Object?> _homesDataModel({Set<String> kept = const {}}) => {
   },
 };
 
-final _household = (answerAffordability(
+final stockholmHousehold = (answerAffordability(
   market: stockholmMarket,
   profile: stockholmProfile,
 ) as AffordabilityAnswered).slice;
 
-final _stockholmHomes = [
+final stockholmSampleHomes = [
   for (final json in jsonDecode(_stockholmHomesJson) as List<Object?>)
     Listing.fromJson(json! as Map<String, Object?>),
 ];
@@ -80,6 +80,11 @@ const _stockholmHomesJson = '''
       "currency": "SEK"
     },
     "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+    "areaRentPerM2": {
+      "minorUnits": 15158,
+      "currency": "SEK"
+    },
+    "rentSource": "Statistics Sweden, median rent of first-hand leases in Nacka in 2025, which take years in the housing queue",
     "photos": [
       "sto-12-1",
       "sto-12-2",
@@ -124,6 +129,11 @@ const _stockholmHomesJson = '''
       "currency": "SEK"
     },
     "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+    "areaRentPerM2": {
+      "minorUnits": 15700,
+      "currency": "SEK"
+    },
+    "rentSource": "Statistics Sweden, median rent of first-hand leases in Norra innerstaden in 2025, which take years in the housing queue",
     "photos": [
       "sto-01-1",
       "sto-01-2",

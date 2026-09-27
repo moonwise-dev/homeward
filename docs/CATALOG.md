@@ -71,6 +71,8 @@ Buttons send actions the model names itself (`docs/PROTOCOL.md`).
 | Money | `PurchaseCostsTable` | Every upfront cost the buyer owes on the day, each with its local term and source, what is refundable and what earns it back, the total, and the cash needed with the down payment; says so when the sample rules list none (D148) | `affordability`, always `{ "path": "/affordability" }` |
 | Money | `DownPaymentSlider` | A what-if on the down payment for the price in the slice: the slider moves through the steps `compute_affordability` worked out, from the minimum the rules allow to what the savings reach after the costs on the day, and shows for each the share of the price, the loan, the monthly cost, the cash needed against the savings, and whether it is within the rules; a button uses the amount (D149) | `affordability`, always `{ "path": "/affordability" }`; `apply`, an optional action |
 | Money | `MortgageOptions` | The sample lender's rates side by side for the price and down payment in the slice: variable, fixed for a period, and in Portugal mixed and fixed for the whole term, each with its rate, how long it holds, the monthly cost, and whether the loan is within the rules at it, the one in use marked; a button uses another (D150) | `affordability`, always `{ "path": "/affordability" }`; `choose`, an optional action |
+| Money | `RentSplit` | Rent and bills split between two to eight people sharing, each person's part of the rent, the bills, and the total a month, by the rule they choose: equally, by the incomes they stated, or by room size with the shared space split equally, which they switch between; the rent labelled as theirs or as an estimate from the area's median with its source (D155) | `split`, always `{ "path": "/rentSplit" }`; `choose`, an optional action |
+| Money | `BuyVsRent` | Buying a home against renting one like it: a line for each of what buying and renting have cost by each year, the costs on the day, interest after any deduction, and the fee against the rent; a slider over the years they expect to stay with both totals and the equity built at today's price; the year buying comes out cheaper, or that renting stays cheaper; the rent labelled as theirs or as an area estimate with its source, and what the comparison leaves out (D155) | `comparison`, always `{ "path": "/buyVsRent" }` |
 | Homes | `HomeCard` | One sample home: its photos, title, area and address, price and monthly fee, rooms, size, floor, and outdoor space, the price per square metre against its area's median with the source, and, once `compute_affordability` has run, what it costs this household each month with the down payment, rate, and term, and whether the loan is within the rules and the cash within their savings, and whether it is on the shortlist; labelled as a sample listing (D151) | `home`, bound to one home, `{ "path": "/homes/<id>" }`; `choose` and `keep`, optional actions |
 | Homes | `Shortlist` | The homes the household kept, each with a photo, its area and address, its price, what it costs them a month, and whether it is within reach, with a tap to work it out and one to drop it; says so when nothing is kept yet (D152) | `homes`, always `{ "path": "/homes" }`; `choose` and `drop`, optional actions |
 | Homes | `HomeComparison` | Two or three homes side by side: price, what each costs a month, the down payment, the cash needed against savings, whether the loan is within the rules, size, rooms, floor, outdoor space, and the price per square metre against its area, labelled as sample listings (D152) | `homes`, a list of two or three, each `{ "path": "/homes/<id>" }`; `choose`, an optional action |
@@ -94,6 +96,10 @@ context. The slider itself changes nothing until then.
 A `MortgageOptions` button sends its `choose` action with `loanType`, the
 option's ID, such as `fixed-3y`, and `label`, such as "Take the rate fixed
 for 3 years", added to its context.
+
+A `RentSplit` button sends its `choose` action with `rule`, `equal`,
+`income`, or `room`, and `label`, such as "Split the rent by income", added
+to its context. Switching rules on the block changes nothing until then.
 
 A `HomeCard` button sends its `choose` action with `home`, the home's ID,
 such as `sto-01`, and `label`, such as "Work out Odengatan 64", added to its
@@ -119,10 +125,8 @@ marked restored come back from `6faa8ab`.
 | Understanding | `Brief` | C10 | A section of the brief: the household, its needs, its week, or what is open |
 | Understanding | `HouseholdSummary` | C10 | Who moves, incomes and savings as stated, and who shares the costs |
 | Money | `MoneyInput` | C10 | An amount in a currency, for incomes and savings; restored |
-| Money | `RentSplit` | C9 | Rent and bills split between people sharing, by the rule they choose |
-| Money | `BuyVsRent` | C9 | Buying a home against renting one like it, over the years they expect to stay |
-| Homes | `HomeSwipe` | C9 | Keep or pass through homes to learn taste |
-| Homes | `ListingQuote` | C9 | The listing text with the sentence that meets a need highlighted |
+| Homes | `HomeSwipe` | C9c | Keep or pass through homes to learn taste |
+| Homes | `ListingQuote` | C9b | The listing text with the sentence that meets a need highlighted |
 | Place and travel | `GoogleMap` | C8b | The Maps Agentic UI Toolkit's map, with its schema vendored at a pinned commit from `googlemaps/a2ui` (`agent/python_agent/shared/schema/maps_catalog_extension.json`) and drawn by Homeward's Flutter Maps package (D133) |
 | Place and travel | `MarketSnapshotCard` | C10 | The city's reference rates and typical costs, as samples; restored |
 | Place and travel | `PlaceDetailsCompact` | Later | The toolkit's place card, after S14 |

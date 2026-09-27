@@ -9,4 +9,12 @@ extension type const Currency._(String code) {
   }
 
   int get minorDigits => iso4217MinorDigits[code]!;
+
+  int get majorUnit {
+    var units = 1;
+    for (var digit = 0; digit < minorDigits; digit++) {
+      units *= 10;
+    }
+    return units;
+  }
 }

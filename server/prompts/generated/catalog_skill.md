@@ -75,6 +75,27 @@ The buyer's week measured with measure_week: an object by starting point, a samp
 | `/week/<from>` | object read by Homeward components | One week: { fromId, fromName, from, trips }. Bind it whole to a WeeklyTravel. |
 | `/week/<from>/trips/<n>` | object read by Homeward components | One trip: { placeName, perWeek, mode, minutes, meters }. Bind it to a RouteSummary. |
 
+### `/rentSplit`
+
+A home's rent and bills split between the people sharing it, by each rule split_rent could work out. Seeded by `split_rent`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/rentSplit/rent` | object read by Homeward components | The rent a month: the buyer's or an estimate from the area, with its source |
+| `/rentSplit/bills` | money object { "minorUnits": integer, "currency": ISO 4217 code } | The bills a month the buyer stated |
+| `/rentSplit/splits` | object read by Homeward components | Each rule's parts per person; bind the whole slice to a RentSplit |
+
+### `/buyVsRent`
+
+Buying a sample home against renting one like it, year by year, from compare_buy_rent. Seeded by `compare_buy_rent`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/buyVsRent/price` | money object { "minorUnits": integer, "currency": ISO 4217 code } | The price of the home |
+| `/buyVsRent/rent` | object read by Homeward components | The rent a month: the buyer's or an estimate from the area, with its source |
+| `/buyVsRent/years` | integer | The years the buyer expects to stay |
+| `/buyVsRent/points` | object read by Homeward components | What buying and renting have cost by each year; bind the whole slice to a BuyVsRent |
+
 ## Actions
 
 Buttons send actions as `{ "event": { "name": …, "context": { … } } }`. Name each action for what the buyer does, in lowercase words joined by underscores, such as `keep_home`. Context values are literals or bindings. You receive the action's name, its context, and the data model of its surface as the buyer's next message.
@@ -95,6 +116,8 @@ The catalog schema below holds the full schemas of the components every plan use
 - `PurchaseCostsTable`: Every upfront cost the buyer owes on the day, with its source, the total, and the cash needed with the down payment, from compute_affordability.
 - `DownPaymentSlider`: Lets the buyer try down payments for the price in /affordability and see the loan, the monthly cost, and the cash needed; its apply action sends the one they use, with downPayment added to its context.
 - `MortgageOptions`: The sample lender's variable, fixed, and mixed rates side by side with the monthly cost of each, from compute_affordability; its choose action sends the one the buyer takes, with loanType added to its context.
+- `RentSplit`: A home's rent and bills split between the people sharing it, from split_rent: equally, by income, or by room size, which the buyer switches between; its choose action sends the rule they take, with rule added to its context.
+- `BuyVsRent`: Buying a sample home against renting one like it, from compare_buy_rent: what each has cost by every year, the equity built, and the year buying comes out cheaper, with a slider over the years the buyer expects to stay.
 - `HomeCard`: One sample home from search_homes: photos, facts, price, and what it costs this household each month; its choose action sends the home to work out, and its keep action the home to keep or drop, with home, its ID, and keep, true or false, added to its context.
 - `Shortlist`: The homes the household kept with keep_homes, each with what it costs them a month; its choose action sends a home to work out and its drop action one to drop, with home, its ID, added to its context.
 - `HomeComparison`: Two or three homes from search_homes side by side: price, what each costs a month, the cash needed, and size; its choose action sends the one the buyer picks, with home, its ID, added to its context.

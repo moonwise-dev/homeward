@@ -34,10 +34,7 @@ DownPaymentBounds loanToValueBounds({
 );
 
 Money downPaymentStep(Money price) {
-  var majorUnit = 1;
-  for (var i = 0; i < price.currency.minorDigits; i++) {
-    majorUnit *= 10;
-  }
+  final majorUnit = price.currency.majorUnit;
   final target = price.minorUnits ~/ 200;
   var magnitude = majorUnit;
   while (magnitude * 10 <= target) {
