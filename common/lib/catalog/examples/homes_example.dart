@@ -12,24 +12,35 @@ final stockholmShortlistDataModel = _homesDataModel(
   kept: {for (final listing in stockholmSampleHomes) listing.id},
 );
 
+final stockholmSwipeDataModel = {
+  'swipe': {
+    'homes': [
+      for (final listing in stockholmSampleHomes)
+        jsonDecode(jsonEncode(_priced(listing, kept: false).toJson())),
+    ],
+  },
+};
+
 Map<String, Object?> _homesDataModel({Set<String> kept = const {}}) => {
   'homes': {
     for (final listing in stockholmSampleHomes)
       listing.id: jsonDecode(
         jsonEncode(
-          PricedHome(
-            listing: listing,
-            cost: homeCostFor(
-              listing,
-              market: stockholmMarket,
-              household: stockholmHousehold,
-            ),
-            kept: kept.contains(listing.id),
-          ).toJson(),
+          _priced(listing, kept: kept.contains(listing.id)).toJson(),
         ),
       ),
   },
 };
+
+PricedHome _priced(Listing listing, {required bool kept}) => PricedHome(
+  listing: listing,
+  cost: homeCostFor(
+    listing,
+    market: stockholmMarket,
+    household: stockholmHousehold,
+  ),
+  kept: kept,
+);
 
 final stockholmHousehold = (answerAffordability(
   market: stockholmMarket,

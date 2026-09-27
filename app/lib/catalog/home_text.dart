@@ -16,3 +16,7 @@ String againstArea(Listing listing) {
       ? 'in line with $median'
       : '${percent.abs()}% ${percent < 0 ? 'below' : 'above'} $median';
 }
+
+String reachText(HomeCost cost) => cost.withinReach
+    ? 'Within the rules and your savings'
+    : 'Out of reach as it stands';

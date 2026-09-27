@@ -76,6 +76,7 @@ Buttons send actions the model names itself (`docs/PROTOCOL.md`).
 | Homes | `HomeCard` | One sample home: its photos, title, area and address, price and monthly fee, rooms, size, floor, and outdoor space, the price per square metre against its area's median with the source, and, once `compute_affordability` has run, what it costs this household each month with the down payment, rate, and term, and whether the loan is within the rules and the cash within their savings, and whether it is on the shortlist; labelled as a sample listing (D151) | `home`, bound to one home, `{ "path": "/homes/<id>" }`; `choose` and `keep`, optional actions |
 | Homes | `Shortlist` | The homes the household kept, each with a photo, its area and address, its price, what it costs them a month, and whether it is within reach, with a tap to work it out and one to drop it; says so when nothing is kept yet (D152) | `homes`, always `{ "path": "/homes" }`; `choose` and `drop`, optional actions |
 | Homes | `HomeComparison` | Two or three homes side by side: price, what each costs a month, the down payment, the cash needed against savings, whether the loan is within the rules, size, rooms, floor, outdoor space, and the price per square metre against its area, labelled as sample listings (D152) | `homes`, a list of two or three, each `{ "path": "/homes/<id>" }`; `choose`, an optional action |
+| Homes | `HomeSwipe` | Up to six sample homes that differ, one card at a time: the photo, area, title, price, rooms and size, and what it costs the household a month once priced; the buyer keeps or passes each with a swipe or a tap, then sees how many they kept, labelled as sample listings (D157) | `homes`, always `{ "path": "/swipe/homes" }`; `done`, an action |
 | Homes | `ListingQuote` | One sample home read for the household's needs: each need in the buyer's words with whether the listing meets it, rules it out, or says nothing, and the listing's description with the sentence that decides each one highlighted, every quote checked word for word; says nothing means the listing does not mention it, to ask or check at a viewing (D156) | `reading`, bound to one home, `{ "path": "/reads/<id>" }` |
 | Place and travel | `WeeklyTravel` | The buyer's week from one starting point, a sample home or a place: each place with how many times a week they go, how they travel, the minutes each way, and the week's total there and back, measured by open routing and labelled with what measured it (D154) | `week`, bound to one starting point, `{ "path": "/week/<from>" }` |
 | Place and travel | `RouteSummary` | One measured trip: where from and to, how they travel, the minutes and distance one way, and how many times a week, labelled with what measured it (D154) | `trip`, bound to one trip, `{ "path": "/week/<from>/trips/<n>" }` |
@@ -110,6 +111,10 @@ or `false` to drop it, and `label`, such as "Keep Odengatan 64". A
 `label`, such as "Drop Odengatan 64"; a `HomeComparison` column sends
 `choose` like a `HomeCard`.
 
+A `HomeSwipe` sends its `done` action after the last card, with `kept`
+and `passed`, the lists of home IDs, and `label`, such as "Kept 2 of 6",
+added to its context.
+
 A `Fact` tap sends its `answer` action with `fact`, the item's ID, `answer`,
 `right` or `not_quite`, and `label`, the words the conversation shows, such as
 "Right: Your mum can't manage stairs". A `Fact` bound to an item the brief
@@ -126,7 +131,6 @@ marked restored come back from `6faa8ab`.
 | Understanding | `Brief` | C10 | A section of the brief: the household, its needs, its week, or what is open |
 | Understanding | `HouseholdSummary` | C10 | Who moves, incomes and savings as stated, and who shares the costs |
 | Money | `MoneyInput` | C10 | An amount in a currency, for incomes and savings; restored |
-| Homes | `HomeSwipe` | C9c | Keep or pass through homes to learn taste |
 | Place and travel | `GoogleMap` | C8b | The Maps Agentic UI Toolkit's map, with its schema vendored at a pinned commit from `googlemaps/a2ui` (`agent/python_agent/shared/schema/maps_catalog_extension.json`) and drawn by Homeward's Flutter Maps package (D133) |
 | Place and travel | `MarketSnapshotCard` | C10 | The city's reference rates and typical costs, as samples; restored |
 | Place and travel | `PlaceDetailsCompact` | Later | The toolkit's place card, after S14 |

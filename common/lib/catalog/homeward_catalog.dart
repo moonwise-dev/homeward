@@ -8,6 +8,7 @@ import 'components/down_payment_slider.dart';
 import 'components/fact.dart';
 import 'components/home_card.dart';
 import 'components/home_comparison.dart';
+import 'components/home_swipe.dart';
 import 'components/listing_quote.dart';
 import 'components/monthly_cost_breakdown.dart';
 import 'components/mortgage_options.dart';
@@ -38,6 +39,7 @@ const homewardComponents = <CatalogComponent>[
   HomeCard(),
   Shortlist(),
   HomeComparison(),
+  HomeSwipe(),
   ListingQuote(),
   WeeklyTravel(),
   RouteSummary(),

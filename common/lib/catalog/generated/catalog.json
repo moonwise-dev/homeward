@@ -1376,6 +1376,51 @@
       ],
       "additionalProperties": false
     },
+    "HomeSwipe": {
+      "type": "object",
+      "description": "The deck search_homes dealt with deal, one sample home at a time, that the buyer keeps or passes with a swipe or a tap; after the last card its done action sends the kept and passed IDs.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "HomeSwipe"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "homes": {
+          "type": "object",
+          "description": "Always { \"path\": \"/swipe/homes\" }, after search_homes dealt a deck.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/swipe/homes"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "done": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "homes",
+        "done"
+      ],
+      "additionalProperties": false
+    },
     "ListingQuote": {
       "type": "object",
       "description": "One sample home read for the household's needs, from read_listings: each need with whether the listing meets it, rules it out, or says nothing, and the listing's own words highlighted.",
@@ -2132,6 +2177,9 @@
         },
         {
           "$ref": "#/components/HomeComparison"
+        },
+        {
+          "$ref": "#/components/HomeSwipe"
         },
         {
           "$ref": "#/components/ListingQuote"

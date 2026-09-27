@@ -9,6 +9,7 @@ import 'down_payment_slider/down_payment_slider_item.dart';
 import 'fact/fact_item.dart';
 import 'home_card/home_card_item.dart';
 import 'home_comparison/home_comparison_item.dart';
+import 'home_swipe/home_swipe_item.dart';
 import 'listing_quote/listing_quote_item.dart';
 import 'monthly_cost_breakdown/monthly_cost_breakdown_item.dart';
 import 'mortgage_options/mortgage_options_item.dart';
@@ -40,6 +41,7 @@ Catalog homewardGenuiCatalog() {
       homeCardItem,
       shortlistItem,
       homeComparisonItem,
+      homeSwipeItem,
       listingQuoteItem,
       weeklyTravelItem,
       routeSummaryItem,

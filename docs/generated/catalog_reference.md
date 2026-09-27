@@ -22,6 +22,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `HomeCard` | yes | `home` | `home` | Two Stockholm flats |
 | `Shortlist` | yes | `homes` | `homes` | Two kept flats |
 | `HomeComparison` | yes | `homes` | `homes` | Nacka against Vasastan |
+| `HomeSwipe` | yes | `homes`, `done` | `homes` | Keep the ones that feel like yours |
 | `ListingQuote` | yes | `reading` | `reading` | A flat in Nacka read for three needs |
 | `WeeklyTravel` | yes | `week` | `week` | A week from a flat in Nacka |
 | `RouteSummary` | yes | `trip` | `trip` | To KTH by public transport |
@@ -82,6 +83,10 @@ The homes the household kept with keep_homes, each with what it costs them a mon
 
 Two or three homes from search_homes side by side: price, what each costs a month, the cash needed, and size; its choose action sends the one the buyer picks, with home, its ID, added to its context.
 
+### HomeSwipe
+
+The deck search_homes dealt with deal, one sample home at a time, that the buyer keeps or passes with a swipe or a tap; after the last card its done action sends the kept and passed IDs.
+
 ### ListingQuote
 
 One sample home read for the household's needs, from read_listings: each need with whether the listing meets it, rules it out, or says nothing, and the listing's own words highlighted.
@@ -140,6 +145,14 @@ Sample homes read_listings read for the household's needs: an object by home ID.
 | Path | Value | Meaning |
 | --- | --- | --- |
 | `/reads/<id>` | object read by Homeward components | One home: { homeName, description, readings }. Bind it whole to a ListingQuote. |
+
+### `/swipe`
+
+The deck search_homes dealt with deal: sample homes that differ. Seeded by `search_homes`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/swipe/homes` | object read by Homeward components | The deck in order, each { listing, cost }. Bind it to a HomeSwipe. |
 
 ### `/places`
 

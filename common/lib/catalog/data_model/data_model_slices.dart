@@ -6,6 +6,7 @@ import 'homes_slice.dart';
 import 'places_slice.dart';
 import 'reads_slice.dart';
 import 'rent_split_slice.dart';
+import 'swipe_slice.dart';
 import 'week_slice.dart';
 
 const dataModelSlices = <DataSlice>[
@@ -13,6 +14,7 @@ const dataModelSlices = <DataSlice>[
   affordabilityDataSlice,
   homesSlice,
   readsSlice,
+  swipeSlice,
   placesSlice,
   weekSlice,
   rentSplitSlice,

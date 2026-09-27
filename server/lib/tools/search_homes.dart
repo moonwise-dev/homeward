@@ -28,7 +28,10 @@ final class SearchHomes extends AgentTool {
       'show their price and fee. Pass only filters the buyer asked for; a '
       'price not in their words is refused. '
       'Areas by city: $_areasText. It seeds /homes for HomeCard, lowest '
-      'price first, or says how many homes each filter ruled out.';
+      'price first, or says how many homes each filter ruled out. With deal, '
+      'it also deals up to six of the matches that differ in kind, outdoor '
+      'space, style, and size, for HomeSwipe, when the buyer has not said '
+      'what they like.';
 
   @override
   Map<String, Object?> get parameters => {
@@ -70,6 +73,12 @@ final class SearchHomes extends AgentTool {
             'Only homes whose loan is within the rules and whose cash '
             'needed is within the savings, for the household '
             'compute_affordability last worked out.',
+      },
+      'deal': {
+        'type': 'boolean',
+        'description':
+            'Also deal a deck of up to six matches that differ, seeded as '
+            '/swipe/homes for HomeSwipe.',
       },
     },
     'required': ['city'],
@@ -176,8 +185,10 @@ final class SearchHomes extends AgentTool {
         logFields: {'matching': 0},
       );
     }
+    final deck = arguments['deal'] == true ? swipeDeck(matches) : null;
     return ToolResult(
       modelResult: {
+        'deck': ?deck?.map((listing) => listing.id).toList(),
         'homes': [
           for (final listing in matches)
             {
@@ -201,7 +212,8 @@ final class SearchHomes extends AgentTool {
             'never write their figures in your text. '
             '${forHousehold ? 'Each is priced for this household. ' : 'They are not priced for this household: compute_affordability has not run in this market. '}'
             'When the buyer picks one, call compute_affordability with it as '
-            'home; when they keep or drop one, call keep_homes.',
+            'home; when they keep or drop one, call keep_homes.'
+            '${deck == null ? '' : _dealNote}',
       },
       seeds: {
         homesSlice.name: {
@@ -209,10 +221,27 @@ final class SearchHomes extends AgentTool {
             if (priced[id] case final home?)
               id: jsonDecode(jsonEncode(home.toJson())),
         },
+        if (deck != null)
+          swipeSlice.name: {
+            'homes': [
+              for (final listing in deck)
+                jsonDecode(jsonEncode(priced[listing.id]!.toJson())),
+            ],
+          },
       },
-      logFields: {'matching': matches.length, 'priced': forHousehold},
+      logFields: {
+        'matching': matches.length,
+        'priced': forHousehold,
+        'dealt': ?deck?.length,
+      },
     );
   }
+
+  static const _dealNote =
+      ' The deck is in /swipe/homes: show it with HomeSwipe, '
+      '{ "homes": { "path": "/swipe/homes" } } and a done action; when the '
+      'buyer finishes, call keep_homes with the kept IDs as keep and the '
+      'others as passed.';
 
   static ToolResult _error(String message) =>
       ToolResult(modelResult: {'error': message});

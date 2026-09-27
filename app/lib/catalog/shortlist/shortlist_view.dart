@@ -6,6 +6,7 @@ import '../../ui/core/themes/colors.dart';
 import '../../ui/core/themes/dimens.dart';
 import '../../ui/core/themes/text_styles.dart';
 import '../../ui/core/ui/app_photo.dart';
+import '../home_text.dart';
 import '../money_text.dart';
 
 class ShortlistView extends HookWidget {
@@ -134,9 +135,7 @@ class _Row extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      cost.withinReach
-                          ? 'Within the rules and your savings'
-                          : 'Out of reach as it stands',
+                      reachText(cost),
                       style: AppTextStyles.caption.copyWith(
                         color: cost.withinReach
                             ? AppColors.positive

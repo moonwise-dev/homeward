@@ -21,7 +21,9 @@ final class KeepHomes extends AgentTool {
       "Keeps sample homes on the household's shortlist or drops them, when "
       'the buyer taps Keep or Drop or says so, by the IDs search_homes gave. '
       'It marks them in /homes, which Shortlist binds, and answers with the '
-      'kept IDs.';
+      'kept IDs. After a HomeSwipe, pass the kept IDs as keep and the others '
+      'as passed: it also answers with what every kept home shares that a '
+      'passed one lacks.';
 
   @override
   Map<String, Object?> get parameters => {
@@ -35,6 +37,11 @@ final class KeepHomes extends AgentTool {
         'type': 'array',
         'items': {'type': 'string'},
       },
+      'passed': {
+        'type': 'array',
+        'items': {'type': 'string'},
+        'description': 'The homes the buyer passed on in HomeSwipe.',
+      },
     },
   };
 
@@ -42,11 +49,12 @@ final class KeepHomes extends AgentTool {
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {
     final keep = _ids(arguments['keep']);
     final drop = _ids(arguments['drop']);
-    if (keep.isEmpty && drop.isEmpty) {
+    final passed = _ids(arguments['passed']);
+    if (keep.isEmpty && drop.isEmpty && passed.isEmpty) {
       return _error('Pass the IDs to keep or drop.');
     }
     final unknown = [
-      for (final id in {...keep, ...drop})
+      for (final id in {...keep, ...drop, ...passed})
         if (markets.home(id) == null) id,
     ];
     if (unknown.isNotEmpty) {
@@ -80,6 +88,7 @@ final class KeepHomes extends AgentTool {
           for (final id in shortlist.keys)
             if (kept.contains(id)) id,
         ],
+        if (passed.isNotEmpty) 'swipe': _swipePattern(keep, passed),
         'note':
             'Show the kept homes with Shortlist, { "path": "/homes" }, and '
             'two or three side by side with HomeComparison.',
@@ -87,6 +96,26 @@ final class KeepHomes extends AgentTool {
       seeds: {homesSlice.name: shortlist},
       logFields: {'kept': kept.length},
     );
+  }
+
+  Map<String, Object?> _swipePattern(List<String> keep, List<String> passed) {
+    final kept = [for (final id in keep) markets.home(id)!.listing];
+    final reading = readSwipe(kept, [
+      for (final id in passed) markets.home(id)!.listing,
+    ]);
+    return {
+      'kept': kept.length,
+      'passed': passed.length,
+      'everyKeptHome': {
+        'homeType': ?reading.homeType?.name,
+        'outdoor': ?reading.outdoor?.name,
+        'style': ?reading.style?.name,
+      },
+      'keptAreas': {for (final home in kept) home.areaName}.toList(),
+      'note':
+          'A clue, not a fact: offer what the kept homes share as a '
+          'deduction for the buyer to confirm.',
+    };
   }
 
   static List<String> _ids(Object? value) => [

@@ -285,6 +285,15 @@ gets an error naming it. It answers with the kept IDs and seeds `/homes`,
 which `Shortlist` binds. `search_homes` and `compute_affordability` keep the
 flag when they reprice the homes.
 
+With `deal` (C9c, D157), `search_homes` also deals a swipe deck: from the
+homes that match, up to six that differ in kind, outdoor space, style, and
+size, flats and houses in turn, priced like the rest, seeded as
+`/swipe/homes` for `HomeSwipe`. When the buyer finishes the deck, Gemini
+calls `keep_homes` with the kept IDs as `keep` and the others as `passed`;
+the kept homes join the shortlist, and the answer says what every kept
+home shares that a passed one lacks, a kind of home, outdoor space, or
+style, with the kept areas, for Gemini to deduce from and confirm.
+
 `find_place` (C8, D154) resolves the places the buyer names: work, a
 school, a parent's home, a clinic. It takes the city the places are in and
 looks it up first, then searches for each place within the city's bounds,

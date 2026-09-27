@@ -66,6 +66,14 @@ Sample homes read_listings read for the household's needs: an object by home ID.
 | --- | --- | --- |
 | `/reads/<id>` | object read by Homeward components | One home: { homeName, description, readings }. Bind it whole to a ListingQuote. |
 
+### `/swipe`
+
+The deck search_homes dealt with deal: sample homes that differ. Seeded by `search_homes`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/swipe/homes` | object read by Homeward components | The deck in order, each { listing, cost }. Bind it to a HomeSwipe. |
+
 ### `/places`
 
 The places the buyer named, found with find_place: an object of places by ID. Seeded by `find_place`.
@@ -129,6 +137,7 @@ The catalog schema below holds the full schemas of the components every plan use
 - `HomeCard`: One sample home from search_homes: photos, facts, price, and what it costs this household each month; its choose action sends the home to work out, and its keep action the home to keep or drop, with home, its ID, and keep, true or false, added to its context.
 - `Shortlist`: The homes the household kept with keep_homes, each with what it costs them a month; its choose action sends a home to work out and its drop action one to drop, with home, its ID, added to its context.
 - `HomeComparison`: Two or three homes from search_homes side by side: price, what each costs a month, the cash needed, and size; its choose action sends the one the buyer picks, with home, its ID, added to its context.
+- `HomeSwipe`: The deck search_homes dealt with deal, one sample home at a time, that the buyer keeps or passes with a swipe or a tap; after the last card its done action sends the kept and passed IDs.
 - `ListingQuote`: One sample home read for the household's needs, from read_listings: each need with whether the listing meets it, rules it out, or says nothing, and the listing's own words highlighted.
 - `WeeklyTravel`: The buyer's week from one starting point, from measure_week: each place, how often and how they go, the measured minutes, and the week's total.
 - `RouteSummary`: One trip measure_week measured: where to, how they go, the minutes and distance, and how often.
