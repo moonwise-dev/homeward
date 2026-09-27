@@ -6,6 +6,7 @@ import 'components/choice.dart';
 import 'components/down_payment_slider.dart';
 import 'components/fact.dart';
 import 'components/monthly_cost_breakdown.dart';
+import 'components/mortgage_options.dart';
 import 'components/purchase_costs_table.dart';
 import 'components/rule_note.dart';
 import 'components/stress_test_chart.dart';
@@ -22,6 +23,7 @@ const homewardComponents = <CatalogComponent>[
   StressTestChart(),
   PurchaseCostsTable(),
   DownPaymentSlider(),
+  MortgageOptions(),
   RuleNote(),
 ];
 

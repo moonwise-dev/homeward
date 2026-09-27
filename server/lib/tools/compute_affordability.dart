@@ -39,8 +39,9 @@ final class ComputeAffordability extends AgentTool {
       'Pass only figures the buyer stated, as they stated them; a figure not '
       'in their words is refused. It answers with the facts it still needs '
       'and why, or seeds /affordability for AffordabilitySummary, RuleNote, '
-      'MonthlyCostBreakdown, StressTestChart, PurchaseCostsTable, and '
-      'DownPaymentSlider, and lists what it assumed that is the '
+      'MonthlyCostBreakdown, StressTestChart, PurchaseCostsTable, '
+      'DownPaymentSlider, and MortgageOptions, and lists what it assumed '
+      'that is the '
       "buyer's to decide. For a home anywhere else, tell the buyer the "
       'sample does not cover it.';
 
@@ -105,6 +106,16 @@ final class ComputeAffordability extends AgentTool {
         'enum': [for (final intent in ResidencyIntent.values) intent.name],
       },
       'formerResident': {'type': 'boolean'},
+      'loanType': {
+        'type': 'string',
+        'enum': [
+          ...{for (final ids in _ratesByMarket.values) ...ids},
+        ],
+        'description':
+            'Optional. The rate the buyer took from MortgageOptions; without '
+            'it the variable rate is assumed. Rates by market: '
+            '$_ratesText.',
+      },
       'termYears': {
         'type': 'integer',
         'description':
@@ -114,6 +125,19 @@ final class ComputeAffordability extends AgentTool {
     },
     'required': ['market'],
   };
+
+  Map<String, List<String>> get _ratesByMarket => {
+    for (final id in markets.covered.keys)
+      id: [
+        for (final type in markets.packFor(MarketId.parse(id))!.loanTypes)
+          type.id,
+      ],
+  };
+
+  String get _ratesText => [
+    for (final MapEntry(:key, :value) in _ratesByMarket.entries)
+      '$key: ${value.join(', ')}',
+  ].join('; ');
 
   static const _perPeriod = {
     'type': 'object',
@@ -143,6 +167,19 @@ final class ComputeAffordability extends AgentTool {
         modelResult: {
           'error':
               'Not a covered market; covered: ${markets.covered.keys.join(', ')}',
+        },
+      );
+    }
+    final loanTypes = [
+      for (final type in markets.packFor(id)!.loanTypes) type.id,
+    ];
+    if (arguments['loanType'] case final String loanType
+        when !loanTypes.contains(loanType)) {
+      return ToolResult(
+        modelResult: {
+          'error':
+              '$loanType is not a rate of this market; its rates: '
+              '${loanTypes.join(', ')}',
         },
       );
     }
@@ -245,6 +282,7 @@ final class ComputeAffordability extends AgentTool {
       downPayment: inMarket['downPayment'],
       monthlyFee: inMarket['homeFee'],
       termYears: arguments['termYears'] as int?,
+      loanTypeId: arguments['loanType'] as String?,
     )) {
       AffordabilityNeeds(:final missing, :final unconverted) => ToolResult(
         logFields: {
@@ -293,6 +331,7 @@ final class ComputeAffordability extends AgentTool {
             if (termMovesPayment(market) && arguments['termYears'] == null)
               'termYears': slice.termYears,
             if (inMarket['homeFee'] == null) 'homeFee': 'none',
+            if (arguments['loanType'] == null) 'loanType': slice.loanTypeId,
           },
           'note':
               'The figures are in /affordability. Show them with '
@@ -301,9 +340,10 @@ final class ComputeAffordability extends AgentTool {
               'StressTestChart, and the costs on the day with '
               'PurchaseCostsTable; never write them in your text. What was '
               "assumed is the buyer's to decide; nothing else can be "
-              'computed yet, so offer no other choice, such as another kind '
-              'of rate. DownPaymentSlider lets them try down payments; when '
-              'they apply one, call this tool again with it as downPayment.',
+              'computed yet, so offer no other choice. DownPaymentSlider lets '
+              'them try down payments, and MortgageOptions compares the '
+              'rates; when they apply one, call this tool again with it as '
+              'downPayment or loanType.',
         },
         seeds: {'affordability': jsonDecode(jsonEncode(slice.toJson()))},
       ),

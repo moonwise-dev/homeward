@@ -89,6 +89,45 @@ const stockholmMarketJson = r'''
       "defaultSpread": "0.41%",
       "fixedYears": 0,
       "sourceId": "sbab-list-rates"
+    },
+    {
+      "id": "fixed-1y",
+      "label": "Fixed for 1 year",
+      "rateType": "fixed",
+      "referenceRateId": "SE.SBAB_LIST_1Y",
+      "typicalSpread": {
+        "min": "0%",
+        "max": "0%"
+      },
+      "defaultSpread": "0%",
+      "fixedYears": 1,
+      "sourceId": "sbab-list-rates"
+    },
+    {
+      "id": "fixed-3y",
+      "label": "Fixed for 3 years",
+      "rateType": "fixed",
+      "referenceRateId": "SE.SBAB_LIST_3Y",
+      "typicalSpread": {
+        "min": "0%",
+        "max": "0%"
+      },
+      "defaultSpread": "0%",
+      "fixedYears": 3,
+      "sourceId": "sbab-list-rates"
+    },
+    {
+      "id": "fixed-5y",
+      "label": "Fixed for 5 years",
+      "rateType": "fixed",
+      "referenceRateId": "SE.SBAB_LIST_5Y",
+      "typicalSpread": {
+        "min": "0%",
+        "max": "0%"
+      },
+      "defaultSpread": "0%",
+      "fixedYears": 5,
+      "sourceId": "sbab-list-rates"
     }
   ],
   "profileFields": [
@@ -140,6 +179,45 @@ const stockholmMarketJson = r'''
         "url": "https://www.scb.se/hitta-statistik/statistik-efter-amne/finansmarknad/finansmarknadsstatistik/finansmarknadsstatistik/pong/statistiknyhet/finansmarknadsstatistik-juli-2026",
         "kind": "officialStatistics",
         "retrievedAt": "2026-09-17"
+      }
+    },
+    "SE.SBAB_LIST_1Y": {
+      "id": "SE.SBAB_LIST_1Y",
+      "rate": "3.62%",
+      "asOf": "2026-09-14",
+      "source": {
+        "id": "sbab-list-rates-2026-09-14",
+        "publisher": "SBAB",
+        "title": "Våra räntor: listräntor för bolån, bindningstider 1, 3 och 5 år, ändrade 2026-09-14",
+        "url": "https://www.sbab.se/1/privat/vara_rantor.html",
+        "kind": "lenderNorm",
+        "retrievedAt": "2026-09-27"
+      }
+    },
+    "SE.SBAB_LIST_3Y": {
+      "id": "SE.SBAB_LIST_3Y",
+      "rate": "3.99%",
+      "asOf": "2026-09-14",
+      "source": {
+        "id": "sbab-list-rates-2026-09-14",
+        "publisher": "SBAB",
+        "title": "Våra räntor: listräntor för bolån, bindningstider 1, 3 och 5 år, ändrade 2026-09-14",
+        "url": "https://www.sbab.se/1/privat/vara_rantor.html",
+        "kind": "lenderNorm",
+        "retrievedAt": "2026-09-27"
+      }
+    },
+    "SE.SBAB_LIST_5Y": {
+      "id": "SE.SBAB_LIST_5Y",
+      "rate": "4.19%",
+      "asOf": "2026-09-14",
+      "source": {
+        "id": "sbab-list-rates-2026-09-14",
+        "publisher": "SBAB",
+        "title": "Våra räntor: listräntor för bolån, bindningstider 1, 3 och 5 år, ändrade 2026-09-14",
+        "url": "https://www.sbab.se/1/privat/vara_rantor.html",
+        "kind": "lenderNorm",
+        "retrievedAt": "2026-09-27"
       }
     }
   },

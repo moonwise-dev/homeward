@@ -194,6 +194,45 @@ const funchalMarketJson = r'''
       "defaultSpread": "1.6%",
       "fixedYears": 0,
       "sourceId": "bpi-price-list"
+    },
+    {
+      "id": "mixed-3y",
+      "label": "Fixed for 3 years, then 6-month Euribor",
+      "rateType": "mixed",
+      "referenceRateId": "PT.BPI_MIXED_3Y",
+      "typicalSpread": {
+        "min": "0%",
+        "max": "0%"
+      },
+      "defaultSpread": "0%",
+      "fixedYears": 3,
+      "sourceId": "bpi-price-list"
+    },
+    {
+      "id": "mixed-5y",
+      "label": "Fixed for 5 years, then 6-month Euribor",
+      "rateType": "mixed",
+      "referenceRateId": "PT.BPI_MIXED_5Y",
+      "typicalSpread": {
+        "min": "0%",
+        "max": "0%"
+      },
+      "defaultSpread": "0%",
+      "fixedYears": 5,
+      "sourceId": "bpi-price-list"
+    },
+    {
+      "id": "fixed-term",
+      "label": "Fixed for the whole term",
+      "rateType": "fixed",
+      "referenceRateId": "PT.BPI_FIXED_30Y",
+      "typicalSpread": {
+        "min": "0%",
+        "max": "0%"
+      },
+      "defaultSpread": "0%",
+      "fixedYears": 0,
+      "sourceId": "bpi-price-list"
     }
   ],
   "obstacles": [
@@ -348,6 +387,45 @@ const funchalMarketJson = r'''
         "url": "https://www.bancobpi.pt/contentservice/getContent?documentName=PP_WCS01_UCM01002197",
         "kind": "lenderNorm",
         "retrievedAt": "2026-09-17"
+      }
+    },
+    "PT.BPI_MIXED_3Y": {
+      "id": "PT.BPI_MIXED_3Y",
+      "rate": "3.8%",
+      "asOf": "2026-09-25",
+      "source": {
+        "id": "bpi-fixed-rates-2026-09-25",
+        "publisher": "Banco BPI",
+        "title": "Preçário 18.1: crédito à habitação a taxa mista e a taxa fixa, em vigor desde 25 de setembro de 2026",
+        "url": "https://www.bancobpi.pt/contentservice/getContent?documentName=PP_WCS01_UCM01002197",
+        "kind": "lenderNorm",
+        "retrievedAt": "2026-09-27"
+      }
+    },
+    "PT.BPI_MIXED_5Y": {
+      "id": "PT.BPI_MIXED_5Y",
+      "rate": "4.25%",
+      "asOf": "2026-09-25",
+      "source": {
+        "id": "bpi-fixed-rates-2026-09-25",
+        "publisher": "Banco BPI",
+        "title": "Preçário 18.1: crédito à habitação a taxa mista e a taxa fixa, em vigor desde 25 de setembro de 2026",
+        "url": "https://www.bancobpi.pt/contentservice/getContent?documentName=PP_WCS01_UCM01002197",
+        "kind": "lenderNorm",
+        "retrievedAt": "2026-09-27"
+      }
+    },
+    "PT.BPI_FIXED_30Y": {
+      "id": "PT.BPI_FIXED_30Y",
+      "rate": "5.2%",
+      "asOf": "2026-09-25",
+      "source": {
+        "id": "bpi-fixed-rates-2026-09-25",
+        "publisher": "Banco BPI",
+        "title": "Preçário 18.1: crédito à habitação a taxa mista e a taxa fixa, em vigor desde 25 de setembro de 2026",
+        "url": "https://www.bancobpi.pt/contentservice/getContent?documentName=PP_WCS01_UCM01002197",
+        "kind": "lenderNorm",
+        "retrievedAt": "2026-09-27"
       }
     }
   },

@@ -11,5 +11,44 @@
       "kind": "lenderNorm",
       "retrievedAt": "2026-09-17"
     }
+  },
+  {
+    "id": "PT.BPI_MIXED_3Y",
+    "rate": "3.8%",
+    "asOf": "2026-09-25",
+    "source": {
+      "id": "bpi-fixed-rates-2026-09-25",
+      "publisher": "Banco BPI",
+      "title": "Preçário 18.1: crédito à habitação a taxa mista e a taxa fixa, em vigor desde 25 de setembro de 2026",
+      "url": "https://www.bancobpi.pt/contentservice/getContent?documentName=PP_WCS01_UCM01002197",
+      "kind": "lenderNorm",
+      "retrievedAt": "2026-09-27"
+    }
+  },
+  {
+    "id": "PT.BPI_MIXED_5Y",
+    "rate": "4.25%",
+    "asOf": "2026-09-25",
+    "source": {
+      "id": "bpi-fixed-rates-2026-09-25",
+      "publisher": "Banco BPI",
+      "title": "Preçário 18.1: crédito à habitação a taxa mista e a taxa fixa, em vigor desde 25 de setembro de 2026",
+      "url": "https://www.bancobpi.pt/contentservice/getContent?documentName=PP_WCS01_UCM01002197",
+      "kind": "lenderNorm",
+      "retrievedAt": "2026-09-27"
+    }
+  },
+  {
+    "id": "PT.BPI_FIXED_30Y",
+    "rate": "5.2%",
+    "asOf": "2026-09-25",
+    "source": {
+      "id": "bpi-fixed-rates-2026-09-25",
+      "publisher": "Banco BPI",
+      "title": "Preçário 18.1: crédito à habitação a taxa mista e a taxa fixa, em vigor desde 25 de setembro de 2026",
+      "url": "https://www.bancobpi.pt/contentservice/getContent?documentName=PP_WCS01_UCM01002197",
+      "kind": "lenderNorm",
+      "retrievedAt": "2026-09-27"
+    }
   }
 ]

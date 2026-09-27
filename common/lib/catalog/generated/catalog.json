@@ -1065,6 +1065,50 @@
       ],
       "additionalProperties": false
     },
+    "MortgageOptions": {
+      "type": "object",
+      "description": "The sample lender's variable, fixed, and mixed rates side by side with the monthly cost of each, from compute_affordability; its choose action sends the one the buyer takes, with loanType added to its context.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "MortgageOptions"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "affordability": {
+          "type": "object",
+          "description": "Always { \"path\": \"/affordability\" }, after compute_affordability answered.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/affordability"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "choose": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "affordability"
+      ],
+      "additionalProperties": false
+    },
     "RuleNote": {
       "type": "object",
       "description": "One lending rule, the largest loan it allows, and its source, from compute_affordability.",
@@ -1720,6 +1764,9 @@
         },
         {
           "$ref": "#/components/DownPaymentSlider"
+        },
+        {
+          "$ref": "#/components/MortgageOptions"
         },
         {
           "$ref": "#/components/RuleNote"

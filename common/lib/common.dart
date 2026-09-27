@@ -27,6 +27,7 @@ export 'catalog/components/choice.dart';
 export 'catalog/components/down_payment_slider.dart';
 export 'catalog/components/fact.dart';
 export 'catalog/components/monthly_cost_breakdown.dart';
+export 'catalog/components/mortgage_options.dart';
 export 'catalog/components/purchase_costs_table.dart';
 export 'catalog/components/rule_note.dart';
 export 'catalog/components/stress_test_chart.dart';

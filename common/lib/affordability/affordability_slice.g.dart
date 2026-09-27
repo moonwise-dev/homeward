@@ -6,147 +6,159 @@ part of 'affordability_slice.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_AffordabilitySlice _$AffordabilitySliceFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('_AffordabilitySlice', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        allowedKeys: const [
-          'marketId',
-          'marketName',
-          'sample',
-          'price',
-          'maxPrice',
-          'loan',
-          'maxLoan',
-          'downPayment',
-          'cashNeeded',
-          'savings',
-          'annualRatePpm',
-          'termYears',
-          'loanType',
-          'monthly',
-          'binding',
-          'checks',
-          'exchangeRates',
-          'stress',
-          'purchaseCosts',
-          'purchaseCostsTotal',
-          'whatIf',
-        ],
-      );
-      final val = _AffordabilitySlice(
-        marketId: $checkedConvert('marketId', (v) => v as String),
-        marketName: $checkedConvert('marketName', (v) => v as String),
-        sample: $checkedConvert('sample', (v) => v as bool? ?? true),
-        price: $checkedConvert(
-          'price',
-          (v) => Money.fromJson(v as Map<String, dynamic>),
-        ),
-        maxPrice: $checkedConvert(
-          'maxPrice',
-          (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
-        ),
-        loan: $checkedConvert(
-          'loan',
-          (v) => Money.fromJson(v as Map<String, dynamic>),
-        ),
-        maxLoan: $checkedConvert(
-          'maxLoan',
-          (v) => Money.fromJson(v as Map<String, dynamic>),
-        ),
-        downPayment: $checkedConvert(
-          'downPayment',
-          (v) => Money.fromJson(v as Map<String, dynamic>),
-        ),
-        cashNeeded: $checkedConvert(
-          'cashNeeded',
-          (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
-        ),
-        savings: $checkedConvert(
-          'savings',
-          (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
-        ),
-        annualRate: $checkedConvert(
-          'annualRatePpm',
-          (v) => const PpmJsonConverter().fromJson((v as num).toInt()),
-        ),
-        termYears: $checkedConvert('termYears', (v) => (v as num).toInt()),
-        loanType: $checkedConvert('loanType', (v) => v as String),
-        monthly: $checkedConvert(
-          'monthly',
-          (v) => MonthlyFigures.fromJson(v as Map<String, dynamic>),
-        ),
-        binding: $checkedConvert(
-          'binding',
-          (v) =>
-              v == null ? null : RuleCheck.fromJson(v as Map<String, dynamic>),
-        ),
-        checks: $checkedConvert(
-          'checks',
-          (v) => (v as List<dynamic>)
-              .map((e) => RuleCheck.fromJson(e as Map<String, dynamic>))
-              .toList(),
-        ),
-        exchangeRates: $checkedConvert(
-          'exchangeRates',
-          (v) =>
-              (v as List<dynamic>?)
-                  ?.map((e) => ExchangeRate.fromJson(e as Map<String, dynamic>))
-                  .toList() ??
-              const [],
-        ),
-        stress: $checkedConvert(
-          'stress',
-          (v) => v == null
-              ? null
-              : StressCurve.fromJson(v as Map<String, dynamic>),
-        ),
-        purchaseCosts: $checkedConvert(
-          'purchaseCosts',
-          (v) =>
-              (v as List<dynamic>?)
-                  ?.map((e) => CostLine.fromJson(e as Map<String, dynamic>))
-                  .toList() ??
-              const [],
-        ),
-        purchaseCostsTotal: $checkedConvert(
-          'purchaseCostsTotal',
-          (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
-        ),
-        whatIf: $checkedConvert(
-          'whatIf',
-          (v) => v == null
-              ? null
-              : DownPaymentWhatIf.fromJson(v as Map<String, dynamic>),
-        ),
-      );
-      return val;
-    }, fieldKeyMap: const {'annualRate': 'annualRatePpm'});
+_AffordabilitySlice _$AffordabilitySliceFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('_AffordabilitySlice', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    allowedKeys: const [
+      'marketId',
+      'marketName',
+      'sample',
+      'price',
+      'maxPrice',
+      'loan',
+      'maxLoan',
+      'downPayment',
+      'cashNeeded',
+      'savings',
+      'annualRatePpm',
+      'termYears',
+      'loanType',
+      'loanTypeId',
+      'monthly',
+      'binding',
+      'checks',
+      'exchangeRates',
+      'stress',
+      'purchaseCosts',
+      'purchaseCostsTotal',
+      'whatIf',
+      'mortgageOptions',
+    ],
+  );
+  final val = _AffordabilitySlice(
+    marketId: $checkedConvert('marketId', (v) => v as String),
+    marketName: $checkedConvert('marketName', (v) => v as String),
+    sample: $checkedConvert('sample', (v) => v as bool? ?? true),
+    price: $checkedConvert(
+      'price',
+      (v) => Money.fromJson(v as Map<String, dynamic>),
+    ),
+    maxPrice: $checkedConvert(
+      'maxPrice',
+      (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
+    ),
+    loan: $checkedConvert(
+      'loan',
+      (v) => Money.fromJson(v as Map<String, dynamic>),
+    ),
+    maxLoan: $checkedConvert(
+      'maxLoan',
+      (v) => Money.fromJson(v as Map<String, dynamic>),
+    ),
+    downPayment: $checkedConvert(
+      'downPayment',
+      (v) => Money.fromJson(v as Map<String, dynamic>),
+    ),
+    cashNeeded: $checkedConvert(
+      'cashNeeded',
+      (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
+    ),
+    savings: $checkedConvert(
+      'savings',
+      (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
+    ),
+    annualRate: $checkedConvert(
+      'annualRatePpm',
+      (v) => const PpmJsonConverter().fromJson((v as num).toInt()),
+    ),
+    termYears: $checkedConvert('termYears', (v) => (v as num).toInt()),
+    loanType: $checkedConvert('loanType', (v) => v as String),
+    loanTypeId: $checkedConvert('loanTypeId', (v) => v as String?),
+    monthly: $checkedConvert(
+      'monthly',
+      (v) => MonthlyFigures.fromJson(v as Map<String, dynamic>),
+    ),
+    binding: $checkedConvert(
+      'binding',
+      (v) => v == null ? null : RuleCheck.fromJson(v as Map<String, dynamic>),
+    ),
+    checks: $checkedConvert(
+      'checks',
+      (v) => (v as List<dynamic>)
+          .map((e) => RuleCheck.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    exchangeRates: $checkedConvert(
+      'exchangeRates',
+      (v) =>
+          (v as List<dynamic>?)
+              ?.map((e) => ExchangeRate.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    ),
+    stress: $checkedConvert(
+      'stress',
+      (v) => v == null ? null : StressCurve.fromJson(v as Map<String, dynamic>),
+    ),
+    purchaseCosts: $checkedConvert(
+      'purchaseCosts',
+      (v) =>
+          (v as List<dynamic>?)
+              ?.map((e) => CostLine.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    ),
+    purchaseCostsTotal: $checkedConvert(
+      'purchaseCostsTotal',
+      (v) => v == null ? null : Money.fromJson(v as Map<String, dynamic>),
+    ),
+    whatIf: $checkedConvert(
+      'whatIf',
+      (v) => v == null
+          ? null
+          : DownPaymentWhatIf.fromJson(v as Map<String, dynamic>),
+    ),
+    mortgageOptions: $checkedConvert(
+      'mortgageOptions',
+      (v) =>
+          (v as List<dynamic>?)
+              ?.map((e) => MortgageOption.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    ),
+  );
+  return val;
+}, fieldKeyMap: const {'annualRate': 'annualRatePpm'});
 
-Map<String, dynamic> _$AffordabilitySliceToJson(_AffordabilitySlice instance) =>
-    <String, dynamic>{
-      'marketId': instance.marketId,
-      'marketName': instance.marketName,
-      'sample': instance.sample,
-      'price': instance.price.toJson(),
-      'maxPrice': ?instance.maxPrice?.toJson(),
-      'loan': instance.loan.toJson(),
-      'maxLoan': instance.maxLoan.toJson(),
-      'downPayment': instance.downPayment.toJson(),
-      'cashNeeded': ?instance.cashNeeded?.toJson(),
-      'savings': ?instance.savings?.toJson(),
-      'annualRatePpm': const PpmJsonConverter().toJson(instance.annualRate),
-      'termYears': instance.termYears,
-      'loanType': instance.loanType,
-      'monthly': instance.monthly.toJson(),
-      'binding': ?instance.binding?.toJson(),
-      'checks': instance.checks.map((e) => e.toJson()).toList(),
-      'exchangeRates': instance.exchangeRates.map((e) => e.toJson()).toList(),
-      'stress': ?instance.stress?.toJson(),
-      'purchaseCosts': instance.purchaseCosts.map((e) => e.toJson()).toList(),
-      'purchaseCostsTotal': ?instance.purchaseCostsTotal?.toJson(),
-      'whatIf': ?instance.whatIf?.toJson(),
-    };
+Map<String, dynamic> _$AffordabilitySliceToJson(
+  _AffordabilitySlice instance,
+) => <String, dynamic>{
+  'marketId': instance.marketId,
+  'marketName': instance.marketName,
+  'sample': instance.sample,
+  'price': instance.price.toJson(),
+  'maxPrice': ?instance.maxPrice?.toJson(),
+  'loan': instance.loan.toJson(),
+  'maxLoan': instance.maxLoan.toJson(),
+  'downPayment': instance.downPayment.toJson(),
+  'cashNeeded': ?instance.cashNeeded?.toJson(),
+  'savings': ?instance.savings?.toJson(),
+  'annualRatePpm': const PpmJsonConverter().toJson(instance.annualRate),
+  'termYears': instance.termYears,
+  'loanType': instance.loanType,
+  'loanTypeId': ?instance.loanTypeId,
+  'monthly': instance.monthly.toJson(),
+  'binding': ?instance.binding?.toJson(),
+  'checks': instance.checks.map((e) => e.toJson()).toList(),
+  'exchangeRates': instance.exchangeRates.map((e) => e.toJson()).toList(),
+  'stress': ?instance.stress?.toJson(),
+  'purchaseCosts': instance.purchaseCosts.map((e) => e.toJson()).toList(),
+  'purchaseCostsTotal': ?instance.purchaseCostsTotal?.toJson(),
+  'whatIf': ?instance.whatIf?.toJson(),
+  'mortgageOptions': instance.mortgageOptions.map((e) => e.toJson()).toList(),
+};
 
 _MonthlyFigures _$MonthlyFiguresFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_MonthlyFigures', json, ($checkedConvert) {
@@ -378,3 +390,64 @@ Map<String, dynamic> _$WhatIfStepToJson(_WhatIfStep instance) =>
       'cashNeeded': ?instance.cashNeeded?.toJson(),
       'withinRules': instance.withinRules,
     };
+
+_MortgageOption _$MortgageOptionFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('_MortgageOption', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        allowedKeys: const [
+          'loanTypeId',
+          'label',
+          'rateType',
+          'fixedYears',
+          'annualRatePpm',
+          'monthly',
+          'withinRules',
+          'source',
+        ],
+      );
+      final val = _MortgageOption(
+        loanTypeId: $checkedConvert('loanTypeId', (v) => v as String),
+        label: $checkedConvert('label', (v) => v as String),
+        rateType: $checkedConvert(
+          'rateType',
+          (v) => $enumDecode(_$RateTypeEnumMap, v),
+        ),
+        fixedYears: $checkedConvert(
+          'fixedYears',
+          (v) => (v as num?)?.toInt() ?? 0,
+        ),
+        annualRate: $checkedConvert(
+          'annualRatePpm',
+          (v) => const PpmJsonConverter().fromJson((v as num).toInt()),
+        ),
+        monthly: $checkedConvert(
+          'monthly',
+          (v) => MonthlyFigures.fromJson(v as Map<String, dynamic>),
+        ),
+        withinRules: $checkedConvert('withinRules', (v) => v as bool),
+        source: $checkedConvert(
+          'source',
+          (v) => v == null ? null : Source.fromJson(v as Map<String, dynamic>),
+        ),
+      );
+      return val;
+    }, fieldKeyMap: const {'annualRate': 'annualRatePpm'});
+
+Map<String, dynamic> _$MortgageOptionToJson(_MortgageOption instance) =>
+    <String, dynamic>{
+      'loanTypeId': instance.loanTypeId,
+      'label': instance.label,
+      'rateType': _$RateTypeEnumMap[instance.rateType]!,
+      'fixedYears': instance.fixedYears,
+      'annualRatePpm': const PpmJsonConverter().toJson(instance.annualRate),
+      'monthly': instance.monthly.toJson(),
+      'withinRules': instance.withinRules,
+      'source': ?instance.source?.toJson(),
+    };
+
+const _$RateTypeEnumMap = {
+  RateType.variable: 'variable',
+  RateType.mixed: 'mixed',
+  RateType.fixed: 'fixed',
+};

@@ -47,7 +47,9 @@ final class UpdateBrief extends AgentTool {
             'text': {
               'type': 'string',
               'description':
-                  'One thing you learned, one short sentence to the buyer. '
+                  'One thing you learned, one short sentence to the buyer, '
+                  'in the second person, such as "You have 600,000 kronor '
+                  'saved". '
                   'Keep what the buyer said and what you conclude from it as '
                   'separate items. Write a figure in digits as the buyer '
                   'wrote it, such as 55,000 kronor; it must appear in words.',

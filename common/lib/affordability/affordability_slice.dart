@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../finance/rate_type.dart';
 import '../markets/exchange_rate.dart';
 import '../markets/refund_rule.dart';
 import '../markets/source.dart';
@@ -30,6 +31,7 @@ abstract class AffordabilitySlice with _$AffordabilitySlice {
     required Rate annualRate,
     required int termYears,
     required String loanType,
+    String? loanTypeId,
     required MonthlyFigures monthly,
     RuleCheck? binding,
     required List<RuleCheck> checks,
@@ -38,6 +40,7 @@ abstract class AffordabilitySlice with _$AffordabilitySlice {
     @Default([]) List<CostLine> purchaseCosts,
     Money? purchaseCostsTotal,
     DownPaymentWhatIf? whatIf,
+    @Default([]) List<MortgageOption> mortgageOptions,
   }) = _AffordabilitySlice;
 
   factory AffordabilitySlice.fromJson(Map<String, Object?> json) =>
@@ -128,4 +131,23 @@ abstract class WhatIfStep with _$WhatIfStep {
 
   factory WhatIfStep.fromJson(Map<String, Object?> json) =>
       _$WhatIfStepFromJson(json);
+}
+
+@freezed
+abstract class MortgageOption with _$MortgageOption {
+  const factory MortgageOption({
+    required String loanTypeId,
+    required String label,
+    required RateType rateType,
+    @Default(0) int fixedYears,
+    @JsonKey(name: 'annualRatePpm')
+    @PpmJsonConverter()
+    required Rate annualRate,
+    required MonthlyFigures monthly,
+    required bool withinRules,
+    Source? source,
+  }) = _MortgageOption;
+
+  factory MortgageOption.fromJson(Map<String, Object?> json) =>
+      _$MortgageOptionFromJson(json);
 }

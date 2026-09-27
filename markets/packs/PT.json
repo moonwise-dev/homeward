@@ -239,6 +239,35 @@
       "typicalSpread": { "min": "0.75%", "max": "1.6%" },
       "defaultSpread": "1.6%",
       "sourceId": "bpi-price-list"
+    },
+    {
+      "id": "mixed-3y",
+      "label": "Fixed for 3 years, then 6-month Euribor",
+      "rateType": "mixed",
+      "referenceRateId": "PT.BPI_MIXED_3Y",
+      "typicalSpread": { "min": "0%", "max": "0%" },
+      "defaultSpread": "0%",
+      "fixedYears": 3,
+      "sourceId": "bpi-price-list"
+    },
+    {
+      "id": "mixed-5y",
+      "label": "Fixed for 5 years, then 6-month Euribor",
+      "rateType": "mixed",
+      "referenceRateId": "PT.BPI_MIXED_5Y",
+      "typicalSpread": { "min": "0%", "max": "0%" },
+      "defaultSpread": "0%",
+      "fixedYears": 5,
+      "sourceId": "bpi-price-list"
+    },
+    {
+      "id": "fixed-term",
+      "label": "Fixed for the whole term",
+      "rateType": "fixed",
+      "referenceRateId": "PT.BPI_FIXED_30Y",
+      "typicalSpread": { "min": "0%", "max": "0%" },
+      "defaultSpread": "0%",
+      "sourceId": "bpi-price-list"
     }
   ],
   "obstacles": [
@@ -353,10 +382,10 @@
     {
       "id": "bpi-price-list",
       "publisher": "Banco BPI",
-      "title": "Preçário 18: operações de crédito a particulares, em vigor desde 16 de setembro de 2026",
+      "title": "Preçário 18: operações de crédito a particulares, em vigor desde 25 de setembro de 2026",
       "url": "https://www.bancobpi.pt/contentservice/getContent?documentName=PP_WCS01_UCM01002197",
       "kind": "lenderNorm",
-      "retrievedAt": "2026-09-17"
+      "retrievedAt": "2026-09-27"
 
     }
   ],

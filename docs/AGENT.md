@@ -244,6 +244,16 @@ cash needed, and whether it is within the rules, all from the same code.
 "Use this down payment", its action carries the amount, which the number
 check accepts as the buyer's words, and Gemini calls the tool again with it.
 
+The mortgage options (C6c, D150) are the sample lender's rates for each
+market: SBAB's list rates in Sweden, variable and fixed for 1, 3, and 5
+years, and Banco BPI's price list in Portugal, variable, mixed with the rate
+fixed for 3 or 5 years, and fixed for the whole term. The tool works out
+each at the plan's price, down payment, and term, with the monthly cost and
+whether the loan is within the rules at it, since Portugal's stress test
+applies to variable and mixed rates only. Its `loanType` argument takes the
+option the buyer chose; without it the variable rate is assumed. Rates come
+from the pack and the rates file; Gemini never names one.
+
 A tool reads the turn through its `ToolContext`: the progress steps, the
 slices as they stand, and the buyer's words in this plan.
 

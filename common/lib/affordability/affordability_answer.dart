@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../costs/purchase_costs.dart';
+import '../markets/loan_type.dart';
 import '../markets/resolved_market.dart';
 import '../markets/rule_section.dart';
 import '../money/currency.dart';
@@ -50,9 +51,12 @@ AffordabilityAnswer answerAffordability({
   Money? downPayment,
   Money? monthlyFee,
   int? termYears,
+  String? loanTypeId,
 }) {
   final zero = Money.zero(market.currency);
-  final loanType = market.loanTypes.first;
+  final loanType =
+      market.loanTypes.where((type) => type.id == loanTypeId).firstOrNull ??
+      market.loanTypes.first;
   final term = termYears ?? termYearsFor(market, profile);
   Scenario at(Money price, Money downPayment) => Scenario(
     price: price,
@@ -132,6 +136,7 @@ AffordabilityAnswer answerAffordability({
       annualRate: assessed.annualRate,
       termYears: term,
       loanType: loanType.label,
+      loanTypeId: loanType.id,
       monthly: monthlyFiguresOf(assessed, scenario, market),
       binding: switch (assessed.binding) {
         final binding? => rule(binding),
@@ -152,6 +157,18 @@ AffordabilityAnswer answerAffordability({
           ),
       ],
       purchaseCostsTotal: costs?.total,
+      mortgageOptions: [
+        for (final option in market.loanTypes)
+          _mortgageOption(
+            scenario.copyWith(
+              loanTypeId: option.id,
+              rateSpread: option.defaultSpread,
+            ),
+            option,
+            market,
+            profile,
+          ),
+      ],
       whatIf: downPaymentWhatIf(
         market: market,
         profile: profile,
@@ -161,6 +178,29 @@ AffordabilityAnswer answerAffordability({
         savings: savings,
       ),
     ),
+  );
+}
+
+MortgageOption _mortgageOption(
+  Scenario scenario,
+  LoanType loanType,
+  ResolvedMarket market,
+  BuyerProfile profile,
+) {
+  final assessed = assessAffordability(
+    scenario: scenario,
+    market: market,
+    profile: profile,
+  ) as AssessedAffordability;
+  return MortgageOption(
+    loanTypeId: loanType.id,
+    label: loanType.label,
+    rateType: loanType.rateType,
+    fixedYears: loanType.fixedYears,
+    annualRate: assessed.annualRate,
+    monthly: monthlyFiguresOf(assessed, scenario, market),
+    withinRules: assessed.loan <= assessed.maxLoan,
+    source: market.sourceOf(loanType.sourceId),
   );
 }
 

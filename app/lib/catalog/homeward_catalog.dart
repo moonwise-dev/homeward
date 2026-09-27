@@ -7,6 +7,7 @@ import 'client_functions.dart';
 import 'down_payment_slider/down_payment_slider_item.dart';
 import 'fact/fact_item.dart';
 import 'monthly_cost_breakdown/monthly_cost_breakdown_item.dart';
+import 'mortgage_options/mortgage_options_item.dart';
 import 'purchase_costs_table/purchase_costs_table_item.dart';
 import 'rule_note/rule_note_item.dart';
 import 'stress_test_chart/stress_test_chart_item.dart';
@@ -24,6 +25,7 @@ Catalog homewardGenuiCatalog() {
       stressTestChartItem,
       purchaseCostsTableItem,
       downPaymentSliderItem,
+      mortgageOptionsItem,
       ruleNoteItem,
     ],
     functions: [

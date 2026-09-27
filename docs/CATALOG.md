@@ -10,7 +10,7 @@ Since the reset (D129) Homeward's own blocks come back one at a time, each
 with the chunk of `docs/ROADMAP.md` that needs it: `Fact` (C4), `Choice`
 (C4b), `AffordabilitySummary` and `RuleNote` (C5), and
 `MonthlyCostBreakdown` (C5b), and `StressTestChart` and `PurchaseCostsTable`
-(C6), and `DownPaymentSlider` (C6b) so far.
+(C6), `DownPaymentSlider` (C6b), and `MortgageOptions` (C6c) so far.
 
 ## Design Principles
 
@@ -70,6 +70,7 @@ Buttons send actions the model names itself (`docs/PROTOCOL.md`).
 | Money | `StressTestChart` | The monthly cost from today's rate up past the rate lenders test, as a line against the most the household can carry each month and the rule that sets it, with today and the tested rate marked; in Sweden after the interest deduction (D148) | `affordability`, always `{ "path": "/affordability" }` |
 | Money | `PurchaseCostsTable` | Every upfront cost the buyer owes on the day, each with its local term and source, what is refundable and what earns it back, the total, and the cash needed with the down payment; says so when the sample rules list none (D148) | `affordability`, always `{ "path": "/affordability" }` |
 | Money | `DownPaymentSlider` | A what-if on the down payment for the price in the slice: the slider moves through the steps `compute_affordability` worked out, from the minimum the rules allow to what the savings reach after the costs on the day, and shows for each the share of the price, the loan, the monthly cost, the cash needed against the savings, and whether it is within the rules; a button uses the amount (D149) | `affordability`, always `{ "path": "/affordability" }`; `apply`, an optional action |
+| Money | `MortgageOptions` | The sample lender's rates side by side for the price and down payment in the slice: variable, fixed for a period, and in Portugal mixed and fixed for the whole term, each with its rate, how long it holds, the monthly cost, and whether the loan is within the rules at it, the one in use marked; a button uses another (D150) | `affordability`, always `{ "path": "/affordability" }`; `choose`, an optional action |
 | Trust | `RuleNote` | One lending rule: what it is, the largest loan it allows, whether the loan is within it, and its source with the date it was read, labelled as a sample rule (D146) | `rule`, bound to one rule, such as `{ "path": "/affordability/binding" }` or `/affordability/checks/0` |
 
 A `Choice` tap sends its `answer` action at once, with `choice` and `label`,
@@ -83,6 +84,10 @@ A `DownPaymentSlider` sends its `apply` action when the buyer taps "Use this
 down payment", with `downPayment`, the amount as the buyer saw it, such as
 "SEK 480,000", and `label`, such as "Put SEK 480,000 down", added to its
 context. The slider itself changes nothing until then.
+
+A `MortgageOptions` button sends its `choose` action with `loanType`, the
+option's ID, such as `fixed-3y`, and `label`, such as "Take the rate fixed
+for 3 years", added to its context.
 
 A `Fact` tap sends its `answer` action with `fact`, the item's ID, `answer`,
 `right` or `not_quite`, and `label`, the words the conversation shows, such as
@@ -99,7 +104,6 @@ marked restored come back from `6faa8ab`.
 | --- | --- | --- | --- |
 | Understanding | `Brief` | C10 | A section of the brief: the household, its needs, its week, or what is open |
 | Understanding | `HouseholdSummary` | C10 | Who moves, incomes and savings as stated, and who shares the costs |
-| Money | `MortgageOptions` | C6c | Fixed against variable and terms, side by side, from sourced sample fixed rates |
 | Money | `MoneyInput` | C10 | An amount in a currency, for incomes and savings; restored |
 | Money | `RentSplit` | C9 | Rent and bills split between people sharing, by the rule they choose |
 | Money | `BuyVsRent` | C9 | Buying a home against renting one like it, over the years they expect to stay |
