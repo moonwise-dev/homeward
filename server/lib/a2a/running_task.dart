@@ -17,7 +17,7 @@ final class RunningTask {
   }) {
     _subscription = run(
       _cancellation.future,
-    ).listen(_record, onError: _fail, onDone: _finish);
+    ).listen(_record, onError: _fail, onDone: _finish, cancelOnError: true);
   }
 
   final String id;
@@ -64,7 +64,9 @@ final class RunningTask {
 
   void _fail(Object error, StackTrace stackTrace) {
     _log.severe('Turn failed unexpectedly', error.runtimeType, stackTrace);
+    _cancellation.complete();
     _record(const TurnEvent.failed(HomewardFailure.internal));
+    _finish();
   }
 
   void _finish() {

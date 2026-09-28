@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import '../../a2a/task_registry.dart';
 import '../../agent/prompt/prompt_assembler.dart';
 import '../../agent/turn/create_interaction.dart';
+import '../../agent/turn/read_interaction.dart';
 import '../../agent/turn/tool_belt.dart';
 import '../../agent/turn/turn_orchestrator.dart';
 import '../../agent/turn/turn_settings.dart';
@@ -47,6 +48,7 @@ final class Providers {
     required PromptAssembler prompts,
     required MarketDirectory markets,
     required Research research,
+    ReadInteraction? readInteraction,
     SessionRepository? sessions,
     DateTime Function()? now,
   }) {
@@ -69,6 +71,7 @@ final class Providers {
         prompts: prompts,
         tools: ToolBelt(homewardTools(markets, research)),
         catalog: CatalogValidator(homewardCatalogDocument()),
+        readInteraction: readInteraction,
         settings: TurnSettings(
           maxCorrections: config.maxCorrections,
           thinkingLevel: config.thinkingLevel,
@@ -143,6 +146,7 @@ final class Providers {
             canFallBack: canFallBack,
             cancellation: cancellation,
           ),
+      readInteraction: client.read,
       verifyKey: (apiKey) => models.ensureAvailable(
         apiKey: apiKey,
         model: config.turnModels.first,

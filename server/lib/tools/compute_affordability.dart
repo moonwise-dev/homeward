@@ -160,9 +160,10 @@ final class ComputeAffordability extends AgentTool {
 
   @override
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {
-    final id = MarketId.parse('${arguments['market']}');
-    final currency = markets.packFor(id)?.currency;
-    if (currency == null) {
+    final code = '${arguments['market']}';
+    final id = markets.covered.containsKey(code) ? MarketId.parse(code) : null;
+    final currency = id == null ? null : markets.packFor(id)?.currency;
+    if (id == null || currency == null) {
       return ToolResult(
         modelResult: {
           'error':

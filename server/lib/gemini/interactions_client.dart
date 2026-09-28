@@ -8,6 +8,7 @@ import 'gemini_exception.dart';
 import 'interaction_cancelled.dart';
 import 'interaction_event.dart';
 import 'interaction_request.dart';
+import 'stored_interaction.dart';
 
 final class InteractionsClient {
   InteractionsClient({
@@ -103,6 +104,35 @@ final class InteractionsClient {
         abort.complete();
       }
     }
+  }
+
+  Future<StoredInteraction> read({
+    required String apiKey,
+    required String interactionId,
+  }) async {
+    final response = await httpClient
+        .get(
+          Uri(
+            scheme: endpoint.scheme,
+            host: endpoint.host,
+            port: endpoint.port,
+            path: '${endpoint.path}/$interactionId',
+          ),
+          headers: {'x-goog-api-key': apiKey},
+        )
+        .timeout(headersDeadline);
+    if (response.statusCode != 200) {
+      throw geminiHttpError(
+        statusCode: response.statusCode,
+        body: response.body,
+        model: '',
+        continuesHistory: true,
+        now: _now(),
+      );
+    }
+    return StoredInteraction.fromJson(
+      jsonDecode(response.body) as Map<String, Object?>,
+    );
   }
 
   Future<bool> _next(

@@ -30,6 +30,7 @@ import '../validation/validation_outcome.dart';
 import 'buyer_words.dart';
 import 'correction_input.dart';
 import 'create_interaction.dart';
+import 'read_interaction.dart';
 import 'drawn_components.dart';
 import 'progress_log.dart';
 import 'replay_shadow.dart';
@@ -52,6 +53,7 @@ final class TurnRun {
     required CatalogValidator catalog,
     required this.settings,
     required this.now,
+    this.readInteraction,
   }) : turn = session.turnCount + 1,
        _session = session,
        _interactionId = session.lastInteractionId,
@@ -64,6 +66,7 @@ final class TurnRun {
 
   final int turn;
   final CreateInteraction createInteraction;
+  final ReadInteraction? readInteraction;
   final PromptAssembler prompts;
   final ToolBelt tools;
   final TurnSettings settings;
@@ -77,6 +80,7 @@ final class TurnRun {
   final _rejectedSources = <String>[];
   final _text = StringBuffer();
   String? _interactionId;
+  String? _lastModel;
   var _emittedText = '';
   var _separateRound = false;
   var _rounds = 0;
@@ -139,6 +143,7 @@ final class TurnRun {
       _rounds++;
       final roundClock = Stopwatch()..start();
       String? status;
+      String? model;
       Map<String, Object?>? usage;
       var textChars = 0;
       final request = _request(
@@ -183,13 +188,21 @@ final class TurnRun {
                 ..write(textBeforeRound);
               _separateRound = _text.isNotEmpty;
               yield* _emitText();
-            case InteractionCreated():
+            case InteractionCreated(model: final created):
+              model = created;
           }
         }
       } on InteractionCancelled {
         return;
       } on GeminiException catch (error) {
         _logFailure(error);
+        if ((error, input, request.previousInteractionId) case (
+          GeminiRequestInvalid(),
+          FunctionResultsInput(:final results),
+          final chainedTo?,
+        )) {
+          await _logRefusedChain(apiKey, chainedTo, results);
+        }
         if (constrained && error is GeminiRequestInvalid) {
           continue;
         }
@@ -220,6 +233,7 @@ final class TurnRun {
           fields: {
             'turn': turn,
             'round': _rounds,
+            'model': model,
             'status': status,
             'functionCalls': [for (final call in calls) call.name],
             'textChars': textChars,
@@ -229,6 +243,7 @@ final class TurnRun {
           },
         ),
       );
+      _lastModel = model;
       if (calls.isEmpty &&
           textChars == 0 &&
           mayStartOver &&
@@ -315,6 +330,44 @@ final class TurnRun {
       _status = TurnStatus.completed;
       yield TurnEvent.completed(_text.toString().trim());
       return;
+    }
+  }
+
+  Future<void> _logRefusedChain(
+    String apiKey,
+    String interactionId,
+    List<FunctionResult> results,
+  ) async {
+    final read = readInteraction;
+    if (read == null) {
+      return;
+    }
+    final fields = {
+      'turn': turn,
+      'round': _rounds,
+      'answered': [for (final result in results) result.name],
+      'modelBefore': _lastModel,
+    };
+    try {
+      final stored = await read(apiKey: apiKey, interactionId: interactionId);
+      _log.info(
+        LogEntry(
+          'Refused chain read back',
+          fields: {
+            ...fields,
+            'storedStatus': stored.status,
+            'storedModel': stored.model,
+            'storedSteps': stored.steps,
+          },
+        ),
+      );
+    } on Exception catch (error) {
+      _log.info(
+        LogEntry(
+          'Refused chain could not be read back',
+          fields: {...fields, 'error': '${error.runtimeType}'},
+        ),
+      );
     }
   }
 

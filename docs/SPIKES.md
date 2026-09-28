@@ -792,3 +792,47 @@ disclosure anyway (D143): the prompt carries the full schemas of the layout
 components and an index of every other component, and `component_docs`
 returns the schemas and examples of the components Gemini names. C3's probe
 measures the round it adds.
+
+## S17 — Refused Function Results
+
+**Open, 2026-09-27.**
+
+### Question
+
+Why does the Interactions API refuse a round's function results with 400
+`invalid_request`, "function response turn comes immediately after a function
+call turn", and can Homeward avoid it rather than start the turn over?
+
+### Method
+
+- Counted refusals in the C10d rehearsals: the four journeys, eight runs,
+  about thirty tool rounds on `gemini-3.5-flash-lite`.
+- Chained two-round turns outside the app with the server's own client: a
+  first turn, then a second whose first round calls a tool, answered at once
+  on the same chain. Homeward's role, style, and catalog skill as the system
+  instruction, 45 KB; one tool; paced under the free tier's 15 requests a
+  minute. A refused request was to be sent again after 1.5 s.
+- Planned a model switch mid-chain, calls from Flash answered on Flash-Lite,
+  since a capped or failing model is passed over without a log line. Flash's
+  daily quota was spent on both keys, so it did not run.
+
+### Findings
+
+| Area | Result |
+| --- | --- |
+| Rate in the app | Three refusals in about thirty tool rounds: twice on a turn's first tool results, once on its fifth round. Each time the turn started over and still drew its blocks |
+| Minimal chains | 0 of 27 refused, with the results sent within a millisecond of the call's completion |
+| Retrying | Retrying a refused request failed every time on 2026-09-25 (see `docs/AGENT.md`, Rebuilding History), so waiting is not the cure; the same calls on a fresh chain continue |
+| Model switch | Untested. The first refusal came on a fresh server with no fallback or cap, so it cannot be the only cause |
+| Reading the chain back | `GET /v1beta/interactions/{id}` returns one interaction's own steps, such as `user_input`, `thought`, and `function_call`, with its status and model, so a refused chain's last stored interaction can be inspected without its content |
+| Reruns with the read-back in place | Journeys 1, 2, and 4 again: 22 rounds, all on Flash-Lite, about ten of them tool rounds, no refusal |
+| Found on the way | Gemini once sent `SE<span>` as a market. The tool's parse threw, and the tool belt's own error path threw over it, so the buyer saw an internal error and the plan stayed busy while the turn ran on. Fixed: a throwing tool answers the model with an error, a market outside the covered ones gets the covered list, and an unexpected error cancels the turn and releases the plan |
+
+### Next
+
+The server now logs the model behind each round, and when a round's function
+results are refused it reads the chained interaction back and logs its
+status, model, and step types, never their content (`docs/AGENT.md`,
+Rebuilding History). The next refusal in a rehearsal will show what Gemini
+stored that it will not continue; the model switch is tried once Flash's
+quota resets. Until then the start-over stays.

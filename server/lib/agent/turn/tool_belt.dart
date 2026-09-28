@@ -41,29 +41,29 @@ final class ToolBelt {
     ToolContext context,
   ) async {
     final stopwatch = Stopwatch()..start();
-    ToolResult? result;
+    ToolResult result;
     try {
-      return result = await tool.run(arguments, context);
+      result = await tool.run(arguments, context);
     } on Object catch (error, stackTrace) {
       _log.severe('Tool ${tool.name} failed', error, stackTrace);
-      return const ToolResult(
+      result = const ToolResult(
         modelResult: {'error': 'The tool failed; nothing was changed'},
       );
-    } finally {
-      _log.log(
-        result?.modelResult['error'] == null && result!.logFields.isEmpty
-            ? Level.FINE
-            : Level.INFO,
-        LogEntry(
-          'Tool ${tool.name}',
-          fields: {
-            'tool': tool.name,
-            'durationMs': stopwatch.elapsedMilliseconds,
-            'error': ?result?.modelResult['error'],
-            ...?result?.logFields,
-          },
-        ),
-      );
     }
+    _log.log(
+      result.modelResult['error'] == null && result.logFields.isEmpty
+          ? Level.FINE
+          : Level.INFO,
+      LogEntry(
+        'Tool ${tool.name}',
+        fields: {
+          'tool': tool.name,
+          'durationMs': stopwatch.elapsedMilliseconds,
+          'error': ?result.modelResult['error'],
+          ...result.logFields,
+        },
+      ),
+    );
+    return result;
   }
 }

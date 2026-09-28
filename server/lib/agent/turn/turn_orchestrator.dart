@@ -3,6 +3,7 @@ import 'package:common/common.dart';
 import '../../data/repository/session_repository.dart';
 import '../prompt/prompt_assembler.dart';
 import 'create_interaction.dart';
+import 'read_interaction.dart';
 import 'tool_belt.dart';
 import 'turn_event.dart';
 import 'turn_input.dart';
@@ -17,6 +18,7 @@ final class TurnOrchestrator {
     required this.prompts,
     required this.tools,
     required this.catalog,
+    this.readInteraction,
     this.settings = const TurnSettings(),
     DateTime Function()? now,
   }) : now = now ?? DateTime.now;
@@ -26,6 +28,7 @@ final class TurnOrchestrator {
   final PromptAssembler prompts;
   final ToolBelt tools;
   final CatalogValidator catalog;
+  final ReadInteraction? readInteraction;
   final TurnSettings settings;
   final DateTime Function() now;
 
@@ -51,6 +54,7 @@ final class TurnOrchestrator {
       prompts: prompts,
       tools: tools,
       catalog: catalog,
+      readInteraction: readInteraction,
       settings: settings,
       now: now,
     );

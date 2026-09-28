@@ -540,6 +540,15 @@ happened on three later turns on 2026-09-27, twice in a row in one session,
 so the fault sits in the stored chain. The new chain replaces the stored
 one, so later turns are clean.
 
+To find that fault (spike S17), each round's log line names the model that
+served it, and when a round's function results are refused, the orchestrator
+reads the interaction it chained to back from the API before starting over,
+with `GET /v1beta/interactions/{id}`, and logs its status, its model, and the
+types of its stored steps, such as `user_input`, `thought`, and
+`function_call`, never their content, beside the model of the round before
+and the names of the tools answered. A failed read is logged and changes
+nothing.
+
 ### Interactions API Client
 
 `server/lib/gemini` is a hand-written client over REST, shaped by spike S2:
@@ -616,6 +625,8 @@ one, so later turns are clean.
 | Stored chain refused with `invalid_request` before anything is drawn | The turn starts over once on a new conversation |
 | Model output invalid after corrections | Model text plus the retry notice |
 | Tool error | The model hears the error and says so in a sentence |
+| A tool throws | The model hears that the tool failed and nothing was changed; the error is logged |
+| The turn throws unexpectedly | Turn fails with `internal`; the turn is cancelled, so its session is saved and released for the next message |
 | Stream dropped | Client resumes with `tasks/get`; server keeps the task for 10 minutes |
 | Concurrent turn | Second turn rejected with `turn_in_progress` |
 
