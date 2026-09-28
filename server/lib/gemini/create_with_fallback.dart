@@ -14,12 +14,16 @@ Stream<InteractionEvent> createWithFallback({
   required bool Function() canFallBack,
   Future<void>? cancellation,
 }) async* {
-  final first = caps.uncapped(apiKey, circuits.candidates);
+  final healthy = circuits.candidates;
   final cooling = [
     for (final model in circuits.cooling)
-      if (!first.contains(model) && !caps.isCapped(apiKey, model)) model,
+      if (!healthy.contains(model)) model,
   ];
-  final candidates = [...first, ...cooling];
+  final ready = [
+    for (final model in [...healthy, ...cooling])
+      if (!caps.isCapped(apiKey, model)) model,
+  ];
+  final candidates = ready.isEmpty ? healthy : ready;
   var retriedOverload = false;
   for (final (attempt, model) in candidates.indexed) {
     try {

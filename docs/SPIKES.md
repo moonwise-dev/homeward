@@ -812,9 +812,13 @@ call turn", and can Homeward avoid it rather than start the turn over?
   on the same chain. Homeward's role, style, and catalog skill as the system
   instruction, 45 KB; one tool; paced under the free tier's 15 requests a
   minute. A refused request was to be sent again after 1.5 s.
-- Planned a model switch mid-chain, calls from Flash answered on Flash-Lite,
-  since a capped or failing model is passed over without a log line. Flash's
-  daily quota was spent on both keys, so it did not run.
+- Planned a model switch mid-chain, since a capped or failing model is
+  passed over without a log line. Tried on 2026-09-28 after Flash's daily
+  reset: calls from Flash answered on Flash-Lite, with a short system
+  instruction, got no tool call from Flash in any of six cycles and spent the
+  first key's Flash requests; calls from Flash-Lite answered on Flash, with
+  the full instruction, met Flash's daily limit on the second key from the
+  first request, at 09:12.
 
 ### Findings
 
@@ -823,10 +827,10 @@ call turn", and can Homeward avoid it rather than start the turn over?
 | Rate in the app | Three refusals in about thirty tool rounds: twice on a turn's first tool results, once on its fifth round. Each time the turn started over and still drew its blocks |
 | Minimal chains | 0 of 27 refused, with the results sent within a millisecond of the call's completion |
 | Retrying | Retrying a refused request failed every time on 2026-09-25 (see `docs/AGENT.md`, Rebuilding History), so waiting is not the cure; the same calls on a fresh chain continue |
-| Model switch | Untested. The first refusal came on a fresh server with no fallback or cap, so it cannot be the only cause |
+| Model switch | One, unplanned: in a journey 2 turn on 2026-09-28, three rounds ran on 3.8 Flash and the fourth round's function results went to Flash-Lite on the same chain, and were accepted. The first refusal came on a fresh server with no fallback or cap, so a switch cannot be the only cause |
 | Reading the chain back | `GET /v1beta/interactions/{id}` returns one interaction's own steps, such as `user_input`, `thought`, and `function_call`, with its status and model, so a refused chain's last stored interaction can be inspected without its content |
-| Reruns with the read-back in place | Journeys 1, 2, and 4 on 2026-09-27: 22 rounds, all on Flash-Lite, about ten of them tool rounds, no refusal. All four on the morning of 2026-09-28: twelve tool rounds, no refusal; journeys 1, 3, and 4 completed, and two turns of journey 2 failed while Flash-Lite answered "high demand" with both Flash models out of requests |
-| Fallback on a spent free tier | That morning a single Flash-Lite stall opened its circuit while both Flash models had spent their 20 requests of the day, so every request refused on both Flash models failed without asking Flash-Lite. A request limit refusal now moves on to the models whose circuits are open (`docs/AGENT.md`, Model Selection); the rerun above was served that way, at about a second of refusals per round |
+| Reruns with the read-back in place | Journeys 1, 2, and 4 on 2026-09-27: 22 rounds, all on Flash-Lite, about ten of them tool rounds, no refusal. All four on the morning of 2026-09-28: twelve tool rounds, no refusal; journeys 1, 3, and 4 completed, and two turns of journey 2 failed while Flash-Lite answered "high demand" with both Flash models out of requests. Again at 09:20: ten turns, 24 rounds, 21 on Flash-Lite and 3 on 3.8 Flash, 17 of them tool rounds, no refusal; four turns failed while Flash-Lite stalled and 3.8 Flash answered "high demand", with both keys' Flash spent |
+| Fallback on a spent free tier | That morning a single Flash-Lite stall opened its circuit while both Flash models had spent their 20 requests of the day, so every request refused on both Flash models failed without asking Flash-Lite. A request limit refusal now moves on to the models whose circuits are open (`docs/AGENT.md`, Model Selection); the reruns above were served that way. In them the skipped Flash was still asked first and refused once every round, because a skipped model was asked again whenever every model with a closed circuit was skipped; it is now asked again only when no other model is left |
 | Found on the way | Gemini once sent `SE<span>` as a market. The tool's parse threw, and the tool belt's own error path threw over it, so the buyer saw an internal error and the plan stayed busy while the turn ran on. Fixed: a throwing tool answers the model with an error, a market outside the covered ones gets the covered list, and an unexpected error cancels the turn and releases the plan |
 
 ### Next
@@ -835,5 +839,6 @@ The server now logs the model behind each round, and when a round's function
 results are refused it reads the chained interaction back and logs its
 status, model, and step types, never their content (`docs/AGENT.md`,
 Rebuilding History). The next refusal in a rehearsal will show what Gemini
-stored that it will not continue; the model switch is tried once Flash's
-quota resets. Until then the start-over stays.
+stored that it will not continue. The planned switch still needs a day with
+Flash requests left: calls from Flash-Lite answered on Flash, with the full
+instruction. Until then the start-over stays.
