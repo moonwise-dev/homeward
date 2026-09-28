@@ -12,6 +12,8 @@ class GalleryParameterRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final path = parameter.path;
     final seededBy = parameter.seededBy;
     final description = parameter.description;
@@ -24,13 +26,13 @@ class GalleryParameterRow extends StatelessWidget {
             spacing: AppSpacing.xs,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Text(parameter.name, style: AppTextStyles.code),
+              Text(parameter.name, style: styles.code),
               Text(
                 [
                   _kindText(parameter.kind),
                   parameter.required ? 'required' : 'optional',
                 ].join(', '),
-                style: AppTextStyles.caption,
+                style: styles.caption,
               ),
             ],
           ),
@@ -41,15 +43,14 @@ class GalleryParameterRow extends StatelessWidget {
                     '$path',
                 if (seededBy != null) 'seeded by $seededBy',
               ].join(', '),
-              style: AppTextStyles.caption.copyWith(color: AppColors.accent),
+              style: styles.caption.copyWith(color: colors.accent),
             ),
           if (parameter.choices.isNotEmpty)
             Text(
               'One of ${parameter.choices.join(', ')}',
-              style: AppTextStyles.caption,
+              style: styles.caption,
             ),
-          if (description != null)
-            Text(description, style: AppTextStyles.caption),
+          if (description != null) Text(description, style: styles.caption),
         ],
       ),
     );

@@ -18,6 +18,8 @@ class WorkingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final steps = entry.progress.steps;
     final measured = steps.every(
       (step) => step.state != ResearchStepState.running,
@@ -30,7 +32,7 @@ class WorkingCard extends StatelessWidget {
           children: [
             Text(
               steps.isEmpty ? 'Thinking it through' : 'Measuring',
-              style: AppTextStyles.title,
+              style: styles.title,
             ),
             const SizedBox(height: AppSpacing.sm),
             for (final step in steps)
@@ -44,7 +46,7 @@ class WorkingCard extends StatelessWidget {
                     ? 'Reading what you said'
                     : 'Putting the page together',
                 isBusy: true,
-                color: AppColors.text,
+                color: colors.text,
               ),
             if (entry.text.isNotEmpty)
               Padding(
@@ -53,7 +55,7 @@ class WorkingCard extends StatelessWidget {
                   entry.text,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.caption,
+                  style: styles.caption,
                 ),
               ),
             Align(
@@ -78,20 +80,23 @@ class _ResearchStepLine extends StatelessWidget {
   final ResearchStep step;
 
   @override
-  Widget build(BuildContext context) => switch (step.state) {
-    ResearchStepState.running => AppStatusLine(
-      text: step.label,
-      isBusy: true,
-      color: AppColors.text,
-    ),
-    ResearchStepState.done => AppStatusLine(
-      text: step.label,
-      icon: Icons.check_circle,
-      color: AppColors.positive,
-    ),
-    ResearchStepState.unavailable => AppStatusLine(
-      text: '${step.label} · not available right now',
-      icon: Icons.remove_circle_outline,
-    ),
-  };
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    return switch (step.state) {
+      ResearchStepState.running => AppStatusLine(
+        text: step.label,
+        isBusy: true,
+        color: colors.text,
+      ),
+      ResearchStepState.done => AppStatusLine(
+        text: step.label,
+        icon: Icons.check_circle,
+        color: colors.positive,
+      ),
+      ResearchStepState.unavailable => AppStatusLine(
+        text: '${step.label} · not available right now',
+        icon: Icons.remove_circle_outline,
+      ),
+    };
+  }
 }

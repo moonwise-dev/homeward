@@ -10,16 +10,19 @@ class AppChartKey extends StatelessWidget {
   final Color color;
 
   @override
-  Widget build(BuildContext context) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      SizedBox(
-        width: 12,
-        height: 3,
-        child: ColoredBox(color: color),
-      ),
-      const SizedBox(width: AppSpacing.xxs),
-      Text(label, style: AppTextStyles.caption),
-    ],
-  );
+  Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 12,
+          height: 3,
+          child: ColoredBox(color: color),
+        ),
+        const SizedBox(width: AppSpacing.xxs),
+        Text(label, style: styles.caption),
+      ],
+    );
+  }
 }

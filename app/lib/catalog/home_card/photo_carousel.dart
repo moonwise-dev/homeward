@@ -23,6 +23,8 @@ class PhotoCarousel extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final controller = usePageController();
     final page = useState(0);
     void go(int index) => controller.animateToPage(
@@ -113,8 +115,8 @@ class PhotoCarousel extends HookWidget {
                           height: 6,
                           decoration: BoxDecoration(
                             color: index == page.value
-                                ? AppColors.onAccent
-                                : AppColors.onAccent.withValues(alpha: 0.55),
+                                ? colors.onPhoto
+                                : colors.onPhoto.withValues(alpha: 0.55),
                             borderRadius: BorderRadius.circular(AppRadii.pill),
                           ),
                         ),
@@ -125,8 +127,8 @@ class PhotoCarousel extends HookWidget {
                             credit,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.caption.copyWith(
-                              color: AppColors.onAccent,
+                            style: styles.caption.copyWith(
+                              color: colors.onPhoto,
                             ),
                           ),
                         ),
@@ -148,19 +150,23 @@ class _Chip extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
-    decoration: BoxDecoration(
-      color: AppColors.surface.withValues(alpha: 0.92),
-      borderRadius: BorderRadius.circular(AppRadii.pill),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xs,
-        vertical: AppSpacing.xxs,
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colors.surface.withValues(alpha: 0.92),
+        borderRadius: BorderRadius.circular(AppRadii.pill),
       ),
-      child: Text(text, style: AppTextStyles.caption),
-    ),
-  );
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.xs,
+          vertical: AppSpacing.xxs,
+        ),
+        child: Text(text, style: styles.caption),
+      ),
+    );
+  }
 }
 
 class _Arrow extends StatelessWidget {
@@ -171,18 +177,21 @@ class _Arrow extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) => AnimatedOpacity(
-    opacity: onPressed == null ? 0 : 1,
-    duration: AppMotion.of(context, AppMotion.surface),
-    child: IconButton.filledTonal(
-      tooltip: tooltip,
-      iconSize: 20,
-      visualDensity: VisualDensity.compact,
-      style: IconButton.styleFrom(
-        backgroundColor: AppColors.surface.withValues(alpha: 0.85),
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    return AnimatedOpacity(
+      opacity: onPressed == null ? 0 : 1,
+      duration: AppMotion.of(context, AppMotion.surface),
+      child: IconButton.filledTonal(
+        tooltip: tooltip,
+        iconSize: 20,
+        visualDensity: VisualDensity.compact,
+        style: IconButton.styleFrom(
+          backgroundColor: colors.surface.withValues(alpha: 0.85),
+        ),
+        icon: Icon(icon, color: colors.text),
+        onPressed: onPressed,
       ),
-      icon: Icon(icon, color: AppColors.text),
-      onPressed: onPressed,
-    ),
-  );
+    );
+  }
 }

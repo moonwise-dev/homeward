@@ -33,6 +33,7 @@ class ExchangeSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final styles = AppTextStyles.of(context);
     final agent = ref.watch(agentRepositoryProvider);
     final entry = section.entry;
     final prompt = _promptText(section.prompt);
@@ -50,7 +51,7 @@ class ExchangeSection extends ConsumerWidget {
                 child: AppChatBubble(text: prompt),
               ),
             if (entry.text.isNotEmpty)
-              SelectableText(entry.text, style: AppTextStyles.body),
+              SelectableText(entry.text, style: styles.body),
             for (final surfaceId in inlineSurfaceIds(entry))
               Padding(
                 padding: const EdgeInsets.only(top: AppSpacing.md),
@@ -73,14 +74,14 @@ class ExchangeSection extends ConsumerWidget {
                   ),
                 ),
               ),
-            ..._ending(),
+            ..._ending(AppColors.of(context)),
           ],
         ),
       ),
     );
   }
 
-  List<Widget> _ending() => switch (section.entry.status) {
+  List<Widget> _ending(AppColors colors) => switch (section.entry.status) {
     AgentTurnStatus.failed => [
       const SizedBox(height: AppSpacing.sm),
       Wrap(
@@ -90,7 +91,7 @@ class ExchangeSection extends ConsumerWidget {
           AppStatusLine(
             text: section.entry.error?.humanMessage ?? 'This step failed',
             icon: Icons.error_outline,
-            color: AppColors.danger,
+            color: colors.danger,
           ),
           AppButton(
             label: 'Retry',

@@ -21,6 +21,7 @@ class BriefView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
     final onAnswer = this.onAnswer;
     final sections = [
       for (final kind in kinds ?? BriefKind.values)
@@ -35,17 +36,17 @@ class BriefView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(title ?? 'What Homeward knows', style: AppTextStyles.label),
+        Text(title ?? 'What Homeward knows', style: styles.label),
         if (sections.isEmpty)
           Padding(
             padding: const EdgeInsets.only(top: AppSpacing.xs),
-            child: Text('Nothing here yet.', style: AppTextStyles.caption),
+            child: Text('Nothing here yet.', style: styles.caption),
           ),
         for (final section in sections) ...[
           const SizedBox(height: AppSpacing.sm),
           Text(
             _heading(section.kind),
-            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
+            style: styles.body.copyWith(fontWeight: FontWeight.w600),
           ),
           for (final item in section.items)
             FactView(

@@ -9,18 +9,20 @@ class AppFigureRow extends StatelessWidget {
     required this.label,
     required this.figure,
     this.isTotal = false,
-    this.color = AppColors.text,
+    this.color,
     super.key,
   });
 
   final String label;
   final String figure;
   final bool isTotal;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
-    final style = AppTextStyles.figure.copyWith(
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
+    final style = styles.figure.copyWith(
       color: color,
       fontWeight: isTotal ? FontWeight.w600 : null,
     );
@@ -34,8 +36,8 @@ class AppFigureRow extends StatelessWidget {
             child: Text(
               label,
               style: isTotal
-                  ? AppTextStyles.body.copyWith(fontWeight: FontWeight.w600)
-                  : AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+                  ? styles.body.copyWith(fontWeight: FontWeight.w600)
+                  : styles.body.copyWith(color: colors.textSecondary),
             ),
           ),
           const SizedBox(width: AppSpacing.sm),

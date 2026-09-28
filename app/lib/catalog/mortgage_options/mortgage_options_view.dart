@@ -17,6 +17,8 @@ class MortgageOptionsView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final chosen = useState<String?>(null);
     useEffect(() {
       chosen.value = null;
@@ -31,12 +33,12 @@ class MortgageOptionsView extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Your rate options', style: AppTextStyles.label),
+        Text('Your rate options', style: styles.label),
         const SizedBox(height: AppSpacing.xxs),
         Text(
           'For a loan of ${moneyText(slice.loan)} over ${slice.termYears} '
           'years',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
         const SizedBox(height: AppSpacing.sm),
         for (final option in options)
@@ -60,10 +62,10 @@ class MortgageOptionsView extends HookWidget {
             onTap: () => launchUrl(Uri.parse(source.url)),
             child: Text(
               '${source.publisher}: ${source.title}',
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.accent,
+              style: styles.caption.copyWith(
+                color: colors.accent,
                 decoration: TextDecoration.underline,
-                decorationColor: AppColors.accent,
+                decorationColor: colors.accent,
               ),
             ),
           ),
@@ -71,7 +73,7 @@ class MortgageOptionsView extends HookWidget {
         Text(
           'Sample rates from one lender for ${slice.marketName}, read '
           '${source?.retrievedAt ?? ''}. An estimate, not advice.',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
       ],
     );
@@ -91,14 +93,16 @@ class _Option extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final afterDeduction = option.monthly.afterDeductionWithFee;
     final onChoose = this.onChoose;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: inUse ? AppColors.accentSoft : AppColors.surface,
+        color: inUse ? colors.accentSoft : colors.surface,
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(
-          color: inUse ? AppColors.accent : AppColors.border,
+          color: inUse ? colors.accent : colors.border,
         ),
       ),
       child: Padding(
@@ -113,18 +117,18 @@ class _Option extends StatelessWidget {
                 Expanded(
                   child: Text(
                     option.label,
-                    style: AppTextStyles.body.copyWith(
+                    style: styles.body.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
                 Text(
                   percentText(option.annualRate),
-                  style: AppTextStyles.figure,
+                  style: styles.figure,
                 ),
               ],
             ),
-            Text(_holds(option), style: AppTextStyles.caption),
+            Text(_holds(option), style: styles.caption),
             const SizedBox(height: AppSpacing.xs),
             AppFigureRow(
               label: 'A month',
@@ -139,14 +143,14 @@ class _Option extends StatelessWidget {
             if (!option.withinRules)
               Text(
                 'Over the lending limit at this rate.',
-                style: AppTextStyles.caption.copyWith(color: AppColors.danger),
+                style: styles.caption.copyWith(color: colors.danger),
               ),
             if (inUse)
               Padding(
                 padding: const EdgeInsets.only(top: AppSpacing.xxs),
                 child: Text(
                   'Your rate',
-                  style: AppTextStyles.label.copyWith(color: AppColors.accent),
+                  style: styles.label.copyWith(color: colors.accent),
                 ),
               )
             else if (onChoose != null)

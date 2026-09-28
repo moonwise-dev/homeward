@@ -93,6 +93,8 @@ declared examples offline.
   buyer wrote as the title and the last activity.
 - New plan creates a session and opens it.
 - Delete plan asks for confirmation and deletes the session and its turns.
+- Appearance in the app bar picks Match the device, Light, or Dark (D162).
+  The choice is kept on the device and applies at once.
 
 ### Journey
 
@@ -222,6 +224,7 @@ the quota cap are what protect the bill.
 | --- | --- |
 | `AuthRepository` | Firebase Auth |
 | `GeminiKeyRepository` | `flutter_secure_storage`, session memory on web |
+| `AppearanceRepository` | `flutter_secure_storage` |
 | `KeyVerificationRepository` | `ApiClient` to `/api/keys/verify` |
 | `PlansRepository` | The server's session list, merged with the plans this run started |
 | `AgentRepository` | Homeward A2A client from `common/wire`, `SurfaceController`, turn event stream |

@@ -13,22 +13,23 @@ class MonthlyCostBreakdownView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
     final monthly = slice.monthly;
     final fee = monthly.fee;
     final afterDeduction = monthly.afterDeductionWithFee;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('What a month costs', style: AppTextStyles.label),
+        Text('What a month costs', style: styles.label),
         const SizedBox(height: AppSpacing.xxs),
         Text(
           moneyText(monthly.totalWithFee),
-          style: AppTextStyles.figureLarge,
+          style: styles.figureLarge,
         ),
         Text(
           'For ${slice.homeName ?? 'a home'} at ${moneyText(slice.price)} with '
           '${moneyText(slice.downPayment)} down',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
         const SizedBox(height: AppSpacing.sm),
         AppFigureRow(
@@ -62,7 +63,7 @@ class MonthlyCostBreakdownView extends StatelessWidget {
         Text(
           'Rate: ${slice.loanType}. Sample rules and rates for '
           '${slice.marketName}. An estimate, not advice.',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
       ],
     );

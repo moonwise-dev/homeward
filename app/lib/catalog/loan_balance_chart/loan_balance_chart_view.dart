@@ -24,6 +24,8 @@ class LoanBalanceChartView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final last = schedule.years.last.year;
     final start = min(assumedStayYears, last);
     final year = useState(start);
@@ -37,13 +39,13 @@ class LoanBalanceChartView extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Your loan year by year', style: AppTextStyles.label),
+        Text('Your loan year by year', style: styles.label),
         const SizedBox(height: AppSpacing.xxs),
         Text(
           '${slice.homeName ?? 'A home at ${moneyText(slice.price)}'}: a loan '
           'of ${moneyText(slice.loan)} at ${percentText(slice.annualRate)}, '
           '${repaymentText(slice)}.',
-          style: AppTextStyles.body,
+          style: styles.body,
         ),
         const SizedBox(height: AppSpacing.sm),
         AppLineChart(
@@ -67,22 +69,22 @@ class LoanBalanceChartView extends HookWidget {
             ChartMarker(
               x: year.value.toDouble(),
               label: yearsText(year.value),
-              color: AppColors.accent,
+              color: colors.accent,
             ),
           ],
         ),
         const SizedBox(height: AppSpacing.xs),
-        const Row(
+        Row(
           children: [
-            AppChartKey(label: 'What you own', color: AppColors.accent),
-            SizedBox(width: AppSpacing.md),
-            AppChartKey(label: 'What you owe', color: AppColors.warning),
+            AppChartKey(label: 'What you own', color: colors.accent),
+            const SizedBox(width: AppSpacing.md),
+            AppChartKey(label: 'What you owe', color: colors.warning),
           ],
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
           'After ${yearsText(year.value)}',
-          style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
+          style: styles.body.copyWith(fontWeight: FontWeight.w600),
         ),
         Slider(
           value: year.value.toDouble(),
@@ -102,20 +104,20 @@ class LoanBalanceChartView extends HookWidget {
         ),
         Text(
           "The down payment and the loan paid off, at today's price.",
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
         AppFigureRow(
           label: 'Interest paid by then',
           figure: moneyText(at.interestPaid),
         ),
         if (slice.monthly.afterDeduction != null)
-          Text('After the interest deduction.', style: AppTextStyles.caption),
+          Text('After the interest deduction.', style: styles.caption),
         if (schedule.steps.isNotEmpty || schedule.paidOffYear != null) ...[
           const SizedBox(height: AppSpacing.sm),
           for (final step in schedule.steps)
-            Text(_stepText(step), style: AppTextStyles.body),
+            Text(_stepText(step), style: styles.body),
           if (schedule.paidOffYear case final year?)
-            Text('Paid off in year $year.', style: AppTextStyles.body),
+            Text('Paid off in year $year.', style: styles.body),
         ],
         const SizedBox(height: AppSpacing.sm),
         Text(
@@ -124,7 +126,7 @@ class LoanBalanceChartView extends HookWidget {
           '${slice.monthly.amortizationRate == null ? '' : ', paying off only what the rules ask'}. '
           'Sample rules and rates for ${slice.marketName}. An estimate, not '
           'advice.',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
       ],
     );

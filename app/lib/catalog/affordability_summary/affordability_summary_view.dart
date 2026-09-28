@@ -14,6 +14,8 @@ class AffordabilitySummaryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final maxPrice = slice.maxPrice;
     final cashNeeded = slice.cashNeeded;
     final savings = slice.savings;
@@ -23,15 +25,15 @@ class AffordabilitySummaryView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('What you can borrow', style: AppTextStyles.label),
+        Text('What you can borrow', style: styles.label),
         const SizedBox(height: AppSpacing.xxs),
-        Text(moneyText(slice.maxLoan), style: AppTextStyles.figureLarge),
+        Text(moneyText(slice.maxLoan), style: styles.figureLarge),
         Text(
           atHighest
               ? 'The largest loan, for a home at the highest price you reach'
               : 'The largest loan for ${slice.homeName ?? 'a home'} at '
                     '${moneyText(slice.price)}',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
         const SizedBox(height: AppSpacing.sm),
         if (maxPrice != null)
@@ -43,7 +45,7 @@ class AffordabilitySummaryView extends StatelessWidget {
           AppFigureRow(
             label: over ? 'Over the limit by' : 'Your loan',
             figure: moneyText(over ? slice.loan - slice.maxLoan : slice.loan),
-            color: over ? AppColors.danger : AppColors.text,
+            color: over ? colors.danger : colors.text,
           ),
         AppFigureRow(
           label: 'Down payment',
@@ -54,8 +56,8 @@ class AffordabilitySummaryView extends StatelessWidget {
             label: 'Cash needed, with purchase costs',
             figure: moneyText(cashNeeded),
             color: savings != null && cashNeeded > savings
-                ? AppColors.danger
-                : AppColors.text,
+                ? colors.danger
+                : colors.text,
           ),
         if (savings != null)
           AppFigureRow(label: 'Your savings', figure: moneyText(savings)),
@@ -66,24 +68,24 @@ class AffordabilitySummaryView extends StatelessWidget {
           figure: moneyText(slice.monthly.total),
           isTotal: true,
         ),
-        Text('Rate: ${slice.loanType}', style: AppTextStyles.caption),
+        Text('Rate: ${slice.loanType}', style: styles.caption),
         if (binding != null) ...[
           const SizedBox(height: AppSpacing.xs),
           Text(
             'Limited by the ${ruleLabel(binding.kind).toLowerCase()}',
-            style: AppTextStyles.label.copyWith(color: AppColors.accent),
+            style: styles.label.copyWith(color: colors.accent),
           ),
         ],
         for (final rate in slice.exchangeRates)
           Padding(
             padding: const EdgeInsets.only(top: AppSpacing.xxs),
-            child: Text(exchangeRateText(rate), style: AppTextStyles.caption),
+            child: Text(exchangeRateText(rate), style: styles.caption),
           ),
         const SizedBox(height: AppSpacing.sm),
         Text(
           'Sample rules and rates for ${slice.marketName}. An estimate, not '
           'advice.',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
       ],
     );

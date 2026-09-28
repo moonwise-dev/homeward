@@ -12,61 +12,65 @@ class WeeklyTravelView extends StatelessWidget {
   final WeekTravel week;
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      Text('Your week from ${week.fromName}', style: AppTextStyles.label),
-      const SizedBox(height: AppSpacing.xxs),
-      Text(
-        durationText(week.weeklyMinutes),
-        style: AppTextStyles.figureLarge,
-      ),
-      Text(
-        week.measuredEveryTrip
-            ? 'Travelling a week, there and back'
-            : 'Travelling a week, there and back, for the trips measured',
-        style: AppTextStyles.caption,
-      ),
-      const SizedBox(height: AppSpacing.sm),
-      for (final trip in week.trips)
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
-          child: Row(
-            children: [
-              Icon(modeIcon(trip.mode), size: 20, color: AppColors.accent),
-              const SizedBox(width: AppSpacing.xs),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(trip.placeName, style: AppTextStyles.body),
-                    Text(
-                      '${timesAWeekText(trip.perWeek)} ${byText(trip.mode)}',
-                      style: AppTextStyles.caption,
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                switch (trip.minutes) {
-                  final minutes? => '${durationText(minutes)} each way',
-                  null => 'Not measured',
-                },
-                style: AppTextStyles.figure.copyWith(
-                  color: trip.minutes == null
-                      ? AppColors.textTertiary
-                      : AppColors.text,
-                ),
-              ),
-            ],
-          ),
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('Your week from ${week.fromName}', style: styles.label),
+        const SizedBox(height: AppSpacing.xxs),
+        Text(
+          durationText(week.weeklyMinutes),
+          style: styles.figureLarge,
         ),
-      const SizedBox(height: AppSpacing.xs),
-      Text(
-        'Measured one way with '
-        '${measuredByText(week.trips.map((trip) => trip.mode))}.',
-        style: AppTextStyles.caption,
-      ),
-    ],
-  );
+        Text(
+          week.measuredEveryTrip
+              ? 'Travelling a week, there and back'
+              : 'Travelling a week, there and back, for the trips measured',
+          style: styles.caption,
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        for (final trip in week.trips)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
+            child: Row(
+              children: [
+                Icon(modeIcon(trip.mode), size: 20, color: colors.accent),
+                const SizedBox(width: AppSpacing.xs),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(trip.placeName, style: styles.body),
+                      Text(
+                        '${timesAWeekText(trip.perWeek)} ${byText(trip.mode)}',
+                        style: styles.caption,
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  switch (trip.minutes) {
+                    final minutes? => '${durationText(minutes)} each way',
+                    null => 'Not measured',
+                  },
+                  style: styles.figure.copyWith(
+                    color: trip.minutes == null
+                        ? colors.textTertiary
+                        : colors.text,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          'Measured one way with '
+          '${measuredByText(week.trips.map((trip) => trip.mode))}.',
+          style: styles.caption,
+        ),
+      ],
+    );
+  }
 }

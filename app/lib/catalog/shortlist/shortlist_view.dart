@@ -23,6 +23,7 @@ class ShortlistView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
     final sent = useState(false);
     useEffect(() {
       sent.value = false;
@@ -43,17 +44,17 @@ class ShortlistView extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Your shortlist', style: AppTextStyles.label),
+        Text('Your shortlist', style: styles.label),
         const SizedBox(height: AppSpacing.xxs),
         if (kept.isEmpty)
           Text(
             'Nothing kept yet. Keep a home to see it here.',
-            style: AppTextStyles.caption,
+            style: styles.caption,
           )
         else ...[
           Text(
             '${kept.length} home${kept.length == 1 ? '' : 's'} kept',
-            style: AppTextStyles.caption,
+            style: styles.caption,
           ),
           const SizedBox(height: AppSpacing.xs),
           for (final home in kept)
@@ -67,7 +68,7 @@ class ShortlistView extends HookWidget {
             ),
           Text(
             'Sample listings, not for sale. An estimate, not advice.',
-            style: AppTextStyles.caption,
+            style: styles.caption,
           ),
         ],
       ],
@@ -84,15 +85,17 @@ class _Row extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final listing = home.listing;
     final cost = home.cost;
     final onChoose = this.onChoose;
     final onDrop = this.onDrop;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: colors.border),
       ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.sm),
@@ -114,32 +117,32 @@ class _Row extends StatelessWidget {
                 children: [
                   Text(
                     '${listing.areaName} · ${listing.address}',
-                    style: AppTextStyles.label,
+                    style: styles.label,
                   ),
                   Text(
                     '${moneyText(listing.price)} · ${listing.rooms} rooms · '
                     '${listing.sizeM2} m²',
-                    style: AppTextStyles.caption,
+                    style: styles.caption,
                   ),
                   const SizedBox(height: AppSpacing.xxs),
                   if (cost == null)
                     Text(
                       'Not worked out for you yet',
-                      style: AppTextStyles.caption,
+                      style: styles.caption,
                     )
                   else ...[
                     Text(
                       '${moneyText(cost.monthly.totalWithFee)} a month',
-                      style: AppTextStyles.figure.copyWith(
+                      style: styles.figure.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
                       reachText(cost),
-                      style: AppTextStyles.caption.copyWith(
+                      style: styles.caption.copyWith(
                         color: cost.withinReach
-                            ? AppColors.positive
-                            : AppColors.danger,
+                            ? colors.positive
+                            : colors.danger,
                       ),
                     ),
                   ],

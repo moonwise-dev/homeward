@@ -19,6 +19,7 @@ class ApiKeyScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final styles = AppTextStyles.of(context);
     final state = ref.watch(apiKeyViewModelProvider);
     final viewModel = ref.read(apiKeyViewModelProvider.notifier);
     final isHidden = useState(true);
@@ -37,7 +38,7 @@ class ApiKeyScreen extends HookConsumerWidget {
           Text(
             'Homeward runs on your own Gemini API key. You can create one for '
             'free in Google AI Studio.',
-            style: AppTextStyles.body,
+            style: styles.body,
           ),
           Align(
             alignment: Alignment.centerLeft,
@@ -73,7 +74,7 @@ class ApiKeyScreen extends HookConsumerWidget {
             CheckboxListTile(
               value: state.remember,
               onChanged: (value) => viewModel.updateRemember(value ?? false),
-              title: Text('Remember on this device', style: AppTextStyles.body),
+              title: Text('Remember on this device', style: styles.body),
               controlAffinity: ListTileControlAffinity.leading,
               contentPadding: EdgeInsets.zero,
             ),

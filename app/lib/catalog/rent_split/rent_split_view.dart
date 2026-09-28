@@ -18,6 +18,7 @@ class RentSplitView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
     final splits = slice.splits;
     final shown = useState(slice.chosen ?? splits.first.rule);
     final sent = useState<SplitRule?>(null);
@@ -37,7 +38,7 @@ class RentSplitView extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Splitting the rent', style: AppTextStyles.label),
+        Text('Splitting the rent', style: styles.label),
         const SizedBox(height: AppSpacing.xxs),
         Text(
           [
@@ -45,9 +46,9 @@ class RentSplitView extends HookWidget {
             '${moneyText(slice.rent.monthly)} a month'
                 '${bills == null ? '' : ', and ${moneyText(bills)} in bills'}',
           ].join(': '),
-          style: AppTextStyles.body,
+          style: styles.body,
         ),
-        Text(rentBasisText(slice.rent), style: AppTextStyles.caption),
+        Text(rentBasisText(slice.rent), style: styles.caption),
         const SizedBox(height: AppSpacing.sm),
         if (rules.length > 1)
           SegmentedButton<SplitRule>(
@@ -60,7 +61,7 @@ class RentSplitView extends HookWidget {
             onSelectionChanged: (selected) => shown.value = selected.first,
           ),
         const SizedBox(height: AppSpacing.xs),
-        Text(_how(split.rule, slice), style: AppTextStyles.caption),
+        Text(_how(split.rule, slice), style: styles.caption),
         const SizedBox(height: AppSpacing.xs),
         for (final share in split.shares) _Share(share: share),
         AppFigureRow(
@@ -71,7 +72,7 @@ class RentSplitView extends HookWidget {
         for (final missing in _missing(rules))
           Padding(
             padding: const EdgeInsets.only(top: AppSpacing.xxs),
-            child: Text(missing, style: AppTextStyles.caption),
+            child: Text(missing, style: styles.caption),
           ),
         if (onChoose != null) ...[
           const SizedBox(height: AppSpacing.sm),
@@ -89,7 +90,7 @@ class RentSplitView extends HookWidget {
           ),
         ],
         const SizedBox(height: AppSpacing.sm),
-        Text('An estimate, not advice.', style: AppTextStyles.caption),
+        Text('An estimate, not advice.', style: styles.caption),
       ],
     );
   }
@@ -128,6 +129,8 @@ class _Share extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final bills = share.bills;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.xs),
@@ -142,8 +145,8 @@ class _Share extends StatelessWidget {
             Text(
               'Rent ${moneyText(share.rent, exact: true)}, bills '
               '${moneyText(bills, exact: true)}',
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.textSecondary,
+              style: styles.caption.copyWith(
+                color: colors.textSecondary,
               ),
             ),
         ],

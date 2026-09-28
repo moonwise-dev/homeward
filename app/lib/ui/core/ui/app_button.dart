@@ -25,7 +25,7 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final onPressed = isLoading ? null : this.onPressed;
-    final child = _content();
+    final child = _content(AppColors.of(context));
     final button = switch (variant) {
       AppButtonVariant.filled => FilledButton(
         onPressed: onPressed,
@@ -40,13 +40,13 @@ class AppButton extends StatelessWidget {
     return fullWidth ? SizedBox(width: double.infinity, child: button) : button;
   }
 
-  Widget _content() {
+  Widget _content(AppColors colors) {
     final leading = isLoading
         ? AppLoadingIndicator(
             size: 18,
             color: variant == AppButtonVariant.filled
-                ? AppColors.onAccent
-                : AppColors.accent,
+                ? colors.onAccent
+                : colors.accent,
           )
         : icon == null
         ? null

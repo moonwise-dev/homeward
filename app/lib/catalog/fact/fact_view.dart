@@ -13,6 +13,8 @@ class FactView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final onAnswer = this.onAnswer;
     final assumed = fact.source == FactSource.deduced;
     return Padding(
@@ -25,7 +27,7 @@ class FactView extends StatelessWidget {
             child: Icon(
               _icon(fact.source),
               size: 18,
-              color: assumed ? AppColors.accent : AppColors.textTertiary,
+              color: assumed ? colors.accent : colors.textTertiary,
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
@@ -33,12 +35,12 @@ class FactView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(fact.text, style: AppTextStyles.body),
+                Text(fact.text, style: styles.body),
                 const SizedBox(height: AppSpacing.xxs),
                 Text(
                   _sourceLine(fact),
-                  style: AppTextStyles.caption.copyWith(
-                    color: assumed ? AppColors.accent : null,
+                  style: styles.caption.copyWith(
+                    color: assumed ? colors.accent : null,
                   ),
                 ),
                 if (assumed && onAnswer != null)
@@ -104,14 +106,17 @@ class _Answer extends StatelessWidget {
   final VoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context) => OutlinedButton.icon(
-    onPressed: onPressed,
-    icon: Icon(icon, size: 16),
-    label: Text(label),
-    style: OutlinedButton.styleFrom(
-      visualDensity: VisualDensity.compact,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-      textStyle: AppTextStyles.label,
-    ),
-  );
+  Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
+    return OutlinedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon, size: 16),
+      label: Text(label),
+      style: OutlinedButton.styleFrom(
+        visualDensity: VisualDensity.compact,
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+        textStyle: styles.label,
+      ),
+    );
+  }
 }

@@ -24,6 +24,8 @@ class HomeSwipeView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final index = useState(0);
     final kept = useState(<String>[]);
     final drag = useState(0.0);
@@ -71,15 +73,15 @@ class HomeSwipeView extends HookWidget {
             Expanded(
               child: Text(
                 'Keep the ones that feel like yours',
-                style: AppTextStyles.label.copyWith(
+                style: styles.label.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
             Text(
               '${index.value + 1} of ${homes.length}',
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.textTertiary,
+              style: styles.caption.copyWith(
+                color: colors.textTertiary,
               ),
             ),
           ],
@@ -137,7 +139,7 @@ class HomeSwipeView extends HookWidget {
         const SizedBox(height: AppSpacing.xs),
         Text(
           'Sample listings, not for sale. An estimate, not advice.',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
       ],
     );
@@ -152,17 +154,19 @@ class _SwipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final listing = home.listing;
     final cost = home.cost;
     final hint = min(lean.abs() / 120, 1.0);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(
           color: Color.lerp(
-            AppColors.border,
-            lean > 0 ? AppColors.positive : AppColors.danger,
+            colors.border,
+            lean > 0 ? colors.positive : colors.danger,
             hint,
           )!,
           width: 1 + hint,
@@ -199,9 +203,7 @@ class _SwipeCard extends StatelessWidget {
                         opacity: hint,
                         child: _Tag(
                           text: lean > 0 ? 'Keep' : 'Pass',
-                          color: lean > 0
-                              ? AppColors.positive
-                              : AppColors.danger,
+                          color: lean > 0 ? colors.positive : colors.danger,
                         ),
                       ),
                     ),
@@ -216,27 +218,25 @@ class _SwipeCard extends StatelessWidget {
               children: [
                 Text(
                   '${listing.areaName} · ${listing.address}',
-                  style: AppTextStyles.label,
+                  style: styles.label,
                 ),
                 const SizedBox(height: AppSpacing.xxs),
-                Text(listing.title, style: AppTextStyles.title),
+                Text(listing.title, style: styles.title),
                 const SizedBox(height: AppSpacing.xxs),
-                Text(moneyText(listing.price), style: AppTextStyles.figure),
-                Text(homeFacts(listing), style: AppTextStyles.label),
+                Text(moneyText(listing.price), style: styles.figure),
+                Text(homeFacts(listing), style: styles.label),
                 if (cost != null) ...[
                   const SizedBox(height: AppSpacing.xs),
                   Text(
                     '${moneyText(cost.monthly.totalWithFee)} a month for you',
-                    style: AppTextStyles.figure.copyWith(
+                    style: styles.figure.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
                     reachText(cost),
-                    style: AppTextStyles.caption.copyWith(
-                      color: cost.withinReach
-                          ? AppColors.positive
-                          : AppColors.danger,
+                    style: styles.caption.copyWith(
+                      color: cost.withinReach ? colors.positive : colors.danger,
                     ),
                   ),
                 ],
@@ -256,24 +256,28 @@ class _Tag extends StatelessWidget {
   final Color? color;
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
-    decoration: BoxDecoration(
-      color: color ?? AppColors.surface.withValues(alpha: 0.9),
-      borderRadius: BorderRadius.circular(AppRadii.pill),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xxs,
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: color ?? colors.surface.withValues(alpha: 0.9),
+        borderRadius: BorderRadius.circular(AppRadii.pill),
       ),
-      child: Text(
-        text,
-        style: AppTextStyles.label.copyWith(
-          color: color == null ? AppColors.textSecondary : AppColors.onAccent,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.xxs,
+        ),
+        child: Text(
+          text,
+          style: styles.label.copyWith(
+            color: color == null ? colors.textSecondary : colors.onAccent,
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class _Summary extends StatelessWidget {
@@ -283,14 +287,18 @@ class _Summary extends StatelessWidget {
   final int of;
 
   @override
-  Widget build(BuildContext context) => Row(
-    children: [
-      const Icon(Icons.check_circle_outline, color: AppColors.positive),
-      const SizedBox(width: AppSpacing.xs),
-      Text(
-        kept == 0 ? 'You passed on all $of' : 'You kept $kept of $of',
-        style: AppTextStyles.label,
-      ),
-    ],
-  );
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
+    return Row(
+      children: [
+        Icon(Icons.check_circle_outline, color: colors.positive),
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          kept == 0 ? 'You passed on all $of' : 'You kept $kept of $of',
+          style: styles.label,
+        ),
+      ],
+    );
+  }
 }

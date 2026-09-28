@@ -13,6 +13,7 @@ class HouseholdSummaryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
     final profile = slice.profile;
     if (profile == null) {
       return const SizedBox.shrink();
@@ -22,14 +23,14 @@ class HouseholdSummaryView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Your household', style: AppTextStyles.label),
+        Text('Your household', style: styles.label),
         if (people.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.xxs),
-          Text(people, style: AppTextStyles.title),
+          Text(people, style: styles.title),
         ],
         if (about.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.xxs),
-          Text(about, style: AppTextStyles.body),
+          Text(about, style: styles.body),
         ],
         const SizedBox(height: AppSpacing.sm),
         if (profile.grossMonthlyIncome case final income?)
@@ -52,12 +53,12 @@ class HouseholdSummaryView extends StatelessWidget {
         for (final rate in slice.exchangeRates)
           Padding(
             padding: const EdgeInsets.only(top: AppSpacing.xxs),
-            child: Text(exchangeRateText(rate), style: AppTextStyles.caption),
+            child: Text(exchangeRateText(rate), style: styles.caption),
           ),
         const SizedBox(height: AppSpacing.sm),
         Text(
           'As you told Homeward. Change anything by saying so.',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
       ],
     );

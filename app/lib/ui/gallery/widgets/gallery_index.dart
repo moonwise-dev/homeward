@@ -22,6 +22,8 @@ class GalleryIndex extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final unknown = this.unknown;
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
@@ -31,7 +33,7 @@ class GalleryIndex extends StatelessWidget {
             padding: const EdgeInsets.all(AppSpacing.md),
             child: Text(
               'There is no block called $unknown.',
-              style: AppTextStyles.body.copyWith(color: AppColors.warning),
+              style: styles.body.copyWith(color: colors.warning),
             ),
           ),
         for (final MapEntry(key: family, value: components) in byFamily.entries)
@@ -43,16 +45,16 @@ class GalleryIndex extends StatelessWidget {
                 AppSpacing.md,
                 AppSpacing.xxs,
               ),
-              child: Text(family.label, style: AppTextStyles.label),
+              child: Text(family.label, style: styles.label),
             ),
             for (final component in components)
               ListTile(
                 selected: component.name == selected,
-                selectedTileColor: AppColors.accentSoft,
-                title: Text(component.name, style: AppTextStyles.body),
+                selectedTileColor: colors.accentSoft,
+                title: Text(component.name, style: styles.body),
                 subtitle: Text(
                   component.description,
-                  style: AppTextStyles.caption,
+                  style: styles.caption,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),

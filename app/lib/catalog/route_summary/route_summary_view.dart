@@ -13,6 +13,8 @@ class RouteSummaryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final minutes = trip.minutes;
     final meters = trip.meters;
     return Row(
@@ -20,20 +22,20 @@ class RouteSummaryView extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 20,
-          backgroundColor: AppColors.accentSoft,
-          child: Icon(modeIcon(trip.mode), color: AppColors.accent),
+          backgroundColor: colors.accentSoft,
+          child: Icon(modeIcon(trip.mode), color: colors.accent),
         ),
         const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('To ${trip.placeName}', style: AppTextStyles.label),
+              Text('To ${trip.placeName}', style: styles.label),
               Text(
                 minutes == null
                     ? 'Not measured ${byText(trip.mode)}'
                     : '${durationText(minutes)} ${byText(trip.mode)}',
-                style: AppTextStyles.figure.copyWith(
+                style: styles.figure.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -42,11 +44,11 @@ class RouteSummaryView extends StatelessWidget {
                   if (meters != null) '${distanceText(meters)} one way',
                   '${timesAWeekText(trip.perWeek)}, there and back',
                 ].join(' · '),
-                style: AppTextStyles.caption,
+                style: styles.caption,
               ),
               Text(
                 'Measured with ${measuredByText([trip.mode])}.',
-                style: AppTextStyles.caption,
+                style: styles.caption,
               ),
             ],
           ),

@@ -15,6 +15,8 @@ class PurchaseCostsTableView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final total = slice.purchaseCostsTotal;
     final cashNeeded = slice.cashNeeded;
     final savings = slice.savings;
@@ -26,15 +28,15 @@ class PurchaseCostsTableView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Costs on the day', style: AppTextStyles.label),
+        Text('Costs on the day', style: styles.label),
         const SizedBox(height: AppSpacing.xs),
         if (slice.purchaseCosts.isEmpty)
           Text(
             'The sample rules for ${slice.marketName} list no purchase taxes '
             'or fees.',
-            style: AppTextStyles.body,
+            style: styles.body,
           ),
-        for (final line in slice.purchaseCosts) ..._line(line),
+        for (final line in slice.purchaseCosts) ..._line(line, styles),
         if (total != null && slice.purchaseCosts.isNotEmpty) ...[
           const Divider(height: AppSpacing.md),
           AppFigureRow(
@@ -53,8 +55,8 @@ class PurchaseCostsTableView extends StatelessWidget {
             figure: moneyText(cashNeeded),
             isTotal: true,
             color: savings != null && cashNeeded > savings
-                ? AppColors.danger
-                : AppColors.text,
+                ? colors.danger
+                : colors.text,
           ),
         if (savings != null)
           AppFigureRow(label: 'Your savings', figure: moneyText(savings)),
@@ -64,23 +66,23 @@ class PurchaseCostsTableView extends StatelessWidget {
             onTap: () => launchUrl(Uri.parse(source.url)),
             child: Text(
               '${source.publisher}: ${source.title}',
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.accent,
+              style: styles.caption.copyWith(
+                color: colors.accent,
                 decoration: TextDecoration.underline,
-                decorationColor: AppColors.accent,
+                decorationColor: colors.accent,
               ),
             ),
           ),
         const SizedBox(height: AppSpacing.xxs),
         Text(
           'Sample rules for ${slice.marketName}. An estimate, not advice.',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
       ],
     );
   }
 
-  List<Widget> _line(CostLine line) {
+  List<Widget> _line(CostLine line, AppTextStyles styles) {
     final refundable = line.refundable;
     final refund = line.refund;
     return [
@@ -95,8 +97,7 @@ class PurchaseCostsTableView extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: AppSpacing.xxs),
           child: Text(
             '${moneyText(refundable)} refundable. ${refundText(refund)}',
-
-            style: AppTextStyles.caption,
+            style: styles.caption,
           ),
         ),
     ];

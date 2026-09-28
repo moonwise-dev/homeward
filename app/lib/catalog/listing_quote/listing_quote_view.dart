@@ -11,41 +11,45 @@ class ListingQuoteView extends StatelessWidget {
   final ListingReading reading;
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      Text('What the listing says', style: AppTextStyles.label),
-      const SizedBox(height: AppSpacing.xxs),
-      Text(reading.homeName, style: AppTextStyles.title),
-      const SizedBox(height: AppSpacing.sm),
-      for (final need in reading.readings) _Need(reading: need),
-      const SizedBox(height: AppSpacing.sm),
-      DecoratedBox(
-        decoration: BoxDecoration(
-          color: AppColors.surfaceMuted,
-          borderRadius: BorderRadius.circular(AppRadii.md),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Text.rich(
-            TextSpan(
-              style: AppTextStyles.body,
-              children: _spans(reading),
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('What the listing says', style: styles.label),
+        const SizedBox(height: AppSpacing.xxs),
+        Text(reading.homeName, style: styles.title),
+        const SizedBox(height: AppSpacing.sm),
+        for (final need in reading.readings) _Need(reading: need),
+        const SizedBox(height: AppSpacing.sm),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: colors.surfaceMuted,
+            borderRadius: BorderRadius.circular(AppRadii.md),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Text.rich(
+              TextSpan(
+                style: styles.body,
+                children: _spans(reading, colors),
+              ),
             ),
           ),
         ),
-      ),
-      const SizedBox(height: AppSpacing.xs),
-      Text(
-        "The sample listing's own words; each highlighted part is quoted word "
-        "for word. Says nothing means the listing doesn't mention it: ask, or "
-        'check at a viewing.',
-        style: AppTextStyles.caption,
-      ),
-    ],
-  );
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          "The sample listing's own words; each highlighted part is quoted word "
+          "for word. Says nothing means the listing doesn't mention it: ask, or "
+          'check at a viewing.',
+          style: styles.caption,
+        ),
+      ],
+    );
+  }
 
-  static List<TextSpan> _spans(ListingReading reading) {
+  static List<TextSpan> _spans(ListingReading reading, AppColors colors) {
     final text = reading.description;
     final marks = <({int start, int end, ReadVerdict verdict})>[
       for (final need in reading.readings)
@@ -66,8 +70,11 @@ class ListingQuoteView extends StatelessWidget {
             text: text.substring(mark.start, mark.end),
             style: TextStyle(
               fontWeight: FontWeight.w600,
-              color: _colorOf(mark.verdict),
-              backgroundColor: _colorOf(mark.verdict).withValues(alpha: 0.12),
+              color: _colorOf(mark.verdict, colors),
+              backgroundColor: _colorOf(
+                mark.verdict,
+                colors,
+              ).withValues(alpha: 0.12),
             ),
           ),
         );
@@ -85,7 +92,8 @@ class _Need extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = _colorOf(reading.verdict);
+    final styles = AppTextStyles.of(context);
+    final color = _colorOf(reading.verdict, AppColors.of(context));
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
       child: Row(
@@ -100,20 +108,20 @@ class _Need extends StatelessWidget {
             color: color,
           ),
           const SizedBox(width: AppSpacing.xs),
-          Expanded(child: Text(reading.label, style: AppTextStyles.body)),
+          Expanded(child: Text(reading.label, style: styles.body)),
           Text(switch (reading.verdict) {
             ReadVerdict.meets => 'Has it',
             ReadVerdict.fails => 'Rules it out',
             ReadVerdict.silent => 'Says nothing',
-          }, style: AppTextStyles.label.copyWith(color: color)),
+          }, style: styles.label.copyWith(color: color)),
         ],
       ),
     );
   }
 }
 
-Color _colorOf(ReadVerdict verdict) => switch (verdict) {
-  ReadVerdict.meets => AppColors.positive,
-  ReadVerdict.fails => AppColors.danger,
-  ReadVerdict.silent => AppColors.textTertiary,
+Color _colorOf(ReadVerdict verdict, AppColors colors) => switch (verdict) {
+  ReadVerdict.meets => colors.positive,
+  ReadVerdict.fails => colors.danger,
+  ReadVerdict.silent => colors.textTertiary,
 };

@@ -21,24 +21,27 @@ class MoneyInputView extends StatelessWidget {
   final ValueChanged<num?> onChanged;
 
   @override
-  Widget build(BuildContext context) => AppTextField(
-    label: label,
-    value: amount == null ? '' : _plain(amount!),
-    keyboardType: TextInputType.number,
-    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-    onChanged: (text) => onChanged(int.tryParse(text)),
-    suffix: Text(
-      [
-        currency,
-        ?switch (period) {
-          'month' => 'a month',
-          'year' => 'a year',
-          _ => null,
-        },
-      ].join(' '),
-      style: AppTextStyles.label,
-    ),
-  );
+  Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
+    return AppTextField(
+      label: label,
+      value: amount == null ? '' : _plain(amount!),
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      onChanged: (text) => onChanged(int.tryParse(text)),
+      suffix: Text(
+        [
+          currency,
+          ?switch (period) {
+            'month' => 'a month',
+            'year' => 'a year',
+            _ => null,
+          },
+        ].join(' '),
+        style: styles.label,
+      ),
+    );
+  }
 
   static String _plain(num amount) =>
       amount == amount.roundToDouble() ? '${amount.round()}' : '$amount';

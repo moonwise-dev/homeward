@@ -24,6 +24,8 @@ class HomeCardView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final sent = useState(false);
     useEffect(() {
       sent.value = false;
@@ -41,9 +43,9 @@ class HomeCardView extends HookWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: colors.border),
       ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.sm),
@@ -59,21 +61,21 @@ class HomeCardView extends HookWidget {
             const SizedBox(height: AppSpacing.sm),
             Text(
               '${listing.areaName} · ${listing.address}',
-              style: AppTextStyles.label,
+              style: styles.label,
             ),
             const SizedBox(height: AppSpacing.xxs),
-            Text(listing.title, style: AppTextStyles.title),
+            Text(listing.title, style: styles.title),
             const SizedBox(height: AppSpacing.xs),
-            Text(moneyText(listing.price), style: AppTextStyles.figure),
-            Text(homeFacts(listing), style: AppTextStyles.label),
+            Text(moneyText(listing.price), style: styles.figure),
+            Text(homeFacts(listing), style: styles.label),
             const SizedBox(height: AppSpacing.xxs),
             Text(
               '${moneyText(listing.pricePerM2)} per m², ${againstArea(listing)}. '
               'Area figure: ${listing.priceSource}.',
-              style: AppTextStyles.caption,
+              style: styles.caption,
             ),
             const SizedBox(height: AppSpacing.xs),
-            Text(listing.blurb, style: AppTextStyles.body),
+            Text(listing.blurb, style: styles.body),
             const Divider(height: AppSpacing.lg),
             if (cost == null) ...[
               if (fee != null)
@@ -84,7 +86,7 @@ class HomeCardView extends HookWidget {
               Text(
                 'What it costs you a month shows once Homeward has worked out '
                 'what you can borrow here.',
-                style: AppTextStyles.caption,
+                style: styles.caption,
               ),
             ] else
               _Cost(cost: cost),
@@ -93,7 +95,7 @@ class HomeCardView extends HookWidget {
                 padding: const EdgeInsets.only(top: AppSpacing.xs),
                 child: Text(
                   'On your shortlist',
-                  style: AppTextStyles.label.copyWith(color: AppColors.accent),
+                  style: styles.label.copyWith(color: colors.accent),
                 ),
               ),
             Wrap(
@@ -115,7 +117,7 @@ class HomeCardView extends HookWidget {
             const SizedBox(height: AppSpacing.xxs),
             Text(
               'A sample listing, not for sale. An estimate, not advice.',
-              style: AppTextStyles.caption,
+              style: styles.caption,
             ),
           ],
         ),
@@ -131,23 +133,25 @@ class _Cost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final afterDeduction = cost.monthly.afterDeductionWithFee;
     final over = cost.overLimit;
     final short = cost.shortOfSavings;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('What it costs you a month', style: AppTextStyles.label),
+        Text('What it costs you a month', style: styles.label),
         const SizedBox(height: AppSpacing.xxs),
         Text(
           moneyText(cost.monthly.totalWithFee),
-          style: AppTextStyles.figureLarge,
+          style: styles.figureLarge,
         ),
         Text(
           'With ${moneyText(cost.downPayment)} down over ${cost.termYears} '
           'years${cost.monthly.fee == null ? '' : ', the fee included'}. '
           'Rate: ${cost.loanType}, ${percentText(cost.annualRate)}.',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
         if (afterDeduction != null)
           AppFigureRow(
@@ -158,21 +162,21 @@ class _Cost extends StatelessWidget {
         if (over != null)
           _Verdict(
             text: 'The loan is over the lending limit by ${moneyText(over)}.',
-            color: AppColors.danger,
+            color: colors.danger,
           ),
         if (short != null)
           _Verdict(
             text:
                 'The cash on the day is ${moneyText(short)} more than your '
                 'savings.',
-            color: AppColors.danger,
+            color: colors.danger,
           ),
         if (cost.withinReach)
           _Verdict(
             text: cost.savings == null
                 ? 'Within the lending rules.'
                 : 'Within the lending rules and your savings.',
-            color: AppColors.positive,
+            color: colors.positive,
           ),
       ],
     );
@@ -186,6 +190,8 @@ class _Verdict extends StatelessWidget {
   final Color color;
 
   @override
-  Widget build(BuildContext context) =>
-      Text(text, style: AppTextStyles.label.copyWith(color: color));
+  Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
+    return Text(text, style: styles.label.copyWith(color: color));
+  }
 }

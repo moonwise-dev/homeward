@@ -258,7 +258,8 @@ two files use moves to the nearest folder both can see.
 - `riverpod_annotation`, `flutter_riverpod`, `hooks_riverpod`, `flutter_hooks`.
 - `go_router`.
 - `firebase_core`, `firebase_auth`, `cloud_firestore`, `firebase_app_check`.
-- `flutter_secure_storage` for the user's Gemini key.
+- `flutter_secure_storage` for the user's Gemini key and their appearance
+  choice.
 - Charts are drawn by Homeward's own `CustomPainter` primitives in `app/lib/ui/core/ui`,
   not a chart package; see `docs/DESIGN.md` and spike S4.
 - `google_fonts`, `intl`.

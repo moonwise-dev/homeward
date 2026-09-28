@@ -17,6 +17,8 @@ class HomeComparisonView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final sent = useState(false);
     useEffect(() {
       sent.value = false;
@@ -37,18 +39,15 @@ class HomeComparisonView extends HookWidget {
       bool Function(PricedHome home)? warn,
     }) => TableRow(
       children: [
-        _Cell(Text(label, style: AppTextStyles.caption)),
+        _Cell(Text(label, style: styles.caption)),
         for (final home in homes)
           _Cell(
             Text(
               value(home),
-              style: (strong ? AppTextStyles.figure : AppTextStyles.label)
-                  .copyWith(
-                    fontWeight: strong ? FontWeight.w600 : null,
-                    color: warn?.call(home) ?? false
-                        ? AppColors.danger
-                        : AppColors.text,
-                  ),
+              style: (strong ? styles.figure : styles.label).copyWith(
+                fontWeight: strong ? FontWeight.w600 : null,
+                color: warn?.call(home) ?? false ? colors.danger : colors.text,
+              ),
             ),
           ),
       ],
@@ -57,7 +56,7 @@ class HomeComparisonView extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Side by side', style: AppTextStyles.label),
+        Text('Side by side', style: styles.label),
         const SizedBox(height: AppSpacing.xs),
         Table(
           columnWidths: {
@@ -66,8 +65,8 @@ class HomeComparisonView extends HookWidget {
               index: const FlexColumnWidth(),
           },
           defaultVerticalAlignment: TableCellVerticalAlignment.top,
-          border: const TableBorder(
-            horizontalInside: BorderSide(color: AppColors.border),
+          border: TableBorder(
+            horizontalInside: BorderSide(color: colors.border),
           ),
           children: [
             TableRow(
@@ -88,13 +87,13 @@ class HomeComparisonView extends HookWidget {
                         const SizedBox(height: AppSpacing.xxs),
                         Text(
                           home.listing.areaName,
-                          style: AppTextStyles.label.copyWith(
+                          style: styles.label.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
                           home.listing.address,
-                          style: AppTextStyles.caption,
+                          style: styles.caption,
                         ),
                       ],
                     ),
@@ -175,7 +174,7 @@ class HomeComparisonView extends HookWidget {
             if (savings != null) 'Your savings: ${moneyText(savings)}.',
             'Sample listings, not for sale. An estimate, not advice.',
           ].join(' '),
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
       ],
     );

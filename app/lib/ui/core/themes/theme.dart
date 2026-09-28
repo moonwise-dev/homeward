@@ -5,21 +5,27 @@ import 'dimens.dart';
 import 'text_styles.dart';
 
 abstract final class AppTheme {
-  static ThemeData get light {
-    const colorScheme = ColorScheme.light(
-      primary: AppColors.accent,
-      onPrimary: AppColors.onAccent,
-      secondary: AppColors.accent,
-      onSecondary: AppColors.onAccent,
-      surface: AppColors.surface,
-      onSurface: AppColors.text,
-      onSurfaceVariant: AppColors.textSecondary,
-      surfaceContainerHighest: AppColors.surfaceMuted,
+  static ThemeData get light => _themeOf(AppColors.light, Brightness.light);
+
+  static ThemeData get dark => _themeOf(AppColors.dark, Brightness.dark);
+
+  static ThemeData _themeOf(AppColors colors, Brightness brightness) {
+    final styles = AppTextStyles(colors);
+    final colorScheme = ColorScheme(
+      brightness: brightness,
+      primary: colors.accent,
+      onPrimary: colors.onAccent,
+      secondary: colors.accent,
+      onSecondary: colors.onAccent,
+      surface: colors.surface,
+      onSurface: colors.text,
+      onSurfaceVariant: colors.textSecondary,
+      surfaceContainerHighest: colors.surfaceMuted,
       surfaceTint: Colors.transparent,
-      error: AppColors.danger,
-      onError: AppColors.onAccent,
-      outline: AppColors.border,
-      outlineVariant: AppColors.border,
+      error: colors.danger,
+      onError: colors.onAccent,
+      outline: colors.border,
+      outlineVariant: colors.border,
     );
 
     OutlineInputBorder fieldBorder(Color color, [double width = 1]) =>
@@ -35,54 +41,56 @@ abstract final class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
+      brightness: brightness,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: AppColors.background,
+      extensions: [colors],
+      scaffoldBackgroundColor: colors.background,
       textTheme: TextTheme(
-        displayLarge: AppTextStyles.display,
-        displayMedium: AppTextStyles.display,
-        displaySmall: AppTextStyles.display,
-        headlineLarge: AppTextStyles.display,
-        headlineMedium: AppTextStyles.title,
-        headlineSmall: AppTextStyles.title,
-        titleLarge: AppTextStyles.title,
-        titleMedium: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
-        titleSmall: AppTextStyles.label,
-        bodyLarge: AppTextStyles.body,
-        bodyMedium: AppTextStyles.body,
-        bodySmall: AppTextStyles.caption,
-        labelLarge: AppTextStyles.button,
-        labelMedium: AppTextStyles.label,
-        labelSmall: AppTextStyles.caption,
+        displayLarge: styles.display,
+        displayMedium: styles.display,
+        displaySmall: styles.display,
+        headlineLarge: styles.display,
+        headlineMedium: styles.title,
+        headlineSmall: styles.title,
+        titleLarge: styles.title,
+        titleMedium: styles.body.copyWith(fontWeight: FontWeight.w600),
+        titleSmall: styles.label,
+        bodyLarge: styles.body,
+        bodyMedium: styles.body,
+        bodySmall: styles.caption,
+        labelLarge: styles.button,
+        labelMedium: styles.label,
+        labelSmall: styles.caption,
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.background,
+        backgroundColor: colors.background,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
-        foregroundColor: AppColors.text,
-        titleTextStyle: AppTextStyles.title,
+        foregroundColor: colors.text,
+        titleTextStyle: styles.title,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.surface,
+        fillColor: colors.surface,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.sm,
           vertical: AppSpacing.sm,
         ),
-        hintStyle: AppTextStyles.body.copyWith(color: AppColors.textTertiary),
-        labelStyle: AppTextStyles.label,
-        errorStyle: AppTextStyles.caption.copyWith(color: AppColors.danger),
-        border: fieldBorder(AppColors.border),
-        enabledBorder: fieldBorder(AppColors.border),
-        focusedBorder: fieldBorder(AppColors.accent, 1.5),
-        errorBorder: fieldBorder(AppColors.danger),
-        focusedErrorBorder: fieldBorder(AppColors.danger, 1.5),
+        hintStyle: styles.body.copyWith(color: colors.textTertiary),
+        labelStyle: styles.label,
+        errorStyle: styles.caption.copyWith(color: colors.danger),
+        border: fieldBorder(colors.border),
+        enabledBorder: fieldBorder(colors.border),
+        focusedBorder: fieldBorder(colors.accent, 1.5),
+        errorBorder: fieldBorder(colors.danger),
+        focusedErrorBorder: fieldBorder(colors.danger, 1.5),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
           minimumSize: buttonSize,
           shape: buttonShape,
-          textStyle: WidgetStatePropertyAll(AppTextStyles.button),
+          textStyle: WidgetStatePropertyAll(styles.button),
           elevation: const WidgetStatePropertyAll(0),
         ),
       ),
@@ -90,16 +98,16 @@ abstract final class AppTheme {
         style: ButtonStyle(
           minimumSize: buttonSize,
           shape: buttonShape,
-          textStyle: WidgetStatePropertyAll(AppTextStyles.button),
-          side: const WidgetStatePropertyAll(
-            BorderSide(color: AppColors.borderStrong),
+          textStyle: WidgetStatePropertyAll(styles.button),
+          side: WidgetStatePropertyAll(
+            BorderSide(color: colors.borderStrong),
           ),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
           minimumSize: buttonSize,
-          textStyle: WidgetStatePropertyAll(AppTextStyles.button),
+          textStyle: WidgetStatePropertyAll(styles.button),
         ),
       ),
       checkboxTheme: CheckboxThemeData(
@@ -107,19 +115,19 @@ abstract final class AppTheme {
           borderRadius: BorderRadius.circular(AppRadii.sm / 2),
         ),
       ),
-      dividerTheme: const DividerThemeData(color: AppColors.border, space: 1),
+      dividerTheme: DividerThemeData(color: colors.border, space: 1),
       chipTheme: ChipThemeData(
-        backgroundColor: AppColors.surface,
-        selectedColor: AppColors.accentSoft,
+        backgroundColor: colors.surface,
+        selectedColor: colors.accentSoft,
         side: WidgetStateBorderSide.resolveWith(
           (states) => BorderSide(
             color: states.contains(WidgetState.selected)
-                ? AppColors.accent
-                : AppColors.border,
+                ? colors.accent
+                : colors.border,
           ),
         ),
-        labelStyle: AppTextStyles.label.copyWith(color: AppColors.text),
-        checkmarkColor: AppColors.accent,
+        labelStyle: styles.label.copyWith(color: colors.text),
+        checkmarkColor: colors.accent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadii.pill),
         ),

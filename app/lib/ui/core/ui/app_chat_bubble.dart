@@ -10,23 +10,27 @@ class AppChatBubble extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) => Align(
-    alignment: Alignment.centerRight,
-    child: ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 520),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: AppColors.accentSoft,
-          borderRadius: BorderRadius.circular(AppRadii.lg),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.sm,
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
+    return Align(
+      alignment: Alignment.centerRight,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 520),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: colors.accentSoft,
+            borderRadius: BorderRadius.circular(AppRadii.lg),
           ),
-          child: SelectableText(text, style: AppTextStyles.body),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm,
+            ),
+            child: SelectableText(text, style: styles.body),
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }

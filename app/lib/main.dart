@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'data/repositories/appearance_repository.dart';
 import 'firebase_options.dart';
 import 'ui/core/messages/app_messages.dart';
 import 'routing/router.dart';
@@ -25,6 +26,8 @@ class HomewardApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => MaterialApp.router(
     title: 'Homeward',
     theme: AppTheme.light,
+    darkTheme: AppTheme.dark,
+    themeMode: ref.watch(appearanceProvider).value ?? ThemeMode.system,
     routerConfig: ref.watch(appRouterProvider),
     builder: (context, child) => AppMessageOverlay(
       message: ref.watch(appMessagesProvider),

@@ -21,32 +21,35 @@ class AppSelectField<T> extends StatelessWidget {
   final bool enabled;
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) => DropdownMenu<T>(
-      key: ValueKey(value),
-      width: constraints.maxWidth,
-      label: Text(label),
-      initialSelection: value,
-      enabled: enabled,
-      enableFilter: enableFilter,
-      requestFocusOnTap: enableFilter,
-      textStyle: AppTextStyles.body,
-      menuHeight: 320,
-      onSelected: (selected) {
-        if (selected != null) {
-          onChanged(selected);
-        }
-      },
-      dropdownMenuEntries: [
-        for (final option in options)
-          DropdownMenuEntry(
-            value: option.value,
-            label: option.label,
-            trailingIcon: option.trailing,
-          ),
-      ],
-    ),
-  );
+  Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
+    return LayoutBuilder(
+      builder: (context, constraints) => DropdownMenu<T>(
+        key: ValueKey(value),
+        width: constraints.maxWidth,
+        label: Text(label),
+        initialSelection: value,
+        enabled: enabled,
+        enableFilter: enableFilter,
+        requestFocusOnTap: enableFilter,
+        textStyle: styles.body,
+        menuHeight: 320,
+        onSelected: (selected) {
+          if (selected != null) {
+            onChanged(selected);
+          }
+        },
+        dropdownMenuEntries: [
+          for (final option in options)
+            DropdownMenuEntry(
+              value: option.value,
+              label: option.label,
+              trailingIcon: option.trailing,
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 class AppSelectOption<T> {

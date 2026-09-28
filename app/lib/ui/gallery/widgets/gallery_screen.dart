@@ -16,6 +16,7 @@ class GalleryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final styles = AppTextStyles.of(context);
     final provider = galleryViewModelProvider(componentName);
     final state = ref.watch(provider);
     final selected = state.selected;
@@ -50,7 +51,7 @@ class GalleryScreen extends ConsumerWidget {
                       Center(
                         child: Text(
                           'Pick a block to see it with its parameters.',
-                          style: AppTextStyles.caption,
+                          style: styles.caption,
                         ),
                       ),
                 ),

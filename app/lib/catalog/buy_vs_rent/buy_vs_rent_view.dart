@@ -19,6 +19,8 @@ class BuyVsRentView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final years = useState(slice.years);
     useEffect(() {
       years.value = slice.years;
@@ -34,14 +36,14 @@ class BuyVsRentView extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Buying against renting', style: AppTextStyles.label),
+        Text('Buying against renting', style: styles.label),
         const SizedBox(height: AppSpacing.xxs),
         Text(
           '${slice.homeName ?? 'This home'}: buy at ${moneyText(slice.price)}, '
           'or rent one like it at ${moneyText(slice.rent.monthly)} a month.',
-          style: AppTextStyles.body,
+          style: styles.body,
         ),
-        Text(rentBasisText(slice.rent), style: AppTextStyles.caption),
+        Text(rentBasisText(slice.rent), style: styles.caption),
         const SizedBox(height: AppSpacing.sm),
         AppLineChart(
           summary:
@@ -64,22 +66,22 @@ class BuyVsRentView extends HookWidget {
             ChartMarker(
               x: years.value.toDouble(),
               label: yearsText(years.value),
-              color: AppColors.accent,
+              color: colors.accent,
             ),
           ],
         ),
         const SizedBox(height: AppSpacing.xs),
-        const Row(
+        Row(
           children: [
-            AppChartKey(label: 'Buying', color: AppColors.accent),
-            SizedBox(width: AppSpacing.md),
-            AppChartKey(label: 'Renting', color: AppColors.warning),
+            AppChartKey(label: 'Buying', color: colors.accent),
+            const SizedBox(width: AppSpacing.md),
+            AppChartKey(label: 'Renting', color: colors.warning),
           ],
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
           'If you stay ${yearsText(years.value)}',
-          style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
+          style: styles.body.copyWith(fontWeight: FontWeight.w600),
         ),
         Slider(
           value: years.value.toDouble(),
@@ -93,11 +95,11 @@ class BuyVsRentView extends HookWidget {
           Text(
             '${yearsText(slice.years)} assumed; move it to how long you '
             'expect to stay.',
-            style: AppTextStyles.caption,
+            style: styles.caption,
           ),
         const SizedBox(height: AppSpacing.xs),
         AppFigureRow(label: 'Buying costs you', figure: moneyText(at.buying)),
-        Text(_buyingText(slice), style: AppTextStyles.caption),
+        Text(_buyingText(slice), style: styles.caption),
         AppFigureRow(label: 'Renting costs you', figure: moneyText(at.renting)),
         AppFigureRow(
           label: 'What you would own of the home',
@@ -105,24 +107,24 @@ class BuyVsRentView extends HookWidget {
         ),
         Text(
           "The down payment and the loan paid off, at today's price.",
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
           '${buyingCheaper ? 'Buying' : 'Renting'} costs '
           '${moneyText(difference)} less over ${yearsText(years.value)}.',
-          style: AppTextStyles.label.copyWith(
-            color: buyingCheaper ? AppColors.positive : AppColors.warning,
+          style: styles.label.copyWith(
+            color: buyingCheaper ? colors.positive : colors.warning,
           ),
         ),
-        Text(_breakEvenText(breakEven, last), style: AppTextStyles.body),
+        Text(_breakEvenText(breakEven, last), style: styles.body),
         const SizedBox(height: AppSpacing.sm),
         Text(
           "Leaves out the home's price changing, what your savings would "
           "earn, selling costs, and a house's upkeep. Sample rules and rates "
           'for ${slice.marketName}, with the rate held at '
           '${percentText(slice.annualRate)}. An estimate, not advice.',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
       ],
     );

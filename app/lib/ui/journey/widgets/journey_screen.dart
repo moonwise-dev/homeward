@@ -18,6 +18,7 @@ class JourneyScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colors = AppColors.of(context);
     final provider = journeyViewModelProvider(sessionId);
     final state = ref.watch(provider);
     final viewModel = ref.read(provider.notifier);
@@ -59,7 +60,7 @@ class JourneyScreen extends HookConsumerWidget {
       ],
     );
     final plan = ColoredBox(
-      color: AppColors.surfaceMuted,
+      color: colors.surfaceMuted,
       child: PlanPanel(
         sessionId: sessionId,
         hasPlan: state.hasPlan,
@@ -120,14 +121,17 @@ class _EmptyJourney extends StatelessWidget {
   const _EmptyJourney();
 
   @override
-  Widget build(BuildContext context) => Center(
-    child: Padding(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Text(
-        'Tell Homeward about your move.',
-        style: AppTextStyles.title,
-        textAlign: TextAlign.center,
+  Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Text(
+          'Tell Homeward about your move.',
+          style: styles.title,
+          textAlign: TextAlign.center,
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

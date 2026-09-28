@@ -25,6 +25,7 @@ class ChoiceView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
     final chosen = useState<String?>(null);
     final ordered = [
       ...options.where((option) => option.label == recommended),
@@ -33,7 +34,7 @@ class ChoiceView extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(question, style: AppTextStyles.title),
+        Text(question, style: styles.title),
         const SizedBox(height: AppSpacing.md),
         for (final option in ordered)
           Padding(
@@ -55,7 +56,7 @@ class ChoiceView extends HookWidget {
         const SizedBox(height: AppSpacing.xxs),
         Text(
           'Or tell Homeward in your own words below.',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
       ],
     );
@@ -81,12 +82,14 @@ class _Option extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final detail = option.detail;
     final because = this.because;
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(AppRadii.md),
       side: BorderSide(
-        color: chosen || recommended ? AppColors.accent : AppColors.border,
+        color: chosen || recommended ? colors.accent : colors.border,
         width: chosen ? 2 : 1,
       ),
     );
@@ -94,7 +97,7 @@ class _Option extends StatelessWidget {
       opacity: faded ? 0.5 : 1,
       duration: const Duration(milliseconds: 200),
       child: Material(
-        color: chosen ? AppColors.accentSoft : AppColors.surface,
+        color: chosen ? colors.accentSoft : colors.surface,
         shape: shape,
         child: InkWell(
           customBorder: shape,
@@ -110,22 +113,22 @@ class _Option extends StatelessWidget {
                     children: [
                       Text(
                         option.label,
-                        style: AppTextStyles.body.copyWith(
+                        style: styles.body.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       if (detail != null)
                         Padding(
                           padding: const EdgeInsets.only(top: AppSpacing.xxs),
-                          child: Text(detail, style: AppTextStyles.label),
+                          child: Text(detail, style: styles.label),
                         ),
                       if (because != null)
                         Padding(
                           padding: const EdgeInsets.only(top: AppSpacing.xs),
                           child: Text(
                             because,
-                            style: AppTextStyles.caption.copyWith(
-                              color: AppColors.accent,
+                            style: styles.caption.copyWith(
+                              color: colors.accent,
                             ),
                           ),
                         ),
@@ -133,7 +136,7 @@ class _Option extends StatelessWidget {
                   ),
                 ),
                 if (chosen)
-                  const Icon(Icons.check_circle, color: AppColors.accent)
+                  Icon(Icons.check_circle, color: colors.accent)
                 else if (recommended)
                   const _RecommendedTag(),
               ],
@@ -149,20 +152,24 @@ class _RecommendedTag extends StatelessWidget {
   const _RecommendedTag();
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
-    decoration: BoxDecoration(
-      color: AppColors.accentSoft,
-      borderRadius: BorderRadius.circular(AppRadii.pill),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xs,
-        vertical: AppSpacing.xxs,
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colors.accentSoft,
+        borderRadius: BorderRadius.circular(AppRadii.pill),
       ),
-      child: Text(
-        'Recommended',
-        style: AppTextStyles.caption.copyWith(color: AppColors.accent),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.xs,
+          vertical: AppSpacing.xxs,
+        ),
+        child: Text(
+          'Recommended',
+          style: styles.caption.copyWith(color: colors.accent),
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

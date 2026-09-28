@@ -23,71 +23,74 @@ class GalleryComponentPage extends StatelessWidget {
   final ValueChanged<int> onShowExample;
 
   @override
-  Widget build(BuildContext context) => Align(
-    alignment: Alignment.topCenter,
-    child: ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: AppSizes.contentWidth),
-      child: ListView(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        children: [
-          Text(component.name, style: AppTextStyles.title),
-          Text(component.family.label, style: AppTextStyles.caption),
-          const SizedBox(height: AppSpacing.xs),
-          Text(component.description, style: AppTextStyles.body),
-          const SizedBox(height: AppSpacing.md),
-          if (component.examples.length > 1)
-            Wrap(
-              spacing: AppSpacing.xs,
-              runSpacing: AppSpacing.xs,
-              children: [
-                for (final (index, candidate) in component.examples.indexed)
-                  ChoiceChip(
-                    label: Text(candidate.name),
-                    selected: index == exampleIndex,
-                    onSelected: (_) => onShowExample(index),
-                  ),
-              ],
-            )
-          else
-            Text(example.name, style: AppTextStyles.label),
-          const SizedBox(height: AppSpacing.xs),
-          AppCard(
-            child: GallerySurfaceView(
-              key: ValueKey(example.surfaceId),
-              surfaceId: example.surfaceId,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          Text('Parameters', style: AppTextStyles.title),
-          const SizedBox(height: AppSpacing.xs),
-          for (final parameter in component.parameters)
-            GalleryParameterRow(parameter: parameter),
-          const SizedBox(height: AppSpacing.lg),
-          Text('The example', style: AppTextStyles.title),
-          const SizedBox(height: AppSpacing.xs),
-          Text('Components', style: AppTextStyles.label),
-          const SizedBox(height: AppSpacing.xxs),
-          AppJsonBlock(value: example.components, copyable: true),
-          const SizedBox(height: AppSpacing.sm),
-          Theme(
-            data: Theme.of(
-              context,
-            ).copyWith(dividerColor: Colors.transparent),
-            child: ExpansionTile(
-              tilePadding: EdgeInsets.zero,
-              shape: const Border(),
-              title: Text('Data model', style: AppTextStyles.label),
-              subtitle: Text(
-                'What the tools seed, as the example gives it',
-                style: AppTextStyles.caption,
+  Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: AppSizes.contentWidth),
+        child: ListView(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          children: [
+            Text(component.name, style: styles.title),
+            Text(component.family.label, style: styles.caption),
+            const SizedBox(height: AppSpacing.xs),
+            Text(component.description, style: styles.body),
+            const SizedBox(height: AppSpacing.md),
+            if (component.examples.length > 1)
+              Wrap(
+                spacing: AppSpacing.xs,
+                runSpacing: AppSpacing.xs,
+                children: [
+                  for (final (index, candidate) in component.examples.indexed)
+                    ChoiceChip(
+                      label: Text(candidate.name),
+                      selected: index == exampleIndex,
+                      onSelected: (_) => onShowExample(index),
+                    ),
+                ],
+              )
+            else
+              Text(example.name, style: styles.label),
+            const SizedBox(height: AppSpacing.xs),
+            AppCard(
+              child: GallerySurfaceView(
+                key: ValueKey(example.surfaceId),
+                surfaceId: example.surfaceId,
               ),
-              children: [
-                AppJsonBlock(value: example.dataModel, copyable: true),
-              ],
             ),
-          ),
-        ],
+            const SizedBox(height: AppSpacing.lg),
+            Text('Parameters', style: styles.title),
+            const SizedBox(height: AppSpacing.xs),
+            for (final parameter in component.parameters)
+              GalleryParameterRow(parameter: parameter),
+            const SizedBox(height: AppSpacing.lg),
+            Text('The example', style: styles.title),
+            const SizedBox(height: AppSpacing.xs),
+            Text('Components', style: styles.label),
+            const SizedBox(height: AppSpacing.xxs),
+            AppJsonBlock(value: example.components, copyable: true),
+            const SizedBox(height: AppSpacing.sm),
+            Theme(
+              data: Theme.of(
+                context,
+              ).copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                shape: const Border(),
+                title: Text('Data model', style: styles.label),
+                subtitle: Text(
+                  'What the tools seed, as the example gives it',
+                  style: styles.caption,
+                ),
+                children: [
+                  AppJsonBlock(value: example.dataModel, copyable: true),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

@@ -17,6 +17,8 @@ class DownPaymentSliderView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final steps = slice.whatIf?.steps ?? const <WhatIfStep>[];
     final current = _nearest(steps, slice.downPayment);
     final index = useState(current);
@@ -44,7 +46,7 @@ class DownPaymentSliderView extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Try a down payment', style: AppTextStyles.label),
+        Text('Try a down payment', style: styles.label),
         const SizedBox(height: AppSpacing.xxs),
         Row(
           crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -53,13 +55,13 @@ class DownPaymentSliderView extends HookWidget {
             Expanded(
               child: Text(
                 moneyText(step.downPayment),
-                style: AppTextStyles.figureLarge,
+                style: styles.figureLarge,
               ),
             ),
             Text(
               '${wholePercentText(share)} of '
               '${moneyText(slice.price)}',
-              style: AppTextStyles.caption,
+              style: styles.caption,
             ),
           ],
         ),
@@ -74,8 +76,8 @@ class DownPaymentSliderView extends HookWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('The minimum the rules allow', style: AppTextStyles.caption),
-              Text('What your savings reach', style: AppTextStyles.caption),
+              Text('The minimum the rules allow', style: styles.caption),
+              Text('What your savings reach', style: styles.caption),
             ],
           ),
         ] else
@@ -84,7 +86,7 @@ class DownPaymentSliderView extends HookWidget {
             child: Text(
               'Your savings do not reach more than the minimum the rules '
               'allow at this price.',
-              style: AppTextStyles.caption,
+              style: styles.caption,
             ),
           ),
         const SizedBox(height: AppSpacing.sm),
@@ -106,15 +108,15 @@ class DownPaymentSliderView extends HookWidget {
             label: 'Cash needed on the day',
             figure: moneyText(cashNeeded),
             color: savings != null && cashNeeded > savings
-                ? AppColors.danger
-                : AppColors.text,
+                ? colors.danger
+                : colors.text,
           ),
         if (savings != null)
           AppFigureRow(label: 'Your savings', figure: moneyText(savings)),
         if (!step.withinRules)
           Text(
             'Over the lending limit at this down payment.',
-            style: AppTextStyles.caption.copyWith(color: AppColors.danger),
+            style: styles.caption.copyWith(color: colors.danger),
           ),
         if (onApply != null) ...[
           const SizedBox(height: AppSpacing.sm),
@@ -133,7 +135,7 @@ class DownPaymentSliderView extends HookWidget {
         Text(
           'Sample rules and rates for ${slice.marketName}. An estimate, not '
           'advice.',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
       ],
     );

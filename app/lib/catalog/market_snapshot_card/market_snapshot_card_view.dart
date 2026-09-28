@@ -18,6 +18,8 @@ class MarketSnapshotCardView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final showRentSources = useState(false);
     final rateSources = {
       for (final rate in snapshot.rates)
@@ -35,19 +37,19 @@ class MarketSnapshotCardView extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('${snapshot.cityName} at a glance', style: AppTextStyles.label),
+        Text('${snapshot.cityName} at a glance', style: styles.label),
         Text(
           'Prices and loans in ${snapshot.currency.code}. Sample figures from '
           "${snapshot.marketName}'s rules and one lender's rates.",
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
         const SizedBox(height: AppSpacing.sm),
-        Text('Mortgage rates today', style: AppTextStyles.label),
+        Text('Mortgage rates today', style: styles.label),
         for (final rate in snapshot.rates)
           AppFigureRow(label: rate.label, figure: percentText(rate.annualRate)),
-        Text(listText([...rateSources]), style: AppTextStyles.caption),
+        Text(listText([...rateSources]), style: styles.caption),
         const SizedBox(height: AppSpacing.sm),
-        Text('What sets the loan', style: AppTextStyles.label),
+        Text('What sets the loan', style: styles.label),
         const SizedBox(height: AppSpacing.xxs),
         AppBulletList(
           items: [for (final rule in snapshot.rules) _ruleText(rule)],
@@ -55,7 +57,7 @@ class MarketSnapshotCardView extends HookWidget {
         if (ruleSources.isNotEmpty)
           Text(
             'From ${listText([...ruleSources])}.',
-            style: AppTextStyles.caption,
+            style: styles.caption,
           ),
         if (snapshot.waitingOn.isNotEmpty)
           Padding(
@@ -64,12 +66,12 @@ class MarketSnapshotCardView extends HookWidget {
               'Other rules depend on '
               '${listText([for (final field in snapshot.waitingOn) profileFieldText(field)])}; '
               'they apply once Homeward knows.',
-              style: AppTextStyles.caption.copyWith(color: AppColors.info),
+              style: styles.caption.copyWith(color: colors.info),
             ),
           ),
         if (snapshot.areas.isNotEmpty) ...[
           const SizedBox(height: AppSpacing.sm),
-          Text('Areas', style: AppTextStyles.label),
+          Text('Areas', style: styles.label),
           const SizedBox(height: AppSpacing.xxs),
           Table(
             columnWidths: const {0: FlexColumnWidth(1.4)},
@@ -79,8 +81,8 @@ class MarketSnapshotCardView extends HookWidget {
               TableRow(
                 children: [
                   const SizedBox.shrink(),
-                  _cell('Price a m²', AppTextStyles.caption),
-                  _cell('Rent a m² a month', AppTextStyles.caption),
+                  _cell('Price a m²', styles.caption),
+                  _cell('Rent a m² a month', styles.caption),
                 ],
               ),
               for (final area in snapshot.areas)
@@ -90,10 +92,10 @@ class MarketSnapshotCardView extends HookWidget {
                       padding: const EdgeInsets.symmetric(
                         vertical: AppSpacing.xxs,
                       ),
-                      child: Text(area.areaName, style: AppTextStyles.body),
+                      child: Text(area.areaName, style: styles.body),
                     ),
-                    _cell(moneyText(area.pricePerM2), AppTextStyles.figure),
-                    _cell(moneyText(area.rentPerM2), AppTextStyles.figure),
+                    _cell(moneyText(area.pricePerM2), styles.figure),
+                    _cell(moneyText(area.rentPerM2), styles.figure),
                   ],
                 ),
             ],
@@ -101,7 +103,7 @@ class MarketSnapshotCardView extends HookWidget {
           const SizedBox(height: AppSpacing.xxs),
           Text(
             'Prices: ${listText([...priceSources])}.',
-            style: AppTextStyles.caption,
+            style: styles.caption,
           ),
           Align(
             alignment: Alignment.centerLeft,
@@ -119,10 +121,10 @@ class MarketSnapshotCardView extends HookWidget {
           ),
           if (showRentSources.value)
             for (final source in rentSources)
-              Text('$source.', style: AppTextStyles.caption),
+              Text('$source.', style: styles.caption),
         ],
         const SizedBox(height: AppSpacing.sm),
-        Text('Sample figures, not advice.', style: AppTextStyles.caption),
+        Text('Sample figures, not advice.', style: styles.caption),
       ],
     );
   }

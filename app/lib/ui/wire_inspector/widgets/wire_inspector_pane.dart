@@ -21,6 +21,8 @@ class WireInspectorPane extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final log = ref.watch(wireLogProvider);
     final entries = ref.watch(wireEntriesProvider).value ?? log.entries;
     final opened = useMemoized(
@@ -48,7 +50,7 @@ class WireInspectorPane extends HookConsumerWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Text('Wire inspector', style: AppTextStyles.title),
+                  child: Text('Wire inspector', style: styles.title),
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete_outline),
@@ -69,13 +71,13 @@ class WireInspectorPane extends HookConsumerWidget {
                 AppFigureRow(
                   label: 'Recomputed on the device',
                   figure: '${log.recomputes - opened.recomputes}',
-                  color: AppColors.accent,
+                  color: colors.accent,
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Since this panel opened',
-                    style: AppTextStyles.caption,
+                    style: styles.caption,
                   ),
                 ),
               ],
@@ -169,14 +171,16 @@ class _Data extends StatelessWidget {
         );
 }
 
-Future<void> showWireInspectorSheet(BuildContext context, String sessionId) =>
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: AppColors.background,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (context) => FractionallySizedBox(
-        heightFactor: 0.85,
-        child: SafeArea(child: WireInspectorPane(sessionId: sessionId)),
-      ),
-    );
+Future<void> showWireInspectorSheet(BuildContext context, String sessionId) {
+  final colors = AppColors.of(context);
+  return showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: colors.background,
+    isScrollControlled: true,
+    showDragHandle: true,
+    builder: (context) => FractionallySizedBox(
+      heightFactor: 0.85,
+      child: SafeArea(child: WireInspectorPane(sessionId: sessionId)),
+    ),
+  );
+}

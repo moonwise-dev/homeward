@@ -57,6 +57,7 @@ class AppLineChart extends StatelessWidget {
             markers: markers,
             limit: limit,
             limitLabel: limitLabel,
+            styles: AppTextStyles.of(context),
             textDirection: Directionality.of(context),
           ),
         ),
@@ -72,6 +73,7 @@ class _LineChartPainter extends CustomPainter {
     required this.markers,
     required this.limit,
     required this.limitLabel,
+    required this.styles,
     required this.textDirection,
   });
 
@@ -83,7 +85,10 @@ class _LineChartPainter extends CustomPainter {
   final List<ChartMarker> markers;
   final double? limit;
   final String? limitLabel;
+  final AppTextStyles styles;
   final TextDirection textDirection;
+
+  AppColors get colors => styles.colors;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -132,12 +137,12 @@ class _LineChartPainter extends CustomPainter {
           ..lineTo(at(points.last.x, minY).dx, plot.bottom)
           ..lineTo(at(points.first.x, minY).dx, plot.bottom)
           ..close(),
-        Paint()..color = AppColors.accentSoft,
+        Paint()..color = colors.accentSoft,
       )
       ..drawPath(
         line,
         Paint()
-          ..color = AppColors.accent
+          ..color = colors.accent
           ..style = PaintingStyle.stroke
           ..strokeWidth = 2
           ..strokeJoin = StrokeJoin.round,
@@ -146,7 +151,7 @@ class _LineChartPainter extends CustomPainter {
       canvas.drawPath(
         pathOf(comparison),
         Paint()
-          ..color = AppColors.warning
+          ..color = colors.warning
           ..style = PaintingStyle.stroke
           ..strokeWidth = 2
           ..strokeJoin = StrokeJoin.round,
@@ -156,7 +161,7 @@ class _LineChartPainter extends CustomPainter {
     if (limit case final limit?) {
       final y = at(minX, limit).dy;
       final dashes = Paint()
-        ..color = AppColors.danger
+        ..color = colors.danger
         ..strokeWidth = 1.5;
       for (var x = plot.left; x < plot.right; x += 8) {
         canvas.drawLine(
@@ -166,7 +171,7 @@ class _LineChartPainter extends CustomPainter {
         );
       }
       if (limitLabel case final label?) {
-        final painter = _painter(label, AppColors.danger);
+        final painter = _painter(label, colors.danger);
         painter.paint(
           canvas,
           Offset(plot.right - painter.width, y - painter.height - 3),
@@ -181,7 +186,7 @@ class _LineChartPainter extends CustomPainter {
         ..drawLine(
           Offset(offset.dx, plot.top),
           Offset(offset.dx, plot.bottom),
-          Paint()..color = AppColors.border,
+          Paint()..color = colors.border,
         )
         ..drawCircle(offset, _markerRadius, Paint()..color = marker.color);
       _label(canvas, marker.label, offset.dx, plot, marker.color);
@@ -213,7 +218,7 @@ class _LineChartPainter extends CustomPainter {
   TextPainter _painter(String text, Color color) => TextPainter(
     text: TextSpan(
       text: text,
-      style: AppTextStyles.caption.copyWith(color: color, fontSize: 11),
+      style: styles.caption.copyWith(color: color, fontSize: 11),
     ),
     textDirection: textDirection,
   )..layout();
@@ -224,5 +229,6 @@ class _LineChartPainter extends CustomPainter {
       old.comparison != comparison ||
       old.markers != markers ||
       old.limit != limit ||
-      old.limitLabel != limitLabel;
+      old.limitLabel != limitLabel ||
+      old.colors != colors;
 }

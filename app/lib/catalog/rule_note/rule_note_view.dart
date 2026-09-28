@@ -14,13 +14,15 @@ class RuleNoteView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final source = rule.source;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(top: 2),
-          child: Icon(Icons.gavel_outlined, size: 18, color: AppColors.accent),
+        Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: Icon(Icons.gavel_outlined, size: 18, color: colors.accent),
         ),
         const SizedBox(width: AppSpacing.sm),
         Expanded(
@@ -29,16 +31,14 @@ class RuleNoteView extends StatelessWidget {
             children: [
               Text(
                 ruleLabel(rule.kind),
-                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
+                style: styles.body.copyWith(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: AppSpacing.xxs),
               Text(
                 'Allows a loan up to ${moneyText(rule.maxLoan)}; '
                 '${rule.allows ? 'your loan is within it' : 'your loan is over it'}.',
-                style: AppTextStyles.body.copyWith(
-                  color: rule.allows
-                      ? AppColors.textSecondary
-                      : AppColors.danger,
+                style: styles.body.copyWith(
+                  color: rule.allows ? colors.textSecondary : colors.danger,
                 ),
               ),
               if (source != null) ...[
@@ -47,17 +47,17 @@ class RuleNoteView extends StatelessWidget {
                   onTap: () => launchUrl(Uri.parse(source.url)),
                   child: Text(
                     '${source.publisher}: ${source.title}',
-                    style: AppTextStyles.label.copyWith(
-                      color: AppColors.accent,
+                    style: styles.label.copyWith(
+                      color: colors.accent,
                       decoration: TextDecoration.underline,
-                      decorationColor: AppColors.accent,
+                      decorationColor: colors.accent,
                     ),
                   ),
                 ),
                 Text(
                   'Read ${source.retrievedAt}. Sample rule for '
                   '${rule.marketName}.',
-                  style: AppTextStyles.caption,
+                  style: styles.caption,
                 ),
               ],
             ],

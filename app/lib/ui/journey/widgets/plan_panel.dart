@@ -20,40 +20,43 @@ class PlanPanel extends StatelessWidget {
   final bool isRunning;
 
   @override
-  Widget build(BuildContext context) => hasPlan
-      ? SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: AppSizes.contentWidth,
-              ),
-              child: SizedBox(
-                width: double.infinity,
-                child: IgnorePointer(
-                  ignoring: isRunning,
-                  child: AppSurfaceEntry(
-                    child: AppCard(
-                      child: PlanSurfaceView(
-                        sessionId: sessionId,
-                        surfaceId: planSurfaceId,
+  Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
+    return hasPlan
+        ? SingleChildScrollView(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: AppSizes.contentWidth,
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: IgnorePointer(
+                    ignoring: isRunning,
+                    child: AppSurfaceEntry(
+                      child: AppCard(
+                        child: PlanSurfaceView(
+                          sessionId: sessionId,
+                          surfaceId: planSurfaceId,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        )
-      : Center(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Text(
-              'Your plan appears here as Homeward learns about your move.',
-              style: AppTextStyles.body,
-              textAlign: TextAlign.center,
+          )
+        : Center(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Text(
+                'Your plan appears here as Homeward learns about your move.',
+                style: styles.body,
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-        );
+          );
+  }
 }

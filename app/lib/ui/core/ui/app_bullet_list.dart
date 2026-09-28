@@ -9,21 +9,24 @@ class AppBulletList extends StatelessWidget {
   final List<String> items;
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      for (final item in items)
-        Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('•', style: AppTextStyles.label),
-              const SizedBox(width: AppSpacing.xs),
-              Expanded(child: Text(item, style: AppTextStyles.label)),
-            ],
+  Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final item in items)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('•', style: styles.label),
+                const SizedBox(width: AppSpacing.xs),
+                Expanded(child: Text(item, style: styles.label)),
+              ],
+            ),
           ),
-        ),
-    ],
-  );
+      ],
+    );
+  }
 }

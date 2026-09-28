@@ -24,19 +24,21 @@ class AppJsonBlock extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final copied = useState(false);
     final text = value == null ? empty : _indented.convert(value);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
-        color: AppColors.surfaceMuted,
+        color: colors.surfaceMuted,
         borderRadius: BorderRadius.circular(AppRadii.sm),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: SelectableText(text, style: AppTextStyles.code)),
+          Expanded(child: SelectableText(text, style: styles.code)),
           if (copyable && value != null)
             IconButton(
               tooltip: copied.value ? 'Copied' : 'Copy',

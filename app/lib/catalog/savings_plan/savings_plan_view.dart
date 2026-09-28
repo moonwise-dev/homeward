@@ -14,33 +14,35 @@ class SavingsPlanView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final share = plan.cashNeeded.isZero
         ? 1.0
         : (plan.saved.minorUnits / plan.cashNeeded.minorUnits).clamp(0.0, 1.0);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Saving for it', style: AppTextStyles.label),
+        Text('Saving for it', style: styles.label),
         const SizedBox(height: AppSpacing.xxs),
-        Text(_needsText(plan), style: AppTextStyles.body),
+        Text(_needsText(plan), style: styles.body),
         const SizedBox(height: AppSpacing.sm),
         if (plan.covered)
           Text(
             'Your savings already cover it.',
-            style: AppTextStyles.figure.copyWith(
-              color: AppColors.positive,
+            style: styles.figure.copyWith(
+              color: colors.positive,
               fontWeight: FontWeight.w600,
             ),
           )
         else ...[
           Text(
             monthsText(plan.months),
-            style: AppTextStyles.figure.copyWith(fontWeight: FontWeight.w600),
+            style: styles.figure.copyWith(fontWeight: FontWeight.w600),
           ),
           Text(
             'Around ${monthText(plan.reachedIn)}, '
             'putting aside ${moneyText(plan.monthlySaving)} a month.',
-            style: AppTextStyles.body,
+            style: styles.body,
           ),
         ],
         const SizedBox(height: AppSpacing.sm),
@@ -51,8 +53,8 @@ class SavingsPlanView extends StatelessWidget {
             child: LinearProgressIndicator(
               value: share,
               minHeight: 8,
-              color: plan.covered ? AppColors.positive : AppColors.accent,
-              backgroundColor: AppColors.surfaceMuted,
+              color: plan.covered ? colors.positive : colors.accent,
+              backgroundColor: colors.surfaceMuted,
             ),
           ),
         ),
@@ -73,14 +75,14 @@ class SavingsPlanView extends StatelessWidget {
           Text(
             'The down payment only; the costs on the day need more about you '
             'to work out.',
-            style: AppTextStyles.caption,
+            style: styles.caption,
           ),
         const SizedBox(height: AppSpacing.sm),
         Text(
           'Leaves out what your savings earn, and prices and incomes '
           'changing. Sample rules for ${plan.marketName}. An estimate, not '
           'advice.',
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
       ],
     );

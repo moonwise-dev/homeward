@@ -5,6 +5,7 @@ import 'package:homeward/catalog/homeward_catalog.dart';
 import 'package:homeward/catalog/surface_views.dart';
 import 'package:homeward/data/repositories/gallery_repository.dart';
 import 'package:homeward/ui/core/themes/colors.dart';
+import 'package:homeward/ui/core/themes/theme.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
@@ -22,8 +23,9 @@ void main() {
               galleryRepositoryProvider.overrideWithValue(repository),
             ],
             child: MaterialApp(
+              theme: AppTheme.light,
               home: Scaffold(
-                backgroundColor: AppColors.background,
+                backgroundColor: AppColors.light.background,
                 body: SingleChildScrollView(
                   child: GallerySurfaceView(surfaceId: example.surfaceId),
                 ),

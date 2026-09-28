@@ -15,6 +15,8 @@ class StressTestChartView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final curve = slice.stress;
     if (curve == null) {
       return const SizedBox.shrink();
@@ -27,7 +29,7 @@ class StressTestChartView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('If rates rise', style: AppTextStyles.label),
+        Text('If rates rise', style: styles.label),
         const SizedBox(height: AppSpacing.sm),
         AppLineChart(
           summary: [
@@ -48,13 +50,13 @@ class StressTestChartView extends StatelessWidget {
             ChartMarker(
               x: curve.todayRate.fraction,
               label: 'Today ${percentText(curve.todayRate)}',
-              color: AppColors.accent,
+              color: colors.accent,
             ),
             if (curve.stressRate > curve.todayRate)
               ChartMarker(
                 x: curve.stressRate.fraction,
                 label: 'Tested at ${percentText(curve.stressRate)}',
-                color: AppColors.warning,
+                color: colors.warning,
               ),
           ],
           limit: limit == null ? null : majorUnits(limit),
@@ -65,7 +67,7 @@ class StressTestChartView extends StatelessWidget {
         AppFigureRow(
           label: 'A month at ${percentText(curve.stressRate)}',
           figure: moneyText(stressed),
-          color: withinLimit ? AppColors.text : AppColors.danger,
+          color: withinLimit ? colors.text : colors.danger,
         ),
         if (limit != null)
           AppFigureRow(
@@ -78,7 +80,7 @@ class StressTestChartView extends StatelessWidget {
             child: Text(
               'Set by the ${ruleLabel(limitKind).toLowerCase()}. '
               '${withinLimit ? 'The tested rate stays inside it.' : 'The tested rate goes past it.'}',
-              style: AppTextStyles.caption,
+              style: styles.caption,
             ),
           ),
         const SizedBox(height: AppSpacing.sm),
@@ -88,7 +90,7 @@ class StressTestChartView extends StatelessWidget {
             'Loan payments only. Sample rules and rates for '
                 '${slice.marketName}. An estimate, not advice.',
           ].join(' '),
-          style: AppTextStyles.caption,
+          style: styles.caption,
         ),
       ],
     );

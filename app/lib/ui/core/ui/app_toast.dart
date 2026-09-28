@@ -23,9 +23,11 @@ class AppToast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
     final (color, icon) = switch (type) {
-      AppMessageType.info => (AppColors.info, Icons.info_outline),
-      AppMessageType.error => (AppColors.danger, Icons.error_outline),
+      AppMessageType.info => (colors.info, Icons.info_outline),
+      AppMessageType.error => (colors.danger, Icons.error_outline),
     };
     final actionLabel = this.actionLabel;
     final onAction = this.onAction;
@@ -36,14 +38,14 @@ class AppToast extends StatelessWidget {
         onTap: onDismiss,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: colors.surface,
             borderRadius: BorderRadius.circular(AppRadii.md),
             border: Border.all(color: color.withValues(alpha: 0.5)),
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
-                color: AppColors.shadow,
+                color: colors.shadow,
                 blurRadius: 16,
-                offset: Offset(0, 4),
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -59,7 +61,7 @@ class AppToast extends StatelessWidget {
                 Expanded(
                   child: Text(
                     message,
-                    style: AppTextStyles.body,
+                    style: styles.body,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),

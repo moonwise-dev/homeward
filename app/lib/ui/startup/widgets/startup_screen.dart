@@ -14,6 +14,7 @@ class StartupScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final styles = AppTextStyles.of(context);
     final session = ref.watch(appSessionProvider);
     final geminiKey = ref.watch(geminiKeyProvider);
     final error = session.error ?? geminiKey.error;
@@ -28,7 +29,7 @@ class StartupScreen extends ConsumerWidget {
                   children: [
                     Text(
                       AppError.fromException(error).humanMessage,
-                      style: AppTextStyles.body,
+                      style: styles.body,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: AppSpacing.md),

@@ -10,7 +10,7 @@ class AppStatusLine extends StatelessWidget {
     required this.text,
     this.icon,
     this.isBusy = false,
-    this.color = AppColors.textTertiary,
+    this.color,
     this.trailing,
     super.key,
   });
@@ -18,12 +18,14 @@ class AppStatusLine extends StatelessWidget {
   final String text;
   final IconData? icon;
   final bool isBusy;
-  final Color color;
+  final Color? color;
   final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
     final icon = this.icon;
+    final color = this.color ?? AppColors.of(context).textTertiary;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -44,7 +46,7 @@ class AppStatusLine extends StatelessWidget {
                   ),
               ],
             ),
-            style: AppTextStyles.caption.copyWith(color: color),
+            style: styles.caption.copyWith(color: color),
           ),
         ),
       ],
