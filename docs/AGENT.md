@@ -92,6 +92,13 @@ minute and 24 of 20 a day.
   refuses within a second. Skips live in memory per instance, keyed by a
   SHA-256 digest of the key that is never logged or stored. When every model
   is skipped for a key, the request asks them again.
+- A request limit refusal also moves on to the models whose circuits are
+  open, the one closing first first, since a model that stalled once is a
+  better bet than one out of requests. On 2026-09-28 Flash-Lite stalled once
+  while both Flash models had spent their 20 requests of the day, and every
+  turn for the next five minutes failed within a second without asking
+  Flash-Lite. An overload still moves on to one more model only, and never to
+  a model whose circuit is open.
 - Every turn logs the model used and, when it fell back, the model and reason
   it fell back from, which the client streams as a `modelFailed` event.
 

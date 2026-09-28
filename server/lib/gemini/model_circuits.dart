@@ -26,6 +26,11 @@ final class ModelCircuits {
     final healthy => healthy,
   };
 
+  List<String> get cooling => [
+    for (final model in models)
+      if (_isOpen(model)) model,
+  ]..sort((a, b) => _openUntil[a]!.compareTo(_openUntil[b]!));
+
   void open(String model) => _openUntil[model] = _now().add(cooldown);
 
   bool _isOpen(String model) => switch (_openUntil[model]) {

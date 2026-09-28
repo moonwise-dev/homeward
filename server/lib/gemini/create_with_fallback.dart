@@ -14,7 +14,12 @@ Stream<InteractionEvent> createWithFallback({
   required bool Function() canFallBack,
   Future<void>? cancellation,
 }) async* {
-  final candidates = caps.uncapped(apiKey, circuits.candidates);
+  final first = caps.uncapped(apiKey, circuits.candidates);
+  final cooling = [
+    for (final model in circuits.cooling)
+      if (!first.contains(model) && !caps.isCapped(apiKey, model)) model,
+  ];
+  final candidates = [...first, ...cooling];
   var retriedOverload = false;
   for (final (attempt, model) in candidates.indexed) {
     try {
@@ -40,7 +45,10 @@ Stream<InteractionEvent> createWithFallback({
         case _:
           rethrow;
       }
-      if (attempt == candidates.length - 1 || !canFallBack()) {
+      final next = candidates.elementAtOrNull(attempt + 1);
+      if (next == null ||
+          !canFallBack() ||
+          (reason is GeminiUnavailable && cooling.contains(next))) {
         rethrow;
       }
       yield InteractionEvent.modelFailed(model: model, reason: reason);

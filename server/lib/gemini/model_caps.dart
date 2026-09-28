@@ -22,6 +22,14 @@ final class ModelCaps {
     return uncapped.isEmpty ? models : uncapped;
   }
 
+  bool isCapped(String apiKey, String model) => switch (_cappedUntil[_entry(
+    apiKey,
+    model,
+  )]) {
+    final until? => _now().isBefore(until),
+    null => false,
+  };
+
   void cap(String apiKey, String model) =>
       _cappedUntil[_entry(apiKey, model)] = _now().add(skipFor);
 
