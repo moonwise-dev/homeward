@@ -183,36 +183,30 @@ and Appearance.
 - About, with links to A2UI, genui, and the repository.
 - Delete all my data: deletes every plan and signs out the anonymous user.
 
-## Maps Keys
+## The Map
 
-The toolkit's `GoogleMap` (C8b, D133) draws on Google Maps, which needs Maps
-Platform keys on the project's billing account. Moonwise's billing account is
-in Sweden, so the Google Maps Platform EEA terms apply. The owner creates the
-keys before C8b, in the Google Cloud console of the Firebase project:
+`WeekMap` (C8b, D163) draws on OpenStreetMap's own tiles with `flutter_map`.
+There is no key, no account, and nothing to configure, on any platform,
+macOS included.
 
-1. **APIs:** enable the Maps JavaScript API, the Maps SDK for Android, and the
-   Maps SDK for iOS, nothing else.
-2. **One key per platform,** so a leaked key is limited to one app:
-   - web, restricted to HTTP referrers `http://localhost:8090/*` and the
-     Firebase Hosting domains, and to the Maps JavaScript API;
-   - Android, restricted to the package `se.moonwise.homeward` with the SHA-1
-     fingerprints of the debug and release signing certificates, and to the
-     Maps SDK for Android;
-   - iOS, restricted to the bundle ID `se.moonwise.homeward`, and to the Maps
-     SDK for iOS.
-3. **Quotas:** the Maps SDKs for Android and iOS are free without limit;
-   dynamic maps on the web have 10,000 free loads a month (checked
-   2026-09-27). Cap the Maps JavaScript API's map loads per day at 300, which
-   keeps a month under the free loads.
-4. **Budget:** a budget alert on the billing account at a small amount, such
-   as 1 euro, emailing the owner.
-5. **Where they go:** the variables `HOMEWARD_MAPS_WEB_KEY`,
-   `HOMEWARD_MAPS_ANDROID_KEY`, and `HOMEWARD_MAPS_IOS_KEY` in the git-ignored
-   `.env`, named in `.env.example` without values. How each reaches its
-   platform build is spike S11's question.
-
-A key the app ships is visible to anyone who has the app; its restrictions and
-the quota cap are what protect the bill.
+- **Tiles:** `https://tile.openstreetmap.org/{z}/{x}/{y}.png`, softened by a
+  colour filter so the pins and routes read first, and darkened under the
+  dark theme (`docs/DESIGN.md`).
+- **The tile policy** (operations.osmfoundation.org/policies/tiles, read
+  2026-10-05) is followed: "© OpenStreetMap contributors" stays on the map,
+  bottom right; native builds send a user agent naming
+  `se.moonwise.homeward`, and the web sends its referrer; tiles are fetched
+  only as they are viewed, never ahead, and cached as the server's headers
+  say. The service is best effort and may block heavy use, which
+  `docs/ROADMAP.md` lists as a risk.
+- **What it draws** comes from the data model alone: the places of `/places`
+  and one starting point of `/week`, with each trip's path decoded from the
+  polyline `measure_week` kept. The app asks no routing or geocoding service
+  anything.
+- **Gestures:** drag, pinch, and double tap. The scroll wheel is left to the
+  plan panel, so scrolling past a map does not zoom it, and the map does not
+  rotate.
+- **Size:** the map fits what it shows when it is drawn and is 320 dp tall.
 
 ## Features And Controllers
 

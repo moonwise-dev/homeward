@@ -25,8 +25,9 @@ composes each household's screen from them as the conversation goes.
 
 On 2026-09-26 the product was cleaned down to its foundation (D129) and
 rebuilt in small chunks. By 2026-09-28 the four journeys below were built
-and rehearsed, all but the map, which waits on the Maps keys; "Where We Are"
-in `docs/ROADMAP.md` says what is built, what is next, and what is open.
+and rehearsed, and the map followed on 2026-10-05, on open tiles (D163);
+"Where We Are" in `docs/ROADMAP.md` says what is built, what is next, and
+what is open.
 
 ## How It Works
 
@@ -79,10 +80,11 @@ go somewhere else entirely.
 - Google's travel demo shows a multi-leg trip no static UI was built for.
   Homeward shows a household finance decision no bank form was built for: two
   incomes in two currencies, a parent moving in, a flat shared by friends.
-- Homeward renders the Maps Agentic UI Toolkit's catalog (`googlemaps/a2ui`)
-  in Flutter, which the toolkit itself does not: its `GoogleMap` component,
-  with the toolkit's exact schema, drawn on Google Maps by a reusable Flutter
-  package (D133).
+- Homeward draws the household's week on an open map: the places it checked
+  and the routes it measured, on OpenStreetMap's tiles, with no key for
+  anyone to obtain. Its map block takes the `markers` and `routes` of the
+  Maps Agentic UI Toolkit's `GoogleMap` (`googlemaps/a2ui`), so a Google
+  Maps renderer can stand behind the same surface (D163).
 
 ## Product Principles
 
@@ -108,8 +110,8 @@ go somewhere else entirely.
   doing, step by step.
 - **Estimates, not advice.** Homeward explains and estimates. It never tells a
   buyer what to sign or presents itself as a lender.
-- **Free to run.** Buyers bring a free Gemini key; open map data measures where
-  and how far; Google Cloud and Google Maps Platform stay within their free
+- **Free to run.** Buyers bring a free Gemini key; open map data measures
+  where and how far and draws the map; Google Cloud stays within its free
   monthly allowances, with quotas capped there.
 
 ## Actors

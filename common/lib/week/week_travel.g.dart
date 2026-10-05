@@ -51,6 +51,7 @@ _Trip _$TripFromJson(Map<String, dynamic> json) => $checkedCreate(
         'mode',
         'minutes',
         'meters',
+        'polyline',
       ],
     );
     final val = _Trip(
@@ -64,6 +65,7 @@ _Trip _$TripFromJson(Map<String, dynamic> json) => $checkedCreate(
       mode: $checkedConvert('mode', (v) => $enumDecode(_$TravelModeEnumMap, v)),
       minutes: $checkedConvert('minutes', (v) => (v as num?)?.toInt()),
       meters: $checkedConvert('meters', (v) => (v as num?)?.toInt()),
+      polyline: $checkedConvert('polyline', (v) => v as String?),
     );
     return val;
   },
@@ -77,6 +79,7 @@ Map<String, dynamic> _$TripToJson(_Trip instance) => <String, dynamic>{
   'mode': _$TravelModeEnumMap[instance.mode]!,
   'minutes': ?instance.minutes,
   'meters': ?instance.meters,
+  'polyline': ?instance.polyline,
 };
 
 const _$TravelModeEnumMap = {

@@ -1824,6 +1824,60 @@
         "trip"
       ],
       "additionalProperties": false
+    },
+    "WeekMap": {
+      "type": "object",
+      "description": "A map on OpenStreetMap of the places find_place found, each a pin with its name; with routes, one starting point's week from measure_week on it: the home, each trip drawn along the route it was measured on with its minutes and how often, and the week's total.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "WeekMap"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "markers": {
+          "type": "object",
+          "description": "Always { \"path\": \"/places\" }, after find_place.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "const": "/places"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        "routes": {
+          "type": "object",
+          "description": "One starting point measure_week measured, { \"path\": \"/week/<from>\" }. Leave it out to show the places alone.",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "markers"
+      ],
+      "additionalProperties": false
     }
   },
   "functions": {
@@ -2491,6 +2545,9 @@
         },
         {
           "$ref": "#/components/RouteSummary"
+        },
+        {
+          "$ref": "#/components/WeekMap"
         }
       ]
     },

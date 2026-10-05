@@ -1,7 +1,6 @@
 import 'package:common/common.dart';
 
 import 'polite_client.dart';
-import 'polyline.dart';
 import 'travel_route.dart';
 
 final class Routing {
@@ -44,7 +43,7 @@ final class Routing {
       roads.resolve(
         'routed-$profile/route/v1/driving/'
         '${from.lng},${from.lat};${to.lng},${to.lat}'
-        '?overview=simplified&geometries=geojson',
+        '?overview=full&geometries=geojson',
       ),
       gap: const Duration(milliseconds: 500),
     );

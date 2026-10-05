@@ -319,7 +319,7 @@ $GeoPointCopyWith<$Res> get from {
 /// @nodoc
 mixin _$Trip {
 
- String get placeId; String get placeName; GeoPoint get to; int get perWeek; TravelMode get mode; int? get minutes; int? get meters;
+ String get placeId; String get placeName; GeoPoint get to; int get perWeek; TravelMode get mode; int? get minutes; int? get meters; String? get polyline;
 /// Create a copy of Trip
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -333,20 +333,20 @@ $TripCopyWith<Trip> get copyWith => _$TripCopyWithImpl<Trip>(this as Trip, _$ide
 @override
 bool operator ==(Object other) {
   final _this = this as Trip;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Trip&&(identical(other.placeId, _this.placeId) || other.placeId == _this.placeId)&&(identical(other.placeName, _this.placeName) || other.placeName == _this.placeName)&&(identical(other.to, _this.to) || other.to == _this.to)&&(identical(other.perWeek, _this.perWeek) || other.perWeek == _this.perWeek)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.minutes, _this.minutes) || other.minutes == _this.minutes)&&(identical(other.meters, _this.meters) || other.meters == _this.meters));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Trip&&(identical(other.placeId, _this.placeId) || other.placeId == _this.placeId)&&(identical(other.placeName, _this.placeName) || other.placeName == _this.placeName)&&(identical(other.to, _this.to) || other.to == _this.to)&&(identical(other.perWeek, _this.perWeek) || other.perWeek == _this.perWeek)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.minutes, _this.minutes) || other.minutes == _this.minutes)&&(identical(other.meters, _this.meters) || other.meters == _this.meters)&&(identical(other.polyline, _this.polyline) || other.polyline == _this.polyline));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Trip;
-  return Object.hash(runtimeType,_this.placeId,_this.placeName,_this.to,_this.perWeek,_this.mode,_this.minutes,_this.meters);
+  return Object.hash(runtimeType,_this.placeId,_this.placeName,_this.to,_this.perWeek,_this.mode,_this.minutes,_this.meters,_this.polyline);
 }
 
 @override
 String toString() {
   final _this = this as Trip;
-  return 'Trip(placeId: ${_this.placeId}, placeName: ${_this.placeName}, to: ${_this.to}, perWeek: ${_this.perWeek}, mode: ${_this.mode}, minutes: ${_this.minutes}, meters: ${_this.meters})';
+  return 'Trip(placeId: ${_this.placeId}, placeName: ${_this.placeName}, to: ${_this.to}, perWeek: ${_this.perWeek}, mode: ${_this.mode}, minutes: ${_this.minutes}, meters: ${_this.meters}, polyline: ${_this.polyline})';
 }
 
 
@@ -357,7 +357,7 @@ abstract mixin class $TripCopyWith<$Res>  {
   factory $TripCopyWith(Trip value, $Res Function(Trip) _then) = _$TripCopyWithImpl;
 @useResult
 $Res call({
- String placeId, String placeName, GeoPoint to, int perWeek, TravelMode mode, int? minutes, int? meters
+ String placeId, String placeName, GeoPoint to, int perWeek, TravelMode mode, int? minutes, int? meters, String? polyline
 });
 
 
@@ -374,7 +374,7 @@ class _$TripCopyWithImpl<$Res>
 
 /// Create a copy of Trip
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? placeId = null,Object? placeName = null,Object? to = null,Object? perWeek = null,Object? mode = null,Object? minutes = freezed,Object? meters = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? placeId = null,Object? placeName = null,Object? to = null,Object? perWeek = null,Object? mode = null,Object? minutes = freezed,Object? meters = freezed,Object? polyline = freezed,}) {
   return _then(Trip(
 placeId: null == placeId ? _self.placeId : placeId // ignore: cast_nullable_to_non_nullable
 as String,placeName: null == placeName ? _self.placeName : placeName // ignore: cast_nullable_to_non_nullable
@@ -383,7 +383,8 @@ as GeoPoint,perWeek: null == perWeek ? _self.perWeek : perWeek // ignore: cast_n
 as int,mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
 as TravelMode,minutes: freezed == minutes ? _self.minutes : minutes // ignore: cast_nullable_to_non_nullable
 as int?,meters: freezed == meters ? _self.meters : meters // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,polyline: freezed == polyline ? _self.polyline : polyline // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 /// Create a copy of Trip
@@ -477,10 +478,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String placeId,  String placeName,  GeoPoint to,  int perWeek,  TravelMode mode,  int? minutes,  int? meters)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String placeId,  String placeName,  GeoPoint to,  int perWeek,  TravelMode mode,  int? minutes,  int? meters,  String? polyline)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Trip() when $default != null:
-return $default(_that.placeId,_that.placeName,_that.to,_that.perWeek,_that.mode,_that.minutes,_that.meters);case _:
+return $default(_that.placeId,_that.placeName,_that.to,_that.perWeek,_that.mode,_that.minutes,_that.meters,_that.polyline);case _:
   return orElse();
 
 }
@@ -498,10 +499,10 @@ return $default(_that.placeId,_that.placeName,_that.to,_that.perWeek,_that.mode,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String placeId,  String placeName,  GeoPoint to,  int perWeek,  TravelMode mode,  int? minutes,  int? meters)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String placeId,  String placeName,  GeoPoint to,  int perWeek,  TravelMode mode,  int? minutes,  int? meters,  String? polyline)  $default,) {final _that = this;
 switch (_that) {
 case _Trip():
-return $default(_that.placeId,_that.placeName,_that.to,_that.perWeek,_that.mode,_that.minutes,_that.meters);case _:
+return $default(_that.placeId,_that.placeName,_that.to,_that.perWeek,_that.mode,_that.minutes,_that.meters,_that.polyline);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -518,10 +519,10 @@ return $default(_that.placeId,_that.placeName,_that.to,_that.perWeek,_that.mode,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String placeId,  String placeName,  GeoPoint to,  int perWeek,  TravelMode mode,  int? minutes,  int? meters)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String placeId,  String placeName,  GeoPoint to,  int perWeek,  TravelMode mode,  int? minutes,  int? meters,  String? polyline)?  $default,) {final _that = this;
 switch (_that) {
 case _Trip() when $default != null:
-return $default(_that.placeId,_that.placeName,_that.to,_that.perWeek,_that.mode,_that.minutes,_that.meters);case _:
+return $default(_that.placeId,_that.placeName,_that.to,_that.perWeek,_that.mode,_that.minutes,_that.meters,_that.polyline);case _:
   return null;
 
 }
@@ -533,7 +534,7 @@ return $default(_that.placeId,_that.placeName,_that.to,_that.perWeek,_that.mode,
 @JsonSerializable()
 
 class _Trip extends Trip {
-  const _Trip({required this.placeId, required this.placeName, required this.to, required this.perWeek, required this.mode, this.minutes, this.meters}): super._();
+  const _Trip({required this.placeId, required this.placeName, required this.to, required this.perWeek, required this.mode, this.minutes, this.meters, this.polyline}): super._();
   factory _Trip.fromJson(Map<String, dynamic> json) => _$TripFromJson(json);
 
 @override final  String placeId;
@@ -543,6 +544,7 @@ class _Trip extends Trip {
 @override final  TravelMode mode;
 @override final  int? minutes;
 @override final  int? meters;
+@override final  String? polyline;
 
 /// Create a copy of Trip
 /// with the given fields replaced by the non-null parameter values.
@@ -557,18 +559,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Trip&&(identical(other.placeId, placeId) || other.placeId == placeId)&&(identical(other.placeName, placeName) || other.placeName == placeName)&&(identical(other.to, to) || other.to == to)&&(identical(other.perWeek, perWeek) || other.perWeek == perWeek)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.minutes, minutes) || other.minutes == minutes)&&(identical(other.meters, meters) || other.meters == meters));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Trip&&(identical(other.placeId, placeId) || other.placeId == placeId)&&(identical(other.placeName, placeName) || other.placeName == placeName)&&(identical(other.to, to) || other.to == to)&&(identical(other.perWeek, perWeek) || other.perWeek == perWeek)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.minutes, minutes) || other.minutes == minutes)&&(identical(other.meters, meters) || other.meters == meters)&&(identical(other.polyline, polyline) || other.polyline == polyline));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,placeId,placeName,to,perWeek,mode,minutes,meters);
+    return Object.hash(runtimeType,placeId,placeName,to,perWeek,mode,minutes,meters,polyline);
 }
 
 @override
 String toString() {
-    return 'Trip(placeId: $placeId, placeName: $placeName, to: $to, perWeek: $perWeek, mode: $mode, minutes: $minutes, meters: $meters)';
+    return 'Trip(placeId: $placeId, placeName: $placeName, to: $to, perWeek: $perWeek, mode: $mode, minutes: $minutes, meters: $meters, polyline: $polyline)';
 }
 
 
@@ -579,7 +581,7 @@ abstract mixin class _$TripCopyWith<$Res> implements $TripCopyWith<$Res> {
   factory _$TripCopyWith(_Trip value, $Res Function(_Trip) _then) = __$TripCopyWithImpl;
 @override @useResult
 $Res call({
- String placeId, String placeName, GeoPoint to, int perWeek, TravelMode mode, int? minutes, int? meters
+ String placeId, String placeName, GeoPoint to, int perWeek, TravelMode mode, int? minutes, int? meters, String? polyline
 });
 
 
@@ -596,7 +598,7 @@ class __$TripCopyWithImpl<$Res>
 
 /// Create a copy of Trip
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? placeId = null,Object? placeName = null,Object? to = null,Object? perWeek = null,Object? mode = null,Object? minutes = freezed,Object? meters = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? placeId = null,Object? placeName = null,Object? to = null,Object? perWeek = null,Object? mode = null,Object? minutes = freezed,Object? meters = freezed,Object? polyline = freezed,}) {
   return _then(_Trip(
 placeId: null == placeId ? _self.placeId : placeId // ignore: cast_nullable_to_non_nullable
 as String,placeName: null == placeName ? _self.placeName : placeName // ignore: cast_nullable_to_non_nullable
@@ -605,7 +607,8 @@ as GeoPoint,perWeek: null == perWeek ? _self.perWeek : perWeek // ignore: cast_n
 as int,mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
 as TravelMode,minutes: freezed == minutes ? _self.minutes : minutes // ignore: cast_nullable_to_non_nullable
 as int?,meters: freezed == meters ? _self.meters : meters // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,polyline: freezed == polyline ? _self.polyline : polyline // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

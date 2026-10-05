@@ -8,9 +8,8 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 Since the reset (D129) Homeward's own blocks came back one at a time, each
 with the chunk of `docs/ROADMAP.md` that needed it, from `Fact` (C4) to
-`LoanBalanceChart`, `SavingsPlan`, and `MarketSnapshotCard` (C10b): 24
-blocks in five families. `GoogleMap` (C8b) is the one still planned before
-the recording.
+`LoanBalanceChart`, `SavingsPlan`, and `MarketSnapshotCard` (C10b) and
+`WeekMap` (C8b): 25 blocks in five families.
 
 ## Design Principles
 
@@ -87,6 +86,7 @@ Buttons send actions the model names itself (`docs/PROTOCOL.md`).
 | Homes | `ListingQuote` | One sample home read for the household's needs: each need in the buyer's words with whether the listing meets it, rules it out, or says nothing, and the listing's description with the sentence that decides each one highlighted, every quote checked word for word; says nothing means the listing does not mention it, to ask or check at a viewing (D156) | `reading`, bound to one home, `{ "path": "/reads/<id>" }` |
 | Place and travel | `WeeklyTravel` | The buyer's week from one starting point, a sample home or a place: each place with how many times a week they go, how they travel, the minutes each way, and the week's total there and back, measured by open routing and labelled with what measured it (D154) | `week`, bound to one starting point, `{ "path": "/week/<from>" }` |
 | Place and travel | `RouteSummary` | One measured trip: where from and to, how they travel, the minutes and distance one way, and how many times a week, labelled with what measured it (D154) | `trip`, bound to one trip, `{ "path": "/week/<from>/trips/<n>" }` |
+| Place and travel | `WeekMap` | A map of the household's places and, from one starting point, their week: each place Homeward found as a pin with its name, the starting point as a home pin, each measured trip drawn along the route it was measured on, with how they travel, the minutes each way, and how many times a week on the place's pin, and the week's total there and back above the map; on OpenStreetMap's tiles with their attribution, labelled with what measured the trips; a trip no router could measure keeps its pin without a line (D163) | `markers`, always `{ "path": "/places" }`; `routes`, optional, bound to one starting point, `{ "path": "/week/<from>" }` |
 | Trust | `RuleNote` | One lending rule: what it is, the largest loan it allows, whether the loan is within it, and its source with the date it was read, labelled as a sample rule (D146) | `rule`, bound to one rule, such as `{ "path": "/affordability/binding" }` or `/affordability/checks/0` |
 
 A `Choice` tap sends its `answer` action at once, with `choice` and `label`,
@@ -130,22 +130,22 @@ A `Fact` tap sends its `answer` action with `fact`, the item's ID, `answer`,
 "Right: Your mum can't manage stairs". A `Fact` bound to an item the brief
 does not hold is refused.
 
+A `WeekMap` takes the names of its two properties, `markers` and `routes`,
+from the Maps Agentic UI Toolkit's `GoogleMap` (`googlemaps/a2ui`), and binds
+both, where the toolkit takes literal coordinates: Gemini never writes a
+coordinate, every pin is a place `find_place` checked, and every line is a
+route `measure_week` measured. It fits itself to what it shows, so it has no
+`center` or `zoom`, and each trip carries its own way of travelling, so it
+has no `travelMode`. It draws on OpenStreetMap's tiles with `flutter_map`
+and needs no key (D163).
+
 ## Planned Blocks
 
-Candidates toward 25 to 30 (D140), grouped in families, each confirmed,
-reshaped, or dropped by the chunk of `docs/ROADMAP.md` that needs it. Blocks
-marked restored come back from `6faa8ab`.
-
-| Family | Block | Chunk | What it shows |
-| --- | --- | --- | --- |
-| Place and travel | `GoogleMap` | C8b | The Maps Agentic UI Toolkit's map, with its schema vendored at a pinned commit from `googlemaps/a2ui` (`agent/python_agent/shared/schema/maps_catalog_extension.json`) and drawn by Homeward's Flutter Maps package (D133) |
-| Place and travel | `PlaceDetailsCompact` | Later | The toolkit's place card, after S14 |
-
-`GoogleMap` keeps the toolkit's schema exactly, so a surface that uses it
-stays readable by the toolkit's own clients. Its `markers` and `routes` take
-literal coordinates, which a validation pass checks against the places tools
-returned rather than a data binding. Its schema is built with `allOf`, which
-keeps it out of the correction round's enforced schema (D110).
+None before the recording. The Maps Agentic UI Toolkit's own components,
+`GoogleMap` and `PlaceDetailsCompact`, were planned for C8b (D133) and
+dropped with D163: they draw with Google Maps Platform, whose keys need a
+billing account. A Google Maps renderer behind `WeekMap`'s properties is
+listed under Later in `docs/ROADMAP.md`.
 
 ## Declaring A Component
 

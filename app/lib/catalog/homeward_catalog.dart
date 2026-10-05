@@ -25,6 +25,7 @@ import 'rule_note/rule_note_item.dart';
 import 'savings_plan/savings_plan_item.dart';
 import 'shortlist/shortlist_item.dart';
 import 'stress_test_chart/stress_test_chart_item.dart';
+import 'week_map/week_map_item.dart';
 import 'weekly_travel/weekly_travel_item.dart';
 
 Catalog homewardGenuiCatalog() {
@@ -57,6 +58,7 @@ Catalog homewardGenuiCatalog() {
       listingQuoteItem,
       weeklyTravelItem,
       routeSummaryItem,
+      weekMapItem,
     ],
     functions: [
       ...basic.functions,

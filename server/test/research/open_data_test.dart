@@ -6,7 +6,6 @@ import 'package:homeward_server/research/open_data/open_data_unavailable.dart';
 import 'package:homeward_server/research/open_data/osm_matcher.dart';
 import 'package:homeward_server/research/open_data/overpass.dart';
 import 'package:homeward_server/research/open_data/polite_client.dart';
-import 'package:homeward_server/research/open_data/polyline.dart';
 import 'package:homeward_server/research/open_data/research_cache.dart';
 import 'package:homeward_server/research/open_data/routing.dart';
 import 'package:http/http.dart' as http;

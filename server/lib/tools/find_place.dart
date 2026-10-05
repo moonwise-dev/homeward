@@ -142,8 +142,9 @@ final class FindPlace extends AgentTool {
             'why': 'OpenStreetMap search did not answer; try again shortly.',
           },
         'note':
-            'The places are in /places. measure_week measures the trips to '
-            'them from a home.',
+            'The places are in /places. WeekMap shows them on a map, '
+            '"markers": { "path": "/places" }, and measure_week measures '
+            'the trips to them from a home.',
       },
       seeds: {if (found.isNotEmpty) placesSlice.name: places},
       logFields: {

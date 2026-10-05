@@ -18,15 +18,15 @@ different screens. Nothing is scripted.
 
 The system is agent-driven and server-owned. A Dart server on Cloud Run runs
 the composing agent and its tools; open map data and routing supply the facts.
-The Flutter app renders A2UI surfaces from a catalog it trusts, maps included
-through a Flutter renderer of the Maps Agentic UI Toolkit's catalog, and never
-contains prompts.
+The Flutter app renders A2UI surfaces from a catalog it trusts, the map
+included, drawn on open map tiles with no key (D163), and never contains
+prompts.
 
 On 2026-09-26 the project was cleaned down to its foundation (D129): the
 earlier question-by-question case, the sample homes, the deal, and the evals
 were removed. The product was rebuilt from there in small chunks: C1 to C10d
-were done by 2026-09-28, with 24 blocks, twelve tools, and four rehearsed
-journeys, and the map (C8b) waits on the Maps keys. Start with "Where We Are"
+were done by 2026-09-28 and the map (C8b) on 2026-10-05, which makes 25
+blocks, twelve tools, and four rehearsed journeys. Start with "Where We Are"
 in `docs/ROADMAP.md`.
 
 ## Repository Shape
@@ -86,10 +86,10 @@ first.
 - Every place a model names is checked against open map data before it is shown.
 - Math lives once, in `common`, and is used by both server tools and client
   functions.
-- Everything runs on free tiers: buyers' free Gemini keys, open map data,
-  Google Cloud and Google Maps Platform within their free monthly allowances
-  with quotas capped there, no paid store accounts. A feature that needs
-  payment is not built.
+- Everything runs on free tiers: buyers' free Gemini keys, open map data and
+  tiles, Google Cloud within its free monthly allowances with quotas capped
+  there, no paid store accounts. A feature that needs payment, or a key on a
+  billing account, is not built (D163).
 - The Gemini API key belongs to the user. Never log, persist, or echo it. Keys
   the server holds live in Secret Manager and are never logged either.
 - Every key reaches code as an environment variable. A developer's keys live in
@@ -108,8 +108,8 @@ first.
 
 ## Agent Tooling
 
-Claude Code picks these up from `.claude/settings.json` and `.mcp.json`, and
-asks once to trust them:
+Claude Code picks these up from `.claude/settings.json`, and asks once to
+trust them:
 
 - The `dart-flutter` plugin (`flutter/agent-plugins`): the Dart MCP server,
   which can analyze, run tests, launch the app, hot reload, read runtime errors
@@ -122,8 +122,6 @@ asks once to trust them:
   the Firestore and rules skills. Deploying still waits for an explicit ask.
 - The `chrome-devtools-mcp` plugin: screenshots, console, and network of the
   web app for the visual look at the end of a chunk.
-- The Google Maps Platform Code Assist MCP server in `.mcp.json`: official Maps
-  docs and samples, used from C8b. It starts with `npx`, so it needs Node.
 
 Project skills in `.claude/skills/`:
 

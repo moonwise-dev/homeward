@@ -24,6 +24,7 @@ import 'components/rule_note.dart';
 import 'components/savings_plan.dart';
 import 'components/shortlist.dart';
 import 'components/stress_test_chart.dart';
+import 'components/week_map.dart';
 import 'components/weekly_travel.dart';
 import 'functions/catalog_function.dart';
 
@@ -55,6 +56,7 @@ const homewardComponents = <CatalogComponent>[
   ListingQuote(),
   WeeklyTravel(),
   RouteSummary(),
+  WeekMap(),
 ];
 
 const homewardFunctions = <CatalogFunction>[];

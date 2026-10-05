@@ -17,6 +17,7 @@ final class MeasureWeek extends AgentTool {
 
   static const maxTrips = 6;
   static const maxPerWeek = 14;
+  static const maxPathPoints = 100;
 
   @override
   String get name => 'measure_week';
@@ -26,9 +27,9 @@ final class MeasureWeek extends AgentTool {
       "Measures the buyer's week from one starting point, a sample home ID "
       'from /homes or a place ID from /places: each trip to a place from '
       '/places, how many times a week they go there and back, and how they '
-      'travel, by open routing. It seeds /week/<from> for WeeklyTravel and '
-      'RouteSummary and answers with the minutes of each trip and the '
-      "week's total.";
+      'travel, by open routing. It seeds /week/<from> for WeeklyTravel, '
+      'RouteSummary, and the routes of a WeekMap, and answers with the '
+      "minutes of each trip and the week's total.";
 
   @override
   Map<String, Object?> get parameters => {
@@ -127,6 +128,12 @@ final class MeasureWeek extends AgentTool {
           mode: mode,
           minutes: route?.minutes,
           meters: route?.meters,
+          polyline: switch (route?.path) {
+            final path? when path.length > 1 => encodePolyline(
+              simplifyPath(path, maxPoints: maxPathPoints),
+            ),
+            _ => null,
+          },
         ),
       );
     }
@@ -156,9 +163,11 @@ final class MeasureWeek extends AgentTool {
           ],
         'note':
             'The week is in /week/$fromId. Show it with WeeklyTravel, '
-            '{ "path": "/week/$fromId" }, or one trip with RouteSummary, '
-            '{ "path": "/week/$fromId/trips/<n>" }; never write the minutes '
-            'in your text.',
+            '{ "path": "/week/$fromId" }, one trip with RouteSummary, '
+            '{ "path": "/week/$fromId/trips/<n>" }, or on a map with '
+            'WeekMap, "markers": { "path": "/places" } and "routes": '
+            '{ "path": "/week/$fromId" }; never write the minutes in your '
+            'text.',
       },
       seeds: {
         weekSlice.name: {

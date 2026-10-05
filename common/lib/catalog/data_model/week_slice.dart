@@ -11,12 +11,13 @@ const weekSlice = DataSlice(
       '<from>',
       FieldKind.record,
       'One week: { fromId, fromName, from, trips }. Bind it whole to a '
-          'WeeklyTravel.',
+          'WeeklyTravel, or to the routes of a WeekMap.',
     ),
     SliceField(
       '<from>/trips/<n>',
       FieldKind.record,
-      'One trip: { placeName, perWeek, mode, minutes, meters }. Bind it to a '
+      'One trip: { placeName, perWeek, mode, minutes, meters, polyline }, '
+          'the route it was measured on as an encoded polyline. Bind it to a '
           'RouteSummary.',
     ),
   ],

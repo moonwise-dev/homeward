@@ -80,7 +80,7 @@ The places the buyer named, found with find_place: an object of places by ID. Se
 
 | Path | Value | Meaning |
 | --- | --- | --- |
-| `/places/<id>` | object read by Homeward components | One place: { id, name, address, point }. |
+| `/places/<id>` | object read by Homeward components | One place: { id, name, address, point }. Bind the whole slice to the markers of a WeekMap. |
 
 ### `/week`
 
@@ -88,8 +88,8 @@ The buyer's week measured with measure_week: an object by starting point, a samp
 
 | Path | Value | Meaning |
 | --- | --- | --- |
-| `/week/<from>` | object read by Homeward components | One week: { fromId, fromName, from, trips }. Bind it whole to a WeeklyTravel. |
-| `/week/<from>/trips/<n>` | object read by Homeward components | One trip: { placeName, perWeek, mode, minutes, meters }. Bind it to a RouteSummary. |
+| `/week/<from>` | object read by Homeward components | One week: { fromId, fromName, from, trips }. Bind it whole to a WeeklyTravel, or to the routes of a WeekMap. |
+| `/week/<from>/trips/<n>` | object read by Homeward components | One trip: { placeName, perWeek, mode, minutes, meters, polyline }, the route it was measured on as an encoded polyline. Bind it to a RouteSummary. |
 
 ### `/rentSplit`
 
@@ -165,6 +165,7 @@ The catalog schema below holds the full schemas of the components every plan use
 - `ListingQuote`: One sample home read for the household's needs, from read_listings: each need with whether the listing meets it, rules it out, or says nothing, and the listing's own words highlighted.
 - `WeeklyTravel`: The buyer's week from one starting point, from measure_week: each place, how often and how they go, the measured minutes, and the week's total.
 - `RouteSummary`: One trip measure_week measured: where to, how they go, the minutes and distance, and how often.
+- `WeekMap`: A map on OpenStreetMap of the places find_place found, each a pin with its name; with routes, one starting point's week from measure_week on it: the home, each trip drawn along the route it was measured on with its minutes and how often, and the week's total.
 
 ## Examples
 

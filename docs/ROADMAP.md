@@ -4,38 +4,47 @@
 
 | Date | Event | Source |
 | --- | --- | --- |
-| 2026-09-28 | Working group and demo build session; shows the fintech realignment (D138 to D142), the foundation, and C1 to C2 if ready | Hilda Arteaga, 2026-09-14 |
+| 2026-09-28 | Working group and demo build session; postponed three days before and moved to 2026-10-06 | Hilda Arteaga, 2026-09-14; Abdallah Shaban, 2026-09-25 |
+| 2026-10-06 | Working and build-up session, 08:00 US Pacific, 17:00 in Sweden: Google reviews each project's progress and live demos and gives direction | Hilda Arteaga, 2026-10-01 |
 | ~2026-10-10 | Recording deadline for Andrew Brogdon's GenUI video segment | Andrew Brogdon, 2026-09-10: "around this time next month"; confirm exact date |
 | 2026-11 | Livestream premiere, date unannounced | Andrew Brogdon, 2026-09-10 |
 
 ## Where We Are
 
-Reviewed on 2026-10-05 at `84d4bbb`, the last commit, from 2026-09-28.
+As of 2026-10-05, after a review of the whole project and the map chunk.
 
-- **Built.** C1 to C10d, all but the map: 24 blocks in five families, twelve
-  tools, the four journeys rehearsed with the probe on 2026-09-27 and
-  2026-09-28, a gallery page per block, and the dark theme (D162).
-- **Next.** C8b, the map, which waits on the Maps keys and spike S11 (Open
-  Question 7), and M4, the recording, around Oct 8 to Oct 10.
-- **Open before the recording.** Its exact date (Open Question 1); S17, the
-  refused function results, which the start-over recovers from and nothing
-  yet explains; latency measured again; the Gemini API terms read again for
-  the key screen (D76); and the recording build tagged, in a repository that
-  has no tag and no remote yet.
-- **Keys.** The repository moved to a new machine on 2026-10-05 without its
-  `.env`, and its API keys were removed. Until `.env` holds a Gemini key
-  again nothing live runs: `make probe`, a development run that skips the key
-  screen, or a rehearsal. `make check` and the gallery need no key. The
-  Firebase client configuration from `flutterfire configure` is still
-  committed; if those keys were revoked too, it is generated again.
+- **Built.** C1 to C10d and C8b: 25 blocks in five families, twelve tools,
+  the four journeys rehearsed with the probe, a gallery page per block, the
+  dark theme (D162), and the map on open tiles with no key (D163).
+- **Next.** The working session with Google on 2026-10-06, which reviews
+  progress and live demos, and M4, the recording, around Oct 8 to Oct 10.
+  No chunk is open before the recording.
+- **Open before the recording.** Its exact date and whether Moonwise is on
+  the video thread (Open Question 1); S17, the refused function results,
+  which the start-over recovers from and nothing yet explains; latency
+  measured again; the Gemini API terms read again for the key screen (D76);
+  and the recording build tagged, in a repository that has no tag and no
+  remote yet.
+- **Keys.** The repository moved to a new machine on 2026-10-05 and its
+  `.env` was made again that day with two Gemini keys. No other key is
+  needed: the map takes none (D163), and the Firebase client configuration
+  from `flutterfire configure` is committed and signs in.
+- **Checked on 2026-10-05.** `make check` is green: 868 tests in `common`,
+  182 in `server` with the 8 Firestore emulator tests skipped, 15 in `tool`,
+  and 20 in `app`. Journey 3 ran live through the probe in three turns and
+  seven model rounds with no correction, first text after 26, 20, and 12 s,
+  and Gemini drew `WeekMap` unasked, the places on the first turn and the
+  routes once the week was measured; the same story ran in the web app in
+  one turn of five rounds. Flash-Lite missed the headers deadline on the
+  first request, so every round ran on 3.5 Flash, whose free tier is 20
+  requests a day.
 - **Hosted.** Nothing hosted serves: on 2026-10-05 the Cloud Run URL in the
   `Makefile` answered 503 and Firebase Hosting 404. The server image could
   not be built from C5 until that day, when the root `.dockerignore` began to
   admit `markets/`, which `server/Dockerfile` copies; so nothing deployed
   with `make deploy-server`, which refuses a dirty tree, holds the money core
   or anything after it. The fix was checked against the build context only:
-  `make server-image` itself has not run since, for want of a Dart SDK to
-  compile the server.
+  `make server-image` itself has not run since.
 - **Named in the requirements, not built.** The settings screen, deleting a
   plan or all data, the 90-day cleanup, the session limit, and rate limits in
   Firestore. `docs/REQUIREMENTS_APP.md`, `docs/REQUIREMENTS_SERVER.md`, and
@@ -44,8 +53,6 @@ Reviewed on 2026-10-05 at `84d4bbb`, the last commit, from 2026-09-28.
   "home-buying and relocation advisor" with one skill, `relocation`, and the
   key screen's "about 250 turns a day" dates from two requests a turn (D78);
   a rehearsed turn takes about two and a half (`docs/AGENT.md`).
-- **Not checked in this review.** `make check` was not run on 2026-10-05,
-  because the machine had no Flutter SDK yet. Run it first once it does.
 
 ## Milestones
 
@@ -132,9 +139,13 @@ four journeys of `docs/PRODUCT.md` (D141).
   that measures the week's trips from a sample home or a place by open
   routing and seeds `/week`, and the `WeeklyTravel` and `RouteSummary` blocks
   (D154). Leaves out the map, and the week in `HomeComparison`.
-- **C8b The map.** After S11 and the Maps keys: the Maps renderer package
-  with the toolkit's `GoogleMap` (D133), drawing the places and the measured
-  trips. Blocked until the keys exist; see Open Questions.
+- **C8b The map — done.** `WeekMap`: the places Homeward found and one starting
+  point's week on OpenStreetMap's tiles, with no key (D163). `measure_week`
+  keeps each trip's path, so every trip is drawn along the route it was
+  measured on, with its minutes and how often on the place's pin and the
+  week's total above the map. Leaves out Google Maps and the toolkit's own
+  components, homes whose week is not measured, several starting points on
+  one map, and satellite and tilt.
 - **C9 Rent — done.** Sample rents per area for the sample homes, from Statistics
   Sweden and INE, which the rent the buyer states replaces; a `split_rent`
   tool and `RentSplit`, rent and bills split equally, by income, or by room
@@ -183,8 +194,10 @@ four journeys of `docs/PRODUCT.md` (D141).
 
 - S12, then on-the-spot research of rules and rates (D142).
 - S13, then reading a listing the buyer pastes (D142).
-- S14 and `PlaceDetailsCompact`.
-- S15, the toolkit's own client rendering a Homeward map surface.
+- A Google Maps renderer behind `WeekMap`'s `markers` and `routes`, on a
+  Maps Demo Key, if Google asks for one (D163).
+- OpenFreeMap's tiles through MapLibre, if traffic outgrows OpenStreetMap's
+  tile policy (D163).
 - Areas suggested for any city from open data.
 - Evals that score facts and validity, never which question came when.
 
@@ -193,7 +206,7 @@ four journeys of `docs/PRODUCT.md` (D141).
 - Agree the segment outline with Andrew: a household's story that becomes a
   plan, what they can afford, homes with what each costs them and why it fits,
   the mortgage options and stress test for one of them, then the code that
-  makes it possible (a finance block, the Maps renderer, a tool, the composing
+  makes it possible (a finance block, the map block, a tool, the composing
   prompt).
 - Recording build tagged; a key whose daily quota is untouched that day; the
   server warmed with one request just before recording.
@@ -232,12 +245,12 @@ four journeys of `docs/PRODUCT.md` (D141).
 | S8 | Can a buyer pick another model or API beside Gemini, and what does each route cost? | Desk research of Google and third-party provider limits, prices, APIs, and Dart libraries; one hero message on each candidate Gemini API model | **Answered:** `gemini-3.5-flash-lite` is the fallback candidate, Gemma 4 does not fit the free tier's 16k input tokens a minute, and an OpenAI-compatible provider choice follows the livestream (D80); see `docs/SPIKES.md`. |
 | S10 | Why does Gemini refuse the catalog as a response schema, and does an accepted schema constrain the output? | Bisecting the composed schema live, synthetic schemas, and chained corrections on the probe key | **Answered:** recursion and `allOf` are the obstacles; a flattened subset is enforced; see `docs/SPIKES.md` and D110. |
 | S9 | Can Homeward learn about any place on free keys: where things are, how far, how good, and what a listing says? | Open-data services and Gemini tools called around Stockholm on the probe key | **Answered:** open data covers where and how far with no key; Google Maps grounding and `url_context` work on free keys; see `docs/SPIKES.md`. |
-| S11 | Does `google_maps_flutter` draw the toolkit's `GoogleMap` on web, Android, and iOS: markers, anchor, satellite, tilt, and routes from a resolver? How does the Maps key reach each platform from the environment, and do the quotas cap at the free allowances? Does the Maps JavaScript API load under the web app's `Cross-Origin-Embedder-Policy: require-corp`, and what do the EEA terms, which apply to Moonwise's Swedish billing account, allow when open-data routes are drawn on a Google map? | A throwaway app on each platform with the keys from `docs/REQUIREMENTS_APP.md` | Before C8b. |
+| S11 | Does `google_maps_flutter` draw the toolkit's `GoogleMap` on web, Android, and iOS, how does the Maps key reach each platform, and does the Maps JavaScript API load under the web app's `Cross-Origin-Embedder-Policy: require-corp`? | A throwaway app on each platform with Maps keys | **Closed by D163,** never run: the map draws on open tiles and needs no key. |
 | S12 | Which sources answer money and local-rule questions on free keys, and how is each quote checked? | `url_context` on official pages, Google Search grounding on the models that have a free tier, our own fetch for checking quotes | After the recording (D142). |
 | S13 | Can Homeward read a listing the buyer pastes, and check its quotes? | `url_context` against our own fetch, on listing sites in the demo cities | After the recording (D142). |
-| S14 | Can Grounding Lite give Google place IDs for `PlaceDetailsCompact`, and how does Flutter show the place card? | Grounding Lite `search_places`; the `gmp-place-details-compact` element on web | Before `PlaceDetailsCompact`. |
+| S14 | Can Grounding Lite give Google place IDs for `PlaceDetailsCompact`, and how does Flutter show the place card? | Grounding Lite `search_places`; the `gmp-place-details-compact` element on web | **Dropped by D163,** with the toolkit's components. |
 | S16 | Does a catalog skill of 25 to 30 components fit the free tier, and does a compact index with schemas on demand keep Gemini as reliable as the full schema? | Measure prompt tokens and first-message validity for the full skill against an index plus a `component_docs` tool, on `gemini-3.5-flash-lite` with the probe key | **Answered:** the full skill fits at about 24K tokens and costs no measurable time; progressive disclosure is built anyway (D143); see `docs/SPIKES.md`. |
-| S15 | Does the toolkit's own web client render a Homeward map surface? | Its React sample pointed at a local Homeward server | Optional, after C8. |
+| S15 | Does the toolkit's own web client render a Homeward map surface? | Its React sample pointed at a local Homeward server | **Dropped by D163:** `WeekMap` is Homeward's own block. |
 | S17 | Why does the Interactions API refuse a round's function results as not following a function call, in about one tool round in ten? | Chained two-round turns on `gemini-3.5-flash-lite` with Homeward's prompt; the model behind each round, now logged; the step types stored in a refused chain's previous interaction | Open: 0 of 27 minimal chains failed on 2026-09-27, and retrying a refused request failed every time on 2026-09-25, so the start-over stays until the stored chain shows the cause. See `docs/SPIKES.md` |
 
 ## Risks
@@ -256,13 +269,10 @@ four journeys of `docs/PRODUCT.md` (D141).
 | Free-tier prompts may be used by Google to improve its products and read by human reviewers; the terms ask for no sensitive or personal information | Buyers' financial details lose a privacy promise | Quoted on the key screen with advice to use round figures or a billing-enabled key (D76); no names are ever asked; terms re-read before recording |
 | Public open-data services limit and refuse heavy use: Nominatim one request a second, Overpass and OSRM fair use | Slow or failed screens when many viewers arrive | A user agent naming Homeward, a cache per query, one request at a time per service |
 | Gemini draws weaker screens without the server steering it | A demo that wanders | A small catalog of expressive blocks, a clear prompt, and evals on validity and facts; no server rule that picks the next question (D129) |
-| The rebuild is not demoable by the Sep 28 session | Little to show at the session | Passed: C1 to C10d were built by 2026-09-27, the day before |
+| The rebuild is not demoable by the working session | Little to show at the session | The session moved from Sep 28 to 2026-10-06; C1 to C10d were built by 2026-09-27 and the map on 2026-10-05, when a journey ran live through the probe and in the web app (Where We Are) |
 | An unscripted agent wanders on camera | A recording that loses its thread | Rehearsal with test stories kept outside the app, inputs only; a recorded backup; the brief keeps each turn anchored |
 | A coding-agent loop spends more free requests per turn | The buyer's daily quota runs out sooner | Lookups that are cheap; research only on request; the tool-round cap stays |
-| The Maps key sits on a billing account | A bill if usage passes the free allowances | Quotas capped at the free allowances, the budget alert, the key restricted by referrer and bundle ID |
-| `google_maps_flutter` has no macOS support | The development build shows no map | A placeholder on macOS; record on web or mobile |
-| The Maps toolkit is alpha | Its schema changes under us | The schema vendored at a pinned commit (D133) |
-| The Flutter map is 2D where the toolkit's web client draws 3D | Tilt looks different from Google's own client | Said plainly in the docs and the README |
+| OpenStreetMap's tile server is best effort, with no guarantee, and may block heavy use | A map with no tiles when many viewers arrive, or on camera | Its policy followed: attribution on the map, a user agent naming Homeward, tiles fetched only as they are viewed; the recording backed by a screen capture; OpenFreeMap through MapLibre if the public demo draws traffic (D163) |
 | Sample homes read as fake | The needs reading looks staged | Labelled as samples; reading a pasted real listing follows after the recording (D142) |
 | Homeward reads as a relocation app, not a finance sample | Google's finance vertical goes unmet; field engineers find no reusable finance components | Money in every journey and in the recording, finance blocks first in the build order (D138) |
 | 25 to 30 components in about twelve days | Unfinished blocks on camera | Finance math and six finance blocks restored from `6faa8ab`; each chunk demoable; the gallery shows only finished blocks |
@@ -388,6 +398,7 @@ superseded stay as history.
 | D160 | A gallery page per block | The gallery becomes an index grouped by family and a page per block at `/gallery/<Block>`, so the README can link each journey to its blocks and a visual look can open one block directly. A page shows the block's examples one at a time and its parameters as a read-only reference taken from the declaration: each property's type, whether it is required and bound, the path a bound property takes and the tool that seeds that slice, and the example's components and data model as JSON with a copy button. Each declaration names its family | The one long page with parameters under each example; an editable playground for the example's data model |
 | D161 | The README's journeys | Each journey in the README is an example opening, what Homeward does with it, the tools it calls and the blocks it tends to draw, linked to their gallery pages, and what it leaves out, said plainly to be an example of what Gemini may do, never a flow (D130, D141). Every journey is rehearsed with the probe before it is written down, and the README describes what the rehearsal showed. Screenshots wait for M5, after the map, the dark theme, and the public deployment, so they do not go stale | Capabilities only, without example wording or block names; screenshots now |
 | D162 | The dark theme | The app follows the device's light or dark setting until the buyer picks Light or Dark under Appearance on the plans screen, a choice kept on the device with the same storage as the Gemini key. Dark is a warm charcoal that keeps light's paper feel, every grey held to AA as in light. Colours and text styles become a theme extension read with `AppColors.of(context)` and `AppTextStyles.of(context)`, so the blocks Gemini composes follow the device like every other screen; a chart's painter is handed its colours | Following the device only; a cool slate palette |
+| D163 | The map on open tiles | The map draws on OpenStreetMap's own tiles with `flutter_map` and needs no key, as before the reset (D118). `WeekMap` is Homeward's own block: its `markers` and `routes` take the names of the Maps Agentic UI Toolkit's `GoogleMap` and are bound, to `/places` and to one starting point of `/week`, so Gemini never writes a coordinate; `measure_week` keeps each trip's path, simplified in `common` to at most 100 points and encoded as a polyline, so the route drawn is the route measured. Read on 2026-10-05, the toolkit (`googlemaps/a2ui`, npm `@googlemaps/a2ui` 0.1.8, alpha) is a Lit web client that Android and iOS wrap in a web view, with no Flutter client and two components, `GoogleMap` and `PlaceDetailsCompact`; it loads the Maps JavaScript API's alpha channel with a key that has Geocoding, Places UI Kit, and Routes enabled, and a Google Maps Platform key needs a billing account. A sample anyone clones, and a public deployment, should need no key and no billing. Vishal Motwani offered the toolkit on 2026-09-26 "for easy visual reference" and for examples; what he described, the routine drawn as routes with a weekly time, needs none of it, and he raised no objection when the owner wrote the same day that paid APIs are out of a demo's reach. Decided by the owner on 2026-10-05. Replaces D133 and its Maps keys, closes S11 unrun, and drops S14 and S15 | Google Maps on a billing key (D133): phones free without limit and 10,000 free web loads a month, then $7 per 1,000, safe only while a quota cap is set right, since a budget only warns; a Maps Demo Key, which needs no billing but covers the Maps JavaScript API and not the phone SDKs, pauses at a daily limit Google does not publish, and is for prototyping, not a public deployment; OpenFreeMap's vector tiles through MapLibre, with no key and no limit, a renderer not yet tried in this app, kept for when traffic outgrows OpenStreetMap's best-effort tiles; the block named `GoogleMap` with the toolkit's exact schema, a name for a map that is not Google's |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.
@@ -411,9 +422,11 @@ them before M0 ends.
 ## Open Questions
 
 1. Exact recording date, segment length, and production help from Andrew's
-   team.
-2. What the 2026-09-28 session decided. Nothing from it is recorded here; the
-   commits of that day are the S17 fallback fixes and the dark theme (D162).
+   team. On 2026-09-15 Andrew named Somnio and Solid Software as taking part
+   and moved the video to a thread of its own; whether Moonwise is on that
+   thread is to confirm.
+2. What the working session of 2026-10-06 decides, to record here afterwards.
+   It was first planned for 2026-09-28 and postponed (External Dates).
 3. Whether Google wants a public deployment and where it will be linked.
 4. Catalog ID domain: `moonwise.se/homeward` or a dedicated domain.
 5. Reply on the email thread with project details, which Hilda asked Moonwise
@@ -423,17 +436,8 @@ them before M0 ends.
    (verygood.ventures/resources/genui-kit) and the Life Goal Simulator shown
    at Google Cloud Next 2026. There is no public repo; D106 to D109 take its
    lessons.
-7. The Maps keys, which block S11 and C8b. Only the Google account that owns
-   `homeward-genui` can create them, and its holder is not available yet. To
-   do, signed in as that account, following "Maps Keys" in
-   `docs/REQUIREMENTS_APP.md`:
-   - enable the Maps JavaScript API and the Maps SDKs for Android and iOS;
-   - create the web, Android, and iOS keys with their restrictions, the
-     Android key with the debug SHA-1 from `./gradlew signingReport` until a
-     release keystore exists;
-   - cap the Maps JavaScript API at 300 map loads a day;
-   - add the budget alert;
-   - put the keys in `.env`.
+7. ~~The Maps keys, which blocked S11 and C8b.~~ Answered on 2026-10-05:
+   none are needed. The map draws on open tiles (D163).
 8. Whether figures should be valued on the spot for each household's story
    rather than from area samples. The Stockholm rent gotcha (D155, Risks)
    shows the limit: a sourced median can be the wrong figure for this buyer.

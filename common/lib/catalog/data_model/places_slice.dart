@@ -10,7 +10,8 @@ const placesSlice = DataSlice(
     SliceField(
       '<id>',
       FieldKind.record,
-      'One place: { id, name, address, point }.',
+      'One place: { id, name, address, point }. Bind the whole slice to '
+          'the markers of a WeekMap.',
     ),
   ],
   seededBy: 'find_place',

@@ -40,12 +40,9 @@ story needs.
 - **Client functions.** If a basic component needs a check or a derived value,
   add a `CatalogFunction` in `common/lib/catalog/functions/` with a pure
   `evaluate`, and list it in `homewardFunctions`.
-- **Toolkit components** (`GoogleMap`, `PlaceDetailsCompact`):
-  - keep the Maps Agentic UI Toolkit's schema exactly;
-  - vendor it at a pinned commit, the way `make a2ui-schemas` vendors the
-    basic catalog;
-  - check literal coordinates in validation rather than changing the schema
-    (D133).
+- **The map** is `WeekMap`, Homeward's own block on open tiles (D163). The
+  Maps Agentic UI Toolkit's `GoogleMap` and `PlaceDetailsCompact` are not
+  built: they need Google Maps Platform keys on a billing account.
 
 ## 3. Generate
 
@@ -58,12 +55,6 @@ Never edit them by hand.
 
 ## 4. Implement it in the app
 
-- **The first block of the rebuild** restores two helpers from `6faa8ab`:
-  - `app/lib/catalog/catalog_item_for.dart`;
-  - the binding readers in `app/lib/catalog/bindings/`.
-
-  Restore them with `git show 6faa8ab:<path>`, taking only what the block
-  uses.
 - **The item.** `app/lib/catalog/<component>/<component>_item.dart` is a genui
   `CatalogItem` built with `catalogItemFor(const <Component>(), …)`, so its
   name and schema come from the declaration. It reads bindings through typed

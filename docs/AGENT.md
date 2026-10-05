@@ -369,8 +369,16 @@ and distance one way, and the weekly total, there and back; a trip no router
 can measure is kept without figures and named in the answer. It answers with
 each trip's minutes and the weekly total, and shows a progress step for each
 trip. `WeeklyTravel` binds `/week/<from>` and `RouteSummary` one trip,
-`/week/<from>/trips/<n>`. The route geometry is left out until the map
-(C8b).
+`/week/<from>/trips/<n>`.
+
+Each measured trip also keeps its path in the slice (C8b, D163): the route
+the router returned, simplified in `common` to at most 100 points and
+encoded as a polyline, a short string. `WeekMap` binds `/places` as its
+`markers` and one `/week/<from>` as its `routes`, and draws each trip along
+that path, so the line on the map is the route that was measured. The
+tool's answer to Gemini carries no path; like every seeded slice, it reaches
+Gemini only inside the surface data an action on the plan sends back, which
+is why it is kept short.
 
 Each sample home carries its area's median rent per square metre with its
 source (C9, D155): Statistics Sweden's 2025 figure for first-hand leases in
@@ -445,10 +453,6 @@ joins in order:
    surface, and the brief as it stands, so a tool or correction round sees
    what this turn already changed, and a turn that starts over in a new
    conversation still knows the household.
-
-When `GoogleMap` joins the catalog (C8b), the prompt adapts the Maps
-Agentic UI Toolkit's guidance on when a map helps, roadmap or satellite, tilt,
-and anchor or markers, with attribution to `googlemaps/a2ui` (Apache-2.0).
 
 Everything, the context block included, is sent as `system_instruction`, which
 goes out again with every request of the turn, tool-result rounds included, and

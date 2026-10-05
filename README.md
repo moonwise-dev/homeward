@@ -124,14 +124,16 @@ finds two-bedroom sample homes, `split_rent` splits the area's median rent
 by income, with any bills they mention, and `measure_week` routes each
 commute by bike and by public transport. The plan shows
 [`RentSplit`](docs/generated/catalog_reference.md#rentsplit), which also
-switches to an equal split or one by room size, and
-[`WeeklyTravel`](docs/generated/catalog_reference.md#weeklytravel).
+switches to an equal split or one by room size,
+[`WeeklyTravel`](docs/generated/catalog_reference.md#weeklytravel), and
+[`WeekMap`](docs/generated/catalog_reference.md#weekmap), both commutes on
+OpenStreetMap, each drawn along the route that was measured.
 Before anything is known, it may open with
 [`MarketSnapshotCard`](docs/generated/catalog_reference.md#marketsnapshotcard),
 the city at a glance.
 
-Leaves out: the map, which comes with the Maps renderer, and rents the buyer
-hasn't found yet, which are area estimates.
+Leaves out: rents the buyer hasn't found yet, which are area estimates, and
+homes on the map before their week is measured.
 
 ### 4. Is this one worth it?
 
@@ -165,7 +167,7 @@ will find it.
 
 ## The Catalog
 
-24 blocks in five families, each declared once in `common/lib/catalog` and
+25 blocks in five families, each declared once in `common/lib/catalog` and
 drawn by a plain Flutter widget in `app/lib/catalog`. The
 [catalog reference](docs/generated/catalog_reference.md) lists each with its
 properties, what it binds, and the tool that seeds it.
@@ -175,7 +177,7 @@ properties, what it binds, and the tool that seeds it.
 | Understanding | `Fact`, `Brief`, `Choice`, `HouseholdSummary` |
 | Money | `MoneyInput`, `AffordabilitySummary`, `MonthlyCostBreakdown`, `StressTestChart`, `PurchaseCostsTable`, `DownPaymentSlider`, `MortgageOptions`, `LoanBalanceChart`, `SavingsPlan`, `MarketSnapshotCard`, `RentSplit`, `BuyVsRent` |
 | Homes | `HomeCard`, `Shortlist`, `HomeComparison`, `HomeSwipe`, `ListingQuote` |
-| Place and travel | `WeeklyTravel`, `RouteSummary` |
+| Place and travel | `WeeklyTravel`, `RouteSummary`, `WeekMap` |
 | Trust | `RuleNote` |
 
 The money blocks are built to be reused in a bank's or a fintech's own
@@ -209,9 +211,11 @@ the prompt small.
   metre and their sources.
 - **Places and routes** from OpenStreetMap (Nominatim), the FOSSGIS routers,
   and Transitous, used within their policies and cached.
+- **The map** on OpenStreetMap's own tiles, with their attribution. It needs
+  no key and no account.
 
 Everything runs on free tiers: buyers bring a free Gemini key, and open data
-measures places and routes.
+measures places and routes and draws the map.
 
 ## Repository
 

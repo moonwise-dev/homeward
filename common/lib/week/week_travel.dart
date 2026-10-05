@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../geo/geo_point.dart';
+import '../geo/polyline.dart';
 import '../geo/travel_mode.dart';
 
 part 'week_travel.freezed.dart';
@@ -38,6 +39,7 @@ abstract class Trip with _$Trip {
     required TravelMode mode,
     int? minutes,
     int? meters,
+    String? polyline,
   }) = _Trip;
 
   const Trip._();
@@ -47,5 +49,10 @@ abstract class Trip with _$Trip {
   int? get weeklyMinutes => switch (minutes) {
     final minutes? => minutes * 2 * perWeek,
     null => null,
+  };
+
+  List<GeoPoint> get path => switch (polyline) {
+    final polyline? => decodePolyline(polyline),
+    null => const [],
   };
 }

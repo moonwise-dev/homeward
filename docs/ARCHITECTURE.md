@@ -59,12 +59,8 @@ the root file.
 | `server` | `homeward_server` |
 | `tool` | `homeward_tool` |
 
-C8b adds a Flutter package that renders the Maps Agentic UI Toolkit's catalog
-for genui (D133); it is not built yet. It depends on genui and
-`google_maps_flutter`, never on
-`app`, `server`, or `common`, so apps other than Homeward can use it; `app`
-adds its items to Homeward's catalog, and `common` vendors the same pinned
-schema for validation.
+The map is one more catalog block inside `app`, drawn with `flutter_map` on
+OpenStreetMap's tiles (D163). There is no Maps package and no key.
 
 ### Dependency Direction
 
@@ -101,7 +97,7 @@ common/lib/
   savings/        the savings plan toward the cash a home needs
   week/           the week's places and trips
   time/           CalendarDate, Period
-  geo/            GeoPoint, TravelMode
+  geo/            GeoPoint, TravelMode, polyline encoding, path simplification
   catalog/        ComponentApi declarations: names, schemas, function signatures,
                   data model slices, examples; generated/ catalog document
   a2ui/           additions over a2ui_core: client action parsing, component
@@ -281,6 +277,8 @@ two files use moves to the nearest folder both can see.
   choice.
 - Charts are drawn by Homeward's own `CustomPainter` primitives in `app/lib/ui/core/ui`,
   not a chart package; see `docs/DESIGN.md` and spike S4.
+- `flutter_map` and `latlong2` for the map, on OpenStreetMap's tiles with no
+  key (D163).
 - `google_fonts` with runtime fetching off, drawing the faces vendored in
   `app/assets/fonts`; `intl`; `url_launcher`.
 
@@ -423,10 +421,8 @@ Homeward is designed to cost nothing to run (D40, D42, D43):
 - Secret Manager stays within its free 6 active secret versions and 10,000
   accesses a month: one version per key with automatic replication, one access
   per instance start.
-- Google Maps Platform, from C8b, stays within its free monthly allowances with
-  quotas capped there: the Maps SDKs for Android and iOS are free without
-  limit, and web maps have 10,000 free loads a month (D133). The key is
-  restricted by referrer and bundle ID.
+- Map tiles come from OpenStreetMap's tile server, free and best effort, with
+  no key and no account; Google Maps Platform is not used (D163).
 - No paid Gemini features such as Google Search grounding, and no third-party
   model that needs a payment method (D136).
 - No paid store accounts: builds reach devices as web, simulators, sideloaded

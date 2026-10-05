@@ -114,10 +114,29 @@ every frame of a drag cut a throttled JS build to about 23 fps, and a
 `CustomPainter` with the same series held about 57. Every chart exposes a
 summary of what it draws as its semantics label.
 
+## Map
+
+The map draws OpenStreetMap's tiles through one primitive, `AppMapTiles`,
+under a colour filter from the theme, `AppMapTint`, so the map sits on the
+page like a card and the pins and routes read first (D163). In light, most
+of the colour is taken out and the whole lifted a little. In dark, the
+lightness is turned over with blue weighed heaviest, which leaves water
+darkest, land a dark grey, and labels light. `AppMapAttribution` keeps
+"© OpenStreetMap contributors" on the map, bottom right.
+
+A place is a `text` dot with a pill beside it in `surface`; the starting
+point is the same in `accent`. A route is an `accent` line cased in
+`surface`. Pills are laid out after they are measured, each on the first
+side of its dot that is free, so two places near each other do not cover one
+another, and none sits under the zoom buttons. Like a chart, a map exposes
+what it shows as its semantics label.
+
 ## Primitives (`app/lib/ui/core/ui`)
 
 Tokens: `AppColors`, `AppTextStyles`, `AppSpacing`, `AppRadii`, `AppSizes`,
-`AppMotion`, `AppTheme`.
+`AppMotion`, `AppMapTint`, `AppTheme`.
+
+Map: `AppMapTiles`, `AppMapAttribution`.
 
 Layout and text: `AppPage`, `AppCard`, `AppBulletList`, `AppChatBubble`,
 `AppSurfaceEntry`, `AppReveal`.
