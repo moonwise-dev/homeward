@@ -6,11 +6,11 @@ once in `common/lib/catalog`, implemented in `app/lib/catalog`, validated in
 
 Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
-Since the reset (D129) Homeward's own blocks come back one at a time, each
-with the chunk of `docs/ROADMAP.md` that needs it: `Fact` (C4), `Choice`
-(C4b), `AffordabilitySummary` and `RuleNote` (C5), and
-`MonthlyCostBreakdown` (C5b), and `StressTestChart` and `PurchaseCostsTable`
-(C6), `DownPaymentSlider` (C6b), and `MortgageOptions` (C6c) so far.
+Since the reset (D129) Homeward's own blocks came back one at a time, each
+with the chunk of `docs/ROADMAP.md` that needed it, from `Fact` (C4) to
+`LoanBalanceChart`, `SavingsPlan`, and `MarketSnapshotCard` (C10b): 24
+blocks in five families. `GoogleMap` (C8b) is the one still planned before
+the recording.
 
 ## Design Principles
 
@@ -186,7 +186,10 @@ Beside the components, `common/lib/catalog` declares:
   `AffordabilitySlice` in `common/lib/affordability`: the market, the price,
   the highest price, the loan and largest loan, the down payment, cash
   needed, savings, rate, term, loan type, the monthly payment, the binding
-  rule, and every rule checked, each with its source.
+  rule, and every rule checked, each with its source. The others, each
+  seeded by the tool `docs/AGENT.md` names: `homes`, `swipe`, `reads`,
+  `places`, `week`, `rentSplit`, `buyVsRent`, `savingsPlan`, and `markets`.
+  `docs/generated/catalog_reference.md` lists every slice with its fields.
 - `functions/`: client functions, `CatalogFunction`s with a pure `evaluate`
   over JSON-shaped arguments, which the app wraps as genui `ClientFunction`s
   and the server can reuse. They serve basic components, such as a check that
@@ -226,9 +229,8 @@ In `app/lib/catalog/<component>/<component>_item.dart`, a catalog item:
 The plain widget has no genui imports and is what the gallery renders. It is
 added to `homewardGenuiCatalog()` in `app/lib/catalog/homeward_catalog.dart`.
 
-The helpers the removed components used, `catalogItemFor` and the binding
-readers, are in git history at `6faa8ab` and come back with the first
-component.
+`catalogItemFor` is in `app/lib/catalog/catalog_item_for.dart` and the
+binding readers in `app/lib/catalog/bindings/`.
 
 ### Binding Rules
 

@@ -22,7 +22,7 @@ approve.
 | Unhealthy model cool-down | 5 min | `HOMEWARD_MODEL_COOLDOWN` |
 | Store interactions | `true` | fixed |
 | Validation correction rounds | 2 | `HOMEWARD_MAX_CORRECTIONS` |
-| Model rounds per turn | 1, plus one per tool round and one per correction round | enforced by the caps below |
+| Model rounds per turn | 1, plus one per tool round, catalog round, and correction round | enforced by the caps below |
 | Surfaces per plan | `plan`, and at most one inline surface per turn (D131, D139) | fixed |
 | Tool rounds per turn, cap | 3 | `TurnSettings.maxToolRounds` (D85) |
 | Catalog rounds per turn, cap | 2; a round whose calls only read `component_docs` counts here, not as a tool round | `TurnSettings.maxCatalogRounds` (D147) |
@@ -57,11 +57,17 @@ share them, and daily limits reset at midnight Pacific:
 | `gemini-3.5-flash-lite`, `gemini-3.1-flash-lite` | 15 | 250K | 500 |
 | `gemma-4-26b-a4b-it`, `gemma-4-31b-it` | 30 | 16K | 14,400 |
 
-A turn uses up to two requests, and a model at a limit hands the turn to the
-next (D79), so a buyer's free key covers roughly 250 turns a day on
-`gemini-3.5-flash-lite` and about twenty more on the Flash models. Two or three quick turns in a minute can reach a Flash model's
-per-minute limit. AI Studio counts refused requests too: it showed 7 of 5 a
-minute and 24 of 20 a day.
+A turn takes one request, plus one for each tool round, catalog round, and
+correction, at most eight under the caps above, and one more when
+`read_listings` reads. The ten turns rehearsed on 2026-09-28 took 24
+(`docs/SPIKES.md`, S17), about two and a half each, and a model at a limit
+hands the turn to the next (D79), so a buyer's free key covers roughly 200
+turns a day on `gemini-3.5-flash-lite` and about fifteen more on the two
+Flash models.
+The key screen's "about 250" dates from two requests a turn (D78). Two or
+three quick turns in a minute can reach a Flash model's per-minute limit. AI
+Studio counts refused requests too: it showed 7 of 5 a minute and 24 of 20 a
+day.
 
 ### Model Selection
 
@@ -173,7 +179,9 @@ model slices keyed by name, that surfaces may bind. `homewardTools` in
 `server/lib/tools/homeward_tools.dart` lists them, and each further tool
 arrives with the step of `docs/ROADMAP.md` that needs it.
 
-- Tools never call Gemini. They measure through `server/lib/research`, whose
+- Tools never call Gemini themselves; `read_listings` alone asks it one
+  structured question, through the researcher in its `ToolContext` (D156).
+  They measure through `server/lib/research`, whose
   open-data clients find places with Nominatim, look near them with Overpass,
   and route by car, bike, and foot on the FOSSGIS router and by public
   transport on Transitous. Calls go one at a time per service with the gap its
@@ -205,8 +213,8 @@ plan, and every number above twelve in the sentence, in digits or spelled
 out, must have the same value as one in the words, so a figure in the brief
 is always the buyer's own; a small count, such as two adults, may be
 deduced. A failed check names each problem to Gemini and stores nothing;
-only the summary is logged, never the buyer's figures. A failed check answers with the
-reason and stores nothing. It returns the whole brief and seeds it as
+only the summary is logged, never the buyer's figures. It returns the whole
+brief and seeds it as
 `/brief`. Measured, quoted, and estimated items come from the tools that
 measure, quote, or estimate, never from `update_brief`.
 
@@ -438,7 +446,7 @@ joins in order:
    what this turn already changed, and a turn that starts over in a new
    conversation still knows the household.
 
-When `GoogleMap` joins the catalog (C8), the prompt adapts the Maps
+When `GoogleMap` joins the catalog (C8b), the prompt adapts the Maps
 Agentic UI Toolkit's guidance on when a map helps, roadmap or satellite, tilt,
 and anchor or markers, with attribution to `googlemaps/a2ui` (Apache-2.0).
 
@@ -449,7 +457,8 @@ is never stored in the interaction history (D70).
 The catalog skill discloses the catalog progressively (D143). It carries, as
 compact JSON Schema and exactly what validation enforces (D69), the core
 components every plan uses and correction rounds offer (`Column`, `Row`,
-`Card`, `Text`, `Button`, `Divider`, and `Fact`, D144), every function, and
+`Card`, `Text`, `Button`, `Divider`, `Fact`, `Choice`,
+`AffordabilitySummary`, and `RuleNote`, D144 to D146), every function, and
 the A2UI common types. Every other component is listed in an index with its one-line
 description, and `component_docs` returns its schema and examples when Gemini
 is about to draw it. Tool results stay in the interaction history, so a

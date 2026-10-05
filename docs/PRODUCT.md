@@ -23,8 +23,10 @@ in Lisbon see the rent split fairly beside both their weeks on one map.
 Nothing is scripted: Homeward holds building blocks, not screens, and Gemini
 composes each household's screen from them as the conversation goes.
 
-On 2026-09-26 the product was cleaned down to its foundation (D129) and is
-being rebuilt in small chunks; `docs/ROADMAP.md` names the next one.
+On 2026-09-26 the product was cleaned down to its foundation (D129) and
+rebuilt in small chunks. By 2026-09-28 the four journeys below were built
+and rehearsed, all but the map, which waits on the Maps keys; "Where We Are"
+in `docs/ROADMAP.md` says what is built, what is next, and what is open.
 
 ## How It Works
 

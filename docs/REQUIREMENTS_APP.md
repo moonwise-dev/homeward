@@ -41,7 +41,7 @@ place each turn.
 | `/plans/:sessionId` | Journey |
 | `/gallery` | Catalog gallery |
 | `/gallery/:component` | One catalog component |
-| `/settings` | Settings |
+| `/settings` | Settings. Not built |
 
 Guards: no anonymous session goes to `/startup`; no key goes to `/key`.
 `/gallery` and its component pages need neither, because they render
@@ -75,7 +75,7 @@ declared examples offline.
   2026-04-28 say, and suggests round figures or a key from a project with
   billing, whose conversations Google does not use (D76). The wording is checked
   against the current terms again before recording.
-- Remove key is available here and in settings.
+- Remove key is available here, and in settings once that screen is built.
 - Development runs skip this screen (D117). A debug or profile app asks the
   local server for `GET /dev/config`, which only `server/tool/dev.dart` serves
   and only to `localhost`, and uses the Gemini keys it returns while no key is
@@ -93,8 +93,10 @@ declared examples offline.
   buyer wrote as the title and the last activity.
 - New plan creates a session and opens it.
 - Delete plan asks for confirmation and deletes the session and its turns.
+  Not built: neither the app nor the server deletes a plan yet.
 - Appearance in the app bar picks Match the device, Light, or Dark (D162).
   The choice is kept on the device and applies at once.
+- The app bar also opens the catalog gallery and the Gemini key screen.
 
 ### Journey
 
@@ -123,8 +125,9 @@ declared examples offline.
   - Stop cancels the turn.
 - **Tell Homeward more**: a one-line field under the conversation sends free
   text.
-- Opening an existing plan replays stored A2UI messages into a fresh surface
-  controller before the conversation and the plan are shown.
+- Opening an existing plan asks the server for its turns,
+  `GET /api/sessions/:id`, and replays the stored A2UI messages into a fresh
+  surface controller before the conversation and the plan are shown.
 - Turn failures show a toast, and the failed section offers retry. A retried
   turn keeps the plan panel the failed one drew, since the server keeps it.
 - `gemini_key_invalid` routes to `/key`. `gemini_quota_exhausted` explains that
@@ -150,7 +153,8 @@ declared examples offline.
 - An unknown component name shows the index with a note.
 - On a wide window the index stays beside the page; on a narrow one the page
   replaces it with a back button.
-- Reachable from settings when developer tools are enabled.
+- Reachable from the plans screen's app bar, and by its URL with no key and
+  no server.
 
 ### Wire Inspector
 
@@ -168,6 +172,10 @@ declared examples offline.
   bytes of the frame, not the compressed transfer.
 
 ### Settings
+
+Not built. What it would hold today sits elsewhere: the key screen removes
+the key, and the plans screen's app bar opens the key screen, the gallery,
+and Appearance.
 
 - Gemini key: status, replace, remove.
 - Developer tools toggle.
@@ -212,27 +220,31 @@ the quota cap are what protect the bill.
 | --- | --- |
 | `startup` | Session restore, App Check, key presence, initial route |
 | `api_key` | Input state, verify, save, remove |
-| `plans` | Stream plans, create, delete |
+| `plans` | Stream plans, create, appearance; delete is not built |
 | `journey` | Send text, stop, stream turn events and progress, replay, retry |
 | `gallery` | Components by family, the selected component, and its selected example |
 | `wire_inspector` | Frame timeline with sizes, A2UI messages, live data model, counters |
-| `settings` | Developer tools flag, delete all data |
+| `settings` | Developer tools flag, delete all data. Not built |
 
 ## Repositories
 
 | Repository | Backed by |
 | --- | --- |
 | `AuthRepository` | Firebase Auth |
-| `GeminiKeyRepository` | `flutter_secure_storage`, session memory on web |
+| `AppCheckRepository` | Firebase App Check; a stand-in that sends no token in development runs |
+| `GeminiKeyRepository` | `flutter_secure_storage`, session memory on web, the local server's development keys while none is saved |
 | `AppearanceRepository` | `flutter_secure_storage` |
-| `KeyVerificationRepository` | `ApiClient` to `/api/keys/verify` |
+| `KeyVerificationRepository` | The server's `/api/keys/verify` |
 | `PlansRepository` | The server's session list, merged with the plans this run started |
-| `AgentRepository` | Homeward A2A client from `common/wire`, `SurfaceController`, turn event stream |
-| `TurnHistoryRepository` | Firestore `turns` for replay |
-| `WireLogRepository` | In-memory ring buffer fed by the Homeward A2A client |
+| `AgentRepository` | Homeward A2A client from `common/wire`, `SurfaceController`, turn event stream; a plan's turns from the server for replay |
+| `GalleryRepository` | The declared examples, drawn as surfaces in a `SurfaceController` of its own |
 
-`AgentRepository` is the only class outside `app/lib/catalog` that touches
-genui.
+The wire log the inspector reads is a service, `data/services/wire_log.dart`,
+an in-memory ring buffer fed by the Homeward A2A client.
+
+`AgentRepository` and `GalleryRepository` are the only classes outside
+`app/lib/catalog` that hold a genui `SurfaceController`;
+`docs/ARCHITECTURE.md` lists the two widgets that also import genui.
 
 ## Accessibility
 

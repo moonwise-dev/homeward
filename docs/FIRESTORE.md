@@ -39,9 +39,10 @@ index, so saving a session again costs one write for the turn it just added.
 
 The answers open-data services gave the research tools, so a city already
 measured answers at once after a restart or while Overpass is slow (D112).
-Written only when sessions are in Firestore, and only once a tool uses the
-open-data clients again; none does since the reset (D129). The document ID is the SHA-256 of
-the request (method, URL, and body), so no buyer text is readable from it.
+Written only when sessions are in Firestore, by the tools that use the
+open-data clients, `find_place` and `measure_week` since C8. The document ID
+is the SHA-256 of the request (method, URL, and body), so no buyer text is
+readable from it.
 
 | Field | Type | Notes |
 | --- | --- | --- |
@@ -109,4 +110,5 @@ service cloud.firestore {
 - `rateLimits.expiresAt` TTL policy, when rate limits move to Firestore.
 - `/internal/cleanup` daily: sessions with `updatedAt` older than 90 days and
   their turns. Plan documents written before the reset (D129) are no longer
-  read and go with their session.
+  read and go with their session. Not built, and nothing deletes a session
+  yet (`docs/REQUIREMENTS_SERVER.md`, Routes).

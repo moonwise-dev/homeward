@@ -1,6 +1,6 @@
 ---
 name: homeward-chunk
-description: Run one Homeward rebuild chunk (C1 to C13 in docs/ROADMAP.md) end to end - docs first, build, make check, a live probe with test stories, and a visual look. Use when starting, continuing, or finishing a chunk, or when the user says "next chunk".
+description: Run one Homeward rebuild chunk (C1 to C10d, C8b, and what follows in docs/ROADMAP.md) end to end - docs first, build, make check, a live probe with test stories, and a visual look. Use when starting, continuing, or finishing a chunk, or when the user says "next chunk".
 ---
 
 # Homeward Chunk

@@ -37,6 +37,7 @@ Three rules shape everything:
 /server
 /common
 /tool
+/markets                sample rules, rates, and homes: data, not a package
 /docs
 AGENTS.md
 Makefile
@@ -58,8 +59,9 @@ the root file.
 | `server` | `homeward_server` |
 | `tool` | `homeward_tool` |
 
-C5 adds a Flutter package that renders the Maps Agentic UI Toolkit's catalog
-for genui (D133). It depends on genui and `google_maps_flutter`, never on
+C8b adds a Flutter package that renders the Maps Agentic UI Toolkit's catalog
+for genui (D133); it is not built yet. It depends on genui and
+`google_maps_flutter`, never on
 `app`, `server`, or `common`, so apps other than Homeward can use it; `app`
 adds its items to Homeward's catalog, and `common` vendors the same pinned
 schema for validation.
@@ -92,8 +94,12 @@ common/lib/
                   rates, resolved for one buyer
   samples/        the labelled sample homes: Listing, kind of home, outdoor space,
                   style, and a home priced for one household
-  profile/        BuyerProfile, the facts the rules read; plan/Scenario, a price,
-                  down payment, term, and loan type
+  profile/        BuyerProfile, the facts the rules read
+  plan/           Scenario: a price, down payment, term, and loan type
+  brief/          BriefItem, Gemini's notes on the household
+  rent/           rent split between people sharing, and buying against renting
+  savings/        the savings plan toward the cash a home needs
+  week/           the week's places and trips
   time/           CalendarDate, Period
   geo/            GeoPoint, TravelMode
   catalog/        ComponentApi declarations: names, schemas, function signatures,
@@ -149,21 +155,29 @@ server/
     request/        RequestContext, trace header parsing, request ids
     logging/        LogEntry, Cloud Logging JSON and text formatters
     http/           response helpers
+    errors/         HomewardFailure, the failures a client is told
     health/         GET /health
-    middleware/     request context, request logging, internal errors;
-                    later auth, app check, gemini key, redaction, rate limit, cors
+    auth/           Firebase ID token and App Check verifiers
+    keys/           POST /api/keys/verify
+    sessions/       creating, listing, and reading back plans
+    rate_limit/     the fixed-window limiter
+    middleware/     request context, request logging, cors, internal errors,
+                    authentication, app check, gemini key, rate limit
+    development/    the local server's `.env` reader and GET /dev/config
     a2a/            agent card, json-rpc dispatch, sse writer, task registry
     agent/          stream parser, turn run, validation
       prompt/       prompt assembler, turn context
       turn/         turn orchestrator and run, tool belt, seeds, surface
                     seeder, corrections
       validation/   validation passes
-    gemini/         interactions client, live client, request/response models
+    gemini/         interactions client, model fallback, request/response
+                    models; the live client comes with the voice door (M6)
     tools/          the tool interface and the list of tools, one file per tool
     markets/        loads the sample market packs and sample homes from
                     `markets/` at startup
     research/       open-data clients (Nominatim, Overpass, routing), polite
-                    and cached
+                    and cached; the listing reader and the researcher that
+                    asks Gemini one structured question on the turn's key
     ids/            random identifiers
     data/
       models/       session record
@@ -183,11 +197,13 @@ Rules:
   write the response. No business logic in handlers.
 - Every external dependency (Firestore, Gemini, clock, id generator) is injected
   through constructors from `data/providers`. No static SDK access.
-- Tools never call Gemini. They take typed input, call `common`, repositories,
-  and `research`, and return a typed result plus data model patches. Research
-  is the only place besides the agent loop that calls out, and it reaches only
-  open-data services, through one polite client.
-- The agent loop is the only place that talks to Gemini.
+- Tools never call Gemini themselves. They take typed input, call `common`,
+  repositories, and `research`, and return a typed result plus data model
+  patches. Research is the only place besides the agent loop that calls out:
+  to open-data services, through one polite client, and, for `read_listings`
+  alone, to Gemini through the researcher the turn hands it (D156).
+- The agent loop is the only place that talks to Gemini; the researcher goes
+  through its model selection, on the turn's key.
 - There is no dependency injection framework on the server. `data/providers`
   is a plain composition root.
 - Logging uses `package:logging`. Code logs a plain message or a `LogEntry` with
@@ -224,7 +240,8 @@ app/lib/
   routing/                router, routes, and guards
   data/
     repositories/         one file per repository, its provider beside it
-    services/             the wire log the inspector reads
+    services/             the wire log the inspector reads; the local
+                          development server's config
   domain/models/          models the data and UI layers share
   utils/                  SafeNotifierState
   ui/
@@ -257,27 +274,35 @@ two files use moves to the nearest folder both can see.
 - `freezed`, `json_serializable`.
 - `riverpod_annotation`, `flutter_riverpod`, `hooks_riverpod`, `flutter_hooks`.
 - `go_router`.
-- `firebase_core`, `firebase_auth`, `cloud_firestore`, `firebase_app_check`.
+- `firebase_core`, `firebase_auth`, `firebase_app_check`. No
+  `cloud_firestore`: clients never read Firestore, they call the server
+  (`docs/FIRESTORE.md`).
 - `flutter_secure_storage` for the user's Gemini key and their appearance
   choice.
 - Charts are drawn by Homeward's own `CustomPainter` primitives in `app/lib/ui/core/ui`,
   not a chart package; see `docs/DESIGN.md` and spike S4.
-- `google_fonts`, `intl`.
+- `google_fonts` with runtime fetching off, drawing the faces vendored in
+  `app/assets/fonts`; `intl`; `url_launcher`.
 
 ### genui Boundary
 
 genui is 0.x and changes shape between minor versions. Everything that touches
-its API is confined to two places:
+its API is confined to a few places:
 
-- `app/lib/catalog/` for catalog items, client functions, and data bindings.
+- `app/lib/catalog/` for catalog items, client functions, data bindings, and
+  the plan and gallery surface views.
 - `app/lib/data/repositories/agent_repository.dart` and its provider for the
   `SurfaceController`: it submits actions from `onSubmit` through the Homeward
   A2A client, attaching capabilities and the surface data model, and feeds
   every received `a2ui_core` message to `handleMessage`.
+- `app/lib/data/repositories/gallery_repository.dart`, which holds a
+  `SurfaceController` of its own for the declared examples.
 
-Features read surfaces through providers and render `Surface` widgets. They
-never construct genui objects. A genui upgrade should touch those two places
-and nothing else.
+Features read surfaces through providers and never construct genui objects.
+Two widgets import genui for one type each: the journey's
+`exchange_section.dart` renders a turn's inline ask with `Surface`, and the
+inspector's `surface_data_view.dart` subscribes to a surface's data model. A
+genui upgrade should touch these files and nothing else.
 
 ### Catalog Items
 
@@ -310,10 +335,13 @@ headers.
 | `startup` | Session restore, anonymous sign-in |
 | `api_key` | Entering, verifying, and removing the Gemini key |
 | `plans` | Plan list and creating a plan |
-| `journey` | The story field, each turn's text and surfaces, the measuring card, history, turn streaming |
-| `gallery` | Every catalog item with example data |
+| `journey` | The conversation with each turn's text and inline ask, the plan panel, the working card, the text field, turn streaming |
+| `gallery` | An index of every catalog item by family, and a page per item with its examples and parameters |
 | `wire_inspector` | A2A frames with their sizes, the A2UI message each carried, the live data model of a surface, and the counters; every write a bound input makes is counted where the app writes it |
-| `settings` | Key, disclaimer, about, reset |
+
+A `settings` feature, for the key, the disclaimer, about, and reset, is in
+`docs/REQUIREMENTS_APP.md` and not built; Appearance sits on the plans screen
+(D162).
 
 Lean screens; one generated Riverpod view model per feature with its Freezed
 state in the same file; `SafeNotifierState` for view models that mutate;
@@ -385,8 +413,8 @@ Homeward is designed to cost nothing to run (D40, D42, D43):
 - Billing is attached to `homeward-genui` because Cloud Run, Artifact
   Registry, and Cloud Scheduler require it, with a budget alert
   of 25 SEK, about €2, at 50%, 90%, and 100%.
-- Cloud Run: minimum 0 and maximum 2 instances, 1 while M1 keeps sessions in
-  memory; cold starts are accepted.
+- Cloud Run: minimum 0 and maximum 2 instances, 1 while tasks live in memory,
+  which is what `make deploy-server` sets; cold starts are accepted.
 - Artifact Registry keeps the last three server images.
 - Firestore stays within its free daily quota; one Cloud Scheduler job.
 - reCAPTCHA Enterprise stays within its free 10,000 assessments a month: each
@@ -395,7 +423,7 @@ Homeward is designed to cost nothing to run (D40, D42, D43):
 - Secret Manager stays within its free 6 active secret versions and 10,000
   accesses a month: one version per key with automatic replication, one access
   per instance start.
-- Google Maps Platform, from C5, stays within its free monthly allowances with
+- Google Maps Platform, from C8b, stays within its free monthly allowances with
   quotas capped there: the Maps SDKs for Android and iOS are free without
   limit, and web maps have 10,000 free loads a month (D133). The key is
   restricted by referrer and bundle ID.

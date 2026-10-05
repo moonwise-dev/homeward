@@ -8,6 +8,45 @@
 | ~2026-10-10 | Recording deadline for Andrew Brogdon's GenUI video segment | Andrew Brogdon, 2026-09-10: "around this time next month"; confirm exact date |
 | 2026-11 | Livestream premiere, date unannounced | Andrew Brogdon, 2026-09-10 |
 
+## Where We Are
+
+Reviewed on 2026-10-05 at `84d4bbb`, the last commit, from 2026-09-28.
+
+- **Built.** C1 to C10d, all but the map: 24 blocks in five families, twelve
+  tools, the four journeys rehearsed with the probe on 2026-09-27 and
+  2026-09-28, a gallery page per block, and the dark theme (D162).
+- **Next.** C8b, the map, which waits on the Maps keys and spike S11 (Open
+  Question 7), and M4, the recording, around Oct 8 to Oct 10.
+- **Open before the recording.** Its exact date (Open Question 1); S17, the
+  refused function results, which the start-over recovers from and nothing
+  yet explains; latency measured again; the Gemini API terms read again for
+  the key screen (D76); and the recording build tagged, in a repository that
+  has no tag and no remote yet.
+- **Keys.** The repository moved to a new machine on 2026-10-05 without its
+  `.env`, and its API keys were removed. Until `.env` holds a Gemini key
+  again nothing live runs: `make probe`, a development run that skips the key
+  screen, or a rehearsal. `make check` and the gallery need no key. The
+  Firebase client configuration from `flutterfire configure` is still
+  committed; if those keys were revoked too, it is generated again.
+- **Hosted.** Nothing hosted serves: on 2026-10-05 the Cloud Run URL in the
+  `Makefile` answered 503 and Firebase Hosting 404. The server image could
+  not be built from C5 until that day, when the root `.dockerignore` began to
+  admit `markets/`, which `server/Dockerfile` copies; so nothing deployed
+  with `make deploy-server`, which refuses a dirty tree, holds the money core
+  or anything after it. The fix was checked against the build context only:
+  `make server-image` itself has not run since, for want of a Dart SDK to
+  compile the server.
+- **Named in the requirements, not built.** The settings screen, deleting a
+  plan or all data, the 90-day cleanup, the session limit, and rate limits in
+  Firestore. `docs/REQUIREMENTS_APP.md`, `docs/REQUIREMENTS_SERVER.md`, and
+  `docs/FIRESTORE.md` mark each.
+- **Left over from before D138.** The agent card still calls Homeward a
+  "home-buying and relocation advisor" with one skill, `relocation`, and the
+  key screen's "about 250 turns a day" dates from two requests a turn (D78);
+  a rehearsed turn takes about two and a half (`docs/AGENT.md`).
+- **Not checked in this review.** `make check` was not run on 2026-10-05,
+  because the machine had no Flutter SDK yet. Run it first once it does.
+
 ## Milestones
 
 ### Before The Reset — Sep 16 to Sep 26
@@ -213,11 +252,11 @@ four journeys of `docs/PRODUCT.md` (D141).
 | The Interactions API refuses a round's function results as not following a function call, in three of about thirty tool rounds in the C10d rehearsals on 2026-09-27 | The turn starts over in a new conversation, which adds seconds and requests and drops the earlier dialogue from the model's history; first text reached 48 s once | The start-over recovers every time so far; retrying the refused request does not (2026-09-25); spike S17 looks for the cause before the recording |
 | Safari untested with `require-corp`, reCAPTCHA Enterprise, and cross-origin streaming | iPhone viewers cannot sign in or stream | Check macOS and iOS Safari in M1; fall back to single-threaded Wasm without isolation headers for Safari |
 | Scripted abuse of the web app exhausts reCAPTCHA's 10,000 free monthly assessments | $8 for the month, then $1 per 1,000 above 100,000 | One-day App Check tokens, the 25 SEK budget alert, per-UID rate limits |
-| Free-tier limits per model per Google Cloud project: 20 requests a day on Flash, 500 on Flash-Lite | Failed turns in rehearsal or on camera; about 250 turns a day per buyer on Flash-Lite | At most two requests per turn (D78); the next model takes over at a cap (D79); recording on a key unused that day; the cap explained in the app |
+| Free-tier limits per model per Google Cloud project: 20 requests a day on Flash, 500 on Flash-Lite | Failed turns in rehearsal or on camera; roughly 200 turns a day per buyer on Flash-Lite, at the two and a half requests a turn the 2026-09-28 rehearsal took | At most three tool rounds, two catalog rounds, and two corrections a turn (D85, D147); the next model takes over at a cap (D79); recording on a key unused that day; the cap explained in the app |
 | Free-tier prompts may be used by Google to improve its products and read by human reviewers; the terms ask for no sensitive or personal information | Buyers' financial details lose a privacy promise | Quoted on the key screen with advice to use round figures or a billing-enabled key (D76); no names are ever asked; terms re-read before recording |
 | Public open-data services limit and refuse heavy use: Nominatim one request a second, Overpass and OSRM fair use | Slow or failed screens when many viewers arrive | A user agent naming Homeward, a cache per query, one request at a time per service |
 | Gemini draws weaker screens without the server steering it | A demo that wanders | A small catalog of expressive blocks, a clear prompt, and evals on validity and facts; no server rule that picks the next question (D129) |
-| The rebuild is not demoable by the Sep 28 session | Little to show at the session | Each chunk demoable on its own; show the direction and the foundation if C1 to C2 are not done |
+| The rebuild is not demoable by the Sep 28 session | Little to show at the session | Passed: C1 to C10d were built by 2026-09-27, the day before |
 | An unscripted agent wanders on camera | A recording that loses its thread | Rehearsal with test stories kept outside the app, inputs only; a recorded backup; the brief keeps each turn anchored |
 | A coding-agent loop spends more free requests per turn | The buyer's daily quota runs out sooner | Lookups that are cheap; research only on request; the tool-round cap stays |
 | The Maps key sits on a billing account | A bill if usage passes the free allowances | Quotas capped at the free allowances, the budget alert, the key restricted by referrer and bundle ID |
@@ -373,8 +412,8 @@ them before M0 ends.
 
 1. Exact recording date, segment length, and production help from Andrew's
    team.
-2. Who attends the Sep 28 session. It shows the realignment (D138 to D142) and
-   whatever of C1 to C2 is ready.
+2. What the 2026-09-28 session decided. Nothing from it is recorded here; the
+   commits of that day are the S17 fallback fixes and the dark theme (D162).
 3. Whether Google wants a public deployment and where it will be linked.
 4. Catalog ID domain: `moonwise.se/homeward` or a dedicated domain.
 5. Reply on the email thread with project details, which Hilda asked Moonwise

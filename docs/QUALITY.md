@@ -27,7 +27,8 @@ constructors, super parameters, generated files excluded. Additionally:
 ## Code Standards
 
 - No comments, including doc comments.
-- One public type per file.
+- A file is named after its main type or widget and keeps the small things
+  only it uses (D111, `docs/ARCHITECTURE.md`).
 - Small functions with a single responsibility.
 - Sealed classes and exhaustive switches for closed sets.
 - No `dynamic`; no `late` without a lifecycle hook that guarantees assignment.
@@ -49,8 +50,14 @@ stories, and a visual look at the result.
 | Area | What is pinned |
 | --- | --- |
 | `money` | Every rounding mode and step against a hand table, 10 000 random cases against exact big integer arithmetic, currency parsing, currency mismatch errors, JSON; run on the VM and in Chrome because web integers are 53-bit |
+| `finance` | Annuity and straight amortization, amortization tiers, brackets, shares, and monthly amounts; restored with the money core (C5) |
+| `affordability` | The largest loan, the maximum price, down payment bounds, eligibility, the interest deduction, the stress curve, and a whole assessment |
+| `costs` | Purchase costs from a market's cost rules |
+| `markets` | Rule packs read and overlaid, which rules apply to a buyer, the market resolved for one buyer, reference rates, living costs, exchange rates, locale tags, and exact decimal and percent values |
+| `profile`, `plan`, `time` | `BuyerProfile`, `Scenario`, `CalendarDate`, and `Period` |
 | `catalog` | The catalog lists each component once; every declared example validates against its schema; bound properties refuse literals and unknown properties; the catalog document composes the basic components and functions |
-| `wire` | A2A models round-trip the frames recorded in spike S1, including explicit `null` fields; the client turns text, A2UI, cancel, and JSON-RPC error events into turn events |
+| `a2ui` | The catalog validator |
+| `wire` | A2A models round-trip the frames recorded in spike S1, including explicit `null` fields; the client turns text, A2UI, cancel, and JSON-RPC error events into turn events; SSE framing |
 
 ### `server`
 
@@ -61,6 +68,10 @@ stories, and a visual look at the result.
 | Turn loop | Tool calls answered in order with their seeds on the surface, measuring steps streamed, the tool round cap and its note, actions handed to the model with their context and surface data, words-only replies left alone, correction rounds with and without an enforced schema, the retry notice, model fallback, quota errors, starting over on a refused or missing history, session ownership and leases |
 | Prompts | The instructions join in order and end with the turn context; hand-written prompts state no rule values and name only tools and components that exist |
 | Open-data clients | Geocoding inside the city first, one Overpass query for many points, answers kept and reused, refusals reported, road and transit routes read into minutes, metres, and a path |
+| Listing reader | A quote kept only when it appears word for word, a need left unanswered read as silent, each listing and need read once |
+| Sample homes | The swipe deck deals six homes that differ, flats and houses in turn, and reads what every kept home shares that no passed one has |
+| Sessions | A plan created for its caller, the caller's own plans listed, a plan's turns given back, another owner's plan hidden |
+| Development | `.env` read, App Check off, and `/dev/config` handing the app the Gemini keys and nothing else, to this machine only |
 | A2A | JSON-RPC dispatch and SSE framing against recorded frame fixtures; the app's `HomewardClient` from `common/wire` reads a scripted turn and its failures through the real app handler; an unexpected error ends a turn with `internal` |
 | Key verification | Model lookup request, invalid key, unknown model, and deadline to typed errors; the route's statuses and envelope |
 | Gemini client | Recorded streams and error bodies to typed events and errors, request JSON, headers and first-step deadlines, fallback only before output, circuits, no key in any error, the next midnight Pacific across daylight saving changes |
@@ -85,8 +96,7 @@ Model selection is tested with a fake clock and a fake transport.
 
 - Every catalog example is pumped through the gallery repository and the real
   `Surface` widget at phone width and fails on any exception; the gallery must
-  show every component. There are no examples since the reset (D129), so this
-  guards the first component that returns.
+  show every component. All 24 blocks carry examples again since C10b.
 - The `genui_a2a` compatibility test. A turn the server streamed, a short
   story surface of basic components, is recorded in
   `app/test/fixtures/recorded_turn.sse` by

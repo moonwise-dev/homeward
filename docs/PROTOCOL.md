@@ -319,10 +319,12 @@ them, so what a tool found in an earlier turn is still there to bind. When a
 tool changes a slice during a turn, the server sends the new value at once to
 every surface the turn may change that binds it, so the plan panel shows the
 change even when Gemini does not redraw it. `common/lib/catalog/data_model`
-declares each slice as it arrives: `/brief` since C4 (D132). The model binds
-to paths and never writes values. An input may bind a path that has no
-value yet, such as `/notes`; what the buyer enters there reaches the model with
-their next action.
+declares each slice: `/brief` since C4 (D132), then `/affordability`,
+`/homes`, `/swipe`, `/reads`, `/places`, `/week`, `/rentSplit`, `/buyVsRent`,
+`/savingsPlan`, and `/markets`, each seeded by the tool `docs/AGENT.md`
+names. The model binds to paths and never writes values. An input may bind a
+path that has no value yet, such as `/notes`; what the buyer enters there
+reaches the model with their next action.
 
 Data model values are JSON-shaped as produced by `jsonDecode`; see the binding
 rules in `docs/CATALOG.md`.

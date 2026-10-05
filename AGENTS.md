@@ -24,8 +24,10 @@ contains prompts.
 
 On 2026-09-26 the project was cleaned down to its foundation (D129): the
 earlier question-by-question case, the sample homes, the deal, and the evals
-were removed. The product is being rebuilt from here in small chunks; see
-`docs/ROADMAP.md`.
+were removed. The product was rebuilt from there in small chunks: C1 to C10d
+were done by 2026-09-28, with 24 blocks, twelve tools, and four rehearsed
+journeys, and the map (C8b) waits on the Maps keys. Start with "Where We Are"
+in `docs/ROADMAP.md`.
 
 ## Repository Shape
 
@@ -40,6 +42,9 @@ includes.
   geo, catalog contract, wire types. It must never import Flutter.
 - `tool` - Dart CLIs: catalog skill generation and checks, vendoring, the live
   probe, the local development server. Never deployed.
+- `markets` - sample data, not a package: rule packs, rates, living costs,
+  exchange rates, and the sample homes of Stockholm and Lisbon, each with its
+  source. The server loads it at startup.
 - `docs` - canonical product, architecture, protocol, catalog, agent, data,
   design, quality, and roadmap documents.
 
@@ -118,7 +123,7 @@ asks once to trust them:
 - The `chrome-devtools-mcp` plugin: screenshots, console, and network of the
   web app for the visual look at the end of a chunk.
 - The Google Maps Platform Code Assist MCP server in `.mcp.json`: official Maps
-  docs and samples, used from C5.
+  docs and samples, used from C8b. It starts with `npx`, so it needs Node.
 
 Project skills in `.claude/skills/`:
 

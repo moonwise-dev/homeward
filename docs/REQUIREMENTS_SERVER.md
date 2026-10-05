@@ -13,11 +13,14 @@ and session state. It holds no Gemini key of its own.
 | POST | `/a2a` | Firebase ID token, App Check, Gemini key | A2A JSON-RPC: `message/stream`, `tasks/get`, `tasks/cancel` |
 | POST | `/api/keys/verify` | Firebase ID token, App Check, Gemini key | Looks up the first turn model with the key, which spends no generate request: 200, or 422 `gemini_key_invalid` |
 | POST | `/api/sessions` | Firebase ID token, App Check | Creates a session and an empty plan |
-| DELETE | `/api/sessions/:id` | Firebase ID token, App Check | Deletes session, turns, plan |
-| DELETE | `/api/me` | Firebase ID token, App Check | Deletes every session of the caller |
-| POST | `/internal/cleanup` | Cloud Scheduler OIDC | Deletes plans inactive for 90 days |
+| GET | `/api/sessions` | Firebase ID token, App Check | Lists the caller's plans, newest activity first |
+| GET | `/api/sessions/:id` | Firebase ID token, App Check | A plan's turns, for replay when it is opened (D90) |
+| DELETE | `/api/sessions/:id` | Firebase ID token, App Check | Deletes session, turns, plan. Not built |
+| DELETE | `/api/me` | Firebase ID token, App Check | Deletes every session of the caller. Not built |
+| POST | `/internal/cleanup` | Cloud Scheduler OIDC | Deletes plans inactive for 90 days. Not built |
 | GET | `/health` | none | Liveness; not `/healthz`, which Cloud Run may reserve |
-| GET | `/live` | Phase 2 | Voice WebSocket door |
+| GET | `/dev/config` | `localhost` only | The developer's Gemini keys for the app; mounted by `server/tool/dev.dart` alone (D117) |
+| GET | `/live` | Phase 2 | Voice WebSocket door. Not built (M6) |
 
 `/api/*` routes use the envelope `{ "ok": true, "data": {} }` and
 `{ "ok": false, "error": { "code": "", "message": "", "retryAfterSeconds": 0 } }`,
@@ -92,9 +95,10 @@ than Gemini spend.
 | Concurrent turns per session | 1 |
 | Sessions per UID | 50 |
 
-Limits are counted in Firestore with fixed windows so they hold across
-instances. In M1 the turn limit is counted in memory with the same fixed
-window, and the session limit joins with Firestore in M2.
+Limits are to be counted in Firestore with fixed windows so they hold across
+instances. Today the turn limit is counted in memory with the same fixed
+window, which holds while one instance serves every turn, and the session
+limit is not built.
 
 ## Error Codes
 
@@ -171,12 +175,16 @@ Secrets.
   workspace includes the Flutter app and a plain Dart image cannot resolve it.
   `make server-build` runs `dart compile exe --target-os linux --target-arch x64`
   against the committed lockfile.
-- `server/Dockerfile` copies that binary and `server/prompts/` onto
-  `gcr.io/distroless/cc-debian12:nonroot`: glibc and CA certificates, no shell,
-  user 65532. The image is about 31 MB.
-- The root `.dockerignore` admits only the server binary and the prompts into
-  the build context.
-- The server loads the prompts once at startup.
+- `server/Dockerfile` copies that binary, `server/prompts/`, and, since C5,
+  `markets/` onto `gcr.io/distroless/cc-debian12:nonroot`: glibc and CA
+  certificates, no shell, user 65532. The image was about 31 MB before
+  `markets/` joined it.
+- The root `.dockerignore` admits only what the image copies into the build
+  context: the server binary, the prompts, and `markets/`. A folder the
+  Dockerfile copies must be admitted there too, or the build stops at that
+  copy, as it did from C5 until 2026-10-05.
+- The server loads the prompts and the sample markets and homes once at
+  startup.
 - The server exits on SIGTERM within Cloud Run's grace period: it stops
   accepting connections, lets in-flight requests finish, and releases every
   signal watcher so the process can end.
