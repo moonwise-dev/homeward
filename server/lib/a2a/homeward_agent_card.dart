@@ -4,8 +4,9 @@ AgentCard homewardAgentCard(Uri publicUrl) => AgentCard(
   protocolVersion: '0.3.0',
   name: 'Homeward',
   description:
-      'Home-buying and relocation advisor: turns the story of a move into a '
-      'screen made for that buyer.',
+      'Home-finance agent: works out what a home costs one household and '
+      'whether they can carry it, and builds the screen made for that '
+      'household.',
   url: publicUrl.resolve('a2a').toString(),
   version: '1.0.0',
   capabilities: const AgentCapabilities(
@@ -43,11 +44,12 @@ AgentCard homewardAgentCard(Uri publicUrl) => AgentCard(
   ],
   skills: const [
     AgentSkill(
-      id: 'relocation',
-      name: 'Relocation',
+      id: 'home-finance',
+      name: 'Home finance',
       description:
-          "Turns a buyer's story of their move into a screen made for them.",
-      tags: ['home-buying', 'relocation'],
+          'Works out what a household can borrow, what a home costs them '
+          'each month, and how it holds up, and builds a screen made for them.',
+      tags: ['home-finance', 'mortgage', 'rent'],
     ),
   ],
 );

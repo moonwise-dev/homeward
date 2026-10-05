@@ -75,9 +75,22 @@ class DownPaymentSliderView extends HookWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('The minimum the rules allow', style: styles.caption),
-              Text('What your savings reach', style: styles.caption),
+              Flexible(
+                child: Text(
+                  'The minimum the rules allow',
+                  style: styles.caption,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Flexible(
+                child: Text(
+                  'What your savings reach',
+                  style: styles.caption,
+                  textAlign: TextAlign.end,
+                ),
+              ),
             ],
           ),
         ] else

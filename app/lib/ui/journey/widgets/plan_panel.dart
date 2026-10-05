@@ -52,7 +52,8 @@ class PlanPanel extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.lg),
               child: Text(
-                'Your plan appears here as Homeward learns about your move.',
+                'Your plan appears here as Homeward learns about your move '
+                'and your money.',
                 style: styles.body,
                 textAlign: TextAlign.center,
               ),

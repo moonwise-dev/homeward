@@ -47,7 +47,7 @@ model yet.
 {
   "protocolVersion": "0.3.0",
   "name": "Homeward",
-  "description": "Home-buying and relocation advisor: turns the story of a move into a screen made for that buyer.",
+  "description": "Home-finance agent: works out what a home costs one household and whether they can carry it, and builds the screen made for that household.",
   "url": "https://homeward-server-1065509330520.europe-north1.run.app/a2a",
   "version": "1.0.0",
   "capabilities": {
@@ -73,7 +73,7 @@ model yet.
   "defaultInputModes": ["text/plain", "application/json"],
   "defaultOutputModes": ["text/plain", "application/json+a2ui"],
   "skills": [
-    { "id": "relocation", "name": "Relocation", "description": "Turns a buyer's story of their move into a screen made for them.", "tags": ["home-buying", "relocation"] }
+    { "id": "home-finance", "name": "Home finance", "description": "Works out what a household can borrow, what a home costs them each month, and how it holds up, and builds a screen made for them.", "tags": ["home-finance", "mortgage", "rent"] }
   ]
 }
 ```

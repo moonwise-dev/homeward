@@ -100,9 +100,9 @@ declared examples offline.
 
 ### Journey
 
-- **Empty plan**: one line asking the buyer to tell Homeward about their move,
-  and the text field under it. The first message is whatever they write; there
-  is no opening form (D129).
+- **Empty plan**: one line asking the buyer to tell Homeward about their move
+  and their money, and the text field under it. The first message is
+  whatever they write; there is no opening form (D129).
 - **The conversation** (D139): one section per turn that has text, an
   inline ask, or a failure. Each opens with what the buyer said, or the action
   they took named in words, as a bubble, then Homeward's reply and the turn's
@@ -113,10 +113,10 @@ declared examples offline.
 - **The plan panel** (D131): the plan's living surface, `plan`. Each turn
   changes it in place as the turn streams, so components appear and change
   without the panel being rebuilt. Before a turn has drawn it, it says the
-  plan appears here as Homeward learns about the move. A fact Homeward
-  deduced offers Right and Not quite; a tap goes to Homeward as the buyer's
-  next message, shown in the conversation as "Right: …" or "Not quite: …"
-  (D144).
+  plan appears here as Homeward learns about the move and the money. A fact
+  Homeward deduced offers Right and Not quite; a tap goes to Homeward as the
+  buyer's next message, shown in the conversation as "Right: …" or "Not
+  quite: …" (D144).
 - **While a turn runs**, the plan panel takes no taps while it changes, and a
   working card at the end of the conversation shows the turn:
   - While tools run, the card lists the measuring steps from the server's

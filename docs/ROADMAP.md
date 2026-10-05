@@ -38,6 +38,28 @@ As of 2026-10-05, after a review of the whole project and the map chunk.
   one turn of five rounds. Flash-Lite missed the headers deadline on the
   first request, so every round ran on 3.5 Flash, whose free tier is 20
   requests a day.
+- **Rehearsed again later that day, for the working session.** The money
+  journey, four turns, ran five times through the probe on Flash-Lite: no
+  error, no leaked text, and the down payment slider on the plan every time
+  it was asked for, though three turns of one run came back with the screen
+  and no words. Journey 2, eight runs through the probe, drew the flat in
+  seven and the listing quote in five; the miss was a rejected `Button` that
+  the correction round did not redraw, so the reply described a flat the plan
+  did not show. In the web app, about twenty-five turns, one wrote the
+  model's own reasoning into the chat, and a `Choice` offered a monthly
+  saving in kronor, which the prompt forbids. First text came after 4 to 26 s,
+  most often 8 to 19. From 15:03 to 15:07 CEST Gemini was slow: a one-word
+  reply took 13.5 s, so with the default 10 s to response headers the models
+  missed it and most turns failed with `gemini_unavailable`; with
+  `HOMEWARD_HEADERS_DEADLINE=40` and `HOMEWARD_FIRST_STEP_DEADLINE=60` a turn
+  completed in 34 s. A demo should set both (`docs/AGENT.md`, Model
+  Selection).
+- **Small fixes made the same day.** The debug build no longer paints its
+  DEBUG ribbon, which covered the wire inspector's button; the agent card and
+  the empty plan speak of home finance and money; the style prompt forbids a
+  label or third-person lead-in such as "To answer the user:", seen once in
+  five turns; the down payment slider's two end labels wrap in a narrow pane
+  instead of overflowing.
 - **Hosted.** Nothing hosted serves: on 2026-10-05 the Cloud Run URL in the
   `Makefile` answered 503 and Firebase Hosting 404. The server image could
   not be built from C5 until that day, when the root `.dockerignore` began to
@@ -49,10 +71,9 @@ As of 2026-10-05, after a review of the whole project and the map chunk.
   plan or all data, the 90-day cleanup, the session limit, and rate limits in
   Firestore. `docs/REQUIREMENTS_APP.md`, `docs/REQUIREMENTS_SERVER.md`, and
   `docs/FIRESTORE.md` mark each.
-- **Left over from before D138.** The agent card still calls Homeward a
-  "home-buying and relocation advisor" with one skill, `relocation`, and the
-  key screen's "about 250 turns a day" dates from two requests a turn (D78);
-  a rehearsed turn takes about two and a half (`docs/AGENT.md`).
+- **Left over from before D138.** The key screen's "about 250 turns a day"
+  dates from two requests a turn (D78); the 53 turns of the second rehearsal
+  on 2026-10-05 took 2.75 on average (`docs/AGENT.md`).
 
 ## Milestones
 
@@ -262,6 +283,8 @@ four journeys of `docs/PRODUCT.md` (D141).
 | No official Dart GenAI SDK | Client maintenance | Thin typed client over REST, recorded fixtures from S2 |
 | Gemini latency: 7–18 s per model round on 2026-09-16 on Flash, 3–5 s on Flash-Lite on 2026-09-17 | Slow turns on camera | Flash-Lite first (D81), a small catalog, full text streamed as it grows, latency re-measured before recording |
 | Preferred model overloaded | Hung or failed turns | Deadlines, circuit breaker, fallback to the next model |
+| Gemini is slow on the day, as from 15:03 to 15:07 CEST on 2026-10-05, when a one-word reply took 13.5 s and most turns failed at the 10 s default | A demo that fails on camera | Raise `HOMEWARD_HEADERS_DEADLINE` to 40 and `HOMEWARD_FIRST_STEP_DEADLINE` to 60 for the demo; a screen capture of the whole path recorded the day before |
+| Now and then, once in about twenty-five web app turns on 2026-10-05, the model writes its own reasoning into the chat or a `Choice` offers a figure, in spite of the style prompt; a reply can also describe a block that was rejected | A visible slip in a recording | Rehearsal until a run is clean, then record; text written in a round that ends in tool calls could be left out of the reply, a server rule that D129 asks to try last |
 | The Interactions API refuses a round's function results as not following a function call, in three of about thirty tool rounds in the C10d rehearsals on 2026-09-27 | The turn starts over in a new conversation, which adds seconds and requests and drops the earlier dialogue from the model's history; first text reached 48 s once | The start-over recovers every time so far; retrying the refused request does not (2026-09-25); spike S17 looks for the cause before the recording |
 | Safari untested with `require-corp`, reCAPTCHA Enterprise, and cross-origin streaming | iPhone viewers cannot sign in or stream | Check macOS and iOS Safari in M1; fall back to single-threaded Wasm without isolation headers for Safari |
 | Scripted abuse of the web app exhausts reCAPTCHA's 10,000 free monthly assessments | $8 for the month, then $1 per 1,000 above 100,000 | One-day App Check tokens, the 25 SEK budget alert, per-UID rate limits |

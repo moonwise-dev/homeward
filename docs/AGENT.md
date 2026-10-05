@@ -60,14 +60,14 @@ share them, and daily limits reset at midnight Pacific:
 A turn takes one request, plus one for each tool round, catalog round, and
 correction, at most eight under the caps above, and one more when
 `read_listings` reads. The ten turns rehearsed on 2026-09-28 took 24
-(`docs/SPIKES.md`, S17), about two and a half each, and a model at a limit
-hands the turn to the next (D79), so a buyer's free key covers roughly 200
-turns a day on `gemini-3.5-flash-lite` and about fifteen more on the two
-Flash models.
-The key screen's "about 250" dates from two requests a turn (D78). Two or
-three quick turns in a minute can reach a Flash model's per-minute limit. AI
-Studio counts refused requests too: it showed 7 of 5 a minute and 24 of 20 a
-day.
+(`docs/SPIKES.md`, S17), about two and a half each, and the 53 of the second
+rehearsal on 2026-10-05 took 2.75 on average, 7 of them with a correction. A
+model at a limit hands the turn to the next (D79), so a buyer's free key
+covers roughly 180 turns a day on `gemini-3.5-flash-lite` and about fifteen
+more on the two Flash models. The key screen's "about 250" dates from two
+requests a turn (D78). Two or three quick turns in a minute can reach a Flash
+model's per-minute limit. AI Studio counts refused requests too: it showed 7
+of 5 a minute and 24 of 20 a day.
 
 ### Model Selection
 
@@ -83,6 +83,13 @@ day.
   its function calls and rejections are dropped, because tools run only after a
   round completes. Once a message of the round has been accepted, the turn
   fails with `gemini_unavailable` instead of repeating output.
+- The deadlines are the first thing to raise when Gemini is slow. On
+  2026-10-05 at 15:05 CEST a one-word reply took 13.5 s on Flash-Lite; at the
+  default 10 s to response headers the models missed it and most turns failed
+  with `gemini_unavailable`, while at `HOMEWARD_HEADERS_DEADLINE=40` and
+  `HOMEWARD_FIRST_STEP_DEADLINE=60` a turn completed in 34 s. A model that
+  hangs for good now costs up to 40 s before the fallback, so raise both for
+  a demo and keep the defaults otherwise.
 - An overloaded round is retried on one more model only. A request limit
   refusal arrives within a second, so it moves on through every remaining
   model.

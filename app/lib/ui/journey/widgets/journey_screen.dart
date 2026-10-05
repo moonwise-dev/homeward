@@ -127,7 +127,7 @@ class _EmptyJourney extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Text(
-          'Tell Homeward about your move.',
+          'Tell Homeward about your move and your money.',
           style: styles.title,
           textAlign: TextAlign.center,
         ),

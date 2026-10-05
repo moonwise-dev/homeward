@@ -25,6 +25,7 @@ class HomewardApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) => MaterialApp.router(
     title: 'Homeward',
+    debugShowCheckedModeBanner: false,
     theme: AppTheme.light,
     darkTheme: AppTheme.dark,
     themeMode: ref.watch(appearanceProvider).value ?? ThemeMode.system,
