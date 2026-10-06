@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 
+import 'a2a/task_registry.dart';
 import 'app.dart';
 import 'config/server_config.dart';
 import 'data/providers/providers.dart';
@@ -14,14 +15,14 @@ import 'logging/log_entry.dart';
 
 final _log = Logger('server');
 
-Future<void> runServer(ServerConfig config, {Handler? development}) async {
+const _shutdownGrace = Duration(seconds: 8);
+const _drainCheckInterval = Duration(milliseconds: 100);
+
+Future<Never> runServer(ServerConfig config, {Handler? development}) async {
   configureLogging(config);
-  final httpClient = http.Client();
+  final providers = Providers.production(config, http.Client());
   final server = await shelf_io.serve(
-    buildApp(
-      Providers.production(config, httpClient),
-      development: development,
-    ),
+    buildApp(providers, development: development),
     InternetAddress.anyIPv4,
     config.port,
     poweredByHeader: null,
@@ -35,5 +36,25 @@ Future<void> runServer(ServerConfig config, {Handler? development}) async {
   ]).first;
   _log.info('Shutting down');
   await server.close();
-  httpClient.close();
+  await _drain(server, providers.tasks);
+  exit(0);
+}
+
+Future<void> _drain(HttpServer server, TaskRegistry tasks) async {
+  final waited = Stopwatch()..start();
+  while (server.connectionsInfo().total > 0 || tasks.running.isNotEmpty) {
+    if (waited.elapsed >= _shutdownGrace) {
+      _log.warning(
+        LogEntry(
+          'Shutdown grace ended with work in flight',
+          fields: {
+            'connections': server.connectionsInfo().total,
+            'runningTasks': tasks.running.length,
+          },
+        ),
+      );
+      return;
+    }
+    await Future<void>.delayed(_drainCheckInterval);
+  }
 }

@@ -9,6 +9,9 @@ final class TaskRegistry {
   final Duration retention;
   final _tasks = <String, RunningTask>{};
 
+  Iterable<RunningTask> get running =>
+      _tasks.values.where((task) => !task.isFinished);
+
   RunningTask start({
     required String id,
     required String contextId,

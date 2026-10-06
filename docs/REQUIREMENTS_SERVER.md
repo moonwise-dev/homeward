@@ -188,9 +188,15 @@ Secrets.
   copy, as it did from C5 until 2026-10-05.
 - The server loads the prompts and the sample markets and homes once at
   startup.
-- The server exits on SIGTERM within Cloud Run's grace period: it stops
-  accepting connections, lets in-flight requests finish, and releases every
-  signal watcher so the process can end.
+- The server ends its own process on the first SIGTERM or SIGINT. It stops
+  accepting connections, closes idle ones, and waits while a request is being
+  answered or a turn is still running, for at most 8 seconds, inside the 10
+  seconds Cloud Run leaves between SIGTERM and SIGKILL; then it exits with
+  status 0, and when the 8 seconds ran out it first logs a warning with the
+  connections and turns it cut. The exit is explicit because a Dart process
+  lives as long as anything is pending: until 2026-10-06 the ten-minute timer
+  that keeps a finished task for `tasks/get` held the process for up to ten
+  minutes after "Shutting down".
 - Cloud Run `europe-north1`, concurrency 40, request timeout 300 s, minimum
   instances 0, maximum 2, to stay within the free allowance; maximum 1 while
   tasks live in memory; cold starts are accepted.
@@ -240,6 +246,12 @@ Secrets.
 - `make app`, `make app-web`, and `make app-macos` start the local server when it
   is not running, run the app on `DEVICE` (Chrome, macOS, or an Android device
   id), and stop the server they started when the app exits.
+- Ctrl-C, `make dev-server-stop`, and the exit of `make app` stop the local
+  server by the shutdown rule under Deployment: the process and its VM service
+  port are gone at once when nothing is in flight and after at most 8 seconds
+  otherwise, and a second signal ends it immediately. A server started while
+  another still holds its VM service port logs "Could not start the VM
+  service", then serves and hot-reloads as usual.
 - The Gemini key is entered in the app like in production, unless the local
   server hands the app the development keys.
 - A developer's keys live in `.env` at the root, copied from `.env.example` and

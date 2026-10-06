@@ -12,12 +12,11 @@ Future<void> main() async {
     dotenv: _read('.env'),
     firebaserc: _read('.firebaserc'),
   );
-  final reloader = await HotReloader.create();
+  await HotReloader.create();
   await runServer(
     ServerConfig.fromEnvironment(environment),
     development: developmentHandler(environment),
   );
-  await reloader.stop();
 }
 
 String? _read(String path) {

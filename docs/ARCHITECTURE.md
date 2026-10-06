@@ -146,7 +146,7 @@ server/
   tool/dev.dart     development entry point with hot reload
   lib/
     app.dart        router and middleware pipeline
-    run_server.dart serve, wait for SIGTERM or SIGINT, close
+    run_server.dart serve, wait for SIGTERM or SIGINT, drain, exit
     config/         ServerConfig from environment
     request/        RequestContext, trace header parsing, request ids
     logging/        LogEntry, Cloud Logging JSON and text formatters
