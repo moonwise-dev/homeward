@@ -17,6 +17,7 @@ class GalleryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styles = AppTextStyles.of(context);
+    void toPlans() => context.go(AppRoutes.plans);
     final provider = galleryViewModelProvider(componentName);
     final state = ref.watch(provider);
     final selected = state.selected;
@@ -39,7 +40,10 @@ class GalleryScreen extends ConsumerWidget {
       builder: (context, constraints) {
         if (constraints.maxWidth >= AppSizes.twoPane) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Catalog gallery')),
+            appBar: AppBar(
+              title: const Text('Catalog gallery'),
+              leading: BackButton(onPressed: toPlans),
+            ),
             body: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -62,9 +66,19 @@ class GalleryScreen extends ConsumerWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Catalog gallery'),
-            leading: page == null
-                ? null
-                : BackButton(onPressed: () => context.go(AppRoutes.gallery)),
+            leading: BackButton(
+              onPressed: page == null
+                  ? toPlans
+                  : () => context.go(AppRoutes.gallery),
+            ),
+            actions: [
+              if (page != null)
+                IconButton(
+                  tooltip: 'Back to plans',
+                  icon: const Icon(Icons.home_outlined),
+                  onPressed: toPlans,
+                ),
+            ],
           ),
           body: page ?? index,
         );

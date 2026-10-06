@@ -158,7 +158,13 @@ declared examples offline.
     button.
 - An unknown component name shows the index with a note.
 - On a wide window the index stays beside the page; on a narrow one the page
-  replaces it with a back button.
+  replaces it.
+- The app bar always has a way back to the plans screen, however the gallery
+  was reached and however many blocks were opened: its back button goes to
+  the plans screen, and on a narrow window with a block open the back button
+  returns to the index while a home button goes to the plans screen. A
+  gallery opened by its URL has them too, and the plans screen then follows
+  the usual guards.
 - Reachable from the plans screen's app bar, and by its URL with no key and
   no server.
 
