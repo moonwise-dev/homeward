@@ -19,6 +19,8 @@ abstract class ServerConfig with _$ServerConfig {
     required Duration modelCooldown,
     required int maxCorrections,
     required int maxFinishingRounds,
+    required int maxOverloadRetries,
+    required Duration overloadWait,
     required List<String> allowedOrigins,
     required bool appCheckEnforced,
     required String promptsDirectory,
@@ -46,7 +48,8 @@ abstract class ServerConfig with _$ServerConfig {
       projectId: environment['GOOGLE_CLOUD_PROJECT'],
       turnModels: list(
         'HOMEWARD_TURN_MODELS',
-        'gemini-3.5-flash-lite,gemini-3.5-flash,gemini-3.8-flash',
+        'gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-3.5-flash,'
+            'gemini-3.8-flash',
       ),
       thinkingLevel: read('HOMEWARD_THINKING_LEVEL', 'low'),
       headersDeadline: seconds('HOMEWARD_HEADERS_DEADLINE', 10),
@@ -56,6 +59,10 @@ abstract class ServerConfig with _$ServerConfig {
       maxFinishingRounds: int.parse(
         read('HOMEWARD_MAX_FINISHING_ROUNDS', '1'),
       ),
+      maxOverloadRetries: int.parse(
+        read('HOMEWARD_MAX_OVERLOAD_RETRIES', '2'),
+      ),
+      overloadWait: seconds('HOMEWARD_OVERLOAD_WAIT', 3),
       allowedOrigins: list(
         'HOMEWARD_ALLOWED_ORIGINS',
         'https://homeward-genui.web.app,'

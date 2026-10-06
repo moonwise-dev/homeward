@@ -32,7 +32,10 @@ void main() {
 
   TurnOrchestrator orchestrator(
     ScriptedInteractions script, {
-    TurnSettings settings = const TurnSettings(maxFinishingRounds: 0),
+    TurnSettings settings = const TurnSettings(
+      maxFinishingRounds: 0,
+      maxOverloadRetries: 0,
+    ),
   }) => TurnOrchestrator(
     sessions: sessions,
     createInteraction: script.call,

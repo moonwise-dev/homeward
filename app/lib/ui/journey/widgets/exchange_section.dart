@@ -89,12 +89,12 @@ class ExchangeSection extends ConsumerWidget {
         spacing: AppSpacing.xs,
         children: [
           AppStatusLine(
-            text: section.entry.error?.humanMessage ?? 'This step failed',
-            icon: Icons.error_outline,
-            color: colors.danger,
+            text: failureText(section.entry.error, DateTime.now()),
+            icon: Icons.cloud_off_outlined,
+            color: colors.textSecondary,
           ),
           AppButton(
-            label: 'Retry',
+            label: 'Try again',
             icon: Icons.refresh,
             variant: AppButtonVariant.text,
             onPressed: onRetry,

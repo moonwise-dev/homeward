@@ -34,7 +34,7 @@ abstract class HomewardFailure with _$HomewardFailure {
         ),
         GeminiUnavailable() => const HomewardFailure(
           code: HomewardErrorCode.geminiUnavailable,
-          message: 'Gemini is overloaded right now; try again shortly',
+          message: 'Gemini is not answering right now',
         ),
         GeminiHistoryMissing() || GeminiRequestInvalid() => internal,
       };

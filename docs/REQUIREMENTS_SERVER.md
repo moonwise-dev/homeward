@@ -108,9 +108,9 @@ limit is not built.
 | `app_check_failed` | Missing or invalid App Check token |
 | `gemini_key_missing` | Key header absent |
 | `gemini_key_invalid` | Gemini rejected the key |
-| `gemini_quota_exhausted` | Gemini returned a quota error on every model it could try; includes the next reset, midnight Pacific |
+| `gemini_quota_exhausted` | Gemini returned a quota error on every model it could try, or the models left after those at their request limit were overloaded (D171); includes the next reset, midnight Pacific |
 | `gemini_credits_depleted` | The project behind the key has run out of prepaid credits |
-| `gemini_unavailable` | Every configured model is overloaded, stalled, or returned a server error |
+| `gemini_unavailable` | The models tried were overloaded, stalled, or returned a server error, after the turn waited and asked again (D171) |
 | `rate_limited` | Homeward limit reached |
 | `turn_in_progress` | Another turn is running in this session |
 | `session_not_found` | Unknown or foreign session |
@@ -141,6 +141,8 @@ limit is not built.
 | `HOMEWARD_MODEL_COOLDOWN` | How long an overloaded model is skipped, in seconds |
 | `HOMEWARD_MAX_CORRECTIONS` | Validation correction rounds |
 | `HOMEWARD_MAX_FINISHING_ROUNDS` | Rounds that ask for a reply's missing plan or ask, 1 by default |
+| `HOMEWARD_MAX_OVERLOAD_RETRIES` | Times a turn waits and asks again when the models it tried are overloaded, 2 by default |
+| `HOMEWARD_OVERLOAD_WAIT` | The wait before asking again, in seconds, multiplied by the attempt; 3 by default |
 | `HOMEWARD_ALLOWED_ORIGINS` | CORS origins |
 | `HOMEWARD_APP_CHECK_ENFORCED` | Enforce App Check, off for local development |
 | `HOMEWARD_PUBLIC_URL` | Base URL clients call, used for the agent card's `url` |

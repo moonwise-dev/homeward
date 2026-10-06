@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 
+import 'gemini_exception.dart';
+
 final class ModelCaps {
   ModelCaps({
     this.skipFor = const Duration(minutes: 1),
@@ -10,21 +12,22 @@ final class ModelCaps {
 
   final Duration skipFor;
   final DateTime Function() _now;
-  final _cappedUntil = <String, DateTime>{};
+  final _capped = <String, ({DateTime until, GeminiQuotaExhausted refusal})>{};
 
-  bool isCapped(String apiKey, String model) => switch (_cappedUntil[_entry(
-    apiKey,
-    model,
-  )]) {
-    final until? => _now().isBefore(until),
-    null => false,
-  };
+  bool isCapped(String apiKey, String model) =>
+      refusalOf(apiKey, model) != null;
 
-  void cap(String apiKey, String model) {
+  GeminiQuotaExhausted? refusalOf(String apiKey, String model) =>
+      switch (_capped[_entry(apiKey, model)]) {
+        (:final until, :final refusal) when _now().isBefore(until) => refusal,
+        _ => null,
+      };
+
+  void cap(String apiKey, String model, GeminiQuotaExhausted refusal) {
     final now = _now();
-    _cappedUntil
-      ..removeWhere((_, until) => !now.isBefore(until))
-      ..[_entry(apiKey, model)] = now.add(skipFor);
+    _capped
+      ..removeWhere((_, capped) => !now.isBefore(capped.until))
+      ..[_entry(apiKey, model)] = (until: now.add(skipFor), refusal: refusal);
   }
 
   static String _entry(String apiKey, String model) =>

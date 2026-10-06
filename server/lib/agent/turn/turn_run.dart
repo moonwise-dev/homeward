@@ -132,6 +132,8 @@ final class TurnRun {
     var corrections = 0;
     var mayStartOver = true;
     var finishingRounds = 0;
+    var overloadRetries = 0;
+    Stopwatch? overloadClock;
     var correcting = false;
     while (true) {
       final constrained = correcting;
@@ -183,15 +185,7 @@ final class TurnRun {
               );
               calls.clear();
               parser = newParser();
-              _pendingFailures.removeRange(
-                failuresBeforeRound,
-                _pendingFailures.length,
-              );
-              _text
-                ..clear()
-                ..write(textBeforeRound);
-              _separateRound = _text.isNotEmpty;
-              yield* _emitText();
+              yield* _takeBackRound(textBeforeRound, failuresBeforeRound);
             case InteractionCreated(model: final created):
               model = created;
           }
@@ -225,6 +219,30 @@ final class TurnRun {
           _failed(HomewardFailure.internal);
           yield const TurnEvent.failed(HomewardFailure.internal);
           return;
+        }
+        if (error is GeminiUnavailable &&
+            _acceptedInRound == 0 &&
+            overloadRetries < settings.maxOverloadRetries &&
+            (overloadClock ??= roundClock).elapsed <
+                settings.overloadPatience) {
+          overloadRetries++;
+          final wait = settings.overloadWait * overloadRetries;
+          _log.info(
+            LogEntry(
+              'Gemini is overloaded; asking again in turn $turn',
+              fields: {
+                'turn': turn,
+                'round': _rounds,
+                'waitMs': wait.inMilliseconds,
+              },
+            ),
+          );
+          yield* _takeBackRound(textBeforeRound, failuresBeforeRound);
+          correcting = constrained;
+          if (!await _waited(wait, cancellation)) {
+            return;
+          }
+          continue;
         }
         final failure = HomewardFailure.fromGemini(error, now());
         _failed(failure);
@@ -411,6 +429,25 @@ final class TurnRun {
         ),
       );
     }
+  }
+
+  Stream<TurnEvent> _takeBackRound(
+    String textBeforeRound,
+    int failuresBeforeRound,
+  ) async* {
+    _pendingFailures.removeRange(failuresBeforeRound, _pendingFailures.length);
+    _text
+      ..clear()
+      ..write(textBeforeRound);
+    _separateRound = _text.isNotEmpty;
+    yield* _emitText();
+  }
+
+  Future<bool> _waited(Duration wait, Future<void>? cancellation) {
+    final waited = Future<void>.delayed(wait).then((_) => true);
+    return cancellation == null
+        ? waited
+        : Future.any([waited, cancellation.then((_) => false)]);
   }
 
   void _startOver() {

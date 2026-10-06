@@ -19,8 +19,9 @@ Stream<InteractionEvent> createWithFallback({
     for (final model in circuits.cooling)
       if (!healthy.contains(model)) model,
   ];
+  final models = [...healthy, ...cooling];
   final ready = [
-    for (final model in [...healthy, ...cooling])
+    for (final model in models)
       if (!caps.isCapped(apiKey, model)) model,
   ];
   final candidates = ready.isEmpty ? healthy : ready;
@@ -40,21 +41,26 @@ Stream<InteractionEvent> createWithFallback({
       switch (reason) {
         case GeminiUnavailable():
           circuits.open(model);
-          if (retriedOverload) {
-            rethrow;
-          }
-          retriedOverload = true;
         case GeminiQuotaExhausted(perModel: true):
-          caps.cap(apiKey, model);
+          caps.cap(apiKey, model, reason);
         case _:
           rethrow;
       }
+      final overloaded = reason is GeminiUnavailable;
       final next = candidates.elementAtOrNull(attempt + 1);
       if (next == null ||
           !canFallBack() ||
-          (reason is GeminiUnavailable && cooling.contains(next))) {
+          (overloaded && (retriedOverload || cooling.contains(next)))) {
+        if (overloaded) {
+          for (final other in models) {
+            if (caps.refusalOf(apiKey, other) case final refusal?) {
+              throw refusal;
+            }
+          }
+        }
         rethrow;
       }
+      retriedOverload = retriedOverload || overloaded;
       yield InteractionEvent.modelFailed(model: model, reason: reason);
     }
   }

@@ -13,6 +13,7 @@ void main() {
         publicUrl: Uri.parse('http://localhost:8080'),
         turnModels: const [
           'gemini-3.5-flash-lite',
+          'gemini-3.1-flash-lite',
           'gemini-3.5-flash',
           'gemini-3.8-flash',
         ],
@@ -22,6 +23,8 @@ void main() {
         modelCooldown: const Duration(minutes: 5),
         maxCorrections: 2,
         maxFinishingRounds: 1,
+        maxOverloadRetries: 2,
+        overloadWait: const Duration(seconds: 3),
         allowedOrigins: const [
           'https://homeward-genui.web.app',
           'https://homeward-genui.firebaseapp.com',

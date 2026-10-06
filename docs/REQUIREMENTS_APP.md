@@ -134,14 +134,25 @@ declared examples offline.
 - Opening an existing plan asks the server for its turns,
   `GET /api/sessions/:id`, and replays the stored A2UI messages into a fresh
   surface controller before the conversation and the plan are shown.
-- Turn failures show a toast, and the failed section offers retry. A retried
-  turn keeps the plan panel the failed one drew, since the server keeps it.
-- `gemini_key_invalid` routes to `/key`. `gemini_quota_exhausted` explains that
-  the buyer's free key has hit a request limit, asks them to try again in a
-  minute, and shows when the daily limit resets. In a development run with
-  another key left, the app moves to that key and retries the turn instead.
-  `gemini_credits_depleted` shows the server message with a change key action,
-  since waiting does not help.
+- A turn recovers by itself before the buyer is asked to do anything (D171).
+  While it does, the buyer sees only the working card:
+  - `gemini_quota_exhausted` with another key left, as in a development run:
+    the app moves to that key and sends the turn again, with no message.
+  - `gemini_unavailable`: the server has already waited and asked again; the
+    app waits 4 s and sends the turn again, once, when the failed attempt
+    took under 30 s.
+  - A stop from the buyer ends either wait.
+- A turn that still fails shows one quiet line under the buyer's message, in
+  the secondary text colour, with Try again; no toast. A turn sent again
+  keeps the plan panel the failed one drew, since the server keeps it.
+  `gemini_quota_exhausted` with no key left says that the buyer's free key
+  has hit a request limit, asks them to try again in a minute, and shows
+  when the daily limit resets.
+- Opening a plan leaves out a failed turn that the next turn asked again, so
+  a turn the app recovered shows once.
+- `gemini_key_invalid` shows a toast and routes to `/key`.
+  `gemini_credits_depleted` shows a toast with the server message and a
+  change key action, since waiting does not help.
 
 ### Catalog Gallery
 

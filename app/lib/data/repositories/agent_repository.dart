@@ -69,10 +69,15 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
       return;
     }
     plan.isOpened = true;
-    final transcript = await _client.transcript(sessionId);
-    for (final turn in transcript.turns) {
-      plan.put(_buyerEntry(turn.input));
-      plan.put(_agentEntry(turn));
+    final turns = (await _client.transcript(sessionId)).turns;
+    for (final (index, turn) in turns.indexed) {
+      final askedAgain =
+          turn.status == TurnStatus.failed &&
+          turns.elementAtOrNull(index + 1)?.input == turn.input;
+      if (!askedAgain) {
+        plan.put(_buyerEntry(turn.input));
+        plan.put(_agentEntry(turn));
+      }
       for (final message in turn.messages) {
         plan.surfaces.handleMessage(a2ui.A2uiMessage.fromJson(message));
       }
@@ -156,7 +161,12 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
 
   @override
   Future<void> stop(String sessionId) => guard(() async {
-    if (_plan(sessionId).taskId case final taskId?) {
+    final plan = _plan(sessionId);
+    if (plan.stopRequest case final stopRequest?
+        when !stopRequest.isCompleted) {
+      stopRequest.complete();
+    }
+    if (plan.taskId case final taskId?) {
       await _client.cancelTask(taskId);
     }
   });
@@ -211,22 +221,105 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
     String? replacing,
   }) async {
     final entryId = replacing ?? _newEntryId();
-    final keptPlan = switch (replacing == null ? null : plan.entry(replacing)) {
-      AgentEntry(:final surfaceIds) when surfaceIds.contains(planSurfaceId) =>
-        const [planSurfaceId],
-      _ => const <String>[],
-    };
+    final stopRequest = Completer<void>();
     plan
-      ..put(
-        TranscriptEntry.agent(
-          id: entryId,
-          request: request,
-          status: AgentTurnStatus.streaming,
-          surfaceIds: keptPlan,
-        ),
-      )
-      ..isRunning = true
-      ..emit();
+      ..stopRequest = stopRequest
+      ..isRunning = true;
+    var attempts = 0;
+    var waitedForGemini = false;
+    try {
+      while (true) {
+        final keptPlan = switch (plan.entry(entryId)) {
+          AgentEntry(:final surfaceIds)
+              when surfaceIds.contains(planSurfaceId) =>
+            const [planSurfaceId],
+          _ => const <String>[],
+        };
+        plan
+          ..put(
+            TranscriptEntry.agent(
+              id: entryId,
+              request: request,
+              status: AgentTurnStatus.streaming,
+              surfaceIds: keptPlan,
+            ),
+          )
+          ..emit();
+        final attemptClock = Stopwatch()..start();
+        final error = await _attempt(sessionId, plan, entryId, request);
+        if (error == null) {
+          return;
+        }
+        attempts++;
+        final recovery = stopRequest.isCompleted
+            ? null
+            : await _recoveryFrom(
+                error,
+                attempts: attempts,
+                mayWaitForGemini:
+                    !waitedForGemini && attemptClock.elapsed < _quickFailure,
+              );
+        if (recovery == null) {
+          plan.updateAgent(
+            entryId,
+            (entry) => stopRequest.isCompleted
+                ? entry.copyWith(status: AgentTurnStatus.canceled)
+                : entry.copyWith(status: AgentTurnStatus.failed, error: error),
+          );
+          if (!stopRequest.isCompleted) {
+            plan.failures.add(TurnFailure(entryId: entryId, error: error));
+          }
+          return;
+        }
+        waitedForGemini = waitedForGemini || recovery == _overloadPause;
+        await Future.any([
+          Future<void>.delayed(recovery),
+          stopRequest.future,
+        ]);
+        if (stopRequest.isCompleted) {
+          plan.updateAgent(
+            entryId,
+            (entry) => entry.copyWith(status: AgentTurnStatus.canceled),
+          );
+          return;
+        }
+      }
+    } finally {
+      plan
+        ..isRunning = false
+        ..taskId = null
+        ..stopRequest = null
+        ..emit();
+    }
+  }
+
+  static const _overloadPause = Duration(seconds: 4);
+  static const _quickFailure = Duration(seconds: 30);
+  static const _leasePause = Duration(milliseconds: 400);
+  static const _maxAttempts = 6;
+
+  Future<Duration?> _recoveryFrom(
+    AppError error, {
+    required int attempts,
+    required bool mayWaitForGemini,
+  }) async => switch (error) {
+    _ when attempts >= _maxAttempts => null,
+    ServerAppError(code: HomewardErrorCode.geminiQuotaExhausted) =>
+      await _geminiKeys.useNextKey() ? Duration.zero : null,
+    ServerAppError(code: HomewardErrorCode.geminiUnavailable)
+        when mayWaitForGemini =>
+      _overloadPause,
+    ServerAppError(code: HomewardErrorCode.turnInProgress) when attempts > 1 =>
+      _leasePause,
+    _ => null,
+  };
+
+  Future<AppError?> _attempt(
+    String sessionId,
+    _PlanSession plan,
+    String entryId,
+    TurnRequest request,
+  ) async {
     try {
       final geminiKey = await _geminiKeys.read();
       if (geminiKey == null) {
@@ -263,19 +356,11 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
         );
         _apply(plan, entryId, event);
       }
+      return null;
     } on Object catch (error) {
-      final appError = AppError.fromException(error);
-      plan.updateAgent(
-        entryId,
-        (entry) =>
-            entry.copyWith(status: AgentTurnStatus.failed, error: appError),
-      );
-      plan.failures.add(TurnFailure(entryId: entryId, error: appError));
+      return AppError.fromException(error);
     } finally {
-      plan
-        ..isRunning = false
-        ..taskId = null
-        ..emit();
+      plan.taskId = null;
     }
   }
 
@@ -385,6 +470,7 @@ class _PlanSession {
   final changes = StreamController<void>.broadcast(sync: true);
   final failures = StreamController<TurnFailure>.broadcast();
   StreamSubscription<ChatMessage>? submissions;
+  Completer<void>? stopRequest;
   String? taskId;
   var isRunning = false;
   var isOpened = false;

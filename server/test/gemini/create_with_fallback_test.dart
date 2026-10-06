@@ -262,9 +262,14 @@ void main() {
   });
 
   test('asks the capped model again when every model is capped', () async {
+    final refusal = GeminiQuotaExhausted(
+      'Quota',
+      resetsAt: clock,
+      perModel: true,
+    );
     final caps = ModelCaps(now: () => clock)
-      ..cap('AQ.test', preferred)
-      ..cap('AQ.test', fallback);
+      ..cap('AQ.test', preferred, refusal)
+      ..cap('AQ.test', fallback, refusal);
     final recorded = <RecordedRequest>[];
 
     await expectLater(

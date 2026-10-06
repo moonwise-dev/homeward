@@ -36,6 +36,7 @@ Providers testProviders({
   config: ServerConfig.fromEnvironment({
     'HOMEWARD_PUBLIC_URL': 'https://homeward.example.run.app',
     'HOMEWARD_MAX_FINISHING_ROUNDS': '0',
+    'HOMEWARD_MAX_OVERLOAD_RETRIES': '0',
     ...environment,
   }),
   identity: const TokenIdentityVerifier({'id-token-1': 'uid-1'}),

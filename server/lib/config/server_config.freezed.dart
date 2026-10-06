@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ServerConfig {
 
- int get port; LogFormat get logFormat; Uri get publicUrl; String? get projectId; List<String> get turnModels; String get thinkingLevel; Duration get headersDeadline; Duration get firstStepDeadline; Duration get modelCooldown; int get maxCorrections; int get maxFinishingRounds; List<String> get allowedOrigins; bool get appCheckEnforced; String get promptsDirectory; String get marketsDirectory; SessionStore get sessionStore;
+ int get port; LogFormat get logFormat; Uri get publicUrl; String? get projectId; List<String> get turnModels; String get thinkingLevel; Duration get headersDeadline; Duration get firstStepDeadline; Duration get modelCooldown; int get maxCorrections; int get maxFinishingRounds; int get maxOverloadRetries; Duration get overloadWait; List<String> get allowedOrigins; bool get appCheckEnforced; String get promptsDirectory; String get marketsDirectory; SessionStore get sessionStore;
 /// Create a copy of ServerConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $ServerConfigCopyWith<ServerConfig> get copyWith => _$ServerConfigCopyWithImpl<S
 @override
 bool operator ==(Object other) {
   final _this = this as ServerConfig;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServerConfig&&(identical(other.port, _this.port) || other.port == _this.port)&&(identical(other.logFormat, _this.logFormat) || other.logFormat == _this.logFormat)&&(identical(other.publicUrl, _this.publicUrl) || other.publicUrl == _this.publicUrl)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&const DeepCollectionEquality().equals(other.turnModels, _this.turnModels)&&(identical(other.thinkingLevel, _this.thinkingLevel) || other.thinkingLevel == _this.thinkingLevel)&&(identical(other.headersDeadline, _this.headersDeadline) || other.headersDeadline == _this.headersDeadline)&&(identical(other.firstStepDeadline, _this.firstStepDeadline) || other.firstStepDeadline == _this.firstStepDeadline)&&(identical(other.modelCooldown, _this.modelCooldown) || other.modelCooldown == _this.modelCooldown)&&(identical(other.maxCorrections, _this.maxCorrections) || other.maxCorrections == _this.maxCorrections)&&(identical(other.maxFinishingRounds, _this.maxFinishingRounds) || other.maxFinishingRounds == _this.maxFinishingRounds)&&const DeepCollectionEquality().equals(other.allowedOrigins, _this.allowedOrigins)&&(identical(other.appCheckEnforced, _this.appCheckEnforced) || other.appCheckEnforced == _this.appCheckEnforced)&&(identical(other.promptsDirectory, _this.promptsDirectory) || other.promptsDirectory == _this.promptsDirectory)&&(identical(other.marketsDirectory, _this.marketsDirectory) || other.marketsDirectory == _this.marketsDirectory)&&(identical(other.sessionStore, _this.sessionStore) || other.sessionStore == _this.sessionStore));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServerConfig&&(identical(other.port, _this.port) || other.port == _this.port)&&(identical(other.logFormat, _this.logFormat) || other.logFormat == _this.logFormat)&&(identical(other.publicUrl, _this.publicUrl) || other.publicUrl == _this.publicUrl)&&(identical(other.projectId, _this.projectId) || other.projectId == _this.projectId)&&const DeepCollectionEquality().equals(other.turnModels, _this.turnModels)&&(identical(other.thinkingLevel, _this.thinkingLevel) || other.thinkingLevel == _this.thinkingLevel)&&(identical(other.headersDeadline, _this.headersDeadline) || other.headersDeadline == _this.headersDeadline)&&(identical(other.firstStepDeadline, _this.firstStepDeadline) || other.firstStepDeadline == _this.firstStepDeadline)&&(identical(other.modelCooldown, _this.modelCooldown) || other.modelCooldown == _this.modelCooldown)&&(identical(other.maxCorrections, _this.maxCorrections) || other.maxCorrections == _this.maxCorrections)&&(identical(other.maxFinishingRounds, _this.maxFinishingRounds) || other.maxFinishingRounds == _this.maxFinishingRounds)&&(identical(other.maxOverloadRetries, _this.maxOverloadRetries) || other.maxOverloadRetries == _this.maxOverloadRetries)&&(identical(other.overloadWait, _this.overloadWait) || other.overloadWait == _this.overloadWait)&&const DeepCollectionEquality().equals(other.allowedOrigins, _this.allowedOrigins)&&(identical(other.appCheckEnforced, _this.appCheckEnforced) || other.appCheckEnforced == _this.appCheckEnforced)&&(identical(other.promptsDirectory, _this.promptsDirectory) || other.promptsDirectory == _this.promptsDirectory)&&(identical(other.marketsDirectory, _this.marketsDirectory) || other.marketsDirectory == _this.marketsDirectory)&&(identical(other.sessionStore, _this.sessionStore) || other.sessionStore == _this.sessionStore));
 }
 
 
 @override
 int get hashCode {
   final _this = this as ServerConfig;
-  return Object.hash(runtimeType,_this.port,_this.logFormat,_this.publicUrl,_this.projectId,const DeepCollectionEquality().hash(_this.turnModels),_this.thinkingLevel,_this.headersDeadline,_this.firstStepDeadline,_this.modelCooldown,_this.maxCorrections,_this.maxFinishingRounds,const DeepCollectionEquality().hash(_this.allowedOrigins),_this.appCheckEnforced,_this.promptsDirectory,_this.marketsDirectory,_this.sessionStore);
+  return Object.hash(runtimeType,_this.port,_this.logFormat,_this.publicUrl,_this.projectId,const DeepCollectionEquality().hash(_this.turnModels),_this.thinkingLevel,_this.headersDeadline,_this.firstStepDeadline,_this.modelCooldown,_this.maxCorrections,_this.maxFinishingRounds,_this.maxOverloadRetries,_this.overloadWait,const DeepCollectionEquality().hash(_this.allowedOrigins),_this.appCheckEnforced,_this.promptsDirectory,_this.marketsDirectory,_this.sessionStore);
 }
 
 @override
 String toString() {
   final _this = this as ServerConfig;
-  return 'ServerConfig(port: ${_this.port}, logFormat: ${_this.logFormat}, publicUrl: ${_this.publicUrl}, projectId: ${_this.projectId}, turnModels: ${_this.turnModels}, thinkingLevel: ${_this.thinkingLevel}, headersDeadline: ${_this.headersDeadline}, firstStepDeadline: ${_this.firstStepDeadline}, modelCooldown: ${_this.modelCooldown}, maxCorrections: ${_this.maxCorrections}, maxFinishingRounds: ${_this.maxFinishingRounds}, allowedOrigins: ${_this.allowedOrigins}, appCheckEnforced: ${_this.appCheckEnforced}, promptsDirectory: ${_this.promptsDirectory}, marketsDirectory: ${_this.marketsDirectory}, sessionStore: ${_this.sessionStore})';
+  return 'ServerConfig(port: ${_this.port}, logFormat: ${_this.logFormat}, publicUrl: ${_this.publicUrl}, projectId: ${_this.projectId}, turnModels: ${_this.turnModels}, thinkingLevel: ${_this.thinkingLevel}, headersDeadline: ${_this.headersDeadline}, firstStepDeadline: ${_this.firstStepDeadline}, modelCooldown: ${_this.modelCooldown}, maxCorrections: ${_this.maxCorrections}, maxFinishingRounds: ${_this.maxFinishingRounds}, maxOverloadRetries: ${_this.maxOverloadRetries}, overloadWait: ${_this.overloadWait}, allowedOrigins: ${_this.allowedOrigins}, appCheckEnforced: ${_this.appCheckEnforced}, promptsDirectory: ${_this.promptsDirectory}, marketsDirectory: ${_this.marketsDirectory}, sessionStore: ${_this.sessionStore})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $ServerConfigCopyWith<$Res>  {
   factory $ServerConfigCopyWith(ServerConfig value, $Res Function(ServerConfig) _then) = _$ServerConfigCopyWithImpl;
 @useResult
 $Res call({
- int port, LogFormat logFormat, Uri publicUrl, String? projectId, List<String> turnModels, String thinkingLevel, Duration headersDeadline, Duration firstStepDeadline, Duration modelCooldown, int maxCorrections, int maxFinishingRounds, List<String> allowedOrigins, bool appCheckEnforced, String promptsDirectory, String marketsDirectory, SessionStore sessionStore
+ int port, LogFormat logFormat, Uri publicUrl, String? projectId, List<String> turnModels, String thinkingLevel, Duration headersDeadline, Duration firstStepDeadline, Duration modelCooldown, int maxCorrections, int maxFinishingRounds, int maxOverloadRetries, Duration overloadWait, List<String> allowedOrigins, bool appCheckEnforced, String promptsDirectory, String marketsDirectory, SessionStore sessionStore
 });
 
 
@@ -68,7 +68,7 @@ class _$ServerConfigCopyWithImpl<$Res>
 
 /// Create a copy of ServerConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? port = null,Object? logFormat = null,Object? publicUrl = null,Object? projectId = freezed,Object? turnModels = null,Object? thinkingLevel = null,Object? headersDeadline = null,Object? firstStepDeadline = null,Object? modelCooldown = null,Object? maxCorrections = null,Object? maxFinishingRounds = null,Object? allowedOrigins = null,Object? appCheckEnforced = null,Object? promptsDirectory = null,Object? marketsDirectory = null,Object? sessionStore = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? port = null,Object? logFormat = null,Object? publicUrl = null,Object? projectId = freezed,Object? turnModels = null,Object? thinkingLevel = null,Object? headersDeadline = null,Object? firstStepDeadline = null,Object? modelCooldown = null,Object? maxCorrections = null,Object? maxFinishingRounds = null,Object? maxOverloadRetries = null,Object? overloadWait = null,Object? allowedOrigins = null,Object? appCheckEnforced = null,Object? promptsDirectory = null,Object? marketsDirectory = null,Object? sessionStore = null,}) {
   return _then(ServerConfig(
 port: null == port ? _self.port : port // ignore: cast_nullable_to_non_nullable
 as int,logFormat: null == logFormat ? _self.logFormat : logFormat // ignore: cast_nullable_to_non_nullable
@@ -81,7 +81,9 @@ as Duration,firstStepDeadline: null == firstStepDeadline ? _self.firstStepDeadli
 as Duration,modelCooldown: null == modelCooldown ? _self.modelCooldown : modelCooldown // ignore: cast_nullable_to_non_nullable
 as Duration,maxCorrections: null == maxCorrections ? _self.maxCorrections : maxCorrections // ignore: cast_nullable_to_non_nullable
 as int,maxFinishingRounds: null == maxFinishingRounds ? _self.maxFinishingRounds : maxFinishingRounds // ignore: cast_nullable_to_non_nullable
-as int,allowedOrigins: null == allowedOrigins ? _self.allowedOrigins : allowedOrigins // ignore: cast_nullable_to_non_nullable
+as int,maxOverloadRetries: null == maxOverloadRetries ? _self.maxOverloadRetries : maxOverloadRetries // ignore: cast_nullable_to_non_nullable
+as int,overloadWait: null == overloadWait ? _self.overloadWait : overloadWait // ignore: cast_nullable_to_non_nullable
+as Duration,allowedOrigins: null == allowedOrigins ? _self.allowedOrigins : allowedOrigins // ignore: cast_nullable_to_non_nullable
 as List<String>,appCheckEnforced: null == appCheckEnforced ? _self.appCheckEnforced : appCheckEnforced // ignore: cast_nullable_to_non_nullable
 as bool,promptsDirectory: null == promptsDirectory ? _self.promptsDirectory : promptsDirectory // ignore: cast_nullable_to_non_nullable
 as String,marketsDirectory: null == marketsDirectory ? _self.marketsDirectory : marketsDirectory // ignore: cast_nullable_to_non_nullable
@@ -171,10 +173,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int port,  LogFormat logFormat,  Uri publicUrl,  String? projectId,  List<String> turnModels,  String thinkingLevel,  Duration headersDeadline,  Duration firstStepDeadline,  Duration modelCooldown,  int maxCorrections,  int maxFinishingRounds,  List<String> allowedOrigins,  bool appCheckEnforced,  String promptsDirectory,  String marketsDirectory,  SessionStore sessionStore)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int port,  LogFormat logFormat,  Uri publicUrl,  String? projectId,  List<String> turnModels,  String thinkingLevel,  Duration headersDeadline,  Duration firstStepDeadline,  Duration modelCooldown,  int maxCorrections,  int maxFinishingRounds,  int maxOverloadRetries,  Duration overloadWait,  List<String> allowedOrigins,  bool appCheckEnforced,  String promptsDirectory,  String marketsDirectory,  SessionStore sessionStore)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ServerConfig() when $default != null:
-return $default(_that.port,_that.logFormat,_that.publicUrl,_that.projectId,_that.turnModels,_that.thinkingLevel,_that.headersDeadline,_that.firstStepDeadline,_that.modelCooldown,_that.maxCorrections,_that.maxFinishingRounds,_that.allowedOrigins,_that.appCheckEnforced,_that.promptsDirectory,_that.marketsDirectory,_that.sessionStore);case _:
+return $default(_that.port,_that.logFormat,_that.publicUrl,_that.projectId,_that.turnModels,_that.thinkingLevel,_that.headersDeadline,_that.firstStepDeadline,_that.modelCooldown,_that.maxCorrections,_that.maxFinishingRounds,_that.maxOverloadRetries,_that.overloadWait,_that.allowedOrigins,_that.appCheckEnforced,_that.promptsDirectory,_that.marketsDirectory,_that.sessionStore);case _:
   return orElse();
 
 }
@@ -192,10 +194,10 @@ return $default(_that.port,_that.logFormat,_that.publicUrl,_that.projectId,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int port,  LogFormat logFormat,  Uri publicUrl,  String? projectId,  List<String> turnModels,  String thinkingLevel,  Duration headersDeadline,  Duration firstStepDeadline,  Duration modelCooldown,  int maxCorrections,  int maxFinishingRounds,  List<String> allowedOrigins,  bool appCheckEnforced,  String promptsDirectory,  String marketsDirectory,  SessionStore sessionStore)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int port,  LogFormat logFormat,  Uri publicUrl,  String? projectId,  List<String> turnModels,  String thinkingLevel,  Duration headersDeadline,  Duration firstStepDeadline,  Duration modelCooldown,  int maxCorrections,  int maxFinishingRounds,  int maxOverloadRetries,  Duration overloadWait,  List<String> allowedOrigins,  bool appCheckEnforced,  String promptsDirectory,  String marketsDirectory,  SessionStore sessionStore)  $default,) {final _that = this;
 switch (_that) {
 case _ServerConfig():
-return $default(_that.port,_that.logFormat,_that.publicUrl,_that.projectId,_that.turnModels,_that.thinkingLevel,_that.headersDeadline,_that.firstStepDeadline,_that.modelCooldown,_that.maxCorrections,_that.maxFinishingRounds,_that.allowedOrigins,_that.appCheckEnforced,_that.promptsDirectory,_that.marketsDirectory,_that.sessionStore);case _:
+return $default(_that.port,_that.logFormat,_that.publicUrl,_that.projectId,_that.turnModels,_that.thinkingLevel,_that.headersDeadline,_that.firstStepDeadline,_that.modelCooldown,_that.maxCorrections,_that.maxFinishingRounds,_that.maxOverloadRetries,_that.overloadWait,_that.allowedOrigins,_that.appCheckEnforced,_that.promptsDirectory,_that.marketsDirectory,_that.sessionStore);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -212,10 +214,10 @@ return $default(_that.port,_that.logFormat,_that.publicUrl,_that.projectId,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int port,  LogFormat logFormat,  Uri publicUrl,  String? projectId,  List<String> turnModels,  String thinkingLevel,  Duration headersDeadline,  Duration firstStepDeadline,  Duration modelCooldown,  int maxCorrections,  int maxFinishingRounds,  List<String> allowedOrigins,  bool appCheckEnforced,  String promptsDirectory,  String marketsDirectory,  SessionStore sessionStore)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int port,  LogFormat logFormat,  Uri publicUrl,  String? projectId,  List<String> turnModels,  String thinkingLevel,  Duration headersDeadline,  Duration firstStepDeadline,  Duration modelCooldown,  int maxCorrections,  int maxFinishingRounds,  int maxOverloadRetries,  Duration overloadWait,  List<String> allowedOrigins,  bool appCheckEnforced,  String promptsDirectory,  String marketsDirectory,  SessionStore sessionStore)?  $default,) {final _that = this;
 switch (_that) {
 case _ServerConfig() when $default != null:
-return $default(_that.port,_that.logFormat,_that.publicUrl,_that.projectId,_that.turnModels,_that.thinkingLevel,_that.headersDeadline,_that.firstStepDeadline,_that.modelCooldown,_that.maxCorrections,_that.maxFinishingRounds,_that.allowedOrigins,_that.appCheckEnforced,_that.promptsDirectory,_that.marketsDirectory,_that.sessionStore);case _:
+return $default(_that.port,_that.logFormat,_that.publicUrl,_that.projectId,_that.turnModels,_that.thinkingLevel,_that.headersDeadline,_that.firstStepDeadline,_that.modelCooldown,_that.maxCorrections,_that.maxFinishingRounds,_that.maxOverloadRetries,_that.overloadWait,_that.allowedOrigins,_that.appCheckEnforced,_that.promptsDirectory,_that.marketsDirectory,_that.sessionStore);case _:
   return null;
 
 }
@@ -227,7 +229,7 @@ return $default(_that.port,_that.logFormat,_that.publicUrl,_that.projectId,_that
 
 
 class _ServerConfig implements ServerConfig {
-  const _ServerConfig({required this.port, required this.logFormat, required this.publicUrl, this.projectId, required  List<String> turnModels, required this.thinkingLevel, required this.headersDeadline, required this.firstStepDeadline, required this.modelCooldown, required this.maxCorrections, required this.maxFinishingRounds, required  List<String> allowedOrigins, required this.appCheckEnforced, required this.promptsDirectory, required this.marketsDirectory, required this.sessionStore}): _turnModels = turnModels,_allowedOrigins = allowedOrigins;
+  const _ServerConfig({required this.port, required this.logFormat, required this.publicUrl, this.projectId, required  List<String> turnModels, required this.thinkingLevel, required this.headersDeadline, required this.firstStepDeadline, required this.modelCooldown, required this.maxCorrections, required this.maxFinishingRounds, required this.maxOverloadRetries, required this.overloadWait, required  List<String> allowedOrigins, required this.appCheckEnforced, required this.promptsDirectory, required this.marketsDirectory, required this.sessionStore}): _turnModels = turnModels,_allowedOrigins = allowedOrigins;
   
 
 @override final  int port;
@@ -247,6 +249,8 @@ class _ServerConfig implements ServerConfig {
 @override final  Duration modelCooldown;
 @override final  int maxCorrections;
 @override final  int maxFinishingRounds;
+@override final  int maxOverloadRetries;
+@override final  Duration overloadWait;
  final  List<String> _allowedOrigins;
 @override List<String> get allowedOrigins {
   if (_allowedOrigins is EqualUnmodifiableListView) return _allowedOrigins;
@@ -269,18 +273,18 @@ _$ServerConfigCopyWith<_ServerConfig> get copyWith => __$ServerConfigCopyWithImp
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ServerConfig&&(identical(other.port, port) || other.port == port)&&(identical(other.logFormat, logFormat) || other.logFormat == logFormat)&&(identical(other.publicUrl, publicUrl) || other.publicUrl == publicUrl)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&const DeepCollectionEquality().equals(other.turnModels, _turnModels)&&(identical(other.thinkingLevel, thinkingLevel) || other.thinkingLevel == thinkingLevel)&&(identical(other.headersDeadline, headersDeadline) || other.headersDeadline == headersDeadline)&&(identical(other.firstStepDeadline, firstStepDeadline) || other.firstStepDeadline == firstStepDeadline)&&(identical(other.modelCooldown, modelCooldown) || other.modelCooldown == modelCooldown)&&(identical(other.maxCorrections, maxCorrections) || other.maxCorrections == maxCorrections)&&(identical(other.maxFinishingRounds, maxFinishingRounds) || other.maxFinishingRounds == maxFinishingRounds)&&const DeepCollectionEquality().equals(other.allowedOrigins, _allowedOrigins)&&(identical(other.appCheckEnforced, appCheckEnforced) || other.appCheckEnforced == appCheckEnforced)&&(identical(other.promptsDirectory, promptsDirectory) || other.promptsDirectory == promptsDirectory)&&(identical(other.marketsDirectory, marketsDirectory) || other.marketsDirectory == marketsDirectory)&&(identical(other.sessionStore, sessionStore) || other.sessionStore == sessionStore));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ServerConfig&&(identical(other.port, port) || other.port == port)&&(identical(other.logFormat, logFormat) || other.logFormat == logFormat)&&(identical(other.publicUrl, publicUrl) || other.publicUrl == publicUrl)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&const DeepCollectionEquality().equals(other.turnModels, _turnModels)&&(identical(other.thinkingLevel, thinkingLevel) || other.thinkingLevel == thinkingLevel)&&(identical(other.headersDeadline, headersDeadline) || other.headersDeadline == headersDeadline)&&(identical(other.firstStepDeadline, firstStepDeadline) || other.firstStepDeadline == firstStepDeadline)&&(identical(other.modelCooldown, modelCooldown) || other.modelCooldown == modelCooldown)&&(identical(other.maxCorrections, maxCorrections) || other.maxCorrections == maxCorrections)&&(identical(other.maxFinishingRounds, maxFinishingRounds) || other.maxFinishingRounds == maxFinishingRounds)&&(identical(other.maxOverloadRetries, maxOverloadRetries) || other.maxOverloadRetries == maxOverloadRetries)&&(identical(other.overloadWait, overloadWait) || other.overloadWait == overloadWait)&&const DeepCollectionEquality().equals(other.allowedOrigins, _allowedOrigins)&&(identical(other.appCheckEnforced, appCheckEnforced) || other.appCheckEnforced == appCheckEnforced)&&(identical(other.promptsDirectory, promptsDirectory) || other.promptsDirectory == promptsDirectory)&&(identical(other.marketsDirectory, marketsDirectory) || other.marketsDirectory == marketsDirectory)&&(identical(other.sessionStore, sessionStore) || other.sessionStore == sessionStore));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,port,logFormat,publicUrl,projectId,const DeepCollectionEquality().hash(_turnModels),thinkingLevel,headersDeadline,firstStepDeadline,modelCooldown,maxCorrections,maxFinishingRounds,const DeepCollectionEquality().hash(_allowedOrigins),appCheckEnforced,promptsDirectory,marketsDirectory,sessionStore);
+    return Object.hash(runtimeType,port,logFormat,publicUrl,projectId,const DeepCollectionEquality().hash(_turnModels),thinkingLevel,headersDeadline,firstStepDeadline,modelCooldown,maxCorrections,maxFinishingRounds,maxOverloadRetries,overloadWait,const DeepCollectionEquality().hash(_allowedOrigins),appCheckEnforced,promptsDirectory,marketsDirectory,sessionStore);
 }
 
 @override
 String toString() {
-    return 'ServerConfig(port: $port, logFormat: $logFormat, publicUrl: $publicUrl, projectId: $projectId, turnModels: $turnModels, thinkingLevel: $thinkingLevel, headersDeadline: $headersDeadline, firstStepDeadline: $firstStepDeadline, modelCooldown: $modelCooldown, maxCorrections: $maxCorrections, maxFinishingRounds: $maxFinishingRounds, allowedOrigins: $allowedOrigins, appCheckEnforced: $appCheckEnforced, promptsDirectory: $promptsDirectory, marketsDirectory: $marketsDirectory, sessionStore: $sessionStore)';
+    return 'ServerConfig(port: $port, logFormat: $logFormat, publicUrl: $publicUrl, projectId: $projectId, turnModels: $turnModels, thinkingLevel: $thinkingLevel, headersDeadline: $headersDeadline, firstStepDeadline: $firstStepDeadline, modelCooldown: $modelCooldown, maxCorrections: $maxCorrections, maxFinishingRounds: $maxFinishingRounds, maxOverloadRetries: $maxOverloadRetries, overloadWait: $overloadWait, allowedOrigins: $allowedOrigins, appCheckEnforced: $appCheckEnforced, promptsDirectory: $promptsDirectory, marketsDirectory: $marketsDirectory, sessionStore: $sessionStore)';
 }
 
 
@@ -291,7 +295,7 @@ abstract mixin class _$ServerConfigCopyWith<$Res> implements $ServerConfigCopyWi
   factory _$ServerConfigCopyWith(_ServerConfig value, $Res Function(_ServerConfig) _then) = __$ServerConfigCopyWithImpl;
 @override @useResult
 $Res call({
- int port, LogFormat logFormat, Uri publicUrl, String? projectId, List<String> turnModels, String thinkingLevel, Duration headersDeadline, Duration firstStepDeadline, Duration modelCooldown, int maxCorrections, int maxFinishingRounds, List<String> allowedOrigins, bool appCheckEnforced, String promptsDirectory, String marketsDirectory, SessionStore sessionStore
+ int port, LogFormat logFormat, Uri publicUrl, String? projectId, List<String> turnModels, String thinkingLevel, Duration headersDeadline, Duration firstStepDeadline, Duration modelCooldown, int maxCorrections, int maxFinishingRounds, int maxOverloadRetries, Duration overloadWait, List<String> allowedOrigins, bool appCheckEnforced, String promptsDirectory, String marketsDirectory, SessionStore sessionStore
 });
 
 
@@ -308,7 +312,7 @@ class __$ServerConfigCopyWithImpl<$Res>
 
 /// Create a copy of ServerConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? port = null,Object? logFormat = null,Object? publicUrl = null,Object? projectId = freezed,Object? turnModels = null,Object? thinkingLevel = null,Object? headersDeadline = null,Object? firstStepDeadline = null,Object? modelCooldown = null,Object? maxCorrections = null,Object? maxFinishingRounds = null,Object? allowedOrigins = null,Object? appCheckEnforced = null,Object? promptsDirectory = null,Object? marketsDirectory = null,Object? sessionStore = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? port = null,Object? logFormat = null,Object? publicUrl = null,Object? projectId = freezed,Object? turnModels = null,Object? thinkingLevel = null,Object? headersDeadline = null,Object? firstStepDeadline = null,Object? modelCooldown = null,Object? maxCorrections = null,Object? maxFinishingRounds = null,Object? maxOverloadRetries = null,Object? overloadWait = null,Object? allowedOrigins = null,Object? appCheckEnforced = null,Object? promptsDirectory = null,Object? marketsDirectory = null,Object? sessionStore = null,}) {
   return _then(_ServerConfig(
 port: null == port ? _self.port : port // ignore: cast_nullable_to_non_nullable
 as int,logFormat: null == logFormat ? _self.logFormat : logFormat // ignore: cast_nullable_to_non_nullable
@@ -321,7 +325,9 @@ as Duration,firstStepDeadline: null == firstStepDeadline ? _self.firstStepDeadli
 as Duration,modelCooldown: null == modelCooldown ? _self.modelCooldown : modelCooldown // ignore: cast_nullable_to_non_nullable
 as Duration,maxCorrections: null == maxCorrections ? _self.maxCorrections : maxCorrections // ignore: cast_nullable_to_non_nullable
 as int,maxFinishingRounds: null == maxFinishingRounds ? _self.maxFinishingRounds : maxFinishingRounds // ignore: cast_nullable_to_non_nullable
-as int,allowedOrigins: null == allowedOrigins ? _self._allowedOrigins : allowedOrigins // ignore: cast_nullable_to_non_nullable
+as int,maxOverloadRetries: null == maxOverloadRetries ? _self.maxOverloadRetries : maxOverloadRetries // ignore: cast_nullable_to_non_nullable
+as int,overloadWait: null == overloadWait ? _self.overloadWait : overloadWait // ignore: cast_nullable_to_non_nullable
+as Duration,allowedOrigins: null == allowedOrigins ? _self._allowedOrigins : allowedOrigins // ignore: cast_nullable_to_non_nullable
 as List<String>,appCheckEnforced: null == appCheckEnforced ? _self.appCheckEnforced : appCheckEnforced // ignore: cast_nullable_to_non_nullable
 as bool,promptsDirectory: null == promptsDirectory ? _self.promptsDirectory : promptsDirectory // ignore: cast_nullable_to_non_nullable
 as String,marketsDirectory: null == marketsDirectory ? _self.marketsDirectory : marketsDirectory // ignore: cast_nullable_to_non_nullable

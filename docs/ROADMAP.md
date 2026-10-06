@@ -11,13 +11,14 @@
 
 ## Where We Are
 
-As of 2026-10-05, after a review of the whole project, the map chunk, and
-C11, a conversation that leads.
+As of 2026-10-06, after a review of the whole project, the map chunk,
+C11, a conversation that leads, and C12, turns that recover by themselves.
 
-- **Built.** C1 to C11 and C8b: 27 blocks in five families, twelve tools,
+- **Built.** C1 to C12 and C8b: 27 blocks in five families, twelve tools,
   the four journeys rehearsed with the probe, a gallery page per block, the
-  dark theme (D162), the map on open tiles with no key (D163), and a
-  conversation that leads (D164 to D169).
+  dark theme (D162), the map on open tiles with no key (D163), a
+  conversation that leads (D164 to D169), and turns that recover by
+  themselves (D170, D171).
 - **Next.** The working session with Google on 2026-10-06, which reviews
   progress and live demos, and M4, the recording, around Oct 8 to Oct 10.
   No chunk is open before the recording.
@@ -107,6 +108,47 @@ C11, a conversation that leads.
   are Gemini's words and now and then carry a figure the buyer gave, which
   nothing checks. For a demo, a shorter `HOMEWARD_MODEL_COOLDOWN` would bring
   Flash-Lite back sooner after one bad answer.
+- **C12, the morning of 2026-10-06.** The owner's own test in the web app
+  failed on seven of eleven turns, and the owner asked whether another API
+  was needed. The first development key had spent `gemini-3.5-flash-lite`'s
+  500 requests of the day, about 490 of them the day before and 249 of those
+  in the evening's probes for C11, and `gemini-3.5-flash`'s 20;
+  `gemini-3.8-flash` answered "high demand". Each failure reached the buyer
+  as a toast and a Retry button, and the app never tried the second key,
+  which was answering, because the last error read as unavailable and not as
+  a request limit. C12 changed the model order, the fallback, the loop, and
+  the app (D170, D171). Checked between 08:30 and 08:45 CEST:
+  - An outage, simulated with a zero deadline: only the working card for
+    22 s, through two waits on the server, one in the app, and two more on
+    the server, then one quiet line with Try again and no toast.
+  - Both models of the first key at their limits: the turn failed in 0.7 s,
+    the app sent it again on the second key 7 ms later, and the reply was
+    complete 11 s after sending, with nothing else on the screen. The plan,
+    reopened after a reload, showed the message once.
+  - The default order on the first key: `gemini-3.5-flash-lite` refused and
+    `gemini-3.1-flash-lite` answered inside the same turn, in 17 s.
+  - `gemini-3.1-flash-lite` alone, on the "take home 10k" conversation:
+    five turns, 12 requests, no correction; it asked which figure was meant
+    and asked the missing facts together. One replay, not a rehearsal.
+  - A change of key in the middle of a conversation: Gemini answered "not
+    found" for the first key's history, the turn started over in a new
+    conversation on the second key and completed, in 7 requests and 32 s.
+  - At 09:02 CEST, just after the daily limits reset: the first key's
+    `gemini-3.5-flash-lite` answered again, took 21 s over its first round,
+    and then answered "high demand"; `gemini-3.1-flash-lite` carried the
+    turn to its end with one correction and a finishing round, in 49 s.
+    Slow, but no failure reached the client; the probe has no screen.
+  Not settled: a key whose main model is spent carries on with its second,
+  slower model while the next key's main model sits unused; one reply in
+  105 on 2026-10-05 ended with the notice that asks the buyer to send
+  again, and still can; a change of key loses the dialogue so far, since
+  the history lives in the first key's project; and when Gemini is slow
+  rather than refusing, a turn still takes as long as the deadlines allow.
+  Google's refusal named 02:00 CEST as the time to retry, and the limit
+  lifted at 09:00 CEST, midnight Pacific, as its documentation says. The
+  waits and the request-limit signal were checked with throwaway tests,
+  which D137 keeps out of the suite, and with the simulated outage, not
+  against a real one.
 - **Hosted.** Nothing hosted serves: on 2026-10-05 the Cloud Run URL in the
   `Makefile` answered 503 and Firebase Hosting 404. The server image could
   not be built from C5 until that day, when the root `.dockerignore` began to
@@ -273,6 +315,18 @@ four journeys of `docs/PRODUCT.md` (D141).
   broken line of JSON (D168). Leaves out a first look at the money from
   part of the facts, estimating pay before tax from take-home pay, and a
   check on figures other than pay.
+- **C12 Turns that recover by themselves — done.** After the owner's own
+  test on 2026-10-06 failed on seven of eleven turns (Where We Are).
+  `gemini-3.1-flash-lite` joins the model order second, with 500 free
+  requests a day of its own on the same key (D170). A turn waits and asks
+  again when the models it tried are overloaded; a key out of requests is
+  reported as that, so a client moves to its next key; and the app sends a
+  failed turn again by itself, on the next key or after a short wait, before
+  it shows anything. What is left when everything refuses is one quiet line
+  with Try again, and no toast (D171). Leaves out the first-choice model of
+  another key before a lesser model of this one, a server that redoes a
+  reply it could not draw instead of asking the buyer to send again, and
+  Google's own retry time as the reset time.
 
 #### Later
 
@@ -355,9 +409,10 @@ four journeys of `docs/PRODUCT.md` (D141).
 | Free-tier prompts may be used by Google to improve its products and read by human reviewers; the terms ask for no sensitive or personal information | Buyers' financial details lose a privacy promise | Quoted on the key screen with advice to use round figures or a billing-enabled key (D76); no names are ever asked; terms re-read before recording |
 | Public open-data services limit and refuse heavy use: Nominatim one request a second, Overpass and OSRM fair use | Slow or failed screens when many viewers arrive | A user agent naming Homeward, a cache per query, one request at a time per service |
 | Gemini draws weaker screens without the server steering it | A demo that wanders | A small catalog of expressive blocks, a prompt that names the order of work, a plan of steps Gemini keeps on screen, and tools that hand over the block to draw (D164, D167); no server rule that picks the next question (D129) |
-| One "high demand" answer opens Flash-Lite's circuit for five minutes while Flash is out of its 20 requests a day and 3.8 Flash is overloaded, as from 20:10 to 20:15 CEST on 2026-10-05 | Turns fail with `gemini_unavailable`, or run on a degraded answer that describes cards it did not draw | A shorter `HOMEWARD_MODEL_COOLDOWN` for a demo; rehearse in the hour before; the recorded backup |
+| One "high demand" answer opens Flash-Lite's circuit for five minutes while Flash is out of its 20 requests a day and 3.8 Flash is overloaded, as from 20:10 to 20:15 CEST on 2026-10-05 | Turns fail with `gemini_unavailable`, or run on a degraded answer that describes cards it did not draw | A shorter `HOMEWARD_MODEL_COOLDOWN` for a demo; rehearse in the hour before; the recorded backup; since C12 `gemini-3.1-flash-lite` stands between them, and the turn waits and asks again before it fails (D170, D171) |
 | The rebuild is not demoable by the working session | Little to show at the session | The session moved from Sep 28 to 2026-10-06; C1 to C10d were built by 2026-09-27 and the map on 2026-10-05, when a journey ran live through the probe and in the web app (Where We Are) |
 | An unscripted agent wanders on camera | A recording that loses its thread | Rehearsal with test stories kept outside the app, inputs only; a recorded backup; the brief keeps each turn anchored |
+| Probes and rehearsals spend the free requests the owner's own testing and a demo need: about 490 `gemini-3.5-flash-lite` requests on 2026-10-05 left ten for the next morning, the day of the working session | A test or a demo that starts on a spent key | Since C12 the turn carries on with `gemini-3.1-flash-lite` and then the next key by itself (D170, D171); bulk probes run on `gemini-3.1-flash-lite`, each batch sized against the day's 500 first, and none on a demo day without asking |
 | A coding-agent loop spends more free requests per turn | The buyer's daily quota runs out sooner | Lookups that are cheap; research only on request; the tool-round cap stays |
 | OpenStreetMap's tile server is best effort, with no guarantee, and may block heavy use | A map with no tiles when many viewers arrive, or on camera | Its policy followed: attribution on the map, a user agent naming Homeward, tiles fetched only as they are viewed; the recording backed by a screen capture; OpenFreeMap through MapLibre if the public demo draws traffic (D163) |
 | Sample homes read as fake | The needs reading looks staged | Labelled as samples; reading a pasted real listing follows after the recording (D142) |
@@ -492,6 +547,8 @@ superseded stay as history.
 | D167 | Tools hand over the block to draw | Every tool that seeds a slice answers with `draw`: the components for its result, ready to send, such as a `HomeCard` for each of the first three homes; `compute_affordability` also lists the blocks to add when the buyer asks, under `drawWhenAsked`. A block outside the core cost a round to read its docs first, a round Flash-Lite skips: twice in the rehearsals of 2026-10-05 it described a home or a result the plan did not show. `component_docs` stays for a block no tool result has given. Amends D143 | More blocks in the core set, which grows every request; the whole catalog in the prompt, which S16 found fits |
 | D168 | What the loop does around the model | Four things, none of which picks a question or draws a screen. Words written in a round that ends in tool calls are dropped, since they were written before the facts, and kept only when no later words come; the model's own reasoning reached the chat that way on 2026-10-05, a round of 1,800 characters with no thinking tokens. A reply that drew no plan panel yet, no inline ask, or no words is asked once to finish it, `HOMEWARD_MAX_FINISHING_ROUNDS`; on the owner's plan the first two turns had drawn nothing, and two replies the same evening drew everything and said nothing. A line that starts a new message ends the one before even when a quote was left open, so a broken line no longer swallows the card after it; a key missing its closing quote is repaired; and messages joined by commas on one line are split. The correction round's enforced schema leaves out array bounds, which Gemini refused once `Questions` joined the core set. A short checklist, `prompts/reply.md`, follows the turn context, where the model reads last. A reply in words alone used to be a finished turn; it is now asked once for its plan and its ask | Prompt rules alone, which the style prompt already carried; holding text back until a round ends, which stops the reply streaming; failing the turn |
 | D169 | The plan as cards | The app draws each child of the plan's root `Column` as a card of its own, entering as it is added, where the whole plan sat in one card: the overview, what Homeward knows, then what each step produced. A root that is not a `Column` is one card, a `Card` Gemini drew is left as it is, and a `Divider` between cards is dropped | One card around everything, where a new block read as more of the same list; asking Gemini to wrap each block in a `Card`, which it does not do reliably |
+| D170 | A second Flash-Lite in the model order | `gemini-3.1-flash-lite` follows `gemini-3.5-flash-lite`, ahead of the Flash models. Google counts free requests per model, so it adds 500 a day on the same key, where a turn fell from a model with 500 straight to two with 20. On 2026-10-06 it answered on a key whose 3.5 Flash-Lite was at its daily limit: a five-turn replay in 12 requests with no correction, at 14 to 22 s a turn against 10 to 13. Amends D81 | Another API or provider, which S8 and D136 found smaller on a free tier and which needs a second client, a conversation stored on the server, and prompts tuned again, so it stays after the livestream (D80); billing on the developer's key, which is the owner's to turn on and bends the free-tier rule for that key (D163); keys from more accounts |
+| D171 | A turn recovers by itself | The owner asked on 2026-10-06 for a conversation with no manual switching and no retries, after seven of eleven turns ended in a toast and a Retry button. Three things, none of which decides what Gemini says or asks. The server waits and asks again, twice by default, when the models a round tried are overloaded, while less than 30 s have passed since the first overloaded round began, so quick refusals are waited out and hung requests are not. An overload met while a model is at its request limit for the key is reported as the request limit, so a client with another key moves to it instead of waiting. The app sends a failed turn again by itself, at once on its next key or once after 4 s when Gemini was unavailable and the attempt failed within 30 s, with the working card kept up; only then does it show a failure, as one quiet line with Try again and no toast, and a reopened plan leaves out a failed turn that was asked again | A toast and Retry on every failure; every key sent to the server so that it picks model and key together, which needs the key that holds the conversation remembered and a wider change to the protocol; retrying without end, which hides a real outage |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

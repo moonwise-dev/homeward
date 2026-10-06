@@ -78,11 +78,6 @@ class JourneyViewModel extends _$JourneyViewModel
       case ServerAppError(code: HomewardErrorCode.geminiKeyInvalid):
         showErrorMessage(error: failure.error);
         ref.read(geminiKeyProvider.notifier).remove();
-      case ServerAppError(
-        code: HomewardErrorCode.geminiQuotaExhausted,
-        :final retryAfter,
-      ):
-        unawaited(_onQuotaExhausted(failure.entryId, retryAfter));
       case ServerAppError(code: HomewardErrorCode.geminiCreditsDepleted):
         showErrorMessage(
           error: failure.error,
@@ -92,29 +87,21 @@ class JourneyViewModel extends _$JourneyViewModel
                 ref.read(appRouterProvider).push(AppRoutes.geminiKey),
           ),
         );
-      case final error:
-        showErrorMessage(
-          error: error,
-          action: AppMessageAction(
-            label: 'Retry',
-            onPressed: () => retry(failure.entryId),
-          ),
-        );
+      case _:
+        break;
     }
-  }
-
-  Future<void> _onQuotaExhausted(String entryId, Duration? retryAfter) async {
-    final agent = ref.read(agentRepositoryProvider);
-    if (await ref.read(geminiKeyRepositoryProvider).useNextKey()) {
-      showInfoMessage(
-        message: 'That Gemini key hit its limit; trying your next key.',
-      );
-      await agent.retry(sessionId, entryId);
-      return;
-    }
-    showInfoMessage(message: _quotaResetMessage(retryAfter, DateTime.now()));
   }
 }
+
+String failureText(AppError? error, DateTime now) => switch (error) {
+  ServerAppError(
+    code: HomewardErrorCode.geminiQuotaExhausted,
+    :final retryAfter,
+  ) =>
+    _quotaResetMessage(retryAfter, now),
+  final error? => error.humanMessage,
+  null => 'This step did not finish.',
+};
 
 @freezed
 abstract class JourneyState with _$JourneyState {

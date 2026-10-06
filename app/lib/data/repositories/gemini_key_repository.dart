@@ -86,8 +86,11 @@ class DevelopmentGeminiKeyRepository implements GeminiKeyRepository {
 
   @override
   Future<bool> useNextKey() async {
-    if (await _saved.read() != null ||
-        _current >= (await _developmentKeys()).length - 1) {
+    if (await _saved.read() != null) {
+      return false;
+    }
+    if (_current >= (await _developmentKeys()).length - 1) {
+      _current = 0;
       return false;
     }
     _current++;

@@ -17,11 +17,14 @@ keeps a plan of steps the buyer can see, and ends every reply with one ask
 
 | Setting | Default | Config key |
 | --- | --- | --- |
-| Turn models, in preference order | `gemini-3.5-flash-lite,gemini-3.5-flash,gemini-3.8-flash` | `HOMEWARD_TURN_MODELS` |
+| Turn models, in preference order | `gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-3.5-flash,gemini-3.8-flash` (D170) | `HOMEWARD_TURN_MODELS` |
 | Thinking level | `low` | `HOMEWARD_THINKING_LEVEL` |
 | Deadline to response headers | 10 s | `HOMEWARD_HEADERS_DEADLINE` |
 | Deadline to first step | 20 s | `HOMEWARD_FIRST_STEP_DEADLINE` |
 | Unhealthy model cool-down | 5 min | `HOMEWARD_MODEL_COOLDOWN` |
+| Times a turn waits and asks again when every model it tried is overloaded | 2 | `HOMEWARD_MAX_OVERLOAD_RETRIES` (D171) |
+| The wait before asking again, multiplied by the attempt | 3 s | `HOMEWARD_OVERLOAD_WAIT` (D171) |
+| How long a turn keeps asking again, from the start of its first overloaded round | 30 s | `TurnSettings.overloadPatience` (D171) |
 | Store interactions | `true` | fixed |
 | Validation correction rounds | 2 | `HOMEWARD_MAX_CORRECTIONS` |
 | Finishing rounds, for a reply that drew no plan or no ask | 1 | `HOMEWARD_MAX_FINISHING_ROUNDS` (D168) |
@@ -50,6 +53,16 @@ profile form with its first text after about 5 s in ten further first
 messages. The Flash models follow it, and the order is compared again for
 quality in the M2 rehearsals.
 
+`gemini-3.1-flash-lite` has gone second since D170. Google counts the free
+requests per model, so it brings 500 a day of its own on the same key, where
+the turn used to fall straight to the Flash models and their 20. On
+2026-10-06, with the first key's `gemini-3.5-flash-lite` at its daily limit,
+`gemini-3.1-flash-lite` answered on that key: a five-turn replay of the
+"take home 10k" conversation took 12 requests and no correction, asked which
+figure was meant, asked the missing facts together, and reached what the
+family can borrow and two homes. Its rounds took 6 to 9 s against about 5, so
+a turn took 14 to 22 s against 10 to 13. One replay, not a rehearsal.
+
 Free-tier limits, read in AI Studio for the Homeward project on 2026-09-17.
 They apply per Google Cloud project, so every key in the project and AI Studio
 share them, and daily limits reset at midnight Pacific:
@@ -66,8 +79,9 @@ more when `read_listings` reads. The ten turns rehearsed on 2026-09-28 took 24
 (`docs/SPIKES.md`, S17), about two and a half each, and the 53 of the second
 rehearsal on 2026-10-05 took 2.75 on average, 7 of them with a correction. A
 model at a limit hands the turn to the next (D79), so a buyer's free key
-covers roughly 180 turns a day on `gemini-3.5-flash-lite` and about fifteen
-more on the two Flash models. The key screen's "about 250" dates from two
+covers roughly 180 turns a day on `gemini-3.5-flash-lite`, as many again on
+`gemini-3.1-flash-lite` (D170), and about fifteen more on the two Flash
+models. The key screen's "about 250" dates from two
 requests a turn (D78). Two or three quick turns in a minute can reach a Flash
 model's per-minute limit. AI Studio counts refused requests too: it showed 7
 of 5 a minute and 24 of 20 a day.
@@ -96,6 +110,24 @@ of 5 a minute and 24 of 20 a day.
 - An overloaded round is retried on one more model only. A request limit
   refusal arrives within a second, so it moves on through every remaining
   model.
+- When the models a round tried are overloaded, the turn waits and asks
+  again instead of failing (D171): `HOMEWARD_MAX_OVERLOAD_RETRIES` times a
+  turn, 2 by default, after `HOMEWARD_OVERLOAD_WAIT`, 3 s, then twice that.
+  The round is taken back first, as on a fallback, a correction round stays
+  a correction round, and a stop from the buyer ends the wait at once. Only
+  a round with no accepted message is asked again, and only while less than
+  30 s have passed since the turn's first overloaded round began: refusals
+  that come within a second are waited out, and requests that hang until a
+  deadline are not asked again and again. Each new attempt starts from the
+  models whose circuits are still closed, so two waits walk the whole list.
+- An overload that ends a round while a model is skipped for the key at its
+  request limit is reported as that refusal, `gemini_quota_exhausted`, not
+  as `gemini_unavailable` (D171): the key is out of requests on the models
+  that would have answered, and a client with another key should move to it
+  rather than wait. On 2026-10-06 the first development key had both its
+  cheap models at their daily limits and `gemini-3.8-flash` answered "high
+  demand"; seven of eleven turns failed as unavailable, and neither the app
+  nor the probe ever tried the second key, which was answering.
 - Circuits live in memory per instance; a cold instance relearns within one
   request.
 - A key error, a quota that is not per model, and depleted prepaid credits
@@ -755,9 +787,10 @@ nothing.
 | --- | --- |
 | Invalid Gemini key (HTTP 401 or 403, or 400 with `API_KEY_INVALID`) | Turn fails with `gemini_key_invalid`; app routes to the key screen |
 | A model's free request limit reached | The round moves to the next model; the refused model is asked again after a minute |
-| Key quota exhausted (HTTP 429) | Turn fails with `gemini_quota_exhausted` and the next midnight Pacific as reset time; app asks to try again in a minute and names when the daily limit resets |
+| Key quota exhausted (HTTP 429) | Turn fails with `gemini_quota_exhausted` and the next midnight Pacific as reset time; an app with another key sends the turn again on it without a word (D171); with none left it asks to try again in a minute and names when the daily limit resets |
 | Prepaid credits depleted | Turn fails with `gemini_credits_depleted`; app offers to change the key |
-| Model overloaded or stalled | Model selection falls back once; if every model is unhealthy, the turn fails with `gemini_unavailable` |
+| Model overloaded or stalled | Model selection falls back once; when that fails too, the turn waits and asks again, twice by default (D171); then it fails with `gemini_unavailable`, and the app waits once more and sends the turn again before it shows anything |
+| Overloaded while a model is at its request limit for the key | Turn fails with `gemini_quota_exhausted`, so a client with another key moves to it (D171) |
 | Unknown or expired previous interaction | Retry once on a fresh interaction |
 | Stored chain refused with `invalid_request` before anything is drawn | The turn starts over once on a new conversation |
 | Model output invalid after corrections | Model text plus the retry notice |

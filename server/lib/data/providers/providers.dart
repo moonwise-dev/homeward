@@ -75,6 +75,8 @@ final class Providers {
         settings: TurnSettings(
           maxCorrections: config.maxCorrections,
           maxFinishingRounds: config.maxFinishingRounds,
+          maxOverloadRetries: config.maxOverloadRetries,
+          overloadWait: config.overloadWait,
           thinkingLevel: config.thinkingLevel,
         ),
         now: now,
