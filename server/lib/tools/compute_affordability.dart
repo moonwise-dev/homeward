@@ -4,6 +4,8 @@ import 'package:common/common.dart';
 
 import '../markets/market_directory.dart';
 import 'agent_tool.dart';
+import 'draw.dart';
+import 'household_in.dart';
 import 'amount_arguments.dart';
 import 'kept_homes.dart';
 import 'numbers_in.dart';
@@ -37,9 +39,18 @@ final class ComputeAffordability extends AgentTool {
       'Works out what this household can borrow and the highest price its '
       'savings and the lending rules allow, from sample rules for a covered '
       'market: ${[for (final MapEntry(:key, :value) in markets.covered.entries) '$value ($key)'].join(', ')}. '
-      'Pass only figures the buyer stated, as they stated them; a figure not '
-      'in their words is refused. It answers with the facts it still needs '
-      'and why, or seeds /affordability for AffordabilitySummary, RuleNote, '
+      'Until it has answered, pass everything the buyer has told you each '
+      'time; once it has answered, it keeps that household and its '
+      'figures, so pass again only what is new or changed, such as home. '
+      'Call it as soon as the buyer gives any money figure, and before you '
+      'ask for money facts, with what you have, even the market alone: its '
+      'needs are what one Questions card should ask. Pass only figures the '
+      'buyer stated, as they '
+      'stated them; a figure not in their words is refused. It answers with '
+      'doubts, figures that do not make sense and must be checked with the '
+      'buyer before they are used; or with needs, every fact still missing '
+      'and why, to ask for together; or it seeds /affordability for '
+      'AffordabilitySummary, RuleNote, '
       'MonthlyCostBreakdown, StressTestChart, PurchaseCostsTable, '
       'DownPaymentSlider, MortgageOptions, and LoanBalanceChart, and lists '
       "what it assumed that is the buyer's to decide. For a home anywhere "
@@ -52,6 +63,9 @@ final class ComputeAffordability extends AgentTool {
       'market': {
         'type': 'string',
         'enum': [...markets.covered.keys],
+        'description':
+            'The country code of the market the home is in: '
+            '${[for (final city in markets.cities.values) '${city.marketId} for ${city.name}'].join(', ')}.',
       },
       for (final name in _lists)
         name: {
@@ -141,8 +155,17 @@ final class ComputeAffordability extends AgentTool {
             'Optional. The term the buyer chose; without it the longest the '
             'rules allow is assumed.',
       },
+      'confirmed': {
+        'type': 'array',
+        'items': {
+          'type': 'string',
+          'enum': ['grossIncomes', 'netIncomes'],
+        },
+        'description':
+            'Optional. Arguments this tool doubted that the buyer has since '
+            'told you are right as they stand.',
+      },
     },
-    'required': ['market'],
   };
 
   Map<String, List<String>> get _ratesByMarket => {
@@ -160,14 +183,19 @@ final class ComputeAffordability extends AgentTool {
 
   @override
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {
-    final code = '${arguments['market']}';
-    final id = markets.covered.containsKey(code) ? MarketId.parse(code) : null;
+    final code = switch (arguments['market']) {
+      final String named => markets.coveredCode(named),
+      _ => _marketInUse(context.slices),
+    };
+    final id = code == null ? null : MarketId.parse(code);
     final currency = id == null ? null : markets.packFor(id)?.currency;
     if (id == null || currency == null) {
       return ToolResult(
+        logFields: {'market': '${arguments['market']}'},
         modelResult: {
           'error':
-              'Not a covered market; covered: ${markets.covered.keys.join(', ')}',
+              'Not a covered market; pass market as one of '
+              '${markets.covered.keys.join(', ')}',
         },
       );
     }
@@ -239,28 +267,39 @@ final class ComputeAffordability extends AgentTool {
         'homeFee': ?listing.monthlyFee,
       },
     };
+    final earlier = switch (householdIn(context.slices)) {
+      final earlier? when earlier.marketId == id.code => earlier,
+      _ => null,
+    };
+    final kept = earlier?.profile;
     final base = BuyerProfile(
-      age: arguments['age'] as int?,
-      adults: arguments['adults'] as int?,
+      age:
+          arguments['age'] as int? ??
+          (earlier?.ageAssumed ?? false ? null : kept?.age),
+      adults: arguments['adults'] as int? ?? kept?.adults,
       childAges: switch (arguments['childAges']) {
         final List<Object?> ages => [
           for (final age in ages)
             if (age is int) age,
         ],
-        _ => null,
+        _ => kept?.childAges,
       },
-      borrowers: arguments['borrowers'] as int?,
+      borrowers:
+          arguments['borrowers'] as int? ??
+          arguments['adults'] as int? ??
+          kept?.borrowers,
       taxResidence: switch (arguments['taxResidence']) {
         final String code => CountryCode.parse(code.toUpperCase()),
-        _ => null,
+        _ => kept?.taxResidence,
       },
-      use: _enum(PropertyUse.values, arguments['use']),
-      employment: _enum(Employment.values, arguments['employment']),
-      residencyIntent: _enum(
-        ResidencyIntent.values,
-        arguments['residencyIntent'],
-      ),
-      formerResident: arguments['formerResident'] as bool?,
+      use: _enum(PropertyUse.values, arguments['use']) ?? kept?.use,
+      employment:
+          _enum(Employment.values, arguments['employment']) ?? kept?.employment,
+      residencyIntent:
+          _enum(ResidencyIntent.values, arguments['residencyIntent']) ??
+          kept?.residencyIntent,
+      formerResident:
+          arguments['formerResident'] as bool? ?? kept?.formerResident,
     );
     final currencies = {
       for (final list in amounts.values)
@@ -268,6 +307,11 @@ final class ComputeAffordability extends AgentTool {
       for (final money in home.values) money.currency,
     };
     final rates = markets.resolveFor(id, base, currencies: currencies)!;
+    final ageAssumed =
+        base.age == null &&
+        !rates.missingFor(RuleSection.lending).contains(ProfileField.age) &&
+        rates.lending.incomeAdjustments.isEmpty &&
+        rates.lending.maxAgeAtMaturity.isEmpty;
     final totals = {
       for (final MapEntry(key: name, value: list) in amounts.entries)
         name: totalInMarket(rates, list),
@@ -295,12 +339,44 @@ final class ComputeAffordability extends AgentTool {
       );
     }
     final profile = base.copyWith(
-      grossMonthlyIncome: totals['grossIncomes'],
-      netMonthlyIncome: totals['netIncomes'],
-      monthlyDebtPayments: totals['debtPayments'],
-      savings: totals['savings'],
+      age: ageAssumed ? assumedAdultAge : base.age,
+      grossMonthlyIncome: totals['grossIncomes'] ?? kept?.grossMonthlyIncome,
+      netMonthlyIncome: totals['netIncomes'] ?? kept?.netMonthlyIncome,
+      monthlyDebtPayments: totals['debtPayments'] ?? kept?.monthlyDebtPayments,
+      savings: totals['savings'] ?? kept?.savings,
     );
     final market = markets.resolveFor(id, profile, currencies: currencies)!;
+    final confirmed = {...?arguments['confirmed'] as List<Object?>?};
+    final doubts = [
+      for (final doubted in figureDoubts(market: market, profile: profile))
+        if (arguments[_doubted(doubted.doubt)] != null &&
+            !confirmed.contains(_doubted(doubted.doubt)))
+          doubted,
+    ];
+    if (doubts.isNotEmpty) {
+      return ToolResult(
+        logFields: {
+          'doubts': [for (final doubted in doubts) doubted.doubt.name],
+        },
+        modelResult: {
+          'doubts': [
+            for (final doubted in doubts)
+              {
+                'argument': _doubted(doubted.doubt),
+                'why': _why(doubted, profile),
+              },
+          ],
+          'note':
+              'Nothing was worked out. A doubted figure is not used until '
+              'the buyer has checked it. In this reply say in plain words '
+              'what looks off, and ask with a Choice, with no recommended '
+              'option, whose options are the figure they gave, as right, '
+              'and the figure you think they meant. Ask nothing else this '
+              'turn. When they stand by the figure, call again with '
+              'confirmed naming the argument.',
+        },
+      );
+    }
     return switch (answerAffordability(
       market: market,
       profile: profile,
@@ -317,24 +393,40 @@ final class ComputeAffordability extends AgentTool {
         modelResult: {
           'needs': [
             for (final field in missing)
-              {
-                'arguments': {
-                  for (final key in field.profileKeys) _argumentFor[key] ?? key,
-                }.toList(),
-                'why': ?market.profileFields
-                    .where((requirement) => requirement.field == field)
-                    .firstOrNull
-                    ?.reason,
-              },
+              if (field != ProfileField.borrowers ||
+                  !missing.contains(ProfileField.household))
+                {
+                  'arguments': {
+                    for (final key in field.profileKeys)
+                      _argumentFor[key] ?? key,
+                  }.toList(),
+                  'why': ?market.profileFields
+                      .where((requirement) => requirement.field == field)
+                      .firstOrNull
+                      ?.reason,
+                  'ask': _ask(field, market),
+                },
           ],
           if (unconverted.isNotEmpty)
             'noExchangeRateFor': [for (final c in unconverted) c.code],
+          'note':
+              'Nothing was worked out yet. Pass what the buyer said or '
+              'the brief holds, and call again in this turn; never guess '
+              'that there are no children or no loans. Ask for everything '
+              'still missing together, in one Questions card in this '
+              'reply: ask holds the fields for each fact, to use as they '
+              'are with an id of your own. A card holds six fields at '
+              'most; ask what is left over in the next turn. Never ask for '
+              'one fact a turn.',
         },
       ),
       AffordabilityAnswered(:final assessed, slice: final answered) =>
         _answered(
           assessed,
-          _withHome(answered, sample?.listing),
+          _withHome(
+            answered.copyWith(ageAssumed: ageAssumed),
+            sample?.listing,
+          ),
           arguments,
           inMarket,
           market,
@@ -382,19 +474,46 @@ final class ComputeAffordability extends AgentTool {
           'termYears': slice.termYears,
         if (inMarket['homeFee'] == null) 'homeFee': 'none',
         if (arguments['loanType'] == null) 'loanType': slice.loanTypeId,
+        if (arguments['borrowers'] == null) 'borrowers': 'every adult',
+        if (slice.ageAssumed)
+          'age':
+              'adults of $assumedAdultAge, which only moves the sample '
+              'everyday costs a little',
       },
+      'limit': _limit(assessed.binding?.kind),
+      'draw': [
+        block('summary', 'AffordabilitySummary', _affordability),
+        if (slice.binding != null)
+          block('limit', 'RuleNote', {
+            'rule': boundTo('/affordability/binding'),
+          }),
+        block('monthly', 'MonthlyCostBreakdown', _affordability),
+      ],
+      'drawWhenAsked': [
+        block('stress', 'StressTestChart', _affordability),
+        block('costs', 'PurchaseCostsTable', _affordability),
+        block('down-payment', 'DownPaymentSlider', {
+          ..._affordability,
+          'apply': sends('use_down_payment'),
+        }),
+        block('rates', 'MortgageOptions', {
+          ..._affordability,
+          'choose': sends('take_rate'),
+        }),
+        block('loan', 'LoanBalanceChart', _affordability),
+        block('household', 'HouseholdSummary', _affordability),
+      ],
       'note':
-          'The figures are in /affordability. Show them with '
-          'AffordabilitySummary, the limiting rule with RuleNote, what a '
-          'month costs with MonthlyCostBreakdown, rising rates with '
-          'StressTestChart, the costs on the day with '
-          'PurchaseCostsTable, and the loan paid down year by year with '
-          'LoanBalanceChart; never write them in your text. What was '
-          "assumed is the buyer's to decide; nothing else can be "
-          'computed yet, so offer no other choice. DownPaymentSlider lets '
-          'them try down payments, and MortgageOptions compares the '
-          'rates; when they apply one, call this tool again with it as '
-          'downPayment or loanType.',
+          'The figures are in /affordability; never write them in your '
+          'text. $drawNote Add one from drawWhenAsked when the buyer asks '
+          'for it or picks it as the next thing to look at: rising rates, '
+          'the costs on the day, other down payments, the rates side by '
+          'side, the loan year by year, or who the household is. In your '
+          'reply say in your own plain words what limit says, and what it '
+          'means for the home they can look at. What was assumed is the '
+          "buyer's to decide; nothing else can be computed yet, so offer "
+          'no other choice. When they apply a down payment or take a '
+          'rate, call this tool again with it as downPayment or loanType.',
     },
     seeds: {
       'affordability': jsonDecode(jsonEncode(slice.toJson())),
@@ -408,6 +527,153 @@ final class ComputeAffordability extends AgentTool {
         },
     },
   );
+
+  String? _marketInUse(Map<String, Object?> slices) {
+    if (slices[affordabilityDataSlice.name] case {
+      'marketId': final String code,
+    }) {
+      return markets.coveredCode(code);
+    }
+    final lookedUp = switch (slices[marketsSlice.name]) {
+      final Map<String, Object?> cities => {
+        for (final cityId in cities.keys) ?markets.coveredCode(cityId),
+      },
+      _ => const <String>{},
+    };
+    return lookedUp.length == 1 ? lookedUp.single : null;
+  }
+
+  static List<Map<String, Object?>> _ask(
+    ProfileField field,
+    ResolvedMarket market,
+  ) {
+    final currency = market.currency.code;
+    Map<String, Object?> money(String label, String period, [String? hint]) => {
+      'label': label,
+      'kind': 'money',
+      'currency': currency,
+      'period': period,
+      'hint': ?hint,
+    };
+    Map<String, Object?> pick(String label, List<String> options) => {
+      'label': label,
+      'kind': 'pick',
+      'options': options,
+    };
+    return switch (field) {
+      ProfileField.grossMonthlyIncome => [
+        money('What you earn together before tax', 'month'),
+      ],
+      ProfileField.netMonthlyIncome || ProfileField.incomeCurrency => [
+        money('What you take home together', 'month'),
+      ],
+      ProfileField.monthlyDebtPayments => [
+        money('What you pay on other loans', 'month', '0 if none'),
+      ],
+      ProfileField.savings => [money('What you have saved', 'once')],
+      ProfileField.age => [
+        {'label': 'Age of the oldest borrower', 'kind': 'number'},
+      ],
+      ProfileField.household => [
+        pick('Adults who will live in the home', const [
+          'One',
+          'Two',
+          'Three or more',
+        ]),
+        {
+          'label': "Children's ages",
+          'kind': 'text',
+          'hint': 'Such as 6 and 9, or none',
+        },
+      ],
+      ProfileField.borrowers => [
+        {'label': 'How many of you take the loan', 'kind': 'number'},
+      ],
+      ProfileField.residency => [
+        pick('Where you pay tax', [market.name, 'Another country']),
+      ],
+      ProfileField.formerResident => [
+        pick('Have you paid tax in ${market.name} before', const ['Yes', 'No']),
+      ],
+      ProfileField.residencyIntent => [
+        pick('Will you start paying tax in ${market.name}', const [
+          'Yes, within two years',
+          'No',
+        ]),
+      ],
+      ProfileField.use => [
+        pick('What the home is for', const [
+          'To live in',
+          'A second home',
+          'To rent out',
+        ]),
+      ],
+      ProfileField.employment => [
+        pick('Your work', const ['Employed', 'Self-employed', 'Retired']),
+      ],
+      ProfileField.firstTime => [
+        pick('Is this your first home', const ['Yes', 'No']),
+      ],
+      ProfileField.citizenship => [
+        {'label': 'Your citizenship', 'kind': 'text'},
+      ],
+    };
+  }
+
+  static final _affordability = {'affordability': boundTo('/affordability')};
+
+  static String? _limit(ConstraintKind? kind) => switch (kind) {
+    null => null,
+    ConstraintKind.loanToValue =>
+      'Their savings set the limit, not their income: a loan may cover '
+          'only a share of the price, so the down payment they can make '
+          'decides the highest price.',
+    ConstraintKind.loanToIncome =>
+      'Their income sets the limit: lenders cap all loans at a multiple '
+          'of yearly pay before tax, so more savings would not raise the '
+          'loan.',
+    ConstraintKind.debtServiceToIncome =>
+      'Their income sets the limit: the monthly payment may take only a '
+          'share of it.',
+    ConstraintKind.leftToLiveOn =>
+      'What is left to live on sets the limit: after everyday costs and '
+          'the payment at the rate lenders test, enough must be left each '
+          'month.',
+  };
+
+  static String _doubted(FigureDoubt doubt) => switch (doubt) {
+    FigureDoubt.takeHomeBelowEverydayCosts ||
+    FigureDoubt.takeHomeAbovePay => 'netIncomes',
+    FigureDoubt.payBelowEverydayCosts => 'grossIncomes',
+  };
+
+  static String _why(DoubtedFigure doubted, BuyerProfile profile) {
+    final household = [
+      switch (profile.adults) {
+        null || 1 => 'one adult',
+        final adults => '$adults adults',
+      },
+      switch (profile.childAges?.length) {
+        null || 0 => null,
+        1 => 'one child',
+        final children => '$children children',
+      },
+    ].nonNulls.join(' and ');
+    final slip = doubted.tenfoldWouldPass
+        ? 'It reads like a slip: with one more zero it would cover them.'
+        : 'It may be a figure for another period, or for one person.';
+    return switch (doubted.doubt) {
+      FigureDoubt.takeHomeAbovePay =>
+        'The take-home pay is more than the pay before tax; one of them is '
+            'off, or they are swapped.',
+      FigureDoubt.takeHomeBelowEverydayCosts =>
+        'The take-home pay does not cover the sample everyday costs of '
+            '$household before any housing, so no loan would pass. $slip',
+      FigureDoubt.payBelowEverydayCosts =>
+        'The pay before tax does not cover the sample everyday costs of '
+            '$household before any housing, so no loan would pass. $slip',
+    };
+  }
 
   static AffordabilitySlice _withHome(
     AffordabilitySlice slice,

@@ -96,7 +96,7 @@ Model selection is tested with a fake clock and a fake transport.
 
 - Every catalog example is pumped through the gallery repository and the real
   `Surface` widget at phone width and fails on any exception; the gallery must
-  show every component. All 25 blocks carry examples, the map's with
+  show every component. All 27 blocks carry examples, the map's with
   routes as the routers returned them; the test draws it without its tiles,
   since a test has no network.
 - The `genui_a2a` compatibility test. A turn the server streamed, a short

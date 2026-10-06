@@ -18,7 +18,10 @@ import 'market_snapshot_card/market_snapshot_card_item.dart';
 import 'monthly_cost_breakdown/monthly_cost_breakdown_item.dart';
 import 'money_input/money_input_item.dart';
 import 'mortgage_options/mortgage_options_item.dart';
+import 'plan_sections.dart';
+import 'plan_overview/plan_overview_item.dart';
 import 'purchase_costs_table/purchase_costs_table_item.dart';
+import 'questions/questions_item.dart';
 import 'rent_split/rent_split_item.dart';
 import 'route_summary/route_summary_item.dart';
 import 'rule_note/rule_note_item.dart';
@@ -32,33 +35,38 @@ Catalog homewardGenuiCatalog() {
   final basic = BasicCatalogItems.asNoAssetCatalog();
   return Catalog(
     [
-      for (final item in basic.items)
-        if (agentVisibleBasicComponents.contains(item.name)) item,
-      factItem,
-      briefItem,
-      choiceItem,
-      householdSummaryItem,
-      moneyInputItem,
-      affordabilitySummaryItem,
-      monthlyCostBreakdownItem,
-      stressTestChartItem,
-      purchaseCostsTableItem,
-      downPaymentSliderItem,
-      mortgageOptionsItem,
-      loanBalanceChartItem,
-      savingsPlanItem,
-      marketSnapshotCardItem,
-      rentSplitItem,
-      buyVsRentItem,
-      ruleNoteItem,
-      homeCardItem,
-      shortlistItem,
-      homeComparisonItem,
-      homeSwipeItem,
-      listingQuoteItem,
-      weeklyTravelItem,
-      routeSummaryItem,
-      weekMapItem,
+      for (final item in [
+        for (final item in basic.items)
+          if (agentVisibleBasicComponents.contains(item.name)) item,
+        planOverviewItem,
+        factItem,
+        briefItem,
+        choiceItem,
+        questionsItem,
+        householdSummaryItem,
+        moneyInputItem,
+        affordabilitySummaryItem,
+        monthlyCostBreakdownItem,
+        stressTestChartItem,
+        purchaseCostsTableItem,
+        downPaymentSliderItem,
+        mortgageOptionsItem,
+        loanBalanceChartItem,
+        savingsPlanItem,
+        marketSnapshotCardItem,
+        rentSplitItem,
+        buyVsRentItem,
+        ruleNoteItem,
+        homeCardItem,
+        shortlistItem,
+        homeComparisonItem,
+        homeSwipeItem,
+        listingQuoteItem,
+        weeklyTravelItem,
+        routeSummaryItem,
+        weekMapItem,
+      ])
+        asPlanSections(item),
     ],
     functions: [
       ...basic.functions,

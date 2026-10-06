@@ -1,4 +1,7 @@
-String? describeA2uiMessage(Map<String, Object?> message) => switch (message) {
+String? describeA2uiMessage(
+  Map<String, Object?> message, {
+  bool detail = false,
+}) => switch (message) {
   {'createSurface': {'surfaceId': final String id}} => 'create $id',
   {
     'updateDataModel': {
@@ -6,7 +9,19 @@ String? describeA2uiMessage(Map<String, Object?> message) => switch (message) {
       'path': final String path,
     },
   } =>
-    'seed $id $path',
+    [
+      'seed $id $path',
+      if (detail && path == '/brief')
+        if (message['updateDataModel'] case {
+          'value': final Map<String, Object?> items,
+        })
+          for (final item in items.values)
+            if (item case {
+              'text': final String text,
+              'source': final String source,
+            })
+              '      ($source, ${item['kind']}) $text',
+    ].join('\n'),
   {
     'updateComponents': {
       'surfaceId': final String id,
@@ -17,7 +32,7 @@ String? describeA2uiMessage(Map<String, Object?> message) => switch (message) {
       'components $id:',
       for (final component in components)
         if (component case final Map<String, Object?> json)
-          '  ${_describeComponent(json)}',
+          '  ${_describeComponent(json)}${detail ? _wordsOf(json) : ''}',
     ].join('\n'),
   _ => null,
 };
@@ -59,4 +74,40 @@ String _sentence(List<Object?> segments) => [
           ? '${json['text']}'
           : '[${[type, ?json['kind'], ?json['label']].join(' ')}'
                 '${json['assumed'] == true ? '?' : ''}]',
+].join();
+
+String _wordsOf(Map<String, Object?> component) => [
+  for (final key in const [
+    'text',
+    'question',
+    'label',
+    'title',
+    'story',
+    'send',
+    'recommended',
+    'because',
+    'kinds',
+    'child',
+    'children',
+  ])
+    if (component[key] case final Object value when value is! Map)
+      '\n      $key: $value',
+  if (component['steps'] case final List<Object?> steps)
+    for (final step in steps)
+      if (step case {'title': final String title})
+        '\n      [${step['state']}] $title${switch (step['note']) {
+          final String note => ': $note',
+          _ => '',
+        }}',
+  if (component['fields'] case final List<Object?> fields)
+    for (final field in fields)
+      if (field case {'label': final String label})
+        '\n      ? $label (${[field['kind'], ?field['currency'], ?field['period'], if (field['options'] case final List<Object?> options) options.join(' / '), ?field['hint']].join(', ')})',
+  if (component['options'] case final List<Object?> options)
+    for (final option in options)
+      if (option case {'label': final String label})
+        '\n      - $label${switch (option['detail']) {
+          final String detail => ' ($detail)',
+          _ => '',
+        }}',
 ].join();

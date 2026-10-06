@@ -17,7 +17,9 @@ import 'components/market_snapshot_card.dart';
 import 'components/monthly_cost_breakdown.dart';
 import 'components/money_input.dart';
 import 'components/mortgage_options.dart';
+import 'components/plan_overview.dart';
 import 'components/purchase_costs_table.dart';
+import 'components/questions.dart';
 import 'components/rent_split.dart';
 import 'components/route_summary.dart';
 import 'components/rule_note.dart';
@@ -32,9 +34,11 @@ const homewardCatalogId =
     'https://moonwise.se/homeward/catalogs/v1/catalog.json';
 
 const homewardComponents = <CatalogComponent>[
+  PlanOverview(),
   Fact(),
   Brief(),
   Choice(),
+  Questions(),
   HouseholdSummary(),
   MoneyInput(),
   AffordabilitySummary(),

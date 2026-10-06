@@ -5,6 +5,7 @@ import 'package:common/common.dart';
 import '../markets/market_directory.dart';
 import '../research/listing_reader.dart';
 import 'agent_tool.dart';
+import 'draw.dart';
 import 'tool_context.dart';
 
 final class ReadListings extends AgentTool {
@@ -185,10 +186,17 @@ final class ReadListings extends AgentTool {
               'saysNothing': needsWith(listing.id, ReadVerdict.silent),
             },
         ],
+        'draw': [
+          for (final listing in listings.take(3))
+            block('read-${listing.id}', 'ListingQuote', {
+              'reading': boundTo('/reads/${listing.id}'),
+            }),
+        ],
         'note':
-            'The readings are in /reads/<id>. Show a home with ListingQuote, '
-            '{ "path": "/reads/<id>" }, which highlights the listing\'s own '
-            'words; never quote the listing in your text. A home that rules '
+            'The readings are in /reads/<id>; a ListingQuote highlights '
+            "the listing's own words, so never quote the listing in your "
+            'text. $drawNote Draw the homes worth reading, another the '
+            'same way with its ID. A home that rules '
             'out a need the buyer must have can be left out; says nothing is '
             'for the buyer to ask about or check at a viewing.',
       },

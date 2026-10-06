@@ -24,10 +24,10 @@ String renderCatalogSkill() {
 
 You draw with A2UI v0.9 messages on two kinds of surface:
 
-- `$planSurfaceId`, the plan panel beside the conversation: what you know about this household so far. You create it in your first reply and change it in place in every reply after.
-- One inline ask per turn, named `t<turn>-<slug>` with the turn number from the turn context and a lowercase slug, such as `${InlineSurfaces.id(3, 'budget')}`: the one decision you ask now, shown in the conversation under your text. You create and fill it in the same turn, and it never changes after.
+- `$planSurfaceId`, the plan panel beside the conversation: the household's plan as it stands. Its `root` is a `Column`, and each child of `root` is drawn as a card of its own: a `PlanOverview` first, then what you know, then what each step produced. You create it in your first reply and change it in place in every reply after.
+- One inline ask per turn, named `t<turn>-<slug>` with the turn number from the turn context and a lowercase slug, such as `${InlineSurfaces.id(3, 'budget')}`: the one `Choice` or `Questions` you ask now, shown as a card in the conversation under your text. Its `root` is that `Choice` or `Questions`. You create and fill it in the same turn, and it never changes after.
 
-Put what you know on `$planSurfaceId` and what you ask in the inline ask. A turn may change either, both, or neither.
+Put what you know on `$planSurfaceId` and what you ask in the inline ask. A reply changes `$planSurfaceId` and ends with one inline ask.
 
 ## Writing Messages
 
@@ -62,7 +62,7 @@ Buttons send actions as `{ "event": { "name": …, "context": { … } } }`. Name
 
 ## Components
 
-The catalog schema below holds the full schemas of the components every plan uses: ${codeList(coreComponents)}. Every other component is listed here with what it is for. Before you draw one whose schema you have not read in this plan, call `component_docs` once with it and every other listed component you are about to draw. Its schema and examples stay with you for the rest of the plan.
+The catalog schema below holds the full schemas of the components every plan uses: ${codeList(coreComponents)}. Every other component is listed here with what it is for. The tool that seeds a component's data answers with `draw`, that component ready to send, so draw it from there. Call `component_docs` only for a listed component no tool result has given you, once, with every one you are about to draw; its schema and examples stay with you for the rest of the plan.
 
 ${index.join('\n')}
 

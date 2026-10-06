@@ -726,6 +726,70 @@
       ],
       "unevaluatedProperties": false
     },
+    "PlanOverview": {
+      "type": "object",
+      "description": "The plan at a glance, first on the plan panel: the household's story so far in your words, and the steps you are working through for them, each done with what you found, the one you are on now, or next.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "PlanOverview"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "story": {
+          "type": "string",
+          "description": "Where this household stands, one or two sentences to the buyer: what you understood and what it means for the home and the money, never a list of their answers. No figures."
+        },
+        "steps": {
+          "type": "array",
+          "description": "The work for this household, in the order you will do it, written for their story. Exactly one step is now, and a step the buyer skipped stays next.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "A few words, such as \"What you can spend\"."
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "done",
+                  "now",
+                  "next"
+                ]
+              },
+              "note": {
+                "type": "string",
+                "description": "One short line with no figures. done: what you found. now: what you are working out or what you asked for. next: what it waits on, or leave it out."
+              }
+            },
+            "required": [
+              "title",
+              "state"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 2,
+          "maxItems": 6
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "story",
+        "steps"
+      ],
+      "additionalProperties": false
+    },
     "Fact": {
       "type": "object",
       "description": "One item of the brief, with where it came from; a deduction offers Right and Not quite when it has an answer action.",
@@ -917,6 +981,106 @@
         "component",
         "question",
         "options",
+        "answer"
+      ],
+      "additionalProperties": false
+    },
+    "Questions": {
+      "type": "object",
+      "description": "A few facts only the buyer knows, asked together: each an amount, a number, a short text, or a pick from options, with one button that sends every answer at once.",
+      "properties": {
+        "id": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "Questions"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "title": {
+          "type": "string",
+          "description": "What the facts are about, a few words, such as \"Your money\"."
+        },
+        "fields": {
+          "type": "array",
+          "description": "The facts the step you are on still needs, one field each, never one you already know; five at most when you can.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Lowercase words joined by hyphens, such as take-home-pay; the answer comes back under it."
+              },
+              "label": {
+                "type": "string",
+                "description": "The fact to give, a few words to the buyer, such as \"What you take home together\"."
+              },
+              "kind": {
+                "type": "string",
+                "description": "money: an amount, with currency and period. number: a count or an age. text: a few words. pick: one of options.",
+                "enum": [
+                  "money",
+                  "number",
+                  "text",
+                  "pick"
+                ]
+              },
+              "currency": {
+                "type": "string",
+                "description": "For money. The ISO 4217 code the buyer uses, such as SEK."
+              },
+              "period": {
+                "type": "string",
+                "description": "For money. month for pay, rent, and loan payments; once for savings and prices.",
+                "enum": [
+                  "once",
+                  "month",
+                  "year"
+                ]
+              },
+              "options": {
+                "type": "array",
+                "description": "For pick. What the buyer taps, a few words each.",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 2,
+                "maxItems": 5
+              },
+              "hint": {
+                "type": "string",
+                "description": "Optional. A short example, or what to enter when there is none, such as \"0 if none\"."
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "kind"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 6
+        },
+        "send": {
+          "type": "string",
+          "description": "The button, a few words, such as \"Work it out\"."
+        },
+        "answer": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "fields",
         "answer"
       ],
       "additionalProperties": false
@@ -2475,6 +2639,9 @@
           "$ref": "#/components/DateTimeInput"
         },
         {
+          "$ref": "#/components/PlanOverview"
+        },
+        {
           "$ref": "#/components/Fact"
         },
         {
@@ -2482,6 +2649,9 @@
         },
         {
           "$ref": "#/components/Choice"
+        },
+        {
+          "$ref": "#/components/Questions"
         },
         {
           "$ref": "#/components/HouseholdSummary"

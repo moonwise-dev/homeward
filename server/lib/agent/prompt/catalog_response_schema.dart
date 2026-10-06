@@ -115,6 +115,7 @@ Object? _enforceable(Object? json) => switch (json) {
     for (final MapEntry(:key, :value) in map.entries)
       ...switch ((key, value)) {
         (r'$schema' || r'$id', _) => const <String, Object?>{},
+        ('minItems' || 'maxItems', final int _) => const <String, Object?>{},
         ('additionalProperties', Map()) => const <String, Object?>{},
         ('const', final String value) => {
           'type': 'string',

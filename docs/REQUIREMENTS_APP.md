@@ -109,16 +109,22 @@ declared examples offline.
   inline ask as a card. Only the latest turn's ask takes taps; earlier asks
   stay as the record of what was decided. The newest section scrolls into view.
   A `Choice` sends the option at once when tapped and keeps it marked; its
-  last line points at the text field for any other answer (D145).
+  last line points at the text field for any other answer (D145). A
+  `Questions` card sends every answer with its one button, which then reads
+  Sent, and the buyer's bubble under it lists each answer on a line (D165).
 - **The plan panel** (D131): the plan's living surface, `plan`. Each turn
   changes it in place as the turn streams, so components appear and change
-  without the panel being rebuilt. Before a turn has drawn it, it says the
-  plan appears here as Homeward learns about the move and the money. A fact
-  Homeward deduced offers Right and Not quite; a tap goes to Homeward as the
-  buyer's next message, shown in the conversation as "Right: …" or "Not
-  quite: …" (D144).
-- **While a turn runs**, the plan panel takes no taps while it changes, and a
-  working card at the end of the conversation shows the turn:
+  without the panel being rebuilt. Each child of its root `Column` is drawn
+  as a card of its own, entering as it is added and resizing as its content
+  changes; a root of any other kind is one card (D169). The first card is
+  the plan at a glance, `PlanOverview`: the story so far and the steps.
+  Before a turn has drawn it, it says the plan appears here as Homeward
+  learns about the move and the money. A fact Homeward deduced offers Right
+  and Not quite; a tap goes to Homeward as the buyer's next message, shown
+  in the conversation as "Right: …" or "Not quite: …" (D144).
+- **While a turn runs**, the plan panel takes no taps while it changes, and
+  what the buyer just said or tapped shows at once as their bubble, with a
+  working card under it that shows the turn:
   - While tools run, the card lists the measuring steps from the server's
     progress data part, each running, done, or unavailable (D108).
   - Otherwise it shows a thinking line with the agent's text so far.

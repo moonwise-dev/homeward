@@ -7,6 +7,7 @@ import '../../core/themes/dimens.dart';
 import '../../core/themes/text_styles.dart';
 import '../../wire_inspector/widgets/wire_inspector_pane.dart';
 import '../view_model/journey_view_model.dart';
+import 'action_label.dart';
 import 'conversation_thread.dart';
 import 'plan_panel.dart';
 import 'tell_more_field.dart';
@@ -36,6 +37,7 @@ class JourneyScreen extends HookConsumerWidget {
                   sessionId: sessionId,
                   sections: state.sections,
                   pending: state.pending,
+                  pendingPrompt: promptText(state.pendingPrompt),
                   onRetry: viewModel.retry,
                   onStop: viewModel.stop,
                 ),

@@ -11,11 +11,13 @@
 
 ## Where We Are
 
-As of 2026-10-05, after a review of the whole project and the map chunk.
+As of 2026-10-05, after a review of the whole project, the map chunk, and
+C11, a conversation that leads.
 
-- **Built.** C1 to C10d and C8b: 25 blocks in five families, twelve tools,
+- **Built.** C1 to C11 and C8b: 27 blocks in five families, twelve tools,
   the four journeys rehearsed with the probe, a gallery page per block, the
-  dark theme (D162), and the map on open tiles with no key (D163).
+  dark theme (D162), the map on open tiles with no key (D163), and a
+  conversation that leads (D164 to D169).
 - **Next.** The working session with Google on 2026-10-06, which reviews
   progress and live demos, and M4, the recording, around Oct 8 to Oct 10.
   No chunk is open before the recording.
@@ -60,6 +62,51 @@ As of 2026-10-05, after a review of the whole project and the map chunk.
   label or third-person lead-in such as "To answer the user:", seen once in
   five turns; the down payment slider's two end labels wrap in a narrow pane
   instead of overflowing.
+- **C11, the same evening.** The owner ran a plan in the web app and found a
+  bot filling a form: one fact a turn, a take-home pay of 10,000 kronor for
+  a family taken without a word, a plan that listed answers back (D164).
+  The replay showed why: Sweden's sample rules need seven facts, the prompt
+  had Gemini ask for the one that mattered most, and nothing checked a
+  figure. C11 changed the prompt, two blocks, the money tool, and the loop
+  around the model (D164 to D169). Rehearsed on Flash-Lite, 97 turns through
+  the probe at 2.6 model rounds a turn, 10 of them with a correction, and
+  three conversations in the web app:
+  - The owner's conversation, typo and all, reached what the family can
+    borrow in five turns, the question about the 10,000 kronor included;
+    before, it was still asking for single facts after three. Once the check
+    was wired in, every replay, four through the probe and two in the app,
+    asked whether they meant 10,000 or 100,000, each a tap.
+  - Pay before tax below take-home pay was refused and offered swapped. A
+    savings figure the test automation typed twice over was questioned by
+    Gemini on its own, both times. A late "we have a daughter" and "we would
+    rather rent first" changed the brief and the story in place.
+  - The Mum journey ran from one line to the listing read for step-free
+    access in four turns and the costs on the day in the fifth, a card to
+    tap in each. The front-loaded opening
+    still reached the money on its first turn, then drew the costs on the
+    day and the down payment slider without a round to read their docs.
+  - Two replies had no words and the finishing round got them; one plan
+    line with a broken quote cost a turn its ask before the parser was
+    fixed.
+- **What C11 did not settle.** Gemini's capacity, not the code, decided the
+  worst turns of the evening. Rounds that took 5 s at 19:10 CEST took 10 to
+  25 s at 19:30. From 20:10 to 20:15 Flash-Lite answered "high demand", its
+  circuit opened for five minutes, Flash was out of its 20 requests a day
+  and 3.8 Flash was overloaded: two turns failed with `gemini_unavailable`,
+  one started over in a new conversation and lost its history, and one reply
+  described cards no tool had produced, to which the finishing round got an
+  empty answer. When it passed, journeys 1, 3, and 4 ran again on the final
+  code, in three, three, and two turns. Journey 3 had first shown the cost
+  of a rule written for buyers: told to check any money figure with the
+  loan tool, Homeward asked two friends renting for their savings and tax
+  residence instead of showing flats, and the rule now says buyers. In one
+  session every plan update left its new blocks out of the root's children
+  and cost a correction round each turn. Not looked at: a phone, where the plan is a tab, and a release
+  build; the new blocks and the plan's cards were seen in both themes in
+  Chrome. The step notes and the story
+  are Gemini's words and now and then carry a figure the buyer gave, which
+  nothing checks. For a demo, a shorter `HOMEWARD_MODEL_COOLDOWN` would bring
+  Flash-Lite back sooner after one bad answer.
 - **Hosted.** Nothing hosted serves: on 2026-10-05 the Cloud Run URL in the
   `Makefile` answered 503 and Firebase Hosting 404. The server image could
   not be built from C5 until that day, when the root `.dockerignore` began to
@@ -210,6 +257,22 @@ four journeys of `docs/PRODUCT.md` (D141).
   gallery pages, and what it leaves out, each rehearsed with the probe; the
   catalog by family; and where to start adding a block or a tool (D161).
   Leaves out screenshots, which come at M5 with the map and the dark theme.
+- **C11 A conversation that leads — done.** After the owner's review of a
+  live plan on 2026-10-05, which read as a bot filling a form (D164). The
+  prompt gives Homeward an order of work, the move before the money, and has
+  it say what each answer changes; `PlanOverview` opens the plan with the
+  household's story so far and the steps Gemini set for them, and the app
+  draws each top-level block of the plan as a card of its own (D169);
+  `Questions` asks the facts a step needs together, in one card, where
+  each used to cost a turn (D165); `compute_affordability` refuses a figure
+  that cannot be right and says why, so Gemini asks "did you mean" with both
+  figures to tap, assumes what only nudges the result, and keeps the
+  household between runs (D166); every tool answers with the block to draw
+  (D167); and the loop drops words written before the tools ran, asks once
+  for a reply that drew no plan or no ask to be finished, and survives a
+  broken line of JSON (D168). Leaves out a first look at the money from
+  part of the facts, estimating pay before tax from take-home pay, and a
+  check on figures other than pay.
 
 #### Later
 
@@ -284,14 +347,15 @@ four journeys of `docs/PRODUCT.md` (D141).
 | Gemini latency: 7–18 s per model round on 2026-09-16 on Flash, 3–5 s on Flash-Lite on 2026-09-17 | Slow turns on camera | Flash-Lite first (D81), a small catalog, full text streamed as it grows, latency re-measured before recording |
 | Preferred model overloaded | Hung or failed turns | Deadlines, circuit breaker, fallback to the next model |
 | Gemini is slow on the day, as from 15:03 to 15:07 CEST on 2026-10-05, when a one-word reply took 13.5 s and most turns failed at the 10 s default | A demo that fails on camera | Raise `HOMEWARD_HEADERS_DEADLINE` to 40 and `HOMEWARD_FIRST_STEP_DEADLINE` to 60 for the demo; a screen capture of the whole path recorded the day before |
-| Now and then, once in about twenty-five web app turns on 2026-10-05, the model writes its own reasoning into the chat or a `Choice` offers a figure, in spite of the style prompt; a reply can also describe a block that was rejected | A visible slip in a recording | Rehearsal until a run is clean, then record; text written in a round that ends in tool calls could be left out of the reply, a server rule that D129 asks to try last |
+| Flash-Lite at times writes its reasoning into a reply, leaves out the plan, the ask, or its words, or breaks a line of JSON; a `Choice` or the plan's story can still carry a figure the prompt forbids | A visible slip in a recording | Since C11 the loop drops words written before the tools ran, asks once for what a reply left out, and reads past a broken line (D168); rehearsal until a run is clean, then record |
 | The Interactions API refuses a round's function results as not following a function call, in three of about thirty tool rounds in the C10d rehearsals on 2026-09-27 | The turn starts over in a new conversation, which adds seconds and requests and drops the earlier dialogue from the model's history; first text reached 48 s once | The start-over recovers every time so far; retrying the refused request does not (2026-09-25); spike S17 looks for the cause before the recording |
 | Safari untested with `require-corp`, reCAPTCHA Enterprise, and cross-origin streaming | iPhone viewers cannot sign in or stream | Check macOS and iOS Safari in M1; fall back to single-threaded Wasm without isolation headers for Safari |
 | Scripted abuse of the web app exhausts reCAPTCHA's 10,000 free monthly assessments | $8 for the month, then $1 per 1,000 above 100,000 | One-day App Check tokens, the 25 SEK budget alert, per-UID rate limits |
 | Free-tier limits per model per Google Cloud project: 20 requests a day on Flash, 500 on Flash-Lite | Failed turns in rehearsal or on camera; roughly 200 turns a day per buyer on Flash-Lite, at the two and a half requests a turn the 2026-09-28 rehearsal took | At most three tool rounds, two catalog rounds, and two corrections a turn (D85, D147); the next model takes over at a cap (D79); recording on a key unused that day; the cap explained in the app |
 | Free-tier prompts may be used by Google to improve its products and read by human reviewers; the terms ask for no sensitive or personal information | Buyers' financial details lose a privacy promise | Quoted on the key screen with advice to use round figures or a billing-enabled key (D76); no names are ever asked; terms re-read before recording |
 | Public open-data services limit and refuse heavy use: Nominatim one request a second, Overpass and OSRM fair use | Slow or failed screens when many viewers arrive | A user agent naming Homeward, a cache per query, one request at a time per service |
-| Gemini draws weaker screens without the server steering it | A demo that wanders | A small catalog of expressive blocks, a clear prompt, and evals on validity and facts; no server rule that picks the next question (D129) |
+| Gemini draws weaker screens without the server steering it | A demo that wanders | A small catalog of expressive blocks, a prompt that names the order of work, a plan of steps Gemini keeps on screen, and tools that hand over the block to draw (D164, D167); no server rule that picks the next question (D129) |
+| One "high demand" answer opens Flash-Lite's circuit for five minutes while Flash is out of its 20 requests a day and 3.8 Flash is overloaded, as from 20:10 to 20:15 CEST on 2026-10-05 | Turns fail with `gemini_unavailable`, or run on a degraded answer that describes cards it did not draw | A shorter `HOMEWARD_MODEL_COOLDOWN` for a demo; rehearse in the hour before; the recorded backup |
 | The rebuild is not demoable by the working session | Little to show at the session | The session moved from Sep 28 to 2026-10-06; C1 to C10d were built by 2026-09-27 and the map on 2026-10-05, when a journey ran live through the probe and in the web app (Where We Are) |
 | An unscripted agent wanders on camera | A recording that loses its thread | Rehearsal with test stories kept outside the app, inputs only; a recorded backup; the brief keeps each turn anchored |
 | A coding-agent loop spends more free requests per turn | The buyer's daily quota runs out sooner | Lookups that are cheap; research only on request; the tool-round cap stays |
@@ -422,6 +486,12 @@ superseded stay as history.
 | D161 | The README's journeys | Each journey in the README is an example opening, what Homeward does with it, the tools it calls and the blocks it tends to draw, linked to their gallery pages, and what it leaves out, said plainly to be an example of what Gemini may do, never a flow (D130, D141). Every journey is rehearsed with the probe before it is written down, and the README describes what the rehearsal showed. Screenshots wait for M5, after the map, the dark theme, and the public deployment, so they do not go stale | Capabilities only, without example wording or block names; screenshots now |
 | D162 | The dark theme | The app follows the device's light or dark setting until the buyer picks Light or Dark under Appearance on the plans screen, a choice kept on the device with the same storage as the Gemini key. Dark is a warm charcoal that keeps light's paper feel, every grey held to AA as in light. Colours and text styles become a theme extension read with `AppColors.of(context)` and `AppTextStyles.of(context)`, so the blocks Gemini composes follow the device like every other screen; a chart's painter is handed its colours | Following the device only; a cool slate palette |
 | D163 | The map on open tiles | The map draws on OpenStreetMap's own tiles with `flutter_map` and needs no key, as before the reset (D118). `WeekMap` is Homeward's own block: its `markers` and `routes` take the names of the Maps Agentic UI Toolkit's `GoogleMap` and are bound, to `/places` and to one starting point of `/week`, so Gemini never writes a coordinate; `measure_week` keeps each trip's path, simplified in `common` to at most 100 points and encoded as a polyline, so the route drawn is the route measured. Read on 2026-10-05, the toolkit (`googlemaps/a2ui`, npm `@googlemaps/a2ui` 0.1.8, alpha) is a Lit web client that Android and iOS wrap in a web view, with no Flutter client and two components, `GoogleMap` and `PlaceDetailsCompact`; it loads the Maps JavaScript API's alpha channel with a key that has Geocoding, Places UI Kit, and Routes enabled, and a Google Maps Platform key needs a billing account. A sample anyone clones, and a public deployment, should need no key and no billing. Vishal Motwani offered the toolkit on 2026-09-26 "for easy visual reference" and for examples; what he described, the routine drawn as routes with a weekly time, needs none of it, and he raised no objection when the owner wrote the same day that paid APIs are out of a demo's reach. Decided by the owner on 2026-10-05. Replaces D133 and its Maps keys, closes S11 unrun, and drops S14 and S15 | Google Maps on a billing key (D133): phones free without limit and 10,000 free web loads a month, then $7 per 1,000, safe only while a quota cap is set right, since a budget only warns; a Maps Demo Key, which needs no billing but covers the Maps JavaScript API and not the phone SDKs, pauses at a daily limit Google does not publish, and is for prototyping, not a public deployment; OpenFreeMap's vector tiles through MapLibre, with no key and no limit, a renderer not yet tried in this app, kept for when traffic outgrows OpenStreetMap's best-effort tiles; the block named `GoogleMap` with the toolkit's exact schema, a name for a map that is not Google's |
+| D164 | A conversation that leads | The owner's review of a live plan on 2026-10-05 found it read as a bot filling a form: one fact asked a turn, in no order a buyer could follow; a take-home pay of 10,000 kronor for a family accepted without a word, and pay before tax asked two turns later; a plan that listed the buyer's answers back; and an ask card that held only "reply in chat". The server log showed no turn starting over, so the model had the whole conversation each time and nothing was forgotten: the prompt sent Gemini to the money at once, the money tool reported seven missing facts, and Gemini asked for them one at a time. Homeward now works in an order the prompt names, unless the buyer leads elsewhere: the move, where to, who will live in the home, rent or buy, and when; what the home must do and where the week goes; the money; then homes and the week from each. Every reply says what the buyer's answer changes, changes the plan, and ends with one inline ask, and when nothing is open the ask offers what to look at next. The plan opens with `PlanOverview`: the household's story so far and the steps Gemini wrote for this household, each done, now, or next, sent again with every reply. Gemini writes the steps, so two households get different ones, and nothing in the server reads them. The order is a method, like a coding agent's explore, plan, and build, never a scenario: no story, question, or wording is fixed, and a buyer who opens with a money question gets the money first. Amends D130, which kept every order of work out of the prompt, and D138's "as soon as the buyer has told you enough": every plan still reaches the money | The prompt as it was; stages kept by the server, which D129 removed; a steps tool with a slice the server stores, one more call a turn for the same screen |
+| D165 | Questions | Facts only the buyer knows are asked together. `Questions` holds up to six fields, each an amount with its currency and period, a number, a short text, or a pick from options, and one button that sends every answer as the buyer's own words, so the number check accepts them; a field left empty is not sent. A decision still goes in a `Choice`, alone, with the recommendation. Sweden's sample rules need seven facts before a loan can be worked out, and asked one a turn they were the interrogation the owner saw. `PlanOverview`, `Brief`, and `Questions` join the core components, whose schemas the skill always carries. Amends D145, which asked facts in text, and replaces `MoneyInput` beside a `Button` as the way to ask (D158) | Facts in text, one a turn (D145); a form Gemini composes from `MoneyInput`, `TextField`, and a `Button` with each path bound by hand, which Flash-Lite gets wrong and which reads as a screen of basic components (D138); several `Choice` cards in a turn |
+| D166 | A figure is checked before it is used | `compute_affordability` answers with `doubts`, and works nothing out, when pay cannot be right: take-home pay or pay before tax that does not cover the sample everyday costs of the household as known so far, which no loan would pass, or take-home pay above pay before tax. It says when one more zero would cover them. The check is `figureDoubts` in `common`, on the pack's own living costs and the lenders' running and transport costs, so no threshold is invented. Gemini says what looks off and asks with a `Choice` holding the figure given and the figure it thinks was meant, the one place it may write a figure of its own; `confirmed` lets a buyer stand by theirs. The same tool asks for everything it still needs at once; assumes what only nudges the result and lists it, every adult a borrower, and where age only picks the living-cost bracket, as in Sweden, an adult of 35, flagged in the slice so `HouseholdSummary` does not show it as stated; keeps the household of its last answered run in the market, so picking a home needs only the home; and takes the market from the plan when Gemini leaves it out | Gemini judging figures from its own knowledge, which the prompt forbids and Flash-Lite did not do; thresholds written into the tool; using the figure and showing that nothing can be borrowed; estimating pay before tax from take-home pay, which needs sourced tax tables |
+| D167 | Tools hand over the block to draw | Every tool that seeds a slice answers with `draw`: the components for its result, ready to send, such as a `HomeCard` for each of the first three homes; `compute_affordability` also lists the blocks to add when the buyer asks, under `drawWhenAsked`. A block outside the core cost a round to read its docs first, a round Flash-Lite skips: twice in the rehearsals of 2026-10-05 it described a home or a result the plan did not show. `component_docs` stays for a block no tool result has given. Amends D143 | More blocks in the core set, which grows every request; the whole catalog in the prompt, which S16 found fits |
+| D168 | What the loop does around the model | Four things, none of which picks a question or draws a screen. Words written in a round that ends in tool calls are dropped, since they were written before the facts, and kept only when no later words come; the model's own reasoning reached the chat that way on 2026-10-05, a round of 1,800 characters with no thinking tokens. A reply that drew no plan panel yet, no inline ask, or no words is asked once to finish it, `HOMEWARD_MAX_FINISHING_ROUNDS`; on the owner's plan the first two turns had drawn nothing, and two replies the same evening drew everything and said nothing. A line that starts a new message ends the one before even when a quote was left open, so a broken line no longer swallows the card after it; a key missing its closing quote is repaired; and messages joined by commas on one line are split. The correction round's enforced schema leaves out array bounds, which Gemini refused once `Questions` joined the core set. A short checklist, `prompts/reply.md`, follows the turn context, where the model reads last. A reply in words alone used to be a finished turn; it is now asked once for its plan and its ask | Prompt rules alone, which the style prompt already carried; holding text back until a round ends, which stops the reply streaming; failing the turn |
+| D169 | The plan as cards | The app draws each child of the plan's root `Column` as a card of its own, entering as it is added, where the whole plan sat in one card: the overview, what Homeward knows, then what each step produced. A root that is not a `Column` is one card, a `Card` Gemini drew is left as it is, and a `Divider` between cards is dropped | One card around everything, where a new block read as more of the same list; asking Gemini to wrap each block in a `Card`, which it does not do reliably |
 
 Defaults chosen during planning without a separate question. Challenge any of
 them before M0 ends.

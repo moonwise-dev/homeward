@@ -8,9 +8,11 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 | Component | Family | Agent visible | Required | Bound | Examples |
 | --- | --- | --- | --- | --- | --- |
+| `PlanOverview` | Understanding | yes | `story`, `steps` |  | A family early in the plan, Two friends sharing, further along |
 | `Fact` | Understanding | yes | `fact` | `fact` | What Homeward understood |
 | `Brief` | Understanding | yes | `brief` | `brief` | The household and its needs |
 | `Choice` | Understanding | yes | `question`, `options`, `answer` |  | Rent first or buy |
+| `Questions` | Understanding | yes | `fields`, `answer` |  | The money a loan needs, Who is moving |
 | `HouseholdSummary` | Understanding | yes | `affordability` | `affordability` | A Stockholm couple, A household buying in Funchal |
 | `MoneyInput` | Money | yes | `label`, `value`, `currency` |  | Take-home pay |
 | `AffordabilitySummary` | Money | yes | `affordability` | `affordability` | A Stockholm couple |
@@ -33,6 +35,15 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `WeeklyTravel` | Place and travel | yes | `week` | `week` | A week from a flat in Nacka |
 | `RouteSummary` | Place and travel | yes | `trip` | `trip` | To KTH by public transport |
 | `WeekMap` | Place and travel | yes | `markers` | `markers`, `routes` | A week from a flat in Nacka, The places before a week is measured |
+
+### PlanOverview
+
+The plan at a glance, first on the plan panel: the household's story so far in your words, and the steps you are working through for them, each done with what you found, the one you are on now, or next.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `story` | text | yes |  |  |
+| `steps` | list | yes |  |  |
 
 ### Fact
 
@@ -64,6 +75,17 @@ One decision to ask: its options, the one you recommend first with why, and a ta
 | `options` | list | yes |  |  |
 | `recommended` | text | no |  |  |
 | `because` | text | no |  |  |
+| `answer` | action | yes |  |  |
+
+### Questions
+
+A few facts only the buyer knows, asked together: each an amount, a number, a short text, or a pick from options, with one button that sends every answer at once.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `title` | text | no |  |  |
+| `fields` | list | yes |  |  |
+| `send` | text | no |  |  |
 | `answer` | action | yes |  |  |
 
 ### HouseholdSummary

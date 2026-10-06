@@ -7,6 +7,7 @@ import '../research/open_data/open_data_unavailable.dart';
 import '../research/open_data/travel_route.dart';
 import '../research/research.dart';
 import 'agent_tool.dart';
+import 'draw.dart';
 import 'tool_context.dart';
 
 final class MeasureWeek extends AgentTool {
@@ -161,13 +162,19 @@ final class MeasureWeek extends AgentTool {
             for (final trip in trips)
               if (trip.minutes == null) trip.placeId,
           ],
+        'draw': [
+          block('map', 'WeekMap', {
+            'markers': boundTo('/places'),
+            'routes': boundTo('/week/$fromId'),
+          }),
+          block('week-$fromId', 'WeeklyTravel', {
+            'week': boundTo('/week/$fromId'),
+          }),
+        ],
         'note':
-            'The week is in /week/$fromId. Show it with WeeklyTravel, '
-            '{ "path": "/week/$fromId" }, one trip with RouteSummary, '
-            '{ "path": "/week/$fromId/trips/<n>" }, or on a map with '
-            'WeekMap, "markers": { "path": "/places" } and "routes": '
-            '{ "path": "/week/$fromId" }; never write the minutes in your '
-            'text.',
+            'The week is in /week/$fromId; never write the minutes in '
+            'your text. $drawNote One trip alone is a RouteSummary bound '
+            'to { "path": "/week/$fromId/trips/<n>" }.',
       },
       seeds: {
         weekSlice.name: {

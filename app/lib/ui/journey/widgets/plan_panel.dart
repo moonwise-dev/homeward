@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import '../../../catalog/surface_views.dart';
 import '../../core/themes/dimens.dart';
 import '../../core/themes/text_styles.dart';
-import '../../core/ui/app_card.dart';
-import '../../core/ui/app_surface_entry.dart';
 
 class PlanPanel extends StatelessWidget {
   const PlanPanel({
@@ -35,13 +33,9 @@ class PlanPanel extends StatelessWidget {
                   width: double.infinity,
                   child: IgnorePointer(
                     ignoring: isRunning,
-                    child: AppSurfaceEntry(
-                      child: AppCard(
-                        child: PlanSurfaceView(
-                          sessionId: sessionId,
-                          surfaceId: planSurfaceId,
-                        ),
-                      ),
+                    child: PlanSurfaceView(
+                      sessionId: sessionId,
+                      surfaceId: planSurfaceId,
                     ),
                   ),
                 ),

@@ -90,7 +90,9 @@ slot left unset would render in the platform's own face.
 
 - `AppSpacing`: 4, 8, 12, 16, 24, 32, 48.
 - `AppRadii`: `sm` 8, `md` 12, `lg` 16, `pill` 999.
-- Cards: `surface`, 1 px `border`, radius `md`, no shadow.
+- Cards: `surface`, 1 px `border`, radius `md`, no shadow. The plan panel is
+  a column of them, 16 apart, on the muted fill: one per top-level block of
+  the plan.
 - Sheets: the page background with a drag handle; a pane beside the journey is
   separated by a divider rather than a shadow.
 - Fields: `surface` fill, 1 px `border`, radius `sm`, height 48.
@@ -104,6 +106,9 @@ reduced motion.
 
 - Surfaces fade in and rise 8 dp over 200 ms as they arrive, through
   `AppSurfaceEntry` around each surface in the transcript.
+- On the plan panel each card enters the same way as Gemini adds it, and a
+  card whose content changes resizes over the same 200 ms, so the plan is
+  seen to grow (D169).
 
 ## Charts
 

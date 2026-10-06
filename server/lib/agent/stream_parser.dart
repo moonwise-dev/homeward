@@ -45,8 +45,14 @@ final class StreamParser implements OutputParser {
   void _completeLine(String line, List<ParsedOutput> outputs) {
     final trimmed = line.trim();
     if (_insideBlock) {
-      if (trimmed == _closingFence) {
+      if (trimmed.startsWith(_closingFence)) {
         _endBlock(outputs);
+        final rest = trimmed.substring(_closingFence.length).trim();
+        if (_openingFence.endsWith(rest) && rest.isNotEmpty) {
+          _insideBlock = true;
+        } else if (rest.isNotEmpty) {
+          outputs.add(ParsedOutput.prose('$rest\n'));
+        }
       } else if (trimmed.isNotEmpty) {
         _appendToMessage(trimmed, outputs);
       }
@@ -91,7 +97,7 @@ final class StreamParser implements OutputParser {
   }
 
   void _appendToMessage(String line, List<ParsedOutput> outputs) {
-    if (_message.isNotEmpty && !_insideString && line.startsWith(_newMessage)) {
+    if (_message.isNotEmpty && line.startsWith(_newMessage)) {
       _emitMessage(outputs);
     }
     if (_message.isNotEmpty) {

@@ -44,6 +44,10 @@ Write `server/lib/tools/<tool_name>.dart` as a `final class` extending
 - **Figures come from measurement or `common`.** A place the model names is
   resolved against open data before it is shown (D101). Coordinates, minutes,
   metres, counts, and amounts are never taken from the model's arguments.
+- **Hand over the block.** A tool that seeds a slice answers with `draw`:
+  the components that show its result, built with `block`, `boundTo`, and
+  `sends` from `server/lib/tools/draw.dart`, so Gemini draws them without a
+  round to read their docs (D167). Gemini still decides which to show.
 - **Errors.** A tool that throws answers the model with an error and changes
   nothing. Do not add fallbacks that draw for the model.
 - **Buyer data.** A tool that reads or writes buyer data, such as

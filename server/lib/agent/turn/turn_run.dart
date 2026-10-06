@@ -41,6 +41,7 @@ import 'tools_done_note.dart';
 import 'turn_event.dart';
 import 'turn_input.dart';
 import 'turn_settings.dart';
+import 'unfinished_reply_input.dart';
 
 final _log = Logger('turn');
 
@@ -79,6 +80,8 @@ final class TurnRun {
   final _pendingFailures = <ValidationFailure>[];
   final _rejectedSources = <String>[];
   final _text = StringBuffer();
+  var _wordsBeforeTools = '';
+  var _wordsOnly = false;
   String? _interactionId;
   String? _lastModel;
   var _emittedText = '';
@@ -128,6 +131,7 @@ final class TurnRun {
     var catalogRounds = 0;
     var corrections = 0;
     var mayStartOver = true;
+    var finishingRounds = 0;
     var correcting = false;
     while (true) {
       final constrained = correcting;
@@ -269,6 +273,14 @@ final class TurnRun {
         } else {
           toolRounds++;
         }
+        _wordsOnly = false;
+        if (_text.toString() != textBeforeRound) {
+          _wordsBeforeTools = _text.toString();
+          _text
+            ..clear()
+            ..write(textBeforeRound);
+          yield* _emitText();
+        }
         final results = <FunctionResult>[];
         final researcher = GeminiResearcher(
           createInteraction: createInteraction,
@@ -310,6 +322,36 @@ final class TurnRun {
         _pendingFailures.clear();
         correcting = true;
         continue;
+      }
+      final noPlan = _validator.screen == null;
+      final noAsk = !_validator.askedThisTurn;
+      final noWords =
+          _text.toString().trim().isEmpty && _wordsBeforeTools.isEmpty;
+      if (finishingRounds < settings.maxFinishingRounds &&
+          _pendingFailures.isEmpty &&
+          (noPlan || noAsk || noWords)) {
+        finishingRounds++;
+        _log.info(
+          LogEntry(
+            'Reply of turn $turn is unfinished',
+            fields: {
+              'turn': turn,
+              'noPlan': noPlan,
+              'noAsk': noAsk,
+              'noWords': noWords,
+            },
+          ),
+        );
+        input = InteractionInput.text(
+          unfinishedReplyInput(plan: noPlan, ask: noAsk, words: noWords),
+        );
+        correcting = !noWords;
+        _wordsOnly = noWords && !noPlan && !noAsk;
+        continue;
+      }
+      if (_text.toString().trim().isEmpty && _wordsBeforeTools.isNotEmpty) {
+        _text.write(_wordsBeforeTools);
+        yield* _emitText();
       }
       if (_pendingFailures.isNotEmpty ||
           (!_validator.drewThisTurn && _text.toString().trim().isEmpty)) {
@@ -382,6 +424,7 @@ final class TurnRun {
     _pendingFailures.clear();
     _rejectedSources.clear();
     _text.clear();
+    _wordsBeforeTools = '';
   }
 
   void _failed(HomewardFailure failure) {
@@ -441,6 +484,8 @@ final class TurnRun {
         }
         _text.write(text);
         yield* _emitText();
+      case A2uiMessageOutput() when _wordsOnly:
+        break;
       case A2uiMessageOutput(:final source):
         for (final part in splitBatchedMessages(
           source,

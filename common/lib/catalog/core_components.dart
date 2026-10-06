@@ -5,8 +5,11 @@ const coreComponents = {
   'Text',
   'Button',
   'Divider',
+  'PlanOverview',
   'Fact',
+  'Brief',
   'Choice',
+  'Questions',
   'AffordabilitySummary',
   'RuleNote',
 };

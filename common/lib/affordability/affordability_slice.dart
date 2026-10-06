@@ -46,6 +46,7 @@ abstract class AffordabilitySlice with _$AffordabilitySlice {
     LoanSchedule? schedule,
     BuyerProfile? profile,
     @Default(false) bool downPaymentStated,
+    @Default(false) bool ageAssumed,
     String? homeId,
     String? homeName,
   }) = _AffordabilitySlice;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/models/plan_conversation.dart';
 import '../../core/themes/dimens.dart';
+import '../../core/ui/app_chat_bubble.dart';
 import '../../core/ui/app_reveal.dart';
 import '../view_model/journey_view_model.dart';
 import 'exchange_section.dart';
@@ -14,18 +15,21 @@ class ConversationThread extends StatelessWidget {
     required this.onRetry,
     required this.onStop,
     this.pending,
+    this.pendingPrompt,
     super.key,
   });
 
   final String sessionId;
   final List<JourneySection> sections;
   final AgentEntry? pending;
+  final String? pendingPrompt;
   final ValueChanged<String> onRetry;
   final VoidCallback onStop;
 
   @override
   Widget build(BuildContext context) {
     final pending = this.pending;
+    final pendingPrompt = this.pendingPrompt;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Align(
@@ -42,6 +46,11 @@ class ConversationThread extends StatelessWidget {
                   section: section,
                   isLatest: pending == null && index == sections.length - 1,
                   onRetry: () => onRetry(section.entry.id),
+                ),
+              if (pending != null && pendingPrompt != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.sm),
+                  child: AppChatBubble(text: pendingPrompt),
                 ),
               if (pending != null)
                 Padding(

@@ -14,7 +14,8 @@ Future<void> main(List<String> arguments) async {
   if (keys == null || arguments.length < 2) {
     stderr.writeln(
       'Usage: probe_turn <server url> '
-      '<message or @action {slice overrides}>…\n'
+      '<message, @action {slice overrides}, @pick <option or number>, '
+      '@fill <answer> | <answer>, or @tap <action> {added context}>…\n'
       'Gemini keys come from ${GeminiKeys.names.join(' and ')}, '
       'which make reads from .env.',
     );
@@ -35,13 +36,20 @@ Future<void> main(List<String> arguments) async {
     final sessionId = await client.createSession();
     stdout.writeln('Session $sessionId');
     final surfaces = ProbeSurfaces();
-    for (final input in arguments.skip(1)) {
+    for (final (index, input) in arguments.skip(1).indexed) {
+      if (index > 0 && _pause > Duration.zero) {
+        await Future<void>.delayed(_pause);
+      }
       final request = _requestFor(input, surfaces);
       if (request == null) {
         stdout.writeln('\nNo surface offers $input; stopping');
         return;
       }
       stdout.writeln('\n> $input');
+      if (request case ActionTurnRequest(:final action) when _detail) {
+        stdout.writeln('  ${action.name} ${jsonEncode(action.context)}');
+      }
+      surfaces.nextTurn();
       while (keys.moveOnAfter(
         await _probeTurn(client, sessionId, keys.current, request, surfaces),
       )) {
@@ -53,12 +61,47 @@ Future<void> main(List<String> arguments) async {
   }
 }
 
+final _detail = Platform.environment.containsKey('HOMEWARD_PROBE_DETAIL');
+
+final _pause = Duration(
+  seconds:
+      int.tryParse(
+        Platform.environment['HOMEWARD_PROBE_PAUSE_SECONDS'] ?? '',
+      ) ??
+      0,
+);
+
 TurnRequest? _requestFor(String input, ProbeSurfaces surfaces) {
   final separator = input.indexOf(' ');
   if (!input.startsWith('@')) {
     return TurnRequest.text(input);
   }
   final name = input.substring(1, separator == -1 ? null : separator);
+  final rest = separator == -1 ? '' : input.substring(separator + 1).trim();
+  final tapped = switch (name) {
+    'pick' => surfaces.pick(rest),
+    'fill' => surfaces.fill([
+      for (final answer in rest.split('|')) answer.trim(),
+    ]),
+    'tap' => switch (rest.indexOf(' ')) {
+      -1 => surfaces.actionFor(rest, const {}),
+      final space => surfaces.actionFor(
+        rest.substring(0, space),
+        const {},
+        tapped: jsonDecode(rest.substring(space + 1)) as Map<String, Object?>,
+      ),
+    },
+    _ => null,
+  };
+  if (const {'pick', 'fill', 'tap'}.contains(name)) {
+    return switch (tapped) {
+      (:final action, :final surfaceData) => TurnRequest.action(
+        action,
+        surfaceData: surfaceData,
+      ),
+      null => null,
+    };
+  }
   final overrides = separator == -1
       ? const <String, Object?>{}
       : jsonDecode(input.substring(separator + 1)) as Map<String, Object?>;
@@ -97,7 +140,8 @@ Future<String?> _probeTurn(
           text = latest;
         case AgentA2ui(:final message):
           surfaces.record(message);
-          if (describeA2uiMessage(message) case final description?) {
+          if (describeA2uiMessage(message, detail: _detail)
+              case final description?) {
             log(description);
           }
         case AgentProgress(:final progress):

@@ -4,6 +4,7 @@ import 'package:common/common.dart';
 
 import '../markets/market_directory.dart';
 import 'agent_tool.dart';
+import 'draw.dart';
 import 'amount_arguments.dart';
 import 'numbers_in.dart';
 import 'tool_context.dart';
@@ -217,11 +218,16 @@ final class SplitRent extends AgentTool {
             ? 'as the buyer stated'
             : {'estimate': true, 'source': rent.source},
         'chosen': ?chosen?.name,
+        'draw': [
+          block('rent-split', 'RentSplit', {
+            'split': boundTo('/rentSplit'),
+            'choose': sends('take_split'),
+          }),
+        ],
         'note':
-            'The split is in /rentSplit. Show it with RentSplit, '
-            '{ "path": "/rentSplit" }; never write the amounts in your text. '
-            'When the buyer takes a rule, call split_rent again with it as '
-            'rule.',
+            'The split is in /rentSplit; never write the amounts in your '
+            'text. $drawNote When the buyer takes a rule, call split_rent '
+            'again with it as rule.',
       },
       seeds: {rentSplitSlice.name: jsonDecode(jsonEncode(slice.toJson()))},
       logFields: {'people': people.length, 'rules': rules.length},

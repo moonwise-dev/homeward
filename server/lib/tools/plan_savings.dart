@@ -4,6 +4,7 @@ import 'package:common/common.dart';
 
 import '../markets/market_directory.dart';
 import 'agent_tool.dart';
+import 'draw.dart';
 import 'amount_arguments.dart';
 import 'household_in.dart';
 import 'numbers_in.dart';
@@ -113,10 +114,14 @@ final class PlanSavings extends AgentTool {
           'prices changing',
           'incomes changing',
         ],
+        'draw': [
+          block('savings-plan', 'SavingsPlan', {
+            'plan': boundTo('/savingsPlan'),
+          }),
+        ],
         'note':
-            'The plan is in /savingsPlan. Show it with SavingsPlan, '
-            '{ "path": "/savingsPlan" }; never write the amounts in your '
-            'text.',
+            'The plan is in /savingsPlan; never write the amounts in your '
+            'text. $drawNote',
       },
       seeds: {savingsPlanSlice.name: jsonDecode(jsonEncode(plan.toJson()))},
       logFields: {

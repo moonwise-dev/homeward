@@ -32,7 +32,7 @@ void main() {
 
   TurnOrchestrator orchestrator(
     ScriptedInteractions script, {
-    TurnSettings settings = const TurnSettings(),
+    TurnSettings settings = const TurnSettings(maxFinishingRounds: 0),
   }) => TurnOrchestrator(
     sessions: sessions,
     createInteraction: script.call,
@@ -233,18 +233,29 @@ void main() {
     },
   );
 
-  test('a reply in words alone is left as it is', () async {
+  test('a reply with no plan and no ask is asked once to finish it', () async {
     await sessions.create('uid-1');
     final script = ScriptedInteractions([
       reply('i1', text: 'A bostadsrätt is a share in an association.'),
+      reply('i2', text: jsonEncode({'messages': <Object?>[]})),
     ]);
 
     final events = await send(
-      orchestrator(script),
+      orchestrator(script, settings: const TurnSettings()),
       'What is a bostadsrätt?',
     ).toList();
 
-    expect(script.requests, hasLength(1));
+    expect(script.requests, hasLength(2));
+    expect(
+      (script.requests[1].input as TextInput).text,
+      allOf(
+        contains('drew no plan panel'),
+        contains('drew no inline ask'),
+        isNot(contains('no words')),
+      ),
+    );
+    expect(script.requests[1].previousInteractionId, 'i1');
+    expect(script.requests[1].responseSchema, isNotNull);
     expect(messagesIn(events), isEmpty);
     expect(
       events.last,
@@ -381,7 +392,10 @@ void main() {
     final script = ScriptedInteractions([invalid, invalid]);
 
     final events = await send(
-      orchestrator(script, settings: const TurnSettings(maxCorrections: 1)),
+      orchestrator(
+        script,
+        settings: const TurnSettings(maxCorrections: 1, maxFinishingRounds: 0),
+      ),
     ).toList();
 
     expect(script.requests, hasLength(2));

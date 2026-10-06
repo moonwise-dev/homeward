@@ -19,7 +19,7 @@ class HouseholdSummaryView extends StatelessWidget {
       return const SizedBox.shrink();
     }
     final people = _people(profile);
-    final about = _about(profile);
+    final about = _about(profile, ageAssumed: slice.ageAssumed);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -76,8 +76,9 @@ class HouseholdSummaryView extends StatelessWidget {
     ].join(' · ');
   }
 
-  static String _about(BuyerProfile profile) => [
-    if (profile.age case final age?) 'The oldest borrower is $age',
+  static String _about(BuyerProfile profile, {required bool ageAssumed}) => [
+    if (profile.age case final age? when !ageAssumed)
+      'The oldest borrower is $age',
     if (profile.taxResidence case final country?)
       'tax resident in ${countryNames[country.code] ?? country.code}',
     if (profile.employment case final employment?)

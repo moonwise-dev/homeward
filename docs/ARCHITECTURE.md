@@ -184,6 +184,7 @@ server/
     role.md
     style.md
     generated/catalog_skill.md
+    reply.md        the checklist that follows the turn context
   Dockerfile
 ```
 
@@ -251,6 +252,7 @@ app/lib/
       widgets/            <feature>_screen.dart and the widgets only it uses
   catalog/
     homeward_catalog.dart the genui catalog: every item and client function
+    plan_sections.dart    draws each child of the plan's root as a card
     bindings/             typed readers over genui DataContext
     <component>/          <component>_item.dart and <component>_view.dart
 ```

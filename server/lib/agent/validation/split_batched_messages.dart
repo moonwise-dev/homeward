@@ -12,7 +12,7 @@ List<String> splitBatchedMessages(String source, {String? lastSurfaceId}) {
   try {
     json = jsonDecode(source);
   } on FormatException {
-    return [source];
+    return _commaJoined(source, lastSurfaceId) ?? [source];
   }
   return switch (json) {
     [...] when json.every((item) => item is Map<String, Object?>) => [
@@ -23,6 +23,26 @@ List<String> splitBatchedMessages(String source, {String? lastSurfaceId}) {
       _split(message, lastSurfaceId) ?? [source],
     _ => [source],
   };
+}
+
+List<String>? _commaJoined(String source, String? lastSurfaceId) {
+  final Object? json;
+  try {
+    json = jsonDecode('[$source]');
+  } on FormatException {
+    return null;
+  }
+  return json is List<Object?> &&
+          json.length > 1 &&
+          json.every((item) => item is Map<String, Object?>)
+      ? [
+          for (final item in json)
+            ...splitBatchedMessages(
+              jsonEncode(item),
+              lastSurfaceId: lastSurfaceId,
+            ),
+        ]
+      : null;
 }
 
 List<String>? _split(Map<String, Object?> message, String? lastSurfaceId) {

@@ -8,6 +8,7 @@ abstract class TurnSettings with _$TurnSettings {
     @Default(2) int maxCorrections,
     @Default(3) int maxToolRounds,
     @Default(2) int maxCatalogRounds,
+    @Default(1) int maxFinishingRounds,
     @Default('low') String thinkingLevel,
   }) = _TurnSettings;
 }

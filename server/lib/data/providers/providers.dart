@@ -74,6 +74,7 @@ final class Providers {
         readInteraction: readInteraction,
         settings: TurnSettings(
           maxCorrections: config.maxCorrections,
+          maxFinishingRounds: config.maxFinishingRounds,
           thinkingLevel: config.thinkingLevel,
         ),
         now: now,

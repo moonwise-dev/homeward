@@ -8,6 +8,7 @@ import 'package:homeward_server/a2a/task_registry.dart';
 import 'package:homeward_server/agent/prompt/prompt_assembler.dart';
 import 'package:homeward_server/agent/turn/tool_belt.dart';
 import 'package:homeward_server/agent/turn/turn_orchestrator.dart';
+import 'package:homeward_server/agent/turn/turn_settings.dart';
 import 'package:homeward_server/data/repository/in_memory_session_repository.dart';
 import 'package:homeward_server/gemini/gemini_exception.dart';
 import 'package:homeward_server/request/request_values.dart';
@@ -36,6 +37,7 @@ void main() {
       prompts: prompts,
       tools: ToolBelt(homewardTools(testMarkets, testResearch)),
       catalog: catalog,
+      settings: const TurnSettings(maxFinishingRounds: 0),
       now: () => DateTime.utc(2026, 9, 17, 12),
     ),
     tasks: TaskRegistry(retention: Duration.zero),

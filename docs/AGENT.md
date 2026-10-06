@@ -9,7 +9,9 @@ only whether what Gemini drew is valid (D129).
 The agent works on a move the way a coding agent works on a codebase (D130):
 it keeps notes, looks things up before it asks, asks one decision at a time
 with its recommendation, shows its work, and proposes for the buyer to
-approve.
+approve. It works in an order the prompt names, the move before the money,
+keeps a plan of steps the buyer can see, and ends every reply with one ask
+(D164).
 
 ## Model Configuration
 
@@ -22,7 +24,8 @@ approve.
 | Unhealthy model cool-down | 5 min | `HOMEWARD_MODEL_COOLDOWN` |
 | Store interactions | `true` | fixed |
 | Validation correction rounds | 2 | `HOMEWARD_MAX_CORRECTIONS` |
-| Model rounds per turn | 1, plus one per tool round, catalog round, and correction round | enforced by the caps below |
+| Finishing rounds, for a reply that drew no plan or no ask | 1 | `HOMEWARD_MAX_FINISHING_ROUNDS` (D168) |
+| Model rounds per turn | 1, plus one per tool round, catalog round, correction round, and finishing round | enforced by the caps below |
 | Surfaces per plan | `plan`, and at most one inline surface per turn (D131, D139) | fixed |
 | Tool rounds per turn, cap | 3 | `TurnSettings.maxToolRounds` (D85) |
 | Catalog rounds per turn, cap | 2; a round whose calls only read `component_docs` counts here, not as a tool round | `TurnSettings.maxCatalogRounds` (D147) |
@@ -57,9 +60,9 @@ share them, and daily limits reset at midnight Pacific:
 | `gemini-3.5-flash-lite`, `gemini-3.1-flash-lite` | 15 | 250K | 500 |
 | `gemma-4-26b-a4b-it`, `gemma-4-31b-it` | 30 | 16K | 14,400 |
 
-A turn takes one request, plus one for each tool round, catalog round, and
-correction, at most eight under the caps above, and one more when
-`read_listings` reads. The ten turns rehearsed on 2026-09-28 took 24
+A turn takes one request, plus one for each tool round, catalog round,
+correction, and finishing round, at most nine under the caps above, and one
+more when `read_listings` reads. The ten turns rehearsed on 2026-09-28 took 24
 (`docs/SPIKES.md`, S17), about two and a half each, and the 53 of the second
 rehearsal on 2026-10-05 took 2.75 on average, 7 of them with a correction. A
 model at a limit hands the turn to the next (D79), so a buyer's free key
@@ -134,10 +137,23 @@ of 5 a minute and 24 of 20 a day.
   buyer to confirm or correct.
 - **Never ask what a tool can find out.** Places, distances, travel times, and
   what a listing says are looked up.
-- **One decision at a time.** When Gemini must ask, it asks the one decision
-  that matters most next, as a `Choice` in the turn's inline ask with its
-  recommendation first and why (C4b, D145). Typing stays open for any other
-  answer.
+- **The move before the money** (D164). Unless the buyer leads elsewhere,
+  Gemini works in the order the prompt names: the move, where to, who will
+  live in the home, rent or buy, and when; what the home must do and where
+  the week goes; the money; then homes and the week from each. The order is
+  a method, never a scenario: Gemini writes the steps for each household
+  into `PlanOverview`, and no story, question, or wording is fixed.
+- **One ask a turn, as a card.** Every reply ends with one inline ask. A
+  decision is a `Choice` with Gemini's recommendation first and why (C4b,
+  D145). Facts only the buyer knows are asked together in one `Questions`
+  card, every fact the step still needs, never one a turn (D165). When
+  nothing is open, the ask offers what to look at next. Typing stays open
+  for any other answer.
+- **Say what the answer changes.** A reply begins with what Gemini can now
+  work out, assume, or rule out, never with thanks or the answer repeated.
+- **A figure is checked before it is used** (D166). `compute_affordability`
+  refuses pay that cannot be right and says why; Gemini says what looks off
+  and offers the figure given and the figure it thinks was meant.
 - **Propose, then build.** Gemini offers solutions when it judges it knows
   enough, and the buyer's confirmation or correction decides what grows next.
 - **Money is the spine** (D138). Every journey reaches what the household can
@@ -145,7 +161,8 @@ of 5 a minute and 24 of 20 a day.
   knows enough, and tools compute every figure from the sample rates and
   rules.
 - **Never telegraph.** "Let me check…" is not a turn. Call the tool and draw the
-  result in the same turn.
+  result in the same turn. Words written in a round that ends in tool calls
+  are dropped (D168).
 - **Figures live in components.** Chat text refers to results in words and
   points at the component. It never states a figure a buyer relies on.
 
@@ -168,6 +185,14 @@ a coding agent reads a file before editing it (D131). A turn may also draw its
 question or options as one inline surface of its own, `t{turn}-{slug}`, which
 the app shows in the conversation under the turn's text; the plan panel keeps
 the state (D139).
+
+The plan panel's root is a `Column`, and the app draws each of its children
+as a card (D169). The first is `PlanOverview` (D164): the household's story
+so far in a sentence or two, and the steps Gemini wrote for this household,
+each done with what was found, the one it is on now, or next. Gemini sends
+it again with every reply, and reads it back in the turn context's `screen`
+the way a coding agent reads its own plan. Under it sit the brief, as one
+`Brief`, and the blocks each step produced.
 
 The brief (C4, D132) is Gemini's notes on the household, the way a coding
 agent keeps a plan. Gemini writes it with `update_brief`; the server keeps it
@@ -197,6 +222,11 @@ arrives with the step of `docs/ROADMAP.md` that needs it.
 - Each lookup reports a measuring step through `ResearchSteps`, which the turn
   streams as a progress data part while tools run (D108). Labels come from the
   tool, never from the model.
+- A tool that seeds a slice answers with `draw` (D167): the components for
+  its result, ready to send, each with an ID, its bound paths, and the
+  actions it takes, such as a `HomeCard` for each of the first three homes
+  `search_homes` found. Gemini adds them to the plan without a round to read
+  their docs, and still decides which to show and where.
 - A tool that throws answers the model with an error and changes nothing.
 - Every place a model names is checked against open data before it is shown
   (D101).
@@ -223,7 +253,12 @@ deduced. A failed check names each problem to Gemini and stores nothing;
 only the summary is logged, never the buyer's figures. It returns the whole
 brief and seeds it as
 `/brief`. Measured, quoted, and estimated items come from the tools that
-measure, quote, or estimate, never from `update_brief`.
+measure, quote, or estimate, never from `update_brief`. Its answer reminds
+Gemini to send the plan again with its `PlanOverview`, and, when a money item
+was recorded, to call `compute_affordability` with it before replying, so
+the figure is checked in the turn it is given (D166), unless they rent:
+people renting are never asked what a loan needs, and `split_rent` takes
+what each of them earns.
 
 `compute_affordability` (C5, D146) works out what the household can borrow
 from the sample rules of a covered market, Sweden or Portugal, which the
@@ -242,6 +277,42 @@ anywhere else Gemini tells the buyer the sample does not cover it. Incomes,
 debts, and savings are lists in their own currencies, converted with the
 sample exchange rates the summary names. It logs the facts it still needs,
 never the figures.
+
+Before it works anything out, the tool checks that pay makes sense (D166).
+`figureDoubts` in `common` compares the take-home pay, and the pay before
+tax, with the sample everyday costs of the household as known so far, one
+adult when nothing is known: the pack's living costs plus the running and
+transport costs lenders count. Pay that does not cover them, which no loan
+would pass, or take-home pay above pay before tax, comes back as `doubts`,
+each with its argument and why, and whether one more zero would cover the
+costs; nothing is seeded. Gemini then says what looks off and asks with a
+`Choice` whose options are the figure given and the figure it thinks was
+meant, and calls again with the answer, with `confirmed` naming the argument
+when the buyer stands by theirs. A figure is doubted only in the call that
+passes it.
+
+When facts are missing, `needs` lists them all, each with `ask`, the fields
+for it in plain words, such as "What you take home together" as money a
+month or "Where you pay tax" as a pick, and its note tells Gemini to ask for
+them together in one `Questions` card, six fields at most, and to pass only
+what the buyer said, never a guess that there are no children or no loans. Gemini calls the
+tool before it asks for money facts, with the market alone if that is all it
+has, so one card asks for everything. Three things keep the list short. Every
+adult is taken as a borrower unless the buyer says otherwise. Where age only
+picks the living-cost bracket, as in Sweden, an adult of 35 is assumed; the
+slice marks it with `ageAssumed`, and `HouseholdSummary` leaves it out.
+Portugal, where age sets the longest term, still asks. Both are listed with
+what else the tool assumed. And once it has answered, the tool keeps that
+household and its figures for the market, so a later call passes only what is
+new, such as `home`. The market itself may be left out: the tool takes it
+from the last run, or from the one city `look_up_market` has looked up.
+
+With the result it answers `limit`, one sentence on what sets the limit, the
+savings, the income, or what is left to live on, for Gemini to put in its own
+words; `draw`, the summary, the limiting rule, and the monthly cost; and
+`drawWhenAsked`, the stress test, the costs on the day, the down payment
+slider, the rates, the loan year by year, and the household, each ready to
+add when the buyer asks or picks it as the next thing to look at.
 
 The buyer's preferences shape what a home costs them a month (C5b, D147):
 the price of a home they name, the down payment they want to make, and the
@@ -448,7 +519,8 @@ reading a listing the buyer pastes (S13), and areas for any city.
 `server/lib/agent/prompt/prompt_assembler.dart` loads, once at startup, and
 joins in order:
 
-1. `prompts/role.md`: who Homeward is, what it does, and what it never does.
+1. `prompts/role.md`: who Homeward is, how it works, in which order, and
+   what it never does.
 2. `prompts/style.md`: tone, and how to point at components instead of
    restating figures.
 3. `prompts/generated/catalog_skill.md`: how to write messages, bind data, and
@@ -460,6 +532,11 @@ joins in order:
    surface, and the brief as it stands, so a tool or correction round sees
    what this turn already changed, and a turn that starts over in a new
    conversation still knows the household.
+5. `prompts/reply.md`: five lines on what to do before replying, check a
+   buyer's money figure, look up a city or a place, do what they asked for
+   outright, record what their words imply, then say what the answer
+   changes, send the plan, and end with one ask. It comes
+   last because the model follows best what it read last (D168).
 
 Everything, the context block included, is sent as `system_instruction`, which
 goes out again with every request of the turn, tool-result rounds included, and
@@ -495,7 +572,11 @@ owner, and leases it; `turn_run.dart` runs one turn:
 5. Call `interactions.create` with streaming, `previous_interaction_id` when
    present, `store: true`, through model selection.
 6. Stream: forward the full text so far as it grows; validate each message of
-   an `a2ui` block as it completes; collect function calls.
+   an `a2ui` block as it completes; collect function calls. When the round
+   ends in function calls that run, the words it wrote are taken back, the
+   way a failed model's draft is: they were written before the facts, and
+   Flash-Lite at times writes its reasoning there. They return only if the
+   turn ends with no other words (D168).
 7. Forward accepted messages through the seeder: a `createSurface` is held
    until its first valid `updateComponents`, then sent with
    `sendDataModel: true`, followed by one `updateDataModel` for each slice a
@@ -512,13 +593,26 @@ owner, and leases it; `turn_run.dart` runs one turn:
 9. When messages were rejected, continue with one text input listing each
    `VALIDATION_FAILED` error, at most `HOMEWARD_MAX_CORRECTIONS` rounds. The
    correction round asks with an enforced response schema (D110): a JSON object
-   of messages, offering the layout basics and the components the turn drew or
-   tried to draw. If Gemini refuses the schema, the round repeats without it.
-10. A turn that ends with nothing at all, or with messages still rejected after
+   of messages, offering the core components and the components the turn drew
+   or tried to draw. The schema leaves out `minItems` and `maxItems`, which
+   validation still enforces: on 2026-10-05 Gemini answered `invalid_request`
+   to any schema holding `Questions`, whose `fields` are a bounded list of
+   objects with seven properties, and accepted it without the bounds. If
+   Gemini refuses the schema, the round repeats without it.
+10. When nothing is rejected and the reply is unfinished, continue once with
+    a note that names what is missing and asks for that only, at most
+    `HOMEWARD_MAX_FINISHING_ROUNDS` times (D168). Unfinished means no plan
+    panel yet, no inline ask this turn, or no words at all. Missing messages
+    are asked for under the correction round's schema; missing words in a
+    free round, since the schema holds no prose. The note picks no question
+    and draws nothing. A reply in words alone used to be a finished turn: on
+    the owner's plan of 2026-10-05 the first two turns drew nothing, and in a
+    rehearsal the same evening two replies drew the plan and the ask and
+    said nothing.
+11. A turn that ends with nothing at all, or with messages still rejected after
     the last correction, ends its text with a line asking the buyer to send
-    the message again; the screen keeps what was accepted. A reply in words
-    alone is a valid turn.
-11. Save the turn number, the last completed interaction ID, and every
+    the message again; the screen keeps what was accepted.
+12. Save the turn number, the last completed interaction ID, and every
     forwarded message, also when the turn fails or is cancelled, then release
     the lease and emit `completed`.
 
@@ -541,6 +635,18 @@ arrive, so components appear progressively while the model is still writing.
 On 2026-09-17 `gemini-3.5-flash-lite` pretty-printed in two of five first
 messages; when each line was a candidate, every line was rejected, two
 correction rounds followed, and one turn drew its form twice.
+
+A line that starts a new message, `{"version"`, ends the message before it
+even when that one left a quote open (D168). JSON cannot hold a raw line break
+inside a string, so such a line is always a boundary. On 2026-10-05 a step
+note missing one quote, `"note: "At least three rooms"`, kept the parser
+inside a string to the end of the block, and the turn's inline ask was lost
+with it. The validator's repair now closes such a key, so the message is
+accepted without a correction round.
+
+Messages joined by commas on one line, an array without its brackets, are
+split into their messages, as an array is; Flash-Lite wrote the plan and its
+ask's `createSurface` that way once on 2026-10-05.
 
 A block opens on a line that is the fence alone or that ends with it, so a
 question followed straight by its card still draws: on 2026-09-25 the model
@@ -655,6 +761,9 @@ nothing.
 | Unknown or expired previous interaction | Retry once on a fresh interaction |
 | Stored chain refused with `invalid_request` before anything is drawn | The turn starts over once on a new conversation |
 | Model output invalid after corrections | Model text plus the retry notice |
+| A reply with no plan panel yet, no inline ask, or no words | One finishing round asks for what is missing; what was sent stands |
+| Words written before the tools ran | Dropped when the round ends in tool calls, unless no later words come |
+| A money figure that cannot be right | `compute_affordability` answers with `doubts` and seeds nothing; Gemini asks which figure is right |
 | Tool error | The model hears the error and says so in a sentence |
 | A tool throws | The model hears that the tool failed and nothing was changed; the error is logged |
 | The turn throws unexpectedly | Turn fails with `internal`; the turn is cancelled, so its session is saved and released for the next message |

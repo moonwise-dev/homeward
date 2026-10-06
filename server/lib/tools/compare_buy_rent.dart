@@ -4,6 +4,7 @@ import 'package:common/common.dart';
 
 import '../markets/market_directory.dart';
 import 'agent_tool.dart';
+import 'draw.dart';
 import 'amount_arguments.dart';
 import 'household_in.dart';
 import 'numbers_in.dart';
@@ -138,10 +139,15 @@ final class CompareBuyRent extends AgentTool {
           'selling costs',
           "a house's upkeep",
         ],
+        'draw': [
+          block('buy-vs-rent', 'BuyVsRent', {
+            'comparison': boundTo('/buyVsRent'),
+          }),
+        ],
         'note':
-            'The comparison is in /buyVsRent. Show it with BuyVsRent, '
-            '{ "path": "/buyVsRent" }; never write the amounts in your text. '
-            'The buyer can move the years on the block.',
+            'The comparison is in /buyVsRent; never write the amounts in '
+            'your text. $drawNote The buyer can move the years on the '
+            'block.',
       },
       seeds: {buyVsRentSlice.name: jsonDecode(jsonEncode(slice.toJson()))},
       logFields: {

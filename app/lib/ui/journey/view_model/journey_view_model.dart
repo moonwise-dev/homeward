@@ -148,6 +148,16 @@ abstract class JourneyState with _$JourneyState {
     _ => null,
   };
 
+  TranscriptEntry? get pendingPrompt => pending == null
+      ? null
+      : switch (conversation.entries.elementAtOrNull(
+          conversation.entries.length - 2,
+        )) {
+          final BuyerEntry prompt => prompt,
+          final BuyerActionEntry prompt => prompt,
+          _ => null,
+        };
+
   bool get hasPlan => conversation.entries.any(
     (entry) => entry is AgentEntry && entry.surfaceIds.contains(planSurfaceId),
   );

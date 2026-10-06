@@ -140,6 +140,7 @@ limit is not built.
 | `HOMEWARD_FIRST_STEP_DEADLINE` | Deadline for the first Gemini step, in seconds |
 | `HOMEWARD_MODEL_COOLDOWN` | How long an overloaded model is skipped, in seconds |
 | `HOMEWARD_MAX_CORRECTIONS` | Validation correction rounds |
+| `HOMEWARD_MAX_FINISHING_ROUNDS` | Rounds that ask for a reply's missing plan or ask, 1 by default |
 | `HOMEWARD_ALLOWED_ORIGINS` | CORS origins |
 | `HOMEWARD_APP_CHECK_ENFORCED` | Enforce App Check, off for local development |
 | `HOMEWARD_PUBLIC_URL` | Base URL clients call, used for the agent card's `url` |

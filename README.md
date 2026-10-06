@@ -6,8 +6,10 @@ Flutter's GenUI initiative, built on [A2UI](https://a2ui.org) v0.9 and
 
 A household tells Homeward about a move in its own words. Homeward works
 through it the way a coding agent works through a codebase: it deduces what
-it can, looks up what it can find out, asks one decision at a time, and keeps
-a brief of what it learned. Then it shows the money decision no bank form was
+it can, looks up what it can find out, asks one decision at a time and the
+few facts it needs together, questions a figure that cannot be right, and
+keeps a brief of what it learned and a plan of steps the household can
+follow. Then it shows the money decision no bank form was
 built for: what they can borrow, what a specific home costs them each month,
 the mortgage options, whether it survives a rate rise, what they pay on the
 day, buying against renting, and how rent splits between people sharing.
@@ -23,8 +25,10 @@ different screens.
 - **Every fact shows where it came from:** said by the buyer, deduced from
   their words, measured, estimated, or quoted word for word from a listing.
 - **Two surfaces.** Questions arrive as cards inline in the conversation, so
-  the history shows each decision; beside it, the plan panel is one living
-  surface Gemini changes in place.
+  the history shows each decision, and every reply ends with one; beside it,
+  the plan panel is one living surface Gemini changes in place, a stack of
+  cards that opens with the household's story so far and the steps Homeward
+  is working through for them.
 
 Homeward explains and estimates; it does not give financial advice. The rules,
 rates, and homes are labelled samples.
@@ -65,10 +69,12 @@ A couple moving to Stockholm, with one income in kronor and one in euros.
 > tax, and my partner keeps her remote job paying 3,500 euros a month. We have
 > 600,000 kronor saved.
 
-Homeward records what they said in the brief and asks the one thing the
-lending rules still need, such as their take-home pay. Once it has that,
-`compute_affordability` works out, from Sweden's sample rules, what they can
-borrow and which rule limits the loan. The plan shows it with
+Homeward records what they said in the brief and asks, in one card, for
+everything the lending rules still need, such as their take-home pay and
+what they pay on other loans. Once it has that, `compute_affordability`
+works out, from Sweden's sample rules, what they can borrow and which rule
+limits the loan, and Homeward says in words whether it is their savings or
+their income that sets the limit. The plan shows it with
 [`AffordabilitySummary`](docs/generated/catalog_reference.md#affordabilitysummary),
 [`RuleNote`](docs/generated/catalog_reference.md#rulenote), and
 [`MonthlyCostBreakdown`](docs/generated/catalog_reference.md#monthlycostbreakdown).
@@ -165,25 +171,53 @@ costs, and upkeep. Stockholm's area rents are first-hand leases, which take
 years in the housing queue, so renting looks cheaper there than a newcomer
 will find it.
 
+## When The Buyer Is Not The Perfect One
+
+Most people open with a line, skip the card they were shown, and mistype.
+Rehearsed on 2026-10-05:
+
+> I'm movint to stockholm with my family soon, help me find a residence
+
+Homeward opens the plan with
+[`PlanOverview`](docs/generated/catalog_reference.md#planoverview), the
+story so far and the steps it set for this household, shows what it deduced
+for them to confirm with a tap, and asks who is moving in one
+[`Questions`](docs/generated/catalog_reference.md#questions) card.
+
+> We take home about 10k sek
+
+That would not cover the sample everyday costs of a household in Stockholm,
+so `compute_affordability` refuses the figure and Homeward asks whether they
+meant 10,000 or 100,000 kronor, each a tap. Then one card asks for the rest:
+pay before tax, savings, other loans, and the children's ages. With those it
+shows what they can borrow, says that their savings set the limit, ticks the
+step, and offers what to look at next. Pay before tax below take-home pay is
+refused the same way. A savings figure with its digits doubled was
+questioned too, by Gemini on its own, both times it came up.
+
+Leaves out: a first look at the money from part of the facts, and checks on
+figures other than pay.
+
 ## The Catalog
 
-25 blocks in five families, each declared once in `common/lib/catalog` and
+27 blocks in five families, each declared once in `common/lib/catalog` and
 drawn by a plain Flutter widget in `app/lib/catalog`. The
 [catalog reference](docs/generated/catalog_reference.md) lists each with its
 properties, what it binds, and the tool that seeds it.
 
 | Family | Blocks |
 | --- | --- |
-| Understanding | `Fact`, `Brief`, `Choice`, `HouseholdSummary` |
+| Understanding | `PlanOverview`, `Fact`, `Brief`, `Choice`, `Questions`, `HouseholdSummary` |
 | Money | `MoneyInput`, `AffordabilitySummary`, `MonthlyCostBreakdown`, `StressTestChart`, `PurchaseCostsTable`, `DownPaymentSlider`, `MortgageOptions`, `LoanBalanceChart`, `SavingsPlan`, `MarketSnapshotCard`, `RentSplit`, `BuyVsRent` |
 | Homes | `HomeCard`, `Shortlist`, `HomeComparison`, `HomeSwipe`, `ListingQuote` |
 | Place and travel | `WeeklyTravel`, `RouteSummary`, `WeekMap` |
 | Trust | `RuleNote` |
 
 The money blocks are built to be reused in a bank's or a fintech's own
-journey. Gemini sees a compact index of the catalog and reads a block's full
-schema through the `component_docs` tool when it wants to draw it, which keeps
-the prompt small.
+journey. Gemini sees a compact index of the catalog; the tool that works out
+a result hands back the block that shows it, ready to draw, and a block no
+tool has given is read through the `component_docs` tool, which keeps the
+prompt small.
 
 ## Build On It
 

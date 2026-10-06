@@ -53,6 +53,23 @@ final class MarketDirectory {
       id.code: pack.name,
   };
 
+  String? coveredCode(String named) {
+    final wanted = named.trim().toLowerCase();
+    for (final MapEntry(key: code, value: name) in covered.entries) {
+      if (code.toLowerCase() == wanted || name.toLowerCase() == wanted) {
+        return code;
+      }
+    }
+    for (final city in cities.values) {
+      if ((city.name.toLowerCase() == wanted ||
+              city.cityId.toLowerCase() == wanted) &&
+          covered.containsKey(city.marketId)) {
+        return city.marketId;
+      }
+    }
+    return null;
+  }
+
   MarketRulePack? packFor(MarketId id) => switch (_packsById[id]) {
     null => null,
     _ => _resolved[id] ??= resolvePackChain(id, _packsById),

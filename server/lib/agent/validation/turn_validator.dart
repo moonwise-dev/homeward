@@ -29,6 +29,10 @@ final class TurnValidator {
 
   bool get drewThisTurn => _sentThisTurn.values.any((ids) => ids.isNotEmpty);
 
+  bool get askedThisTurn => _inlineCreated.any(
+    (surfaceId) => _sentThisTurn[surfaceId]?.isNotEmpty ?? false,
+  );
+
   List<Map<String, Object?>>? get screen => switch (_surface(planSurfaceId)) {
     final surface? => [
       for (final component in surface.componentsModel.all) component.toJson(),

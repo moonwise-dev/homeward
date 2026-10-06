@@ -25,9 +25,9 @@ prompts.
 On 2026-09-26 the project was cleaned down to its foundation (D129): the
 earlier question-by-question case, the sample homes, the deal, and the evals
 were removed. The product was rebuilt from there in small chunks: C1 to C10d
-were done by 2026-09-28 and the map (C8b) on 2026-10-05, which makes 25
-blocks, twelve tools, and four rehearsed journeys. Start with "Where We Are"
-in `docs/ROADMAP.md`.
+were done by 2026-09-28, and the map (C8b) and a conversation that leads
+(C11) on 2026-10-05, which makes 27 blocks, twelve tools, and four rehearsed
+journeys. Start with "Where We Are" in `docs/ROADMAP.md`.
 
 ## Repository Shape
 
@@ -76,9 +76,12 @@ first.
   try a smaller catalog, a clearer prompt, or a better tool before a server
   rule that takes a decision away from it.
 - Homeward works like a coding agent (D130): it deduces first, never asks what
-  a tool can find out, asks one decision at a time with its recommendation,
-  and keeps a brief of what it learned. No scenario or scripted flow goes in
-  the product; the catalog holds building blocks, not screens.
+  a tool can find out, asks one decision at a time with its recommendation
+  and the facts a step needs together, and keeps a brief of what it learned
+  and a plan of steps the buyer sees. The prompt names an order of work, the
+  move before the money, as a method (D164); no scenario, story, or scripted
+  flow goes in the product, and the catalog holds building blocks, not
+  screens.
 - Work in small chunks, each one demoable, and say what each leaves out.
 - Every fact carries its source kind: stated by the buyer, deduced from their
   words, measured, estimate, or quoted from a source. Estimates are labelled;

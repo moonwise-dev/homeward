@@ -40,8 +40,11 @@ void main() {
           'Divider',
           'Button',
           'TextField',
+          'PlanOverview',
           'Fact',
+          'Brief',
           'Choice',
+          'Questions',
           'AffordabilitySummary',
           'RuleNote',
         ])

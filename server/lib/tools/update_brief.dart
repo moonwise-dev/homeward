@@ -20,9 +20,10 @@ final class UpdateBrief extends AgentTool {
   String get description =>
       'Records what you learned or deduced about this household in the '
       'brief, your notes on it, which surfaces bind as /brief. Call it '
-      'whenever the buyer tells you something or you deduce something from '
-      'their words. It does not draw: add a Fact to the plan for each new '
-      'item in the same turn. It stores nothing if any item fails a check, '
+      'whenever the buyer tells you something, with what they said and, in '
+      'the same call, what follows from it that they did not say, as '
+      'deduced, such as what the home must have. It does not draw: a Brief '
+      'on the plan shows it. It stores nothing if any item fails a check, '
       'and returns the whole brief.';
 
   @override
@@ -38,7 +39,8 @@ final class UpdateBrief extends AgentTool {
               'type': 'string',
               'description':
                   'Lowercase words joined by hyphens, such as step-free. An '
-                  'existing ID replaces that item.',
+                  'existing ID replaces that item: reuse it when a fact '
+                  'changes or the buyer corrects it.',
             },
             'kind': {
               'type': 'string',
@@ -113,8 +115,23 @@ final class UpdateBrief extends AgentTool {
     for (final item in items) {
       brief[item['id']! as String] = _itemOf(item).toJson();
     }
+    final money = items.any((item) => item['kind'] == BriefKind.money.name);
     return ToolResult(
-      modelResult: {'brief': brief},
+      modelResult: {
+        'brief': brief,
+        'note': [
+          if (money)
+            'A money figure was recorded. If they are buying, or have not '
+                'said whether they rent, call compute_affordability with '
+                'it now, before you reply, unless you already did in this '
+                'turn: it checks that the figure makes sense and says '
+                'what is still missing. If they rent, do not: split_rent '
+                'takes what each of them earns.',
+          'In your reply send the plan again: the PlanOverview with the '
+              'story and steps as they stand now, and a Brief with an '
+              'answer action under it.',
+        ].join(' '),
+      },
       seeds: {briefSlice.name: brief},
     );
   }

@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../markets/household_rules.dart';
 import '../markets/income_basis.dart';
 import '../markets/lending_rules.dart';
+import '../markets/living_costs.dart';
 import '../markets/resolved_market.dart';
 import '../money/money.dart';
 import '../money/rate.dart';
@@ -123,15 +124,29 @@ Money? _leftToLiveOn(
       livingCosts == null) {
     return null;
   }
-  final currency = market.currency;
   return income -
       debts -
-      livingCosts.monthlyFor(
+      everydayCosts(
+        rule: rule,
+        livingCosts: livingCosts,
         adultAge: age,
         adults: adults,
         childAges: childAges,
       ) -
-      (scenario.associationFee ?? Money.zero(currency)) -
-      rule.runningCostsMonthly.toMoney(currency) -
-      rule.transportMonthlyPerAdult.toMoney(currency) * adults;
+      (scenario.associationFee ?? Money.zero(market.currency));
 }
+
+Money everydayCosts({
+  required LeftToLiveOnRule rule,
+  required LivingCosts livingCosts,
+  required int adultAge,
+  required int adults,
+  required List<int> childAges,
+}) =>
+    livingCosts.monthlyFor(
+      adultAge: adultAge,
+      adults: adults,
+      childAges: childAges,
+    ) +
+    rule.runningCostsMonthly.toMoney(livingCosts.currency) +
+    rule.transportMonthlyPerAdult.toMoney(livingCosts.currency) * adults;

@@ -8,6 +8,7 @@ import 'package:homeward_server/a2a/turn_wire.dart';
 import 'package:homeward_server/agent/prompt/prompt_assembler.dart';
 import 'package:homeward_server/agent/turn/tool_belt.dart';
 import 'package:homeward_server/agent/turn/turn_orchestrator.dart';
+import 'package:homeward_server/agent/turn/turn_settings.dart';
 import 'package:homeward_server/data/repository/in_memory_session_repository.dart';
 import 'package:homeward_server/request/request_values.dart';
 import 'package:homeward_server/tools/homeward_tools.dart';
@@ -42,6 +43,7 @@ void main() {
         prompts: PromptAssembler.load(Directory('prompts')),
         tools: ToolBelt(homewardTools(testMarkets, testResearch)),
         catalog: CatalogValidator(homewardCatalogDocument()),
+        settings: const TurnSettings(maxFinishingRounds: 0),
         now: () => DateTime.utc(2026, 9, 17, 12),
       ),
       tasks: TaskRegistry(retention: Duration.zero),

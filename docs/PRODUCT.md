@@ -9,7 +9,8 @@ coding agent works through a codebase (D130, D138).
 
 A buyer or renter tells it a little about their move in their own words.
 Homeward deduces what it can, looks up what it can find out, and asks only what
-it cannot: one real decision at a time, as a choice with its recommendation.
+it cannot: one real decision at a time, as a choice with its recommendation,
+and the few facts only they know together, in one card.
 Piece by piece it learns the household behind the money: who moves, what they
 earn, where their week takes them, what the home must do for them. Then it
 shows the money decision that no bank form can fit: what they can borrow, what
@@ -32,10 +33,21 @@ what is open.
 ## How It Works
 
 - **The conversation and the plan** (D139). Questions and options arrive as
-  cards inline in the conversation, so the history shows each decision. Beside
-  it, the plan panel is one living surface Gemini changes in place (D131): what
-  it understood, the homes on the shortlist, the week on the map, and the
-  money. On a phone the plan is a tab.
+  cards inline in the conversation, so the history shows each decision, and
+  every reply ends with one: a choice to tap, a few facts to fill in, or what
+  to look at next (D164, D165). Beside it, the plan panel is one living
+  surface Gemini changes in place (D131), drawn as a stack of cards: first
+  the household's story so far and the steps Homeward is working through for
+  them, then what it understood, the homes on the shortlist, the week on the
+  map, and the money. On a phone the plan is a tab.
+- **An order of work, not a script** (D164). Homeward understands the move
+  before the money: who moves and where, what the home must do, then what
+  they can borrow, then homes. A buyer who opens with a money question gets
+  the money first. Gemini writes the steps for each household, so a couple
+  buying and two friends sharing see different plans.
+- **Figures are checked** (D166). A take-home pay that could not cover a
+  household's everyday costs is questioned before it is used, with the
+  figure given and the likely one to tap.
 - **The brief.** Gemini keeps its own notes on the household, the way a coding
   agent keeps a plan: incomes and savings as stated, needs, habits (a place and
   how often), wants, places, and what is still open. Each item says where it
@@ -96,9 +108,12 @@ go somewhere else entirely.
   it came from, for the buyer to confirm or correct.
 - **Never ask what a tool can find out.** Places, distances, travel times,
   costs, and what a listing says are looked up or computed, not asked.
-- **One decision at a time.** When Gemini must ask, it asks one real decision,
-  as a choice with its recommendation. Typing is always open.
-- **Building blocks, not screens.** The catalog holds 25 to 30 blocks in
+- **One ask at a time, as a card.** When Gemini must ask, it asks one real
+  decision, as a choice with its recommendation, or the facts a step needs,
+  together. Typing is always open.
+- **Say what an answer changes.** Homeward replies with what it can now work
+  out or rule out, never with the answer repeated back.
+- **Building blocks, not screens.** The catalog holds 27 blocks in five
   families (D140). Two households get two structurally different screens from
   the same blocks.
 - **Gemini composes; tools measure; code computes.** The composing model never
@@ -127,10 +142,12 @@ The presenter tells Homeward about a move, and the conversation goes wherever
 it goes; the journeys above are what is rehearsed. What the demo shows is the
 arc:
 
-1. A few words become a brief, with Homeward's deductions marked as assumed,
-   and one question asked inline, as a choice with its recommendation.
-2. Back and forth, the plan panel fills in: the household, its week on a map,
-   and what it can afford.
+1. A few words become a plan: the household's story, the steps Homeward
+   will work through, what it deduced marked as assumed, and one card asked
+   inline.
+2. Back and forth, the steps tick off and the plan panel fills in: the
+   household, its week on a map, and what it can afford. A figure that
+   cannot be right is questioned, not used.
 3. Homes appear with what each costs this household a month and why it fits;
    the mortgage options and the stress test follow for the one they like.
 4. A correction reshapes the plan in place.

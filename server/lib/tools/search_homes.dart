@@ -4,6 +4,7 @@ import 'package:common/common.dart';
 
 import '../markets/market_directory.dart';
 import 'agent_tool.dart';
+import 'draw.dart';
 import 'amount_arguments.dart';
 import 'household_in.dart';
 import 'kept_homes.dart';
@@ -208,10 +209,19 @@ final class SearchHomes extends AgentTool {
         ],
         'inCity': city.listings.length,
         'priced': forHousehold,
+        'draw': [
+          for (final listing in matches.take(3))
+            block('home-${listing.id}', 'HomeCard', {
+              'home': boundTo('/homes/${listing.id}'),
+              'choose': sends('work_out_home'),
+              'keep': sends('keep_home'),
+            }),
+        ],
         'note':
-            'The homes are in /homes, by ID, lowest price first. Show the '
-            'ones worth seeing with HomeCard, { "path": "/homes/<id>" }; '
-            'never write their figures in your text. '
+            'The homes are in /homes, by ID, lowest price first; never '
+            'write their figures in your text. $drawNote It holds the '
+            'first three; draw another the same way with its ID, and only '
+            'the ones worth seeing. '
             '${forHousehold ? 'Each is priced for this household. ' : 'They are not priced for this household: compute_affordability has not run in this market. '}'
             'When the buyer picks one, call compute_affordability with it as '
             'home; when they keep or drop one, call keep_homes.'
@@ -240,10 +250,11 @@ final class SearchHomes extends AgentTool {
   }
 
   static const _dealNote =
-      ' The deck is in /swipe/homes: show it with HomeSwipe, '
-      '{ "homes": { "path": "/swipe/homes" } } and a done action; when the '
-      'buyer finishes, call keep_homes with the kept IDs as keep and the '
-      'others as passed.';
+      ' The deck is in /swipe/homes: show it with { "id": "deck", '
+      '"component": "HomeSwipe", "homes": { "path": "/swipe/homes" }, '
+      '"done": { "event": { "name": "finish_deck", "context": {} } } } '
+      'instead of the cards; when the buyer finishes, call keep_homes with '
+      'the kept IDs as keep and the others as passed.';
 
   static ToolResult _error(String message) =>
       ToolResult(modelResult: {'error': message});

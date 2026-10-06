@@ -30,6 +30,10 @@ String? _repairAt(String text, int? offset) {
   }
   final at = text[offset];
   final before = text.substring(0, offset).trimRight();
+  if (_misquotedKey.firstMatch(before) case final key?) {
+    return '${before.substring(0, key.start)}${key[1]}"${key[2]}": "'
+        '${text.substring(offset)}';
+  }
   if ((at == ',' || at == '}' || at == ']') &&
       (before.endsWith('}') || before.endsWith(']'))) {
     return before.substring(0, before.length - 1) + text.substring(offset);
@@ -46,6 +50,14 @@ String? _repairAt(String text, int? offset) {
         jsonEncode(text.substring(offset + 1, close)) +
         text.substring(close + 1);
   }
+  if (before.endsWith(':') && !_tokenStart.hasMatch(at)) {
+    final end = text.indexOf(RegExp(r'[,}\]]'), offset);
+    if (end != -1) {
+      return text.substring(0, offset) +
+          jsonEncode(text.substring(offset, end).trim()) +
+          text.substring(end);
+    }
+  }
   if (at.isNotEmpty && !_tokenStart.hasMatch(at)) {
     return text.substring(0, offset) + text.substring(offset + 1);
   }
@@ -53,6 +65,8 @@ String? _repairAt(String text, int? offset) {
 }
 
 final _tokenStart = RegExp(r'[\s{}\[\],:"\-0-9tfn]');
+
+final _misquotedKey = RegExp(r'([{,]\s*)"(\w+):\s*"$');
 
 String? _unclosed(String text) {
   final closers = <String>[];

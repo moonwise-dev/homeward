@@ -13,26 +13,31 @@ void main() {
   final prompts = Directory('prompts');
   final assembler = PromptAssembler.load(prompts);
   final handWritten = {
-    for (final name in PromptAssembler.instructionFiles)
+    for (final name in [
+      ...PromptAssembler.instructionFiles,
+      PromptAssembler.closingFile,
+    ])
       if (!name.startsWith('generated/'))
         name: File('${prompts.path}/$name').readAsStringSync(),
   };
 
-  test('joins the instructions in order and ends with the turn context', () {
+  test('joins the instructions in order around the turn context', () {
     final instruction = assembler.systemInstruction({'turn': 3});
     final headings = [
       '# Role',
       '# Style',
       '# Drawing The Interface',
       '# Turn Context',
+      '# Before You Reply',
     ].map(instruction.indexOf).toList();
 
     expect(headings, everyElement(isNonNegative));
     expect(headings, orderedEquals([...headings]..sort()));
     expect(
       instruction,
-      endsWith(
-        '# Turn Context\n\n```json\n${jsonEncode({'turn': 3})}\n```\n',
+      contains(
+        '# Turn Context\n\n```json\n${jsonEncode({'turn': 3})}\n```\n'
+        '\n# Before You Reply',
       ),
     );
   });

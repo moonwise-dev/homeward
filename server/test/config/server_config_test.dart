@@ -21,6 +21,7 @@ void main() {
         firstStepDeadline: const Duration(seconds: 20),
         modelCooldown: const Duration(minutes: 5),
         maxCorrections: 2,
+        maxFinishingRounds: 1,
         allowedOrigins: const [
           'https://homeward-genui.web.app',
           'https://homeward-genui.firebaseapp.com',

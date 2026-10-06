@@ -4,6 +4,7 @@ import 'package:common/common.dart';
 
 import '../markets/market_directory.dart';
 import 'agent_tool.dart';
+import 'draw.dart';
 import 'household_in.dart';
 import 'kept_homes.dart';
 import 'tool_context.dart';
@@ -89,9 +90,22 @@ final class KeepHomes extends AgentTool {
             if (kept.contains(id)) id,
         ],
         if (passed.isNotEmpty) 'swipe': _swipePattern(keep, passed),
-        'note':
-            'Show the kept homes with Shortlist, { "path": "/homes" }, and '
-            'two or three side by side with HomeComparison.',
+        'draw': [
+          block('shortlist', 'Shortlist', {
+            'homes': boundTo('/homes'),
+            'choose': sends('work_out_home'),
+            'drop': sends('drop_home'),
+          }),
+          if (kept.length >= 2)
+            block('comparison', 'HomeComparison', {
+              'homes': [
+                for (final id in shortlist.keys.where(kept.contains).take(3))
+                  boundTo('/homes/$id'),
+              ],
+              'choose': sends('work_out_home'),
+            }),
+        ],
+        'note': drawNote,
       },
       seeds: {homesSlice.name: shortlist},
       logFields: {'kept': kept.length},

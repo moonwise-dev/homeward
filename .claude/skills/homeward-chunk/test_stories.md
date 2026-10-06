@@ -28,6 +28,20 @@ chunk, and add new ones when a chunk needs a kind of move not covered here.
     kronor of 55,000, and she takes home 2,600 euros of 3,500. We have 600,000
     kronor saved. What would it cost us each month?
 
+Messy conversations, for when the buyer is not the perfect one (C11). Each
+line is a turn; they slip, skip the card they were shown, and answer in
+their own way:
+
+11. I'm movint to stockholm with my family soon, help me find a residence /
+    We take home about 10k sek / (tap the figure meant) / 500000 / (fill the
+    card)
+12. hi / I don't really know where to start, we might move next year / Not
+    sure yet, maybe Lisbon, maybe we just stay and rent
+13. We want to buy in Stockholm. I earn 45,000 before tax and take home
+    52,000. / Sorry, the other way round.
+14. Two of us, no kids, buying in Lisbon, 60k saved. / Actually we have a
+    daughter, she's 4. / And we would rather rent for a year first.
+
 The four journeys in the README (D141, D161) are rehearsed with the openings
 written there, each turn as its own argument to the probe:
 

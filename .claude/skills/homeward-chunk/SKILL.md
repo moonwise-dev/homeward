@@ -32,7 +32,10 @@ Update the canonical doc the chunk changes before any code: `docs/AGENT.md`,
 - Never add a server rule that picks the next question, withholds a tool, or
   draws for the model (D129). When Gemini misbehaves, try a smaller catalog,
   a clearer prompt, or a better tool first.
-- Nothing scripted: no stories, stages, or flows in code or prompts (D130).
+- Nothing scripted: no stories, scenarios, or flows in code or prompts
+  (D130). The prompt names an order of work, the move before the money, as a
+  method; Gemini writes each household's steps itself (D164). Never fix a
+  question, a wording, or a step in code.
 - Adding a catalog block: use the `homeward-block` skill.
 - Adding an agent tool: use the `homeward-tool` skill.
 - The Dart MCP server can read the pinned sources of genui and `a2ui_core`
@@ -61,6 +64,25 @@ declaration, run `make catalog`.
   ```
   - Pick stories that exercise the chunk.
   - They are inputs only, never part of the product.
+- A whole conversation runs as several turns, each its own argument, and a
+  turn can answer the card the turn before drew:
+  ```sh
+  set -a; . ./.env; set +a
+  HOMEWARD_PROBE_DETAIL=1 HOMEWARD_PROBE_PAUSE_SECONDS=5 \
+    dart run tool/bin/probe_turn.dart http://localhost:8080 \
+    "first message" "@pick 1" \
+    "@fill saved=SEK 500,000 | before tax=SEK 130,000 a month"
+  ```
+  - `@pick <number or words>` taps an option of the last `Choice`, the
+    recommended one first.
+  - `@fill <words>=<answer> | …` fills the last `Questions` card, each answer
+    to the field whose label holds the words; fields no answer matches are
+    left empty.
+  - `@tap <action> {context}` sends any block's action with context added,
+    such as a down payment.
+  - `HOMEWARD_PROBE_DETAIL` prints what Gemini wrote in each block and the
+    brief; `HOMEWARD_PROBE_PAUSE_SECONDS` paces the turns under Flash-Lite's
+    requests a minute.
 - The probe reads `HOMEWARD_EVAL_GEMINI_KEY` and
   `HOMEWARD_EVAL_GEMINI_MOON_KEY` from `.env`. Never print, cat, or echo keys
   or `.env`, and redact `AIza…` and `csk-…` in any log you show.

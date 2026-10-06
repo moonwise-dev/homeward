@@ -38,6 +38,7 @@ _AffordabilitySlice _$AffordabilitySliceFromJson(
       'schedule',
       'profile',
       'downPaymentStated',
+      'ageAssumed',
       'homeId',
       'homeName',
     ],
@@ -147,6 +148,7 @@ _AffordabilitySlice _$AffordabilitySliceFromJson(
       'downPaymentStated',
       (v) => v as bool? ?? false,
     ),
+    ageAssumed: $checkedConvert('ageAssumed', (v) => v as bool? ?? false),
     homeId: $checkedConvert('homeId', (v) => v as String?),
     homeName: $checkedConvert('homeName', (v) => v as String?),
   );
@@ -182,6 +184,7 @@ Map<String, dynamic> _$AffordabilitySliceToJson(
   'schedule': ?instance.schedule?.toJson(),
   'profile': ?instance.profile?.toJson(),
   'downPaymentStated': instance.downPaymentStated,
+  'ageAssumed': instance.ageAssumed,
   'homeId': ?instance.homeId,
   'homeName': ?instance.homeName,
 };

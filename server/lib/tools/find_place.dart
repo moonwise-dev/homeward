@@ -6,6 +6,7 @@ import '../research/open_data/geo_place.dart';
 import '../research/open_data/open_data_unavailable.dart';
 import '../research/research.dart';
 import 'agent_tool.dart';
+import 'draw.dart';
 import 'tool_context.dart';
 
 final class FindPlace extends AgentTool {
@@ -141,9 +142,12 @@ final class FindPlace extends AgentTool {
             'ids': unavailable,
             'why': 'OpenStreetMap search did not answer; try again shortly.',
           },
+        if (found.isNotEmpty)
+          'draw': [
+            block('map', 'WeekMap', {'markers': boundTo('/places')}),
+          ],
         'note':
-            'The places are in /places. WeekMap shows them on a map, '
-            '"markers": { "path": "/places" }, and measure_week measures '
+            'The places are in /places. $drawNote measure_week measures '
             'the trips to them from a home.',
       },
       seeds: {if (found.isNotEmpty) placesSlice.name: places},

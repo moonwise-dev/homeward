@@ -8,14 +8,16 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 Since the reset (D129) Homeward's own blocks came back one at a time, each
 with the chunk of `docs/ROADMAP.md` that needed it, from `Fact` (C4) to
-`LoanBalanceChart`, `SavingsPlan`, and `MarketSnapshotCard` (C10b) and
-`WeekMap` (C8b): 25 blocks in five families.
+`LoanBalanceChart`, `SavingsPlan`, and `MarketSnapshotCard` (C10b), `WeekMap`
+(C8b), and `PlanOverview` and `Questions` (C11): 27 blocks in five families.
 
 ## Design Principles
 
 1. **Building blocks, not screens.** The catalog never holds a screen, a step,
    or a flow. Gemini composes every screen from blocks as the conversation
    goes, so two buyers end up on structurally different screens.
+   `PlanOverview` shows the steps Gemini wrote for one household; the catalog
+   fixes none of them.
 2. **A catalog others can build on.** 25 to 30 blocks in families (D140), so
    Homeward's journeys and the ones a developer or a Google field engineer
    builds next share one vocabulary. The money blocks are the core of a
@@ -48,12 +50,14 @@ in `basicComponentSummaries`:
 `CheckBox`, `ChoicePicker`, `TextField`, `DateTimeInput`.
 
 The core components, `coreComponents`: the layout components `Column`,
-`Row`, `Card`, `Text`, `Button`, and `Divider`, `Fact`, which every plan
-uses, `Choice`, which every ask uses, and `AffordabilitySummary` and
-`RuleNote`, since money is in every plan. The skill always carries their full
-schemas, and correction rounds offer them (D110, D143 to D146). Every other
-component, `MonthlyCostBreakdown` first, is in the index only, and Gemini
-reads it through `component_docs` when it wants it.
+`Row`, `Card`, `Text`, `Button`, and `Divider`; `PlanOverview`, `Brief`, and
+`Fact`, which every plan uses; `Choice` and `Questions`, which every ask
+uses; and `AffordabilitySummary` and `RuleNote`, since money is in every
+plan. The skill always carries their full schemas and examples, and
+correction and finishing rounds offer them (D110, D143 to D146, D165). Every
+other component, `MonthlyCostBreakdown` first, is in the index only. The
+tool that seeds its data answers with it ready to draw (D167), and Gemini
+reads it through `component_docs` only when no tool result has given it.
 
 Not agent-visible: `Image`, `Video`, `AudioPlayer`, `Modal`, `Slider`.
 
@@ -63,8 +67,10 @@ Buttons send actions the model names itself (`docs/PROTOCOL.md`).
 
 | Family | Block | What it shows | Properties |
 | --- | --- | --- | --- |
+| Understanding | `PlanOverview` | The plan at a glance, first on the plan panel: "Your plan" with the step Gemini is on of how many, the household's story so far in a sentence or two, and the steps Gemini wrote for this household as a list down the card, each done with a tick and what was found, now, marked and with what is being worked out, or next (D164) | `story`, one or two sentences with no figures; `steps`, two to six, each a `title`, a `state`, `done`, `now`, or `next`, and an optional `note` |
 | Understanding | `Fact` | One item of the brief: the sentence, and where it came from: "You said", "Deduced from" with the buyer's words, or "You confirmed". A deduction with an `answer` action offers Right and Not quite (D144) | `fact`, bound to one item, `{ "path": "/brief/<id>" }`; `answer`, an optional action |
 | Understanding | `Choice` | One decision as an inline ask: the question, two to five options, the recommended one first with why, and a line pointing at the text field for any other answer (D145) | `question`; `options`, each a `label` and an optional `detail`; `recommended`, the label of one option; `because`; `answer`, an action |
+| Understanding | `Questions` | A few facts only the buyer knows, asked together as an inline ask: a title, up to six fields, each an amount with its currency and period, a number, a short text, or a pick from options shown as chips, a hint under a field, and one button that sends every answer; a field left empty is not sent, and after sending the card stays as the record (D165) | `title`, optional; `fields`, each an `id`, a `label`, a `kind`, `money`, `number`, `text`, or `pick`, and for money a `currency` and a `period`, for a pick its `options`, and an optional `hint`; `send`, the button's words; `answer`, an action |
 | Understanding | `Brief` | Sections of the brief, one kind or several: the household, money, needs, habits, wants, places, and what is open, each item with where it came from, as `Fact` shows it; a deduction offers Right and Not quite when the block has an `answer` action (D158) | `brief`, always `{ "path": "/brief" }`; `kinds`, an optional list of kinds; `title`, optional; `answer`, an optional action |
 | Understanding | `HouseholdSummary` | Who the household is and what they stated, as `compute_affordability` kept it: adults, children's ages, borrowers, age, tax residence, work, and use of the home, then the monthly incomes, debts, and savings as they gave them, with the sample exchange rates used (D158) | `affordability`, always `{ "path": "/affordability" }` |
 | Money | `MoneyInput` | An amount field with its currency and period that writes `{ amount, currency, per }`, the shape the money tools take, to the path it binds; a `Button` beside it sends the path in its action's context; restored (D158) | `label`; `value`, a path the field writes, such as `{ "path": "/answers/income" }`; `currency`, an ISO 4217 code; `period`, `once`, `month`, or `year` |
@@ -91,6 +97,18 @@ Buttons send actions the model names itself (`docs/PROTOCOL.md`).
 
 A `Choice` tap sends its `answer` action at once, with `choice` and `label`,
 the option's label, added to its context; the tapped option stays marked.
+
+A `Questions` button sends its `answer` action with `answers`, an object of
+each answered field's ID and the answer as the buyer gave it, such as
+`"SEK 130,000 a month"`, `"38"`, or the option tapped, and `label`, one line
+per answer for the conversation, such as "What you have saved: SEK 500,000".
+The answers count as the buyer's words for `update_brief` and the money
+tools. A money field without a currency, or a pick without options, is drawn
+as a plain field.
+
+A `PlanOverview` binds nothing: Gemini writes its story and steps and sends
+it again as they change. On the plan panel the app draws each child of the
+root `Column` as a card of its own (D169), so the overview is the first card.
 
 A block that binds a slice, such as `AffordabilitySummary` or `Fact`, is
 refused until the tool that seeds it has run: its whole path, or every path

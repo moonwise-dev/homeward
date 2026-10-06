@@ -36,7 +36,7 @@ class ExchangeSection extends ConsumerWidget {
     final styles = AppTextStyles.of(context);
     final agent = ref.watch(agentRepositoryProvider);
     final entry = section.entry;
-    final prompt = _promptText(section.prompt);
+    final prompt = promptText(section.prompt);
     return AppReveal(
       enabled: isLatest,
       alignment: 0.08,
@@ -109,10 +109,3 @@ class ExchangeSection extends ConsumerWidget {
     AgentTurnStatus.streaming || AgentTurnStatus.completed => const [],
   };
 }
-
-String? _promptText(TranscriptEntry? prompt) => switch (prompt) {
-  BuyerEntry(:final text) => text.trim(),
-  BuyerActionEntry(:final label?) => label,
-  BuyerActionEntry(:final actionName) => actionLabel(actionName),
-  _ => null,
-};

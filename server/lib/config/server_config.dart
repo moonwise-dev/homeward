@@ -18,6 +18,7 @@ abstract class ServerConfig with _$ServerConfig {
     required Duration firstStepDeadline,
     required Duration modelCooldown,
     required int maxCorrections,
+    required int maxFinishingRounds,
     required List<String> allowedOrigins,
     required bool appCheckEnforced,
     required String promptsDirectory,
@@ -52,6 +53,9 @@ abstract class ServerConfig with _$ServerConfig {
       firstStepDeadline: seconds('HOMEWARD_FIRST_STEP_DEADLINE', 20),
       modelCooldown: seconds('HOMEWARD_MODEL_COOLDOWN', 300),
       maxCorrections: int.parse(read('HOMEWARD_MAX_CORRECTIONS', '2')),
+      maxFinishingRounds: int.parse(
+        read('HOMEWARD_MAX_FINISHING_ROUNDS', '1'),
+      ),
       allowedOrigins: list(
         'HOMEWARD_ALLOWED_ORIGINS',
         'https://homeward-genui.web.app,'
