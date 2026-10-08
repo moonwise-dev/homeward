@@ -16,6 +16,7 @@ import '../../core/ui/app_status_line.dart';
 import '../../core/ui/app_surface_entry.dart';
 import '../view_model/journey_view_model.dart';
 import 'action_label.dart';
+import 'plan_receipt.dart';
 
 class ExchangeSection extends ConsumerWidget {
   const ExchangeSection({
@@ -23,6 +24,7 @@ class ExchangeSection extends ConsumerWidget {
     required this.section,
     required this.isLatest,
     required this.onRetry,
+    required this.onShowOnPlan,
     super.key,
   });
 
@@ -30,6 +32,7 @@ class ExchangeSection extends ConsumerWidget {
   final JourneySection section;
   final bool isLatest;
   final VoidCallback onRetry;
+  final ValueChanged<String> onShowOnPlan;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,6 +40,7 @@ class ExchangeSection extends ConsumerWidget {
     final agent = ref.watch(agentRepositoryProvider);
     final entry = section.entry;
     final prompt = promptText(section.prompt);
+    final changes = receiptChanges(entry);
     return AppReveal(
       enabled: isLatest,
       alignment: 0.08,
@@ -52,6 +56,11 @@ class ExchangeSection extends ConsumerWidget {
               ),
             if (entry.text.isNotEmpty)
               SelectableText(entry.text, style: styles.body),
+            if (changes.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.sm),
+                child: PlanReceipt(changes: changes, onShow: onShowOnPlan),
+              ),
             for (final surfaceId in inlineSurfaceIds(entry))
               Padding(
                 padding: const EdgeInsets.only(top: AppSpacing.md),

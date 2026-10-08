@@ -109,6 +109,10 @@ reduced motion.
 - On the plan panel each card enters the same way as Gemini adds it, and a
   card whose content changes resizes over the same 200 ms, so the plan is
   seen to grow (D169).
+- A card the latest turn added or changed has an `accent` border and a New
+  or Updated tag on its top edge (D180). Showing a card from the
+  conversation scrolls the panel to it over 320 ms and washes it in
+  `accentSoft` once.
 
 ## Charts
 

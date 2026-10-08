@@ -31,6 +31,36 @@ class JourneyScreen extends HookConsumerWidget {
     final isWide = MediaQuery.sizeOf(context).width >= AppSizes.twoPane;
     final showsWire = useState(false);
     final wirePane = isWide && showsWire.value;
+    final tabs = useTabController(initialLength: 2);
+    final planFocus = useValueNotifier<String?>(null);
+    final hasUnseenChanges = useState(false);
+    useEffect(() {
+      void markSeen() {
+        if (tabs.index == _planTab) {
+          hasUnseenChanges.value = false;
+        }
+      }
+
+      tabs.addListener(markSeen);
+      return () => tabs.removeListener(markSeen);
+    }, [tabs]);
+    ref.listen(provider, (previous, next) {
+      final finished =
+          (previous?.conversation.isRunning ?? false) &&
+          !next.conversation.isRunning;
+      if (!finished || next.latestChanges.isEmpty) {
+        return;
+      }
+      planFocus.value = next.sectionToShow;
+      hasUnseenChanges.value = !isWide && tabs.index != _planTab;
+    });
+    void showOnPlan(String sectionId) {
+      planFocus.value = sectionId;
+      if (!isWide) {
+        tabs.animateTo(_planTab);
+      }
+    }
+
     useEffect(() {
       Future.microtask(
         () => ref.read(openPlanProvider.notifier).open(sessionId),
@@ -50,6 +80,7 @@ class JourneyScreen extends HookConsumerWidget {
                   pendingPrompt: promptText(state.pendingPrompt),
                   onRetry: viewModel.retry,
                   onStop: viewModel.stop,
+                  onShowOnPlan: showOnPlan,
                 ),
         ),
         Center(
@@ -77,6 +108,8 @@ class JourneyScreen extends HookConsumerWidget {
         sessionId: sessionId,
         hasPlan: state.hasPlan,
         isRunning: conversation.isRunning,
+        changes: state.latestChanges,
+        focus: planFocus,
       ),
     );
     final actions = [
@@ -128,23 +161,38 @@ class JourneyScreen extends HookConsumerWidget {
         ),
       );
     }
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Homeward'),
-          actions: actions,
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Conversation'),
-              Tab(text: 'Plan'),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Homeward'),
+        actions: actions,
+        bottom: TabBar(
+          controller: tabs,
+          tabs: [
+            const Tab(text: 'Conversation'),
+            Tab(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: AppSpacing.xs,
+                children: [
+                  const Text('Plan'),
+                  if (hasUnseenChanges.value)
+                    Semantics(
+                      label: 'changed',
+                      child: Icon(Icons.circle, size: 8, color: colors.accent),
+                    ),
+                ],
+              ),
+            ),
+          ],
         ),
-        body: SafeArea(child: TabBarView(children: [talk, plan])),
+      ),
+      body: SafeArea(
+        child: TabBarView(controller: tabs, children: [talk, plan]),
       ),
     );
   }
+
+  static const _planTab = 1;
 }
 
 class _EmptyJourney extends StatelessWidget {

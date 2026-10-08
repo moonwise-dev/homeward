@@ -33,8 +33,18 @@ sealed class TranscriptEntry with _$TranscriptEntry {
     @Default('') String text,
     @Default([]) List<String> surfaceIds,
     @Default(ResearchProgress()) ResearchProgress progress,
+    @Default([]) List<PlanChange> planChanges,
     AppError? error,
   }) = AgentEntry;
+}
+
+@freezed
+abstract class PlanChange with _$PlanChange {
+  const factory PlanChange({
+    required String sectionId,
+    required String type,
+    required bool isNew,
+  }) = _PlanChange;
 }
 
 enum AgentTurnStatus { streaming, completed, canceled, failed }

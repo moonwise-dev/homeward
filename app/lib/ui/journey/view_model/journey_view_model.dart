@@ -153,7 +153,26 @@ abstract class JourneyState with _$JourneyState {
   bool get hasPlan => conversation.entries.any(
     (entry) => entry is AgentEntry && entry.surfaceIds.contains(planSurfaceId),
   );
+
+  List<PlanChange> get latestChanges =>
+      switch (conversation.entries.lastOrNull) {
+        AgentEntry(:final planChanges) => planChanges,
+        _ => const [],
+      };
+
+  String? get sectionToShow =>
+      (latestChanges.where((change) => change.isNew).firstOrNull ??
+              latestChanges.where(_isWorthNaming).firstOrNull)
+          ?.sectionId;
 }
+
+List<PlanChange> receiptChanges(AgentEntry entry) => [
+  for (final change in entry.planChanges)
+    if (_isWorthNaming(change)) change,
+];
+
+bool _isWorthNaming(PlanChange change) =>
+    change.isNew || change.type != 'PlanOverview';
 
 List<String> inlineSurfaceIds(AgentEntry entry) => [
   for (final surfaceId in entry.surfaceIds)

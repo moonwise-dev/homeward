@@ -432,12 +432,12 @@ return agent(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String id,  String text)?  buyer,TResult Function( String id,  String actionName,  String? label)?  buyerAction,TResult Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  AppError? error)?  agent,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String id,  String text)?  buyer,TResult Function( String id,  String actionName,  String? label)?  buyerAction,TResult Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  List<PlanChange> planChanges,  AppError? error)?  agent,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case BuyerEntry() when buyer != null:
 return buyer(_that.id,_that.text);case BuyerActionEntry() when buyerAction != null:
 return buyerAction(_that.id,_that.actionName,_that.label);case AgentEntry() when agent != null:
-return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.progress,_that.error);case _:
+return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.progress,_that.planChanges,_that.error);case _:
   return orElse();
 
 }
@@ -455,12 +455,12 @@ return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String id,  String text)  buyer,required TResult Function( String id,  String actionName,  String? label)  buyerAction,required TResult Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  AppError? error)  agent,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String id,  String text)  buyer,required TResult Function( String id,  String actionName,  String? label)  buyerAction,required TResult Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  List<PlanChange> planChanges,  AppError? error)  agent,}) {final _that = this;
 switch (_that) {
 case BuyerEntry():
 return buyer(_that.id,_that.text);case BuyerActionEntry():
 return buyerAction(_that.id,_that.actionName,_that.label);case AgentEntry():
-return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.progress,_that.error);}
+return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.progress,_that.planChanges,_that.error);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -474,12 +474,12 @@ return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String id,  String text)?  buyer,TResult? Function( String id,  String actionName,  String? label)?  buyerAction,TResult? Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  AppError? error)?  agent,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String id,  String text)?  buyer,TResult? Function( String id,  String actionName,  String? label)?  buyerAction,TResult? Function( String id,  TurnRequest request,  AgentTurnStatus status,  String text,  List<String> surfaceIds,  ResearchProgress progress,  List<PlanChange> planChanges,  AppError? error)?  agent,}) {final _that = this;
 switch (_that) {
 case BuyerEntry() when buyer != null:
 return buyer(_that.id,_that.text);case BuyerActionEntry() when buyerAction != null:
 return buyerAction(_that.id,_that.actionName,_that.label);case AgentEntry() when agent != null:
-return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.progress,_that.error);case _:
+return agent(_that.id,_that.request,_that.status,_that.text,_that.surfaceIds,_that.progress,_that.planChanges,_that.error);case _:
   return null;
 
 }
@@ -633,7 +633,7 @@ as String?,
 
 
 class AgentEntry implements TranscriptEntry {
-  const AgentEntry({required this.id, required this.request, required this.status, this.text = '',  List<String> surfaceIds = const [], this.progress = const ResearchProgress(), this.error}): _surfaceIds = surfaceIds;
+  const AgentEntry({required this.id, required this.request, required this.status, this.text = '',  List<String> surfaceIds = const [], this.progress = const ResearchProgress(),  List<PlanChange> planChanges = const [], this.error}): _surfaceIds = surfaceIds,_planChanges = planChanges;
   
 
 @override final  String id;
@@ -648,6 +648,13 @@ class AgentEntry implements TranscriptEntry {
 }
 
 @JsonKey() final  ResearchProgress progress;
+ final  List<PlanChange> _planChanges;
+@JsonKey() List<PlanChange> get planChanges {
+  if (_planChanges is EqualUnmodifiableListView) return _planChanges;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_planChanges);
+}
+
  final  AppError? error;
 
 /// Create a copy of TranscriptEntry
@@ -660,18 +667,18 @@ $AgentEntryCopyWith<AgentEntry> get copyWith => _$AgentEntryCopyWithImpl<AgentEn
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is AgentEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.request, request) || other.request == request)&&(identical(other.status, status) || other.status == status)&&(identical(other.text, text) || other.text == text)&&const DeepCollectionEquality().equals(other.surfaceIds, _surfaceIds)&&(identical(other.progress, progress) || other.progress == progress)&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is AgentEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.request, request) || other.request == request)&&(identical(other.status, status) || other.status == status)&&(identical(other.text, text) || other.text == text)&&const DeepCollectionEquality().equals(other.surfaceIds, _surfaceIds)&&(identical(other.progress, progress) || other.progress == progress)&&const DeepCollectionEquality().equals(other.planChanges, _planChanges)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,request,status,text,const DeepCollectionEquality().hash(_surfaceIds),progress,error);
+    return Object.hash(runtimeType,id,request,status,text,const DeepCollectionEquality().hash(_surfaceIds),progress,const DeepCollectionEquality().hash(_planChanges),error);
 }
 
 @override
 String toString() {
-    return 'TranscriptEntry.agent(id: $id, request: $request, status: $status, text: $text, surfaceIds: $surfaceIds, progress: $progress, error: $error)';
+    return 'TranscriptEntry.agent(id: $id, request: $request, status: $status, text: $text, surfaceIds: $surfaceIds, progress: $progress, planChanges: $planChanges, error: $error)';
 }
 
 
@@ -682,7 +689,7 @@ abstract mixin class $AgentEntryCopyWith<$Res> implements $TranscriptEntryCopyWi
   factory $AgentEntryCopyWith(AgentEntry value, $Res Function(AgentEntry) _then) = _$AgentEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, TurnRequest request, AgentTurnStatus status, String text, List<String> surfaceIds, ResearchProgress progress, AppError? error
+ String id, TurnRequest request, AgentTurnStatus status, String text, List<String> surfaceIds, ResearchProgress progress, List<PlanChange> planChanges, AppError? error
 });
 
 
@@ -699,7 +706,7 @@ class _$AgentEntryCopyWithImpl<$Res>
 
 /// Create a copy of TranscriptEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? request = null,Object? status = null,Object? text = null,Object? surfaceIds = null,Object? progress = null,Object? error = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? request = null,Object? status = null,Object? text = null,Object? surfaceIds = null,Object? progress = null,Object? planChanges = null,Object? error = freezed,}) {
   return _then(AgentEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,request: null == request ? _self.request : request // ignore: cast_nullable_to_non_nullable
@@ -707,7 +714,8 @@ as TurnRequest,status: null == status ? _self.status : status // ignore: cast_nu
 as AgentTurnStatus,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,surfaceIds: null == surfaceIds ? _self._surfaceIds : surfaceIds // ignore: cast_nullable_to_non_nullable
 as List<String>,progress: null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
-as ResearchProgress,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as ResearchProgress,planChanges: null == planChanges ? _self._planChanges : planChanges // ignore: cast_nullable_to_non_nullable
+as List<PlanChange>,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as AppError?,
   ));
 }
@@ -743,6 +751,276 @@ $AppErrorCopyWith<$Res>? get error {
     return _then(_self.copyWith(error: value));
   });
 }
+}
+
+/// @nodoc
+mixin _$PlanChange {
+
+ String get sectionId; String get type; bool get isNew;
+/// Create a copy of PlanChange
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PlanChangeCopyWith<PlanChange> get copyWith => _$PlanChangeCopyWithImpl<PlanChange>(this as PlanChange, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as PlanChange;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlanChange&&(identical(other.sectionId, _this.sectionId) || other.sectionId == _this.sectionId)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.isNew, _this.isNew) || other.isNew == _this.isNew));
+}
+
+
+@override
+int get hashCode {
+  final _this = this as PlanChange;
+  return Object.hash(runtimeType,_this.sectionId,_this.type,_this.isNew);
+}
+
+@override
+String toString() {
+  final _this = this as PlanChange;
+  return 'PlanChange(sectionId: ${_this.sectionId}, type: ${_this.type}, isNew: ${_this.isNew})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PlanChangeCopyWith<$Res>  {
+  factory $PlanChangeCopyWith(PlanChange value, $Res Function(PlanChange) _then) = _$PlanChangeCopyWithImpl;
+@useResult
+$Res call({
+ String sectionId, String type, bool isNew
+});
+
+
+
+
+}
+/// @nodoc
+class _$PlanChangeCopyWithImpl<$Res>
+    implements $PlanChangeCopyWith<$Res> {
+  _$PlanChangeCopyWithImpl(this._self, this._then);
+
+  final PlanChange _self;
+  final $Res Function(PlanChange) _then;
+
+/// Create a copy of PlanChange
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? sectionId = null,Object? type = null,Object? isNew = null,}) {
+  return _then(PlanChange(
+sectionId: null == sectionId ? _self.sectionId : sectionId // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,isNew: null == isNew ? _self.isNew : isNew // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [PlanChange].
+extension PlanChangePatterns on PlanChange {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PlanChange value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _PlanChange() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PlanChange value)  $default,){
+final _that = this;
+switch (_that) {
+case _PlanChange():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PlanChange value)?  $default,){
+final _that = this;
+switch (_that) {
+case _PlanChange() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String sectionId,  String type,  bool isNew)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _PlanChange() when $default != null:
+return $default(_that.sectionId,_that.type,_that.isNew);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String sectionId,  String type,  bool isNew)  $default,) {final _that = this;
+switch (_that) {
+case _PlanChange():
+return $default(_that.sectionId,_that.type,_that.isNew);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String sectionId,  String type,  bool isNew)?  $default,) {final _that = this;
+switch (_that) {
+case _PlanChange() when $default != null:
+return $default(_that.sectionId,_that.type,_that.isNew);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _PlanChange implements PlanChange {
+  const _PlanChange({required this.sectionId, required this.type, required this.isNew});
+  
+
+@override final  String sectionId;
+@override final  String type;
+@override final  bool isNew;
+
+/// Create a copy of PlanChange
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$PlanChangeCopyWith<_PlanChange> get copyWith => __$PlanChangeCopyWithImpl<_PlanChange>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlanChange&&(identical(other.sectionId, sectionId) || other.sectionId == sectionId)&&(identical(other.type, type) || other.type == type)&&(identical(other.isNew, isNew) || other.isNew == isNew));
+}
+
+
+@override
+int get hashCode {
+    return Object.hash(runtimeType,sectionId,type,isNew);
+}
+
+@override
+String toString() {
+    return 'PlanChange(sectionId: $sectionId, type: $type, isNew: $isNew)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$PlanChangeCopyWith<$Res> implements $PlanChangeCopyWith<$Res> {
+  factory _$PlanChangeCopyWith(_PlanChange value, $Res Function(_PlanChange) _then) = __$PlanChangeCopyWithImpl;
+@override @useResult
+$Res call({
+ String sectionId, String type, bool isNew
+});
+
+
+
+
+}
+/// @nodoc
+class __$PlanChangeCopyWithImpl<$Res>
+    implements _$PlanChangeCopyWith<$Res> {
+  __$PlanChangeCopyWithImpl(this._self, this._then);
+
+  final _PlanChange _self;
+  final $Res Function(_PlanChange) _then;
+
+/// Create a copy of PlanChange
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? sectionId = null,Object? type = null,Object? isNew = null,}) {
+  return _then(_PlanChange(
+sectionId: null == sectionId ? _self.sectionId : sectionId // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,isNew: null == isNew ? _self.isNew : isNew // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
 }
 
 /// @nodoc

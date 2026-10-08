@@ -37,6 +37,13 @@ As of 2026-10-08.
   the same plan, the gallery and the key screen returned to it, Start over
   opened a new one, and five app bar actions fit beside the title at phone
   width. Not looked at: a release build, a device, and the hosted path.
+- **The plan says what changed** (D180, 2026-10-08). The owner found the
+  conversation and the plan hard to follow side by side. Each reply now
+  lists the plan cards the turn added or changed as chips that show them,
+  those cards carry a New or Updated tag, the panel scrolls to the first
+  new one, and on a phone the Plan tab carries a dot. Looked at in headless
+  Chrome over five live turns, at 1440 and 390 dp, in both themes, with a
+  reload in between. Not looked at: a real phone.
 - **Not hosted.** Nothing serves. On 2026-10-05 the Cloud Run URL in the
   `Makefile` answered 503 and Firebase Hosting 404, and `make server-image`
   has not run since the root `.dockerignore` began to admit `markets/`.

@@ -14,6 +14,7 @@ class ConversationThread extends StatelessWidget {
     required this.sections,
     required this.onRetry,
     required this.onStop,
+    required this.onShowOnPlan,
     this.pending,
     this.pendingPrompt,
     super.key,
@@ -25,6 +26,7 @@ class ConversationThread extends StatelessWidget {
   final String? pendingPrompt;
   final ValueChanged<String> onRetry;
   final VoidCallback onStop;
+  final ValueChanged<String> onShowOnPlan;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +48,7 @@ class ConversationThread extends StatelessWidget {
                   section: section,
                   isLatest: pending == null && index == sections.length - 1,
                   onRetry: () => onRetry(section.entry.id),
+                  onShowOnPlan: onShowOnPlan,
                 ),
               if (pending != null && pendingPrompt != null)
                 Padding(

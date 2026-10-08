@@ -13,6 +13,7 @@ import '../../domain/models/app_error.dart';
 import '../../domain/models/plan_conversation.dart';
 import '../services/wire_log.dart';
 import 'gemini_key_repository.dart';
+import 'plan_snapshot.dart';
 import 'repository_guard.dart';
 
 part 'agent_repository.g.dart';
@@ -75,16 +76,19 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
     }
     plan.isOpened = true;
     final turns = (await _client.transcript(sessionId)).turns;
+    var before = plan.snapshot;
     for (final (index, turn) in turns.indexed) {
+      for (final message in turn.messages) {
+        plan.surfaces.handleMessage(a2ui.A2uiMessage.fromJson(message));
+      }
       final askedAgain =
           turn.status == TurnStatus.failed &&
           turns.elementAtOrNull(index + 1)?.input == turn.input;
       if (!askedAgain) {
+        final after = plan.snapshot;
         plan.put(_buyerEntry(turn.input));
-        plan.put(_agentEntry(turn));
-      }
-      for (final message in turn.messages) {
-        plan.surfaces.handleMessage(a2ui.A2uiMessage.fromJson(message));
+        plan.put(_agentEntry(turn, planChanges(before, after)));
+        before = after;
       }
     }
     plan.emit();
@@ -102,8 +106,12 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
     ),
   };
 
-  TranscriptEntry _agentEntry(TurnRecord turn) => TranscriptEntry.agent(
+  TranscriptEntry _agentEntry(
+    TurnRecord turn,
+    List<PlanChange> planChanges,
+  ) => TranscriptEntry.agent(
     id: _newEntryId(),
+    planChanges: planChanges,
     request: switch (turn.input) {
       RecordedText(:final text) => TurnRequest.text(text),
       RecordedAction(
@@ -229,7 +237,8 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
     final stopRequest = Completer<void>();
     plan
       ..stopRequest = stopRequest
-      ..isRunning = true;
+      ..isRunning = true
+      ..before = plan.snapshot;
     var attempts = 0;
     var waitedForGemini = false;
     try {
@@ -247,6 +256,7 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
               request: request,
               status: AgentTurnStatus.streaming,
               surfaceIds: keptPlan,
+              planChanges: plan.turnChanges,
             ),
           )
           ..emit();
@@ -387,6 +397,13 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
                 entry.copyWith(surfaceIds: [...entry.surfaceIds, surfaceId]),
           );
         }
+        if (_a2uiSurfaceId(normalized) == planSurfaceId) {
+          final changes = plan.turnChanges;
+          plan.updateAgent(
+            entryId,
+            (entry) => entry.copyWith(planChanges: changes),
+          );
+        }
       case AgentProgress(:final progress):
         plan.updateAgent(
           entryId,
@@ -477,8 +494,13 @@ class _PlanSession {
   StreamSubscription<ChatMessage>? submissions;
   Completer<void>? stopRequest;
   String? taskId;
+  PlanSnapshot before = const {};
   var isRunning = false;
   var isOpened = false;
+
+  PlanSnapshot get snapshot => planSnapshot(surfaces.contextFor(planSurfaceId));
+
+  List<PlanChange> get turnChanges => planChanges(before, snapshot);
 
   PlanConversation get conversation => PlanConversation(
     entries: List.unmodifiable(entries),

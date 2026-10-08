@@ -370,7 +370,7 @@ nearest folder both can see.
 | --- | --- |
 | `startup` | Waiting for the key, opening a new plan |
 | `api_key` | Entering, verifying, and removing the Gemini key |
-| `journey` | The conversation with each turn's text and inline ask, the plan panel, the working card, the text field, turn streaming, and the app bar: Start over, the gallery, the wire inspector, the key, Appearance |
+| `journey` | The conversation with each turn's text, the chips for what it changed on the plan, and its inline ask, the plan panel, the working card, the text field, turn streaming, and the app bar: Start over, the gallery, the wire inspector, the key, Appearance |
 | `gallery` | An index of every catalog item by family, and a page per item with its examples and parameters |
 | `wire_inspector` | A2A frames with their sizes, the A2UI message each carried, the live data model of a surface, and the counters |
 
@@ -466,7 +466,7 @@ place each turn.
 
 | Width | Layout |
 | --- | --- |
-| < 1000 dp | Two tabs, Conversation and Plan, each filling the screen. The wire inspector opens as a sheet. |
+| < 1000 dp | Two tabs, Conversation and Plan, each filling the screen. The Plan tab carries a dot while it holds a change the buyer has not seen (D180). The wire inspector opens as a sheet. |
 | ≥ 1000 dp | The conversation, at most 640 dp wide, beside the plan panel. The wire inspector can open as a third pane, 380–440 dp wide, from the app bar. |
 
 ### Screens
@@ -502,13 +502,25 @@ place each turn.
   inline ask as a card. Only the latest turn's ask takes taps; earlier asks
   stay as the record of what was decided. A `Choice` sends the option at once
   when tapped and keeps it marked (D145). A `Questions` card sends every
-  answer with its one button (D165).
+  answer with its one button (D165). Between the reply and the ask, a line
+  of chips names each plan card the turn added or changed; a tap shows that
+  card on the plan (D180).
 - **The plan panel** (D131): the plan's living surface, `plan`. Each turn
   changes it in place as the turn streams. Each child of its root `Column` is
   drawn as a card of its own, entering as it is added (D169). A fact Homeward
   deduced offers Right and Not quite; a tap goes to Homeward as the buyer's
   next message (D144).
-- **While a turn runs**, the plan panel takes no taps, and what the buyer
+- **What a turn changed** (D180): the app compares each plan card before and
+  after a turn, its components and the data they bind, so nothing is asked
+  of the model or the server. A card the latest turn added or changed
+  carries a New or Updated tag until the next turn starts, and when a turn
+  ends the panel scrolls to the first card it added, or else the first it
+  changed below the overview, unless that card already starts in the upper
+  half of the panel. The reply's chips name new cards first, each heading
+  once, and leave out an overview that only changed. A reopened plan works
+  out the same from the server's record.
+- **While a turn runs**, a thin bar runs along the top of the plan panel,
+  the panel takes no taps, and what the buyer
   just said shows at once as their bubble, with a working card under it:
   the measuring steps from the server's progress data part while tools run
   (D108), otherwise a thinking line with the agent's text so far. Stop
