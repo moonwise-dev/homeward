@@ -9,7 +9,7 @@ import 'package:homeward_server/agent/prompt/prompt_assembler.dart';
 import 'package:homeward_server/agent/turn/tool_belt.dart';
 import 'package:homeward_server/agent/turn/turn_orchestrator.dart';
 import 'package:homeward_server/agent/turn/turn_settings.dart';
-import 'package:homeward_server/data/repository/in_memory_session_repository.dart';
+import 'package:homeward_server/data/repository/session_repository.dart';
 import 'package:homeward_server/gemini/gemini_exception.dart';
 import 'package:homeward_server/request/request_values.dart';
 import 'package:homeward_server/tools/homeward_tools.dart';
@@ -23,12 +23,9 @@ import '../support/test_research.dart';
 void main() {
   final prompts = PromptAssembler.load(Directory('prompts'));
   final catalog = CatalogValidator(homewardCatalogDocument());
-  late InMemorySessionRepository sessions;
+  late SessionRepository sessions;
 
-  setUp(() async {
-    sessions = InMemorySessionRepository(newId: () => 's-1');
-    await sessions.create('uid-1');
-  });
+  setUp(() => sessions = SessionRepository(newId: () => 's-1')..create());
 
   A2aHandler handlerFor(ScriptedInteractions script) => A2aHandler(
     turns: TurnOrchestrator(
@@ -47,7 +44,6 @@ void main() {
   Request rpc(
     String method,
     Map<String, Object?> params, {
-    String uid = 'uid-1',
     String? apiKey = 'key',
     bool extension = true,
   }) {
@@ -61,7 +57,7 @@ void main() {
         'params': params,
       }),
       headers: {if (extension) A2uiExtension.header: A2uiExtension.uri},
-    ).withCallerUid(uid);
+    );
     return apiKey == null ? request : request.withGeminiKey(apiKey);
   }
 
@@ -125,9 +121,7 @@ void main() {
         containsPair('state', 'completed'),
       );
       expect(
-        await body(
-          await handler(rpc('tasks/get', {'id': 'task-1'}, uid: 'uid-2')),
-        ),
+        await body(await handler(rpc('tasks/get', {'id': 'task-9'}))),
         containsPair('error', {'code': -32001, 'message': 'Task not found'}),
       );
     },
@@ -229,7 +223,7 @@ void main() {
         ((event['result']! as Map)['status']! as Map)['state'],
     ];
     expect(states, ['submitted', 'working', 'canceled']);
-    expect(await sessions.lease('s-1'), isTrue);
+    expect(sessions.lease('s-1'), isTrue);
     expect(
       await body(await handler(rpc('tasks/cancel', {'id': 'task-1'}))),
       containsPair('error', containsPair('code', -32002)),

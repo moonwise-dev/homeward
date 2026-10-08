@@ -7,7 +7,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../data/repositories/agent_repository.dart';
 import '../../../data/repositories/gemini_key_repository.dart';
-import '../../../data/repositories/plans_repository.dart';
 import '../../../domain/models/app_error.dart';
 import '../../../domain/models/plan_conversation.dart';
 import '../../../routing/router.dart';
@@ -36,6 +35,11 @@ class JourneyViewModel extends _$JourneyViewModel
   Future<void> _open(AgentRepository agent) async {
     try {
       await agent.open(sessionId);
+    } on ServerAppError catch (error, stackTrace) {
+      logError(error, stackTrace);
+      if (error.code == HomewardErrorCode.sessionNotFound && ref.mounted) {
+        ref.read(appRouterProvider).go(AppRoutes.startup);
+      }
     } on Object catch (error, stackTrace) {
       logError(error, stackTrace);
     }
@@ -50,14 +54,15 @@ class JourneyViewModel extends _$JourneyViewModel
       return;
     }
     setState((current) => current.copyWith(draft: ''));
-    await _sendText(text);
+    await ref.read(agentRepositoryProvider).sendText(sessionId, text);
   }
 
-  Future<void> _sendText(String text) async {
-    ref
-        .read(plansRepositoryProvider)
-        .recordActivity(sessionId, buyerText: text);
-    await ref.read(agentRepositoryProvider).sendText(sessionId, text);
+  Future<void> startOver() async {
+    final router = ref.read(appRouterProvider);
+    if (state.conversation.isRunning) {
+      await stop();
+    }
+    router.go(AppRoutes.startup);
   }
 
   Future<void> stop() async {

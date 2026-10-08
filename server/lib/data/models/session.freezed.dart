@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Session {
 
- String get id; String get ownerUid; int get turnCount; String? get lastInteractionId; DateTime? get updatedAt; List<TurnRecord> get turns;
+ String get id; int get turnCount; String? get lastInteractionId; List<TurnRecord> get turns;
 /// Create a copy of Session
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $SessionCopyWith<Session> get copyWith => _$SessionCopyWithImpl<Session>(this as
 @override
 bool operator ==(Object other) {
   final _this = this as Session;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Session&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.ownerUid, _this.ownerUid) || other.ownerUid == _this.ownerUid)&&(identical(other.turnCount, _this.turnCount) || other.turnCount == _this.turnCount)&&(identical(other.lastInteractionId, _this.lastInteractionId) || other.lastInteractionId == _this.lastInteractionId)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt)&&const DeepCollectionEquality().equals(other.turns, _this.turns));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Session&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.turnCount, _this.turnCount) || other.turnCount == _this.turnCount)&&(identical(other.lastInteractionId, _this.lastInteractionId) || other.lastInteractionId == _this.lastInteractionId)&&const DeepCollectionEquality().equals(other.turns, _this.turns));
 }
 
 
 @override
 int get hashCode {
   final _this = this as Session;
-  return Object.hash(runtimeType,_this.id,_this.ownerUid,_this.turnCount,_this.lastInteractionId,_this.updatedAt,const DeepCollectionEquality().hash(_this.turns));
+  return Object.hash(runtimeType,_this.id,_this.turnCount,_this.lastInteractionId,const DeepCollectionEquality().hash(_this.turns));
 }
 
 @override
 String toString() {
   final _this = this as Session;
-  return 'Session(id: ${_this.id}, ownerUid: ${_this.ownerUid}, turnCount: ${_this.turnCount}, lastInteractionId: ${_this.lastInteractionId}, updatedAt: ${_this.updatedAt}, turns: ${_this.turns})';
+  return 'Session(id: ${_this.id}, turnCount: ${_this.turnCount}, lastInteractionId: ${_this.lastInteractionId}, turns: ${_this.turns})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $SessionCopyWith<$Res>  {
   factory $SessionCopyWith(Session value, $Res Function(Session) _then) = _$SessionCopyWithImpl;
 @useResult
 $Res call({
- String id, String ownerUid, int turnCount, String? lastInteractionId, DateTime? updatedAt, List<TurnRecord> turns
+ String id, int turnCount, String? lastInteractionId, List<TurnRecord> turns
 });
 
 
@@ -68,14 +68,12 @@ class _$SessionCopyWithImpl<$Res>
 
 /// Create a copy of Session
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? ownerUid = null,Object? turnCount = null,Object? lastInteractionId = freezed,Object? updatedAt = freezed,Object? turns = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? turnCount = null,Object? lastInteractionId = freezed,Object? turns = null,}) {
   return _then(Session(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,ownerUid: null == ownerUid ? _self.ownerUid : ownerUid // ignore: cast_nullable_to_non_nullable
 as String,turnCount: null == turnCount ? _self.turnCount : turnCount // ignore: cast_nullable_to_non_nullable
 as int,lastInteractionId: freezed == lastInteractionId ? _self.lastInteractionId : lastInteractionId // ignore: cast_nullable_to_non_nullable
-as String?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,turns: null == turns ? _self.turns : turns // ignore: cast_nullable_to_non_nullable
+as String?,turns: null == turns ? _self.turns : turns // ignore: cast_nullable_to_non_nullable
 as List<TurnRecord>,
   ));
 }
@@ -161,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String ownerUid,  int turnCount,  String? lastInteractionId,  DateTime? updatedAt,  List<TurnRecord> turns)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  int turnCount,  String? lastInteractionId,  List<TurnRecord> turns)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Session() when $default != null:
-return $default(_that.id,_that.ownerUid,_that.turnCount,_that.lastInteractionId,_that.updatedAt,_that.turns);case _:
+return $default(_that.id,_that.turnCount,_that.lastInteractionId,_that.turns);case _:
   return orElse();
 
 }
@@ -182,10 +180,10 @@ return $default(_that.id,_that.ownerUid,_that.turnCount,_that.lastInteractionId,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String ownerUid,  int turnCount,  String? lastInteractionId,  DateTime? updatedAt,  List<TurnRecord> turns)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int turnCount,  String? lastInteractionId,  List<TurnRecord> turns)  $default,) {final _that = this;
 switch (_that) {
 case _Session():
-return $default(_that.id,_that.ownerUid,_that.turnCount,_that.lastInteractionId,_that.updatedAt,_that.turns);case _:
+return $default(_that.id,_that.turnCount,_that.lastInteractionId,_that.turns);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +200,10 @@ return $default(_that.id,_that.ownerUid,_that.turnCount,_that.lastInteractionId,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String ownerUid,  int turnCount,  String? lastInteractionId,  DateTime? updatedAt,  List<TurnRecord> turns)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  int turnCount,  String? lastInteractionId,  List<TurnRecord> turns)?  $default,) {final _that = this;
 switch (_that) {
 case _Session() when $default != null:
-return $default(_that.id,_that.ownerUid,_that.turnCount,_that.lastInteractionId,_that.updatedAt,_that.turns);case _:
+return $default(_that.id,_that.turnCount,_that.lastInteractionId,_that.turns);case _:
   return null;
 
 }
@@ -217,14 +215,12 @@ return $default(_that.id,_that.ownerUid,_that.turnCount,_that.lastInteractionId,
 
 
 class _Session extends Session {
-  const _Session({required this.id, required this.ownerUid, this.turnCount = 0, this.lastInteractionId, this.updatedAt,  List<TurnRecord> turns = const []}): _turns = turns,super._();
+  const _Session({required this.id, this.turnCount = 0, this.lastInteractionId,  List<TurnRecord> turns = const []}): _turns = turns,super._();
   
 
 @override final  String id;
-@override final  String ownerUid;
 @override@JsonKey() final  int turnCount;
 @override final  String? lastInteractionId;
-@override final  DateTime? updatedAt;
  final  List<TurnRecord> _turns;
 @override@JsonKey() List<TurnRecord> get turns {
   if (_turns is EqualUnmodifiableListView) return _turns;
@@ -243,18 +239,18 @@ _$SessionCopyWith<_Session> get copyWith => __$SessionCopyWithImpl<_Session>(thi
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Session&&(identical(other.id, id) || other.id == id)&&(identical(other.ownerUid, ownerUid) || other.ownerUid == ownerUid)&&(identical(other.turnCount, turnCount) || other.turnCount == turnCount)&&(identical(other.lastInteractionId, lastInteractionId) || other.lastInteractionId == lastInteractionId)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.turns, _turns));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Session&&(identical(other.id, id) || other.id == id)&&(identical(other.turnCount, turnCount) || other.turnCount == turnCount)&&(identical(other.lastInteractionId, lastInteractionId) || other.lastInteractionId == lastInteractionId)&&const DeepCollectionEquality().equals(other.turns, _turns));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,ownerUid,turnCount,lastInteractionId,updatedAt,const DeepCollectionEquality().hash(_turns));
+    return Object.hash(runtimeType,id,turnCount,lastInteractionId,const DeepCollectionEquality().hash(_turns));
 }
 
 @override
 String toString() {
-    return 'Session(id: $id, ownerUid: $ownerUid, turnCount: $turnCount, lastInteractionId: $lastInteractionId, updatedAt: $updatedAt, turns: $turns)';
+    return 'Session(id: $id, turnCount: $turnCount, lastInteractionId: $lastInteractionId, turns: $turns)';
 }
 
 
@@ -265,7 +261,7 @@ abstract mixin class _$SessionCopyWith<$Res> implements $SessionCopyWith<$Res> {
   factory _$SessionCopyWith(_Session value, $Res Function(_Session) _then) = __$SessionCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String ownerUid, int turnCount, String? lastInteractionId, DateTime? updatedAt, List<TurnRecord> turns
+ String id, int turnCount, String? lastInteractionId, List<TurnRecord> turns
 });
 
 
@@ -282,14 +278,12 @@ class __$SessionCopyWithImpl<$Res>
 
 /// Create a copy of Session
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? ownerUid = null,Object? turnCount = null,Object? lastInteractionId = freezed,Object? updatedAt = freezed,Object? turns = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? turnCount = null,Object? lastInteractionId = freezed,Object? turns = null,}) {
   return _then(_Session(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,ownerUid: null == ownerUid ? _self.ownerUid : ownerUid // ignore: cast_nullable_to_non_nullable
 as String,turnCount: null == turnCount ? _self.turnCount : turnCount // ignore: cast_nullable_to_non_nullable
 as int,lastInteractionId: freezed == lastInteractionId ? _self.lastInteractionId : lastInteractionId // ignore: cast_nullable_to_non_nullable
-as String?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,turns: null == turns ? _self._turns : turns // ignore: cast_nullable_to_non_nullable
+as String?,turns: null == turns ? _self._turns : turns // ignore: cast_nullable_to_non_nullable
 as List<TurnRecord>,
   ));
 }

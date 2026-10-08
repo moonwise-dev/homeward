@@ -1,16 +1,31 @@
+import '../../ids/random_hex.dart';
 import '../models/session.dart';
-import '../models/session_listing.dart';
 
-abstract interface class SessionRepository {
-  Future<Session> create(String ownerUid);
+final class SessionRepository {
+  SessionRepository({String Function()? newId, this.capacity = 500})
+    : _newId = newId ?? (() => randomHex(16));
 
-  Future<Session?> find(String id);
+  final String Function() _newId;
+  final int capacity;
+  final _sessions = <String, Session>{};
+  final _leased = <String>{};
 
-  Future<List<SessionListing>> listingsOf(String ownerUid);
+  Session create() {
+    final session = Session(id: _newId());
+    save(session);
+    while (_sessions.length > capacity) {
+      _sessions.remove(_sessions.keys.first);
+    }
+    return session;
+  }
 
-  Future<void> save(Session session);
+  Session? find(String id) => _sessions[id];
 
-  Future<bool> lease(String id);
+  void save(Session session) => _sessions
+    ..remove(session.id)
+    ..[session.id] = session;
 
-  Future<void> release(String id);
+  bool lease(String id) => _sessions.containsKey(id) && _leased.add(id);
+
+  void release(String id) => _leased.remove(id);
 }

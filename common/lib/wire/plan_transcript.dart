@@ -39,19 +39,6 @@ abstract class TurnRecord with _$TurnRecord {
 }
 
 @freezed
-abstract class PlanListing with _$PlanListing {
-  const factory PlanListing({
-    required String sessionId,
-    @Default(0) int turnCount,
-    String? title,
-    DateTime? updatedAt,
-  }) = _PlanListing;
-
-  factory PlanListing.fromJson(Map<String, Object?> json) =>
-      _$PlanListingFromJson(json);
-}
-
-@freezed
 abstract class PlanTranscript with _$PlanTranscript {
   const factory PlanTranscript({
     required String sessionId,

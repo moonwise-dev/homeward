@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../routing/router.dart';
 import '../../../routing/routes.dart';
 import '../../core/themes/dimens.dart';
 import '../../core/themes/text_styles.dart';
@@ -17,7 +18,7 @@ class GalleryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styles = AppTextStyles.of(context);
-    void toPlans() => context.go(AppRoutes.plans);
+    void toPlan() => context.go(AppRoutes.resuming(ref.read(openPlanProvider)));
     final provider = galleryViewModelProvider(componentName);
     final state = ref.watch(provider);
     final selected = state.selected;
@@ -42,7 +43,7 @@ class GalleryScreen extends ConsumerWidget {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Catalog gallery'),
-              leading: BackButton(onPressed: toPlans),
+              leading: BackButton(onPressed: toPlan),
             ),
             body: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -68,15 +69,15 @@ class GalleryScreen extends ConsumerWidget {
             title: const Text('Catalog gallery'),
             leading: BackButton(
               onPressed: page == null
-                  ? toPlans
+                  ? toPlan
                   : () => context.go(AppRoutes.gallery),
             ),
             actions: [
               if (page != null)
                 IconButton(
-                  tooltip: 'Back to plans',
+                  tooltip: 'Back to your plan',
                   icon: const Icon(Icons.home_outlined),
-                  onPressed: toPlans,
+                  onPressed: toPlan,
                 ),
             ],
           ),

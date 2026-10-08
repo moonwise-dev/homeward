@@ -11,7 +11,6 @@ final class RunningTask {
   RunningTask({
     required this.id,
     required this.contextId,
-    required this.ownerUid,
     required Stream<TurnEvent> Function(Future<void> cancellation) run,
     required this.onFinished,
   }) {
@@ -22,7 +21,6 @@ final class RunningTask {
 
   final String id;
   final String contextId;
-  final String ownerUid;
   final void Function() onFinished;
   final _cancellation = Completer<void>();
   final _history = <TurnEvent>[];

@@ -1,10 +1,9 @@
 import 'package:homeward_server/config/log_format.dart';
 import 'package:homeward_server/config/server_config.dart';
-import 'package:homeward_server/config/session_store.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('defaults suit local development with production safeguards on', () {
+  test('defaults suit local development', () {
     expect(
       ServerConfig.fromEnvironment({}),
       ServerConfig(
@@ -30,32 +29,9 @@ void main() {
           'https://homeward-genui.firebaseapp.com',
           'http://localhost:*',
         ],
-        appCheckEnforced: true,
         promptsDirectory: 'server/prompts',
         marketsDirectory: 'markets',
-        sessionStore: SessionStore.memory,
       ),
-    );
-  });
-
-  test('keeps sessions where the environment can hold them', () {
-    expect(
-      ServerConfig.fromEnvironment({'K_SERVICE': 'homeward-server'})
-          .sessionStore,
-      SessionStore.firestore,
-    );
-    expect(
-      ServerConfig.fromEnvironment({
-        'FIRESTORE_EMULATOR_HOST': 'localhost:8081',
-      }).sessionStore,
-      SessionStore.firestore,
-    );
-    expect(
-      ServerConfig.fromEnvironment({
-        'K_SERVICE': 'homeward-server',
-        'HOMEWARD_SESSION_STORE': 'memory',
-      }).sessionStore,
-      SessionStore.memory,
     );
   });
 
@@ -69,7 +45,6 @@ void main() {
       'HOMEWARD_HEADERS_DEADLINE': '5',
       'HOMEWARD_MAX_CORRECTIONS': '1',
       'HOMEWARD_ALLOWED_ORIGINS': 'https://a.example, https://b.example',
-      'HOMEWARD_APP_CHECK_ENFORCED': 'false',
       'HOMEWARD_PROMPTS_DIR': '/app/prompts',
     });
 
@@ -80,7 +55,6 @@ void main() {
     expect(config.headersDeadline, const Duration(seconds: 5));
     expect(config.maxCorrections, 1);
     expect(config.allowedOrigins, ['https://a.example', 'https://b.example']);
-    expect(config.appCheckEnforced, isFalse);
     expect(config.promptsDirectory, '/app/prompts');
   });
 }

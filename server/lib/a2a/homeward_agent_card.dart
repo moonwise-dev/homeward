@@ -23,11 +23,6 @@ AgentCard homewardAgentCard(Uri publicUrl) => AgentCard(
     ],
   ),
   securitySchemes: const {
-    'firebase': {
-      'type': 'http',
-      'scheme': 'bearer',
-      'bearerFormat': 'Firebase ID token',
-    },
     'gemini': {
       'type': 'apiKey',
       'in': 'header',
@@ -35,7 +30,7 @@ AgentCard homewardAgentCard(Uri publicUrl) => AgentCard(
     },
   },
   security: const [
-    {'firebase': [], 'gemini': []},
+    {'gemini': []},
   ],
   defaultInputModes: const ['text/plain', 'application/json'],
   defaultOutputModes: const [

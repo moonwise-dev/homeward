@@ -1,5 +1,4 @@
 import 'package:common/common.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 
@@ -30,7 +29,6 @@ sealed class AppError with _$AppError implements Exception {
       AppError.server(code: code, message: message, retryAfter: retryAfter),
     DevelopmentServerUnreachable(:final server) =>
       AppError.developmentServerUnreachable(server),
-    FirebaseException(code: 'network-request-failed') ||
     http.ClientException() => const AppError.networkFailure(),
     _ => AppError.unknown(exception),
   };

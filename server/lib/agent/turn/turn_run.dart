@@ -95,7 +95,6 @@ final class TurnRun {
   Session get session => _session.copyWith(
     turnCount: turn,
     lastInteractionId: _interactionId,
-    updatedAt: now(),
     turns: [
       ..._session.turns,
       TurnRecord(

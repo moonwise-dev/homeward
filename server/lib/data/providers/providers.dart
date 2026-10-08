@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:common/common.dart';
-import 'package:firebase_admin_sdk/firebase_admin_sdk.dart';
 import 'package:http/http.dart' as http;
 
 import '../../a2a/task_registry.dart';
@@ -11,12 +10,7 @@ import '../../agent/turn/read_interaction.dart';
 import '../../agent/turn/tool_belt.dart';
 import '../../agent/turn/turn_orchestrator.dart';
 import '../../agent/turn/turn_settings.dart';
-import '../../auth/app_check_verifier.dart';
-import '../../auth/firebase_app_check_verifier.dart';
-import '../../auth/firebase_identity_verifier.dart';
-import '../../auth/identity_verifier.dart';
 import '../../config/server_config.dart';
-import '../../config/session_store.dart';
 import '../../gemini/create_with_fallback.dart';
 import '../../gemini/interactions_client.dart';
 import '../../gemini/model_caps.dart';
@@ -26,13 +20,8 @@ import '../../keys/verify_gemini_key.dart';
 import '../../markets/finding.dart';
 import '../../markets/load_markets.dart';
 import '../../markets/market_directory.dart';
-import '../../rate_limit/fixed_window_limiter.dart';
-import '../../research/open_data/research_cache.dart';
 import '../../research/research.dart';
 import '../../tools/homeward_tools.dart';
-import '../repository/firestore_research_cache.dart';
-import '../repository/firestore_session_repository.dart';
-import '../repository/in_memory_session_repository.dart';
 import '../repository/session_repository.dart';
 
 String homewardUserAgent(ServerConfig config) =>
@@ -41,8 +30,6 @@ String homewardUserAgent(ServerConfig config) =>
 final class Providers {
   factory Providers({
     required ServerConfig config,
-    required IdentityVerifier identity,
-    required AppCheckVerifier appCheck,
     required CreateInteraction createInteraction,
     required VerifyGeminiKey verifyKey,
     required PromptAssembler prompts,
@@ -52,19 +39,12 @@ final class Providers {
     SessionRepository? sessions,
     DateTime Function()? now,
   }) {
-    final repository = sessions ?? InMemorySessionRepository();
+    final repository = sessions ?? SessionRepository();
     return Providers._(
       config: config,
-      identity: identity,
-      appCheck: appCheck,
       verifyKey: verifyKey,
       sessions: repository,
       tasks: TaskRegistry(),
-      turnLimiter: FixedWindowLimiter(
-        limit: 30,
-        window: const Duration(minutes: 10),
-        now: now,
-      ),
       turns: TurnOrchestrator(
         sessions: repository,
         createInteraction: createInteraction,
@@ -86,12 +66,9 @@ final class Providers {
 
   const Providers._({
     required this.config,
-    required this.identity,
-    required this.appCheck,
     required this.verifyKey,
     required this.sessions,
     required this.tasks,
-    required this.turnLimiter,
     required this.turns,
   });
 
@@ -105,9 +82,6 @@ final class Providers {
     if (errors.isNotEmpty) {
       throw StateError('Markets failed to load: ${errors.join('; ')}');
     }
-    final firebase = FirebaseApp.initializeApp(
-      options: AppOptions(projectId: config.projectId),
-    );
     final client = InteractionsClient(
       httpClient: httpClient,
       headersDeadline: config.headersDeadline,
@@ -122,18 +96,8 @@ final class Providers {
       cooldown: config.modelCooldown,
     );
     final caps = ModelCaps();
-    final firestore = switch (config.sessionStore) {
-      SessionStore.firestore => firebase.firestore(),
-      SessionStore.memory => null,
-    };
     return Providers(
       config: config,
-      sessions: switch (firestore) {
-        final firestore? => FirestoreSessionRepository(firestore),
-        null => null,
-      },
-      identity: FirebaseIdentityVerifier(firebase.auth()),
-      appCheck: FirebaseAppCheckVerifier(firebase.appCheck()),
       createInteraction:
           ({
             required apiKey,
@@ -156,23 +120,13 @@ final class Providers {
       ),
       prompts: PromptAssembler.load(Directory(config.promptsDirectory)),
       markets: MarketDirectory(marketsData),
-      research: Research.open(
-        httpClient,
-        userAgent: homewardUserAgent(config),
-        cache: switch (firestore) {
-          final firestore? => FirestoreResearchCache(firestore),
-          null => const NoResearchCache(),
-        },
-      ),
+      research: Research.open(httpClient, userAgent: homewardUserAgent(config)),
     );
   }
 
   final ServerConfig config;
-  final IdentityVerifier identity;
-  final AppCheckVerifier appCheck;
   final VerifyGeminiKey verifyKey;
   final SessionRepository sessions;
   final TaskRegistry tasks;
-  final FixedWindowLimiter turnLimiter;
   final TurnOrchestrator turns;
 }

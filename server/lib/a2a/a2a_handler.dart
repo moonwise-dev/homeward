@@ -46,8 +46,8 @@ final class A2aHandler {
     }
     return switch (rpc.method) {
       'message/stream' => _stream(request, rpc),
-      'tasks/get' => _get(request, rpc),
-      'tasks/cancel' => await _cancel(request, rpc),
+      'tasks/get' => _get(rpc),
+      'tasks/cancel' => await _cancel(rpc),
       _ => _error(rpc.id, JsonRpcErrors.methodNotFound),
     };
   }
@@ -74,25 +74,18 @@ final class A2aHandler {
         ),
       );
     }
-    final uid = request.callerUid;
     final apiKey = request.geminiKey;
-    if (uid == null || apiKey == null) {
+    if (apiKey == null) {
       return _error(
         rpc.id,
-        JsonRpcErrors.homeward(
-          uid == null
-              ? HomewardFailure.unauthenticated
-              : HomewardFailure.geminiKeyMissing,
-        ),
+        JsonRpcErrors.homeward(HomewardFailure.geminiKeyMissing),
       );
     }
     final task = tasks.start(
       id: _newTaskId(),
       contextId: sessionId,
-      ownerUid: uid,
       run: (cancellation) => turns.run(
         sessionId: sessionId,
-        uid: uid,
         input: input,
         apiKey: apiKey,
         cancellation: cancellation,
@@ -110,15 +103,15 @@ final class A2aHandler {
     );
   }
 
-  Response _get(Request request, JsonRpcRequest rpc) {
-    final task = _task(request, rpc);
+  Response _get(JsonRpcRequest rpc) {
+    final task = _task(rpc);
     return task == null
         ? _error(rpc.id, JsonRpcErrors.taskNotFound)
         : jsonResponse(200, wire.snapshot(rpc.id, task));
   }
 
-  Future<Response> _cancel(Request request, JsonRpcRequest rpc) async {
-    final task = _task(request, rpc);
+  Future<Response> _cancel(JsonRpcRequest rpc) async {
+    final task = _task(rpc);
     if (task == null) {
       return _error(rpc.id, JsonRpcErrors.taskNotFound);
     }
@@ -160,11 +153,11 @@ final class A2aHandler {
     return text.isEmpty ? null : TurnInput.text(text);
   }
 
-  RunningTask? _task(Request request, JsonRpcRequest rpc) {
-    final id = _parse(rpc, TaskIdParams.fromJson)?.id;
-    final uid = request.callerUid;
-    return id == null || uid == null ? null : tasks.find(id, uid);
-  }
+  RunningTask? _task(JsonRpcRequest rpc) =>
+      switch (_parse(rpc, TaskIdParams.fromJson)?.id) {
+        final id? => tasks.find(id),
+        null => null,
+      };
 
   T? _parse<T>(JsonRpcRequest rpc, T Function(Map<String, Object?>) fromJson) {
     try {

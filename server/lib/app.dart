@@ -7,12 +7,9 @@ import 'data/providers/providers.dart';
 import 'health/health_handler.dart';
 import 'keys/keys_handler.dart';
 import 'http/json_response.dart';
-import 'middleware/app_check_middleware.dart';
-import 'middleware/authentication_middleware.dart';
 import 'middleware/cors_middleware.dart';
 import 'middleware/gemini_key_middleware.dart';
 import 'middleware/internal_error_middleware.dart';
-import 'middleware/rate_limit_middleware.dart';
 import 'middleware/request_context_middleware.dart';
 import 'middleware/request_logging_middleware.dart';
 import 'sessions/sessions_handler.dart';
@@ -23,39 +20,17 @@ Handler buildApp(Providers providers, {Handler? development}) {
   final a2a = A2aHandler(turns: providers.turns, tasks: providers.tasks);
   final sessions = SessionsHandler(providers.sessions);
   final keys = KeysHandler(providers.verifyKey);
-  final verified = const Pipeline()
-      .addMiddleware(authenticationMiddleware(providers.identity))
-      .addMiddleware(
-        appCheckMiddleware(
-          providers.appCheck,
-          enforced: config.appCheckEnforced,
-        ),
-      );
+  final withGeminiKey = const Pipeline().addMiddleware(geminiKeyMiddleware());
   final router = Router()
     ..get('/health', healthHandler)
     ..get(
       '/.well-known/agent-card.json',
       (Request request) => jsonResponse(200, agentCard),
     )
-    ..post(
-      '/a2a',
-      verified
-          .addMiddleware(geminiKeyMiddleware())
-          .addMiddleware(rateLimitMiddleware(providers.turnLimiter))
-          .addHandler(a2a.call),
-    )
-    ..post(
-      '/api/keys/verify',
-      verified.addMiddleware(geminiKeyMiddleware()).addHandler(keys.verify),
-    )
-    ..post('/api/sessions', verified.addHandler(sessions.create))
-    ..get('/api/sessions', verified.addHandler(sessions.list))
-    ..get(
-      '/api/sessions/<sessionId>',
-      (Request request, String sessionId) => verified.addHandler(
-        (request) => sessions.transcript(request, sessionId),
-      )(request),
-    );
+    ..post('/a2a', withGeminiKey.addHandler(a2a.call))
+    ..post('/api/keys/verify', withGeminiKey.addHandler(keys.verify))
+    ..post('/api/sessions', sessions.create)
+    ..get('/api/sessions/<sessionId>', sessions.transcript);
   if (development != null) {
     router.mount('/dev/', development);
   }

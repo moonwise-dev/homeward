@@ -9,7 +9,7 @@ import 'package:homeward_server/agent/prompt/prompt_assembler.dart';
 import 'package:homeward_server/agent/turn/tool_belt.dart';
 import 'package:homeward_server/agent/turn/turn_orchestrator.dart';
 import 'package:homeward_server/agent/turn/turn_settings.dart';
-import 'package:homeward_server/data/repository/in_memory_session_repository.dart';
+import 'package:homeward_server/data/repository/session_repository.dart';
 import 'package:homeward_server/request/request_values.dart';
 import 'package:homeward_server/tools/homeward_tools.dart';
 import 'package:shelf/shelf.dart';
@@ -23,8 +23,8 @@ void main() {
   final recording = File('../app/test/fixtures/recorded_turn.sse');
 
   test('the turn the app test replays is the turn the server streams', () async {
-    final sessions = InMemorySessionRepository(newId: () => 's-1');
-    await sessions.create('uid-1');
+    final sessions = SessionRepository(newId: () => 's-1');
+    sessions.create();
     var messages = 0;
     final handler = A2aHandler(
       turns: TurnOrchestrator(
@@ -77,7 +77,7 @@ void main() {
           },
         }),
         headers: {A2uiExtension.header: A2uiExtension.uri},
-      ).withCallerUid('uid-1').withGeminiKey('key'),
+      ).withGeminiKey('key'),
     );
     final streamed = await response.readAsString();
 

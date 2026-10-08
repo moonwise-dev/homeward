@@ -9,93 +9,6 @@ part of 'dependencies.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(firebaseAuth)
-final firebaseAuthProvider = FirebaseAuthProvider._();
-
-final class FirebaseAuthProvider
-    extends $FunctionalProvider<FirebaseAuth, FirebaseAuth, FirebaseAuth>
-    with $Provider<FirebaseAuth> {
-  FirebaseAuthProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'firebaseAuthProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$firebaseAuthHash();
-
-  @$internal
-  @override
-  $ProviderElement<FirebaseAuth> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  FirebaseAuth create(Ref ref) {
-    return firebaseAuth(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(FirebaseAuth value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<FirebaseAuth>(value),
-    );
-  }
-}
-
-String _$firebaseAuthHash() => r'8c3e9d11b27110ca96130356b5ef4d5d34a5ffc2';
-
-@ProviderFor(firebaseAppCheck)
-final firebaseAppCheckProvider = FirebaseAppCheckProvider._();
-
-final class FirebaseAppCheckProvider
-    extends
-        $FunctionalProvider<
-          FirebaseAppCheck,
-          FirebaseAppCheck,
-          FirebaseAppCheck
-        >
-    with $Provider<FirebaseAppCheck> {
-  FirebaseAppCheckProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'firebaseAppCheckProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$firebaseAppCheckHash();
-
-  @$internal
-  @override
-  $ProviderElement<FirebaseAppCheck> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  FirebaseAppCheck create(Ref ref) {
-    return firebaseAppCheck(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(FirebaseAppCheck value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<FirebaseAppCheck>(value),
-    );
-  }
-}
-
-String _$firebaseAppCheckHash() => r'9600fb5f8901474de399aeb73a398073ea268c44';
-
 @ProviderFor(secureStorage)
 final secureStorageProvider = SecureStorageProvider._();
 
@@ -223,7 +136,7 @@ final class HomewardClientProvider
   }
 }
 
-String _$homewardClientHash() => r'39b87988ddf298600aeeb6d9e78f9dfa6b1dc34b';
+String _$homewardClientHash() => r'deb0afeda1d33ce60c3d781563c1a04f14d24030';
 
 @ProviderFor(developmentServer)
 final developmentServerProvider = DevelopmentServerProvider._();

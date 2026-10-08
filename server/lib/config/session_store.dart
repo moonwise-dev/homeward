@@ -1,1 +1,0 @@
-enum SessionStore { memory, firestore }

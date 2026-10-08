@@ -186,7 +186,6 @@ export 'wire/a2ui_extension.dart';
 export 'wire/client/agent_event.dart';
 export 'wire/client/homeward_api_exception.dart';
 export 'wire/client/homeward_client.dart';
-export 'wire/client/request_credentials.dart';
 export 'wire/client/turn_request.dart';
 export 'wire/decode_sse.dart';
 export 'wire/homeward_error_code.dart';

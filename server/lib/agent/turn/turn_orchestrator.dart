@@ -34,17 +34,16 @@ final class TurnOrchestrator {
 
   Stream<TurnEvent> run({
     required String sessionId,
-    required String uid,
     required TurnInput input,
     required String apiKey,
     Future<void>? cancellation,
   }) async* {
-    final session = await sessions.find(sessionId);
-    if (session == null || session.ownerUid != uid) {
+    final session = sessions.find(sessionId);
+    if (session == null) {
       yield const TurnEvent.failed(HomewardFailure.sessionNotFound);
       return;
     }
-    if (!await sessions.lease(sessionId)) {
+    if (!sessions.lease(sessionId)) {
       yield const TurnEvent.failed(HomewardFailure.turnInProgress);
       return;
     }
@@ -66,8 +65,9 @@ final class TurnOrchestrator {
         cancellation: cancellation,
       );
     } finally {
-      await sessions.save(run.session);
-      await sessions.release(sessionId);
+      sessions
+        ..save(run.session)
+        ..release(sessionId);
     }
   }
 }

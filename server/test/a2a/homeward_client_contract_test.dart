@@ -28,10 +28,6 @@ void main() {
         );
       }),
       server: Uri.parse('http://localhost'),
-      credentials: () async => const RequestCredentials(
-        idToken: 'id-token-1',
-        appCheckToken: 'app-check-1',
-      ),
     );
   }
 

@@ -1,85 +1,42 @@
 import 'dart:convert';
 
 import 'package:common/common.dart';
-import 'package:homeward_server/data/repository/in_memory_session_repository.dart';
-import 'package:homeward_server/request/request_values.dart';
+import 'package:homeward_server/data/repository/session_repository.dart';
 import 'package:homeward_server/sessions/sessions_handler.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
 void main() {
-  late InMemorySessionRepository sessions;
+  late SessionRepository sessions;
   late SessionsHandler handler;
   var made = 0;
 
   setUp(() {
     made = 0;
-    sessions = InMemorySessionRepository(newId: () => 's-${++made}');
+    sessions = SessionRepository(newId: () => 's-${++made}');
     handler = SessionsHandler(sessions);
   });
 
-  Request get(String path, {String? uid = 'uid-1'}) {
-    final request = Request('GET', Uri.parse('http://localhost$path'));
-    return uid == null ? request : request.withCallerUid(uid);
-  }
+  Request get(String path) =>
+      Request('GET', Uri.parse('http://localhost$path'));
 
   Future<Object?> dataOf(Response response) async =>
       (jsonDecode(await response.readAsString())
           as Map<String, Object?>)['data'];
 
-  test('creates an empty plan owned by the caller', () async {
-    final response = await handler.create(
-      Request(
-        'POST',
-        Uri.parse('http://localhost/api/sessions'),
-      ).withCallerUid('uid-1'),
+  test('creates an empty plan', () async {
+    final response = handler.create(
+      Request('POST', Uri.parse('http://localhost/api/sessions')),
     );
 
     expect(response.statusCode, 201);
     expect(await dataOf(response), {'sessionId': 's-1'});
-    expect((await sessions.find('s-1'))?.ownerUid, 'uid-1');
-  });
-
-  test('refuses a caller without a verified identity', () async {
-    final response = await handler.create(
-      Request('POST', Uri.parse('http://localhost/api/sessions')),
-    );
-
-    expect(response.statusCode, 401);
-    expect(jsonDecode(await response.readAsString()), {
-      'ok': false,
-      'error': {
-        'code': 'unauthenticated',
-        'message': 'Sign in again to continue',
-      },
-    });
-  });
-
-  test('lists the caller own plans', () async {
-    final mine = await sessions.create('uid-1');
-    await sessions.save(
-      mine.copyWith(turnCount: 3),
-    );
-    await sessions.save((await sessions.create('uid-2')));
-
-    final listed =
-        (await dataOf(await handler.list(get('/api/sessions'))))!
-            as Map<String, Object?>;
-
-    expect(
-      [
-        for (final listing in listed['sessions']! as List<Object?>)
-          PlanListing.fromJson(listing! as Map<String, Object?>),
-      ],
-      [
-        const PlanListing(sessionId: 's-1', turnCount: 3),
-      ],
-    );
+    expect(sessions.find('s-1')?.turns, isEmpty);
   });
 
   test('gives back the turns of a plan', () async {
-    final session = await sessions.create('uid-1');
-    await sessions.save(
+    final session = sessions.create();
+    sessions.save(
       session.copyWith(
         turnCount: 1,
         turns: [
@@ -97,7 +54,7 @@ void main() {
     );
 
     final transcript = PlanTranscript.fromJson(
-      await dataOf(await handler.transcript(get('/api/sessions/s-1'), 's-1'))
+      await dataOf(handler.transcript(get('/api/sessions/s-1'), 's-1'))
           as Map<String, Object?>,
     );
 
@@ -109,10 +66,8 @@ void main() {
     );
   });
 
-  test('hides a plan owned by somebody else', () async {
-    await sessions.create('uid-2');
-
-    final response = await handler.transcript(get('/api/sessions/s-1'), 's-1');
+  test('has nothing for a plan it does not hold', () {
+    final response = handler.transcript(get('/api/sessions/s-9'), 's-9');
 
     expect(response.statusCode, 404);
   });

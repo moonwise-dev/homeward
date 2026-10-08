@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../routing/router.dart';
+import '../../../routing/routes.dart';
 import '../../core/themes/colors.dart';
 import '../../core/themes/dimens.dart';
 import '../../core/themes/text_styles.dart';
 import '../../wire_inspector/widgets/wire_inspector_pane.dart';
 import '../view_model/journey_view_model.dart';
 import 'action_label.dart';
+import 'appearance_button.dart';
 import 'conversation_thread.dart';
 import 'plan_panel.dart';
 import 'tell_more_field.dart';
@@ -27,6 +31,12 @@ class JourneyScreen extends HookConsumerWidget {
     final isWide = MediaQuery.sizeOf(context).width >= AppSizes.twoPane;
     final showsWire = useState(false);
     final wirePane = isWide && showsWire.value;
+    useEffect(() {
+      Future.microtask(
+        () => ref.read(openPlanProvider.notifier).open(sessionId),
+      );
+      return null;
+    }, [sessionId]);
 
     final talk = Column(
       children: [
@@ -69,18 +79,36 @@ class JourneyScreen extends HookConsumerWidget {
         isRunning: conversation.isRunning,
       ),
     );
-    final wireButton = IconButton(
-      icon: const Icon(Icons.swap_vert_outlined),
-      tooltip: 'Wire inspector',
-      isSelected: wirePane,
-      onPressed: () => isWide
-          ? showsWire.value = !showsWire.value
-          : showWireInspectorSheet(context, sessionId),
-    );
+    final actions = [
+      IconButton(
+        icon: const Icon(Icons.restart_alt),
+        tooltip: 'Start over',
+        onPressed: viewModel.startOver,
+      ),
+      IconButton(
+        icon: const Icon(Icons.widgets_outlined),
+        tooltip: 'Catalog gallery',
+        onPressed: () => context.push(AppRoutes.gallery),
+      ),
+      IconButton(
+        icon: const Icon(Icons.swap_vert_outlined),
+        tooltip: 'Wire inspector',
+        isSelected: wirePane,
+        onPressed: () => isWide
+            ? showsWire.value = !showsWire.value
+            : showWireInspectorSheet(context, sessionId),
+      ),
+      IconButton(
+        icon: const Icon(Icons.key_outlined),
+        tooltip: 'Gemini key',
+        onPressed: () => context.push(AppRoutes.geminiKey),
+      ),
+      const AppearanceButton(),
+    ];
 
     if (isWide) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Homeward'), actions: [wireButton]),
+        appBar: AppBar(title: const Text('Homeward'), actions: actions),
         body: SafeArea(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -105,7 +133,7 @@ class JourneyScreen extends HookConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Homeward'),
-          actions: [wireButton],
+          actions: actions,
           bottom: const TabBar(
             tabs: [
               Tab(text: 'Conversation'),

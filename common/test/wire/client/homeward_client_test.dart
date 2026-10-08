@@ -24,8 +24,6 @@ void main() {
       return respond(request);
     }),
     server: server,
-    credentials: () async =>
-        const RequestCredentials(idToken: 'id-token', appCheckToken: 'check'),
     newMessageId: () => 'm-1',
   );
 
@@ -78,7 +76,7 @@ void main() {
     'createSurface': {'surfaceId': 't1-profile', 'catalogId': 'c'},
   };
 
-  test('creates a session with the caller credentials', () async {
+  test('creates a session without sending a key', () async {
     final client = clientFor(
       (_) async => json(201, {
         'ok': true,
@@ -89,33 +87,10 @@ void main() {
     expect(await client.createSession(), 's-1');
     final request = requests.single;
     expect(request.url, server.resolve('api/sessions'));
-    expect(request.headers['authorization'], 'Bearer id-token');
-    expect(request.headers[HomewardHeaders.appCheck], 'check');
     expect(request.headers[HomewardHeaders.geminiKey], isNull);
   });
 
-  test('reads the plan list and a plan transcript back', () async {
-    final listing = clientFor(
-      (_) async => json(200, {
-        'ok': true,
-        'data': {
-          'sessions': [
-            {
-              'sessionId': 's-1',
-              'turnCount': 2,
-            },
-          ],
-        },
-      }),
-    );
-
-    expect(await listing.plans(), [
-      const PlanListing(sessionId: 's-1', turnCount: 2),
-    ]);
-    expect(requests.single.method, 'GET');
-    expect(requests.single.url, server.resolve('api/sessions'));
-
-    requests.clear();
+  test('reads a plan transcript back', () async {
     final transcript = clientFor(
       (_) async => json(200, {
         'ok': true,
@@ -333,12 +308,12 @@ void main() {
     'fails the stream when the server refuses it before streaming',
     () async {
       final client = clientFor(
-        (_) async => json(401, {
+        (_) async => json(200, {
           'jsonrpc': '2.0',
           'error': {
             'code': -32000,
-            'message': 'Sign in again to continue',
-            'data': {'code': 'unauthenticated'},
+            'message': 'Add your Gemini API key to continue',
+            'data': {'code': 'gemini_key_missing'},
           },
         }),
       );
@@ -355,7 +330,7 @@ void main() {
           isA<HomewardApiException>().having(
             (error) => error.code,
             'code',
-            HomewardErrorCode.unauthenticated,
+            HomewardErrorCode.geminiKeyMissing,
           ),
         ),
       );

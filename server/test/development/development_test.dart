@@ -25,26 +25,22 @@ not an assignment
     );
   });
 
-  test('a development run turns App Check off and takes the project', () {
+  test('a development run reads the dotenv file beside the environment', () {
     final environment = developmentEnvironment(
       {'PORT': '9000'},
       dotenv: 'CEREBRAS_API_KEY=secret',
-      firebaserc: '{"projects": {"default": "homeward-genui"}}',
     );
 
-    expect(environment['HOMEWARD_APP_CHECK_ENFORCED'], 'false');
-    expect(environment['GOOGLE_CLOUD_PROJECT'], 'homeward-genui');
     expect(environment['CEREBRAS_API_KEY'], 'secret');
     expect(environment['PORT'], '9000');
   });
 
-  test('the environment beats the dotenv file and the defaults', () {
+  test('the environment beats the dotenv file', () {
     final environment = developmentEnvironment(
-      {'HOMEWARD_APP_CHECK_ENFORCED': 'true', 'A': 'process'},
+      {'A': 'process'},
       dotenv: 'A=file',
     );
 
-    expect(environment['HOMEWARD_APP_CHECK_ENFORCED'], 'true');
     expect(environment['A'], 'process');
   });
 

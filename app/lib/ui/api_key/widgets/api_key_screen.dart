@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../config/environment.dart';
+import '../../../routing/router.dart';
 import '../../../routing/routes.dart';
 import '../../core/themes/dimens.dart';
 import '../../core/themes/text_styles.dart';
@@ -26,7 +27,7 @@ class ApiKeyScreen extends HookConsumerWidget {
 
     Future<void> submit() async {
       if (await viewModel.verifyAndSave() && context.mounted) {
-        context.go(AppRoutes.plans);
+        context.go(AppRoutes.resuming(ref.read(openPlanProvider)));
       }
     }
 

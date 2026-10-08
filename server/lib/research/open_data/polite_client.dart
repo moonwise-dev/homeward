@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'open_data_unavailable.dart';
-import 'research_cache.dart';
 
 final class PoliteClient {
   PoliteClient(
@@ -14,7 +13,6 @@ final class PoliteClient {
     this.timeout = const Duration(seconds: 25),
     this.maxEntries = 2000,
     this.failFor = const Duration(minutes: 1),
-    this.store = const NoResearchCache(),
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now;
 
@@ -24,7 +22,6 @@ final class PoliteClient {
   final Duration timeout;
   final int maxEntries;
   final Duration failFor;
-  final ResearchCache store;
   final DateTime Function() _now;
   final _failures = <String, (DateTime, OpenDataUnavailable)>{};
   final _queues = <String, Future<void>>{};
@@ -63,16 +60,9 @@ final class PoliteClient {
         when until.isAfter(_now())) {
       throw failure;
     }
-    if (await store.read(key) case final stored?) {
-      _remember(key, stored);
-      return stored;
-    }
     try {
       final value = await _fetch(uri, gap, send);
       _remember(key, value);
-      if (value != null) {
-        unawaited(store.write(key, value));
-      }
       return value;
     } on OpenDataUnavailable catch (failure) {
       if (!failure.isBusy) {

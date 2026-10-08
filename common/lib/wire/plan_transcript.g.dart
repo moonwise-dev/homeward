@@ -115,35 +115,6 @@ const _$TurnStatusEnumMap = {
   TurnStatus.canceled: 'canceled',
 };
 
-_PlanListing _$PlanListingFromJson(Map<String, dynamic> json) => $checkedCreate(
-  '_PlanListing',
-  json,
-  ($checkedConvert) {
-    $checkKeys(
-      json,
-      allowedKeys: const ['sessionId', 'turnCount', 'title', 'updatedAt'],
-    );
-    final val = _PlanListing(
-      sessionId: $checkedConvert('sessionId', (v) => v as String),
-      turnCount: $checkedConvert('turnCount', (v) => (v as num?)?.toInt() ?? 0),
-      title: $checkedConvert('title', (v) => v as String?),
-      updatedAt: $checkedConvert(
-        'updatedAt',
-        (v) => v == null ? null : DateTime.parse(v as String),
-      ),
-    );
-    return val;
-  },
-);
-
-Map<String, dynamic> _$PlanListingToJson(_PlanListing instance) =>
-    <String, dynamic>{
-      'sessionId': instance.sessionId,
-      'turnCount': instance.turnCount,
-      'title': ?instance.title,
-      'updatedAt': ?instance.updatedAt?.toIso8601String(),
-    };
-
 _PlanTranscript _$PlanTranscriptFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_PlanTranscript', json, ($checkedConvert) {
       $checkKeys(json, allowedKeys: const ['sessionId', 'turns']);

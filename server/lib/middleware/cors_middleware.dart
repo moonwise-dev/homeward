@@ -2,9 +2,7 @@ import 'package:common/common.dart';
 import 'package:shelf/shelf.dart';
 
 final _allowedHeaders = [
-  'authorization',
   'content-type',
-  HomewardHeaders.appCheck,
   HomewardHeaders.geminiKey,
   A2uiExtension.header,
 ].map((header) => header.toLowerCase());

@@ -18,14 +18,12 @@ import '../plan_transcript.dart';
 import '../progress/research_progress.dart';
 import 'agent_event.dart';
 import 'homeward_api_exception.dart';
-import 'request_credentials.dart';
 import 'turn_request.dart';
 
 final class HomewardClient {
   HomewardClient({
     required this.httpClient,
     required Uri server,
-    required this.credentials,
     String Function()? newMessageId,
   }) : server = server.path.endsWith('/')
            ? server
@@ -34,21 +32,12 @@ final class HomewardClient {
 
   final http.Client httpClient;
   final Uri server;
-  final Future<RequestCredentials> Function() credentials;
   final String Function() _newMessageId;
   var _lastRequestId = 0;
 
   Future<String> createSession() async {
     final data = await _api('api/sessions');
     return data['sessionId']! as String;
-  }
-
-  Future<List<PlanListing>> plans() async {
-    final data = await _api('api/sessions', method: 'GET');
-    return [
-      for (final listing in data['sessions']! as List<Object?>)
-        PlanListing.fromJson(listing! as Map<String, Object?>),
-    ];
   }
 
   Future<PlanTranscript> transcript(String sessionId) async =>
@@ -99,10 +88,7 @@ final class HomewardClient {
   Future<void> cancelTask(String taskId) async {
     final response = await httpClient.post(
       server.resolve('a2a'),
-      headers: {
-        ...await _headers(),
-        'content-type': 'application/json',
-      },
+      headers: {'content-type': 'application/json'},
       body: jsonEncode(
         _rpc('tasks/cancel', TaskIdParams(id: taskId).toJson()),
       ),
@@ -129,7 +115,7 @@ final class HomewardClient {
             abortTrigger: abort,
           )
           ..headers.addAll({
-            ...await _headers(geminiKey: geminiKey),
+            HomewardHeaders.geminiKey: geminiKey,
             'content-type': 'application/json',
             'accept': 'text/event-stream',
             A2uiExtension.header: A2uiExtension.uri,
@@ -204,7 +190,7 @@ final class HomewardClient {
     String? geminiKey,
   }) async {
     final uri = server.resolve(path);
-    final headers = await _headers(geminiKey: geminiKey);
+    final headers = {HomewardHeaders.geminiKey: ?geminiKey};
     final response = method == 'GET'
         ? await httpClient.get(uri, headers: headers)
         : await httpClient.post(uri, headers: headers);
@@ -215,15 +201,6 @@ final class HomewardClient {
       _ => throw FormatException(
         'Unexpected response from $path with HTTP ${response.statusCode}',
       ),
-    };
-  }
-
-  Future<Map<String, String>> _headers({String? geminiKey}) async {
-    final RequestCredentials(:idToken, :appCheckToken) = await credentials();
-    return {
-      'authorization': 'Bearer $idToken',
-      HomewardHeaders.appCheck: ?appCheckToken,
-      HomewardHeaders.geminiKey: ?geminiKey,
     };
   }
 

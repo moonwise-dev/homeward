@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:common/common.dart';
-import 'package:homeward_tool/probe/anonymous_id_token.dart';
 import 'package:homeward_tool/probe/describe_event.dart';
-import 'package:homeward_tool/probe/firebase_web_api_key.dart';
 import 'package:homeward_tool/probe/gemini_keys.dart';
 import 'package:homeward_tool/probe/probe_surfaces.dart';
 import 'package:http/http.dart' as http;
@@ -24,14 +22,9 @@ Future<void> main(List<String> arguments) async {
   }
   final httpClient = http.Client();
   try {
-    final idToken = await anonymousIdToken(
-      httpClient,
-      firebaseWebApiKey(File('app/lib/firebase_options.dart')),
-    );
     final client = HomewardClient(
       httpClient: httpClient,
       server: Uri.parse(arguments.first),
-      credentials: () async => RequestCredentials(idToken: idToken),
     );
     final sessionId = await client.createSession();
     stdout.writeln('Session $sessionId');

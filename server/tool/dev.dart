@@ -10,7 +10,6 @@ Future<void> main() async {
   final environment = developmentEnvironment(
     Platform.environment,
     dotenv: _read('.env'),
-    firebaserc: _read('.firebaserc'),
   );
   await HotReloader.create();
   await runServer(

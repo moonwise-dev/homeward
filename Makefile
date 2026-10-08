@@ -34,7 +34,6 @@ help:
 	@echo "  make codegen       Run build_runner in app, common, and server"
 	@echo "  make codegen-check Fail if build_runner changes a committed generated file"
 	@echo "  make a2ui-schemas  Vendor the pinned A2UI v0.9 basic catalog and common types"
-	@echo "  make emulator      Run the Firestore emulator on port 8081"
 	@echo "  make server-dev    Run the server locally with hot reload, in this terminal"
 	@echo "  make dev-server    Start the local server in the background if it is not running"
 	@echo "  make dev-server-stop  Stop a local server that make dev-server started"
@@ -110,10 +109,6 @@ a2ui-schemas:
 	@dart run tool/bin/vendor_a2ui_schemas.dart common/lib/a2ui/generated/a2ui_v09_schemas.dart
 	@dart format common/lib/a2ui/generated/a2ui_v09_schemas.dart
 
-.PHONY: emulator
-emulator:
-	@firebase emulators:start --only firestore --project $(FIREBASE_PROJECT)
-
 .PHONY: server-dev
 server-dev:
 	@dart run --enable-vm-service server/tool/dev.dart
@@ -141,7 +136,7 @@ server-image: server-build
 
 .PHONY: server-image-run
 server-image-run: server-image
-	@docker run --rm --platform linux/amd64 -p 8080:8080 -e HOMEWARD_APP_CHECK_ENFORCED=false -e GOOGLE_CLOUD_PROJECT=$(FIREBASE_PROJECT) $(SERVER_IMAGE)
+	@docker run --rm --platform linux/amd64 -p 8080:8080 $(SERVER_IMAGE)
 
 .PHONY: clean-tree
 clean-tree:

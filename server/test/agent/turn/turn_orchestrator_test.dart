@@ -11,7 +11,7 @@ import 'package:homeward_server/agent/turn/retry_notice.dart';
 import 'package:homeward_server/agent/turn/turn_input.dart';
 import 'package:homeward_server/agent/turn/turn_orchestrator.dart';
 import 'package:homeward_server/agent/turn/turn_settings.dart';
-import 'package:homeward_server/data/repository/in_memory_session_repository.dart';
+import 'package:homeward_server/data/repository/session_repository.dart';
 import 'package:homeward_server/errors/homeward_failure.dart';
 import 'package:homeward_server/gemini/gemini_exception.dart';
 import 'package:homeward_server/gemini/interaction_event.dart';
@@ -26,9 +26,9 @@ import 'scripted_interactions.dart';
 void main() {
   final prompts = PromptAssembler.load(Directory('prompts'));
   final catalog = CatalogValidator(homewardCatalogDocument());
-  late InMemorySessionRepository sessions;
+  late SessionRepository sessions;
 
-  setUp(() => sessions = InMemorySessionRepository(newId: () => 's-1'));
+  setUp(() => sessions = SessionRepository(newId: () => 's-1'));
 
   TurnOrchestrator orchestrator(
     ScriptedInteractions script, {
@@ -49,7 +49,6 @@ void main() {
   Stream<TurnEvent> send(TurnOrchestrator agent, [String text = 'Hi']) =>
       agent.run(
         sessionId: 's-1',
-        uid: 'uid-1',
         input: TurnInput.text(text),
         apiKey: 'key',
       );
@@ -87,7 +86,7 @@ void main() {
   test(
     'runs the tools the model calls and seeds its surface with their results',
     () async {
-      await sessions.create('uid-1');
+      sessions.create();
       final script = ScriptedInteractions([
         reply('i1', calls: [locate('KTH')]),
         reply(
@@ -128,7 +127,7 @@ void main() {
       expect(input.results.single.result, {'found': 'KTH'});
       expect(input.note, isNull);
 
-      final saved = (await sessions.find('s-1'))!;
+      final saved = sessions.find('s-1')!;
       expect(saved.turnCount, 1);
       expect(saved.lastInteractionId, 'i2');
       expect(saved.messages, messages);
@@ -136,7 +135,7 @@ void main() {
   );
 
   test('answers tool calls in the order the model made them', () async {
-    await sessions.create('uid-1');
+    sessions.create();
     final script = ScriptedInteractions([
       reply('i1', calls: [locate('KTH'), locate('Odenplan')]),
       reply('i2', text: 'Noted.'),
@@ -149,7 +148,7 @@ void main() {
   });
 
   test('streams each measuring step while a tool runs', () async {
-    await sessions.create('uid-1');
+    sessions.create();
     final script = ScriptedInteractions([
       reply('i1', calls: [locate('KTH')]),
       reply('i2', text: 'Found it.'),
@@ -182,7 +181,7 @@ void main() {
   });
 
   test('ends the tool rounds once they run out, and says so', () async {
-    await sessions.create('uid-1');
+    sessions.create();
     final script = ScriptedInteractions([
       reply('i1', calls: [locate('KTH')]),
       reply('i2', calls: [locate('Odenplan')]),
@@ -204,13 +203,12 @@ void main() {
   test(
     'hands an action to the model with its context and surface data',
     () async {
-      await sessions.create('uid-1');
+      sessions.create();
       final script = ScriptedInteractions([reply('i1', text: 'Kept.')]);
 
       await orchestrator(script)
           .run(
             sessionId: 's-1',
-            uid: 'uid-1',
             input: const TurnInput.action(
               ClientAction(
                 name: 'keep_home',
@@ -230,14 +228,14 @@ void main() {
       expect(input, contains('"homeId":"h1"'));
       expect(input, contains('A garden for the dog'));
       expect(
-        (await sessions.find('s-1'))!.turns.single.input,
+        sessions.find('s-1')!.turns.single.input,
         isA<RecordedAction>(),
       );
     },
   );
 
   test('a reply with no plan and no ask is asked once to finish it', () async {
-    await sessions.create('uid-1');
+    sessions.create();
     final script = ScriptedInteractions([
       reply('i1', text: 'A bostadsrätt is a share in an association.'),
       reply('i2', text: jsonEncode({'messages': <Object?>[]})),
@@ -267,7 +265,7 @@ void main() {
   });
 
   test('offers a retry notice when a turn gives nothing at all', () async {
-    await sessions.create('uid-1');
+    sessions.create();
     final script = ScriptedInteractions([reply('i1')]);
 
     final events = await send(orchestrator(script)).toList();
@@ -279,7 +277,7 @@ void main() {
   test(
     "takes back a failed model's draft and continues on the fallback",
     () async {
-      await sessions.create('uid-1');
+      sessions.create();
       final script = ScriptedInteractions([
         (_) => Stream.fromIterable([
           const InteractionEvent.textDelta('Draft that will vanish\n'),
@@ -316,7 +314,7 @@ void main() {
   test(
     'sends rejections back and forwards the corrected surface once',
     () async {
-      await sessions.create('uid-1');
+      sessions.create();
       final script = ScriptedInteractions([
         reply('i1', text: a2ui('plan', note(property: 'label'))),
         reply(
@@ -355,7 +353,7 @@ void main() {
   );
 
   test('a correction Gemini refuses to constrain runs again freely', () async {
-    await sessions.create('uid-1');
+    sessions.create();
     final script = ScriptedInteractions([
       reply('i1', text: a2ui('plan', note(property: 'label'))),
       failing(
@@ -387,7 +385,7 @@ void main() {
   });
 
   test('ends with a retry notice when corrections run out', () async {
-    await sessions.create('uid-1');
+    sessions.create();
     final invalid = reply(
       'i1',
       text: a2ui('plan', note(property: 'label')),
@@ -414,7 +412,7 @@ void main() {
   });
 
   test('fails a turn on a quota error and releases the session', () async {
-    await sessions.create('uid-1');
+    sessions.create();
     final script = ScriptedInteractions([
       failing(
         GeminiQuotaExhausted('Quota', resetsAt: DateTime.utc(2026, 9, 18, 7)),
@@ -431,12 +429,12 @@ void main() {
     expect(failure.code, HomewardErrorCode.geminiQuotaExhausted);
     expect(failure.retryAfter, const Duration(hours: 19));
     expect(retried.last, const TurnEvent.completed('Hello again.'));
-    expect((await sessions.find('s-1'))!.turnCount, 2);
+    expect(sessions.find('s-1')!.turnCount, 2);
   });
 
   test('starts fresh history when the previous interaction is gone', () async {
-    final session = await sessions.create('uid-1');
-    await sessions.save(session.copyWith(lastInteractionId: 'expired'));
+    final session = sessions.create();
+    sessions.save(session.copyWith(lastInteractionId: 'expired'));
     final script = ScriptedInteractions([
       failing(const GeminiHistoryMissing('not_found')),
       reply('i2', text: 'Where are you moving?'),
@@ -455,8 +453,8 @@ void main() {
     'starts the turn over in a new conversation when Gemini refuses to '
     'continue a stored one',
     () async {
-      final session = await sessions.create('uid-1');
-      await sessions.save(session.copyWith(lastInteractionId: 'stored'));
+      final session = sessions.create();
+      sessions.save(session.copyWith(lastInteractionId: 'stored'));
       final script = ScriptedInteractions([
         reply('i1', calls: [locate('KTH')]),
         failing(
@@ -479,13 +477,13 @@ void main() {
       ]);
       expect(script.requests[2].input, const InteractionInput.text('Hi again'));
       expect(events.last, const TurnEvent.completed('KTH it is.'));
-      expect((await sessions.find('s-1'))!.lastInteractionId, 'i4');
+      expect(sessions.find('s-1')!.lastInteractionId, 'i4');
     },
   );
 
   test('fails the turn when the new conversation is refused too', () async {
-    final session = await sessions.create('uid-1');
-    await sessions.save(session.copyWith(lastInteractionId: 'stored'));
+    final session = sessions.create();
+    sessions.save(session.copyWith(lastInteractionId: 'stored'));
     const refused = GeminiRequestInvalid(
       'Request contains an invalid argument.',
     );
@@ -500,8 +498,8 @@ void main() {
     expect(events.last, isA<TurnFailed>());
   });
 
-  test('refuses foreign sessions and a second turn while one runs', () async {
-    await sessions.create('uid-1');
+  test('refuses unknown sessions and a second turn while one runs', () async {
+    sessions.create();
     final gate = Completer<void>();
     final script = ScriptedInteractions([silentUntil(gate.future)]);
     final agent = orchestrator(script);
@@ -512,8 +510,7 @@ void main() {
     expect(
       await agent
           .run(
-            sessionId: 's-1',
-            uid: 'uid-2',
+            sessionId: 's-2',
             input: const TurnInput.text('Hi'),
             apiKey: 'key',
           )
@@ -526,7 +523,7 @@ void main() {
 
     gate.complete();
     while (await running.moveNext()) {}
-    expect(await sessions.lease('s-1'), isTrue);
+    expect(sessions.lease('s-1'), isTrue);
   });
 }
 

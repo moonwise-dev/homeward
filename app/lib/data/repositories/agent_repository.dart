@@ -18,6 +18,8 @@ import 'repository_guard.dart';
 part 'agent_repository.g.dart';
 
 abstract interface class AgentRepository {
+  Future<String> create();
+
   Stream<PlanConversation> watchConversation(String sessionId);
 
   Future<void> open(String sessionId);
@@ -41,6 +43,9 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
   final Catalog _catalog;
   final _plans = <String, _PlanSession>{};
   var _lastEntryId = 0;
+
+  @override
+  Future<String> create() => guard(_client.createSession);
 
   @override
   Stream<PlanConversation> watchConversation(String sessionId) {

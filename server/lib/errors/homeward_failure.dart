@@ -59,22 +59,6 @@ abstract class HomewardFailure with _$HomewardFailure {
     message: 'Add your Gemini API key to continue',
   );
 
-  static const unauthenticated = HomewardFailure(
-    code: HomewardErrorCode.unauthenticated,
-    message: 'Sign in again to continue',
-  );
-
-  static const appCheckFailed = HomewardFailure(
-    code: HomewardErrorCode.appCheckFailed,
-    message: 'This app could not be verified; reload and try again',
-  );
-
-  static HomewardFailure rateLimited(Duration retryAfter) => HomewardFailure(
-    code: HomewardErrorCode.rateLimited,
-    message: 'Too many messages in a short time; wait a moment',
-    retryAfter: retryAfter,
-  );
-
   static const turnInProgress = HomewardFailure(
     code: HomewardErrorCode.turnInProgress,
     message: 'Another message in this plan is still being answered',
