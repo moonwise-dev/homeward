@@ -1,4 +1,4 @@
-import 'generated/iso_4217.dart';
+import 'iso_4217.dart';
 
 extension type const Currency._(String code) {
   factory Currency.parse(String code) {

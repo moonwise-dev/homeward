@@ -33,10 +33,7 @@ help:
 	@echo "  make catalog-check Fail if catalog outputs are stale or an example is invalid"
 	@echo "  make codegen       Run build_runner in app, common, and server"
 	@echo "  make codegen-check Fail if build_runner changes a committed generated file"
-	@echo "  make iso-4217      Regenerate the ISO 4217 currency table from SIX"
-	@echo "  make country-names Regenerate the country name table from CLDR"
 	@echo "  make a2ui-schemas  Vendor the pinned A2UI v0.9 basic catalog and common types"
-	@echo "  make fonts         Vendor the pinned font faces the app draws with"
 	@echo "  make emulator      Run the Firestore emulator on port 8081"
 	@echo "  make server-dev    Run the server locally with hot reload, in this terminal"
 	@echo "  make dev-server    Start the local server in the background if it is not running"
@@ -108,24 +105,10 @@ codegen-check:
 	test "$$before" = "$$($(GENERATED_DIGEST))" || \
 		(echo "Generated files were stale; build_runner rewrote them, commit the result" && exit 1)
 
-.PHONY: iso-4217
-iso-4217:
-	@dart run tool/bin/generate_iso_4217.dart common/lib/money/generated/iso_4217.dart
-	@dart format common/lib/money/generated/iso_4217.dart
-
-.PHONY: country-names
-country-names:
-	@dart run tool/bin/generate_country_names.dart common/lib/geo/generated/country_names.dart
-	@dart format common/lib/geo/generated/country_names.dart
-
 .PHONY: a2ui-schemas
 a2ui-schemas:
 	@dart run tool/bin/vendor_a2ui_schemas.dart common/lib/a2ui/generated/a2ui_v09_schemas.dart
 	@dart format common/lib/a2ui/generated/a2ui_v09_schemas.dart
-
-.PHONY: fonts
-fonts:
-	@dart run tool/bin/vendor_fonts.dart app/assets/fonts
 
 .PHONY: emulator
 emulator:

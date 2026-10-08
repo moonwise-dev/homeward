@@ -1,4 +1,4 @@
-import '../geo/generated/country_names.dart';
+import '../geo/country_names.dart';
 
 extension type const LocaleTag._(String tag) {
   factory LocaleTag.parse(String tag) {
