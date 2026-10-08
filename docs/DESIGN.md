@@ -45,7 +45,7 @@ sentences a buyer has to read â€” what a refund depends on, what sets a limit â€
 so the lightest grey is held to the same bar as the rest.
 
 The app follows the device's light or dark setting (`ThemeMode.system`)
-until the buyer picks Light or Dark under Appearance on the plans screen, a
+until the buyer picks Light or Dark under Appearance in the app bar, a
 choice kept on the device; Match the device returns to following it. The web
 page takes the device's page colour before Flutter draws. Dark keeps the warm paper of light: a warm
 near-black page, cream text, and the accents lifted until they read on it.
@@ -69,10 +69,10 @@ tabular numerals so columns and animated values never jitter.
 | `figure` | Inter | 17 / 500, tabular | Table and breakdown amounts |
 | `code` | Roboto Mono | 12 / 400 | A2UI messages and data models in the wire inspector |
 
-The five faces ship as assets under `app/assets/fonts`, vendored by `make fonts`
-against the checksums `google_fonts` pins, and `allowRuntimeFetching` is off, so
-a recording never waits on a font server and never flashes a fallback face.
-`tool/test/fonts` fails if a file is missing or no longer matches.
+The five faces ship as assets under `app/assets/fonts`, each beside its OFL
+licence, the files `google_fonts` pins by checksum, and `allowRuntimeFetching`
+is off, so a recording never waits on a font server and never flashes a
+fallback face.
 
 A surface the model draws reaches type through Material rather than through
 `AppTextStyles`, so every slot of the `TextTheme` maps onto a style above and a

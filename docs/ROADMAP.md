@@ -1,594 +1,168 @@
 # Homeward Roadmap
 
+Where the project is and what is next. `docs/DECISIONS.md` has what was
+decided and why, and `docs/SPIKES.md` the evidence.
+
 ## External Dates
 
 | Date | Event | Source |
 | --- | --- | --- |
-| 2026-09-28 | Working group and demo build session; postponed three days before and moved to 2026-10-06 | Hilda Arteaga, 2026-09-14; Abdallah Shaban, 2026-09-25 |
-| 2026-10-06 | Working and build-up session, 08:00 US Pacific, 17:00 in Sweden: Google reviews each project's progress and live demos and gives direction | Hilda Arteaga, 2026-10-01 |
-| ~2026-10-10 | Recording deadline for Andrew Brogdon's GenUI video segment | Andrew Brogdon, 2026-09-10: "around this time next month"; confirm exact date |
+| 2026-10-06 | Working and build-up session: Google reviewed each project's progress and live demos | Hilda Arteaga, 2026-10-01 |
+| 2026-10-16 | Submission due: the asset bundle, by email to the Flutter consultants team | Hilda Arteaga, 2026-10-06 |
+| After 2026-10-16 | Google's review of the repository; some comments are mandatory, to ensure official SDKs are used | Hilda Arteaga, 2026-10-06 |
+| To schedule | A user study with Google's UX research on how developers build with GenUI: a screener, about an hour of questions beforehand, and an hour's interview | Email after the session, introduced by Abdallah Shaban |
+| ~2026-10-10 | Recording for Andrew Brogdon's GenUI video segment; the submission lists a video as optional | Andrew Brogdon, 2026-09-10; confirm it is still wanted |
 | 2026-11 | Livestream premiere, date unannounced | Andrew Brogdon, 2026-09-10 |
 
 ## Where We Are
 
-As of 2026-10-06, after a review of the whole project, the map chunk,
-C11, a conversation that leads, and C12, turns that recover by themselves.
+As of 2026-10-08.
 
-- **Built.** C1 to C12 and C8b: 27 blocks in five families, twelve tools,
-  the four journeys rehearsed with the probe, a gallery page per block, the
-  dark theme (D162), the map on open tiles with no key (D163), a
-  conversation that leads (D164 to D169), and turns that recover by
-  themselves (D170, D171).
-- **Next.** The working session with Google on 2026-10-06, which reviews
-  progress and live demos, and M4, the recording, around Oct 8 to Oct 10.
-  No chunk is open before the recording.
-- **Open before the recording.** Its exact date and whether Moonwise is on
-  the video thread (Open Question 1); S17, the refused function results,
-  which the start-over recovers from and nothing yet explains; latency
-  measured again; the Gemini API terms read again for the key screen (D76);
-  and the recording build tagged, in a repository that has no tag and no
-  remote yet.
-- **Keys.** The repository moved to a new machine on 2026-10-05 and its
-  `.env` was made again that day with two Gemini keys. No other key is
-  needed: the map takes none (D163), and the Firebase client configuration
-  from `flutterfire configure` is committed and signs in.
-- **Checked on 2026-10-05.** `make check` is green: 868 tests in `common`,
-  182 in `server` with the 8 Firestore emulator tests skipped, 15 in `tool`,
-  and 20 in `app`. Journey 3 ran live through the probe in three turns and
-  seven model rounds with no correction, first text after 26, 20, and 12 s,
-  and Gemini drew `WeekMap` unasked, the places on the first turn and the
-  routes once the week was measured; the same story ran in the web app in
-  one turn of five rounds. Flash-Lite missed the headers deadline on the
-  first request, so every round ran on 3.5 Flash, whose free tier is 20
-  requests a day.
-- **Rehearsed again later that day, for the working session.** The money
-  journey, four turns, ran five times through the probe on Flash-Lite: no
-  error, no leaked text, and the down payment slider on the plan every time
-  it was asked for, though three turns of one run came back with the screen
-  and no words. Journey 2, eight runs through the probe, drew the flat in
-  seven and the listing quote in five; the miss was a rejected `Button` that
-  the correction round did not redraw, so the reply described a flat the plan
-  did not show. In the web app, about twenty-five turns, one wrote the
-  model's own reasoning into the chat, and a `Choice` offered a monthly
-  saving in kronor, which the prompt forbids. First text came after 4 to 26 s,
-  most often 8 to 19. From 15:03 to 15:07 CEST Gemini was slow: a one-word
-  reply took 13.5 s, so with the default 10 s to response headers the models
-  missed it and most turns failed with `gemini_unavailable`; with
-  `HOMEWARD_HEADERS_DEADLINE=40` and `HOMEWARD_FIRST_STEP_DEADLINE=60` a turn
-  completed in 34 s. A demo should set both (`docs/AGENT.md`, Model
-  Selection).
-- **Small fixes made the same day.** The debug build no longer paints its
-  DEBUG ribbon, which covered the wire inspector's button; the agent card and
-  the empty plan speak of home finance and money; the style prompt forbids a
-  label or third-person lead-in such as "To answer the user:", seen once in
-  five turns; the down payment slider's two end labels wrap in a narrow pane
-  instead of overflowing.
-- **C11, the same evening.** The owner ran a plan in the web app and found a
-  bot filling a form: one fact a turn, a take-home pay of 10,000 kronor for
-  a family taken without a word, a plan that listed answers back (D164).
-  The replay showed why: Sweden's sample rules need seven facts, the prompt
-  had Gemini ask for the one that mattered most, and nothing checked a
-  figure. C11 changed the prompt, two blocks, the money tool, and the loop
-  around the model (D164 to D169). Rehearsed on Flash-Lite, 97 turns through
-  the probe at 2.6 model rounds a turn, 10 of them with a correction, and
-  three conversations in the web app:
-  - The owner's conversation, typo and all, reached what the family can
-    borrow in five turns, the question about the 10,000 kronor included;
-    before, it was still asking for single facts after three. Once the check
-    was wired in, every replay, four through the probe and two in the app,
-    asked whether they meant 10,000 or 100,000, each a tap.
-  - Pay before tax below take-home pay was refused and offered swapped. A
-    savings figure the test automation typed twice over was questioned by
-    Gemini on its own, both times. A late "we have a daughter" and "we would
-    rather rent first" changed the brief and the story in place.
-  - The Mum journey ran from one line to the listing read for step-free
-    access in four turns and the costs on the day in the fifth, a card to
-    tap in each. The front-loaded opening
-    still reached the money on its first turn, then drew the costs on the
-    day and the down payment slider without a round to read their docs.
-  - Two replies had no words and the finishing round got them; one plan
-    line with a broken quote cost a turn its ask before the parser was
-    fixed.
-- **What C11 did not settle.** Gemini's capacity, not the code, decided the
-  worst turns of the evening. Rounds that took 5 s at 19:10 CEST took 10 to
-  25 s at 19:30. From 20:10 to 20:15 Flash-Lite answered "high demand", its
-  circuit opened for five minutes, Flash was out of its 20 requests a day
-  and 3.8 Flash was overloaded: two turns failed with `gemini_unavailable`,
-  one started over in a new conversation and lost its history, and one reply
-  described cards no tool had produced, to which the finishing round got an
-  empty answer. When it passed, journeys 1, 3, and 4 ran again on the final
-  code, in three, three, and two turns. Journey 3 had first shown the cost
-  of a rule written for buyers: told to check any money figure with the
-  loan tool, Homeward asked two friends renting for their savings and tax
-  residence instead of showing flats, and the rule now says buyers. In one
-  session every plan update left its new blocks out of the root's children
-  and cost a correction round each turn. Not looked at: a phone, where the plan is a tab, and a release
-  build; the new blocks and the plan's cards were seen in both themes in
-  Chrome. The step notes and the story
-  are Gemini's words and now and then carry a figure the buyer gave, which
-  nothing checks. For a demo, a shorter `HOMEWARD_MODEL_COOLDOWN` would bring
-  Flash-Lite back sooner after one bad answer.
-- **C12, the morning of 2026-10-06.** The owner's own test in the web app
-  failed on seven of eleven turns, and the owner asked whether another API
-  was needed. The first development key had spent `gemini-3.5-flash-lite`'s
-  500 requests of the day, about 490 of them the day before and 249 of those
-  in the evening's probes for C11, and `gemini-3.5-flash`'s 20;
-  `gemini-3.8-flash` answered "high demand". Each failure reached the buyer
-  as a toast and a Retry button, and the app never tried the second key,
-  which was answering, because the last error read as unavailable and not as
-  a request limit. C12 changed the model order, the fallback, the loop, and
-  the app (D170, D171). Checked between 08:30 and 08:45 CEST:
-  - An outage, simulated with a zero deadline: only the working card for
-    22 s, through two waits on the server, one in the app, and two more on
-    the server, then one quiet line with Try again and no toast.
-  - Both models of the first key at their limits: the turn failed in 0.7 s,
-    the app sent it again on the second key 7 ms later, and the reply was
-    complete 11 s after sending, with nothing else on the screen. The plan,
-    reopened after a reload, showed the message once.
-  - The default order on the first key: `gemini-3.5-flash-lite` refused and
-    `gemini-3.1-flash-lite` answered inside the same turn, in 17 s.
-  - `gemini-3.1-flash-lite` alone, on the "take home 10k" conversation:
-    five turns, 12 requests, no correction; it asked which figure was meant
-    and asked the missing facts together. One replay, not a rehearsal.
-  - A change of key in the middle of a conversation: Gemini answered "not
-    found" for the first key's history, the turn started over in a new
-    conversation on the second key and completed, in 7 requests and 32 s.
-  - At 09:02 CEST, just after the daily limits reset: the first key's
-    `gemini-3.5-flash-lite` answered again, took 21 s over its first round,
-    and then answered "high demand"; `gemini-3.1-flash-lite` carried the
-    turn to its end with one correction and a finishing round, in 49 s.
-    Slow, but no failure reached the client; the probe has no screen.
-  Not settled: a key whose main model is spent carries on with its second,
-  slower model while the next key's main model sits unused; one reply in
-  105 on 2026-10-05 ended with the notice that asks the buyer to send
-  again, and still can; a change of key loses the dialogue so far, since
-  the history lives in the first key's project; and when Gemini is slow
-  rather than refusing, a turn still takes as long as the deadlines allow.
-  Google's refusal named 02:00 CEST as the time to retry, and the limit
-  lifted at 09:00 CEST, midnight Pacific, as its documentation says. The
-  waits and the request-limit signal were checked with throwaway tests,
-  which D137 keeps out of the suite, and with the simulated outage, not
-  against a real one.
-- **Hosted.** Nothing hosted serves: on 2026-10-05 the Cloud Run URL in the
-  `Makefile` answered 503 and Firebase Hosting 404. The server image could
-  not be built from C5 until that day, when the root `.dockerignore` began to
-  admit `markets/`, which `server/Dockerfile` copies; so nothing deployed
-  with `make deploy-server`, which refuses a dirty tree, holds the money core
-  or anything after it. The fix was checked against the build context only:
-  `make server-image` itself has not run since.
-- **Named in the requirements, not built.** The settings screen, deleting a
-  plan or all data, the 90-day cleanup, the session limit, and rate limits in
-  Firestore. `docs/REQUIREMENTS_APP.md`, `docs/REQUIREMENTS_SERVER.md`, and
-  `docs/FIRESTORE.md` mark each.
-- **Left over from before D138.** The key screen's "about 250 turns a day"
-  dates from two requests a turn (D78); the 53 turns of the second rehearsal
-  on 2026-10-05 took 2.75 on average (`docs/AGENT.md`).
+- **Built.** 27 blocks in five families, twelve tools, and the four journeys
+  of the README, rehearsed with the probe; a gallery page per block; the
+  wire inspector; light and dark themes; the map on open tiles with no key
+  (D163); a conversation that leads (D164 to D169); and turns that recover
+  by themselves (D170, D171).
+- **Cleaned up on 2026-10-08** (D172 to D179). Out: Firebase sign-in, App
+  Check, and Firestore; the rate limiter; the plans list; three one-off
+  data generators; four documents. In their place: a session known by its
+  ID and kept in memory, one plan at a time with Start over, and the app
+  bar of the plan opening the gallery, the wire inspector, the key, and
+  Appearance.
+- **Checked on 2026-10-08.** `make check` is green: 882 tests in `common`,
+  168 in `server`, 12 in `tool`, and 16 in `app`. One live turn through the
+  probe on the trimmed server found Stockholm and KTH, worked out what a
+  couple can borrow, and drew the plan and an inline `Choice` in 26 s. In
+  the web app, in headless Chrome: a turn drew the plan, a reload reopened
+  the same plan, the gallery and the key screen returned to it, Start over
+  opened a new one, and five app bar actions fit beside the title at phone
+  width. Not looked at: a release build, a device, and the hosted path.
+- **Not hosted.** Nothing serves. On 2026-10-05 the Cloud Run URL in the
+  `Makefile` answered 503 and Firebase Hosting 404, and `make server-image`
+  has not run since the root `.dockerignore` began to admit `markets/`.
+  The deploy targets have not run against the server without Firebase.
+- **The repository** is at `github.com/moonwise-dev/homeward`, private, on
+  `main`. `make hooks` runs `make check` before every push.
+- **What to expect from a turn.** First text after 4 to 26 s on the free
+  tier, most often 8 to 19; two and a half model requests a turn on
+  average; about one turn in ten needs a correction round. Free requests
+  are counted per model per key, 500 a day on each Flash-Lite, and reset at
+  midnight Pacific. A demo should set `HOMEWARD_HEADERS_DEADLINE=40` and
+  `HOMEWARD_FIRST_STEP_DEADLINE=60` (`docs/AGENT.md`, Model Selection).
 
-## Milestones
+## The Submission
 
-### Before The Reset — Sep 16 to Sep 26
+What Google asked for on 2026-10-06, due 2026-10-16 (D172).
 
-The foundation was built and kept: the Dart workspace, the A2A server on Cloud
-Run with Firestore sessions, the streaming Gemini client with model fallback,
-A2UI validation with correction rounds, the catalog contract and its generated
-prompt skill, the Flutter app shell with the renderer, gallery, and wire
-inspector, and the open-data clients for places and routes.
+| Asked for | State | Left to do |
+| --- | --- | --- |
+| A public web build | Not hosted | Deploy the server to Cloud Run and the web build to Hosting; check a turn, a reload, and Safari there |
+| A golden script, with clickable prompts | Not built | Starter prompts on the empty plan, taken from the four journeys |
+| A place that shows the catalog | Built: `/gallery`, from the app bar or by URL, with no key | A look at it as a stranger would arrive |
+| A logo, vector or high-resolution PNG | None | Moonwise's or Homeward's mark |
+| The repository open-sourced under Apache 2.0, with a Figma file of every catalog component | Private; no licence file; no Figma file | `LICENSE`, a notice for the Unsplash photos and the OFL fonts, the Figma file, and Moonwise making it public |
+| A short description with one or two screenshots | The README has the words | Screenshots, and the three-sentence version |
+| A video, optional | A 74 s recorded run from 2026-10-06, outside the repository | Record again on the hosted build if it is wanted |
+| Official SDKs, in the review that follows | genui renders; the Gemini call is our own REST client | Ask Google which package it expects (D177) |
 
-On top of it came a question-by-question case (D121), sample homes (D122), a
-deal workspace with verified rule packs (D113), and evals that scored the
-case's script. On 2026-09-26 all of that was removed (D129): the server had
-taken the flow away from the model, so the app read as a filter rather than
-generated UI. It is in git history at `6faa8ab`.
+## Next
 
-### The Rebuild — Chunks C1 to C10
+In this order, each a small chunk that ends with `make check` green, a live
+probe, and a visual look.
 
-The rebuild runs in small chunks. Each chunk is one visible change, demoable
-on its own, and says what it leaves out. Each ends with `make check` green, a
-live probe with a few test stories, and a visual look; no new unit tests are
-written (D137). Earlier work to bring back from `6faa8ab` is named where it
-exists, restored only as far as the chunk needs and never with the server
-scripting D129 removed. The order puts finance and domain blocks first, since
-Homeward is a finance sample and screens of basic components read as forms
-(D138). The recording targets C1 to C10: 25 to 30 components (D140) and the
-four journeys of `docs/PRODUCT.md` (D141).
+1. Host it, since it is the least certain step.
+2. Starter prompts on the empty plan.
+3. Decide which blocks stay. A block stays when basic components cannot do
+   its job: a chart, a map, a calculation, or a figure shown with its
+   source. Tools that only the removed blocks used go with them, and the
+   journeys are rehearsed again.
+4. The licence and notice, the description, screenshots, the logo, and the
+   Figma file.
+5. A rehearsal on the hosted build, and the video if it is wanted.
 
-- **C1 One living surface — done.** A plan's screen is one surface that later
-  turns update in place, instead of a new card per turn; the ownership pass
-  allows it (D131).
-- **C2 Two patterns — done.** Inline asks in the conversation beside the plan panel
-  (D139): the validator accepts `plan` in any turn and `t{turn}-{slug}` in its
-  own turn, and the app shows the conversation with its inline cards next to
-  the plan panel, or the panel as a tab on a phone. Leaves out new blocks.
-- **C3 Progressive disclosure — done.** The catalog skill carries the full schemas
-  of the core components and an index of every other component, and a
-  `component_docs` tool returns the full schemas and examples of the ones
-  Gemini is about to draw (D140, D143). Leaves out new blocks.
-- **C4 The brief — done.** An `update_brief` tool and a `/brief` slice kept with each
-  turn's record (D132); the `Fact` block, with Right and Not quite on a
-  deduction (D144); the prompt that deduces first and keeps the brief, like a
-  coding agent (D130). Leaves out `Choice`.
-- **C4b Choice — done.** The `Choice` block, one decision with Gemini's
-  recommendation first, and the prompt that asks one decision at a time.
-- **C5 Money core — done.** Restored from `6faa8ab`: `common/lib/finance`,
-  `common/lib/affordability`, `common/lib/costs`, and the market model with
-  the Swedish and Portuguese packs, rates, and living costs, labelled as
-  samples. A `compute_affordability` tool that takes the figures the buyer
-  stated, and the `AffordabilitySummary` and `RuleNote` blocks: what the
-  household can borrow, the highest price it allows, and which rule limits
-  it, with its source (D146).
-- **C5b Monthly cost — done.** `MonthlyCostBreakdown`, restored as
-  `PaymentBreakdown`: what a given price costs the household each month. The
-  first block in the index only. `compute_affordability` takes the down
-  payment and monthly fee the buyer states and says what it assumed, so
-  Gemini asks the buyer's preference (D147). Reading a block's docs no longer
-  counts as a tool round.
-- **C6 Stress and upfront costs — done.** `StressTestChart` and
-  `PurchaseCostsTable`, restored: `compute_affordability` adds the monthly
-  cost as rates rise, against the most the household can carry, and every
-  upfront cost with its source to `/affordability` (D148).
-- **C6b Down payment what-if — done.** `DownPaymentSlider`: the buyer drags the
-  down payment between the minimum the rules allow and what the savings
-  reach after the costs on the day, through steps `compute_affordability`
-  worked out, and uses the amount they settle on (D149).
-- **C6c Mortgage options — done.** `MortgageOptions`: the sample lender's variable,
-  fixed, and mixed rates side by side for the plan's price and down payment,
-  from SBAB's list rates and Banco BPI's price list added to the packs, and
-  the one the buyer uses (D150).
-- **C7 Homes — done.** The sample homes of Stockholm and Lisbon restored with their
-  photos, a `search_homes` tool that prices each for the household the last
-  `compute_affordability` run kept, and `HomeCard` with its monthly cost,
-  whose tap works out every money block for that home (D151). Leaves out
-  keeping homes and comparing them, and why a home fits beyond the money.
-- **C7b Shortlist and comparison — done.** A Keep button on `HomeCard` and a
-  `keep_homes` tool that marks homes kept in `/homes`; `Shortlist`, the homes
-  the household kept, and `HomeComparison`, two or three homes Gemini names
-  side by side on price, monthly cost, cash, and size (D152). Leaves out
-  comparing needs and the week, which come with C8 and C9.
-- **C8 Places and the week — done.** A `find_place` tool that checks each place the
-  buyer names against open data and seeds `/places`, a `measure_week` tool
-  that measures the week's trips from a sample home or a place by open
-  routing and seeds `/week`, and the `WeeklyTravel` and `RouteSummary` blocks
-  (D154). Leaves out the map, and the week in `HomeComparison`.
-- **C8b The map — done.** `WeekMap`: the places Homeward found and one starting
-  point's week on OpenStreetMap's tiles, with no key (D163). `measure_week`
-  keeps each trip's path, so every trip is drawn along the route it was
-  measured on, with its minutes and how often on the place's pin and the
-  week's total above the map. Leaves out Google Maps and the toolkit's own
-  components, homes whose week is not measured, several starting points on
-  one map, and satellite and tilt.
-- **C9 Rent — done.** Sample rents per area for the sample homes, from Statistics
-  Sweden and INE, which the rent the buyer states replaces; a `split_rent`
-  tool and `RentSplit`, rent and bills split equally, by income, or by room
-  size; a `compare_buy_rent` tool and `BuyVsRent`, the running cost of
-  buying a home against renting one like it, year by year (D155). Leaves out
-  the home's price changing, what the savings would earn, selling costs, and
-  a house's upkeep.
-- **C9b Needs from listings — done.** A `read_listings` tool, the listing reader
-  restored from `6faa8ab` for any need Gemini names from the buyer's story,
-  with quotes checked word for word (D126, D156), and `ListingQuote`, one
-  home's needs with the listing's own words highlighted. Leaves out the
-  reasons on `HomeCard` and `HomeComparison`, and listings the buyer pastes
-  (S13).
-- **C9c Swiping — done.** `HomeSwipe`, restored from `6faa8ab`: `search_homes` deals
-  up to six sample homes that differ, priced for the household, and
-  `keep_homes` reads what the kept ones share that the passed ones lack
-  (D128, D157). Leaves out needs in the deck and swiping rentals.
-- **C10 Understanding blocks — done.** `HouseholdSummary`, who the household is
-  and the figures they stated, from `/affordability`; `Brief`, sections of
-  the brief with where each item came from; and `MoneyInput`, restored, an
-  amount field that writes what the money tools take (D158).
-- **C10b Money blocks — done.** `LoanBalanceChart`, the loan paid down and the
-  equity built year by year, which `compute_affordability` works out into
-  `/affordability` with Sweden's amortization stepping down as the loan
-  falls, the schedule `BuyVsRent` now shares; `SavingsPlan`, how long until
-  the savings cover the cash a home needs, from a `plan_savings` tool at the
-  monthly saving the buyer states; and `MarketSnapshotCard`, a city at a
-  glance before anything is known, from a `look_up_market` tool: the sample
-  lender's rates, the rules that set the loan, and each area's median price
-  and rent per square metre (D158, D159). Leaves out what the savings earn,
-  prices and incomes changing, and rates moving over the loan.
-- **C10c Gallery with parameters — done.** An index of every block by family, and a
-  page per block at `/gallery/<Block>` with its examples and its parameters,
-  read from the declaration: each property, required or not, bound or not,
-  with the path it binds and the tool that seeds it, and the example's
-  components and data model as JSON to copy (D160). Leaves out editing an
-  example's data.
-- **C10d Journeys — done.** The README rewritten for the home-finance agent: how to
-  run it, the four journeys, each with an opening a buyer might type, what
-  Homeward does with it and the blocks it tends to draw, linked to their
-  gallery pages, and what it leaves out, each rehearsed with the probe; the
-  catalog by family; and where to start adding a block or a tool (D161).
-  Leaves out screenshots, which come at M5 with the map and the dark theme.
-- **C11 A conversation that leads — done.** After the owner's review of a
-  live plan on 2026-10-05, which read as a bot filling a form (D164). The
-  prompt gives Homeward an order of work, the move before the money, and has
-  it say what each answer changes; `PlanOverview` opens the plan with the
-  household's story so far and the steps Gemini set for them, and the app
-  draws each top-level block of the plan as a card of its own (D169);
-  `Questions` asks the facts a step needs together, in one card, where
-  each used to cost a turn (D165); `compute_affordability` refuses a figure
-  that cannot be right and says why, so Gemini asks "did you mean" with both
-  figures to tap, assumes what only nudges the result, and keeps the
-  household between runs (D166); every tool answers with the block to draw
-  (D167); and the loop drops words written before the tools ran, asks once
-  for a reply that drew no plan or no ask to be finished, and survives a
-  broken line of JSON (D168). Leaves out a first look at the money from
-  part of the facts, estimating pay before tax from take-home pay, and a
-  check on figures other than pay.
-- **C12 Turns that recover by themselves — done.** After the owner's own
-  test on 2026-10-06 failed on seven of eleven turns (Where We Are).
-  `gemini-3.1-flash-lite` joins the model order second, with 500 free
-  requests a day of its own on the same key (D170). A turn waits and asks
-  again when the models it tried are overloaded; a key out of requests is
-  reported as that, so a client moves to its next key; and the app sends a
-  failed turn again by itself, on the next key or after a short wait, before
-  it shows anything. What is left when everything refuses is one quiet line
-  with Try again, and no toast (D171). Leaves out the first-choice model of
-  another key before a lesser model of this one, a server that redoes a
-  reply it could not draw instead of asking the buyer to send again, and
-  Google's own retry time as the reset time.
-
-#### Later
+## Later
 
 - S12, then on-the-spot research of rules and rates (D142).
 - S13, then reading a listing the buyer pastes (D142).
-- A Google Maps renderer behind `WeekMap`'s `markers` and `routes`, on a
-  Maps Demo Key, if Google asks for one (D163).
+- A Google Maps renderer behind `WeekMap`'s `markers` and `routes`, if
+  Google asks for one (D163).
 - OpenFreeMap's tiles through MapLibre, if traffic outgrows OpenStreetMap's
   tile policy (D163).
 - Areas suggested for any city from open data.
 - Evals that score facts and validity, never which question came when.
-
-### M4 Recording — around Oct 8 to Oct 10
-
-- Agree the segment outline with Andrew: a household's story that becomes a
-  plan, what they can afford, homes with what each costs them and why it fits,
-  the mortgage options and stress test for one of them, then the code that
-  makes it possible (a finance block, the map block, a tool, the composing
-  prompt).
-- Recording build tagged; a key whose daily quota is untouched that day; the
-  server warmed with one request just before recording.
-- Backup: screen capture of every step recorded the day before.
-
-### M5 Sample Complete — Oct 13 to livestream
-
-- Public web deployment and README with screenshots.
-- The repository is the most important asset (Abdallah Shaban, 2026-09-03):
-  the README walks through the four journeys, how to add a component, and how
-  to add a tool, so a developer or a Google field engineer can build their own
-  finance journey from the catalog.
-- The gallery shows every building block beside its parameters.
-- Repository made public under Apache-2.0; a tutorial draft.
-- Dark theme — done.
-
-### M6 Voice Door — after M5
-
-- `/live` WebSocket door, Live API client, `show_ui` tool, voice composer mode.
-
-### M7 Provider Choice — after livestream
-
+- The voice door: a `/live` WebSocket, the Live API client, and a voice
+  composer mode.
 - A second model API for composing, picked by the buyer (D80).
+- The move to `a2ui_core` 0.2 and `a2ui_agent`, once genui accepts them:
+  its surface checks and prompt generation cover what
+  `server/lib/agent/validation` and the catalog skill do by hand today.
 
-## Spikes
+## How It Got Here
 
-| ID | Question | Method | Decision gate |
-| --- | --- | --- | --- |
-| S1 | What does `genui_a2a` 0.10.x put on the wire: A2A version, SSE or WebSocket, A2UI MIME type, where capabilities and data model travel, how actions are sent? | Run `genui_a2a` against a recording fake A2A server | **Answered:** the protocol fits; the app uses its own client, see `docs/SPIKES.md`. |
-| S2 | Can Dart drive the Interactions API cleanly: request shape, SSE event types, function calling continuation, `previous_interaction_id`, error codes for bad key and quota? Is `gemini-3.8-flash` available on free-tier keys? | Curl and a Dart console probe against a free-tier key | **Answered:** yes; see `docs/SPIKES.md`. Quota (429) shapes recorded during S3. |
-| S3 | Can one interaction combine `google_search` with structured JSON output, and what grounding metadata links fields to URLs? | Research call for `PT-20` | **Closed by design:** grounding is paid only, so research is not built (D40); see `docs/SPIKES.md`. |
-| S4 | Do genui client functions accept object arguments and return numbers, strings, and booleans; can a catalog item subscribe to a whole slice; is a six-component slider drag at 60 fps? | Probe app, widget test, profile web builds in headless Chrome with CPU throttling | **Answered:** bindings and functions work; charts drawn with `fl_chart` are the bottleneck; see `docs/SPIKES.md`. Android unmeasured. |
-| S5 | Is `a2ui_core` pure Dart and usable on the server for message models and validation? | Import into a console app | **Answered:** yes; used from `common`, see `docs/SPIKES.md`. |
-| S6 | Does `firebase_admin_sdk` verify anonymous ID tokens and App Check tokens and run Firestore transactions on Cloud Run with ADC? | Deploy a probe route | **Answered:** yes; clients call Cloud Run directly because Hosting rewrites cannot stream, and the invoker IAM check is off; see `docs/SPIKES.md`. |
-| S7 | Verify the high-impact Tier 1 claims: Portugal non-resident IMT, Portugal DSTI limit, Portugal non-resident LTV, Sweden top-up cap | Primary sources listed in `docs/MARKETS.md`, removed in D129 and kept at `6faa8ab` | **Answered:** Sweden confirmed; Portugal corrected: DSTI 45% from 2026-08-01, non-resident IMT by Decree-Law 97/2026 with a refund path, non-resident 70% is lender practice; see `docs/SPIKES.md`. |
-| S8 | Can a buyer pick another model or API beside Gemini, and what does each route cost? | Desk research of Google and third-party provider limits, prices, APIs, and Dart libraries; one hero message on each candidate Gemini API model | **Answered:** `gemini-3.5-flash-lite` is the fallback candidate, Gemma 4 does not fit the free tier's 16k input tokens a minute, and an OpenAI-compatible provider choice follows the livestream (D80); see `docs/SPIKES.md`. |
-| S10 | Why does Gemini refuse the catalog as a response schema, and does an accepted schema constrain the output? | Bisecting the composed schema live, synthetic schemas, and chained corrections on the probe key | **Answered:** recursion and `allOf` are the obstacles; a flattened subset is enforced; see `docs/SPIKES.md` and D110. |
-| S9 | Can Homeward learn about any place on free keys: where things are, how far, how good, and what a listing says? | Open-data services and Gemini tools called around Stockholm on the probe key | **Answered:** open data covers where and how far with no key; Google Maps grounding and `url_context` work on free keys; see `docs/SPIKES.md`. |
-| S11 | Does `google_maps_flutter` draw the toolkit's `GoogleMap` on web, Android, and iOS, how does the Maps key reach each platform, and does the Maps JavaScript API load under the web app's `Cross-Origin-Embedder-Policy: require-corp`? | A throwaway app on each platform with Maps keys | **Closed by D163,** never run: the map draws on open tiles and needs no key. |
-| S12 | Which sources answer money and local-rule questions on free keys, and how is each quote checked? | `url_context` on official pages, Google Search grounding on the models that have a free tier, our own fetch for checking quotes | After the recording (D142). |
-| S13 | Can Homeward read a listing the buyer pastes, and check its quotes? | `url_context` against our own fetch, on listing sites in the demo cities | After the recording (D142). |
-| S14 | Can Grounding Lite give Google place IDs for `PlaceDetailsCompact`, and how does Flutter show the place card? | Grounding Lite `search_places`; the `gmp-place-details-compact` element on web | **Dropped by D163,** with the toolkit's components. |
-| S16 | Does a catalog skill of 25 to 30 components fit the free tier, and does a compact index with schemas on demand keep Gemini as reliable as the full schema? | Measure prompt tokens and first-message validity for the full skill against an index plus a `component_docs` tool, on `gemini-3.5-flash-lite` with the probe key | **Answered:** the full skill fits at about 24K tokens and costs no measurable time; progressive disclosure is built anyway (D143); see `docs/SPIKES.md`. |
-| S15 | Does the toolkit's own web client render a Homeward map surface? | Its React sample pointed at a local Homeward server | **Dropped by D163:** `WeekMap` is Homeward's own block. |
-| S17 | Why does the Interactions API refuse a round's function results as not following a function call, in about one tool round in ten? | Chained two-round turns on `gemini-3.5-flash-lite` with Homeward's prompt; the model behind each round, now logged; the step types stored in a refused chain's previous interaction | Open: 0 of 27 minimal chains failed on 2026-09-27, and retrying a refused request failed every time on 2026-09-25, so the start-over stays until the stored chain shows the cause. See `docs/SPIKES.md` |
+- **Sep 16 to Sep 26.** The foundation: the Dart workspace, the A2A server,
+  the streaming Gemini client with model fallback, A2UI validation with
+  correction rounds, the catalog contract and its generated prompt skill,
+  the app shell with the renderer, gallery, and wire inspector, and the
+  open-data clients. On top of it came a question-by-question case, which
+  took the flow away from the model.
+- **Sep 26, the reset (D129).** The case, the deal, and the evals were
+  removed. They are in git at `6faa8ab`.
+- **Sep 26 to Oct 6, the rebuild.** Chunks C1 to C12 and C8b, each one
+  visible change: one living surface, inline asks, progressive disclosure
+  of the catalog, the brief, the money core, homes, places and the week,
+  the map, rent, needs read from listings, the gallery, a conversation that
+  leads, and turns that recover by themselves. On 2026-09-27 the project
+  was realigned from a relocation app to home finance (D138).
+- **Oct 8, the cleanup (D172 to D179).**
+
+The chunk-by-chunk record, with what each left out and how each rehearsal
+went, is in `docs/ROADMAP.md` at `93e1e1a`.
 
 ## Risks
 
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
-| genui and A2UI change between now and recording | Rework in catalog and connector | Pin exact versions; genui confined to two places; no upgrades after M2 until recording |
+| The submission is due 2026-10-16 and nothing is hosted, licensed, or drawn in Figma yet | A late or partial submission | Host first, since it is the least certain step; the Figma file and the licence need Moonwise, so they are asked for at once (Open Questions) |
+| genui is marked highly experimental and is being redesigned as `a2ui_core`, `a2ui_agent`, and `a2ui_flutter`; `a2ui_core` 0.2 already differs from the 0.1 that genui 0.10 needs | Rework in the catalog and the validation passes | Exact versions pinned; genui confined to a few files (`docs/ARCHITECTURE.md`); no upgrade before the submission |
+| Google's review asks for official SDKs, and the Gemini call is Homeward's own REST client | A mandatory comment that costs days in the review window | The client calls the API Google recommends, for which Google lists no Dart package; the question is put to Google before anything is swapped (D177) |
+| Sessions live in the memory of one Cloud Run instance (D174) | A restart, a new deploy, or a second instance loses every open plan | One instance; the app starts a new plan when the server no longer holds the one in its URL; nothing a buyer cannot retype |
+| Nobody signs in, so any caller can open sessions and run turns (D173) | Server time and open-data requests spent on someone's script | A turn needs a Gemini key that Gemini accepts, and spends that key's quota; open-data requests go one at a time per service; one instance, at most 500 sessions |
+| Safari untested with `require-corp` and cross-origin streaming | iPhone viewers cannot stream a turn | Check macOS and iOS Safari on the hosted build; fall back to single-threaded Wasm without isolation headers for Safari |
+| Buyers' personal details in the EU | Compliance exposure | No account and no name asked; a plan lives only in the server's memory, in `europe-north1`, until it is dropped; no content in logs |
+| The buyer has to bring a Gemini key | Fewer people try the demo | One-screen key flow with a direct AI Studio link; starter prompts on the empty plan |
 | A Google A2A client changes what it accepts | Other clients stop rendering Homeward | Server emits only `task` and `status-update`, full text snapshots; `genui_a2a` contract test in the app |
-| No official Dart GenAI SDK | Client maintenance | Thin typed client over REST, recorded fixtures from S2 |
 | Gemini latency: 7–18 s per model round on 2026-09-16 on Flash, 3–5 s on Flash-Lite on 2026-09-17 | Slow turns on camera | Flash-Lite first (D81), a small catalog, full text streamed as it grows, latency re-measured before recording |
 | Preferred model overloaded | Hung or failed turns | Deadlines, circuit breaker, fallback to the next model |
 | Gemini is slow on the day, as from 15:03 to 15:07 CEST on 2026-10-05, when a one-word reply took 13.5 s and most turns failed at the 10 s default | A demo that fails on camera | Raise `HOMEWARD_HEADERS_DEADLINE` to 40 and `HOMEWARD_FIRST_STEP_DEADLINE` to 60 for the demo; a screen capture of the whole path recorded the day before |
 | Flash-Lite at times writes its reasoning into a reply, leaves out the plan, the ask, or its words, or breaks a line of JSON; a `Choice` or the plan's story can still carry a figure the prompt forbids | A visible slip in a recording | Since C11 the loop drops words written before the tools ran, asks once for what a reply left out, and reads past a broken line (D168); rehearsal until a run is clean, then record |
 | The Interactions API refuses a round's function results as not following a function call, in three of about thirty tool rounds in the C10d rehearsals on 2026-09-27 | The turn starts over in a new conversation, which adds seconds and requests and drops the earlier dialogue from the model's history; first text reached 48 s once | The start-over recovers every time so far; retrying the refused request does not (2026-09-25); spike S17 looks for the cause before the recording |
-| Safari untested with `require-corp`, reCAPTCHA Enterprise, and cross-origin streaming | iPhone viewers cannot sign in or stream | Check macOS and iOS Safari in M1; fall back to single-threaded Wasm without isolation headers for Safari |
-| Scripted abuse of the web app exhausts reCAPTCHA's 10,000 free monthly assessments | $8 for the month, then $1 per 1,000 above 100,000 | One-day App Check tokens, the 25 SEK budget alert, per-UID rate limits |
 | Free-tier limits per model per Google Cloud project: 20 requests a day on Flash, 500 on Flash-Lite | Failed turns in rehearsal or on camera; roughly 200 turns a day per buyer on Flash-Lite, at the two and a half requests a turn the 2026-09-28 rehearsal took | At most three tool rounds, two catalog rounds, and two corrections a turn (D85, D147); the next model takes over at a cap (D79); recording on a key unused that day; the cap explained in the app |
 | Free-tier prompts may be used by Google to improve its products and read by human reviewers; the terms ask for no sensitive or personal information | Buyers' financial details lose a privacy promise | Quoted on the key screen with advice to use round figures or a billing-enabled key (D76); no names are ever asked; terms re-read before recording |
 | Public open-data services limit and refuse heavy use: Nominatim one request a second, Overpass and OSRM fair use | Slow or failed screens when many viewers arrive | A user agent naming Homeward, a cache per query, one request at a time per service |
 | Gemini draws weaker screens without the server steering it | A demo that wanders | A small catalog of expressive blocks, a prompt that names the order of work, a plan of steps Gemini keeps on screen, and tools that hand over the block to draw (D164, D167); no server rule that picks the next question (D129) |
 | One "high demand" answer opens Flash-Lite's circuit for five minutes while Flash is out of its 20 requests a day and 3.8 Flash is overloaded, as from 20:10 to 20:15 CEST on 2026-10-05 | Turns fail with `gemini_unavailable`, or run on a degraded answer that describes cards it did not draw | A shorter `HOMEWARD_MODEL_COOLDOWN` for a demo; rehearse in the hour before; the recorded backup; since C12 `gemini-3.1-flash-lite` stands between them, and the turn waits and asks again before it fails (D170, D171) |
-| The rebuild is not demoable by the working session | Little to show at the session | The session moved from Sep 28 to 2026-10-06; C1 to C10d were built by 2026-09-27 and the map on 2026-10-05, when a journey ran live through the probe and in the web app (Where We Are) |
 | An unscripted agent wanders on camera | A recording that loses its thread | Rehearsal with test stories kept outside the app, inputs only; a recorded backup; the brief keeps each turn anchored |
 | Probes and rehearsals spend the free requests the owner's own testing and a demo need: about 490 `gemini-3.5-flash-lite` requests on 2026-10-05 left ten for the next morning, the day of the working session | A test or a demo that starts on a spent key | Since C12 the turn carries on with `gemini-3.1-flash-lite` and then the next key by itself (D170, D171); bulk probes run on `gemini-3.1-flash-lite`, each batch sized against the day's 500 first, and none on a demo day without asking |
 | A coding-agent loop spends more free requests per turn | The buyer's daily quota runs out sooner | Lookups that are cheap; research only on request; the tool-round cap stays |
 | OpenStreetMap's tile server is best effort, with no guarantee, and may block heavy use | A map with no tiles when many viewers arrive, or on camera | Its policy followed: attribution on the map, a user agent naming Homeward, tiles fetched only as they are viewed; the recording backed by a screen capture; OpenFreeMap through MapLibre if the public demo draws traffic (D163) |
 | Sample homes read as fake | The needs reading looks staged | Labelled as samples; reading a pasted real listing follows after the recording (D142) |
 | Homeward reads as a relocation app, not a finance sample | Google's finance vertical goes unmet; field engineers find no reusable finance components | Money in every journey and in the recording, finance blocks first in the build order (D138) |
-| 25 to 30 components in about twelve days | Unfinished blocks on camera | Finance math and six finance blocks restored from `6faa8ab`; each chunk demoable; the gallery shows only finished blocks |
 | A catalog of 25 to 30 components outgrows the prompt | Slower turns, more corrections, the free tier's token limits | Progressive disclosure after S16 (D140) |
 | Area samples miss the household's own situation: Stockholm's official rents are first-hand leases a newcomer rarely gets without years in the queue, while second-hand rents run about 2.5 times higher, so `BuyVsRent` makes renting look cheaper there than a newcomer finds it | A comparison that is sourced yet wrong for the buyer in front of it | Each figure carries its source and what it measures, and Gemini sees it; a rent the buyer states replaces the estimate; valuing each situation on the spot from the buyer's story is Open Question 8 |
 | The restored finance was the slowest and least reliable part before (D125) | Money turns fail on camera | The math returns without the scripted deal: Gemini composes the finance blocks freely, and tools seed the figures |
-| BYO key friction for video viewers | Fewer people try the demo | One-screen key flow with direct AI Studio link; hero prompt ready on first plan |
-| Buyers' personal details in EU | Compliance exposure | Anonymous auth, `eur3`, no content in logs, delete controls, 90-day inactivity cleanup |
-
-## Decision Log
-
-Decisions from the planning session on 2026-09-16 onwards. Rows that D129
-superseded stay as history.
-
-| # | Decision | Chosen | Alternatives considered |
-| --- | --- | --- | --- |
-| D1 | Agent host | Dart server on Cloud Run | Python FastAPI, Firebase Functions JS, client-only Firebase AI Logic |
-| D2 | Meaning of "10/20 items" | 10–20 custom catalog components; planned 20, 10 for recording | Use cases, phased split |
-| D3 | Market scope | Location-adaptive for any market, specialised per jurisdiction and buyer | Sweden only, pluggable later |
-| D4 | UI authoring | Model lays out, code does numbers | Raw prompt-first A2UI, typed tools compiled by server |
-| D5 | Rule source | Curated packs plus researched fallback | Curated only, fully researched, single market first |
-| D6 | Curated markets | SE, PT with Madeira, ES, UK, US, plus popular destinations | — |
-| D60 | Unknown buyer facts | Rules needing them are pending; the facts become required profile fields and dependent figures wait | Assume the stricter rule; skip the rule until known |
-| D61 | Borrowers | Household income totals, savings, debts, a borrower count, and the oldest borrower's age; the deduction threshold scales by borrower | A profile per borrower now; a single borrower only |
-| D62 | Household | Adults and each child's age, costed from Konsumentverket's tables | Adults and a child count with an averaged cost; adults only |
-| D63 | Swedish left-to-live-on costs | Konsumentverket's 2026 table plus the Riksbank memo's bank norms: 750 SEK running costs for a bostadsrätt, 850 SEK transport per adult, 7% stress rate | Konsumentverket's table only; one bank's published norms |
-| D64 | Swedish income cap | 5× gross income, typical range 5–6×, labelled as bank practice from secondary sources | 5.5× midpoint; no income cap |
-| D65 | Swedish variable spread | 0–1.2% over SCB's negotiated average, starting at 0.41%, SBAB's list rate; the 0.5% first proposed did not match banks' list rates | Start at 1.2%, Nordea's list rate; start at the average |
-| D66 | `/market` slice | The resolved market in the pack's published format with its reference rates and living costs, parsed by the same models on app and server | A separate data-model format with ppm integers and money objects |
-| D67 | Basic component validation | Vendor the A2UI v0.9 basic catalog and common types at a pinned spec commit and validate against a composed Homeward catalog document | Hand-declared basic components; no property schemas for basic components |
-| D68 | Place resolution | The model proposes ISO 3166 codes; generated CLDR tables verify them and a curated place list for rule-bearing regions overrides them | A curated gazetteer only; OpenStreetMap Nominatim |
-| D69 | Catalog skill | The exact composed catalog document and common types as compact JSON Schema, plus message rules, data model paths, actions, and component and surface examples, as genui's `PromptBuilder` and the A2UI agent SDK embed schemas; about 12k tokens. Amended by D143: full schemas for the layout components, the rest on demand | A compact generated summary of about 5k tokens; schemas without examples |
-| D70 | Turn context placement | Appended to `system_instruction`, re-sent on every request and never stored in history | Prepended to the buyer's message, which keeps stale snapshots in history |
-| D71 | A single resolved market | `resolve_market` selects it for the plan in the same model round, and the surface offers a change | The buyer confirms every market in a picker first, one extra turn per plan; a market draft committed with the profile |
-| D72 | Turn model order | `gemini-3.5-flash` first and `gemini-3.8-flash` as fallback, after live turns found 3.8 stalling or failing mid-stream in every turn; replaced by D81 | 3.8 first; 3.5 only |
-| D73 | A model failing after its text streamed | Take the round back and retry it on the next model while no A2UI message of the round was accepted, since clients replace the full text | Fail the turn once any text streamed |
-| D74 | Plans list in M1 | Plans started during this app run, held in app memory, while the server keeps sessions in memory; the Firestore list replaces it in M2 | A server list route over in-memory sessions; no plans screen until M2 |
-| D75 | Gemini key verification | `POST /api/keys/verify` looks up the first turn model with the key, which spends none of the free daily generate requests | Save the key unchecked and let the first turn report `gemini_key_invalid` |
-| D76 | Free-tier data use on the key screen | Quote the Gemini API terms (last modified 2026-04-28): on a free key Google may use conversations to improve its products and people may review them, and Google asks that sensitive or personal information not be sent; Homeward suggests round figures or a key from a project with billing, whose conversations Google does not use | Disclose without advice; a Moonwise billing-enabled key for the recording |
-| D77 | Money formatting | Each country pack declares a BCP 47 `locale`, carried in `/market`, and components format amounts the way that market writes them inside English copy | English grouping with ISO codes everywhere; English grouping with the currency symbol |
-| D78 | Model requests per turn | One tool round per turn: the request carrying tool results ends with a note that tools are done and sets `tool_choice` to `none`, and tools without input, such as `compute_affordability`, run only on the server and reach the model in `preRun` | Up to four tool rounds with every tool offered, which took four requests in a live turn; prompt guidance alone |
-| D79 | A model at its free request limit | The round moves to the next model, and the refused model is skipped for that key for a minute, since per-minute and daily refusals read the same, which roughly doubles a free key's turns; other quota errors and depleted credits still stop the turn. Replaces D41 for this cap after a live session hit the cap on its fifth turn | Keep D41 and stop at the first model's cap |
-| D80 | Models and APIs beside Gemini | Later fallback models on the same key before the recording, `gemini-3.5-flash-lite` once its limits and the hero script check out, Gemma 4 ruled out by its free-tier token limit; an OpenAI-compatible provider choice after the livestream | Gemini models only; the provider choice before the recording; no change until after it |
-| D81 | Turn model order | `gemini-3.5-flash-lite` first, then `gemini-3.5-flash` and `gemini-3.8-flash`: 500 free requests a day and 15 a minute against 20 and 5, the hero script in four requests and 16 s; replaces D72 | Flash first and Flash-Lite last, about ten turns a day on Flash; Flash only |
-| D82 | Household input | `HouseholdInput`, a domain component with an adults stepper, a child age list, and a one-tap no children answer, bound to `/profile/adults` and `/profile/childAges`; it takes the `LoanTermPicker` slot, since the term uses the basic `ChoicePicker`, making 11 components for the recording and 20 in total | A comma-separated `TextField` parsed by the server; a children count priced at one age band; a 21st component |
-| D83 | Keeping the profile and what-if steps on track | A form sending `commit_profile` must bind every profile path the market still needs, or the model gets one correction naming them; when the buyer saves with blanks, `compute_affordability` still seeds down payment bounds from the loan-to-value cap and the summary shows what is still needed; a repeated `createSurface` in a turn is ignored. Found in a live Stockholm run on 2026-09-17: a form without household, then a slider rejected for missing bounds and two corrections | Also reject what-if surfaces while facts are missing; prompt guidance only |
-| D84 | Tool calls after the tool round | Superseded by D85 the same day: one extra request was not enough for a model that calls one tool per request | A hard cap of 2 with the send again surface; two tool rounds without the note |
-| D85 | Models that call one tool per request | While a round draws nothing, its tool calls run and the model is asked again, at most three tool rounds, so such a turn costs up to 4 requests; a turn that still ends empty draws the retry surface. Replaces D84 after live turns on `gemini-3.5-flash-lite` called `resolve_market`, `propose_profile`, and `propose_scenario` in separate requests | One extra request only (D84); the server drawing the form itself; the retry surface alone |
-| D86 | Uncovered markets in the data model | `/market` carries the full rules when a market is curated and `{ id, name, coverage }` when it is not, so `MarketSnapshotCard` reads one path in both states, with the curated markets in `/selection/candidates` where the market picker already reads them | A separate coverage slice; treating a market without rules as uncovered by absence |
-| D87 | Choosing between cost rules in one group | `CostRule.precedence`, an integer the highest of which wins inside a group, so a special regime overrides a general one instead of every general rule enumerating the cases it does not cover; `make markets-check` tries every combination of the facts a group's predicates name and fails on a gap or a tie. Found while curating Portugal, where the flat non-resident IMT overrides two ordinary tables | Positive predicates only, seven IMT rules in `PT` and six overrides in `PT-30`; an `unless` clause in the predicate; ordering rules by position in the file |
-| D88 | Where a refund's baseline lives | `resolveForBuyer` puts the rule that would apply under the refund's `recomputeAs` in `ResolvedMarket.refundBaselines`, so `/market` carries everything the app needs to recompute upfront costs and the refundable part locally while the buyer drags the down payment slider | The app re-resolving rules from the pack; a server round trip per what-if; seeding the refundable amount as a number, which the slider would strand |
-| D89 | Income in another currency | A daily exchange rate table under `markets/fx`, whose rate for the buyer's currency travels inside `/market`, so the app converts locally while the slider moves and every figure can name the rate and its date; `markets-check` keeps the snapshot fresh | Converting once when the profile is saved, which freezes the rate and hides it; asking the buyer for income in the market's currency |
-| D90 | Reopening a plan | The session keeps every turn: its input, the text, the A2UI messages the server forwarded, and how it ended, so opening a plan replays them into the surfaces without asking the model again, while the board is recompiled from the plan on the way out and never stored; the plans screen lists `GET /api/sessions` merged with what this run started, so a title and the market show against each plan | Storing the board with the session, which would go stale as rules change; replaying by resending the turns to the model; keeping the list in app memory as in D74 |
-| D91 | Where sessions live | A Firestore-backed `SessionRepository` behind the same interface, chosen by `HOMEWARD_SESSION_STORE`, which defaults to Firestore on Cloud Run and with the emulator and to memory otherwise, so a restart between takes no longer loses the hero plan; a turn is one document written once, holding its record as JSON because Firestore refuses nested arrays, and the lease is a transaction over the session document | Keeping sessions in memory through the recording and accepting the loss; a turn subcollection under each session; storing A2UI messages as arrays, which nested children break |
-| D92 | Where the wire inspector lives | The second pane beside the chat, in the board's place, and a sheet on a narrow window, rather than a screen of its own: the recording needs the slider and the frame count in one shot, and a surface's data model is only meaningful next to the surface it drives; sizes are the JSON bytes counted where the app encodes and decodes | A separate `/wire` route, which the app had and which hid the chat; an overlay strip over the chat; sizes reported by the server, which would need the protocol to carry them |
-| D93 | What an eval drives | Cases run through `TurnOrchestrator` in process rather than over HTTP: the prompts, tools, catalog, and packs are the real ones, while auth, A2A framing, and Firebase are out of the picture, so a failing case points at the model or the prompt; the scores read the structured turn logs the server already writes rather than new instrumentation | Driving the deployed server, which spends a deploy per prompt change; a second set of counters inside `TurnRun` for evals only |
-| D94 | A round that asks again for what it has | When every tool call in a round names a tool the server already settled or already ran this turn, the results still come back but the tool rounds end: the next request goes out with no tools and the note to draw now. Found by the first eval pass, where a Stockholm turn after `commit_profile` spent four rounds calling `propose_scenario` twice and `load_market`, whose result was already in `preRun`, and drew nothing; with the guard the same turn draws the affordability surface in two rounds and 8 s instead of 13 | Leaving D85's three tool rounds to run out, which costs a request and 5 s and often ends in the retry surface; refusing to run a settled tool, which leaves the call unanswered |
-| D95 | A form that misses a fact the rules need | The validation pass adds the input itself, picked by the field's value shape and placed above the commit button, instead of spending a correction round on it; the rejection stays for a form with nowhere to put an input. Three Portugal runs dropped residency facts and paid a correction each; with the completion the whole Funchal case runs with no correction and its first turn falls from 15.8 s to 8.9 s. The server draws part of one surface, which the sample now says plainly: the model composes, the rules decide what must be asked | Prompt wording, which took the misses from three paths to one but never to none; `gemini-3.5-flash`, which asks for everything but takes 37 s and emits malformed JSON of its own; splitting the Portugal form into two turns |
-| D96 | An action answered with words alone | When the buyer used a control and the turn forwarded no surface while a decision that calls for one is open, the server asks the model once more, naming the decision, before it settles for the retry surface. It costs a request when it fires and rescues a turn that would otherwise leave the buyer with prose and no what-if; a typed message answered in prose is left alone, since a question deserves an answer | Letting the turn end, which the eval caught twice on `commit_profile`; firing on every turn, which would force a surface onto an explain answer |
-| D97 | Scope | Re-scoped on 2026-09-24 to the pitch sent to Google: a story-driven mortgage and relocation advisor. Discovery of the buyer's life, criteria checked on a map, then the existing deal workspace. The built pipeline, finance code, and packs stay; the first two acts are added on top | Starting over; keeping the calculator and adding markets |
-| D98 | Rules outside curated markets | Researched estimates, labelled "estimate — check with a lender" and editable; the math stays in `common`. Replaces the uncovered state of D40 and D86 | Finance only where curated; the buyer typing every rule |
-| D99 | How much to ask | Infer from the first message and any listing, ask only the gaps in one or two adaptive cards, show the board, refine on it | A full interview by category, about ten turns; a board with assumed defaults and no questions |
-| D100 | Where research runs | Behind one researcher interface: a free third-party model on a key the server holds in Secret Manager first, Gemini on the buyer's key as its fallback, Google Search grounding if credits ever arrive; Google requests stay with composing the UI. Groq and Cerebras compete in a bake-off. Its third-party researcher is superseded by D136 | Gemini for everything; a second key from the buyer; Gemma 4 on the buyer's key |
-| D101 | Places a model names | Checked against Nominatim or Overpass before they are shown, and dropped when they do not resolve; free research models have no maps or search and invent places | Trusting the model; research through Google Maps grounding only |
-| D102 | Ratings and quality | Google Maps grounding, which works on free keys (measured 2026-09-24), only when the buyer asks how good something is, shown with its attribution; open data answers what is near and how far | Dropping ratings; routing every place search through Google Maps |
-| D103 | Building blocks | Gemini composes screens from mid-level blocks that carry Homeward's design (`Map`, `FactTile`, `StatusRow`, `ComparisonTable`, `ChoiceChips`, and others) beside the A2UI basic components and the finance components that recompute on the device | Basic components only; whole single-purpose items such as a fit matrix |
-| D104 | Tests | No widget tests; the UI is reviewed visually. Tests cover `common`, packs, the catalog contract, validation passes, research tools, and evals | Keeping the widget tests added in the design pass |
-| D105 | What a buyer brings | Either up to three candidate homes, as a listing link, an address, or a pin, or just a city, for which areas are suggested | Candidates only; a city only |
-| D106 | The app's shape | A journey: each turn is one page, holding the agent's text and the surfaces the turn created. The page stays up under an overlay while the next one is built. A "Tell Homeward more" field sits under every page, and the transcript moves to a history sheet. This follows the Very Good Ventures GenUI finance demo (Google Cloud Next 2026), whose lesson is that the best AI interfaces do not look like AI interfaces. The wire inspector keeps its pane (D92) | Keeping the chat; journey pages on phones and chat on wide screens, which is two layouts to polish before Sep 28 |
-| D107 | How a plan starts | One hand-built opening page. It has reason chips and a story box, and the first message is built from both, so the model never starts cold and never asks why the buyer is moving | Two hand-built pages, which is Very Good Ventures' exact pattern and one more tap; Gemini from the first screen with starter prompts, as before |
-| D108 | What the buyer sees while tools run | Every lookup (finding a place, looking near the homes, timing a ride) is a step. The turn streams the steps whole in a progress data part with its own media type, which other A2UI clients skip, and the page lists them as they run and finish. Labels come from server code, never from the model | A thinking spinner, which says nothing for 5–16 s; animated pins and routes, about half a day more |
-| D109 | A composition that fails validation | The server composes the homes surface itself (map, ranked homes, comparison table) from the assessment the turn already measured, and passes it through the same validation. The retry text is left only for turns with nothing measured. About one turn in ten failed after corrections on 2026-09-23; the Very Good Ventures kit calls this a deterministic fallback | Always the retry text; more correction rounds, which spend the buyer's requests |
-| D110 | Constrained output | Only the correction round asks with an enforced schema. The schema offers the layout basics and the components the turn drew, flattened into one object each, with every fixed value as an enum and function calls not recursive. The whole catalog is refused, and components built with `allOf` are out of the model's reach under a schema (S10). Normal rounds keep streaming text with fenced A2UI; a refused schema repeats the round without it | Every round as one JSON object, which rewrites the streaming path and costs thousands of tokens a request; dropping constrained output |
-| D111 | The app's layout | Flutter's guide to app architecture: `ui/<feature>/view_model` and `widgets`, `ui/core` for themes and shared widgets, `data/repositories` and `services`, `domain/models`, `routing`, `config`, and one folder per catalog component holding its item and view. Riverpod stays, its notifiers named view models. A file keeps the small things only it uses, which replaces one public type per file. The Purrtrait layout had spread one component over two folders and one-function files over `display/` | Feature folders with a design system package, as Very Good Ventures does; keeping the layout and only consolidating; plain `ChangeNotifier` view models |
-| D112 | Open data that is slow | Every open-data answer is kept in Firestore for a week, keyed by the SHA-256 of its request and gzipped, behind the six-hour memory cache, whenever sessions are in Firestore. On 2026-09-24 one Overpass query took 25 s and every public Overpass instance was timing out, which made the board wait 37 to 53 s; a rehearsed city now answers at once after a Cloud Run restart. A Firestore failure is a cache miss, never a failed turn | A warm-up run before recording, which a restart undoes; accepting the wait behind the measuring overlay |
-| D113 | The deal after a home is chosen | Two pages. The facts page asks only what the rules need, filled in from the story. The deal sheet is one surface with the affordability, the down payment slider, the payment, the stress test, the purchase costs, and the rules, all recomputed on the device. It replaces a market card on the form and separate affordability and stress-test turns, and matches the pitch's deal workspace | One page where figures fill in while the buyer types, the riskiest change before Sep 28; polishing the step-by-step deal, four waits after choosing |
-| D114 | The plan board | Removed. It was a server-compiled summary pane from the chat design, and after D113 it only repeated what the journey pages and the deal sheet show. Its compiler, the `board` surface, the `toggle_document` action, and the app's pane go with it, and the disclaimer moves to the opening page. `change` stays as an action Gemini can put on any page | Keeping it as a "Your plan" pane beside the journey |
-| D115 | Where keys live | Every key is an environment variable. A developer's keys sit in a git-ignored `.env` at the root that the Makefile loads, beside a committed `.env.example`; on Cloud Run, keys the server holds come from Secret Manager through `--set-secrets`, so the server has no Secret Manager client and the image holds no key. Provider keys keep their vendors' names, `CEREBRAS_API_KEY` and `GROQ_API_KEY`; the probe and eval key stays `HOMEWARD_EVAL_GEMINI_KEY`, since the server never reads a Gemini key, and `HOMEWARD_EVAL_GEMINI_MOON_KEY` from a second account doubles the free quota: probe, eval, and development runs of the app move to it on `gemini_quota_exhausted`. Development runs take those keys from `.env` and skip the key screen. The buyer's key stays in `flutter_secure_storage` | A key file under `~/.config/homeward`, read only by the probe; a Secret Manager client in the server; a `dotenv` package in every entry point |
-| D116 | The story interview | Replaced by D119. Story Steps: a short sequence of small, single-purpose cards, each folded into the story with `continue_story` and the last with `commit_story`, gated on `/story`'s own fields and `surfacesUsed` rather than a fixed stage in code. The opening page drops its story box for a location line; everything else is asked one thing at a time and narrated back as it grows. Buyer testing on 2026-09-24 found the single "storyGaps" card (D99), even prefilled, read as a filter form of six controls at once, which is what an A2UI sample should avoid. Revises D99 and the opening page's second half of D107 | Keeping one card with every control, better prefilled; a fully atomic one-question-per-turn interview, more turns and more waiting than the chosen grouping; a plain-text back-and-forth with no cards, more typing than tapping |
-| D117 | How a development run starts | The local server hands the app what it needs, so the app takes no compile-time defines: `server/tool/dev.dart` reads `.env` and `.firebaserc`, turns App Check off, and serves `GET /dev/config` (the two Gemini keys) to `localhost` only, and a debug app asks for it and skips the key screen; a debug app without an App Check debug token does not activate App Check. `make app`, `app-web`, `app-macos`, and the VS Code launch start the server when nothing answers on 8080, forward it to Android with `adb reverse`, and stop what they started. Run above `main()` needs only a server already up, and the startup screen says how to start one. Found the same day: `PlansViewModel.build` read its state before `build` returned, which the debugger stops on. Replaces the dart-define delivery in D115 | Defines written from `.env` by make, which only make and the launch config could pass; a Gemini key held by the server, which moves key rotation off the app; pointing development at the hosted server, which needs a deploy |
-| D118 | Map tiles | OpenStreetMap's own tile server, with no key, under a colour filter that keeps the pins readable and the map as calm as the light basemap it replaces. CARTO's keyless tiles have carried an "API KEY REQUIRED" watermark since 2026-09-23. The sample is not a production app, so an account and a key for a map style is not worth it; the OSM policy allows light interactive use with a named user agent, attribution, and caching, and can block heavy use, which the livestream is the moment to watch. Replaced by D133 | A free CARTO key (email only; 5 million tiles a month for non-commercial use), which keeps the exact look but adds a key to deploy and to development; OpenFreeMap vector tiles, which need no key but a new package and style loading |
-| D119 | The living story | The story phase is one surface: `StoryDraft`, the story as a paragraph Homeward writes from a reason and a place, with inline slots for the commute mode and longest trip, the criteria that matter, and the places they travel to, beside a map and a Show me homes button. Guesses are marked as assumed; blanks are only what Homeward cannot guess. Corrections run on the device with no model turn, and only typed text or Show me homes reaches Gemini, so a story costs two requests instead of five. A pin dropped on the map is an anchor with no geocoding. Testing on 2026-09-25 found Story Steps still read as an onboarding wizard: a page and a Continue per question, in an order Homeward chose. Also cut: the areas suggested on turn 1, and `load_market` and `get_obstacles` before a home is chosen. Replaces D116, and `continue_story` goes | Story Steps with adaptive questions; a map-first conversation of pins and a drag ring, kept for later since it suits commute stories better than lifestyle ones; a chat with inline controls, which is the journey D106 left |
-| D120 | One scrolling story | The journey is one scrolling story, not a page per turn. Each turn adds a section; the newest is open and scrolls into view, earlier ones fold into a recap of what they showed and what the buyer answered, and tapping a recap opens it in place. There is no step count, pager, or next button, and a working card under the newest section replaces the overlay once the story has begun. The recap names what a section holds from its components, and shows the buyer's own words or the action they took as the answer. Amends D106 | Step titles from the plan's stage (still a wizard); the story pinned on top with one focus card below (hides earlier decisions); recaps written by the model (a request and a figure to check for each) |
-| D121 | The case | The story phase is a case Homeward works like a detective. Each turn states one deduction from the last clue and asks one question the buyer answers with a tap, as a `Hunch`, a `PhotoLineup`, a `TradeOff`, or the household, sending `answer`. It asks about life and taste, never for a room count or a budget; rooms are a deduction to confirm, and the price range comes from the trade-off picked. The server tracks answered facets and derives what is open; after the essential ones, or five questions, the living story paragraph (D119) is drawn once as the case summary with Find my three homes. Every answer is a model turn, one round when the server pre-runs what the question needs. Amends D119, which drew the paragraph first | A short interview drafted once and tapped through on the device, which is a wizard again; the living story kept as the opening with questions after it; a case board of clue chips instead of the paragraph |
-| D122 | Sample homes | No listing site offers a free API (checked 2026-09-25: Zillow and Hemnet partner-only, Booli unclear, Idealista on request, RentCast US-only). Stockholm and Lisbon carry about twelve sample homes each, generated by `make listings` from a reviewed spec: real street addresses placed with Nominatim, prices from the area's price per square metre (Svensk Mäklarstatistik, INE) times a factor, photos from Unsplash series of the same home bundled as WebP assets. At `commit_story` code rules out homes that miss the type, price range, area, or rooms, relaxing in that order until three remain, and `assess_story` measures those three. Labelled as samples. Other cities fall back to suggested areas | Generating listings at runtime for any city from price statistics and Overpass, which adds seconds and cannot review photos; scraping listing sites; photos from Firebase Storage, which needs the Blaze plan; images from Gemini, which are not free |
-| D123 | The detective's cards | `Hunch` (a deduction with alternatives), `PhotoLineup` (four curated photos whose traits the server reads), `TradeOff` (ways to live priced by `compare_areas`), and `ListingCard` (one sample home in full); the stack shows a sample home's photos. The app adds the tapped value to the `answer` action, so the model writes only the question, and every figure comes from a tool. A day-rhythm card is deferred to M3 | The day rhythm first, about a day to build; a free-form photo picker where the model names photos |
-| D124 | The case's household reaches the facts form | The profile seed takes who moves from the case when the profile has not said, and the ask-once request names the missing profile fields; its reply's words are dropped. A Skopje plan financed under Swedish rules on 2026-09-25 saved its facts with no adults, because the case had written them to the story only; the closing turn then asked Gemini for the facts page, and Gemini answered in words the buyer saw, "An error occurred or `profileFields` is not actually open" | Writing the case's answer into the committed profile, which the buyer never confirmed there; refusing `commit_profile` with a field blank, which strands a buyer who saw a prefilled-looking form |
-| D125 | The deal switch | `HOMEWARD_DEAL`, off by default and for the Sep 28 demo, leaves the deal out of the agent: its tools, its open decisions, `prompts/deal.md` and `prompts/markets.md`, and a story catalog skill without the deal's components, functions, slices, actions, and examples. Choosing a home closes the case with the buyer's week from it. The code, packs, and evals stay, and `deal: true` eval cases run on a server with it on. Workshop feedback on 2026-09-26 was about the story and the homes, never the money, and the deal was the slowest and least reliable part of the runs on 2026-09-25: every failure of the Skopje plan came after its home was chosen, and the Stockholm eval's three deal turns took 124 s, 50 s, and 44 s. The deal is about a third of the catalog schema sent with every request | Keeping the deal in the demo; deleting it; one monthly-cost line per home |
-| D126 | Needs of the home, read from the listing | The case can ask what the home itself must have: step-free entry, a lift, a shower or a bedroom on the entry floor, room for a home office, pets. Each sample listing carries a description of about eighty words. Gemini on the buyer's key reads the city's listings for the buyer's needs, answering per need whether the listing meets it, fails it, or says nothing, with the sentence that says so, and code keeps a quote only when it appears word for word. A home that fails a need is ruled out, and each chosen home shows why it fits and where it falls short, every reason with its source: the listing, measured, or the buyer. Workshop feedback asked for an agent that finds "stepless entry and a main-floor walk-in shower" in long descriptions for a parent moving in, and shows why each home was picked and where each reason comes from | Features tagged by hand when curating, which shows no reading; the composing model quoting without a check |
-| D127 | The routine and the week map | Each place the buyer goes gets how often, and one routine card sets the week with taps: the places the case knows, days a week for each, and places to add on the map. Code computes each home's weekly travel time from the measured trips, and the map draws each routine trip with its frequency. The routine is an essential clue once a daily place is on the map, so the case asks at most six questions, not five. The map component takes the property names of the Maps Agentic UI Toolkit's `GoogleMap`: `center`, `zoom`, `markers`, `routes` with `origin` and `destination`, and `travelMode`, drawn on OpenStreetMap, which D133 replaces with the toolkit's own component on Google Maps. Workshop feedback asked to map the buyer's actual routine, such as three office days and a weekly clinic visit, with a weekly commute figure and the routes drawn, and pointed at the toolkit | A median over departure times, which needs several routing calls per trip; the toolkit itself, which has no Flutter client and needs a Maps Platform key with billing |
-| D128 | Swipe clues | A `HomeSwipe` card deals six of the city's sample homes that differ in type, outdoor space, style, and size. The buyer keeps or passes each with a swipe or a tap, and the server reads what the kept homes share that the passed ones lack: a kind of home, outdoor space, or style it then sets on the story, and the pattern it hands the model for its next deduction, such as every flat passed. The model draws it where it would draw the homes lineup. Stairs were planned as a fourth trait, but only a listing reading knows them, and that waits for needs | Photos alone, which carry taste but not size or price |
-| D129 | The reset | Clean the project down to what is essential and certainly correct, and rebuild in small steps around one screen per buyer that Gemini composes and updates as the buyer talks. Kept: the server platform, the agent loop with validation and correction rounds, the catalog contract with basic components only, the app shell with renderer, gallery, and wire inspector, money and geo types, the probe, and the open-data clients. Removed: the case and every question card (D121, D123, D126 to D128), the story model and its tools, the sample homes and photos (D122), the deal with its finance code, rule packs, and markets (D113, D125), the plan record, the fixed action list, and the evals (D93). Actions are now named by the model and handed back to it with their surface's data model. Reviewed on 2026-09-26, the app still felt like a filter dressed as AI: each live failure had been fixed with a server rule (must-ask lists, rejections, withheld tools, fallbacks the server drew), until the server scripted the flow and Gemini only worded it, and the evals scored the script | Stripping the guardrails but keeping the question cards; a full restart in a new repository |
-| D130 | What Homeward is | A relocation agent that works like a coding agent. There are no scenarios and no scripted flows: Gemini deduces what it can from what the buyer says and shows it as assumed, with the words it came from; never asks what a tool can find out; asks one real decision at a time, as a choice on the screen with its recommendation, with typing always open; shows its work while tools run; and proposes, for the buyer to approve or correct. The server only validates (D129). Set on 2026-09-26 from the pitch, two emails from Google's Vishal (a screen that confirms the buyer's own filters before homes, needs read from long listings with each reason's source, the buyer's week on a map, the Maps Agentic UI Toolkit, and later mortgage options, rentals, and roommates), and the owner's call for "a specialised agent for relocating, like you are for coding". Amended by D138: a home-finance agent | Two fixed demo stories; a question flow chosen by the server, which D129 removed |
-| D131 | The living screen grows | One surface per plan, updated in place. It starts with the brief, the open question, and the buyer's week on the map; "Looks right" grows solutions onto the same screen, and a later correction re-ranks them in place. This is the confirmation before homes that Google asked for, without a wizard. D139 adds inline asks beside it | A confirmation screen and then a separate homes screen, which reads as steps; homes from the first message with the understanding above them, which skips the confirmation |
-| D132 | The brief | Gemini's own notes on the buyer, written with a tool, the way a coding agent keeps a plan: needs, habits (a place and how often), wants, places, and open questions, each marked said, deduced (from which words), measured, or quoted. Stored with the session, seeded into the data model for the screen, edited by the buyer, and read by tools, such as the week's places for routes. The server never decides from it | The understanding only in what Gemini draws, re-read from the conversation each turn, which tools cannot read and long sessions drift from; the plan record D129 removed, which the server filled |
-| D133 | Maps | Homeward renders the Maps Agentic UI Toolkit's catalog (`googlemaps/a2ui`, alpha, Apache-2.0) in Flutter, which the toolkit does not. Its `GoogleMap` schema is vendored at a pinned commit, as the basic catalog is (D67), and joins Homeward's catalog; a reusable Flutter package draws it with `google_maps_flutter` on Android, iOS, and web, and resolves route geometry through an injectable resolver so that the drawn routes are the ones the server measured. Open data stays the measuring layer, and a validation pass checks the literal marker coordinates against places tools returned. The prompt adapts the toolkit's guidance on maps. The Maps key sits on the project's billing account, restricted by referrer and bundle ID, with quotas capped at the free allowances: the mobile SDKs are free without limit, and web maps have 10,000 free loads a month (checked 2026-09-26). Replaces D118, and the OSM drawing of D127 | The toolkit's properties drawn on OpenStreetMap, a component named after Google Maps that is not; the full Google stack with Grounding Lite for places and routes, kept for S14 |
-| D134 | Solutions | Offered when the conversation gets there, in the order Gemini judges: areas for any city, from open data; labelled sample homes it searches, with long, realistic descriptions; and listings the buyer pastes, read on the spot. Every reason a home fits, and every shortfall, carries its source: a quote checked word for word in code, a measurement, or the buyer's words. Amended by D138 and D142 | Sample homes only; areas only |
-| D135 | Money | Researched on the spot when the buyer wants it or accepts Homeward's offer: local rules and rates quoted with their sources, figures computed in `common` and labelled as estimates, rent split per person for people sharing. No prebuilt deal. Superseded by D138 | A monthly cost block per home; the deal workspace from `6faa8ab` (D113), the slowest and least reliable part of earlier runs (D125) |
-| D136 | Cerebras | Not used. On 2026-09-26 the server's Cerebras key answered HTTP 402, payment required; the free trial now needs a payment method for $5 of credit that expires in 30 days. Even free it allows 5 requests a minute and 1M tokens a day on one key shared by every viewer, about 100 of today's 8.3k-token requests a day for everyone, against 15 a minute and 500 a day on each buyer's own Gemini Flash-Lite key. Gemma 4 on the Gemini key fits 16k input tokens a minute, about one request. Homeward stays on Gemini and spends fewer requests. Supersedes D100's third-party researcher; the provider choice after the livestream (D80) stays open | Cerebras for reading listings or research; Cerebras as a composing fallback |
-| D137 | Tests during the rebuild | No new unit tests. Existing tests keep running in `make check`, and a test goes when the behaviour it covers changes. Each chunk ends with `make check` green, a live probe with a few test stories, and a visual look | Tests for each chunk, as before the reset; no probe or visual check |
-| D138 | Fintech realignment | Homeward is a home-finance agent: Moonwise's assigned vertical at the kickoff on 2026-09-03 was finance and fintech, and the plan had drifted to a relocation app with money as an optional last chunk. The household's money decision is the spine: what they can borrow, what a specific home costs them each month, the mortgage options, the stress test, the upfront costs, and rent split between people sharing, computed in `common` from sample rates and rules for the demo cities, each labelled. The story, needs, and week make the numbers personal. Vishal Motwani endorsed the home idea in writing and named mortgage options and rent sharing himself; the kickoff said mocked data is fine. Distinct from Somnio's investing companion and Very Good Ventures' Life Goal Simulator: lending tied to a real home and household. Amends D130 and D134; supersedes D135 | Money only on request, researched on the spot (D135); pivoting to a small-business money copilot or shared household money, which would lose the endorsement two weeks before recording |
-| D139 | Two surface patterns | The two patterns Vishal showed at the kickoff: questions and options as inline cards in the conversation, `t{turn}-{slug}`, one turn each, so the history shows each decision, beside the living plan panel `plan` (D131), which holds the brief, the shortlist, the map, and the money. Wide screens show them side by side; a phone shows the panel as a tab. Amends D131 | One living screen holding the questions too, as C1 built it |
-| D140 | Catalog size | 25 to 30 components before the recording, in families: understanding, money, homes, place and travel, and trust. Vishal needed 12 to 13 for a decent demo and Abdallah Shaban asked for 20 to 30 so developers can build their own journeys on the catalog. The catalog skill moves to progressive disclosure after S16: a compact index of every component, with full schemas and examples on demand. Replaces the few-blocks principle | About 15 for the recording and 20 to 25 by M5; staying at about eight |
-| D141 | Journeys | Four named journeys, documented in `docs/PRODUCT.md` and the README, rehearsed, and used in the probe: can we afford it here, a home that works for Mum, sharing in Lisbon, and is this one worth it. They are capabilities; none is coded as a flow, so D130 holds. The kickoff asked for three to five well laid-out journeys | No named journeys, test stories only |
-| D142 | Deferred until after the recording | S12 and on-the-spot research of rules and rates, S13 and reading a listing the buyer pastes, and areas for any city. The recording's money comes from labelled sample rates and rules, which the kickoff called fine | Building them before the recording, at the cost of components |
-| D143 | Progressive disclosure of the catalog | S16 found the full skill fits the free tier at 25 to 30 blocks and costs no measurable time; progressive disclosure is built anyway, by the user's choice. The skill carries the full schemas of the layout components correction rounds use (`Column`, `Row`, `Card`, `Text`, `Button`, `Divider`), the functions, and the common types, and an index of every other component with its one-line description. `component_docs` returns the full schemas and examples of the components Gemini names. Amends D69 | The full schema in the prompt; deciding at C10 |
-| D144 | The brief on screen | C4 splits into the brief and then `Choice` (C4b), smaller chunks. The brief is kept as the `/brief` slice in each turn's record, the way every slice persists, and seeded again into the plan whenever a tool changes it. `Fact` binds one item and joins the core components, whose schemas the skill always carries, since every plan shows the brief; on a deduction it offers Right and Not quite, which reach Gemini as an action with the item's ID, and Gemini updates the brief with `update_brief`. `update_brief` stores an item only when its words appear word for word in what the buyer wrote or tapped, and every number in its sentence appears in those words | Editing a fact in place, stored by the server as said; correcting only by typing; the brief as a field of the session document |
-| D145 | Choice | One decision per `Choice`: a question, two to five options, the recommended one first with why. A tap sends the option at once, the way a coding agent takes a one-key answer, and the option stays marked. The text field under the conversation is the room to type; the `Choice` points at it rather than holding a field of its own. `Choice` joins the core components, so asking never costs a `component_docs` round. The chosen label counts as the buyer's words for `update_brief`. A `Choice` is for a decision; a fact only the buyer knows, such as savings, is asked in text, and `update_brief` checks numbers written in words as well as digits, since Gemini spelled figures out to get past the check | Select, then Continue; several choices at once; an Other field inside the card |
-| D146 | Money core | C5 splits into what the household can borrow (C5) and what a price costs them a month (C5b). `compute_affordability` takes the household's figures as arguments, the ones the buyer stated, and refuses a figure that does not appear in their words, the same check as the brief; it answers with the facts it still needs and why, from the pack, so Gemini asks. It resolves the Swedish or Portuguese sample pack, runs the restored `assessAffordability` and `maximumPrice`, and seeds `/affordability`. Other cities are not covered by the sample and the tool says so. Incomes, debts, and savings come as lists in their own currencies, converted with the sample exchange rates the summary names. `AffordabilitySummary` and `RuleNote` join the core components, and a block bound to a slice no tool has seeded yet is refused | One chunk with the monthly cost; figures read from structured money items in the brief |
-| D147 | The buyer's preferences | What a home costs a month depends on choices that are the buyer's: the down payment, the term where it moves the payment, and the home's monthly fee. Rather than only calculating with defaults, `compute_affordability` answers with what it assumed, and Gemini shows the result, then asks one of those choices with `Choice`, recording the answer in the brief. A choice about money carries no recommendation: Homeward explains and does not advise. `MonthlyCostBreakdown` is the first Homeward block left out of the core components, read through `component_docs`; a round that only reads `component_docs` does not count toward the three tool rounds, at most two such rounds a turn, so reading a block's docs never costs the turn its tools | Always in the prompt like the C4 and C5 blocks; calculating with defaults only |
-| D148 | Mortgage options split | C6 splits into stress and upfront costs (C6), the down payment what-if (C6b), and fixed against variable (C6c), since fixed rates need new sourced sample data. The stress curve and the upfront costs are computed by `compute_affordability` with the rest of `/affordability`, not on the device as before the reset. `MoneyInput` moves to C10: buyers state amounts in their own words, which the tools check | One chunk with all five blocks; the slider first |
-| D149 | Down payment what-if | `compute_affordability` works out up to 40 down payment steps between the minimum the rules allow and what the savings reach after the costs on the day, each with the loan, the monthly cost, the cash needed, and whether it is within the rules, from the same code as the rest of `/affordability`. `DownPaymentSlider` moves between them on the device and recomputes nothing. A "Use this down payment" button sends the amount as an action, so Gemini calls the tool with it and every block updates; the amount comes from the buyer's tap, so the number check accepts it | Recomputing on the device with the rules sent to the app; a slider that never changes the rest of the plan |
-| D150 | Mortgage options | One sample lender per market prices every option, so the rates compare like with like: SBAB's list rates in Sweden, whose three-month rate is the variable rate D65 set, and Banco BPI's price list in Portugal, whose variable rate the pack already used. Sweden offers variable and fixed for 1, 3, and 5 years; Portugal variable, mixed with the rate fixed for 3 or 5 years, and fixed for the whole term. `compute_affordability` works out each at the plan's price, down payment, and term, and takes the buyer's pick as `loanType`, so every block follows it. The terms are not compared: the term is already a preference (D147). No option is recommended, and what a rate does after its fixed period is not forecast | SCB's average rates by fixation period, which mix every lender and sit below list rates; comparing terms too |
-| D151 | Sample homes | The fourteen sample homes of Stockholm and the fourteen of Lisbon come back from `6faa8ab` as D122 made them, labelled as samples, with their photos bundled in the app. `search_homes` filters a city's homes by what the buyer asked, such as the kind of home, rooms, areas, outdoor space, and a price they stated, and prices each for the household: `compute_affordability` keeps the household and preferences it used in `/affordability`, and each home is worked out with the same code at its own price and fee, with the down payment the buyer chose or else the minimum the rules allow, and the same rate and term. Before any affordability run, homes come with their price and fee, and the tool says what pricing needs. When nothing matches, it says which filter ruled the homes out, and Gemini asks. A `HomeCard` tap sends the home, and `compute_affordability` takes it as `home`, the price and fee from the listing, so every money block follows that home. Why a home fits beyond the money waits for the listing reader (C9); keeping and comparing homes is C7b | search_homes taking the household's figures as arguments, which doubles what Gemini sends each call; homes with price only and the monthly cost on a tap; photos from the Unsplash CDN at runtime |
-| D152 | Shortlist and comparison | A household keeps a home with a Keep button on `HomeCard` or in its own words. The tap reaches Gemini like every action, and Gemini records it with `keep_homes`, which marks homes kept or dropped in `/homes`, pricing a sample home the plan has not shown yet; the flag survives every repricing. `Shortlist` binds `/homes` and lists the kept homes, each with its monthly cost, a tap to work it out, and one to drop it. `HomeComparison` binds two or three homes Gemini names, each `{ "path": "/homes/<id>" }`, so it compares kept homes or any the buyer asks about, on price, monthly cost, down payment, cash against savings, the rules, size, rooms, and the price per square metre against the area. The check that a bound slice was seeded reads a list of paths | Keeping homes as brief items; a comparison that always shows the whole shortlist; keeping the shortlist on the device only |
-| D153 | Down payment within savings | Found comparing homes in C7b: the down payment assumed when the buyer has not stated one was the smallest every rule allows, so a home whose loan an income rule caps was priced with a down payment the savings could not reach, and read cheaper a month than a home half its price. It stays the smallest the rules allow while the savings reach it; when they do not, it is the most the savings can put down after the costs on the day, in the what-if's steps and never below the loan-to-value minimum, and the loan is shown over the limit by what is missing. The same code prices `compute_affordability`, `HomeCard`, `Shortlist`, and `HomeComparison`. Amends D147 | Keeping the figure and labelling it; the loan-to-value minimum always, which marks homes over the limit that the savings could bring within it |
-| D154 | Places and the week before the map | C8 splits into places and the week (C8) and the map (C8b), since the map needs S11 and a Maps key on the billing account that the owner creates. `find_place` resolves each place the buyer names with Nominatim, so every place shown was checked against open data (D101), and seeds `/places`. `measure_week` routes from a sample home or a place to each of the week's places by foot, bike, car, or public transport, on the FOSSGIS routers and Transitous, with how many times a week the buyer goes there and back, and seeds `/week`, one entry for each starting point: every trip's minutes and distance, and the weekly total. How often is a small count Gemini may deduce, as the brief allows. `WeeklyTravel` shows one starting point's week and `RouteSummary` one trip; both say they were measured and by what. The route geometry waits for the map | The map first, blocked on the key; the week added to every priced home, which would route every sample home against every place |
-| D155 | Rent from area statistics | C9 is the rent money: `RentSplit` and `BuyVsRent` before the listing reader (C9b) and `HomeSwipe` (C9c), since money is the spine (D138) and journeys 3 and 4 need them. No listing site offers rents for free, so each sample home carries its area's median rent per square metre: in Stockholm, Statistics Sweden's 2025 figure for first-hand leases in the district or municipality, which a newcomer rarely gets without years in the housing queue, so the source says so; in Lisbon, INE's median for new leases in the 12 months to March 2026 in the parish, or the municipality or sub-region where INE gives no parish figure, each named. A home like it rents for that figure times its size, labelled as an estimate with its source; a rent the buyer states replaces it and is labelled as theirs. `split_rent` splits rent and bills between two to eight people equally, by the incomes they stated, or by room size with the shared space split equally, and `RentSplit` lets them switch rule and send the one they take. `compare_buy_rent` prices the home for the household the last `compute_affordability` run kept and adds, month by month, the costs on the day, interest after any deduction, and the home's fee, against the rent, with the equity built at today's price; `BuyVsRent` shows the two totals over the years they expect to stay, which a slider moves, and the year buying comes out cheaper. It leaves out the home's price changing, what the savings would earn, selling costs, and a house's upkeep, and says so | The listing reader first, for journey 2; rents the buyer states only, which adds a question to every rent screen; sample rental listings, a data job that widens the chunk |
-| D156 | Needs read in the buyer's words | `read_listings` reads the sample homes Gemini picks, or a whole city's, for up to six needs it names from the buyer's story, each with an ID, the buyer's short words, and what counts as meeting it, rather than D126's fixed list, so a bath for the children or a quiet bedroom can be read as well as step-free entry. One structured request on the buyer's key, on the fast model first, answers per home and need whether the listing meets it, rules it out, or says nothing, with the sentence that decides it; code keeps a quote only when it appears in the description word for word, and a verdict without one becomes says nothing. Readings are kept per home and need for the life of the server, so a need read once is not read again. The tool seeds `/reads/<home>` with the description and every need read so far, which `ListingQuote` binds; Gemini decides which homes to show or leave out, and no server rule filters them. A tool reaches Gemini through a researcher in its `ToolContext`, bound to the turn's key | D126's six fixed needs, which the descriptions were written around; a needs filter on `search_homes` that drops homes failing a need, which hides the reading and adds a request to every search |
-| D157 | Swiping without the case | `HomeSwipe` returns as a taste clue, not a facet of the removed case (D128 amended). `search_homes` takes `deal`: from the homes that match the buyer's filters, the restored deck picks up to six that differ in kind, outdoor space, style, and size, flats and houses in turn, each priced for the household when `compute_affordability` has run, and seeds `/swipe/homes`. The buyer keeps or passes each card; after the last one the block sends its action with the kept and passed IDs. Gemini calls `keep_homes` with them: the kept homes join the shortlist, and the restored reading answers with what every kept home shares that a passed one lacks, a kind of home, outdoor space, or style, and the kept areas, for Gemini to deduce from and confirm with a `Fact`; nothing is set on the buyer's behalf | A `deal_homes` tool, one more tool that repeats the city and pricing of `search_homes`; a deck of `/homes` paths Gemini picks, which can come out samey |
-| D158 | Filling the catalog | Six blocks take the catalog from 18 to 24, and 25 with `GoogleMap` once the Maps keys exist: `HouseholdSummary`, `Brief`, and `MoneyInput` (C10), then `MarketSnapshotCard`, `SavingsPlan`, and `LoanBalanceChart` (C10b), money first as D138 asks. `EstimateNote` is dropped, since every block already labels its estimates and sources. `MoneyInput` writes `{ amount, currency, per }`, the shape the money tools take, to the path it binds, which no tool seeds, so an action that carries it hands Gemini the amount to pass on; numbers in an action's context now count as the buyer's words, like its text. C10 splits into blocks, the gallery with parameters (C10c), and the journeys with the README (C10d) | The planned five with `EstimateNote`, which stays under 25; eight blocks, clearing 25 without the map at the cost of rehearsal time; the journeys first |
-| D159 | Money blocks from the sample data | `MarketSnapshotCard` returns reshaped, since the market model it bound is gone: a `look_up_market` tool takes a city and needs no household, so it can open a plan before anything is known; it seeds `/markets/<city>` with the sample lender's rates, the lending rules that set the loan resolved for a buyer Homeward knows nothing about yet, with the rules that wait on the household named, and each area's median price and rent per square metre from the sample homes, each with its source. `SavingsPlan` comes from a `plan_savings` tool that reads `/affordability` like `compare_buy_rent` and takes the monthly saving the buyer states, checked against their words: the target is the cash needed on the day at the down payment they chose, or at the rules' minimum, and it seeds `/savingsPlan` with the months to go and the month they get there, leaving out what the savings earn and prices and incomes changing. `LoanBalanceChart` binds `/affordability`, where `compute_affordability` adds the loan year by year at today's rate over the term: the balance, the equity at today's price, and interest paid after any deduction. One schedule in `common` serves it and `BuyVsRent`: Sweden's amortization is the rules' share of the loan as first taken for the tier the balance is in, 2% a year while it is above 70% of the price, 1% above 50%, and none below, where `BuyVsRent` had kept the first payment for 30 years | `MarketSnapshotCard` bound to `/affordability`, shown only once the household's figures are in; areas only, seeded by `search_homes`; `monthlySaving` on `compute_affordability` |
-| D160 | A gallery page per block | The gallery becomes an index grouped by family and a page per block at `/gallery/<Block>`, so the README can link each journey to its blocks and a visual look can open one block directly. A page shows the block's examples one at a time and its parameters as a read-only reference taken from the declaration: each property's type, whether it is required and bound, the path a bound property takes and the tool that seeds that slice, and the example's components and data model as JSON with a copy button. Each declaration names its family | The one long page with parameters under each example; an editable playground for the example's data model |
-| D161 | The README's journeys | Each journey in the README is an example opening, what Homeward does with it, the tools it calls and the blocks it tends to draw, linked to their gallery pages, and what it leaves out, said plainly to be an example of what Gemini may do, never a flow (D130, D141). Every journey is rehearsed with the probe before it is written down, and the README describes what the rehearsal showed. Screenshots wait for M5, after the map, the dark theme, and the public deployment, so they do not go stale | Capabilities only, without example wording or block names; screenshots now |
-| D162 | The dark theme | The app follows the device's light or dark setting until the buyer picks Light or Dark under Appearance on the plans screen, a choice kept on the device with the same storage as the Gemini key. Dark is a warm charcoal that keeps light's paper feel, every grey held to AA as in light. Colours and text styles become a theme extension read with `AppColors.of(context)` and `AppTextStyles.of(context)`, so the blocks Gemini composes follow the device like every other screen; a chart's painter is handed its colours | Following the device only; a cool slate palette |
-| D163 | The map on open tiles | The map draws on OpenStreetMap's own tiles with `flutter_map` and needs no key, as before the reset (D118). `WeekMap` is Homeward's own block: its `markers` and `routes` take the names of the Maps Agentic UI Toolkit's `GoogleMap` and are bound, to `/places` and to one starting point of `/week`, so Gemini never writes a coordinate; `measure_week` keeps each trip's path, simplified in `common` to at most 100 points and encoded as a polyline, so the route drawn is the route measured. Read on 2026-10-05, the toolkit (`googlemaps/a2ui`, npm `@googlemaps/a2ui` 0.1.8, alpha) is a Lit web client that Android and iOS wrap in a web view, with no Flutter client and two components, `GoogleMap` and `PlaceDetailsCompact`; it loads the Maps JavaScript API's alpha channel with a key that has Geocoding, Places UI Kit, and Routes enabled, and a Google Maps Platform key needs a billing account. A sample anyone clones, and a public deployment, should need no key and no billing. Vishal Motwani offered the toolkit on 2026-09-26 "for easy visual reference" and for examples; what he described, the routine drawn as routes with a weekly time, needs none of it, and he raised no objection when the owner wrote the same day that paid APIs are out of a demo's reach. Decided by the owner on 2026-10-05. Replaces D133 and its Maps keys, closes S11 unrun, and drops S14 and S15 | Google Maps on a billing key (D133): phones free without limit and 10,000 free web loads a month, then $7 per 1,000, safe only while a quota cap is set right, since a budget only warns; a Maps Demo Key, which needs no billing but covers the Maps JavaScript API and not the phone SDKs, pauses at a daily limit Google does not publish, and is for prototyping, not a public deployment; OpenFreeMap's vector tiles through MapLibre, with no key and no limit, a renderer not yet tried in this app, kept for when traffic outgrows OpenStreetMap's best-effort tiles; the block named `GoogleMap` with the toolkit's exact schema, a name for a map that is not Google's |
-| D164 | A conversation that leads | The owner's review of a live plan on 2026-10-05 found it read as a bot filling a form: one fact asked a turn, in no order a buyer could follow; a take-home pay of 10,000 kronor for a family accepted without a word, and pay before tax asked two turns later; a plan that listed the buyer's answers back; and an ask card that held only "reply in chat". The server log showed no turn starting over, so the model had the whole conversation each time and nothing was forgotten: the prompt sent Gemini to the money at once, the money tool reported seven missing facts, and Gemini asked for them one at a time. Homeward now works in an order the prompt names, unless the buyer leads elsewhere: the move, where to, who will live in the home, rent or buy, and when; what the home must do and where the week goes; the money; then homes and the week from each. Every reply says what the buyer's answer changes, changes the plan, and ends with one inline ask, and when nothing is open the ask offers what to look at next. The plan opens with `PlanOverview`: the household's story so far and the steps Gemini wrote for this household, each done, now, or next, sent again with every reply. Gemini writes the steps, so two households get different ones, and nothing in the server reads them. The order is a method, like a coding agent's explore, plan, and build, never a scenario: no story, question, or wording is fixed, and a buyer who opens with a money question gets the money first. Amends D130, which kept every order of work out of the prompt, and D138's "as soon as the buyer has told you enough": every plan still reaches the money | The prompt as it was; stages kept by the server, which D129 removed; a steps tool with a slice the server stores, one more call a turn for the same screen |
-| D165 | Questions | Facts only the buyer knows are asked together. `Questions` holds up to six fields, each an amount with its currency and period, a number, a short text, or a pick from options, and one button that sends every answer as the buyer's own words, so the number check accepts them; a field left empty is not sent. A decision still goes in a `Choice`, alone, with the recommendation. Sweden's sample rules need seven facts before a loan can be worked out, and asked one a turn they were the interrogation the owner saw. `PlanOverview`, `Brief`, and `Questions` join the core components, whose schemas the skill always carries. Amends D145, which asked facts in text, and replaces `MoneyInput` beside a `Button` as the way to ask (D158) | Facts in text, one a turn (D145); a form Gemini composes from `MoneyInput`, `TextField`, and a `Button` with each path bound by hand, which Flash-Lite gets wrong and which reads as a screen of basic components (D138); several `Choice` cards in a turn |
-| D166 | A figure is checked before it is used | `compute_affordability` answers with `doubts`, and works nothing out, when pay cannot be right: take-home pay or pay before tax that does not cover the sample everyday costs of the household as known so far, which no loan would pass, or take-home pay above pay before tax. It says when one more zero would cover them. The check is `figureDoubts` in `common`, on the pack's own living costs and the lenders' running and transport costs, so no threshold is invented. Gemini says what looks off and asks with a `Choice` holding the figure given and the figure it thinks was meant, the one place it may write a figure of its own; `confirmed` lets a buyer stand by theirs. The same tool asks for everything it still needs at once; assumes what only nudges the result and lists it, every adult a borrower, and where age only picks the living-cost bracket, as in Sweden, an adult of 35, flagged in the slice so `HouseholdSummary` does not show it as stated; keeps the household of its last answered run in the market, so picking a home needs only the home; and takes the market from the plan when Gemini leaves it out | Gemini judging figures from its own knowledge, which the prompt forbids and Flash-Lite did not do; thresholds written into the tool; using the figure and showing that nothing can be borrowed; estimating pay before tax from take-home pay, which needs sourced tax tables |
-| D167 | Tools hand over the block to draw | Every tool that seeds a slice answers with `draw`: the components for its result, ready to send, such as a `HomeCard` for each of the first three homes; `compute_affordability` also lists the blocks to add when the buyer asks, under `drawWhenAsked`. A block outside the core cost a round to read its docs first, a round Flash-Lite skips: twice in the rehearsals of 2026-10-05 it described a home or a result the plan did not show. `component_docs` stays for a block no tool result has given. Amends D143 | More blocks in the core set, which grows every request; the whole catalog in the prompt, which S16 found fits |
-| D168 | What the loop does around the model | Four things, none of which picks a question or draws a screen. Words written in a round that ends in tool calls are dropped, since they were written before the facts, and kept only when no later words come; the model's own reasoning reached the chat that way on 2026-10-05, a round of 1,800 characters with no thinking tokens. A reply that drew no plan panel yet, no inline ask, or no words is asked once to finish it, `HOMEWARD_MAX_FINISHING_ROUNDS`; on the owner's plan the first two turns had drawn nothing, and two replies the same evening drew everything and said nothing. A line that starts a new message ends the one before even when a quote was left open, so a broken line no longer swallows the card after it; a key missing its closing quote is repaired; and messages joined by commas on one line are split. The correction round's enforced schema leaves out array bounds, which Gemini refused once `Questions` joined the core set. A short checklist, `prompts/reply.md`, follows the turn context, where the model reads last. A reply in words alone used to be a finished turn; it is now asked once for its plan and its ask | Prompt rules alone, which the style prompt already carried; holding text back until a round ends, which stops the reply streaming; failing the turn |
-| D169 | The plan as cards | The app draws each child of the plan's root `Column` as a card of its own, entering as it is added, where the whole plan sat in one card: the overview, what Homeward knows, then what each step produced. A root that is not a `Column` is one card, a `Card` Gemini drew is left as it is, and a `Divider` between cards is dropped | One card around everything, where a new block read as more of the same list; asking Gemini to wrap each block in a `Card`, which it does not do reliably |
-| D170 | A second Flash-Lite in the model order | `gemini-3.1-flash-lite` follows `gemini-3.5-flash-lite`, ahead of the Flash models. Google counts free requests per model, so it adds 500 a day on the same key, where a turn fell from a model with 500 straight to two with 20. On 2026-10-06 it answered on a key whose 3.5 Flash-Lite was at its daily limit: a five-turn replay in 12 requests with no correction, at 14 to 22 s a turn against 10 to 13. Amends D81 | Another API or provider, which S8 and D136 found smaller on a free tier and which needs a second client, a conversation stored on the server, and prompts tuned again, so it stays after the livestream (D80); billing on the developer's key, which is the owner's to turn on and bends the free-tier rule for that key (D163); keys from more accounts |
-| D171 | A turn recovers by itself | The owner asked on 2026-10-06 for a conversation with no manual switching and no retries, after seven of eleven turns ended in a toast and a Retry button. Three things, none of which decides what Gemini says or asks. The server waits and asks again, twice by default, when the models a round tried are overloaded, while less than 30 s have passed since the first overloaded round began, so quick refusals are waited out and hung requests are not. An overload met while a model is at its request limit for the key is reported as the request limit, so a client with another key moves to it instead of waiting. The app sends a failed turn again by itself, at once on its next key or once after 4 s when Gemini was unavailable and the attempt failed within 30 s, with the working card kept up; only then does it show a failure, as one quiet line with Try again and no toast, and a reopened plan leaves out a failed turn that was asked again | A toast and Retry on every failure; every key sent to the server so that it picks model and key together, which needs the key that holds the conversation remembered and a wider change to the protocol; retrying without end, which hides a real outage |
-
-Defaults chosen during planning without a separate question. Challenge any of
-them before M0 ends.
-
-| # | Default | Reason |
-| --- | --- | --- |
-| P1 | `common` is pure Dart and shared by app and server; UI primitives live in `app/lib/ui/core` | Server cannot import Flutter; one Flutter app does not need a shared UI package yet |
-| P2 | Flutter stack follows Purrtrait: Riverpod generator, hooks, Freezed, go_router | Team conventions, proven in production |
-| P3 | Server uses `shelf`, `shelf_router`, `firebase_admin_sdk`, no DI framework | Minimal, official where available |
-| P4 | Model emits A2UI as JSONL in fenced blocks, validated server-side | Prompt-first is the A2UI v0.9 and genui direction and streams progressively |
-| P5 | Homeward components take coarse slice bindings; client functions serve basic components and checks | The model cannot mis-wire formulas it never writes |
-| P6 | The board is compiled by the server without the model; superseded by D114 | Consistent, instant, cheap |
-| P7 | Placement by surface ID namespace | Survives any connector |
-| P8 | Reference rates from dated snapshots, never fetched per request | Deterministic demos and tests |
-| P9 | Chat text never states money amounts or rates | Figures stay in code-computed components |
-| P10 | Values the buyer states are proposed by the model and committed by the buyer | Keeps "code does numbers" honest for user-provided inputs |
-| P11 | Cloud Run `europe-north1`, Firestore `eur3` | EU data residency for EU buyers |
-| P12 | Fonts Fraunces and Inter; charts decided in D44 | Calm editorial tone |
-| P13 | English only in v1, local terms glossed | Global video audience |
 
 ## Open Questions
 
-1. Exact recording date, segment length, and production help from Andrew's
-   team. On 2026-09-15 Andrew named Somnio and Solid Software as taking part
-   and moved the video to a thread of its own; whether Moonwise is on that
-   thread is to confirm.
-2. What the working session of 2026-10-06 decides, to record here afterwards.
-   It was first planned for 2026-09-28 and postponed (External Dates).
-3. Whether Google wants a public deployment and where it will be linked.
-4. Catalog ID domain: `moonwise.se/homeward` or a dedicated domain.
-5. Reply on the email thread with project details, which Hilda asked Moonwise
-   for on 2026-09-14.
-6. ~~The Very Good Ventures product the finish should come close to.~~
-   Answered on 2026-09-24. It is their GenUI Kit
-   (verygood.ventures/resources/genui-kit) and the Life Goal Simulator shown
-   at Google Cloud Next 2026. There is no public repo; D106 to D109 take its
-   lessons.
-7. ~~The Maps keys, which blocked S11 and C8b.~~ Answered on 2026-10-05:
-   none are needed. The map draws on open tiles (D163).
-8. Whether figures should be valued on the spot for each household's story
+1. Which package Google's review expects for the Gemini call from a Dart
+   server: our client on the Interactions API, or Genkit Dart on
+   `generateContent` (D177).
+2. Whether the map on OpenStreetMap's tiles is acceptable, where the travel
+   example Google linked draws Google Maps (D163).
+3. Who makes the Figma file, and when Moonwise makes the repository public.
+4. Which blocks stay (Next, 3).
+5. Whether Andrew Brogdon's team still wants a recording, and by when.
+6. Catalog ID domain: `moonwise.se/homeward` or a dedicated domain.
+7. Whether figures should be valued on the spot for each household's story
    rather than from area samples. The Stockholm rent gotcha (D155, Risks)
-   shows the limit: a sourced median can be the wrong figure for this buyer.
-   Revisit with S12 and the brief, or sooner if the recording needs it.
+   shows the limit: a sourced median can be the wrong figure for this
+   buyer. Revisit with S12 and the brief.

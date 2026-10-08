@@ -27,7 +27,9 @@ earlier question-by-question case, the sample homes, the deal, and the evals
 were removed. The product was rebuilt from there in small chunks: C1 to C10d
 were done by 2026-09-28, and the map (C8b) and a conversation that leads
 (C11) on 2026-10-05, which makes 27 blocks, twelve tools, and four rehearsed
-journeys. Start with "Where We Are" in `docs/ROADMAP.md`.
+journeys. On 2026-10-08, after Google's working session, it was trimmed
+for the submission due 2026-10-16 (D172 to D179): no accounts, no database,
+one plan at a time. Start with "Where We Are" in `docs/ROADMAP.md`.
 
 ## Repository Shape
 
@@ -40,8 +42,8 @@ includes.
 - `server` - Dart `shelf` server on Cloud Run: A2A endpoint, agent loop, tools.
 - `common` - pure Dart package shared by `app`, `server`, and `tool`: money,
   geo, catalog contract, wire types. It must never import Flutter.
-- `tool` - Dart CLIs: catalog skill generation and checks, vendoring, the live
-  probe, the local development server. Never deployed.
+- `tool` - Dart CLIs: catalog skill generation and checks, the A2UI schema
+  vendoring, the live probe, the local development server. Never deployed.
 - `markets` - sample data, not a package: rule packs, rates, living costs,
   exchange rates, and the sample homes of Stockholm and Lisbon, each with its
   source. The server loads it at startup.
@@ -51,17 +53,17 @@ includes.
 ## Canonical Docs
 
 - `docs/PRODUCT.md` - product direction, principles, and what the demo shows.
-- `docs/ARCHITECTURE.md` - system shape, package boundaries, code rules.
+- `docs/ARCHITECTURE.md` - system shape, packages, the server's routes and
+  configuration, the app's screens, running and deploying it, code rules,
+  and the quality gate.
 - `docs/PROTOCOL.md` - A2UI v0.9 usage and the A2A subset on the wire.
 - `docs/CATALOG.md` - the Homeward component catalog and client functions.
 - `docs/AGENT.md` - agent loop, prompts, tools, voice door.
-- `docs/REQUIREMENTS_APP.md` - client app screens and behavior.
-- `docs/REQUIREMENTS_SERVER.md` - endpoints, auth, key handling, deployment.
-- `docs/FIRESTORE.md` - collections, rules, and indexes.
 - `docs/DESIGN.md` - design tokens and how generated UI stays on-brand.
-- `docs/QUALITY.md` - code standards, tests, catalog checks.
-- `docs/ROADMAP.md` - milestones, spikes, risks, decision log, open questions.
-- `docs/SPIKES.md` - evidence and decisions from answered spikes.
+- `docs/ROADMAP.md` - where the project is, the submission, what is next,
+  risks, open questions.
+- `docs/DECISIONS.md` - the decision log, D1 onwards.
+- `docs/SPIKES.md` - evidence from answered spikes, and their index.
 
 If a product or implementation convention changes, update the canonical doc
 first.
@@ -93,6 +95,10 @@ first.
   tiles, Google Cloud within its free monthly allowances with quotas capped
   there, no paid store accounts. A feature that needs payment, or a key on a
   billing account, is not built (D163).
+- Nobody signs in and nothing is stored (D173, D174): the buyer's Gemini key
+  is the only credential, and a plan lives in the server's memory, reached by
+  its session ID. Do not add an account, a database, or a paid service
+  without the owner's decision.
 - The Gemini API key belongs to the user. Never log, persist, or echo it. Keys
   the server holds live in Secret Manager and are never logged either.
 - Every key reaches code as an environment variable. A developer's keys live in
@@ -121,8 +127,9 @@ trust them:
   this file wins.
 - The `gemini-skills` plugin (`google-gemini/gemini-skills`): the Gemini API
   and Live API skills.
-- The `firebase` plugin (`firebase/agent-skills`): the Firebase MCP server and
-  the Firestore and rules skills. Deploying still waits for an explicit ask.
+- The `firebase` plugin (`firebase/agent-skills`): the Firebase MCP server,
+  of use only for Hosting since D173. Deploying still waits for an explicit
+  ask.
 - The `chrome-devtools-mcp` plugin: screenshots, console, and network of the
   web app for the visual look at the end of a chunk.
 
@@ -163,15 +170,15 @@ make app                # Chrome; make app DEVICE=macos or DEVICE=<android id>
 `make check` runs codegen-check, format-check, analyze, test, and
 catalog-check.
 
-`make probe SERVER=http://localhost:8080 MESSAGE="…"` signs in anonymously,
-creates a session, and streams one live turn against a running server,
+`make probe SERVER=http://localhost:8080 MESSAGE="…"` creates a session and
+streams one live turn against a running server,
 printing text, surfaces, and timings. It reads Gemini keys from
 `HOMEWARD_EVAL_GEMINI_KEY` and `HOMEWARD_EVAL_GEMINI_MOON_KEY`, moves to the
 second when the first hits its quota, and never prints them.
 
 The Makefile loads `.env` from the root and exports its variables to every
 target. Copy `.env.example` to `.env` once per clone and fill in the keys you
-use; `docs/REQUIREMENTS_SERVER.md` lists what reads each one. `make app`,
+use; `docs/ARCHITECTURE.md` lists what reads each one. `make app`,
 `make app-web`, `make app-macos`, and the VS Code launch "Homeward app" start
 the local server when it is not running and run the app; the server hands the
 app the development Gemini keys, so it skips the key screen. Run above `main()`
@@ -188,12 +195,6 @@ Generated files are committed and never edited by hand:
 - `*.g.dart` and `*.freezed.dart`, from `make codegen`; `make codegen-check`
   fails when they are stale. `.vscode/settings.json` nests them under their
   source file and hides build caches, so folders show what people write
-- `app/lib/firebase_options.dart`, `app/firebase.json`,
-  `app/android/app/google-services.json`, and both
-  `GoogleService-Info.plist` files, from `flutterfire configure`
-- `common/lib/money/generated/*`, from `make iso-4217`
-- `common/lib/geo/generated/*`, from `make country-names`, pinned to a CLDR
-  release
 - `common/lib/a2ui/generated/*`, from `make a2ui-schemas`, pinned to an A2UI spec
   commit
 - `common/lib/catalog/generated/*`, `server/prompts/generated/*`, and

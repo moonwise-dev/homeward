@@ -66,10 +66,9 @@ model yet.
     ]
   },
   "securitySchemes": {
-    "firebase": { "type": "http", "scheme": "bearer", "bearerFormat": "Firebase ID token" },
     "gemini": { "type": "apiKey", "in": "header", "name": "X-Homeward-Gemini-Key" }
   },
-  "security": [{ "firebase": [], "gemini": [] }],
+  "security": [{ "gemini": [] }],
   "defaultInputModes": ["text/plain", "application/json"],
   "defaultOutputModes": ["text/plain", "application/json+a2ui"],
   "skills": [
@@ -96,10 +95,13 @@ connection does not stop it. `tasks/get` returns the task with its state and
 one message holding the full text so far and every A2UI message forwarded so
 far, in order; a failed task returns its JSON-RPC error instead. `tasks/cancel`
 aborts the Gemini request at once, ends the stream with `canceled`, and
-returns the canceled task. Tasks are kept for 10 minutes after they end, in
-memory per instance in M1.
+returns the canceled task. Tasks are kept in memory for 10 minutes after they
+end.
 
-`contextId` is the Homeward session ID. Each turn is one task.
+`contextId` is the Homeward session ID. Each turn is one task. Nobody signs
+in (D173): whoever holds a session's ID, 32 random hex characters, or a
+task's, may use it, and the buyer's Gemini key is the only credential a turn
+carries.
 
 ### Client To Server
 
@@ -214,9 +216,9 @@ stream closes:
 { "jsonrpc": "2.0", "id": 7, "error": { "code": -32000, "message": "Your Gemini key has reached a request limit", "data": { "code": "gemini_quota_exhausted", "retryAfterSeconds": 40 } } }
 ```
 
-`error.data.code` is a Homeward error code from `docs/REQUIREMENTS_SERVER.md`,
+`error.data.code` is a Homeward error code from `docs/ARCHITECTURE.md`,
 always under JSON-RPC code `-32000`. The A2A codes keep their meaning:
-`-32001` task not found, including another caller's task, and `-32002` a task
+`-32001` task not found and `-32002` a task
 that already ended and cannot be canceled. Malformed requests get `-32700`,
 `-32600`, `-32601`, or `-32602`, as JSON with HTTP 200.
 A `failed` status is not used, because A2A clients surface it only as text.

@@ -19,8 +19,8 @@ out (D137). Work through these steps in order.
 ## 2. Docs first
 
 Update the canonical doc the chunk changes before any code: `docs/AGENT.md`,
-`docs/CATALOG.md`, `docs/PROTOCOL.md`, `docs/REQUIREMENTS_APP.md`,
-`docs/REQUIREMENTS_SERVER.md`, `docs/FIRESTORE.md`, or `docs/DESIGN.md`.
+`docs/CATALOG.md`, `docs/PROTOCOL.md`, `docs/ARCHITECTURE.md`, or
+`docs/DESIGN.md`.
 
 ## 3. Build
 

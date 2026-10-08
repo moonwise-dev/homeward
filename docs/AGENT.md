@@ -250,7 +250,7 @@ arrives with the step of `docs/ROADMAP.md` that needs it.
   and route by car, bike, and foot on the FOSSGIS router and by public
   transport on Transitous. Calls go one at a time per service with the gap its
   policy asks, under a user agent naming Homeward, and are cached for six
-  hours in memory and a week in Firestore (D112).
+  hours in memory (D173).
 - Each lookup reports a measuring step through `ResearchSteps`, which the turn
   streams as a progress data part while tools run (D108). Labels come from the
   tool, never from the model.

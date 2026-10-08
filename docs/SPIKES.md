@@ -1,8 +1,32 @@
 # Homeward Spikes
 
-Each spike answers one question from `docs/ROADMAP.md` with evidence, ends in a
-decision, and lists what the decision changed. Probe code lives outside the
-repository; the findings here are what remains.
+Each spike answers one question with evidence, ends in a decision in
+`docs/DECISIONS.md`, and lists what the decision changed. Probe code lives
+outside the repository; the findings here are what remains. A spike is a
+record of its day: the files and documents it names are the ones of that day,
+and some have since been merged or removed (D173, D179).
+
+## Index
+
+| ID | Question | Method | Decision gate |
+| --- | --- | --- | --- |
+| S1 | What does `genui_a2a` 0.10.x put on the wire: A2A version, SSE or WebSocket, A2UI MIME type, where capabilities and data model travel, how actions are sent? | Run `genui_a2a` against a recording fake A2A server | **Answered:** the protocol fits; the app uses its own client, see below. |
+| S2 | Can Dart drive the Interactions API cleanly: request shape, SSE event types, function calling continuation, `previous_interaction_id`, error codes for bad key and quota? Is `gemini-3.8-flash` available on free-tier keys? | Curl and a Dart console probe against a free-tier key | **Answered:** yes; see below. Quota (429) shapes recorded during S3. |
+| S3 | Can one interaction combine `google_search` with structured JSON output, and what grounding metadata links fields to URLs? | Research call for `PT-20` | **Closed by design:** grounding is paid only, so research is not built (D40); see below. |
+| S4 | Do genui client functions accept object arguments and return numbers, strings, and booleans; can a catalog item subscribe to a whole slice; is a six-component slider drag at 60 fps? | Probe app, widget test, profile web builds in headless Chrome with CPU throttling | **Answered:** bindings and functions work; charts drawn with `fl_chart` are the bottleneck; see below. Android unmeasured. |
+| S5 | Is `a2ui_core` pure Dart and usable on the server for message models and validation? | Import into a console app | **Answered:** yes; used from `common`, see below. |
+| S6 | Does `firebase_admin_sdk` verify anonymous ID tokens and App Check tokens and run Firestore transactions on Cloud Run with ADC? | Deploy a probe route | **Answered:** yes; clients call Cloud Run directly because Hosting rewrites cannot stream, and the invoker IAM check is off. Firebase Auth, App Check, and Firestore were removed on 2026-10-08 (D173), so only the Hosting and Cloud Run findings still apply. |
+| S7 | Verify the high-impact Tier 1 claims: Portugal non-resident IMT, Portugal DSTI limit, Portugal non-resident LTV, Sweden top-up cap | Primary sources listed in `docs/MARKETS.md`, removed in D129 and kept at `6faa8ab` | **Answered:** Sweden confirmed; Portugal corrected: DSTI 45% from 2026-08-01, non-resident IMT by Decree-Law 97/2026 with a refund path, non-resident 70% is lender practice; see below. |
+| S8 | Can a buyer pick another model or API beside Gemini, and what does each route cost? | Desk research of Google and third-party provider limits, prices, APIs, and Dart libraries; one hero message on each candidate Gemini API model | **Answered:** `gemini-3.5-flash-lite` is the fallback candidate, Gemma 4 does not fit the free tier's 16k input tokens a minute, and an OpenAI-compatible provider choice follows the livestream (D80); see below. |
+| S10 | Why does Gemini refuse the catalog as a response schema, and does an accepted schema constrain the output? | Bisecting the composed schema live, synthetic schemas, and chained corrections on the probe key | **Answered:** recursion and `allOf` are the obstacles; a flattened subset is enforced; see below and D110. |
+| S9 | Can Homeward learn about any place on free keys: where things are, how far, how good, and what a listing says? | Open-data services and Gemini tools called around Stockholm on the probe key | **Answered:** open data covers where and how far with no key; Google Maps grounding and `url_context` work on free keys; see below. |
+| S11 | Does `google_maps_flutter` draw the toolkit's `GoogleMap` on web, Android, and iOS, how does the Maps key reach each platform, and does the Maps JavaScript API load under the web app's `Cross-Origin-Embedder-Policy: require-corp`? | A throwaway app on each platform with Maps keys | **Closed by D163,** never run: the map draws on open tiles and needs no key. |
+| S12 | Which sources answer money and local-rule questions on free keys, and how is each quote checked? | `url_context` on official pages, Google Search grounding on the models that have a free tier, our own fetch for checking quotes | After the recording (D142). |
+| S13 | Can Homeward read a listing the buyer pastes, and check its quotes? | `url_context` against our own fetch, on listing sites in the demo cities | After the recording (D142). |
+| S14 | Can Grounding Lite give Google place IDs for `PlaceDetailsCompact`, and how does Flutter show the place card? | Grounding Lite `search_places`; the `gmp-place-details-compact` element on web | **Dropped by D163,** with the toolkit's components. |
+| S16 | Does a catalog skill of 25 to 30 components fit the free tier, and does a compact index with schemas on demand keep Gemini as reliable as the full schema? | Measure prompt tokens and first-message validity for the full skill against an index plus a `component_docs` tool, on `gemini-3.5-flash-lite` with the probe key | **Answered:** the full skill fits at about 24K tokens and costs no measurable time; progressive disclosure is built anyway (D143); see below. |
+| S15 | Does the toolkit's own web client render a Homeward map surface? | Its React sample pointed at a local Homeward server | **Dropped by D163:** `WeekMap` is Homeward's own block. |
+| S17 | Why does the Interactions API refuse a round's function results as not following a function call, in about one tool round in ten? | Chained two-round turns on `gemini-3.5-flash-lite` with Homeward's prompt; the model behind each round, now logged; the step types stored in a refused chain's previous interaction | Open: 0 of 27 minimal chains failed on 2026-09-27, and retrying a refused request failed every time on 2026-09-25, so the start-over stays until the stored chain shows the cause. See below |
 
 ## S1 — What `genui_a2a` Puts On The Wire
 

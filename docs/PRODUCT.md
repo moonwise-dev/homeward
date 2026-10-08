@@ -133,8 +133,8 @@ go somewhere else entirely.
 
 Buyers and renters are anyone deciding where to live and how to pay for it:
 relocating for work, making room for family, sharing a flat, buying across a
-border. They are anonymous, bring their own Gemini key, and start and resume
-plans.
+border. They have no account, bring their own Gemini key, and work on one
+plan at a time, which Start over replaces with a new one (D175).
 
 ## What The Demo Shows
 
