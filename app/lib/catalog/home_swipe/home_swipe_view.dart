@@ -223,7 +223,7 @@ class _SwipeCard extends StatelessWidget {
                 const SizedBox(height: AppSpacing.xxs),
                 Text(listing.title, style: styles.title),
                 const SizedBox(height: AppSpacing.xxs),
-                Text(moneyText(listing.price), style: styles.figure),
+                Text(homeFigureText(home), style: styles.figure),
                 Text(homeFacts(listing), style: styles.label),
                 if (cost != null) ...[
                   const SizedBox(height: AppSpacing.xs),

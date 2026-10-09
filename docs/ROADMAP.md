@@ -18,7 +18,7 @@ decided and why, and `docs/SPIKES.md` the evidence.
 
 As of 2026-10-08.
 
-- **Built.** 27 blocks in five families, thirteen tools, and the four journeys
+- **Built.** 27 blocks in five families, thirteen tools, and the journeys
   of the README, rehearsed with the probe; a gallery page per block; the
   wire inspector; light and dark themes; the map on open tiles with no key
   (D163); a conversation that leads (D164 to D169); and turns that recover
@@ -179,7 +179,12 @@ As of 2026-10-08.
   and left: Gemini thinks for 300 to 800 tokens before a one-sentence
   reply to a tap, 2 to 4 s of it; when it leaves the buttons out, the
   round that fetches them adds about 5 s, and it has drawn them every
-  time since it stopped being constrained, six of six.
+  time since it stopped being constrained, six of six. Tried and
+  dropped: thinking level `minimal`, which was no faster and made Gemini
+  pass a broken market code and ignore that tools were off. After it:
+  `HomeSwipe` shows rents to people who rent, the style prompt asks for
+  what a result means and forbids describing the screen, and a reply to a
+  tap never runs a tool even when Gemini calls one.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, first from commit
   `bf1a0fb` and again the same day with D182 to D188; one live turn on the
@@ -222,8 +227,8 @@ What Google asked for on 2026-10-06, due 2026-10-16 (D172).
 | A golden script, with clickable prompts | Drafted on 2026-10-08: three opening messages on the empty plan, each sent with a tap, taken from journeys 1, 4, and 3 of the README | The owner's edit of the three, and the screen each must end on (D181) |
 | A place that shows the catalog | Built: `/gallery`, from the app bar or by URL, with no key | A look at it as a stranger would arrive |
 | A logo, vector or high-resolution PNG | None | Moonwise's or Homeward's mark |
-| The repository open-sourced under Apache 2.0, with a Figma file of every catalog component | Private; no licence file; no Figma file | `LICENSE`, a notice for the Unsplash photos and the OFL fonts, the Figma file, and Moonwise making it public |
-| A short description with one or two screenshots | The README has the words | Screenshots, and the three-sentence version |
+| The repository open-sourced under Apache 2.0, with a Figma file of every catalog component | Private; `LICENSE` and `NOTICE` added on 2026-10-09, the notice naming the OFL fonts, the Unsplash photographers, OpenStreetMap, and the sample data; eight photos no code used were removed; no Figma file | Moonwise confirming the copyright line, "Copyright 2026 Moonwise", the Figma file, and Moonwise making it public |
+| A short description with one or two screenshots | The README was rewritten on 2026-10-09 for the screen as it is since D182 to D188; a three-sentence description and screenshots were drafted outside the repository | The owner's edit of the description, and the screenshots taken again on the final build |
 | A video, optional | A 74 s recorded run from 2026-10-06, outside the repository | Record again on the hosted build if it is wanted |
 | Official SDKs, in the review that follows | genui renders; the Gemini call is our own REST client | Ask Google which package it expects (D177) |
 

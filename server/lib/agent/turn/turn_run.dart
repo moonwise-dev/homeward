@@ -316,7 +316,9 @@ final class TurnRun {
           catalogRounds < settings.maxCatalogRounds &&
           tools.onlyReadCatalog([for (final call in calls) call.name]);
       if (readsCatalog ||
-          (calls.isNotEmpty && toolRounds < settings.maxToolRounds)) {
+          (calls.isNotEmpty &&
+              !tapAnswered &&
+              toolRounds < settings.maxToolRounds)) {
         if (readsCatalog) {
           catalogRounds++;
         } else {

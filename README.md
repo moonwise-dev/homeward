@@ -6,29 +6,35 @@ Flutter's GenUI initiative, built on [A2UI](https://a2ui.org) v0.9 and
 
 A household tells Homeward about a move in its own words. Homeward works
 through it the way a coding agent works through a codebase: it deduces what
-it can, looks up what it can find out, asks one decision at a time and the
-few facts it needs together, questions a figure that cannot be right, and
-keeps a brief of what it learned and a plan of steps the household can
-follow. Then it shows the money decision no bank form was
-built for: what they can borrow, what a specific home costs them each month,
-the mortgage options, whether it survives a rate rise, what they pay on the
-day, buying against renting, and how rent splits between people sharing.
+it can, looks up what it can find out, answers first with what it can work
+out, marks what it assumed, asks little, and questions a figure that cannot
+be right. It shows the money decision no bank form was built for: what they
+can borrow, what a specific home costs them each month, the mortgage
+options, whether it survives a rate rise, what they pay on the day, buying
+against renting, and how rent splits between people sharing.
 
-Nothing is scripted. Gemini composes every screen from Homeward's catalog of
-building blocks as the conversation goes, so two households end up on two
-different screens.
+Try it at [homeward-genui.web.app](https://homeward-genui.web.app) with a
+free [Gemini API key](https://aistudio.google.com/apikey); the catalog
+gallery there needs no key.
+
+Nothing is scripted. Gemini decides which tools run and what to say and ask,
+and the screen is composed from Homeward's catalog of building blocks as the
+conversation goes, so two households end up on two different screens.
 
 - **Gemini composes; tools measure; code computes.** The model never writes a
   figure a buyer relies on. Amounts come from shared Dart code in `common`,
   places and travel times from open map data, and the blocks bind them from
   the data model instead of taking them as text.
 - **Every fact shows where it came from:** said by the buyer, deduced from
-  their words, measured, estimated, or quoted word for word from a listing.
-- **Two surfaces.** Questions arrive as cards inline in the conversation, so
-  the history shows each decision, and every reply ends with one; beside it,
-  the plan panel is one living surface Gemini changes in place, a stack of
-  cards that opens with the household's story so far and the steps Homeward
-  is working through for them.
+  their words, assumed, measured, estimated, or quoted word for word from a
+  listing. What Homeward assumed is marked on the card, with one button to
+  say it is right.
+- **One plan, changed in place.** The plan is a living A2UI surface. A tool's
+  result goes on it as a card the moment the tool answers, and only the card
+  that answers what was asked; the rest wait until the buyer asks. Gemini
+  writes the words, arranges the plan, and composes each question from basic
+  components, a sentence and two or three buttons, inline in the
+  conversation. A button on a card runs its tool at once.
 
 Homeward explains and estimates; it does not give financial advice. The rules,
 rates, and homes are labelled samples.
@@ -53,15 +59,15 @@ examples and parameters, or `/gallery/<Block>` for one, such as
 
 `make check` runs everything a change must pass.
 
-## Four Journeys
+## Three Ways In
 
-These are examples of what Homeward can do, rehearsed with the live probe
-(`make probe`). They are not flows: nothing in the code knows about them,
-Gemini decides what to ask and what to draw, and the same words can lead to a
-different screen on another run. Try them, mix them, or tell it something else
-entirely.
+The empty plan offers three opening messages, each sent with a tap. They are
+examples, not flows: nothing in the code knows about them, Gemini decides
+which tools to call and what to say, and the same words can lead to a
+different screen on another run. Try them, mix them, or tell it something
+else entirely.
 
-### 1. Can we afford it here?
+### Can we afford it here?
 
 A couple moving to Stockholm, with one income in kronor and one in euros.
 
@@ -69,79 +75,28 @@ A couple moving to Stockholm, with one income in kronor and one in euros.
 > tax, and my partner keeps her remote job paying 3,500 euros a month. We have
 > 600,000 kronor saved.
 
-Homeward records what they said in the brief and asks, in one card, for
-everything the lending rules still need, such as their take-home pay and
-what they pay on other loans. Once it has that, `compute_affordability`
-works out, from Sweden's sample rules, what they can borrow and which rule
-limits the loan, and Homeward says in words whether it is their savings or
-their income that sets the limit. The plan shows it with
-[`AffordabilitySummary`](docs/generated/catalog_reference.md#affordabilitysummary),
-[`RuleNote`](docs/generated/catalog_reference.md#rulenote), and
-[`MonthlyCostBreakdown`](docs/generated/catalog_reference.md#monthlycostbreakdown).
-Ask about the mortgage options and rising rates, and it adds
-[`MortgageOptions`](docs/generated/catalog_reference.md#mortgageoptions) and
-[`StressTestChart`](docs/generated/catalog_reference.md#stresstestchart).
-Anything they haven't said, such as the down payment, is assumed and offered
-back as a choice with no recommendation.
+`compute_affordability` needs only what they earn and have saved. It counts
+the euros at a sample exchange rate, estimates their take-home pay from the
+tax authority's table, assumes what they did not say, no children and no
+other loans, and works out from Sweden's sample rules what they can borrow
+and which rule limits it. The plan shows
+[`AffordabilitySummary`](docs/generated/catalog_reference.md#affordabilitysummary)
+and
+[`HouseholdSummary`](docs/generated/catalog_reference.md#householdsummary),
+where each assumed line is marked and one button says they are right; say
+what is different, and it is worked out again. From there Homeward offers
+what to look at next: what a month costs
+([`MonthlyCostBreakdown`](docs/generated/catalog_reference.md#monthlycostbreakdown)),
+homes within reach
+([`HomeCard`](docs/generated/catalog_reference.md#homecard)), the rates side
+by side
+([`MortgageOptions`](docs/generated/catalog_reference.md#mortgageoptions)),
+or what a rate rise does
+([`StressTestChart`](docs/generated/catalog_reference.md#stresstestchart)).
 
 Leaves out: real lenders' offers, and rates changing over the loan.
 
-### 2. A home that works for Mum
-
-A family whose parent can't manage stairs.
-
-> My mum is moving in with us and she can't really do stairs anymore. We're
-> looking around Stockholm. We take home 68,000 kronor a month together,
-> 92,000 before tax, no debts, and have 900,000 kronor saved. We're both 42,
-> two adults plus Mum, no kids.
->
-> Show us flats with at least three rooms that would work for her, and what
-> each would cost us a month.
-
-Homeward takes step-free access as a need of the home, deduced from their
-words. `read_listings` reads each sample listing for that need and keeps a
-quote only when it appears in the listing word for word.
-`search_homes` prices each home that fits for this household, and the plan
-shows them with [`HomeCard`](docs/generated/catalog_reference.md#homecard).
-[`ListingQuote`](docs/generated/catalog_reference.md#listingquote) shows the
-listing's own words for a home, and
-[`HomeComparison`](docs/generated/catalog_reference.md#homecomparison) puts
-two or three side by side.
-
-Leaves out: listings from real sites, and needs no listing mentions, which
-become questions for a viewing.
-
-### 3. Sharing in Lisbon
-
-Two friends renting together.
-
-> Me and a friend are moving to Lisbon to share a rented flat. I'll be at a
-> startup in Beato most days, she works shifts at Santa Maria hospital.
->
-> I take home 2,400 euros a month and she takes home 1,800. Show us some
-> two-bedroom flats.
->
-> Let's take the first one. Split the rent by what we earn, and how long would
-> our commutes be from there? I'd cycle, she'd take the metro, five days a week
-> each.
-
-`find_place` checks both workplaces against OpenStreetMap, `search_homes`
-finds two-bedroom sample homes, `split_rent` splits the area's median rent
-by income, with any bills they mention, and `measure_week` routes each
-commute by bike and by public transport. The plan shows
-[`RentSplit`](docs/generated/catalog_reference.md#rentsplit), which also
-switches to an equal split or one by room size,
-[`WeeklyTravel`](docs/generated/catalog_reference.md#weeklytravel), and
-[`WeekMap`](docs/generated/catalog_reference.md#weekmap), both commutes on
-OpenStreetMap, each drawn along the route that was measured.
-Before anything is known, it may open with
-[`MarketSnapshotCard`](docs/generated/catalog_reference.md#marketsnapshotcard),
-the city at a glance.
-
-Leaves out: rents the buyer hasn't found yet, which are area estimates, and
-homes on the map before their week is measured.
-
-### 4. Is this one worth it?
+### Is this one worth it?
 
 A couple weighing one sample home.
 
@@ -154,13 +109,14 @@ A couple weighing one sample home.
 > renting something like it?
 
 `compute_affordability` finds the flat by the words they named it by and
-prices it for this household, and `compare_buy_rent` adds up buying against renting a
-home like it, year by year. The plan shows
+prices it for this household, and `compare_buy_rent` adds up buying against
+renting a home like it, year by year. One reply answers all three questions:
+the plan shows the home,
 [`MonthlyCostBreakdown`](docs/generated/catalog_reference.md#monthlycostbreakdown),
 [`PurchaseCostsTable`](docs/generated/catalog_reference.md#purchasecoststable),
 and [`BuyVsRent`](docs/generated/catalog_reference.md#buyvsrent), with a
 slider over the years they expect to stay. Ask how fast the loan comes down,
-and it can add
+and it adds
 [`LoanBalanceChart`](docs/generated/catalog_reference.md#loanbalancechart);
 say what they can put aside each month, and `plan_savings` works out with
 [`SavingsPlan`](docs/generated/catalog_reference.md#savingsplan) how long
@@ -171,32 +127,53 @@ costs, and upkeep. Stockholm's area rents are first-hand leases, which take
 years in the housing queue, so renting looks cheaper there than a newcomer
 will find it.
 
-## When The Buyer Is Not The Perfect One
+### Sharing in Lisbon
 
-Most people open with a line, skip the card they were shown, and mistype.
-Rehearsed on 2026-10-05:
+Two friends renting together.
 
-> I'm movint to stockholm with my family soon, help me find a residence
+> Me and a friend are moving to Lisbon to share a rented flat. I'll be at a
+> startup in Beato most days, she works shifts at Santa Maria hospital. I take
+> home 2,400 euros a month and she takes home 1,800. Show us some two-bedroom
+> flats.
 
-Homeward opens the plan with
-[`PlanOverview`](docs/generated/catalog_reference.md#planoverview), the
-story so far and the steps it set for this household, shows what it deduced
-for them to confirm with a tap, and asks who is moving in one
-[`Questions`](docs/generated/catalog_reference.md#questions) card.
+`find_place` checks both workplaces against OpenStreetMap, and `search_homes`
+finds two-bedroom sample homes and shows what renting one like each costs a
+month, an estimate from the area's median rent, lowest first. Split this
+rent on a card splits it by what they earn with
+[`RentSplit`](docs/generated/catalog_reference.md#rentsplit), which also
+switches to an equal split or one by room size; Keep puts a home on the
+[`Shortlist`](docs/generated/catalog_reference.md#shortlist). Ask how long
+their commutes would be, one by bike and one by metro, and `measure_week`
+routes each: the plan shows
+[`WeeklyTravel`](docs/generated/catalog_reference.md#weeklytravel) and
+[`WeekMap`](docs/generated/catalog_reference.md#weekmap), both commutes on
+OpenStreetMap, each drawn along the route that was measured.
 
-> We take home about 10k sek
+Leaves out: real rental listings, so rents are area estimates, and homes on
+the map before their week is measured.
 
-That would not cover the sample everyday costs of a household in Stockholm,
-so `compute_affordability` refuses the figure and Homeward asks whether they
-meant 10,000 or 100,000 kronor, each a tap. Then one card asks for the rest:
-pay before tax, savings, other loans, and the children's ages. With those it
-shows what they can borrow, says that their savings set the limit, ticks the
-step, and offers what to look at next. Pay before tax below take-home pay is
-refused the same way. A savings figure with its digits doubled was
-questioned too, by Gemini on its own, both times it came up.
+## More To Try
 
-Leaves out: a first look at the money from part of the facts, and checks on
-figures other than pay.
+- **A need of the home.** "My mum is moving in with us and she can't really
+  do stairs anymore. Show us flats with at least three rooms that would work
+  for her." Homeward takes step-free access as a need deduced from their
+  words; `read_listings` reads each sample listing for it and keeps a quote
+  only when it appears in the listing word for word, shown with
+  [`ListingQuote`](docs/generated/catalog_reference.md#listingquote), and
+  [`HomeComparison`](docs/generated/catalog_reference.md#homecomparison) puts
+  two or three homes side by side.
+- **A figure that cannot be right.** "We take home about 10k sek" would not
+  cover the sample everyday costs of a household in Stockholm, so
+  `compute_affordability` answers with a doubt instead of a result, and
+  Homeward asks which figure they meant, each a tap. Pay before tax below
+  take-home pay is questioned the same way.
+- **A correction.** "We also have a car loan of 2,500 a month and a child of
+  three." The tool runs again with what changed, and the marks on the
+  household card go.
+- **What Homeward knows.** Ask where things stand or what it knows, and it
+  shows [`PlanOverview`](docs/generated/catalog_reference.md#planoverview)
+  or its [`Brief`](docs/generated/catalog_reference.md#brief): each fact
+  with where it came from.
 
 ## The Catalog
 
@@ -215,9 +192,10 @@ properties, what it binds, and the tool that seeds it.
 
 The money blocks are built to be reused in a bank's or a fintech's own
 journey. Gemini sees a compact index of the catalog; the tool that works out
-a result hands back the block that shows it, ready to draw, and a block no
-tool has given is read through the `component_docs` tool, which keeps the
-prompt small.
+a result hands over the block that shows it, the server puts it on the plan,
+and a block no tool has given is read through the `component_docs` tool,
+which keeps the prompt small. Every block has a page in the gallery, with
+its examples and parameters.
 
 ## Build On It
 
@@ -258,8 +236,14 @@ measures places and routes and draws the map.
 | `app` | The Flutter app: the conversation and plan, the catalog widgets Gemini composes from, the gallery, and the wire inspector |
 | `server` | The Dart server: the agent loop, the tools, and validation of every A2UI message |
 | `common` | Pure Dart shared by both: the finance maths, the catalog contract, and wire types |
-| `markets` | Sample rules, rates, exchange rates, and homes for the demo cities |
+| `markets` | Sample rules, rates, tax tables, exchange rates, and homes for the demo cities |
 | `tool` | Developer CLIs: catalog generation and checks, the local server, the live probe |
 | `docs` | How Homeward works and why, starting with [PRODUCT](docs/PRODUCT.md) and [ARCHITECTURE](docs/ARCHITECTURE.md) |
 
 Contributors and coding agents start with [AGENTS.md](AGENTS.md).
+
+## Licence
+
+Apache License 2.0; see [LICENSE](LICENSE). The fonts, the photographs of the
+sample listings, and the map data are under their own terms, listed in
+[NOTICE](NOTICE).
