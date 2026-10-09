@@ -36,6 +36,9 @@ final class ArrangePlan extends AgentTool {
   };
 
   @override
+  bool get tapsNeedNoReply => true;
+
+  @override
   Map<String, Object?>? argumentsForTap(
     String action,
     Map<String, Object?> context,
@@ -69,13 +72,22 @@ final class ArrangePlan extends AgentTool {
         },
       );
     }
+    final wasThere = [
+      for (final id in show)
+        if (context.onPlan.contains(id)) id,
+    ];
     return ToolResult(
       modelResult: {
         'shown': show,
         'removed': remove,
+        if (wasThere.isNotEmpty) 'alreadyOnThePlan': wasThere,
+        'means': {
+          for (final id in show) id: ?context.cardNotes[id],
+        },
         'note':
             'The plan changes as you reply; send no message for it. Say '
-            'in your text what the buyer now sees.',
+            'in your text what the cards under means tell this household, '
+            'never only that they are on the plan.',
       },
       showCards: show,
       removeCards: remove,

@@ -34,6 +34,11 @@ class ConversationThread extends StatelessWidget {
   Widget build(BuildContext context) {
     final pending = this.pending;
     final pendingPrompt = this.pendingPrompt;
+    final lastSpoken = sections.lastIndexWhere(
+      (section) =>
+          section.entry.text.isNotEmpty ||
+          inlineSurfaceIds(section.entry).isNotEmpty,
+    );
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Align(
@@ -48,7 +53,7 @@ class ConversationThread extends StatelessWidget {
                   key: ValueKey(section.entry.id),
                   sessionId: sessionId,
                   section: section,
-                  isLatest: pending == null && index == sections.length - 1,
+                  isLatest: pending == null && index >= lastSpoken,
                   onRetry: () => onRetry(section.entry.id),
                   onShowOnPlan: onShowOnPlan,
                 ),

@@ -16,6 +16,7 @@ abstract class ToolResult with _$ToolResult {
     @Default([]) List<String> showCards,
     @Default([]) List<String> removeCards,
     @Default(false) bool asksOnCard,
+    @Default({}) Map<String, String> cardNotes,
   }) = _ToolResult;
 }
 
@@ -34,6 +35,8 @@ abstract class AgentTool {
     String action,
     Map<String, Object?> context,
   ) => null;
+
+  bool get tapsNeedNoReply => false;
 
   FunctionDeclaration get declaration => FunctionDeclaration(
     name: name,

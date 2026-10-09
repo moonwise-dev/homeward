@@ -683,8 +683,13 @@ owner, and leases it; `turn_run.dart` runs one turn:
    `use_down_payment` by `compute_affordability`; `keep_home` and
    `drop_home` by `keep_homes`; `split_this_rent` and `take_split` by
    `split_rent`; and `show_card`, a tap on a waiting card's button, by
-   `arrange_plan` (D190), whose reply is a sentence with no offer after
-   it.
+   `arrange_plan` (D190). A tool may say its taps need no reply (D191), as
+   `arrange_plan` and `keep_homes` do: the turn then ends with no model
+   round, and the buyer's next message carries a note that names those
+   taps and says what they opened is on the plan. A tool hands a one-line
+   meaning with its cards, kept with the session, which `arrange_plan`
+   answers with and that note quotes, so Gemini can say what a card tells
+   the household.
 4. Before every model request, assemble the system instruction with a fresh
    turn context, and declare the tools.
 5. Call `interactions.create` with streaming, `previous_interaction_id` when
@@ -917,7 +922,7 @@ nothing.
 | Model output invalid after corrections | Model text, and the retry notice when the turn drew nothing |
 | A reply with no words | One finishing round asks for them; what was drawn stands |
 | A reply that asks in words and draws no ask | One finishing round asks for the ask alone, unconstrained, and keeps only its `a2ui` block; a card that asks by itself, such as the household card's button, counts as the ask |
-| A tap on a card's own button that a tool claims | The tool runs before the first model round, and Gemini hears its answer with the tap and replies with tools off |
+| A tap on a card's own button that a tool claims | The tool runs before the first model round, and Gemini hears its answer with the tap and replies with tools off; a tap that only moves cards ends the turn with no model round (D191) |
 | An inline ask named for another turn, such as `t3-next` in turn 2 | Renamed for this turn when no surface has that name |
 | A plan message that names a card where a component belongs | The card is put first on the plan, as `arrange_plan` would |
 | Words written before the tools ran | Dropped when the round ends in tool calls, unless no later words come |

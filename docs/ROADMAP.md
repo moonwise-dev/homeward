@@ -198,13 +198,25 @@ As of 2026-10-08.
   buttons, a month's cost, the rates, rising rates, the costs on the day,
   a down payment, the loan year by year, the city, and the lending rule;
   a tap on If rates rise put the stress test on top at once and drew a
-  one-sentence reply in 1 round and 4 s. Looked at in headless Chrome at
-  1440 dp. Seen and left: that sentence says what the card is more than
-  what it means, and the buttons sit under the plan, a long scroll down
-  on a phone once several cards are open.
+  one-sentence reply in 1 round and 4 s, which D191 then dropped. Looked
+  at in headless Chrome at 1440 dp. Seen and left: the buttons sit under
+  the plan, a long scroll down on a phone once several cards are open.
+- **Taps that only move cards draw no reply** (D191, 2026-10-09). Opening
+  a waiting card, Keep, and Drop end the turn with no model round. Probed
+  on a local server with `gemini-3.5-flash-lite`: a tap on If rates rise
+  completed in 27 ms; "Does that hold for us?" after it, 1 round and 4 s,
+  answered that the cost at the tested rate stays inside what they can
+  carry, where before the meaning was handed over Gemini showed the card
+  again and said only that it had. In headless Chrome at 1440 dp: Keep on
+  a Lisbon flat, the shortlist on the plan at once, the tap as the
+  buyer's line with its chips; and a chain on the first opening message,
+  If rates rise, These are right, Costs on the day, where the buttons of
+  the reply to the second stayed live after the third. Seen and left:
+  after These are right Gemini still offered a month's cost, a card that
+  waits, beside homes that fit.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, first from commit
-  `bf1a0fb` and again the same day with D182 to D190; one live turn on the
+  `bf1a0fb` and again the same day with D182 to D191; one live turn on the
   redeployed server drew its cards after 5 s. On the public server: `/health`, the agent card with its
   public URL, a new session, `/dev` shut, a preflight from the Hosting
   origin, and one live turn in 25 s. On the public page, in headless

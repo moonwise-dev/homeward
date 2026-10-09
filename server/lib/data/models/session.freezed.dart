@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Session {
 
- String get id; int get turnCount; String? get lastInteractionId; List<TurnRecord> get turns; Map<String, Map<String, Object?>> get handedCards;
+ String get id; int get turnCount; String? get lastInteractionId; List<TurnRecord> get turns; Map<String, Map<String, Object?>> get handedCards; Map<String, String> get cardNotes;
 /// Create a copy of Session
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $SessionCopyWith<Session> get copyWith => _$SessionCopyWithImpl<Session>(this as
 @override
 bool operator ==(Object other) {
   final _this = this as Session;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Session&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.turnCount, _this.turnCount) || other.turnCount == _this.turnCount)&&(identical(other.lastInteractionId, _this.lastInteractionId) || other.lastInteractionId == _this.lastInteractionId)&&const DeepCollectionEquality().equals(other.turns, _this.turns)&&const DeepCollectionEquality().equals(other.handedCards, _this.handedCards));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Session&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.turnCount, _this.turnCount) || other.turnCount == _this.turnCount)&&(identical(other.lastInteractionId, _this.lastInteractionId) || other.lastInteractionId == _this.lastInteractionId)&&const DeepCollectionEquality().equals(other.turns, _this.turns)&&const DeepCollectionEquality().equals(other.handedCards, _this.handedCards)&&const DeepCollectionEquality().equals(other.cardNotes, _this.cardNotes));
 }
 
 
 @override
 int get hashCode {
   final _this = this as Session;
-  return Object.hash(runtimeType,_this.id,_this.turnCount,_this.lastInteractionId,const DeepCollectionEquality().hash(_this.turns),const DeepCollectionEquality().hash(_this.handedCards));
+  return Object.hash(runtimeType,_this.id,_this.turnCount,_this.lastInteractionId,const DeepCollectionEquality().hash(_this.turns),const DeepCollectionEquality().hash(_this.handedCards),const DeepCollectionEquality().hash(_this.cardNotes));
 }
 
 @override
 String toString() {
   final _this = this as Session;
-  return 'Session(id: ${_this.id}, turnCount: ${_this.turnCount}, lastInteractionId: ${_this.lastInteractionId}, turns: ${_this.turns}, handedCards: ${_this.handedCards})';
+  return 'Session(id: ${_this.id}, turnCount: ${_this.turnCount}, lastInteractionId: ${_this.lastInteractionId}, turns: ${_this.turns}, handedCards: ${_this.handedCards}, cardNotes: ${_this.cardNotes})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $SessionCopyWith<$Res>  {
   factory $SessionCopyWith(Session value, $Res Function(Session) _then) = _$SessionCopyWithImpl;
 @useResult
 $Res call({
- String id, int turnCount, String? lastInteractionId, List<TurnRecord> turns, Map<String, Map<String, Object?>> handedCards
+ String id, int turnCount, String? lastInteractionId, List<TurnRecord> turns, Map<String, Map<String, Object?>> handedCards, Map<String, String> cardNotes
 });
 
 
@@ -68,14 +68,15 @@ class _$SessionCopyWithImpl<$Res>
 
 /// Create a copy of Session
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? turnCount = null,Object? lastInteractionId = freezed,Object? turns = null,Object? handedCards = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? turnCount = null,Object? lastInteractionId = freezed,Object? turns = null,Object? handedCards = null,Object? cardNotes = null,}) {
   return _then(Session(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,turnCount: null == turnCount ? _self.turnCount : turnCount // ignore: cast_nullable_to_non_nullable
 as int,lastInteractionId: freezed == lastInteractionId ? _self.lastInteractionId : lastInteractionId // ignore: cast_nullable_to_non_nullable
 as String?,turns: null == turns ? _self.turns : turns // ignore: cast_nullable_to_non_nullable
 as List<TurnRecord>,handedCards: null == handedCards ? _self.handedCards : handedCards // ignore: cast_nullable_to_non_nullable
-as Map<String, Map<String, Object?>>,
+as Map<String, Map<String, Object?>>,cardNotes: null == cardNotes ? _self.cardNotes : cardNotes // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,
   ));
 }
 
@@ -160,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  int turnCount,  String? lastInteractionId,  List<TurnRecord> turns,  Map<String, Map<String, Object?>> handedCards)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  int turnCount,  String? lastInteractionId,  List<TurnRecord> turns,  Map<String, Map<String, Object?>> handedCards,  Map<String, String> cardNotes)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Session() when $default != null:
-return $default(_that.id,_that.turnCount,_that.lastInteractionId,_that.turns,_that.handedCards);case _:
+return $default(_that.id,_that.turnCount,_that.lastInteractionId,_that.turns,_that.handedCards,_that.cardNotes);case _:
   return orElse();
 
 }
@@ -181,10 +182,10 @@ return $default(_that.id,_that.turnCount,_that.lastInteractionId,_that.turns,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int turnCount,  String? lastInteractionId,  List<TurnRecord> turns,  Map<String, Map<String, Object?>> handedCards)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int turnCount,  String? lastInteractionId,  List<TurnRecord> turns,  Map<String, Map<String, Object?>> handedCards,  Map<String, String> cardNotes)  $default,) {final _that = this;
 switch (_that) {
 case _Session():
-return $default(_that.id,_that.turnCount,_that.lastInteractionId,_that.turns,_that.handedCards);case _:
+return $default(_that.id,_that.turnCount,_that.lastInteractionId,_that.turns,_that.handedCards,_that.cardNotes);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +202,10 @@ return $default(_that.id,_that.turnCount,_that.lastInteractionId,_that.turns,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  int turnCount,  String? lastInteractionId,  List<TurnRecord> turns,  Map<String, Map<String, Object?>> handedCards)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  int turnCount,  String? lastInteractionId,  List<TurnRecord> turns,  Map<String, Map<String, Object?>> handedCards,  Map<String, String> cardNotes)?  $default,) {final _that = this;
 switch (_that) {
 case _Session() when $default != null:
-return $default(_that.id,_that.turnCount,_that.lastInteractionId,_that.turns,_that.handedCards);case _:
+return $default(_that.id,_that.turnCount,_that.lastInteractionId,_that.turns,_that.handedCards,_that.cardNotes);case _:
   return null;
 
 }
@@ -216,7 +217,7 @@ return $default(_that.id,_that.turnCount,_that.lastInteractionId,_that.turns,_th
 
 
 class _Session extends Session {
-  const _Session({required this.id, this.turnCount = 0, this.lastInteractionId,  List<TurnRecord> turns = const [],  Map<String, Map<String, Object?>> handedCards = const {}}): _turns = turns,_handedCards = handedCards,super._();
+  const _Session({required this.id, this.turnCount = 0, this.lastInteractionId,  List<TurnRecord> turns = const [],  Map<String, Map<String, Object?>> handedCards = const {},  Map<String, String> cardNotes = const {}}): _turns = turns,_handedCards = handedCards,_cardNotes = cardNotes,super._();
   
 
 @override final  String id;
@@ -236,6 +237,13 @@ class _Session extends Session {
   return EqualUnmodifiableMapView(_handedCards);
 }
 
+ final  Map<String, String> _cardNotes;
+@override@JsonKey() Map<String, String> get cardNotes {
+  if (_cardNotes is EqualUnmodifiableMapView) return _cardNotes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_cardNotes);
+}
+
 
 /// Create a copy of Session
 /// with the given fields replaced by the non-null parameter values.
@@ -247,18 +255,18 @@ _$SessionCopyWith<_Session> get copyWith => __$SessionCopyWithImpl<_Session>(thi
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Session&&(identical(other.id, id) || other.id == id)&&(identical(other.turnCount, turnCount) || other.turnCount == turnCount)&&(identical(other.lastInteractionId, lastInteractionId) || other.lastInteractionId == lastInteractionId)&&const DeepCollectionEquality().equals(other.turns, _turns)&&const DeepCollectionEquality().equals(other.handedCards, _handedCards));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Session&&(identical(other.id, id) || other.id == id)&&(identical(other.turnCount, turnCount) || other.turnCount == turnCount)&&(identical(other.lastInteractionId, lastInteractionId) || other.lastInteractionId == lastInteractionId)&&const DeepCollectionEquality().equals(other.turns, _turns)&&const DeepCollectionEquality().equals(other.handedCards, _handedCards)&&const DeepCollectionEquality().equals(other.cardNotes, _cardNotes));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,turnCount,lastInteractionId,const DeepCollectionEquality().hash(_turns),const DeepCollectionEquality().hash(_handedCards));
+    return Object.hash(runtimeType,id,turnCount,lastInteractionId,const DeepCollectionEquality().hash(_turns),const DeepCollectionEquality().hash(_handedCards),const DeepCollectionEquality().hash(_cardNotes));
 }
 
 @override
 String toString() {
-    return 'Session(id: $id, turnCount: $turnCount, lastInteractionId: $lastInteractionId, turns: $turns, handedCards: $handedCards)';
+    return 'Session(id: $id, turnCount: $turnCount, lastInteractionId: $lastInteractionId, turns: $turns, handedCards: $handedCards, cardNotes: $cardNotes)';
 }
 
 
@@ -269,7 +277,7 @@ abstract mixin class _$SessionCopyWith<$Res> implements $SessionCopyWith<$Res> {
   factory _$SessionCopyWith(_Session value, $Res Function(_Session) _then) = __$SessionCopyWithImpl;
 @override @useResult
 $Res call({
- String id, int turnCount, String? lastInteractionId, List<TurnRecord> turns, Map<String, Map<String, Object?>> handedCards
+ String id, int turnCount, String? lastInteractionId, List<TurnRecord> turns, Map<String, Map<String, Object?>> handedCards, Map<String, String> cardNotes
 });
 
 
@@ -286,14 +294,15 @@ class __$SessionCopyWithImpl<$Res>
 
 /// Create a copy of Session
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? turnCount = null,Object? lastInteractionId = freezed,Object? turns = null,Object? handedCards = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? turnCount = null,Object? lastInteractionId = freezed,Object? turns = null,Object? handedCards = null,Object? cardNotes = null,}) {
   return _then(_Session(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,turnCount: null == turnCount ? _self.turnCount : turnCount // ignore: cast_nullable_to_non_nullable
 as int,lastInteractionId: freezed == lastInteractionId ? _self.lastInteractionId : lastInteractionId // ignore: cast_nullable_to_non_nullable
 as String?,turns: null == turns ? _self._turns : turns // ignore: cast_nullable_to_non_nullable
 as List<TurnRecord>,handedCards: null == handedCards ? _self._handedCards : handedCards // ignore: cast_nullable_to_non_nullable
-as Map<String, Map<String, Object?>>,
+as Map<String, Map<String, Object?>>,cardNotes: null == cardNotes ? _self._cardNotes : cardNotes // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,
   ));
 }
 

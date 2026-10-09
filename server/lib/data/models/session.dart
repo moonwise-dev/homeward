@@ -11,6 +11,7 @@ abstract class Session with _$Session {
     String? lastInteractionId,
     @Default([]) List<TurnRecord> turns,
     @Default({}) Map<String, Map<String, Object?>> handedCards,
+    @Default({}) Map<String, String> cardNotes,
   }) = _Session;
 
   const Session._();

@@ -8,6 +8,7 @@ final class ToolContext {
     this.buyerWords = const [],
     this.cards = const {},
     this.onPlan = const [],
+    this.cardNotes = const {},
     this.researcher,
   });
 
@@ -16,5 +17,6 @@ final class ToolContext {
   final List<String> buyerWords;
   final Set<String> cards;
   final List<String> onPlan;
+  final Map<String, String> cardNotes;
   final Researcher? researcher;
 }

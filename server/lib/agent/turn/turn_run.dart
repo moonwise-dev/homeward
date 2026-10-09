@@ -66,7 +66,8 @@ final class TurnRun {
          shadow: replayShadow(session.messages),
          seeds: session.slices,
          handed: session.handedCards,
-       );
+       ),
+       _cardNotes = {...session.cardNotes};
 
   final int turn;
   final CreateInteraction createInteraction;
@@ -89,6 +90,7 @@ final class TurnRun {
   final _shownWhenAlone = <String>[];
   final _putFirst = <String>[];
   final _takenOff = <String>{};
+  final Map<String, String> _cardNotes;
   var _cardAsks = false;
   var _askOnly = false;
   String? _interactionId;
@@ -105,6 +107,7 @@ final class TurnRun {
     turnCount: turn,
     lastInteractionId: _interactionId,
     handedCards: _validator.handed,
+    cardNotes: _cardNotes,
     turns: [
       ..._session.turns,
       TurnRecord(
@@ -129,8 +132,10 @@ final class TurnRun {
       ActionTurnInput(:final action) => recordedInputOf(action),
     };
     FunctionResult? tapAnswer;
+    var tapNeedsReply = true;
     if (turnInput case ActionTurnInput(:final action)) {
       if (tools.answering(action.name, action.context) case final answering?) {
+        tapNeedsReply = answering.needsReply;
         yield* _progress.whileRunning(() async {
           tapAnswer = await _runCall(
             FunctionCall(
@@ -149,19 +154,32 @@ final class TurnRun {
       FunctionResult(:final result) => !_isError(result),
       null => false,
     };
-    final firstInput = InteractionInput.text(switch (turnInput) {
-      TextTurnInput(:final text) => text,
-      ActionTurnInput(:final action, :final surfaceData) => [
-        actionInput(action, surfaceData),
-        if (tapAnswer case FunctionResult(:final name, :final result)
-            when tapAnswered)
-          tapAnsweredInput(
-            name,
-            result,
-            offersNext: action.name != showCardAction,
-          ),
+    if (tapAnswered && !tapNeedsReply) {
+      _log.info(
+        LogEntry(
+          'Turn $turn completed',
+          fields: {'turn': turn, 'modelRounds': 0, 'answeredByTap': true},
+        ),
+      );
+      _status = TurnStatus.completed;
+      yield const TurnEvent.completed('');
+      return;
+    }
+    final unheard = _unheardTaps;
+    final firstInput = InteractionInput.text(
+      [
+        ...switch (turnInput) {
+          TextTurnInput(:final text) => [text],
+          ActionTurnInput(:final action, :final surfaceData) => [
+            actionInput(action, surfaceData),
+            if (tapAnswer case FunctionResult(:final name, :final result)
+                when tapAnswered)
+              tapAnsweredInput(name, result),
+          ],
+        },
+        if (unheard.isNotEmpty) unheardTapsNote(unheard),
       ].join('\n'),
-    });
+    );
     InteractionInput input = firstInput;
     var toolRounds = 0;
     var catalogRounds = 0;
@@ -464,6 +482,24 @@ final class TurnRun {
     }
   }
 
+  List<String> get _unheardTaps => [
+    for (final record
+        in _session.turns.reversed
+            .takeWhile(
+              (record) =>
+                  record.input is RecordedAction &&
+                  record.outputText.isEmpty &&
+                  record.status == TurnStatus.completed,
+            )
+            .toList()
+            .reversed)
+      if (record.input case RecordedAction(:final name, :final context))
+        [
+          '${context['label'] ?? name}',
+          if (_cardNotes[context['card']] case final note?) '($note)',
+        ].join(' '),
+  ];
+
   static bool _isError(Object? result) =>
       result is Map<String, Object?> && result['error'] != null;
 
@@ -759,6 +795,7 @@ final class TurnRun {
         slices: _validator.seeds,
         cards: {..._validator.handed.keys},
         onPlan: _planChildren ?? const [],
+        cardNotes: _cardNotes,
         buyerWords: buyerWords([
           for (final record in _session.turns) record.input,
           _turnRequest,
@@ -770,6 +807,7 @@ final class TurnRun {
     _putFirst.addAll(result.showCards);
     _takenOff.addAll(result.removeCards);
     _cardAsks = _cardAsks || result.asksOnCard;
+    _cardNotes.addAll(result.cardNotes);
     return FunctionResult(
       callId: call.callId,
       name: call.name,

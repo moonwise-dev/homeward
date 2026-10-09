@@ -47,6 +47,9 @@ final class KeepHomes extends AgentTool {
   };
 
   @override
+  bool get tapsNeedNoReply => true;
+
+  @override
   Map<String, Object?>? argumentsForTap(
     String action,
     Map<String, Object?> context,

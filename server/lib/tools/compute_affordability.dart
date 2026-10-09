@@ -635,6 +635,7 @@ final class ComputeAffordability extends AgentTool {
           'downPayment or loanType.',
     },
     asksOnCard: slice.awaitsConfirmation,
+    cardNotes: _cardNotes(assessed, slice),
     seeds: {
       'affordability': jsonDecode(jsonEncode(slice.toJson())),
       if (_homesToPrice(context, slice) case final ids when ids.isNotEmpty)
@@ -651,6 +652,45 @@ final class ComputeAffordability extends AgentTool {
         },
     },
   );
+
+  static Map<String, String> _cardNotes(
+    AssessedAffordability assessed,
+    AffordabilitySlice slice,
+  ) => {
+    'summary': ?_limit(assessed.binding?.kind),
+    'limit': ?_limit(assessed.binding?.kind),
+    'stress': switch (slice.stress) {
+      StressCurve(:final limit?, :final stressRate, :final points) =>
+        points
+                .where((point) => point.annualRate == stressRate)
+                .every((point) => point.cost <= limit)
+            ? 'At the rate lenders test, the monthly cost stays inside the '
+                  'most this household can carry.'
+            : 'At the rate lenders test, the monthly cost is over the most '
+                  'this household can carry.',
+      _ =>
+        'How the monthly cost grows as rates rise; the sample rules set '
+            'no limit to hold it against.',
+    },
+    'costs': slice.purchaseCosts.isEmpty
+        ? 'The sample rules list no purchase taxes or fees here, so the '
+              'cash needed on the day is the down payment.'
+        : 'Purchase taxes and fees come on top of the down payment, and '
+              'the card adds them up to the cash needed on the day.',
+    'monthly':
+        'A month of this loan: interest, the amortization the rules '
+        "require, and the home's own fee when it has one.",
+    'down-payment':
+        'A larger down payment lowers the loan and the monthly cost; the '
+        'slider starts at the least the rules allow and ends at their '
+        'savings.',
+    'rates':
+        "The sample lender's rates side by side, each with what a month "
+        'would cost; a fixed rate costs more today and does not move.',
+    'loan':
+        'How the loan comes down and their share of the home grows, year '
+        "by year, at today's rate.",
+  };
 
   static const _askedFor = {
     'monthly': 'what a month costs',
