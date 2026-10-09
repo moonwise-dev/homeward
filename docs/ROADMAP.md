@@ -214,9 +214,20 @@ As of 2026-10-08.
   the reply to the second stayed live after the third. Seen and left:
   after These are right Gemini still offered a month's cost, a card that
   waits, beside homes that fit.
+- **Take-home pay is estimated in Portugal too** (D192, 2026-10-09).
+  `markets/income_tax/PT.json` holds table I of the 2026 withholding
+  tables for mainland Portugal with the employee's 11% social security
+  contribution added. Checked without Gemini, by running
+  `compute_affordability` for a couple in Lisbon who gave 3,000 and 2,200
+  euros before tax and 60,000 saved: it answered, with take-home pay
+  estimated at 3,598 euros and marked, where before it asked for it. One
+  live turn with that message on a local server: 2 rounds and 10 s, what
+  they can borrow and the household, with no other loans, employment,
+  and tax residence assumed. Left out: tables for
+  dependents and a single earner, the Azores and Madeira, and pensions.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, first from commit
-  `bf1a0fb` and again the same day with D182 to D191; one live turn on the
+  `bf1a0fb` and again the same day with D182 to D192; one live turn on the
   redeployed server drew its cards after 5 s. On the public server: `/health`, the agent card with its
   public URL, a new session, `/dev` shut, a preflight from the Hosting
   origin, and one live turn in 25 s. On the public page, in headless
@@ -278,7 +289,7 @@ The order agreed on 2026-10-08 (D181):
    other loans and no children until told, takes the household from the
    buyer's words, and estimates take-home pay from pay before tax with
    Skatteverket's table, so the first reply to a move shows what they can
-   borrow. Left of it: Portugal's table.
+   borrow. Portugal's table followed the same day (D192).
 4. One day on the assessment: one new block and a prompt change on the
    tools there are, run against the three messages, with nothing removed.
    If Gemini draws it reliably, the step list, the brief as a card, the two

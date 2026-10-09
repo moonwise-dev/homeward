@@ -219,6 +219,9 @@ its examples and parameters.
   `markets/rates`, each with its source and the date it was read: the lending
   rules, upfront costs, one sample lender's list rates, and the interest
   deduction.
+- **Tax withheld from pay** in `markets/income_tax`, from each tax
+  authority's 2026 table, used to estimate take-home pay when a buyer gives
+  only pay before tax.
 - **Sample homes** in Stockholm and Lisbon in `markets/listings`, labelled
   and not for sale, each with its area's median price and rent per square
   metre and their sources.

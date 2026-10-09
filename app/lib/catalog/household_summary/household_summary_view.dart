@@ -42,10 +42,13 @@ class HouseholdSummaryView extends HookWidget {
         Text('Your household', style: styles.label),
         const SizedBox(height: AppSpacing.xxs),
         Text(
-          slice.assumed.isEmpty
+          slice.awaitsConfirmation
+              ? 'What the figures rest on. Homeward assumed what you have '
+                    'not said yet, and marked it.'
+              : slice.assumed.isEmpty
               ? 'What the figures rest on, as you told Homeward.'
-              : 'What the figures rest on. Homeward assumed what you have '
-                    'not said yet, and marked it.',
+              : 'What the figures rest on, as you told Homeward, with '
+                    'your take-home pay estimated.',
           style: styles.body,
         ),
         const SizedBox(height: AppSpacing.sm),

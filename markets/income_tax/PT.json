@@ -1,0 +1,73 @@
+{
+  "id": "PT-2026-table-I",
+  "currency": "EUR",
+  "year": 2026,
+  "basis": "An employee resident in mainland Portugal, not married or married with two earners, with no dependents: table I of the 2026 withholding tables, tax withheld from a month's pay, plus the employee's social security contribution of 11% under article 53 of the Código dos Regimes Contributivos. Each point is the end of a bracket, and the formula is a straight line between them; above 30,000 euros the share withheld at 30,000 is kept",
+  "points": [
+    {
+      "monthlyPay": "0",
+      "tax": "0.00"
+    },
+    {
+      "monthlyPay": "920",
+      "tax": "101.20"
+    },
+    {
+      "monthlyPay": "1042",
+      "tax": "169.52"
+    },
+    {
+      "monthlyPay": "1108",
+      "tax": "201.13"
+    },
+    {
+      "monthlyPay": "1154",
+      "tax": "213.41"
+    },
+    {
+      "monthlyPay": "1212",
+      "tax": "232.08"
+    },
+    {
+      "monthlyPay": "1819",
+      "tax": "445.14"
+    },
+    {
+      "monthlyPay": "2119",
+      "tax": "571.44"
+    },
+    {
+      "monthlyPay": "2499",
+      "tax": "745.85"
+    },
+    {
+      "monthlyPay": "3305",
+      "tax": "1143.69"
+    },
+    {
+      "monthlyPay": "5547",
+      "tax": "2280.15"
+    },
+    {
+      "monthlyPay": "20221",
+      "tax": "10490.25"
+    },
+    {
+      "monthlyPay": "30000",
+      "tax": "16178.69"
+    }
+  ],
+  "above": [
+    {
+      "rate": "54%"
+    }
+  ],
+  "source": {
+    "id": "at-despacho-233-a-2026-tabela-i",
+    "publisher": "Autoridade Tributária e Aduaneira",
+    "title": "Despacho n.º 233-A/2026, tabela I: tax withheld from a month's pay in mainland Portugal in 2026, with the employee's 11% social security contribution added",
+    "url": "https://at.madeira.gov.pt/ficheiros/Despacho-233-A-2026.pdf",
+    "kind": "taxAuthority",
+    "retrievedAt": "2026-10-09"
+  }
+}

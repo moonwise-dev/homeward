@@ -368,8 +368,9 @@ loans, an oldest borrower of 35, and, where the pack asks, tax residence in
 the market, a home to live in, and employment. Every adult is taken as a
 borrower. Take-home pay comes from pay before tax through the market's
 income tax table, `markets/income_tax`, each income taxed as one person's
-pay; Sweden has one, Skatteverket's 2026 table for Stockholm, and Portugal
-has none yet, so there take-home pay is still asked for. The slice lists
+pay; Sweden's is Skatteverket's 2026 table for Stockholm, and Portugal's
+is table I of the 2026 withholding tables for the mainland with the
+employee's social security contribution added (D192). The slice lists
 each under `assumed`, with `takeHomeSource` for the estimate, and
 `HouseholdSummary` marks those lines. An assumption stays, and stays
 marked, until a call passes the fact; take-home pay is estimated again when
