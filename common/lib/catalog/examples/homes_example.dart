@@ -3,10 +3,25 @@ import 'dart:convert';
 import '../../affordability/affordability_answer.dart';
 import '../../samples/home_cost_for.dart';
 import '../../samples/listing.dart';
+import '../../rent/rent_figure.dart';
 import '../../samples/priced_home.dart';
 import 'stockholm_example.dart';
 
 final stockholmHomesDataModel = _homesDataModel();
+
+final stockholmRentingDataModel = {
+  'homes': {
+    for (final listing in stockholmSampleHomes)
+      listing.id: jsonDecode(
+        jsonEncode(
+          PricedHome(
+            listing: listing,
+            rent: RentFigure.like(listing),
+          ).toJson(),
+        ),
+      ),
+  },
+};
 
 final stockholmShortlistDataModel = _homesDataModel(
   kept: {for (final listing in stockholmSampleHomes) listing.id},

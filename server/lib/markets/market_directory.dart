@@ -39,6 +39,7 @@ final class MarketDirectory {
     Iterable<String> ids,
     AffordabilitySlice? household, {
     Set<String> kept = const {},
+    bool renting = false,
   }) {
     final profile = household?.profile;
     final market = household == null || profile == null
@@ -49,9 +50,13 @@ final class MarketDirectory {
         if (home(id) case (:final city, :final listing))
           id: PricedHome(
             listing: listing.copyWith(description: ''),
-            cost: market != null && city.marketId == household!.marketId
+            cost:
+                !renting &&
+                    market != null &&
+                    city.marketId == household!.marketId
                 ? homeCostFor(listing, market: market, household: household)
                 : null,
+            rent: renting ? RentFigure.like(listing) : null,
             kept: kept.contains(id),
           ),
     };

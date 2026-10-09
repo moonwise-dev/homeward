@@ -8,7 +8,7 @@ part of 'priced_home.dart';
 
 _PricedHome _$PricedHomeFromJson(Map<String, dynamic> json) =>
     $checkedCreate('_PricedHome', json, ($checkedConvert) {
-      $checkKeys(json, allowedKeys: const ['listing', 'cost', 'kept']);
+      $checkKeys(json, allowedKeys: const ['listing', 'cost', 'rent', 'kept']);
       final val = _PricedHome(
         listing: $checkedConvert(
           'listing',
@@ -19,6 +19,11 @@ _PricedHome _$PricedHomeFromJson(Map<String, dynamic> json) =>
           (v) =>
               v == null ? null : HomeCost.fromJson(v as Map<String, dynamic>),
         ),
+        rent: $checkedConvert(
+          'rent',
+          (v) =>
+              v == null ? null : RentFigure.fromJson(v as Map<String, dynamic>),
+        ),
         kept: $checkedConvert('kept', (v) => v as bool? ?? false),
       );
       return val;
@@ -28,6 +33,7 @@ Map<String, dynamic> _$PricedHomeToJson(_PricedHome instance) =>
     <String, dynamic>{
       'listing': instance.listing.toJson(),
       'cost': ?instance.cost?.toJson(),
+      'rent': ?instance.rent?.toJson(),
       'kept': instance.kept,
     };
 

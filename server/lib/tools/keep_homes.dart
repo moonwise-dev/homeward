@@ -79,6 +79,7 @@ final class KeepHomes extends AgentTool {
                 keep.where((id) => !homes.containsKey(id)),
                 householdIn(context.slices),
                 kept: kept,
+                renting: rentingIn(homes),
               )
               .entries)
         key: jsonDecode(jsonEncode(value.toJson())),

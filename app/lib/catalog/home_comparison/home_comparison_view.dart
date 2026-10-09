@@ -100,7 +100,10 @@ class HomeComparisonView extends HookWidget {
                   ),
               ],
             ),
-            row('Price', (home) => moneyText(home.listing.price)),
+            row(
+              homes.any((home) => home.rent != null) ? 'Rent' : 'Price',
+              homeFigureText,
+            ),
             row(
               'A month',
               (home) => _money(home.cost?.monthly.totalWithFee),

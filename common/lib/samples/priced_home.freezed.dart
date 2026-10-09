@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PricedHome {
 
- Listing get listing; HomeCost? get cost; bool get kept;
+ Listing get listing; HomeCost? get cost; RentFigure? get rent; bool get kept;
 /// Create a copy of PricedHome
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $PricedHomeCopyWith<PricedHome> get copyWith => _$PricedHomeCopyWithImpl<PricedH
 @override
 bool operator ==(Object other) {
   final _this = this as PricedHome;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PricedHome&&(identical(other.listing, _this.listing) || other.listing == _this.listing)&&(identical(other.cost, _this.cost) || other.cost == _this.cost)&&(identical(other.kept, _this.kept) || other.kept == _this.kept));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PricedHome&&(identical(other.listing, _this.listing) || other.listing == _this.listing)&&(identical(other.cost, _this.cost) || other.cost == _this.cost)&&(identical(other.rent, _this.rent) || other.rent == _this.rent)&&(identical(other.kept, _this.kept) || other.kept == _this.kept));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as PricedHome;
-  return Object.hash(runtimeType,_this.listing,_this.cost,_this.kept);
+  return Object.hash(runtimeType,_this.listing,_this.cost,_this.rent,_this.kept);
 }
 
 @override
 String toString() {
   final _this = this as PricedHome;
-  return 'PricedHome(listing: ${_this.listing}, cost: ${_this.cost}, kept: ${_this.kept})';
+  return 'PricedHome(listing: ${_this.listing}, cost: ${_this.cost}, rent: ${_this.rent}, kept: ${_this.kept})';
 }
 
 
@@ -54,11 +54,11 @@ abstract mixin class $PricedHomeCopyWith<$Res>  {
   factory $PricedHomeCopyWith(PricedHome value, $Res Function(PricedHome) _then) = _$PricedHomeCopyWithImpl;
 @useResult
 $Res call({
- Listing listing, HomeCost? cost, bool kept
+ Listing listing, HomeCost? cost, RentFigure? rent, bool kept
 });
 
 
-$ListingCopyWith<$Res> get listing;$HomeCostCopyWith<$Res>? get cost;
+$ListingCopyWith<$Res> get listing;$HomeCostCopyWith<$Res>? get cost;$RentFigureCopyWith<$Res>? get rent;
 
 }
 /// @nodoc
@@ -71,11 +71,12 @@ class _$PricedHomeCopyWithImpl<$Res>
 
 /// Create a copy of PricedHome
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? listing = null,Object? cost = freezed,Object? kept = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? listing = null,Object? cost = freezed,Object? rent = freezed,Object? kept = null,}) {
   return _then(PricedHome(
 listing: null == listing ? _self.listing : listing // ignore: cast_nullable_to_non_nullable
 as Listing,cost: freezed == cost ? _self.cost : cost // ignore: cast_nullable_to_non_nullable
-as HomeCost?,kept: null == kept ? _self.kept : kept // ignore: cast_nullable_to_non_nullable
+as HomeCost?,rent: freezed == rent ? _self.rent : rent // ignore: cast_nullable_to_non_nullable
+as RentFigure?,kept: null == kept ? _self.kept : kept // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -99,6 +100,18 @@ $HomeCostCopyWith<$Res>? get cost {
 
   return $HomeCostCopyWith<$Res>(_self.cost!, (value) {
     return _then(_self.copyWith(cost: value));
+  });
+}/// Create a copy of PricedHome
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RentFigureCopyWith<$Res>? get rent {
+    if (_self.rent == null) {
+    return null;
+  }
+
+  return $RentFigureCopyWith<$Res>(_self.rent!, (value) {
+    return _then(_self.copyWith(rent: value));
   });
 }
 }
@@ -182,10 +195,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Listing listing,  HomeCost? cost,  bool kept)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Listing listing,  HomeCost? cost,  RentFigure? rent,  bool kept)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PricedHome() when $default != null:
-return $default(_that.listing,_that.cost,_that.kept);case _:
+return $default(_that.listing,_that.cost,_that.rent,_that.kept);case _:
   return orElse();
 
 }
@@ -203,10 +216,10 @@ return $default(_that.listing,_that.cost,_that.kept);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Listing listing,  HomeCost? cost,  bool kept)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Listing listing,  HomeCost? cost,  RentFigure? rent,  bool kept)  $default,) {final _that = this;
 switch (_that) {
 case _PricedHome():
-return $default(_that.listing,_that.cost,_that.kept);case _:
+return $default(_that.listing,_that.cost,_that.rent,_that.kept);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -223,10 +236,10 @@ return $default(_that.listing,_that.cost,_that.kept);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Listing listing,  HomeCost? cost,  bool kept)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Listing listing,  HomeCost? cost,  RentFigure? rent,  bool kept)?  $default,) {final _that = this;
 switch (_that) {
 case _PricedHome() when $default != null:
-return $default(_that.listing,_that.cost,_that.kept);case _:
+return $default(_that.listing,_that.cost,_that.rent,_that.kept);case _:
   return null;
 
 }
@@ -238,11 +251,12 @@ return $default(_that.listing,_that.cost,_that.kept);case _:
 @JsonSerializable()
 
 class _PricedHome implements PricedHome {
-  const _PricedHome({required this.listing, this.cost, this.kept = false});
+  const _PricedHome({required this.listing, this.cost, this.rent, this.kept = false});
   factory _PricedHome.fromJson(Map<String, dynamic> json) => _$PricedHomeFromJson(json);
 
 @override final  Listing listing;
 @override final  HomeCost? cost;
+@override final  RentFigure? rent;
 @override@JsonKey() final  bool kept;
 
 /// Create a copy of PricedHome
@@ -258,18 +272,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PricedHome&&(identical(other.listing, listing) || other.listing == listing)&&(identical(other.cost, cost) || other.cost == cost)&&(identical(other.kept, kept) || other.kept == kept));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PricedHome&&(identical(other.listing, listing) || other.listing == listing)&&(identical(other.cost, cost) || other.cost == cost)&&(identical(other.rent, rent) || other.rent == rent)&&(identical(other.kept, kept) || other.kept == kept));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,listing,cost,kept);
+    return Object.hash(runtimeType,listing,cost,rent,kept);
 }
 
 @override
 String toString() {
-    return 'PricedHome(listing: $listing, cost: $cost, kept: $kept)';
+    return 'PricedHome(listing: $listing, cost: $cost, rent: $rent, kept: $kept)';
 }
 
 
@@ -280,11 +294,11 @@ abstract mixin class _$PricedHomeCopyWith<$Res> implements $PricedHomeCopyWith<$
   factory _$PricedHomeCopyWith(_PricedHome value, $Res Function(_PricedHome) _then) = __$PricedHomeCopyWithImpl;
 @override @useResult
 $Res call({
- Listing listing, HomeCost? cost, bool kept
+ Listing listing, HomeCost? cost, RentFigure? rent, bool kept
 });
 
 
-@override $ListingCopyWith<$Res> get listing;@override $HomeCostCopyWith<$Res>? get cost;
+@override $ListingCopyWith<$Res> get listing;@override $HomeCostCopyWith<$Res>? get cost;@override $RentFigureCopyWith<$Res>? get rent;
 
 }
 /// @nodoc
@@ -297,11 +311,12 @@ class __$PricedHomeCopyWithImpl<$Res>
 
 /// Create a copy of PricedHome
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? listing = null,Object? cost = freezed,Object? kept = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? listing = null,Object? cost = freezed,Object? rent = freezed,Object? kept = null,}) {
   return _then(_PricedHome(
 listing: null == listing ? _self.listing : listing // ignore: cast_nullable_to_non_nullable
 as Listing,cost: freezed == cost ? _self.cost : cost // ignore: cast_nullable_to_non_nullable
-as HomeCost?,kept: null == kept ? _self.kept : kept // ignore: cast_nullable_to_non_nullable
+as HomeCost?,rent: freezed == rent ? _self.rent : rent // ignore: cast_nullable_to_non_nullable
+as RentFigure?,kept: null == kept ? _self.kept : kept // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -326,6 +341,18 @@ $HomeCostCopyWith<$Res>? get cost {
 
   return $HomeCostCopyWith<$Res>(_self.cost!, (value) {
     return _then(_self.copyWith(cost: value));
+  });
+}/// Create a copy of PricedHome
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RentFigureCopyWith<$Res>? get rent {
+    if (_self.rent == null) {
+    return null;
+  }
+
+  return $RentFigureCopyWith<$Res>(_self.rent!, (value) {
+    return _then(_self.copyWith(rent: value));
   });
 }
 }

@@ -68,6 +68,14 @@ final class SearchHomes extends AgentTool {
         ...amountParameter,
         'description': 'Optional. The highest price the buyer stated.',
       },
+      'renting': {
+        'type': 'boolean',
+        'description':
+            'True when the buyer said they will rent. Each home then shows '
+            'what renting one like it costs a month, an estimate from the '
+            "area's median rent, in place of its price, and the plan "
+            'keeps that for later searches.',
+      },
       'affordable': {
         'type': 'boolean',
         'description':
@@ -142,10 +150,14 @@ final class SearchHomes extends AgentTool {
       final Map<String, Object?> homes => homes.keys,
       _ => const <String>[],
     };
+    final renting =
+        arguments['renting'] as bool? ??
+        rentingIn(context.slices[homesSlice.name]);
     final priced = markets.pricedHomes(
       {...earlier, for (final listing in city.listings) listing.id},
       household,
       kept: keptHomesIn(context.slices[homesSlice.name]),
+      renting: renting,
     );
     final filters = <String, bool Function(Listing listing)>{
       if (arguments['homeType'] case final String type)
@@ -166,10 +178,15 @@ final class SearchHomes extends AgentTool {
           null => false,
         },
     };
-    final matches = [
-      for (final listing in city.listings)
-        if (filters.values.every((keeps) => keeps(listing))) listing,
-    ]..sort((a, b) => a.price.compareTo(b.price));
+    final matches =
+        [
+          for (final listing in city.listings)
+            if (filters.values.every((keeps) => keeps(listing))) listing,
+        ]..sort(
+          (a, b) => renting
+              ? a.rentLikeThis.compareTo(b.rentLikeThis)
+              : a.price.compareTo(b.price),
+        );
     if (matches.isEmpty) {
       return ToolResult(
         modelResult: {
@@ -209,19 +226,27 @@ final class SearchHomes extends AgentTool {
         ],
         'inCity': city.listings.length,
         'priced': forHousehold,
-        'draw': [for (final listing in matches.take(3)) homeCard(listing.id)],
+        'draw': [
+          for (final listing in matches.take(3))
+            homeCard(listing.id, renting: renting),
+        ],
         if (matches.length > 3)
           'drawWhenAsked': [
-            for (final listing in matches.skip(3)) homeCard(listing.id),
+            for (final listing in matches.skip(3))
+              homeCard(listing.id, renting: renting),
           ],
         'note':
-            'The homes are in /homes, by ID, lowest price first; never '
+            'The homes are in /homes, by ID, lowest '
+            "${renting ? 'rent' : 'price'} first; never "
             'write their figures in your text. $drawNote draw holds the '
             'first three, and drawWhenAsked the rest, each home-<id>: add '
             'another by calling arrange_plan with its id. '
-            '${forHousehold ? 'Each is priced for this household. ' : 'They are not priced for this household: compute_affordability has not run in this market. '}'
-            'When the buyer picks one, call compute_affordability with it as '
-            'home; when they keep or drop one, call keep_homes.'
+            '${renting
+                ? _rentingNote
+                : forHousehold
+                ? _pricedNote
+                : _unpricedNote}'
+            'When they keep or drop one, call keep_homes.'
             '${deck == null ? '' : _dealNote}',
       },
       seeds: {
@@ -252,6 +277,21 @@ final class SearchHomes extends AgentTool {
       '"done": { "event": { "name": "finish_deck", "context": {} } } } '
       'instead of the cards; when the buyer finishes, call keep_homes with '
       'the kept IDs as keep and the others as passed.';
+
+  static const _rentingNote =
+      'Each shows what renting a home like it costs a month, an estimate '
+      "from its area's median rent, since the samples are homes for sale: "
+      'say that it is an estimate. When they pick one, call split_rent '
+      'with it as home. ';
+
+  static const _pricedNote =
+      'Each is priced for this household. When the buyer picks one, call '
+      'compute_affordability with it as home. ';
+
+  static const _unpricedNote =
+      'They are not priced for this household: compute_affordability has '
+      'not run in this market. When the buyer picks one, call '
+      'compute_affordability with it as home. ';
 
   static ToolResult _error(String message) =>
       ToolResult(modelResult: {'error': message});

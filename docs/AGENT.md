@@ -464,6 +464,12 @@ each with its source. It takes one of the cities `search_homes` covers, seeds
 `/markets/<city>` for `MarketSnapshotCard`, and answers with the areas and
 the rules, never the figures.
 
+For people who rent, `search_homes` takes `renting` (D186) and remembers
+it for the plan: each home then carries `rent`, an estimate from its area's
+median rent a square metre and its size, with the source, the homes come
+lowest rent first, and nothing is priced as a purchase. The card's choose
+action is then `split_this_rent`, which Gemini answers with `split_rent`.
+
 `search_homes` (C7, D151) searches the labelled sample homes of Stockholm
 and Lisbon, which the server loads from `markets/listings/` at startup. Its
 arguments are what the buyer asked for: the city, the kind of home, the

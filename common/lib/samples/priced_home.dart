@@ -4,6 +4,7 @@ import '../affordability/affordability_slice.dart';
 import '../money/money.dart';
 import '../money/ppm_json_converter.dart';
 import '../money/rate.dart';
+import '../rent/rent_figure.dart';
 import 'listing.dart';
 
 part 'priced_home.freezed.dart';
@@ -14,6 +15,7 @@ abstract class PricedHome with _$PricedHome {
   const factory PricedHome({
     required Listing listing,
     HomeCost? cost,
+    RentFigure? rent,
     @Default(false) bool kept,
   }) = _PricedHome;
 

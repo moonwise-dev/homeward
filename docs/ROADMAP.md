@@ -131,6 +131,16 @@ As of 2026-10-08.
   gives a reason no tool gave; the flat of the second starter costs twice
   what that household can borrow, so its screen says no; renters are shown
   sale prices.
+- **People who rent see a rent** (D186, 2026-10-09, not deployed).
+  `search_homes` takes `renting`, and the home card, the shortlist, and the
+  comparison then show what renting a home like it costs a month, an
+  estimate from the area's median with its source, in place of the price.
+  Probed once on a local server with `gemini-3.5-flash-lite`: two friends
+  in Lisbon, 2 rounds and 12 s, three flats lowest rent first with Split
+  this rent on each; a tap on it, 2 rounds and 9 s, with the split by
+  income. Looked at in headless Chrome at 1440 dp. Left out: a highest
+  rent as a filter, `HomeSwipe`, which still shows prices, and real
+  rental listings.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, both from commit
   `bf1a0fb`. On the public server: `/health`, the agent card with its

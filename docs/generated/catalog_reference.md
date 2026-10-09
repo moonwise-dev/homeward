@@ -27,7 +27,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `RentSplit` | Money | yes | `split` | `split` | Two friends in Graça |
 | `BuyVsRent` | Money | yes | `comparison` | `comparison` | A flat in Nacka over seven years |
 | `RuleNote` | Trust | yes | `rule` | `rule` | The rule that limits the loan |
-| `HomeCard` | Homes | yes | `home` | `home` | Two Stockholm flats |
+| `HomeCard` | Homes | yes | `home` | `home` | Two Stockholm flats, A flat for people who rent |
 | `Shortlist` | Homes | yes | `homes` | `homes` | Two kept flats |
 | `HomeComparison` | Homes | yes | `homes` | `homes` | Nacka against Vasastan |
 | `HomeSwipe` | Homes | yes | `homes`, `done` | `homes` | Keep the ones that feel like yours |
@@ -208,7 +208,7 @@ One lending rule, the largest loan it allows, and its source, from compute_affor
 
 ### HomeCard
 
-One sample home from search_homes: photos, facts, price, and what it costs this household each month; its choose action sends the home to work out, and its keep action the home to keep or drop, with home, its ID, and keep, true or false, added to its context.
+One sample home from search_homes: photos, facts, price, and what it costs this household each month, or, for people who rent, what renting a home like it costs, as an estimate. Its choose action sends the home to work out, and its keep action the home to keep or drop, with home, its ID, and keep, true or false, added to its context.
 
 | Property | Kind | Required | Path | Seeded by |
 | --- | --- | --- | --- | --- |

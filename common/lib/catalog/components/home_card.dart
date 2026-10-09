@@ -16,9 +16,11 @@ final class HomeCard extends CatalogComponent {
   @override
   String get description =>
       'One sample home from search_homes: photos, facts, price, and what it '
-      'costs this household each month; its choose action sends the home to '
-      'work out, and its keep action the home to keep or drop, with home, '
-      'its ID, and keep, true or false, added to its context.';
+      'costs this household each month, or, for people who rent, what '
+      'renting a home like it costs, as an estimate. Its choose action '
+      'sends the home to work out, and its keep action the home to keep or '
+      'drop, with home, its ID, and keep, true or false, added to its '
+      'context.';
 
   @override
   bool get agentVisible => true;
@@ -62,6 +64,21 @@ final class HomeCard extends CatalogComponent {
 ]
 ''',
       dataModel: stockholmHomesDataModel,
+    ),
+    CatalogExample(
+      name: 'A flat for people who rent',
+      componentsJson: '''
+[
+  {
+    "id": "root",
+    "component": "HomeCard",
+    "home": { "path": "/homes/sto-01" },
+    "choose": { "event": { "name": "split_this_rent", "context": {} } },
+    "keep": { "event": { "name": "keep_home", "context": {} } }
+  }
+]
+''',
+      dataModel: stockholmRentingDataModel,
     ),
   ];
 }

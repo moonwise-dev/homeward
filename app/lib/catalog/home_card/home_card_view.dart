@@ -8,6 +8,7 @@ import '../../ui/core/themes/text_styles.dart';
 import '../../ui/core/ui/app_figure_row.dart';
 import '../home_text.dart';
 import '../money_text.dart';
+import '../rent_text.dart';
 import 'photo_carousel.dart';
 
 class HomeCardView extends HookWidget {
@@ -33,6 +34,7 @@ class HomeCardView extends HookWidget {
     }, [home]);
     final listing = home.listing;
     final cost = home.cost;
+    final rent = home.rent;
     final fee = listing.monthlyFee;
     final onChoose = this.onChoose;
     final onKeep = this.onKeep;
@@ -66,18 +68,23 @@ class HomeCardView extends HookWidget {
             const SizedBox(height: AppSpacing.xxs),
             Text(listing.title, style: styles.title),
             const SizedBox(height: AppSpacing.xs),
-            Text(moneyText(listing.price), style: styles.figure),
+            Text(homeFigureText(home), style: styles.figure),
             Text(homeFacts(listing), style: styles.label),
             const SizedBox(height: AppSpacing.xxs),
             Text(
-              '${moneyText(listing.pricePerM2)} per m², ${againstArea(listing)}. '
-              'Area figure: ${listing.priceSource}.',
+              rent == null
+                  ? '${moneyText(listing.pricePerM2)} per m², '
+                        '${againstArea(listing)}. '
+                        'Area figure: ${listing.priceSource}.'
+                  : 'The rent of a home like this. ${rentBasisText(rent)}',
               style: styles.caption,
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(listing.blurb, style: styles.body),
             const Divider(height: AppSpacing.lg),
-            if (cost == null) ...[
+            if (rent != null)
+              const SizedBox.shrink()
+            else if (cost == null) ...[
               if (fee != null)
                 AppFigureRow(
                   label: 'Fee for the home a month',
@@ -103,7 +110,9 @@ class HomeCardView extends HookWidget {
                 if (onChoose != null)
                   TextButton(
                     onPressed: sent.value ? null : () => send(onChoose),
-                    child: const Text('Work out this home'),
+                    child: Text(
+                      rent == null ? 'Work out this home' : 'Split this rent',
+                    ),
                   ),
                 if (onKeep != null)
                   TextButton(
@@ -116,7 +125,9 @@ class HomeCardView extends HookWidget {
             ),
             const SizedBox(height: AppSpacing.xxs),
             Text(
-              'A sample listing, not for sale. An estimate, not advice.',
+              rent == null
+                  ? 'A sample listing, not for sale. An estimate, not advice.'
+                  : 'A sample listing, not for rent. An estimate, not advice.',
               style: styles.caption,
             ),
           ],

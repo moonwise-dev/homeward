@@ -120,7 +120,7 @@ class _Row extends StatelessWidget {
                     style: styles.label,
                   ),
                   Text(
-                    '${moneyText(listing.price)} · ${listing.rooms} rooms · '
+                    '${homeFigureText(home)} · ${listing.rooms} rooms · '
                     '${listing.sizeM2} m²',
                     style: styles.caption,
                   ),

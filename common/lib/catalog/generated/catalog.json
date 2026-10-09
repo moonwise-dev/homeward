@@ -1684,7 +1684,7 @@
     },
     "HomeCard": {
       "type": "object",
-      "description": "One sample home from search_homes: photos, facts, price, and what it costs this household each month; its choose action sends the home to work out, and its keep action the home to keep or drop, with home, its ID, and keep, true or false, added to its context.",
+      "description": "One sample home from search_homes: photos, facts, price, and what it costs this household each month, or, for people who rent, what renting a home like it costs, as an estimate. Its choose action sends the home to work out, and its keep action the home to keep or drop, with home, its ID, and keep, true or false, added to its context.",
       "properties": {
         "id": {
           "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
