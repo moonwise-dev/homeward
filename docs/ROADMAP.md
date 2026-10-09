@@ -86,6 +86,26 @@ As of 2026-10-08.
   homes for sale; the README is stale. Left out: Portugal's tax table, so
   there take-home pay is still asked for; pay before tax from take-home
   pay; an answer without savings or a price.
+- **Cards drawn by name** (D184, 2026-10-09, not deployed). Gemini sees a
+  tool's cards as ID and component name, shows one by naming it in the
+  plan's `root`, and the server supplies the body; a surface is created by
+  its first `updateComponents`. A reply's drawing fell from about 2,000
+  characters to 200 to 450, and a reply round from about 5 to 7 s to about
+  4. Probed on a local server with `gemini-3.5-flash-lite`: the move with
+  two incomes ran four times, 2 rounds once and 3 rounds three times,
+  12 to 30 s, once with Gemini itself slow and falling back to
+  `gemini-3.1-flash-lite`; a follow-up asking what happens if rates rise
+  showed the stress test, a card handed in the turn before, in 2 rounds.
+  The home they picked: 3 rounds, 16 s. Two friends in Lisbon: 2 or 3
+  rounds, 12 to 16 s, and a follow-up added a fourth home by name and the
+  rent split in 2 rounds and 9 s. Seen and addressed: a component list
+  that held a bare card name crashed the turn, and is now rejected with
+  the reason; a stray line of closing brackets after a message was
+  rejected, and is now ignored. Seen and left, and the main cost now: in
+  about half the first replies Gemini sends its words in one round and its
+  cards in the next, or the other way round, and the finishing round that
+  fetches the missing half costs 4 to 9 s. Three wordings of the note sent
+  with tool results did not settle it.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, both from commit
   `bf1a0fb`. On the public server: `/health`, the agent card with its

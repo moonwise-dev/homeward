@@ -7,9 +7,10 @@ sealed class ValidationOutcome {
 }
 
 final class Accepted extends ValidationOutcome {
-  const Accepted(this.message);
+  const Accepted(this.message, {this.created});
 
   final A2uiMessage message;
+  final CreateSurfaceMessage? created;
 }
 
 final class Unchanged extends ValidationOutcome {

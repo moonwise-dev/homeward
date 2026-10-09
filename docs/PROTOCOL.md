@@ -294,8 +294,10 @@ the record of that decision. `planSurfaceId` and `InlineSurfaces` in
 
 ### Lifecycle
 
-- The first turn that draws creates `plan`. A `createSurface` for it after that
-  changes nothing and is not forwarded, so the model may send one every turn.
+- The first turn that draws creates `plan`. The model need not send its
+  `createSurface`: the first `updateComponents` for a surface that does not
+  exist creates it (D184). A `createSurface` for a surface that exists
+  changes nothing and is not forwarded, so the model may still send one.
 - Every later turn changes the same surface in place with `updateComponents`:
   a component whose ID exists replaces it, a new ID adds one, and the model
   sends only what changes. A component no longer reachable from `root` stays in
@@ -373,7 +375,8 @@ pass rejects it.
 3. **Ownership.** The surface ID is `plan`, or `t{turn}-{slug}` with this
    turn's number. The model may send only `createSurface`, with the Homeward
    catalog ID and at most one inline surface per turn, and `updateComponents`
-   for `plan` once it exists or for this turn's inline surface.
+   for `plan` or for this turn's inline surface; an update to one that does
+   not exist yet creates it under the same rules (D184).
    `updateDataModel` and `deleteSurface` are the server's.
 4. **Allow-list.** Component is in the agent-visible catalog subset.
    `a2ui_core` does not check this, so the pass does.

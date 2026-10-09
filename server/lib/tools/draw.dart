@@ -10,7 +10,9 @@ Map<String, Object?> sends(String action) => {
   'event': {'name': action, 'context': const <String, Object?>{}},
 };
 
+const handedCardKeys = {'draw', 'drawWhenAsked'};
+
 const drawNote =
-    'draw holds components ready to send as they are: put them in '
-    'updateComponents for the plan and add their IDs to the children of '
-    'root, without reading their docs first.';
+    'draw lists cards that are ready: to show one, add its id to the '
+    "children of root in the plan's updateComponents. Send root only; "
+    "never send a card's own component, the server has it.";

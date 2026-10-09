@@ -15,10 +15,10 @@ String unfinishedReplyInput({
         'say what you worked out and, if you need something from them, '
         'what you ask.',
   if (screen)
-    'It drew nothing, though your tools handed you components under draw. '
-        'Send them on the plan now: its createSurface, then its components '
-        'from root. If your text asks the buyer for something, send that '
-        'inline ask too.',
+    'It drew nothing, though your tools handed you cards under draw. Send '
+        "the plan's updateComponents now, with root alone, naming those "
+        'cards by ID in its children. If your text asks the buyer for '
+        'something, send that inline ask too.',
   if (screen && !words) 'Send only those messages, and write no more text.',
   if (words && !screen)
     'Write only those sentences; the screen is already drawn.',

@@ -186,17 +186,17 @@ final class ReadListings extends AgentTool {
               'saysNothing': needsWith(listing.id, ReadVerdict.silent),
             },
         ],
-        'draw': [
-          for (final listing in listings.take(3))
-            block('read-${listing.id}', 'ListingQuote', {
-              'reading': boundTo('/reads/${listing.id}'),
-            }),
-        ],
+        'draw': [for (final listing in listings.take(3)) _card(listing)],
+        if (listings.length > 3)
+          'drawWhenAsked': [
+            for (final listing in listings.skip(3)) _card(listing),
+          ],
         'note':
             'The readings are in /reads/<id>; a ListingQuote highlights '
             "the listing's own words, so never quote the listing in your "
-            'text. $drawNote Draw the homes worth reading, another the '
-            'same way with its ID. A home that rules '
+            'text. $drawNote It holds the first three, and drawWhenAsked '
+            'the rest, each read-<id>: show the homes worth reading. A '
+            'home that rules '
             'out a need the buyer must have can be left out; says nothing is '
             'for the buyer to ask about or check at a viewing.',
       },
@@ -215,6 +215,11 @@ final class ReadListings extends AgentTool {
       },
     );
   }
+
+  static Map<String, Object?> _card(Listing listing) =>
+      block('read-${listing.id}', 'ListingQuote', {
+        'reading': boundTo('/reads/${listing.id}'),
+      });
 
   static ToolResult _error(String message) =>
       ToolResult(modelResult: {'error': message});

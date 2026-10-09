@@ -10,6 +10,7 @@ abstract class Session with _$Session {
     @Default(0) int turnCount,
     String? lastInteractionId,
     @Default([]) List<TurnRecord> turns,
+    @Default({}) Map<String, Map<String, Object?>> handedCards,
   }) = _Session;
 
   const Session._();

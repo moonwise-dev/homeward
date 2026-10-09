@@ -150,11 +150,6 @@ void main() {
       'Use catalogId',
     ),
     (
-      'ownership: components before the surface',
-      () => [update('plan', validTree)],
-      'before adding components',
-    ),
-    (
       'allow-list: Slider',
       () => [
         create('plan'),
@@ -242,6 +237,19 @@ void main() {
       expect(rejection(validator, all.last), contains(expected));
     });
   }
+
+  test('components for a surface that does not exist create it', () {
+    final validator = firstTurn();
+
+    expect(
+      validator.validate(update('plan', validTree)),
+      isA<Accepted>().having(
+        (accepted) => accepted.created?.surfaceId,
+        'created',
+        'plan',
+      ),
+    );
+  });
 
   test('an input may bind to a field not yet written', () {
     final validator = firstTurn()..validate(create('plan'));

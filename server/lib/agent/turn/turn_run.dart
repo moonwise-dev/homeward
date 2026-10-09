@@ -14,6 +14,7 @@ import '../../gemini/tool_choice.dart';
 import '../../logging/log_entry.dart';
 import '../../research/gemini_researcher.dart';
 import '../../research/researcher.dart';
+import '../../tools/draw.dart';
 import '../../tools/tool_context.dart';
 import '../actions/action_input.dart';
 import '../json_reply_parser.dart';
@@ -64,6 +65,7 @@ final class TurnRun {
          catalog: catalog,
          shadow: replayShadow(session.messages),
          seeds: session.slices,
+         handed: session.handedCards,
        );
 
   final int turn;
@@ -97,6 +99,7 @@ final class TurnRun {
   Session get session => _session.copyWith(
     turnCount: turn,
     lastInteractionId: _interactionId,
+    handedCards: _validator.handed,
     turns: [
       ..._session.turns,
       TurnRecord(
@@ -524,6 +527,7 @@ final class TurnRun {
       turnContext(
         turn: turn,
         screen: _validator.screen ?? const [],
+        ready: _validator.ready,
         brief: switch (_validator.seeds[briefSlice.name]) {
           final Map<String, Object?> brief => brief,
           _ => const {},
@@ -568,11 +572,13 @@ final class TurnRun {
 
   Stream<TurnEvent> _validated(String source) async* {
     switch (_validator.validate(source)) {
-      case Accepted(:final message):
+      case Accepted(:final message, :final created):
         _acceptedInRound++;
-        for (final json in _seeder.forward(message, _validator.seeds)) {
-          _forwarded.add(json);
-          yield TurnEvent.message(json);
+        for (final accepted in [?created, message]) {
+          for (final json in _seeder.forward(accepted, _validator.seeds)) {
+            _forwarded.add(json);
+            yield TurnEvent.message(json);
+          }
         }
       case Rejected(:final failure):
         _reject(failure);
@@ -641,21 +647,38 @@ final class TurnRun {
     );
     _validator.seeds = {..._validator.seeds, ...result.seeds};
     _handedDraw = _handedDraw || result.modelResult['draw'] != null;
-    for (final key in const ['draw', 'drawWhenAsked']) {
-      if (result.modelResult[key] case final List<Object?> blocks) {
-        for (final block in blocks) {
-          if (block case final Map<String, Object?> component) {
-            if (component['id'] case final String id) {
-              _validator.handed[id] = component;
-            }
-          }
-        }
-      }
-    }
     return FunctionResult(
       callId: call.callId,
       name: call.name,
-      result: result.modelResult,
+      result: {
+        for (final MapEntry(:key, :value) in result.modelResult.entries)
+          key: handedCardKeys.contains(key) ? _keepCards(value) : value,
+      },
     );
+  }
+
+  Object? _keepCards(Object? cards) => switch (cards) {
+    final List<Object?> cards => [
+      for (final card in cards)
+        if (card
+            case {
+                  'id': final String id,
+                  'component': final String component,
+                } &&
+                final Map<String, Object?> body)
+          _nameOf(id, component, body)
+        else
+          card,
+    ],
+    _ => cards,
+  };
+
+  Map<String, Object?> _nameOf(
+    String id,
+    String component,
+    Map<String, Object?> body,
+  ) {
+    _validator.handed[id] = body;
+    return {'id': id, 'component': component};
   }
 }

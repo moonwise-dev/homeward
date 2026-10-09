@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:a2ui_core/a2ui_core.dart';
+import 'package:collection/collection.dart';
 import 'package:common/common.dart';
 
 import 'component_tree.dart';
@@ -14,16 +15,19 @@ final class TurnValidator {
     required this.catalog,
     required this.shadow,
     required this.seeds,
-  }) : _inlinePattern = InlineSurfaces.idPattern(turn);
+    Map<String, Map<String, Object?>> handed = const {},
+  }) : handed = {...handed},
+       _inlinePattern = InlineSurfaces.idPattern(turn);
 
   final int turn;
   final CatalogValidator catalog;
   final MessageProcessor<ComponentApi> shadow;
   Map<String, Object?> seeds;
-  final handed = <String, Map<String, Object?>>{};
+  final Map<String, Map<String, Object?>> handed;
   final RegExp _inlinePattern;
   final _sentThisTurn = <String, Set<String>>{};
   final _inlineCreated = <String>{};
+  final _unsentCreations = <String, CreateSurfaceMessage>{};
   var _lastSurfaceId = planSurfaceId;
 
   String get lastSurfaceId => _lastSurfaceId;
@@ -36,6 +40,17 @@ final class TurnValidator {
     ],
     null => null,
   };
+
+  List<Map<String, Object?>> get ready {
+    final shown = {
+      for (final component in screen ?? const <Map<String, Object?>>[])
+        component['id'],
+    };
+    return [
+      for (final MapEntry(key: id, value: body) in handed.entries)
+        if (!shown.contains(id)) {'id': id, 'component': body['component']},
+    ];
+  }
 
   Object? heldValue(String surfaceId, String slice) =>
       _surface(surfaceId)?.dataModel.get('/$slice');
@@ -72,6 +87,18 @@ final class TurnValidator {
     }
     if (_unknownEnvelopeField(json) case (final path, final problem)) {
       return _reject(_surfaceIdIn(json), path, problem);
+    }
+    if (json
+        case {
+          'updateComponents': {'components': final List<Object?> components},
+        }
+        when components.any((component) => component is! Map)) {
+      return _reject(
+        _surfaceIdIn(json),
+        '/updateComponents/components',
+        'components holds component objects only. To show a card a tool '
+            'handed you, add its ID to the children of root and send root',
+      );
     }
     final A2uiMessage message;
     try {
@@ -135,41 +162,32 @@ final class TurnValidator {
     });
   }
 
-  ValidationOutcome _updateComponents(UpdateComponentsMessage message) {
-    final surfaceId = message.surfaceId;
+  ValidationOutcome _updateComponents(UpdateComponentsMessage sent) {
+    final surfaceId = sent.surfaceId;
     if (_ownershipProblem(surfaceId) case final problem?) {
       return _reject(surfaceId, '/updateComponents/surfaceId', problem);
     }
-    final surface = _surface(surfaceId);
-    if (surface == null) {
-      return _reject(
-        surfaceId,
-        '/updateComponents/surfaceId',
-        'Create surface $surfaceId before adding components',
+    if (_surface(surfaceId) == null) {
+      final creation = CreateSurfaceMessage(
+        surfaceId: surfaceId,
+        catalogId: homewardCatalogId,
+        sendDataModel: true,
       );
+      switch (_createSurface(creation)) {
+        case final Rejected rejected:
+          return rejected;
+        case Accepted():
+          _unsentCreations[surfaceId] = creation;
+        case Unchanged():
+      }
     }
-    final merged = {
+    final surface = _surface(surfaceId)!;
+    final onScreen = {
       for (final component in surface.componentsModel.all)
         component.id: component.toJson(),
     };
-    final named = {
-      ...merged.keys,
-      for (final component in message.components) component['id'],
-    };
-    final leftOut = {
-      for (final component in [...merged.values, ...message.components])
-        for (final child in childReferences(component))
-          if (!named.contains(child)) child,
-    };
-    final filled = [for (final id in leftOut) ?handed[id]];
-    if (filled.isNotEmpty) {
-      return _updateComponents(
-        UpdateComponentsMessage(
-          surfaceId: surfaceId,
-          components: [...message.components, ...filled],
-        ),
-      );
-    }
+    final merged = {...onScreen};
+    final message = _withHandedCards(sent, onScreen);
     final data = {
       ...switch (surface.dataModel.get('/')) {
         final Map<String, Object?> data => data,
@@ -177,7 +195,7 @@ final class TurnValidator {
       },
       ...seeds,
     };
-    final sent = <String>{};
+    final sentIds = <String>{};
     for (final (index, component) in message.components.indexed) {
       final path = '/updateComponents/components/$index';
       final name = component['component'];
@@ -219,20 +237,57 @@ final class TurnValidator {
       }
       final id = component['id']! as String;
       merged[id] = component;
-      sent.add(id);
+      sentIds.add(id);
     }
     if (structureProblem(
           merged,
-          mustReach: {...?_sentThisTurn[surfaceId], ...sent},
+          mustReach: {...?_sentThisTurn[surfaceId], ...sentIds},
         )
         case final problem?) {
       return _reject(surfaceId, '/updateComponents/components', problem);
     }
-    return _apply(message, () {
-      _sentThisTurn.putIfAbsent(surfaceId, () => {}).addAll(sent);
+    return switch (_apply(message, () {
+      _sentThisTurn.putIfAbsent(surfaceId, () => {}).addAll(sentIds);
       _lastSurfaceId = surfaceId;
-    });
+    })) {
+      Accepted(:final message) => Accepted(
+        message,
+        created: _unsentCreations.remove(surfaceId),
+      ),
+      final outcome => outcome,
+    };
   }
+
+  UpdateComponentsMessage _withHandedCards(
+    UpdateComponentsMessage message,
+    Map<String, Map<String, Object?>> onScreen,
+  ) {
+    final sent = [
+      for (final component in message.components)
+        switch (handed[component['id']]) {
+          final body? when body['component'] == component['component'] => body,
+          _ => component,
+        },
+    ];
+    final sentIds = {for (final component in sent) component['id']};
+    final shown = {
+      for (final component in [...onScreen.values, ...sent])
+        ...childReferences(component),
+    };
+    return UpdateComponentsMessage(
+      surfaceId: message.surfaceId,
+      components: [
+        ...sent,
+        for (final id in shown)
+          if (handed[id] case final body?
+              when !sentIds.contains(id) &&
+                  !_sameBody.equals(onScreen[id], body))
+            body,
+      ],
+    );
+  }
+
+  static const _sameBody = DeepCollectionEquality();
 
   static String _near(String source, int? offset) {
     if (offset == null) {

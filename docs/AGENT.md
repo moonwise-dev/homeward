@@ -264,11 +264,15 @@ arrives with the step of `docs/ROADMAP.md` that needs it.
 - Each lookup reports a measuring step through `ResearchSteps`, which the turn
   streams as a progress data part while tools run (D108). Labels come from the
   tool, never from the model.
-- A tool that seeds a slice answers with `draw` (D167): the components for
-  its result, ready to send, each with an ID, its bound paths, and the
-  actions it takes, such as a `HomeCard` for each of the first three homes
-  `search_homes` found. Gemini adds them to the plan without a round to read
-  their docs, and still decides which to show and where.
+- A tool that seeds a slice answers with `draw` (D167): the cards for its
+  result, each with an ID, its bound paths, and the actions it takes, such
+  as a `HomeCard` for each of the first three homes `search_homes` found.
+  Gemini sees each card as its ID and component name only, and shows one by
+  naming its ID in the children of the plan's `root`; the server keeps the
+  body and supplies it (D184). Gemini still decides which cards show and in
+  what order, and never retypes one. The cards a plan was handed stay with
+  its session, and the turn context lists those not on the plan under
+  `ready`, so a card handed in one turn can be shown in a later one.
 - A tool that throws answers the model with an error and changes nothing.
 - Every place a model names is checked against open data before it is shown
   (D101).
@@ -644,12 +648,17 @@ owner, and leases it; `turn_run.dart` runs one turn:
    tool seeded that its components bind, then the components. A surface whose
    tree never validates never reaches the buyer. A round that ends with a
    surface created but no components counts as a rejected message, so the
-   correction round asks for its `updateComponents` (C5b). When a message
-   names a component in a container's children and leaves its body out,
-   and a tool handed that component over under `draw` or `drawWhenAsked`
-   in this turn, the body is filled in from the tool's answer (D183): on
-   2026-10-09 such a message was rejected and both correction rounds came
-   back empty, so the turn drew nothing.
+   correction round asks for its `updateComponents` (C5b). A surface need
+   not be created by the model at all (D184): an `updateComponents` for
+   `plan`, or for an inline ask of this turn, that has no surface yet
+   creates it. A card a tool handed over is drawn from the tool's body
+   (D183, D184): when a message names its ID in a container's children
+   without sending it, the body is added, and when it sends a component of
+   the same ID and kind, the tool's body replaces it. A card whose body a
+   tool changed in this turn is sent again when the tree still shows it.
+   A component list that holds anything but objects, such as a bare card
+   name, is rejected with the reason, and a line of closing brackets left
+   over after a message is ignored.
 8. When the round ended with function calls, run them in the order the model
    made them and continue the interaction with every result at once, at most
    three tool rounds, plus at most two rounds that only read `component_docs`.
