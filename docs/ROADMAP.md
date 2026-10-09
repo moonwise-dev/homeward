@@ -44,10 +44,26 @@ As of 2026-10-08.
   new one, and on a phone the Plan tab carries a dot. Looked at in headless
   Chrome over five live turns, at 1440 and 390 dp, in both themes, with a
   reload in between. Not looked at: a real phone.
-- **Not hosted.** Nothing serves. On 2026-10-05 the Cloud Run URL in the
-  `Makefile` answered 503 and Firebase Hosting 404, and `make server-image`
-  has not run since the root `.dockerignore` began to admit `markets/`.
-  The deploy targets have not run against the server without Firebase.
+- **Not hosted, and the path to it checked locally on 2026-10-08.** The
+  image from `make server-image` used to stop at start: this checkout's
+  `markets` and `server/prompts` are readable by their owner only, and the
+  image runs as another user, so the Dockerfile now hands both to that
+  user. With that, the container answered `/health`, the agent card, a new
+  session, and a preflight from the Hosting origin, kept `/dev` shut, and
+  ran one live turn in 10 s. The Wasm release build opened on the key
+  screen and drew `/gallery` with no key, served with Hosting's two
+  headers. `cupertino_icons` is back in the app: the release build named
+  it as missing, since Flutter's own widgets draw from it. The same day
+  the owner's own Google account was given Cloud Run Admin, Service Account
+  User, Artifact Registry Writer, Firebase Hosting Admin, and Logs Viewer
+  on the project, and holds every permission the two deploy targets use.
+  Billing was off on `homeward-genui` until 2026-10-09, which is why the
+  Cloud Run service answered 503 and Artifact Registry refused; Moonwise
+  turned it back on that day. The service answers again, on the revision
+  of 2026-09-17, which still asks for a Firebase sign-in, so the two
+  deploy targets have yet to run. A budget alert and an automatic cut-off
+  are not set up yet. The key screen has no link to the gallery yet, so a
+  visitor without a key reaches the catalog only by its URL.
 - **The repository** is at `github.com/moonwise-dev/homeward`, private, on
   `main`. `make hooks` runs `make check` before every push.
 - **What to expect from a turn.** First text after 4 to 26 s on the free
@@ -64,7 +80,7 @@ What Google asked for on 2026-10-06, due 2026-10-16 (D172).
 | Asked for | State | Left to do |
 | --- | --- | --- |
 | A public web build | Not hosted | Deploy the server to Cloud Run and the web build to Hosting; check a turn, a reload, and Safari there |
-| A golden script, with clickable prompts | Not built | Starter prompts on the empty plan, taken from the four journeys |
+| A golden script, with clickable prompts | Drafted on 2026-10-08: three opening messages on the empty plan, each sent with a tap, taken from journeys 1, 4, and 3 of the README | The owner's edit of the three, and the screen each must end on (D181) |
 | A place that shows the catalog | Built: `/gallery`, from the app bar or by URL, with no key | A look at it as a stranger would arrive |
 | A logo, vector or high-resolution PNG | None | Moonwise's or Homeward's mark |
 | The repository open-sourced under Apache 2.0, with a Figma file of every catalog component | Private; no licence file; no Figma file | `LICENSE`, a notice for the Unsplash photos and the OFL fonts, the Figma file, and Moonwise making it public |
@@ -77,15 +93,24 @@ What Google asked for on 2026-10-06, due 2026-10-16 (D172).
 In this order, each a small chunk that ends with `make check` green, a live
 probe, and a visual look.
 
-1. Host it, since it is the least certain step.
-2. Starter prompts on the empty plan.
-3. Decide which blocks stay. A block stays when basic components cannot do
-   its job: a chart, a map, a calculation, or a figure shown with its
-   source. Tools that only the removed blocks used go with them, and the
-   journeys are rehearsed again.
-4. The licence and notice, the description, screenshots, the logo, and the
-   Figma file.
-5. A rehearsal on the hosted build, and the video if it is wanted.
+The order agreed on 2026-10-08 (D181):
+
+1. The golden script: three opening messages and the screen each must end
+   on. It is the finish line, and what the three do not need goes, blocks
+   included.
+2. Host the build as it stands, since it is the least certain step:
+   the two deploy targets, then a turn, a reload, and the gallery on the
+   public address.
+3. One day on the assessment: one new block and a prompt change on the
+   tools there are, run against the three messages, with nothing removed.
+   If Gemini draws it reliably, the step list, the brief as a card, the two
+   panels, the inline ask, and D180's chips go in one change. If not, the
+   hosted build stands.
+4. Then a price set against sample sales, and a listing the buyer pastes
+   (S13).
+5. The licence and notice, the description, screenshots, the logo, and the
+   Figma file, once the catalog has settled.
+6. A rehearsal on the hosted build, and the video if it is wanted.
 
 ## Later
 

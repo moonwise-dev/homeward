@@ -493,7 +493,8 @@ place each turn.
 
 **The journey.**
 
-- **Empty plan**: one line asking the buyer to tell Homeward about their move
+- **Empty plan**: three opening messages, each sent with a tap (D181), under
+  one line asking the buyer to tell Homeward about their move
   and their money, and the text field under it. There is no opening form
   (D129).
 - **The conversation** (D139): one section per turn that has text, an inline

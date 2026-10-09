@@ -14,6 +14,7 @@ import 'action_label.dart';
 import 'appearance_button.dart';
 import 'conversation_thread.dart';
 import 'plan_panel.dart';
+import 'starter_prompts.dart';
 import 'tell_more_field.dart';
 
 class JourneyScreen extends HookConsumerWidget {
@@ -72,7 +73,7 @@ class JourneyScreen extends HookConsumerWidget {
       children: [
         Expanded(
           child: state.sections.isEmpty && state.pending == null
-              ? const _EmptyJourney()
+              ? _EmptyJourney(onStart: viewModel.start)
               : ConversationThread(
                   sessionId: sessionId,
                   sections: state.sections,
@@ -196,18 +197,36 @@ class JourneyScreen extends HookConsumerWidget {
 }
 
 class _EmptyJourney extends StatelessWidget {
-  const _EmptyJourney();
+  const _EmptyJourney({required this.onStart});
+
+  final ValueChanged<String> onStart;
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final styles = AppTextStyles.of(context);
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Text(
-          'Tell Homeward about your move and your money.',
-          style: styles.title,
-          textAlign: TextAlign.center,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: AppSizes.contentWidth),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: AppSpacing.sm,
+            children: [
+              Text(
+                'Tell Homeward about your move and your money.',
+                style: styles.title,
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                'Or start from one of these',
+                style: styles.caption.copyWith(color: colors.textTertiary),
+                textAlign: TextAlign.center,
+              ),
+              StarterPrompts(onSend: onStart),
+            ],
+          ),
         ),
       ),
     );

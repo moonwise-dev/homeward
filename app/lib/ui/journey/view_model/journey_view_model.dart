@@ -57,6 +57,13 @@ class JourneyViewModel extends _$JourneyViewModel
     await ref.read(agentRepositoryProvider).sendText(sessionId, text);
   }
 
+  Future<void> start(String message) async {
+    if (state.conversation.isRunning) {
+      return;
+    }
+    await ref.read(agentRepositoryProvider).sendText(sessionId, message);
+  }
+
   Future<void> startOver() async {
     final router = ref.read(appRouterProvider);
     if (state.conversation.isRunning) {
