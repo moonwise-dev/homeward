@@ -49,6 +49,10 @@ in `basicComponentSummaries`:
 `Text`, `Row`, `Column`, `Card`, `Divider`, `List`, `Tabs`, `Icon`, `Button`,
 `CheckBox`, `ChoicePicker`, `TextField`, `DateTimeInput`.
 
+The app draws them with genui's widgets, with one change (D189): a `Row`
+whose children carry no `weight` wraps onto the next line when they do not
+fit, so the buttons of an ask never overflow a phone.
+
 The core components, `coreComponents`: the layout components `Column`,
 `Row`, `Card`, `Text`, `Button`, and `Divider`; `PlanOverview`, `Brief`, and
 `Fact`, which every plan uses; `Choice` and `Questions`, which every ask

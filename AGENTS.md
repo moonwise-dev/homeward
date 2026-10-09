@@ -74,11 +74,13 @@ first.
   writes a figure a buyer relies on: distances, times, counts, and amounts come
   from tools or shared code.
 - Gemini decides which tools run, what the reply says, and what it asks. A
-  tool's result goes on the plan as its card (D185), and Gemini arranges the
-  plan when it has a reason. The server checks that what is drawn is valid,
-  never which question comes next. When the model misbehaves, try a smaller
-  catalog, a clearer prompt, or a better tool before a server rule that takes
-  a decision away from it.
+  tool's result goes on the plan as its card (D185), only the card that
+  answers what was asked (D187), and Gemini arranges the plan when it has a
+  reason. A tap on a card's own button runs that card's tool on the server
+  before Gemini replies (D187, D188). The server checks that what is drawn
+  is valid, never which question comes next. When the model misbehaves, try
+  a smaller catalog, a clearer prompt, or a better tool before a server rule
+  that takes a decision away from it.
 - Homeward works like a coding agent (D130): it deduces first, never asks what
   a tool can find out, answers first with what it can work out and what it
   assumed, asks at most once a reply, and keeps a brief of what it learned,
