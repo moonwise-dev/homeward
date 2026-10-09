@@ -28,11 +28,16 @@ final class TurnValidator {
   final _sentThisTurn = <String, Set<String>>{};
   final _inlineCreated = <String>{};
   final _unsentCreations = <String, CreateSurfaceMessage>{};
+  var _shownByServer = false;
   var _lastSurfaceId = planSurfaceId;
 
   String get lastSurfaceId => _lastSurfaceId;
 
   bool get drewThisTurn => _sentThisTurn.values.any((ids) => ids.isNotEmpty);
+
+  bool get showedThisTurn => _shownByServer || drewThisTurn;
+
+  bool get askedThisTurn => _inlineCreated.isNotEmpty;
 
   List<Map<String, Object?>>? get screen => switch (_surface(planSurfaceId)) {
     final surface? => [
@@ -93,12 +98,24 @@ final class TurnValidator {
           'updateComponents': {'components': final List<Object?> components},
         }
         when components.any((component) => component is! Map)) {
-      return _reject(
-        _surfaceIdIn(json),
-        '/updateComponents/components',
-        'components holds component objects only. To show a card a tool '
-            'handed you, add its ID to the children of root and send root',
-      );
+      final named = _withNamedCards(_surfaceIdIn(json), components);
+      return named == null
+          ? _reject(
+              _surfaceIdIn(json),
+              '/updateComponents/components',
+              'components holds component objects only. To show a card a '
+                  'tool handed you, add its ID to the children of root and '
+                  'send root',
+            )
+          : validate(
+              jsonEncode({
+                ...json,
+                'updateComponents': {
+                  'surfaceId': _surfaceIdIn(json),
+                  'components': named,
+                },
+              }),
+            );
     }
     final A2uiMessage message;
     try {
@@ -162,7 +179,13 @@ final class TurnValidator {
     });
   }
 
-  ValidationOutcome _updateComponents(UpdateComponentsMessage sent) {
+  ValidationOutcome show(UpdateComponentsMessage message) =>
+      _updateComponents(message, byServer: true);
+
+  ValidationOutcome _updateComponents(
+    UpdateComponentsMessage sent, {
+    bool byServer = false,
+  }) {
     final surfaceId = sent.surfaceId;
     if (_ownershipProblem(surfaceId) case final problem?) {
       return _reject(surfaceId, '/updateComponents/surfaceId', problem);
@@ -195,6 +218,12 @@ final class TurnValidator {
       },
       ...seeds,
     };
+    if (byServer &&
+        message.components.every(
+          (component) => _sameBody.equals(onScreen[component['id']], component),
+        )) {
+      return const Unchanged();
+    }
     final sentIds = <String>{};
     for (final (index, component) in message.components.indexed) {
       final path = '/updateComponents/components/$index';
@@ -247,8 +276,12 @@ final class TurnValidator {
       return _reject(surfaceId, '/updateComponents/components', problem);
     }
     return switch (_apply(message, () {
-      _sentThisTurn.putIfAbsent(surfaceId, () => {}).addAll(sentIds);
-      _lastSurfaceId = surfaceId;
+      if (byServer) {
+        _shownByServer = true;
+      } else {
+        _sentThisTurn.putIfAbsent(surfaceId, () => {}).addAll(sentIds);
+        _lastSurfaceId = surfaceId;
+      }
     })) {
       Accepted(:final message) => Accepted(
         message,
@@ -257,6 +290,33 @@ final class TurnValidator {
       final outcome => outcome,
     };
   }
+
+  List<Object?>? _withNamedCards(String surfaceId, List<Object?> components) {
+    final written = components.whereType<Map<String, Object?>>().toList();
+    final names = components.whereType<String>().toList();
+    final root =
+        written.where((component) => component['id'] == _rootId).firstOrNull ??
+        _surface(surfaceId)?.componentsModel.get(_rootId)?.toJson() ??
+        const {'id': _rootId, 'component': 'Column'};
+    final children = root['children'];
+    if (surfaceId != planSurfaceId ||
+        written.length + names.length != components.length ||
+        root['component'] != 'Column' ||
+        (children != null && children is! List<Object?>)) {
+      return null;
+    }
+    return [
+      {
+        ...root,
+        'children': [
+          ...{...names, ...?children as List<Object?>?},
+        ],
+      },
+      ...written.where((component) => component['id'] != _rootId),
+    ];
+  }
+
+  static const _rootId = 'root';
 
   UpdateComponentsMessage _withHandedCards(
     UpdateComponentsMessage message,

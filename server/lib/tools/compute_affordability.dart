@@ -55,9 +55,10 @@ final class ComputeAffordability extends AgentTool {
       'Everything else you do not pass it assumes or estimates, and names '
       'under assumedAboutThem: who lives in the home, no children, no '
       'other loans, and their take-home pay from their pay before tax. So '
-      'never ask for those before calling it. Pass what their words say '
-      'they do not have too: debtPayments [] for no debts, childAges [] '
-      'for no children. Until it has answered, pass '
+      'never ask for those before calling it. Only when their words say '
+      'they have none, pass debtPayments [] for no debts or childAges [] '
+      'for no children; when they have not said, leave both out, never '
+      '[] as a guess. Until it has answered, pass '
       'everything the buyer has told you each time; once it has answered, '
       'it keeps that household and its figures, so pass again only what is '
       'new or changed, such as home. Call it as soon as the buyer gives '
@@ -109,9 +110,10 @@ final class ComputeAffordability extends AgentTool {
       'home': {
         'type': 'string',
         'description':
-            'Optional. The ID of a sample home from search_homes the buyer '
-            'picked; its price and fee come from the listing, so pass no '
-            'price or homeFee with it.',
+            'Optional. A sample home the buyer picked: its ID from '
+            'search_homes, or the street they named it by, such as '
+            'Odengatan, which needs no search first. Its price and fee come '
+            'from the listing, so pass no price or homeFee with it.',
       },
       'price': {
         ...amountParameter,
@@ -248,7 +250,9 @@ final class ComputeAffordability extends AgentTool {
     if (arguments['home'] case final String homeId when sample == null) {
       return ToolResult(
         modelResult: {
-          'error': 'No sample home $homeId; take the ID from search_homes.',
+          'error':
+              'No one sample home is named $homeId; take its ID from '
+              'search_homes.',
         },
       );
     }
@@ -560,6 +564,7 @@ final class ComputeAffordability extends AgentTool {
             'rule': boundTo('/affordability/binding'),
           }),
         block('monthly', 'MonthlyCostBreakdown', _affordability),
+        if (slice.homeId case final id?) homeCard(id),
       ],
       'drawWhenAsked': [
         block('stress', 'StressTestChart', _affordability),
@@ -578,7 +583,8 @@ final class ComputeAffordability extends AgentTool {
       ],
       'note':
           'The figures are in /affordability; never write them in your '
-          'text. $drawNote Add one from drawWhenAsked when the buyer asks '
+          'text. $drawNote Add one from drawWhenAsked, by calling '
+          'arrange_plan with its id, when the buyer asks '
           'for it or picks it as the next thing to look at: rising rates, '
           'the costs on the day, other down payments, the rates side by '
           'side, the loan year by year, or who the household is. In your '
@@ -591,11 +597,15 @@ final class ComputeAffordability extends AgentTool {
     },
     seeds: {
       'affordability': jsonDecode(jsonEncode(slice.toJson())),
-      if (context.slices[homesSlice.name] case final Map<String, Object?> homes)
+      if (_homesToPrice(context, slice) case final ids when ids.isNotEmpty)
         homesSlice.name: {
           for (final MapEntry(:key, :value)
               in markets
-                  .pricedHomes(homes.keys, slice, kept: keptHomesIn(homes))
+                  .pricedHomes(
+                    ids,
+                    slice,
+                    kept: keptHomesIn(context.slices[homesSlice.name]),
+                  )
                   .entries)
             key: jsonDecode(jsonEncode(value.toJson())),
         },
@@ -632,6 +642,17 @@ final class ComputeAffordability extends AgentTool {
     ProfileAssumption.residency => 'they pay tax in ${slice.marketName}',
     ProfileAssumption.use => 'a home to live in',
     ProfileAssumption.employment => 'employed',
+  };
+
+  static Set<String> _homesToPrice(
+    ToolContext context,
+    AffordabilitySlice slice,
+  ) => {
+    ...switch (context.slices[homesSlice.name]) {
+      final Map<String, Object?> homes => homes.keys,
+      _ => const <String>[],
+    },
+    ?slice.homeId,
   };
 
   static bool _ageSetsLoan(ResolvedMarket market) =>

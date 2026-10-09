@@ -21,7 +21,8 @@ final class CompareBuyRent extends AgentTool {
   @override
   String get description =>
       'Compares buying a sample home with renting one like it, for the '
-      'household the last compute_affordability run kept: year by year, the '
+      'household compute_affordability kept, so call it after that tool, '
+      'in the same step when you can: year by year, the '
       'costs on the day, interest after any deduction, and the fee against '
       "the rent, and the equity built. The rent is the area's estimate unless "
       'the buyer stated one. It seeds /buyVsRent for BuyVsRent and answers '
@@ -33,7 +34,9 @@ final class CompareBuyRent extends AgentTool {
     'properties': {
       'home': {
         'type': 'string',
-        'description': 'A sample home ID from search_homes.',
+        'description':
+            'A sample home: its ID from search_homes, or the street the '
+            'buyer named it by, such as Odengatan.',
       },
       'rent': {
         ...amountParameter,
@@ -125,7 +128,7 @@ final class CompareBuyRent extends AgentTool {
     final at = slice.at(slice.years);
     return ToolResult(
       modelResult: {
-        'home': id,
+        'home': sample.listing.id,
         'years': slice.years,
         if (slice.yearsAssumed) 'assumed': {'years': slice.years},
         'cheaperOverTheYears': at.buying <= at.renting ? 'buying' : 'renting',

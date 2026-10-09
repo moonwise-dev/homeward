@@ -2,6 +2,7 @@ import '../markets/market_directory.dart';
 import '../research/listing_reader.dart';
 import '../research/research.dart';
 import 'agent_tool.dart';
+import 'arrange_plan.dart';
 import 'compare_buy_rent.dart';
 import 'component_docs.dart';
 import 'compute_affordability.dart';
@@ -18,6 +19,7 @@ import 'update_brief.dart';
 List<AgentTool> homewardTools(MarketDirectory markets, Research research) => [
   const ComponentDocs(),
   const UpdateBrief(),
+  const ArrangePlan(),
   LookUpMarket(markets),
   ComputeAffordability(markets),
   PlanSavings(markets),

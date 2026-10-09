@@ -15,15 +15,24 @@ final class MarketDirectory {
 
   Map<String, ListingInventory> get cities => _data.cities;
 
-  ({ListingInventory city, Listing listing})? home(String id) {
-    for (final city in _data.cities.values) {
-      for (final listing in city.listings) {
-        if (listing.id == id) {
-          return (city: city, listing: listing);
-        }
-      }
+  ({ListingInventory city, Listing listing})? home(String named) {
+    final words = named.trim().toLowerCase();
+    final all = [
+      for (final city in _data.cities.values)
+        for (final listing in city.listings) (city: city, listing: listing),
+    ];
+    final byId = all.where((home) => home.listing.id == words).firstOrNull;
+    if (byId != null || words.isEmpty) {
+      return byId;
     }
-    return null;
+    final byWords = [
+      for (final home in all)
+        if (words.contains(home.listing.name.toLowerCase()) ||
+            home.listing.address.toLowerCase().contains(words) ||
+            home.listing.title.toLowerCase().contains(words))
+          home,
+    ];
+    return byWords.length == 1 ? byWords.single : null;
   }
 
   Map<String, PricedHome> pricedHomes(

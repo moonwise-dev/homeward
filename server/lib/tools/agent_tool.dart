@@ -13,6 +13,8 @@ abstract class ToolResult with _$ToolResult {
     required Map<String, Object?> modelResult,
     @Default({}) Map<String, Object?> seeds,
     @Default({}) Map<String, Object?> logFields,
+    @Default([]) List<String> showCards,
+    @Default([]) List<String> removeCards,
   }) = _ToolResult;
 }
 

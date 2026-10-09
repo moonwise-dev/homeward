@@ -100,10 +100,11 @@ go somewhere else entirely.
 
 ## Product Principles
 
-- **Nothing scripted.** Gemini decides what the screen shows, in what form,
-  and what it asks. Nothing in the server decides which question comes next or
-  draws the screen for the model; the server only checks that what Gemini
-  draws is valid.
+- **Nothing scripted.** Gemini decides what to work out, what to say, and
+  what to ask, and the plan follows from that: a result a tool worked out
+  shows as its card, and Gemini arranges the plan when it has a reason
+  (D185). Nothing in the server decides which tool runs or which question
+  comes next; it checks that what is drawn is valid.
 - **Deduce first.** What Gemini can infer it shows as assumed, with the words
   it came from, for the buyer to confirm or correct.
 - **Never ask what a tool can find out.** Places, distances, travel times,

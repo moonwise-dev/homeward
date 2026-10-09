@@ -22,15 +22,12 @@ String renderCatalogSkill() {
   return '''
 # Drawing The Interface
 
-You draw with A2UI v0.9 `updateComponents` messages on two kinds of surface:
+The buyer sees two kinds of surface. You write A2UI v0.9 `updateComponents` messages for what you ask, and almost never for the plan:
 
-- `$planSurfaceId`, the plan panel beside the conversation: what your tools produced for this household. Its `root` is a `Column`, and each child of `root` is drawn as a card of its own, the newest first. A tool that worked something out hands you its cards under `draw`, each as an `id` and the component it is. To show cards, send `root` alone, with the IDs you chose in `children`, in the order to show them. The server has each card's body, so never send a card's own component. A reply with nothing new to show sends no message for it.
+- `$planSurfaceId`, the plan panel beside the conversation: what your tools produced for this household. Its `root` is a `Column`, and each child of `root` is drawn as a card of its own, the newest first. A tool that works something out puts its cards on the plan as it answers, and names them under `draw`, each as an `id` and the component it is. To add a card that waits under `ready`, take one off, or put one first, call `arrange_plan`. So you send no message for `$planSurfaceId`, and never a card's own component; the one exception is a component you write yourself, below.
 - At most one inline ask per turn, named `t<turn>-<slug>` with the turn number from the turn context and a lowercase slug, such as `${InlineSurfaces.id(3, 'budget')}`: what you ask now, shown as a card in the conversation under your text. Its `root` is a `Choice`, a `Questions`, or a `Column` that holds a `Text` and a `Row` of `Button`s. You write every component of an ask yourself, in one message, and it never changes after.
 
 Put what your tools produced on `$planSurfaceId` and what you ask in the inline ask. A reply that needs nothing from the buyer has no inline ask.
-
-Cards your tools handed you, shown on the plan:
-`{"version":"v0.9","updateComponents":{"surfaceId":"$planSurfaceId","components":[{"id":"root","component":"Column","children":["summary","limit","monthly","market"]}]}}`
 
 A sentence with buttons, for a yes or no or for what to look at next:
 `{"version":"v0.9","updateComponents":{"surfaceId":"${InlineSurfaces.id(3, 'loans')}","components":[{"id":"root","component":"Column","children":["ask","answers"]},{"id":"ask","component":"Text","text":"I have assumed you have no other loans. Is that right?"},{"id":"answers","component":"Row","children":["yes","no"]},{"id":"yes","component":"Button","child":"yes-label","action":{"event":{"name":"confirm_no_other_loans","context":{"label":"Right, no other loans"}}}},{"id":"yes-label","component":"Text","text":"Right"},{"id":"no","component":"Button","child":"no-label","action":{"event":{"name":"say_other_loans","context":{"label":"We have other loans"}}}},{"id":"no-label","component":"Text","text":"We have other loans"}]}}`
@@ -39,8 +36,8 @@ A sentence with buttons, for a yes or no or for what to look at next:
 
 - Write messages in one fenced block that opens with ```a2ui and closes with ```. Put one complete JSON message on each line and nothing else.
 - Each message is `{"version":"v0.9","updateComponents":{"surfaceId":"…","components":[…]}}`. A surface is created the first time you send components for it, so never send `createSurface`. The server owns the data model and surfaces stay for the whole plan, so never send `updateDataModel` or `deleteSurface`.
-- The turn context's `screen` lists every component of `$planSurfaceId` as it stands now, and `ready` lists the cards your tools handed you that are not on it. To add a card, send `root` with its ID added to `children`; to take one off, send `root` without it. Keep every ID you still want shown.
-- A component you write yourself for the plan, such as a `PlanOverview` the buyer asked for, goes in the same message as `root`, in full.
+- The turn context's `screen` lists every component of `$planSurfaceId` as it stands now, and `ready` lists the cards your tools handed you that are not on it, such as the ones under `drawWhenAsked`; `arrange_plan` shows and removes them.
+- A component you write yourself for the plan, such as a `PlanOverview` the buyer asked for, is the one message you send for `$planSurfaceId`: `root` with every ID you still want shown and the new one, and the component in full.
 - An inline ask's `updateComponents` holds its whole tree, starting from `root`.
 - If your text mentions something on the plan or in an ask, draw it in the same turn.
 - Components are a flat list. Containers name their children by ID in `child`, `children`, `tabs`, `trigger`, or `content`. Exactly one component has the ID `root`, every ID a container names is a card you were handed, a component on the screen, or one you send, and every component you send is reachable from `root`.
@@ -58,7 +55,7 @@ Buttons send actions as `{ "event": { "name": …, "context": { … } } }`. Name
 
 ## Components
 
-The catalog schema below holds the full schemas of the components every plan uses: ${codeList(coreComponents)}. Every other component is listed here with what it is for. The tool that seeds a component's data answers with `draw`, the card for it, which you show by its ID without writing it. Call `component_docs` only for a listed component you write yourself, once, with every one you are about to draw; its schema and examples stay with you for the rest of the plan.
+The catalog schema below holds the full schemas of the components every plan uses: ${codeList(coreComponents)}. Every other component is listed here with what it is for. The tool that seeds a component's data puts the card for it on the plan and names it under `draw`, so you never write it. Call `component_docs` only for a listed component you write yourself, once, with every one you are about to draw; its schema and examples stay with you for the rest of the plan.
 
 ${index.join('\n')}
 

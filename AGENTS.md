@@ -26,7 +26,7 @@ On 2026-09-26 the project was cleaned down to its foundation (D129): the
 earlier question-by-question case, the sample homes, the deal, and the evals
 were removed. The product was rebuilt from there in small chunks: C1 to C10d
 were done by 2026-09-28, and the map (C8b) and a conversation that leads
-(C11) on 2026-10-05, which makes 27 blocks, twelve tools, and four rehearsed
+(C11) on 2026-10-05, which made 27 blocks, twelve tools, and four rehearsed
 journeys. On 2026-10-08, after Google's working session, it was trimmed
 for the submission due 2026-10-16 (D172 to D179): no accounts, no database,
 one plan at a time. Start with "Where We Are" in `docs/ROADMAP.md`.
@@ -73,10 +73,12 @@ first.
 - Gemini composes; tools measure; code computes. The composing model never
   writes a figure a buyer relies on: distances, times, counts, and amounts come
   from tools or shared code.
-- Gemini decides what the screen shows and asks. The server checks that what it
-  draws is valid, never which question comes next. When the model misbehaves,
-  try a smaller catalog, a clearer prompt, or a better tool before a server
-  rule that takes a decision away from it.
+- Gemini decides which tools run, what the reply says, and what it asks. A
+  tool's result goes on the plan as its card (D185), and Gemini arranges the
+  plan when it has a reason. The server checks that what is drawn is valid,
+  never which question comes next. When the model misbehaves, try a smaller
+  catalog, a clearer prompt, or a better tool before a server rule that takes
+  a decision away from it.
 - Homeward works like a coding agent (D130): it deduces first, never asks what
   a tool can find out, answers first with what it can work out and what it
   assumed, asks at most once a reply, and keeps a brief of what it learned,

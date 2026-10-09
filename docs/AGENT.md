@@ -172,6 +172,11 @@ of 5 a minute and 24 of 20 a day.
 - **No card is owed** (D182). A block is drawn when a tool produced its data
   this turn or the buyer asked for it. `PlanOverview` and `Brief` are drawn
   when the buyer asks where things stand or what Homeward knows.
+- **A result shows itself** (D185). When a tool works something out, its
+  cards go on the plan as it answers, the newest on top, before Gemini
+  writes a word. Gemini decides which tools run, writes the reply,
+  composes what it asks, and changes the plan when it has a reason: it adds
+  a card that waits under `ready`, takes one off, or reorders them.
 - **Never ask what a tool can find out.** Places, distances, travel times, and
   what a listing says are looked up.
 - **The move before the money** (D164). Unless the buyer leads elsewhere,
@@ -284,6 +289,17 @@ common types the skill carries. Text, because the Interactions API reads a
 `$ref` key in a function response as a reference to an attached part and
 refuses the request. An unknown name gets an error that lists the components.
 It reports no progress step and seeds nothing.
+
+`arrange_plan` (D185) measures nothing either: it changes which cards the
+plan shows. `show` puts cards on the plan, the first named on top, either
+ones that wait under `ready` or ones already there that should come first;
+`remove` takes cards off. It refuses an ID no tool has handed over, and
+names the cards that wait. Cards under `draw` never need it. Gemini calls
+it in the same step as the tool whose card it wants, or alone when the
+buyer asks to see or drop something, and the plan changes with the other
+cards of that tool round. It exists because Gemini calls tools reliably and
+writes plan messages unreliably: on 2026-10-09 it said it had added a flat
+it had never put on the plan.
 
 `update_brief` (C4, D132) records what Gemini learned or deduced about the
 household. Each item has an ID, a kind (`household`, `money`, `need`,
@@ -662,11 +678,16 @@ owner, and leases it; `turn_run.dart` runs one turn:
 8. When the round ended with function calls, run them in the order the model
    made them and continue the interaction with every result at once, at most
    three tool rounds, plus at most two rounds that only read `component_docs`.
-   Every batch of tool results carries a short note (D183): call what the
-   buyer's message still asks for, then reply in one message, sentences
-   first and the `a2ui` block after. Without it Flash-Lite often sent the
-   surfaces without words, or the words without surfaces, and each cost a
-   finishing round. The request after the last allowed tool round ends
+   After the tools ran, the server shows what they handed over under
+   `draw` (D185): it sends the plan's `root` with those cards' IDs put
+   before the children it had, and the ones under `drawUnder`, such as the
+   city at a glance, after them; cards already on the plan keep their
+   place. The message goes through the same validation as Gemini's, and
+   one that fails is logged and dropped, never sent back to Gemini to
+   correct. Every batch of tool results carries a short note (D183): call
+   what the buyer's message still asks for, then reply with sentences for
+   the buyer, and an `a2ui` block only to ask something or to change the
+   plan. The request after the last allowed tool round ends
    with a note that tools are done and sets `tool_choice` to `none` (D85).
    Every round is logged with its status, the names of the tools called,
    and its duration.
@@ -681,14 +702,15 @@ owner, and leases it; `turn_run.dart` runs one turn:
    Gemini refuses the schema, the round repeats without it.
 10. When nothing is rejected and the reply is unfinished, continue once with
     a note that names what is missing and asks for that only, at most
-    `HOMEWARD_MAX_FINISHING_ROUNDS` times (D168). Unfinished means one of
-    two things (D182): no words at all, or nothing drawn in a turn where a
-    tool handed over components under `draw`. Words that hold the model's
-    notes to itself count as no words (D183): text with a backtick, a JSON
-    object, or a protocol word such as `updateComponents` is taken back,
-    and the note says why. Missing messages are asked
-    for under the correction round's schema; missing words in a free
-    round, since the schema holds no prose. A round that still asks for a
+    `HOMEWARD_MAX_FINISHING_ROUNDS` times (D168). Unfinished means no
+    words for the buyer, or words that end in a question with no inline
+    ask drawn (D185): the buyer would have nothing to tap, so the note
+    asks for the ask alone, under the correction round's schema. From D182
+    to D185 a turn that drew nothing its tools had handed it was
+    unfinished too; the server shows those cards itself now. Words that hold the model's notes to itself count as no
+    words (D183): text with a backtick, a JSON object, or a protocol word
+    such as `updateComponents` is taken back, and the note says why. The
+    words are asked for in a free round. A round that still asks for a
     tool after the last tool round is unfinished too: its words, written
     before any result, are dropped, and each call is answered with an
     error beside the note. The note picks no question and draws nothing.
@@ -850,7 +872,9 @@ nothing.
 | Unknown or expired previous interaction | Retry once on a fresh interaction |
 | Stored chain refused with `invalid_request` before anything is drawn | The turn starts over once on a new conversation |
 | Model output invalid after corrections | Model text, and the retry notice when the turn drew nothing |
-| A reply with no words, or one that drew nothing of what its tools handed it | One finishing round asks for what is missing; what was sent stands |
+| A reply with no words | One finishing round asks for them; what was drawn stands |
+| A reply that asks in words and draws no ask | One finishing round asks for the ask alone |
+| A plan message that names a card where a component belongs | The card is put first on the plan, as `arrange_plan` would |
 | Words written before the tools ran | Dropped when the round ends in tool calls, unless no later words come |
 | Words that hold the model's notes to itself or code | Taken back, and the one finishing round asks for sentences for the buyer |
 | A message that names a handed block without its body | The body is filled in from the tool's answer |

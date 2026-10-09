@@ -18,7 +18,7 @@ decided and why, and `docs/SPIKES.md` the evidence.
 
 As of 2026-10-08.
 
-- **Built.** 27 blocks in five families, twelve tools, and the four journeys
+- **Built.** 27 blocks in five families, thirteen tools, and the four journeys
   of the README, rehearsed with the probe; a gallery page per block; the
   wire inspector; light and dark themes; the map on open tiles with no key
   (D163); a conversation that leads (D164 to D169); and turns that recover
@@ -106,6 +106,31 @@ As of 2026-10-08.
   cards in the next, or the other way round, and the finishing round that
   fetches the missing half costs 4 to 9 s. Three wordings of the note sent
   with tool results did not settle it.
+- **A tool's result shows itself** (D185, 2026-10-09, not deployed). The
+  server puts a tool's cards on the plan as soon as the tools have run;
+  Gemini writes the reply and the ask, and changes the plan through a new
+  tool, `arrange_plan`. Probed on a local server with
+  `gemini-3.5-flash-lite`, each starter several times while the pieces
+  landed. On the final code: the move with two incomes, 2 rounds and 11 s,
+  cards after 6 s, words after 9 s, and a two-button ask; "what happens if
+  rates go up", 2 rounds and 10 s, the stress test added through
+  `arrange_plan`. The home they picked, named by its street with no search
+  first: 2 rounds and 11 s, with what they can borrow, the rule, a month's
+  cost, the home, and buying against renting; "what would we pay on the
+  day", 2 rounds and 8 s. Two friends in Lisbon: 2 rounds and 12 s, or 3
+  and 17 s when the ask was fetched in its own round; their commutes from
+  the first flat, 2 rounds and 10 s, with the map redrawn along the routes.
+  Seen and addressed on the way: Gemini said it had added a flat that it
+  had not, which `arrange_plan` and a line in the prompt answer; it asked
+  in words and drew no buttons, which the finishing round now fetches; a
+  constrained round offered every component the turn had shown came back
+  empty twice, and is now offered only the ask's components or those of
+  the rejected message. Seen and left: the fetched ask was not probed
+  again after its schema was narrowed; Gemini's text at times repeats the
+  ask's sentence, lists the cards instead of saying what they mean, or
+  gives a reason no tool gave; the flat of the second starter costs twice
+  what that household can borrow, so its screen says no; renters are shown
+  sale prices.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, both from commit
   `bf1a0fb`. On the public server: `/health`, the agent card with its

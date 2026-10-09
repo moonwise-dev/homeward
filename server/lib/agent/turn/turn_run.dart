@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:a2ui_core/a2ui_core.dart' show UpdateComponentsMessage;
 import 'package:common/common.dart';
 import 'package:logging/logging.dart';
 
@@ -85,7 +84,10 @@ final class TurnRun {
   final _text = StringBuffer();
   var _wordsBeforeTools = '';
   var _wordsOnly = false;
-  var _handedDraw = false;
+  final _shownOnTop = <String>[];
+  final _shownUnder = <String>[];
+  final _putFirst = <String>[];
+  final _takenOff = <String>{};
   String? _interactionId;
   String? _lastModel;
   var _emittedText = '';
@@ -316,6 +318,7 @@ final class TurnRun {
           }
         });
         yield* _refreshSlices();
+        yield* _showHandedCards();
         input = InteractionInput.functionResults(
           results,
           note: toolRounds < settings.maxToolRounds
@@ -365,10 +368,14 @@ final class TurnRun {
       final noWords =
           _text.toString().trim().isEmpty &&
           (calls.isNotEmpty || _wordsBeforeTools.isEmpty);
-      final noScreen = !_validator.drewThisTurn && _handedDraw;
+      final noAsk =
+          !noWords &&
+          calls.isEmpty &&
+          !_validator.askedThisTurn &&
+          _text.toString().trimRight().endsWith('?');
       if (finishingRounds < settings.maxFinishingRounds &&
           _pendingFailures.isEmpty &&
-          (noWords || noScreen)) {
+          (noWords || noAsk)) {
         finishingRounds++;
         _log.info(
           LogEntry(
@@ -376,16 +383,14 @@ final class TurnRun {
             fields: {
               'turn': turn,
               'noWords': noWords,
-              'noScreen': noScreen,
+              'noAsk': noAsk,
               'notesToSelf': notesToSelf,
             },
           ),
         );
-        final note = unfinishedReplyInput(
-          words: noWords,
-          screen: noScreen,
-          notes: notesToSelf,
-        );
+        final note = noWords
+            ? unfinishedReplyInput(notes: notesToSelf)
+            : missingAskInput;
         if (calls.isEmpty) {
           input = InteractionInput.text(note);
         } else {
@@ -400,14 +405,14 @@ final class TurnRun {
           ], note: note);
         }
         correcting = !noWords;
-        _wordsOnly = noWords && !noScreen;
+        _wordsOnly = noWords;
         continue;
       }
       if (_text.toString().trim().isEmpty && _wordsBeforeTools.isNotEmpty) {
         _text.write(_wordsBeforeTools);
         yield* _emitText();
       }
-      if (!_validator.drewThisTurn &&
+      if (!_validator.showedThisTurn &&
           (_pendingFailures.isNotEmpty || _text.toString().trim().isEmpty)) {
         yield* _retry();
       }
@@ -419,7 +424,7 @@ final class TurnRun {
             'modelRounds': _rounds,
             'toolRounds': toolRounds,
             'corrections': corrections,
-            'drewScreen': _validator.drewThisTurn,
+            'drewScreen': _validator.showedThisTurn,
           },
         ),
       );
@@ -539,13 +544,11 @@ final class TurnRun {
     thinkingLevel: settings.thinkingLevel,
     previousInteractionId: _interactionId,
     responseSchema: constrained
-        ? catalogResponseSchema({
-            ...coreComponents,
-            ...drawnComponents([
-              ..._rejectedSources,
-              for (final message in _forwarded) jsonEncode(message),
-            ]),
-          })
+        ? catalogResponseSchema(
+            _rejectedSources.isEmpty
+                ? askComponents
+                : {...coreComponents, ...drawnComponents(_rejectedSources)},
+          )
         : null,
   );
 
@@ -572,20 +575,88 @@ final class TurnRun {
 
   Stream<TurnEvent> _validated(String source) async* {
     switch (_validator.validate(source)) {
-      case Accepted(:final message, :final created):
+      case final Accepted accepted:
         _acceptedInRound++;
-        for (final accepted in [?created, message]) {
-          for (final json in _seeder.forward(accepted, _validator.seeds)) {
-            _forwarded.add(json);
-            yield TurnEvent.message(json);
-          }
-        }
+        yield* _forward(accepted);
       case Rejected(:final failure):
         _reject(failure);
         _rejectedSources.add(source);
       case Unchanged():
     }
   }
+
+  Stream<TurnEvent> _forward(Accepted accepted) async* {
+    for (final message in [?accepted.created, accepted.message]) {
+      for (final json in _seeder.forward(message, _validator.seeds)) {
+        _forwarded.add(json);
+        yield TurnEvent.message(json);
+      }
+    }
+  }
+
+  Map<String, Object?> get _planRoot =>
+      _validator.screen
+          ?.where((component) => component['id'] == _rootId)
+          .firstOrNull ??
+      const {'id': _rootId, 'component': 'Column'};
+
+  List<String>? get _planChildren => switch (_planRoot['children']) {
+    final List<Object?> ids => ids.whereType<String>().toList(),
+    null => const <String>[],
+    _ => null,
+  };
+
+  Stream<TurnEvent> _showHandedCards() async* {
+    final first = [..._putFirst];
+    final onTop = [..._shownOnTop];
+    final under = [..._shownUnder];
+    final takenOff = {..._takenOff};
+    _putFirst.clear();
+    _shownOnTop.clear();
+    _shownUnder.clear();
+    _takenOff.clear();
+    final root = _planRoot;
+    final children = _planChildren;
+    if ([first, onTop, under, takenOff].every((ids) => ids.isEmpty) ||
+        root['component'] != 'Column' ||
+        children == null) {
+      return;
+    }
+    final shown = UpdateComponentsMessage(
+      surfaceId: planSurfaceId,
+      components: [
+        {
+          ...root,
+          'children': [
+            ...{
+              ...first,
+              ...onTop.where((id) => !children.contains(id)),
+              ...children,
+              ...under,
+            }.where((id) => !takenOff.contains(id)),
+          ],
+        },
+      ],
+    );
+    switch (_validator.show(shown)) {
+      case final Accepted accepted:
+        yield* _forward(accepted);
+      case Rejected(:final failure):
+        _log.warning(
+          LogEntry(
+            'Handed cards not shown',
+            fields: {
+              'turn': turn,
+              'path': failure.path,
+              'reason': failure.message,
+            },
+          ),
+        );
+      case Unchanged():
+    }
+  }
+
+  static const _rootId = 'root';
 
   void _reject(ValidationFailure failure) {
     _log.info(
@@ -638,6 +709,8 @@ final class TurnRun {
       context: ToolContext(
         steps: _progress,
         slices: _validator.seeds,
+        cards: {..._validator.handed.keys},
+        onPlan: _planChildren ?? const [],
         buyerWords: buyerWords([
           for (final record in _session.turns) record.input,
           _turnRequest,
@@ -646,18 +719,19 @@ final class TurnRun {
       ),
     );
     _validator.seeds = {..._validator.seeds, ...result.seeds};
-    _handedDraw = _handedDraw || result.modelResult['draw'] != null;
+    _putFirst.addAll(result.showCards);
+    _takenOff.addAll(result.removeCards);
     return FunctionResult(
       callId: call.callId,
       name: call.name,
       result: {
         for (final MapEntry(:key, :value) in result.modelResult.entries)
-          key: handedCardKeys.contains(key) ? _keepCards(value) : value,
+          key: handedCardKeys.contains(key) ? _keepCards(key, value) : value,
       },
     );
   }
 
-  Object? _keepCards(Object? cards) => switch (cards) {
+  Object? _keepCards(String key, Object? cards) => switch (cards) {
     final List<Object?> cards => [
       for (final card in cards)
         if (card
@@ -666,7 +740,7 @@ final class TurnRun {
                   'component': final String component,
                 } &&
                 final Map<String, Object?> body)
-          _nameOf(id, component, body)
+          _nameOf(key, id, component, body)
         else
           card,
     ],
@@ -674,11 +748,17 @@ final class TurnRun {
   };
 
   Map<String, Object?> _nameOf(
+    String key,
     String id,
     String component,
     Map<String, Object?> body,
   ) {
     _validator.handed[id] = body;
+    if (key == shownOnTopKey) {
+      _shownOnTop.add(id);
+    } else if (key == shownUnderKey) {
+      _shownUnder.add(id);
+    }
     return {'id': id, 'component': component};
   }
 }

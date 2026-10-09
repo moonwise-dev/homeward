@@ -73,18 +73,17 @@ final class LookUpMarket extends AgentTool {
           ...{for (final rule in snapshot.rules) rule.kind.name},
         ],
         'waitingOn': [for (final field in snapshot.waitingOn) field.name],
-        'draw': [
+        shownUnderKey: [
           block('market', 'MarketSnapshotCard', {
             'market': boundTo('/markets/${city.cityId}'),
           }),
         ],
         'note':
             'The city is in /markets/${city.cityId}; never write its '
-            'figures in your text. $drawNote Keep it last on the plan, '
-            'under what you know. The rules that wait on the household '
+            'figures in your text. Its card is on the plan already, under '
+            'what you worked out. The rules that wait on the household '
             'apply once compute_affordability knows it: before you ask the '
-            'buyer for money facts, call it with what you have, and ask '
-            'for everything in its needs in one Questions card.',
+            'buyer for money facts, call it with what you have.',
       },
       seeds: {
         marketsSlice.name: {

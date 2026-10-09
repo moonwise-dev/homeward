@@ -10,9 +10,16 @@ Map<String, Object?> sends(String action) => {
   'event': {'name': action, 'context': const <String, Object?>{}},
 };
 
-const handedCardKeys = {'draw', 'drawWhenAsked'};
+Map<String, Object?> homeCard(String id) => block('home-$id', 'HomeCard', {
+  'home': boundTo('/homes/$id'),
+  'choose': sends('work_out_home'),
+  'keep': sends('keep_home'),
+});
+
+const shownOnTopKey = 'draw';
+const shownUnderKey = 'drawUnder';
+const handedCardKeys = {shownOnTopKey, shownUnderKey, 'drawWhenAsked'};
 
 const drawNote =
-    'draw lists cards that are ready: to show one, add its id to the '
-    "children of root in the plan's updateComponents. Send root only; "
-    "never send a card's own component, the server has it.";
+    'The cards under draw are on the plan already, so send nothing to '
+    'show them, and say in your text what they mean.';

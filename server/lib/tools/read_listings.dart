@@ -194,9 +194,9 @@ final class ReadListings extends AgentTool {
         'note':
             'The readings are in /reads/<id>; a ListingQuote highlights '
             "the listing's own words, so never quote the listing in your "
-            'text. $drawNote It holds the first three, and drawWhenAsked '
-            'the rest, each read-<id>: show the homes worth reading. A '
-            'home that rules '
+            'text. $drawNote draw holds the first three, and '
+            'drawWhenAsked the rest, each read-<id>: add another by '
+            'calling arrange_plan with its id. A home that rules '
             'out a need the buyer must have can be left out; says nothing is '
             'for the buyer to ask about or check at a viewing.',
       },
