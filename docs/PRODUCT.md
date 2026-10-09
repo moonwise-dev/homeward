@@ -39,7 +39,9 @@ what is open.
   once, last: a sentence with two or three buttons inline in the
   conversation, composed from basic components, or nothing when it needs
   nothing. What Homeward assumed is marked on the card, with one button to
-  say it is right, and a button on a card runs its tool at once (D188). The
+  say it is right, and a button on a card runs its tool at once (D188).
+  Under its cards the plan lists what else was worked out, each a button
+  that opens its card (D190). The
   plan is one living surface changed in place (D131). On a wide screen it
   sits beside the conversation; on a phone it follows the conversation in
   one scroll (D189).

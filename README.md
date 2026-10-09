@@ -31,7 +31,8 @@ conversation goes, so two households end up on two different screens.
   say it is right.
 - **One plan, changed in place.** The plan is a living A2UI surface. A tool's
   result goes on it as a card the moment the tool answers, and only the card
-  that answers what was asked; the rest wait until the buyer asks. Gemini
+  that answers what was asked; the rest wait, listed under the plan as
+  buttons built from basic components, and open with a tap. Gemini
   writes the words, arranges the plan, and composes each question from basic
   components, a sentence and two or three buttons, inline in the
   conversation. A button on a card runs its tool at once.

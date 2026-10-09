@@ -40,7 +40,12 @@ CatalogItem asPlanSections(CatalogItem item) => CatalogItem(
       spacing: AppSpacing.md,
       children: [
         for (final id in sections)
-          if (itemContext.getComponent(id)?.type case final type?
+          if (id == planMoreId)
+            KeyedSubtree(
+              key: const ValueKey(planMoreId),
+              child: itemContext.buildChild(id),
+            )
+          else if (itemContext.getComponent(id)?.type case final type?
               when type != 'Divider')
             AppSurfaceEntry(
               key: ValueKey(id),

@@ -682,7 +682,9 @@ owner, and leases it; `turn_run.dart` runs one turn:
    claimed: `confirm_household`, `work_out_home`, `take_rate`, and
    `use_down_payment` by `compute_affordability`; `keep_home` and
    `drop_home` by `keep_homes`; `split_this_rent` and `take_split` by
-   `split_rent`.
+   `split_rent`; and `show_card`, a tap on a waiting card's button, by
+   `arrange_plan` (D190), whose reply is a sentence with no offer after
+   it.
 4. Before every model request, assemble the system instruction with a fresh
    turn context, and declare the tools.
 5. Call `interactions.create` with streaming, `previous_interaction_id` when
@@ -718,7 +720,12 @@ owner, and leases it; `turn_run.dart` runs one turn:
    before the children it had; cards already on the plan keep their
    place. Cards under `drawWhenAlone`, the city at a glance, go on only
    when the plan would otherwise be empty, and wait under `ready`
-   otherwise (D187). The message goes through the same validation as Gemini's, and
+   otherwise (D187). The same message ends the plan with the cards that
+   wait (D190): a `Column` named `more` that holds a caption and a `Row` of
+   `Button`s, one for each waiting card whose kind has a heading and only
+   one waiting card, each sending `show_card` with the card's ID. The
+   server redraws it after every tool round and at the end of the turn,
+   and leaves it out of the screen Gemini is shown. The message goes through the same validation as Gemini's, and
    one that fails is logged and dropped, never sent back to Gemini to
    correct. Every batch of tool results carries a short note (D183): call
    what the buyer's message still asks for, then reply with sentences for

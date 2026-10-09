@@ -1,6 +1,6 @@
+import 'package:common/common.dart';
 import 'package:flutter/material.dart';
 
-import '../../../catalog/plan_section_labels.dart';
 import '../../../domain/models/plan_conversation.dart';
 import '../../core/themes/colors.dart';
 import '../../core/themes/dimens.dart';

@@ -16,15 +16,21 @@ const toolsDoneNote =
     'those sentences ask them anything, add the a2ui block with that ask '
     'and its buttons right after them.';
 
-String tapAnsweredInput(String tool, Object? answer) => [
+String tapAnsweredInput(
+  String tool,
+  Object? answer, {
+  required bool offersNext,
+}) => [
   'Server note, never repeat it to the buyer: this tap already ran '
       '$tool, and no more tools can run until the buyer answers. Its '
       'answer:',
   jsonEncode(answer),
   'The cards it handed over under draw are on the plan already. Reply '
-      'now with one or two sentences that say what this changes for them. '
-      'When there is something worth doing next, such as homes to see, a '
-      'card that waits under ready, or their week from a home, offer it: '
-      'right after your sentences add the a2ui block with that ask and '
-      'two or three buttons.',
+      'now with one or two sentences that say what this means for them, '
+      'from what the tools have told you, and end with a statement.',
+  if (offersNext)
+    'When there is work worth doing next that no tool has done, such as '
+        'homes to see or their week from a home, offer it instead: right '
+        'after your sentences add the a2ui block with that ask and two or '
+        'three buttons.',
 ].join('\n');

@@ -36,6 +36,17 @@ final class ArrangePlan extends AgentTool {
   };
 
   @override
+  Map<String, Object?>? argumentsForTap(
+    String action,
+    Map<String, Object?> context,
+  ) => switch ((action, context)) {
+    ('show_card', {'card': final String card}) => {
+      'show': [card],
+    },
+    _ => null,
+  };
+
+  @override
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {
     final show = _ids(arguments['show']);
     final remove = _ids(arguments['remove']);

@@ -378,7 +378,9 @@ pass rejects it.
    for `plan` or for this turn's inline surface; an update to one that does
    not exist yet creates it under the same rules (D184). An inline ID
    with another turn's number that names no surface is renamed for this
-   turn (D188). `updateDataModel` and `deleteSurface` are the server's.
+   turn (D188). `updateDataModel` and `deleteSurface` are the server's,
+   and so are the plan's `more` column and the components under it, the
+   buttons for the cards that wait (D190).
 4. **Allow-list.** Component is in the agent-visible catalog subset.
    `a2ui_core` does not check this, so the pass does.
 5. **Schema.** Components validate against the Homeward catalog document from

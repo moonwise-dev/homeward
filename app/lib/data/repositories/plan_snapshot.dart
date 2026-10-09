@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 
+import 'package:common/common.dart';
 import 'package:genui/genui.dart';
 
 import '../../domain/models/plan_conversation.dart';
@@ -22,7 +23,10 @@ PlanSnapshot planSnapshot(SurfaceContext surface) {
   final sectionIds = switch (root.properties) {
     {'children': final List<Object?> ids} when root.type == 'Column' => [
       for (final id in ids)
-        if (id is String && components[id]?.type != 'Divider') id,
+        if (id is String &&
+            id != planMoreId &&
+            components[id]?.type != 'Divider')
+          id,
     ],
     _ => [_rootId],
   };

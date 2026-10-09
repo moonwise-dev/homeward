@@ -43,6 +43,7 @@ import 'turn_event.dart';
 import 'turn_input.dart';
 import 'turn_settings.dart';
 import 'unfinished_reply_input.dart';
+import 'waiting_cards.dart';
 
 final _log = Logger('turn');
 
@@ -154,7 +155,11 @@ final class TurnRun {
         actionInput(action, surfaceData),
         if (tapAnswer case FunctionResult(:final name, :final result)
             when tapAnswered)
-          tapAnsweredInput(name, result),
+          tapAnsweredInput(
+            name,
+            result,
+            offersNext: action.name != showCardAction,
+          ),
       ].join('\n'),
     });
     InteractionInput input = firstInput;
@@ -452,6 +457,7 @@ final class TurnRun {
           },
         ),
       );
+      yield* _showHandedCards();
       _status = TurnStatus.completed;
       yield TurnEvent.completed(_text.toString().trim());
       return;
@@ -566,7 +572,7 @@ final class TurnRun {
     systemInstruction: prompts.systemInstruction(
       turnContext(
         turn: turn,
-        screen: _validator.screen ?? const [],
+        screen: withoutWaitingButtons(_validator.screen ?? const []),
         ready: _validator.ready,
         brief: switch (_validator.seeds[briefSlice.name]) {
           final Map<String, Object?> brief => brief,
@@ -638,7 +644,10 @@ final class TurnRun {
       const {'id': _rootId, 'component': 'Column'};
 
   List<String>? get _planChildren => switch (_planRoot['children']) {
-    final List<Object?> ids => ids.whereType<String>().toList(),
+    final List<Object?> ids => [
+      for (final id in ids)
+        if (id is String && id != planMoreId) id,
+    ],
     null => const <String>[],
     _ => null,
   };
@@ -654,22 +663,27 @@ final class TurnRun {
     _takenOff.clear();
     final root = _planRoot;
     final children = _planChildren;
-    if ([first, onTop, whenAlone, takenOff].every((ids) => ids.isEmpty) ||
-        root['component'] != 'Column' ||
-        children == null) {
+    if (root['component'] != 'Column' || children == null) {
       return;
     }
-    final cards = [
-      ...{
-        ...first,
-        ...onTop.where((id) => !children.contains(id)),
-        ...children,
-      }.where((id) => !takenOff.contains(id)),
-    ];
+    final kept = {
+      ...first,
+      ...onTop.where((id) => !children.contains(id)),
+      ...children,
+    }.where((id) => !takenOff.contains(id));
+    final cards = kept.isEmpty ? whenAlone : [...kept];
+    if (cards.isEmpty && children.isEmpty) {
+      return;
+    }
+    final more = waitingCardButtons(_validator.handed, cards);
     final shown = UpdateComponentsMessage(
       surfaceId: planSurfaceId,
       components: [
-        {...root, 'children': cards.isEmpty ? whenAlone : cards},
+        {
+          ...root,
+          'children': [...cards, if (more.isNotEmpty) planMoreId],
+        },
+        ...more,
       ],
     );
     switch (_validator.show(shown)) {

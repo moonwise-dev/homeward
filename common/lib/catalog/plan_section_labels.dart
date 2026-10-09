@@ -1,4 +1,4 @@
-const _headings = {
+const planSectionHeadings = {
   'PlanOverview': 'Your plan',
   'Brief': 'What Homeward knows',
   'AffordabilitySummary': 'What you can borrow',
@@ -20,13 +20,13 @@ const _headings = {
   'WeekMap': 'Your week on the map',
   'WeeklyTravel': 'Your week of travel',
   'RouteSummary': 'A route',
-  'RuleNote': 'A lending rule',
+  'RuleNote': 'The lending rule',
 };
 
 final _wordStart = RegExp('(?<=[a-z])[A-Z]');
 
 String planSectionLabel(String type) =>
-    _headings[type] ??
+    planSectionHeadings[type] ??
     type.replaceAllMapped(
       _wordStart,
       (match) => ' ${match[0]!.toLowerCase()}',

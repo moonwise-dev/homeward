@@ -54,6 +54,7 @@ export 'catalog/components/stress_test_chart.dart';
 export 'catalog/components/week_map.dart';
 export 'catalog/components/weekly_travel.dart';
 export 'catalog/core_components.dart';
+export 'catalog/plan_section_labels.dart';
 export 'catalog/data_model/affordability_data_slice.dart';
 export 'catalog/data_model/brief_slice.dart';
 export 'catalog/data_model/buy_vs_rent_slice.dart';

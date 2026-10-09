@@ -191,9 +191,20 @@ As of 2026-10-08.
   first opening message, with what they can borrow right under the reply,
   and a tap on These are right. A row of two buttons overflowed there and
   now wraps. Not looked at: a real phone, and Safari.
+- **The plan lists what waits** (D190, 2026-10-09). Under its cards the
+  plan shows Also worked out for you and a button for each waiting card,
+  built by the server from basic components. Probed on a local server
+  with `gemini-3.5-flash-lite`: after the move with two incomes, eight
+  buttons, a month's cost, the rates, rising rates, the costs on the day,
+  a down payment, the loan year by year, the city, and the lending rule;
+  a tap on If rates rise put the stress test on top at once and drew a
+  one-sentence reply in 1 round and 4 s. Looked at in headless Chrome at
+  1440 dp. Seen and left: that sentence says what the card is more than
+  what it means, and the buttons sit under the plan, a long scroll down
+  on a phone once several cards are open.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, first from commit
-  `bf1a0fb` and again the same day with D182 to D189; one live turn on the
+  `bf1a0fb` and again the same day with D182 to D190; one live turn on the
   redeployed server drew its cards after 5 s. On the public server: `/health`, the agent card with its
   public URL, a new session, `/dev` shut, a preflight from the Hosting
   origin, and one live turn in 25 s. On the public page, in headless
