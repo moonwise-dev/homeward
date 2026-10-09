@@ -35,8 +35,8 @@ final class CompareBuyRent extends AgentTool {
       'home': {
         'type': 'string',
         'description':
-            'A sample home: its ID from search_homes, or the street the '
-            'buyer named it by, such as Odengatan.',
+            'A sample home: its ID from search_homes, or the words the '
+            'buyer named it by, such as its street or what it is.',
       },
       'rent': {
         ...amountParameter,

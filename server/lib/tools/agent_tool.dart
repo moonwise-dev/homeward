@@ -15,6 +15,7 @@ abstract class ToolResult with _$ToolResult {
     @Default({}) Map<String, Object?> logFields,
     @Default([]) List<String> showCards,
     @Default([]) List<String> removeCards,
+    @Default(false) bool asksOnCard,
   }) = _ToolResult;
 }
 
@@ -28,6 +29,11 @@ abstract class AgentTool {
   Map<String, Object?> get parameters;
 
   bool get readsCatalog => false;
+
+  Map<String, Object?>? argumentsForTap(
+    String action,
+    Map<String, Object?> context,
+  ) => null;
 
   FunctionDeclaration get declaration => FunctionDeclaration(
     name: name,

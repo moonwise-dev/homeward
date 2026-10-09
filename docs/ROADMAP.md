@@ -60,7 +60,7 @@ As of 2026-10-08.
   estimate it; it refused a figure once as not the buyer's words; and
   renters are shown homes for sale. The README still describes the plan
   header and the brief on screen.
-- **Tools assume and estimate** (D183, 2026-10-09, not deployed).
+- **Tools assume and estimate** (D183, 2026-10-09).
   `compute_affordability` needs only income and savings; the rest it
   assumes or estimates and marks. Probed on a local server with
   the three opening messages, on `gemini-3.5-flash-lite`, each run more
@@ -86,7 +86,7 @@ As of 2026-10-08.
   homes for sale; the README is stale. Left out: Portugal's tax table, so
   there take-home pay is still asked for; pay before tax from take-home
   pay; an answer without savings or a price.
-- **Cards drawn by name** (D184, 2026-10-09, not deployed). Gemini sees a
+- **Cards drawn by name** (D184, 2026-10-09). Gemini sees a
   tool's cards as ID and component name, shows one by naming it in the
   plan's `root`, and the server supplies the body; a surface is created by
   its first `updateComponents`. A reply's drawing fell from about 2,000
@@ -106,7 +106,7 @@ As of 2026-10-08.
   cards in the next, or the other way round, and the finishing round that
   fetches the missing half costs 4 to 9 s. Three wordings of the note sent
   with tool results did not settle it.
-- **A tool's result shows itself** (D185, 2026-10-09, not deployed). The
+- **A tool's result shows itself** (D185, 2026-10-09). The
   server puts a tool's cards on the plan as soon as the tools have run;
   Gemini writes the reply and the ask, and changes the plan through a new
   tool, `arrange_plan`. Probed on a local server with
@@ -131,7 +131,7 @@ As of 2026-10-08.
   gives a reason no tool gave; the flat of the second starter costs twice
   what that household can borrow, so its screen says no; renters are shown
   sale prices.
-- **People who rent see a rent** (D186, 2026-10-09, not deployed).
+- **People who rent see a rent** (D186, 2026-10-09).
   `search_homes` takes `renting`, and the home card, the shortlist, and the
   comparison then show what renting a home like it costs a month, an
   estimate from the area's median with its source, in place of the price.
@@ -141,9 +141,35 @@ As of 2026-10-08.
   income. Looked at in headless Chrome at 1440 dp. Left out: a highest
   rent as a filter, `HomeSwipe`, which still shows prices, and real
   rental listings.
+- **The card that answers, and buttons that run their tool** (D187,
+  2026-10-09). A reply shows what they can borrow and only the cards the
+  message asks for; the household card confirms with a button of its own;
+  a tap on a card's button runs its tool on the server before Gemini
+  replies. Probed on a local server with `gemini-3.5-flash-lite`, the
+  last run of each: the move with two incomes, 2 rounds and 11 s, two
+  cards, what they can borrow and the household, where D185 showed five;
+  a tap on These are right, the marks gone at once and a reply in 1 round
+  and 4 s, or 2 rounds and 9 s when Gemini went on to find homes within
+  reach. The flat they picked, now one within reach and named by what it
+  is: 2 rounds and 12 s, with the home, what they can borrow, a month's
+  cost, the costs on the day, and buying against renting, all three
+  questions answered, where an earlier run of the same message took 4
+  rounds and 20 s because Gemini spread its tools over three steps. Two
+  friends in Lisbon: 2 rounds and 13 s, the map and three flats, no ask;
+  an earlier run took 4 rounds and 22 s, one of them `split_rent` called
+  before a flat was named, which it now answers with the first flat
+  shown, and one the round that fetches a missing ask, which drew its two
+  buttons. Looked at in headless Chrome at 1440 dp: the first reply and
+  the tap. Seen and left: Gemini still spreads its tools over two or
+  three steps in some runs, each a round of 4 to 6 s; its first round
+  takes about 6 s, much of it writing the brief; it offered as the next
+  thing to look at cards already on the plan, which the prompt now
+  forbids and one run confirmed; `use_down_payment`, `keep_home`,
+  `split_this_rent`, and `take_split` still go through Gemini.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
-  server on Cloud Run at the URL in the `Makefile`, both from commit
-  `bf1a0fb`. On the public server: `/health`, the agent card with its
+  server on Cloud Run at the URL in the `Makefile`, first from commit
+  `bf1a0fb` and again the same day with D182 to D187; one live turn on the
+  redeployed server drew its cards after 5 s. On the public server: `/health`, the agent card with its
   public URL, a new session, `/dev` shut, a preflight from the Hosting
   origin, and one live turn in 25 s. On the public page, in headless
   Chrome: the key screen at 1440 and 390 dp, and `/gallery/WeekMap` by its

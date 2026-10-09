@@ -22,6 +22,18 @@ final class ToolBelt {
         (name) => tools.any((tool) => tool.name == name && tool.readsCatalog),
       );
 
+  ({String name, Map<String, Object?> arguments})? answering(
+    String action,
+    Map<String, Object?> context,
+  ) {
+    for (final tool in tools) {
+      if (tool.argumentsForTap(action, context) case final arguments?) {
+        return (name: tool.name, arguments: arguments);
+      }
+    }
+    return null;
+  }
+
   Future<ToolResult> call(
     String name,
     Map<String, Object?> arguments, {

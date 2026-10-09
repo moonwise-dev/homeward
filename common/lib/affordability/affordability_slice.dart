@@ -53,6 +53,11 @@ abstract class AffordabilitySlice with _$AffordabilitySlice {
     String? homeName,
   }) = _AffordabilitySlice;
 
+  const AffordabilitySlice._();
+
+  bool get awaitsConfirmation =>
+      assumed.any((assumption) => assumption != ProfileAssumption.takeHomePay);
+
   factory AffordabilitySlice.fromJson(Map<String, Object?> json) =>
       _$AffordabilitySliceFromJson(json);
 }

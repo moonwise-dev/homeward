@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:common/common.dart';
 
 import 'markets_data.dart';
@@ -32,8 +34,54 @@ final class MarketDirectory {
             home.listing.title.toLowerCase().contains(words))
           home,
     ];
-    return byWords.length == 1 ? byWords.single : null;
+    if (byWords.length == 1) {
+      return byWords.single;
+    }
+    final telling = _tellingWords(words);
+    final shared = {
+      for (final home in all)
+        home: telling
+            .intersection(_tellingWords(_wordsOf(home.listing)))
+            .length,
+    };
+    final most = shared.values.fold(0, max);
+    final closest = [
+      for (final MapEntry(:key, :value) in shared.entries)
+        if (value == most) key,
+    ];
+    return most > 0 && closest.length == 1 ? closest.single : null;
   }
+
+  static String _wordsOf(Listing listing) => [
+    listing.name,
+    listing.address,
+    listing.title,
+    listing.areaName,
+  ].join(' ').toLowerCase();
+
+  static Set<String> _tellingWords(String text) => {
+    for (final word in text.split(_notLetters))
+      if (word.length > 3 && !_commonWords.contains(word)) word,
+  };
+
+  static final _notLetters = RegExp(r'[^\p{L}]+', unicode: true);
+
+  static const _commonWords = {
+    'flat',
+    'house',
+    'home',
+    'room',
+    'rooms',
+    'with',
+    'that',
+    'this',
+    'look',
+    'like',
+    'from',
+    'near',
+    'above',
+    'street',
+  };
 
   Map<String, PricedHome> pricedHomes(
     Iterable<String> ids,

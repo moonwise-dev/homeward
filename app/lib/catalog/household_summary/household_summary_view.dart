@@ -1,5 +1,6 @@
 import 'package:common/common.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../ui/core/themes/colors.dart';
@@ -8,11 +9,13 @@ import '../../ui/core/themes/text_styles.dart';
 import '../../ui/core/ui/app_figure_row.dart';
 import '../money_text.dart';
 
-class HouseholdSummaryView extends StatelessWidget {
-  const HouseholdSummaryView({required this.slice, super.key});
+class HouseholdSummaryView extends HookWidget {
+  const HouseholdSummaryView({required this.slice, this.onConfirm, super.key});
 
   final AffordabilitySlice slice;
+  final VoidCallback? onConfirm;
 
+  static const confirmLabel = 'These are right';
   static const _assumed = 'Assumed';
 
   @override
@@ -25,6 +28,12 @@ class HouseholdSummaryView extends StatelessWidget {
     }
     final children = profile.childAges;
     final source = slice.takeHomeSource;
+    final onConfirm = this.onConfirm;
+    final sent = useState(false);
+    useEffect(() {
+      sent.value = false;
+      return null;
+    }, [slice]);
     String? noteFor(ProfileAssumption assumption, [String note = _assumed]) =>
         slice.assumed.contains(assumption) ? note : null;
     return Column(
@@ -136,6 +145,22 @@ class HouseholdSummaryView extends StatelessWidget {
           ),
         ],
         const SizedBox(height: AppSpacing.sm),
+        if (onConfirm != null && slice.awaitsConfirmation)
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: OutlinedButton(
+                onPressed: sent.value
+                    ? null
+                    : () {
+                        sent.value = true;
+                        onConfirm();
+                      },
+                child: const Text(confirmLabel),
+              ),
+            ),
+          ),
         Text(
           slice.assumed.isEmpty
               ? 'Change anything by saying so.'

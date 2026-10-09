@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 const toolResultsNote =
     'Server note, never repeat it to the buyer: the cards these tools '
     'handed over under draw are on the plan already. If their message '
@@ -13,3 +15,15 @@ const toolsDoneNote =
     'already. Reply now with one to three sentences for the buyer. When '
     'those sentences ask them anything, add the a2ui block with that ask '
     'and its buttons right after them.';
+
+String tapAnsweredInput(String tool, Object? answer) => [
+  'Server note, never repeat it to the buyer: this tap already ran '
+      '$tool, so do not call it again for this tap. Its answer:',
+  jsonEncode(answer),
+  'The cards it handed over under draw are on the plan already. Call '
+      'another tool only when the tap asks for more than this. Reply with '
+      'one to three sentences that say what this changes for them. When '
+      'there is something worth looking at next, offer it: add the a2ui '
+      'block with that ask and two or three buttons right after your '
+      'sentences.',
+].join('\n');

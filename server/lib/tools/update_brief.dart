@@ -2,6 +2,7 @@ import 'package:common/common.dart';
 
 import 'agent_tool.dart';
 import 'numbers_in.dart';
+import 'their_words.dart';
 import 'tool_context.dart';
 
 final class UpdateBrief extends AgentTool {
@@ -146,10 +147,11 @@ final class UpdateBrief extends AgentTool {
   BriefItem _itemOf(Map<String, Object?> item, List<String> buyerWords) {
     final source = FactSource.values.byName(item['source']! as String);
     final words = switch (item['words']) {
-      final String words when _appearsIn(words, buyerWords) => words.replaceAll(
-        _edges,
-        '',
-      ),
+      final String words when inTheirWords(words, buyerWords) =>
+        words.replaceAll(
+          quoteEdges,
+          '',
+        ),
       _ => null,
     };
     return BriefItem(
@@ -195,18 +197,4 @@ final class UpdateBrief extends AgentTool {
       (int.tryParse(number) ?? smallCountLimit + 1) <= smallCountLimit;
 
   static const smallCountLimit = 12;
-
-  static bool _appearsIn(String words, List<String> buyerWords) {
-    final quote = _normalized(words).replaceAll(_edges, '');
-    return quote.isNotEmpty &&
-        buyerWords.any((said) => _normalized(said).contains(quote));
-  }
-
-  static final _edges = RegExp(r'''^[\s"'“”‘’.,;:!?]+|[\s"'“”‘’.,;:!?]+$''');
-
-  static String _normalized(String text) => text
-      .toLowerCase()
-      .replaceAll(RegExp('[‘’]'), "'")
-      .replaceAll(RegExp('[“”]'), '"')
-      .replaceAll(RegExp(r'\s+'), ' ');
 }

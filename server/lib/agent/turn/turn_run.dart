@@ -85,9 +85,11 @@ final class TurnRun {
   var _wordsBeforeTools = '';
   var _wordsOnly = false;
   final _shownOnTop = <String>[];
-  final _shownUnder = <String>[];
+  final _shownWhenAlone = <String>[];
   final _putFirst = <String>[];
   final _takenOff = <String>{};
+  var _cardAsks = false;
+  var _askOnly = false;
   String? _interactionId;
   String? _lastModel;
   var _emittedText = '';
@@ -125,12 +127,30 @@ final class TurnRun {
       TextTurnInput(:final text) => RecordedInput.text(text),
       ActionTurnInput(:final action) => recordedInputOf(action),
     };
+    FunctionResult? tapAnswer;
+    if (turnInput case ActionTurnInput(:final action)) {
+      if (tools.answering(action.name, action.context) case final answering?) {
+        yield* _progress.whileRunning(() async {
+          tapAnswer = await _runCall(
+            FunctionCall(
+              callId: action.name,
+              name: answering.name,
+              arguments: answering.arguments,
+            ),
+            _researcher(apiKey, cancellation),
+          );
+        });
+        yield* _refreshSlices();
+        yield* _showHandedCards();
+      }
+    }
     final firstInput = InteractionInput.text(switch (turnInput) {
       TextTurnInput(:final text) => text,
-      ActionTurnInput(:final action, :final surfaceData) => actionInput(
-        action,
-        surfaceData,
-      ),
+      ActionTurnInput(:final action, :final surfaceData) => [
+        actionInput(action, surfaceData),
+        if (tapAnswer case FunctionResult(:final name, :final result))
+          tapAnsweredInput(name, result),
+      ].join('\n'),
     });
     InteractionInput input = firstInput;
     var toolRounds = 0;
@@ -298,6 +318,7 @@ final class TurnRun {
           toolRounds++;
         }
         _wordsOnly = false;
+        _askOnly = false;
         if (_text.toString() != textBeforeRound) {
           _wordsBeforeTools = _text.toString();
           _text
@@ -306,12 +327,7 @@ final class TurnRun {
           yield* _emitText();
         }
         final results = <FunctionResult>[];
-        final researcher = GeminiResearcher(
-          createInteraction: createInteraction,
-          apiKey: apiKey,
-          thinkingLevel: settings.thinkingLevel,
-          cancellation: cancellation,
-        );
+        final researcher = _researcher(apiKey, cancellation);
         yield* _progress.whileRunning(() async {
           for (final call in calls) {
             results.add(await _runCall(call, researcher));
@@ -372,6 +388,7 @@ final class TurnRun {
           !noWords &&
           calls.isEmpty &&
           !_validator.askedThisTurn &&
+          !_cardAsks &&
           _text.toString().trimRight().endsWith('?');
       if (finishingRounds < settings.maxFinishingRounds &&
           _pendingFailures.isEmpty &&
@@ -404,8 +421,8 @@ final class TurnRun {
               ),
           ], note: note);
         }
-        correcting = !noWords;
         _wordsOnly = noWords;
+        _askOnly = !noWords;
         continue;
       }
       if (_text.toString().trim().isEmpty && _wordsBeforeTools.isNotEmpty) {
@@ -433,6 +450,14 @@ final class TurnRun {
       return;
     }
   }
+
+  Researcher _researcher(String apiKey, Future<void>? cancellation) =>
+      GeminiResearcher(
+        createInteraction: createInteraction,
+        apiKey: apiKey,
+        thinkingLevel: settings.thinkingLevel,
+        cancellation: cancellation,
+      );
 
   Future<void> _logRefusedChain(
     String apiKey,
@@ -554,6 +579,8 @@ final class TurnRun {
 
   Stream<TurnEvent> _emit(ParsedOutput output) async* {
     switch (output) {
+      case ProseOutput() when _askOnly:
+        break;
       case ProseOutput(:final text):
         if (_separateRound && text.trim().isNotEmpty) {
           _text.write('\n\n');
@@ -609,33 +636,30 @@ final class TurnRun {
   Stream<TurnEvent> _showHandedCards() async* {
     final first = [..._putFirst];
     final onTop = [..._shownOnTop];
-    final under = [..._shownUnder];
+    final whenAlone = [..._shownWhenAlone];
     final takenOff = {..._takenOff};
     _putFirst.clear();
     _shownOnTop.clear();
-    _shownUnder.clear();
+    _shownWhenAlone.clear();
     _takenOff.clear();
     final root = _planRoot;
     final children = _planChildren;
-    if ([first, onTop, under, takenOff].every((ids) => ids.isEmpty) ||
+    if ([first, onTop, whenAlone, takenOff].every((ids) => ids.isEmpty) ||
         root['component'] != 'Column' ||
         children == null) {
       return;
     }
+    final cards = [
+      ...{
+        ...first,
+        ...onTop.where((id) => !children.contains(id)),
+        ...children,
+      }.where((id) => !takenOff.contains(id)),
+    ];
     final shown = UpdateComponentsMessage(
       surfaceId: planSurfaceId,
       components: [
-        {
-          ...root,
-          'children': [
-            ...{
-              ...first,
-              ...onTop.where((id) => !children.contains(id)),
-              ...children,
-              ...under,
-            }.where((id) => !takenOff.contains(id)),
-          ],
-        },
+        {...root, 'children': cards.isEmpty ? whenAlone : cards},
       ],
     );
     switch (_validator.show(shown)) {
@@ -721,6 +745,7 @@ final class TurnRun {
     _validator.seeds = {..._validator.seeds, ...result.seeds};
     _putFirst.addAll(result.showCards);
     _takenOff.addAll(result.removeCards);
+    _cardAsks = _cardAsks || result.asksOnCard;
     return FunctionResult(
       callId: call.callId,
       name: call.name,
@@ -756,8 +781,8 @@ final class TurnRun {
     _validator.handed[id] = body;
     if (key == shownOnTopKey) {
       _shownOnTop.add(id);
-    } else if (key == shownUnderKey) {
-      _shownUnder.add(id);
+    } else if (key == shownWhenAloneKey) {
+      _shownWhenAlone.add(id);
     }
     return {'id': id, 'component': component};
   }

@@ -149,12 +149,12 @@ A couple weighing one sample home.
 > together, 85,000 before tax, no debts, and have 900,000 kronor saved. We're
 > both 34, two adults, no kids.
 >
-> We like the look of the corner flat on Odengatan. What would it cost us each
-> month, what do we pay on the day, and is buying it better than renting
-> something like it?
+> We like the look of the loft-style flat by the lake in Nacka. What would it
+> cost us each month, what do we pay on the day, and is buying it better than
+> renting something like it?
 
-`search_homes` finds the flat by its street, `compute_affordability` prices it
-for this household, and `compare_buy_rent` adds up buying against renting a
+`compute_affordability` finds the flat by the words they named it by and
+prices it for this household, and `compare_buy_rent` adds up buying against renting a
 home like it, year by year. The plan shows
 [`MonthlyCostBreakdown`](docs/generated/catalog_reference.md#monthlycostbreakdown),
 [`PurchaseCostsTable`](docs/generated/catalog_reference.md#purchasecoststable),

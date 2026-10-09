@@ -144,7 +144,7 @@ The catalog schema below holds the full schemas of the components every plan use
 - `ChoicePicker`: Options to pick one or several of, as checkboxes or chips, bound to a list
 - `TextField`: A labelled text input, short, long, numeric, or obscured
 - `DateTimeInput`: A labelled date, time, or both, in ISO 8601
-- `HouseholdSummary`: What the figures rest on, as compute_affordability kept it: the people, residency, work, incomes, other loans, and savings. A line the tool assumed or estimated is marked, so draw it when the tool hands it over, and when the buyer asks who the household is.
+- `HouseholdSummary`: What the figures rest on, as compute_affordability kept it: the people, residency, work, incomes, other loans, and savings. A line the tool assumed or estimated is marked, so draw it when the tool hands it over, and when the buyer asks who the household is. While a line is assumed, its confirm action shows as a button that says the assumed lines are right, so no other ask is needed for that.
 - `MoneyInput`: An amount field that writes { amount, currency, per }, the shape the money tools take, to the path it binds; a Button beside it sends that path in its action context. Use it to ask for an income, savings, a debt, a rent, or a fee.
 - `MonthlyCostBreakdown`: What the home at the price in /affordability costs each month: interest, amortization, the fee the buyer stated, and the total, from compute_affordability.
 - `StressTestChart`: The monthly cost as rates rise past the rate lenders test, against the most this household can carry, from compute_affordability.

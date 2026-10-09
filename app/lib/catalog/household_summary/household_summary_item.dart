@@ -2,6 +2,7 @@ import 'package:common/common.dart';
 import 'package:flutter/widgets.dart';
 import 'package:genui/genui.dart';
 
+import '../bindings/binding_actions.dart';
 import '../bindings/binding_parsers.dart';
 import '../bindings/bound_parsed.dart';
 import '../catalog_item_for.dart';
@@ -17,6 +18,15 @@ final householdSummaryItem = catalogItemFor(const HouseholdSummary(), (
     parse: (value) => jsonModelOf(value, AffordabilitySlice.fromJson),
     builder: (context, slice) => slice == null
         ? const SizedBox.shrink()
-        : HouseholdSummaryView(slice: slice),
+        : HouseholdSummaryView(
+            slice: slice,
+            onConfirm: data['confirm'] == null
+                ? null
+                : () => dispatchAction(
+                    itemContext,
+                    data['confirm'],
+                    adding: const {'label': HouseholdSummaryView.confirmLabel},
+                  ),
+          ),
   );
 });

@@ -388,12 +388,28 @@ up.
 With the result it answers `limit`, one sentence on what sets the limit, the
 savings, the income, or what is left to live on, for Gemini to put in its own
 words; `assumedAboutThem`, what it assumed or estimated about the household,
-with a note to say so in the reply and ask once whether it is right; `draw`,
-the summary, the household when anything about it was assumed, the limiting
-rule, and the monthly cost; and `drawWhenAsked`, the stress test, the costs
-on the day, the down payment slider, the rates, the loan year by year, and
-the household when nothing was assumed, each ready to add when the buyer
-asks or picks it as the next thing to look at.
+with a note to say so in the reply; `draw`, the cards that answer (D187):
+the summary always, the household when anything about it was assumed, the
+monthly cost when there is a home or a price, the limiting rule when the
+loan is over it, and the home being worked out; and `drawWhenAsked`, the
+rest, the stress test, the costs on the day, the down payment slider, the
+rates, and the loan year by year among them, each ready to add when the
+buyer asks or picks it as the next thing to look at.
+
+`show` names cards the buyer's message asks for, so one call answers a
+message that asks several things: each entry holds the card, `monthly`,
+`costs`, `stress`, `down-payment`, `rates`, `loan`, `household`, or `limit`,
+and `theirWords`, the words of the buyer that ask for it. A card whose
+words are not in what the buyer wrote waits instead; without that check
+Gemini named four cards for a message that asked for none.
+
+The household card carries a `confirm` action while a line is assumed, a
+button that reads These are right, so Gemini draws no ask for the
+assumptions. `assumedRight` clears the marks of everything the tool
+assumed; an estimated take-home pay stays marked as an estimate. The tool
+claims three taps (D187), which the server runs before the first model
+round: `confirm_household` as `assumedRight`, `work_out_home` with the
+home's ID, and `take_rate` with the rate's ID.
 
 The buyer's preferences shape what a home costs them a month (C5b, D147):
 the price of a home they name, the down payment they want to make, and the
@@ -562,7 +578,9 @@ incomes; and by room size, rent in proportion to each room plus an equal
 part of the shared space, bills equally. The parts add up to the total to
 the cent. It seeds `/rentSplit` for `RentSplit` and answers with the rules
 it could work out and which figures would add the others. When the buyer
-takes a rule, Gemini calls it again with `rule`.
+takes a rule, Gemini calls it again with `rule`. Without a home or a rent
+it splits the first flat `search_homes` showed for renting and says which
+(D187), so it can run in the same step as the search.
 
 `compare_buy_rent` (C9, D155) compares buying a sample home with renting
 one like it. It takes the home's ID, the rent the buyer stated if any, and
@@ -653,7 +671,10 @@ owner, and leases it; `turn_run.dart` runs one turn:
 2. Replay the session's stored A2UI messages into the shadow processor, so
    validation knows the surfaces earlier turns drew.
 3. Write the first input: the buyer's text, or the action with its context and
-   surface data.
+   surface data. When a tool claims the action as a tap on its own card's
+   button (D187), the server runs that tool first, shows its cards, and
+   adds its answer to the input with a note not to call it again, so the
+   reply takes one model round.
 4. Before every model request, assemble the system instruction with a fresh
    turn context, and declare the tools.
 5. Call `interactions.create` with streaming, `previous_interaction_id` when
@@ -686,9 +707,10 @@ owner, and leases it; `turn_run.dart` runs one turn:
    three tool rounds, plus at most two rounds that only read `component_docs`.
    After the tools ran, the server shows what they handed over under
    `draw` (D185): it sends the plan's `root` with those cards' IDs put
-   before the children it had, and the ones under `drawUnder`, such as the
-   city at a glance, after them; cards already on the plan keep their
-   place. The message goes through the same validation as Gemini's, and
+   before the children it had; cards already on the plan keep their
+   place. Cards under `drawWhenAlone`, the city at a glance, go on only
+   when the plan would otherwise be empty, and wait under `ready`
+   otherwise (D187). The message goes through the same validation as Gemini's, and
    one that fails is logged and dropped, never sent back to Gemini to
    correct. Every batch of tool results carries a short note (D183): call
    what the buyer's message still asks for, then reply with sentences for
@@ -879,7 +901,8 @@ nothing.
 | Stored chain refused with `invalid_request` before anything is drawn | The turn starts over once on a new conversation |
 | Model output invalid after corrections | Model text, and the retry notice when the turn drew nothing |
 | A reply with no words | One finishing round asks for them; what was drawn stands |
-| A reply that asks in words and draws no ask | One finishing round asks for the ask alone |
+| A reply that asks in words and draws no ask | One finishing round asks for the ask alone, unconstrained, and keeps only its `a2ui` block; a card that asks by itself, such as the household card's button, counts as the ask |
+| A tap on a card's own button that a tool claims | The tool runs before the first model round, and Gemini hears its answer with the tap |
 | A plan message that names a card where a component belongs | The card is put first on the plan, as `arrange_plan` would |
 | Words written before the tools ran | Dropped when the round ends in tool calls, unless no later words come |
 | Words that hold the model's notes to itself or code | Taken back, and the one finishing round asks for sentences for the buyer |

@@ -90,11 +90,12 @@ A few facts only the buyer knows, asked together: each an amount, a number, a sh
 
 ### HouseholdSummary
 
-What the figures rest on, as compute_affordability kept it: the people, residency, work, incomes, other loans, and savings. A line the tool assumed or estimated is marked, so draw it when the tool hands it over, and when the buyer asks who the household is.
+What the figures rest on, as compute_affordability kept it: the people, residency, work, incomes, other loans, and savings. A line the tool assumed or estimated is marked, so draw it when the tool hands it over, and when the buyer asks who the household is. While a line is assumed, its confirm action shows as a button that says the assumed lines are right, so no other ask is needed for that.
 
 | Property | Kind | Required | Path | Seeded by |
 | --- | --- | --- | --- | --- |
 | `affordability` | binding | yes | `/affordability` | `compute_affordability` |
+| `confirm` | action | no |  |  |
 
 ### MoneyInput
 

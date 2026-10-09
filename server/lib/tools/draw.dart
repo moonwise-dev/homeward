@@ -18,8 +18,9 @@ Map<String, Object?> homeCard(String id, {bool renting = false}) =>
     });
 
 const shownOnTopKey = 'draw';
-const shownUnderKey = 'drawUnder';
-const handedCardKeys = {shownOnTopKey, shownUnderKey, 'drawWhenAsked'};
+const shownWhenAloneKey = 'drawWhenAlone';
+const waitingKey = 'drawWhenAsked';
+const handedCardKeys = {shownOnTopKey, shownWhenAloneKey, waitingKey};
 
 const drawNote =
     'The cards under draw are on the plan already, so send nothing to '

@@ -20,9 +20,9 @@ const starterPrompts = <StarterPrompt>[
         "We're looking at flats in Stockholm. We take home 62,000 kronor a "
         'month together, 85,000 before tax, no debts, and have 900,000 '
         "kronor saved. We're both 34, two adults, no kids. We like the look "
-        'of the corner flat on Odengatan. What would it cost us each month, '
-        'what do we pay on the day, and is buying it better than renting '
-        'something like it?',
+        'of the loft-style flat by the lake in Nacka. What would it cost us '
+        'each month, what do we pay on the day, and is buying it better '
+        'than renting something like it?',
   ),
   (
     title: 'Sharing in Lisbon',

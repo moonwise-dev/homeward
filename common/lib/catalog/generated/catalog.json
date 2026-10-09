@@ -1087,7 +1087,7 @@
     },
     "HouseholdSummary": {
       "type": "object",
-      "description": "What the figures rest on, as compute_affordability kept it: the people, residency, work, incomes, other loans, and savings. A line the tool assumed or estimated is marked, so draw it when the tool hands it over, and when the buyer asks who the household is.",
+      "description": "What the figures rest on, as compute_affordability kept it: the people, residency, work, incomes, other loans, and savings. A line the tool assumed or estimated is marked, so draw it when the tool hands it over, and when the buyer asks who the household is. While a line is assumed, its confirm action shows as a button that says the assumed lines are right, so no other ask is needed for that.",
       "properties": {
         "id": {
           "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
@@ -1117,6 +1117,9 @@
             "path"
           ],
           "additionalProperties": false
+        },
+        "confirm": {
+          "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/Action"
         }
       },
       "required": [

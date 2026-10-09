@@ -13,7 +13,8 @@ String unfinishedReplyInput({required bool notes}) => [
 
 const missingAskInput =
     'Server note, never repeat it to the buyer: your text asks the buyer '
-    'something, and you drew nothing for them to tap. Send the inline ask '
-    'for it now and nothing else: one updateComponents for a surface '
-    'named for this turn, whose root is a Column with a Text and a Row of '
-    'Buttons, or a Choice, or a Questions card. Do not call a tool.';
+    'something, and you drew nothing for them to tap. Send the a2ui '
+    'block with the inline ask for it now, and no sentences: one '
+    'updateComponents for a surface named for this turn, whose root is a '
+    'Column with a Text and a Row of Buttons, or a Choice, or a Questions '
+    'card. Do not call a tool.';

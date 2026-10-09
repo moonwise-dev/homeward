@@ -10,6 +10,7 @@ import 'household_in.dart';
 import 'amount_arguments.dart';
 import 'kept_homes.dart';
 import 'numbers_in.dart';
+import 'their_words.dart';
 import 'tool_context.dart';
 
 final class ComputeAffordability extends AgentTool {
@@ -67,12 +68,14 @@ final class ComputeAffordability extends AgentTool {
       'they stated them; a figure not in their words is left out. It '
       'answers with doubts, figures that do not make sense and must be '
       'checked with the buyer before they are used; or with needs, the '
-      'facts only the buyer has, to ask for together; or it seeds '
-      '/affordability for AffordabilitySummary, HouseholdSummary, RuleNote, '
-      'MonthlyCostBreakdown, StressTestChart, PurchaseCostsTable, '
-      'DownPaymentSlider, MortgageOptions, and LoanBalanceChart, and lists '
-      "what it assumed that is the buyer's to decide. For a home anywhere "
-      'else, tell the buyer the sample does not cover it.';
+      'facts only the buyer has, to ask for together; or with the answer: '
+      'what they can borrow goes on the plan, with what a month costs '
+      'when there is a home or a price, who the figures rest on when '
+      'something was assumed, and the lending rule when the loan is over '
+      'it. Its other cards wait until the buyer asks, or go on at once '
+      'when you pass them under show. It also lists what it assumed that '
+      "is the buyer's to decide. For a home anywhere else, tell the buyer "
+      'the sample does not cover it.';
 
   @override
   Map<String, Object?> get parameters => {
@@ -111,8 +114,8 @@ final class ComputeAffordability extends AgentTool {
         'type': 'string',
         'description':
             'Optional. A sample home the buyer picked: its ID from '
-            'search_homes, or the street they named it by, such as '
-            'Odengatan, which needs no search first. Its price and fee come '
+            'search_homes, or the words they named it by, such as its '
+            'street or what it is, which needs no search first. Its price and fee come '
             'from the listing, so pass no price or homeFee with it.',
       },
       'price': {
@@ -186,6 +189,38 @@ final class ComputeAffordability extends AgentTool {
             'Optional. The term the buyer chose; without it the longest the '
             'rules allow is assumed.',
       },
+      'show': {
+        'type': 'array',
+        'items': {
+          'type': 'object',
+          'properties': {
+            'card': {
+              'type': 'string',
+              'enum': [..._askedFor.keys],
+            },
+            'theirWords': {
+              'type': 'string',
+              'description':
+                  "The words of the buyer's message that ask for this "
+                  'card, copied exactly.',
+            },
+          },
+          'required': ['card', 'theirWords'],
+        },
+        'description':
+            "Optional. Cards the buyer's message asks for in so many "
+            'words, to put on the plan with the answer: '
+            '${_waitingText()}. Leave it out when their message asks for '
+            'none of these, as a message that only gives their pay and '
+            'savings does; a card whose words are not theirs waits.',
+      },
+      'assumedRight': {
+        'type': 'boolean',
+        'description':
+            'True when the buyer said, or tapped on the household card, '
+            'that what this tool assumed about them is right; the assumed '
+            'lines are then no longer marked. Never as a guess.',
+      },
       'confirmed': {
         'type': 'array',
         'items': {
@@ -211,6 +246,17 @@ final class ComputeAffordability extends AgentTool {
     for (final MapEntry(:key, :value) in _ratesByMarket.entries)
       '$key: ${value.join(', ')}',
   ].join('; ');
+
+  @override
+  Map<String, Object?>? argumentsForTap(
+    String action,
+    Map<String, Object?> context,
+  ) => switch ((action, context)) {
+    ('confirm_household', _) => const {'assumedRight': true},
+    ('work_out_home', {'home': final String home}) => {'home': home},
+    ('take_rate', {'loanType': final String rate}) => {'loanType': rate},
+    _ => null,
+  };
 
   @override
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {
@@ -304,10 +350,13 @@ final class ComputeAffordability extends AgentTool {
     final estimateAgain =
         passed['grossIncomes'] != null &&
         assumedEarlier.contains(ProfileAssumption.takeHomePay);
+    final saidRight = passed['assumedRight'] == true;
     final carried = {
       for (final assumption in assumedEarlier)
         if (passed[_assumedArgument[assumption]] == null &&
-            !(estimateAgain && assumption == ProfileAssumption.takeHomePay))
+            (assumption == ProfileAssumption.takeHomePay
+                ? !estimateAgain
+                : !saidRight))
           assumption,
     };
     final people = BuyerProfile(
@@ -513,6 +562,8 @@ final class ComputeAffordability extends AgentTool {
       if (slice.assumed.isNotEmpty)
         'assumed': [for (final assumption in slice.assumed) assumption.name],
       if (leftOut.isNotEmpty) 'leftOut': leftOut.length,
+      if (_asked(arguments, context).isNotEmpty)
+        'show': [..._asked(arguments, context)],
     },
     modelResult: {
       'answered': true,
@@ -555,39 +606,20 @@ final class ComputeAffordability extends AgentTool {
               _assumedArgument[assumption]!: _assumedText(assumption, slice),
         },
       'limit': _limit(assessed.binding?.kind),
-      'draw': [
-        block('summary', 'AffordabilitySummary', _affordability),
-        if (slice.assumed.isNotEmpty)
-          block('household', 'HouseholdSummary', _affordability),
-        if (slice.binding != null)
-          block('limit', 'RuleNote', {
-            'rule': boundTo('/affordability/binding'),
-          }),
-        block('monthly', 'MonthlyCostBreakdown', _affordability),
-        if (slice.homeId case final id?) homeCard(id),
+      shownOnTopKey: [
+        for (final (:card, :shown) in _cards(slice, inMarket))
+          if (shown || _asked(arguments, context).contains(card['id'])) card,
       ],
-      'drawWhenAsked': [
-        block('stress', 'StressTestChart', _affordability),
-        block('costs', 'PurchaseCostsTable', _affordability),
-        block('down-payment', 'DownPaymentSlider', {
-          ..._affordability,
-          'apply': sends('use_down_payment'),
-        }),
-        block('rates', 'MortgageOptions', {
-          ..._affordability,
-          'choose': sends('take_rate'),
-        }),
-        block('loan', 'LoanBalanceChart', _affordability),
-        if (slice.assumed.isEmpty)
-          block('household', 'HouseholdSummary', _affordability),
+      waitingKey: [
+        for (final (:card, :shown) in _cards(slice, inMarket))
+          if (!shown && !_asked(arguments, context).contains(card['id'])) card,
       ],
       'note':
           'The figures are in /affordability; never write them in your '
-          'text. $drawNote Add one from drawWhenAsked, by calling '
-          'arrange_plan with its id, when the buyer asks '
-          'for it or picks it as the next thing to look at: rising rates, '
-          'the costs on the day, other down payments, the rates side by '
-          'side, the loan year by year, or who the household is. In your '
+          'text. $drawNote The cards under drawWhenAsked wait: put one on '
+          'the plan when the buyer asks for it or picks it as the next '
+          'thing to look at, with arrange_plan and its id, or under show '
+          'when you call this tool again: ${_waitingText()}. In your '
           'reply say in your own plain words what limit says, and what it '
           'means for the home they can look at. ${slice.assumed.isEmpty ? '' : _assumedNote}'
           "What is under assumed is the buyer's to decide; nothing else "
@@ -595,6 +627,7 @@ final class ComputeAffordability extends AgentTool {
           'a down payment or take a rate, call this tool again with it as '
           'downPayment or loanType.',
     },
+    asksOnCard: slice.awaitsConfirmation,
     seeds: {
       'affordability': jsonDecode(jsonEncode(slice.toJson())),
       if (_homesToPrice(context, slice) case final ids when ids.isNotEmpty)
@@ -612,18 +645,95 @@ final class ComputeAffordability extends AgentTool {
     },
   );
 
+  static const _askedFor = {
+    'monthly': 'what a month costs',
+    'costs': 'what they pay on the day',
+    'stress': 'what happens when rates rise',
+    'down-payment': 'other down payments',
+    'rates': 'the rates side by side',
+    'loan': 'the loan year by year',
+    'household': 'who the figures rest on',
+    'limit': 'the lending rule that sets the loan',
+  };
+
+  static String _waitingText() => [
+    for (final MapEntry(:key, :value) in _askedFor.entries) '$key for $value',
+  ].join(', ');
+
+  static Set<String> _asked(
+    Map<String, Object?> arguments,
+    ToolContext context,
+  ) => {
+    if (arguments['show'] case final List<Object?> cards)
+      for (final card in cards)
+        if (card
+            case {
+              'card': final String id,
+              'theirWords': final String words,
+            }
+            when inTheirWords(words, context.buyerWords))
+          id,
+  };
+
+  static List<({Map<String, Object?> card, bool shown})> _cards(
+    AffordabilitySlice slice,
+    Map<String, Money> inMarket,
+  ) => [
+    (
+      card: block('summary', 'AffordabilitySummary', _affordability),
+      shown: true,
+    ),
+    (
+      card: block('household', 'HouseholdSummary', {
+        ..._affordability,
+        'confirm': sends('confirm_household'),
+      }),
+      shown: slice.assumed.isNotEmpty,
+    ),
+    if (slice.binding != null)
+      (
+        card: block('limit', 'RuleNote', {
+          'rule': boundTo('/affordability/binding'),
+        }),
+        shown: slice.loan > slice.maxLoan,
+      ),
+    (
+      card: block('monthly', 'MonthlyCostBreakdown', _affordability),
+      shown: slice.homeId != null || inMarket['price'] != null,
+    ),
+    (card: block('costs', 'PurchaseCostsTable', _affordability), shown: false),
+    if (slice.homeId case final id?) (card: homeCard(id), shown: true),
+    (card: block('stress', 'StressTestChart', _affordability), shown: false),
+    (
+      card: block('down-payment', 'DownPaymentSlider', {
+        ..._affordability,
+        'apply': sends('use_down_payment'),
+      }),
+      shown: false,
+    ),
+    (
+      card: block('rates', 'MortgageOptions', {
+        ..._affordability,
+        'choose': sends('take_rate'),
+      }),
+      shown: false,
+    ),
+    (card: block('loan', 'LoanBalanceChart', _affordability), shown: false),
+  ];
+
   static const _assumedNote =
       'assumedAboutThem holds, the one that moves the answer most first, '
       'what their words did not say and this tool assumed or estimated; '
       'the household card under draw shows each one marked, with its '
-      'figure. If their words already said one of these, such as no '
-      'debts or no children, call again with it now, before you reply. '
-      'Otherwise say in your text what you assumed about them, in plain '
-      'words and without figures, and ask once whether that is right, '
-      'before any other question. When they say it is, call again '
-      'with what they confirmed, such as childAges [] and debtPayments [], '
-      'so it is no longer marked; when they correct something, call again '
-      'with their figure. ';
+      'figure, and a button that says they are right. If their words '
+      'already said one of these, such as no debts or no children, call '
+      'again with it now, before you reply. Otherwise say in your text '
+      'what you assumed about them, in plain words and without figures, '
+      'and that they can confirm it on the card or tell you what is '
+      'different; the card asks, so draw no ask for it and end with a '
+      'statement. When they say it is right, or tap that button, call '
+      'again with assumedRight true; when they correct something, call '
+      'again with their figure. ';
 
   static String _assumedText(
     ProfileAssumption assumption,

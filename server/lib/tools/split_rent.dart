@@ -6,6 +6,7 @@ import '../markets/market_directory.dart';
 import 'agent_tool.dart';
 import 'draw.dart';
 import 'amount_arguments.dart';
+import 'kept_homes.dart';
 import 'numbers_in.dart';
 import 'tool_context.dart';
 
@@ -38,7 +39,9 @@ final class SplitRent extends AgentTool {
         'type': 'string',
         'description':
             'Optional. A sample home ID from search_homes; its area gives the '
-            'rent unless the buyer stated one.',
+            'rent unless the buyer stated one. Without a home or a rent, '
+            'the first flat search_homes showed for renting is split, so '
+            'it can run in the same step as that search.',
       },
       'market': {
         'type': 'string',
@@ -88,7 +91,10 @@ final class SplitRent extends AgentTool {
 
   @override
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {
-    final sample = switch (arguments['home']) {
+    final firstShown = arguments['rent'] == null
+        ? _firstRentedHome(context)
+        : null;
+    final sample = switch (arguments['home'] ?? firstShown) {
       final String id => markets.home(id),
       _ => null,
     };
@@ -218,6 +224,10 @@ final class SplitRent extends AgentTool {
             ? 'as the buyer stated'
             : {'estimate': true, 'source': rent.source},
         'chosen': ?chosen?.name,
+        if (arguments['home'] == null && sample != null)
+          'home':
+              'No home was named, so this splits the first flat shown, '
+              '${sample.listing.addressLine}; say so.',
         'draw': [
           block('rent-split', 'RentSplit', {
             'split': boundTo('/rentSplit'),
@@ -233,6 +243,13 @@ final class SplitRent extends AgentTool {
       logFields: {'people': people.length, 'rules': rules.length},
     );
   }
+
+  static String? _firstRentedHome(ToolContext context) =>
+      switch (context.slices[homesSlice.name]) {
+        final Map<String, Object?> homes when rentingIn(homes) =>
+          homes.keys.firstOrNull,
+        _ => null,
+      };
 
   static Money? _money(Object? argument, Currency? currency) =>
       argument == null ? null : moneyFromArgument(argument, currency);
