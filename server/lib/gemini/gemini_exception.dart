@@ -53,6 +53,8 @@ GeminiException geminiHttpError({
 }) {
   final (code, message, reasons) = _errorOf(body);
   return switch (statusCode) {
+    _ when _isOutOfCredits(message) => GeminiCreditsDepleted(message),
+    402 => GeminiCreditsDepleted(message),
     401 || 403 => GeminiKeyInvalid(message),
     400 when reasons.contains('API_KEY_INVALID') => GeminiKeyInvalid(message),
     429 => _quotaError(message, now),
@@ -73,6 +75,7 @@ GeminiException geminiStreamError({
 }) {
   final message = error['message'] as String? ?? 'Gemini stream error';
   return switch (error['code']) {
+    _ when _isOutOfCredits(message) => GeminiCreditsDepleted(message),
     'api_error' => GeminiUnavailable(message, model: model),
     'quota_exceeded' || 'too_many_requests' => _quotaError(message, now),
     _ when message.startsWith(_rateLimited) => _quotaError(message, now),
@@ -86,16 +89,17 @@ const _rateLimited = 'Rate limit exceeded';
 bool _isOverloaded(String message) =>
     message.contains('high demand') || message.contains('overloaded');
 
+bool _isOutOfCredits(String message) =>
+    message.contains('prepayment credits are depleted');
+
 GeminiException _quotaError(String message, DateTime now) =>
-    message.contains('prepayment credits are depleted')
-    ? GeminiCreditsDepleted(message)
-    : GeminiQuotaExhausted(
-        message,
-        resetsAt: nextPacificMidnight(now),
-        perModel:
-            message.contains('generate_content_free_tier_requests') ||
-            message.startsWith('$_rateLimited for model'),
-      );
+    GeminiQuotaExhausted(
+      message,
+      resetsAt: nextPacificMidnight(now),
+      perModel:
+          message.contains('generate_content_free_tier_requests') ||
+          message.startsWith('$_rateLimited for model'),
+    );
 
 (Object?, String, Set<String>) _errorOf(String body) {
   try {
