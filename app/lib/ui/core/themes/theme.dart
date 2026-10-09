@@ -94,6 +94,16 @@ abstract final class AppTheme {
           elevation: const WidgetStatePropertyAll(0),
         ),
       ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          minimumSize: buttonSize,
+          shape: buttonShape,
+          elevation: const WidgetStatePropertyAll(0),
+          side: WidgetStatePropertyAll(
+            BorderSide(color: colors.borderStrong),
+          ),
+        ),
+      ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
           minimumSize: buttonSize,

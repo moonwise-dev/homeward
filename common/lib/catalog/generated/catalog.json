@@ -728,7 +728,7 @@
     },
     "PlanOverview": {
       "type": "object",
-      "description": "The plan at a glance, first on the plan panel: the household's story so far in your words, and the steps you are working through for them, each done with what you found, the one you are on now, or next.",
+      "description": "The plan at a glance, drawn when the buyer asks where things stand: the household's story so far in your words, and the steps you are working through for them, each done with what you found, the one you are on now, or next.",
       "properties": {
         "id": {
           "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",
@@ -857,7 +857,7 @@
     },
     "Brief": {
       "type": "object",
-      "description": "Sections of the brief update_brief kept, one kind or several, each item with where it came from; a deduction offers Right and Not quite when it has an answer action.",
+      "description": "Sections of the brief update_brief kept, drawn when the buyer asks what you know: one kind or several, each item with where it came from; a deduction offers Right and Not quite when it has an answer action.",
       "properties": {
         "id": {
           "$ref": "https://a2ui.org/specification/v0_9/common_types.json#/$defs/ComponentId",

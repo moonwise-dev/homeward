@@ -1,23 +1,16 @@
-String unfinishedReplyInput({
-  required bool plan,
-  required bool ask,
-  required bool words,
-}) => [
-  'Server note, never repeat it to the buyer: your reply is not finished.',
+String unfinishedReplyInput({required bool words, required bool screen}) => [
+  'Server note, never repeat it to the buyer: your reply is not finished. '
+      'Do not call a tool.',
   if (words)
     'It has no words for the buyer. Write one to three sentences now that '
-        'say what their answer changes and what you ask next.',
-  if (plan)
-    'It drew no plan panel. Send the plan now: its createSurface, then its '
-        'components from root, a PlanOverview with the story and steps as '
-        'they stand, and a Brief with an answer action.',
-  if (ask)
-    'It drew no inline ask. Send this turn\'s inline ask now: its '
-        'createSurface, then one Choice or one Questions that asks what '
-        'your text asks.',
-  if (plan || ask)
-    'Send only ${words ? 'those sentences and ' : ''}those messages'
-        '${words ? '' : ', and write no more text'}.'
-  else
+        'say what you worked out and, if you need something from them, '
+        'what you ask.',
+  if (screen)
+    'It drew nothing, though your tools handed you components under draw. '
+        'Send them on the plan now: its createSurface, then its components '
+        'from root. If your text asks the buyer for something, send that '
+        'inline ask too.',
+  if (screen && !words) 'Send only those messages, and write no more text.',
+  if (words && !screen)
     'Write only those sentences; the screen is already drawn.',
 ].join('\n');

@@ -82,6 +82,7 @@ final class TurnRun {
   final _text = StringBuffer();
   var _wordsBeforeTools = '';
   var _wordsOnly = false;
+  var _handedDraw = false;
   String? _interactionId;
   String? _lastModel;
   var _emittedText = '';
@@ -340,38 +341,50 @@ final class TurnRun {
         correcting = true;
         continue;
       }
-      final noPlan = _validator.screen == null;
-      final noAsk = !_validator.askedThisTurn;
+      if (calls.isNotEmpty && _text.toString() != textBeforeRound) {
+        _text
+          ..clear()
+          ..write(textBeforeRound);
+        yield* _emitText();
+      }
       final noWords =
-          _text.toString().trim().isEmpty && _wordsBeforeTools.isEmpty;
+          _text.toString().trim().isEmpty &&
+          (calls.isNotEmpty || _wordsBeforeTools.isEmpty);
+      final noScreen = !_validator.drewThisTurn && _handedDraw;
       if (finishingRounds < settings.maxFinishingRounds &&
           _pendingFailures.isEmpty &&
-          (noPlan || noAsk || noWords)) {
+          (noWords || noScreen)) {
         finishingRounds++;
         _log.info(
           LogEntry(
             'Reply of turn $turn is unfinished',
-            fields: {
-              'turn': turn,
-              'noPlan': noPlan,
-              'noAsk': noAsk,
-              'noWords': noWords,
-            },
+            fields: {'turn': turn, 'noWords': noWords, 'noScreen': noScreen},
           ),
         );
-        input = InteractionInput.text(
-          unfinishedReplyInput(plan: noPlan, ask: noAsk, words: noWords),
-        );
+        final note = unfinishedReplyInput(words: noWords, screen: noScreen);
+        if (calls.isEmpty) {
+          input = InteractionInput.text(note);
+        } else {
+          _wordsBeforeTools = '';
+          input = InteractionInput.functionResults([
+            for (final call in calls)
+              FunctionResult(
+                callId: call.callId,
+                name: call.name,
+                result: const {'error': 'No more tools can run in this turn.'},
+              ),
+          ], note: note);
+        }
         correcting = !noWords;
-        _wordsOnly = noWords && !noPlan && !noAsk;
+        _wordsOnly = noWords && !noScreen;
         continue;
       }
       if (_text.toString().trim().isEmpty && _wordsBeforeTools.isNotEmpty) {
         _text.write(_wordsBeforeTools);
         yield* _emitText();
       }
-      if (_pendingFailures.isNotEmpty ||
-          (!_validator.drewThisTurn && _text.toString().trim().isEmpty)) {
+      if (!_validator.drewThisTurn &&
+          (_pendingFailures.isNotEmpty || _text.toString().trim().isEmpty)) {
         yield* _retry();
       }
       _log.info(
@@ -606,6 +619,7 @@ final class TurnRun {
       ),
     );
     _validator.seeds = {..._validator.seeds, ...result.seeds};
+    _handedDraw = _handedDraw || result.modelResult['draw'] != null;
     return FunctionResult(
       callId: call.callId,
       name: call.name,

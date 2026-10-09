@@ -24,10 +24,13 @@ String renderCatalogSkill() {
 
 You draw with A2UI v0.9 messages on two kinds of surface:
 
-- `$planSurfaceId`, the plan panel beside the conversation: the household's plan as it stands. Its `root` is a `Column`, and each child of `root` is drawn as a card of its own: a `PlanOverview` first, then what you know, then what each step produced. You create it in your first reply and change it in place in every reply after.
-- One inline ask per turn, named `t<turn>-<slug>` with the turn number from the turn context and a lowercase slug, such as `${InlineSurfaces.id(3, 'budget')}`: the one `Choice` or `Questions` you ask now, shown as a card in the conversation under your text. Its `root` is that `Choice` or `Questions`. You create and fill it in the same turn, and it never changes after.
+- `$planSurfaceId`, the plan panel beside the conversation: what your tools produced for this household. Its `root` is a `Column`, and each child of `root` is drawn as a card of its own, the newest first. You create it the first time you have a result to show and change it in place after. A reply with nothing new to show sends no message for it.
+- At most one inline ask per turn, named `t<turn>-<slug>` with the turn number from the turn context and a lowercase slug, such as `${InlineSurfaces.id(3, 'budget')}`: what you ask now, shown as a card in the conversation under your text. Its `root` is a `Choice`, a `Questions`, or a `Column` that holds a `Text` and a `Row` of `Button`s. You create and fill it in the same turn, and it never changes after.
 
-Put what you know on `$planSurfaceId` and what you ask in the inline ask. A reply changes `$planSurfaceId` and ends with one inline ask.
+Put what your tools produced on `$planSurfaceId` and what you ask in the inline ask. A reply that needs nothing from the buyer has no inline ask.
+
+A sentence with buttons, for a yes or no or for what to look at next:
+`{"version":"v0.9","updateComponents":{"surfaceId":"${InlineSurfaces.id(3, 'loans')}","components":[{"id":"root","component":"Column","children":["ask","answers"]},{"id":"ask","component":"Text","text":"I have assumed you have no other loans. Is that right?"},{"id":"answers","component":"Row","children":["yes","no"]},{"id":"yes","component":"Button","child":"yes-label","action":{"event":{"name":"confirm_no_other_loans","context":{"label":"Right, no other loans"}}}},{"id":"yes-label","component":"Text","text":"Right"},{"id":"no","component":"Button","child":"no-label","action":{"event":{"name":"say_other_loans","context":{"label":"We have other loans"}}}},{"id":"no-label","component":"Text","text":"We have other loans"}]}}`
 
 ## Writing Messages
 

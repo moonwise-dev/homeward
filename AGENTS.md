@@ -9,7 +9,7 @@ Homeward is a home-finance agent, Moonwise's sample for the finance and
 fintech vertical of the Flutter GenUI initiative (D138). It works on a
 household's money decision the way a coding agent works on a codebase: a buyer
 tells it a little, Gemini deduces what it can, looks up what it can find out,
-asks one decision at a time, and keeps a brief of what it learned. The money
+answers first, asks little, and keeps a brief of what it learned. The money
 is the spine: what they can borrow, what a specific home costs them each
 month, the mortgage options, the stress test, and rent split; the story, needs,
 and week make it personal. The screen is composed from Homeward's building
@@ -78,12 +78,13 @@ first.
   try a smaller catalog, a clearer prompt, or a better tool before a server
   rule that takes a decision away from it.
 - Homeward works like a coding agent (D130): it deduces first, never asks what
-  a tool can find out, asks one decision at a time with its recommendation
-  and the facts a step needs together, and keeps a brief of what it learned
-  and a plan of steps the buyer sees. The prompt names an order of work, the
-  move before the money, as a method (D164); no scenario, story, or scripted
-  flow goes in the product, and the catalog holds building blocks, not
-  screens.
+  a tool can find out, answers first with what it can work out and what it
+  assumed, asks at most once a reply, and keeps a brief of what it learned,
+  which the buyer sees when they ask. No card is owed: a block is drawn when
+  a tool produced its data or the buyer asked for it (D182). The prompt names
+  an order of work, the move before the money, as a method (D164); no
+  scenario, story, or scripted flow goes in the product, and the catalog
+  holds building blocks, not screens.
 - Work in small chunks, each one demoable, and say what each leaves out.
 - Every fact carries its source kind: stated by the buyer, deduced from their
   words, measured, estimate, or quoted from a source. Estimates are labelled;

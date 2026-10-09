@@ -16,9 +16,10 @@ final class Brief extends CatalogComponent {
 
   @override
   String get description =>
-      'Sections of the brief update_brief kept, one kind or several, each '
-      'item with where it came from; a deduction offers Right and Not quite '
-      'when it has an answer action.';
+      'Sections of the brief update_brief kept, drawn when the buyer asks '
+      'what you know: one kind or several, each item with where it came '
+      'from; a deduction offers Right and Not quite when it has an answer '
+      'action.';
 
   @override
   bool get agentVisible => true;

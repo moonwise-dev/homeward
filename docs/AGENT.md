@@ -27,7 +27,7 @@ keeps a plan of steps the buyer can see, and ends every reply with one ask
 | How long a turn keeps asking again, from the start of its first overloaded round | 30 s | `TurnSettings.overloadPatience` (D171) |
 | Store interactions | `true` | fixed |
 | Validation correction rounds | 2 | `HOMEWARD_MAX_CORRECTIONS` |
-| Finishing rounds, for a reply that drew no plan or no ask | 1 | `HOMEWARD_MAX_FINISHING_ROUNDS` (D168) |
+| Finishing rounds, for a reply with no words, or one that drew nothing of what its tools handed it | 1 | `HOMEWARD_MAX_FINISHING_ROUNDS` (D168, D182) |
 | Model rounds per turn | 1, plus one per tool round, catalog round, correction round, and finishing round | enforced by the caps below |
 | Surfaces per plan | `plan`, and at most one inline surface per turn (D131, D139) | fixed |
 | Tool rounds per turn, cap | 3 | `TurnSettings.maxToolRounds` (D85) |
@@ -165,22 +165,29 @@ of 5 a minute and 24 of 20 a day.
   well formed, fits the catalog, binds data that exists, and stays on the
   plan panel or this turn's inline ask.
 - **Deduce first.** What Gemini can infer from the buyer's words it writes
-  down as deduced, with the words it came from, and shows as assumed for the
-  buyer to confirm or correct.
+  down as deduced, with the words it came from when they are the buyer's
+  own, and says in its reply what it assumed.
+- **Answer first** (D182). A reply shows what can be worked out from what is
+  known, with what was assumed, before it asks for anything.
+- **No card is owed** (D182). A block is drawn when a tool produced its data
+  this turn or the buyer asked for it. `PlanOverview` and `Brief` are drawn
+  when the buyer asks where things stand or what Homeward knows.
 - **Never ask what a tool can find out.** Places, distances, travel times, and
   what a listing says are looked up.
 - **The move before the money** (D164). Unless the buyer leads elsewhere,
   Gemini works in the order the prompt names: the move, where to, who will
   live in the home, rent or buy, and when; what the home must do and where
   the week goes; the money; then homes and the week from each. The order is
-  a method, never a scenario: Gemini writes the steps for each household
-  into `PlanOverview`, and no story, question, or wording is fixed.
-- **One ask a turn, as a card.** Every reply ends with one inline ask. A
-  decision is a `Choice` with Gemini's recommendation first and why (C4b,
-  D145). Facts only the buyer knows are asked together in one `Questions`
-  card, every fact the step still needs, never one a turn (D165). When
-  nothing is open, the ask offers what to look at next. Typing stays open
-  for any other answer.
+  a method, never a scenario: no story, question, or wording is fixed.
+- **Ask last, and little** (D182). A reply asks at most once, at its end,
+  and only for a fact no tool can find or estimate, or a decision that
+  changes the result. Confirming what was assumed comes before a question.
+  A decision with consequences is a `Choice` with Gemini's recommendation
+  first and why (C4b, D145). Several facts only the buyer knows are asked
+  together in one `Questions` card (D165). A yes or no, or what to look at
+  next, is a sentence with buttons, built from basic components. When
+  nothing is needed the reply ends in words. Typing stays open for any
+  other answer.
 - **Say what the answer changes.** A reply begins with what Gemini can now
   work out, assume, or rule out, never with thanks or the answer repeated.
 - **A figure is checked before it is used** (D166). `compute_affordability`
@@ -219,20 +226,19 @@ the app shows in the conversation under the turn's text; the plan panel keeps
 the state (D139).
 
 The plan panel's root is a `Column`, and the app draws each of its children
-as a card (D169). The first is `PlanOverview` (D164): the household's story
-so far in a sentence or two, and the steps Gemini wrote for this household,
-each done with what was found, the one it is on now, or next. Gemini sends
-it again with every reply, and reads it back in the turn context's `screen`
-the way a coding agent reads its own plan. Under it sit the brief, as one
-`Brief`, and the blocks each step produced.
+as a card (D169). It holds what tools produced, the newest first (D182).
+`PlanOverview` (D164), the household's story so far and the steps Gemini
+wrote for it, is drawn when the buyer asks where things stand, and no
+longer with every reply.
 
 The brief (C4, D132) is Gemini's notes on the household, the way a coding
 agent keeps a plan. Gemini writes it with `update_brief`; the server keeps it
 as the `/brief` slice of the turn's record, so the next turn starts from it,
-and seeds it into the surfaces that bind it. The plan panel shows its items
-with `Fact`. A buyer taps Right or Not quite on a deduction, and Gemini
-updates the brief and follows up; the server never edits the brief or decides
-from it (D144).
+and seeds it into the surfaces that bind it. It is Gemini's own record: the
+turn context carries it, and the screen shows it, as one `Brief` whose items
+are `Fact`s, when the buyer asks what Homeward knows (D182). A buyer taps
+Right or Not quite on a deduction there, and Gemini updates the brief and
+follows up; the server never edits the brief or decides from it (D144).
 
 ## Tools
 
@@ -276,18 +282,22 @@ household. Each item has an ID, a kind (`household`, `money`, `need`,
 `habit`, `want`, `place`, or `open`), one short sentence to the buyer, a
 source (`said`, `deduced`, or `confirmed`, a deduction the buyer tapped Right
 on), and the buyer's words it came from. An item with an existing ID replaces
-it; `remove` drops items. The tool checks every item before it stores any:
-the words must appear word for word in what the buyer wrote or tapped in this
-plan, and every number above twelve in the sentence, in digits or spelled
-out, must have the same value as one in the words, so a figure in the brief
-is always the buyer's own; a small count, such as two adults, may be
-deduced. A failed check names each problem to Gemini and stores nothing;
-only the summary is logged, never the buyer's figures. It returns the whole
-brief and seeds it as
+it; `remove` drops items. The tool checks each item and keeps every one it
+can (D182). Words that appear word for word in what the buyer wrote or
+tapped in this plan are kept as the item's quote; words that do not are
+dropped, and the item is kept as deduced with no quote, so a quote on the
+screen is always the buyer's own. Every number above twelve in the
+sentence, in digits or spelled out, must have the same value as one in the
+buyer's words, so a figure in the brief is always the buyer's own; a small
+count, such as two adults, may be deduced. An item that fails that check,
+or is malformed, is left out and named to Gemini under `leftOut`, with a
+note not to call again for it, while the rest are stored. Until
+2026-10-09 one failed item stored nothing, and on the hosted build a turn
+spent three rounds on it and drew no plan. Only the summary is logged,
+never the buyer's figures. It returns the whole brief and seeds it as
 `/brief`. Measured, quoted, and estimated items come from the tools that
-measure, quote, or estimate, never from `update_brief`. Its answer reminds
-Gemini to send the plan again with its `PlanOverview`, and, when a money item
-was recorded, to call `compute_affordability` with it before replying, so
+measure, quote, or estimate, never from `update_brief`. When a money item
+was recorded, its answer reminds Gemini to call `compute_affordability` with it before replying, so
 the figure is checked in the turn it is given (D166), unless they rent:
 people renting are never asked what a loan needs, and `split_rent` takes
 what each of them earns.
@@ -633,17 +643,22 @@ owner, and leases it; `turn_run.dart` runs one turn:
    Gemini refuses the schema, the round repeats without it.
 10. When nothing is rejected and the reply is unfinished, continue once with
     a note that names what is missing and asks for that only, at most
-    `HOMEWARD_MAX_FINISHING_ROUNDS` times (D168). Unfinished means no plan
-    panel yet, no inline ask this turn, or no words at all. Missing messages
-    are asked for under the correction round's schema; missing words in a
-    free round, since the schema holds no prose. The note picks no question
-    and draws nothing. A reply in words alone used to be a finished turn: on
-    the owner's plan of 2026-10-05 the first two turns drew nothing, and in a
-    rehearsal the same evening two replies drew the plan and the ask and
-    said nothing.
-11. A turn that ends with nothing at all, or with messages still rejected after
-    the last correction, ends its text with a line asking the buyer to send
-    the message again; the screen keeps what was accepted.
+    `HOMEWARD_MAX_FINISHING_ROUNDS` times (D168). Unfinished means one of
+    two things (D182): no words at all, or nothing drawn in a turn where a
+    tool handed over components under `draw`. Missing messages are asked
+    for under the correction round's schema; missing words in a free
+    round, since the schema holds no prose. A round that still asks for a
+    tool after the last tool round is unfinished too: its words, written
+    before any result, are dropped, and each call is answered with an
+    error beside the note. The note picks no question and draws nothing.
+    From 2026-10-05 to 2026-10-09 every reply owed a plan panel and an
+    inline ask; a reply in words alone, to a question that needs no
+    screen, is a finished turn again.
+11. A turn that drew nothing, and has no words or has messages still
+    rejected after the last correction, ends its text with a line asking
+    the buyer to send the message again. A turn that drew something keeps
+    what was accepted and says nothing of what was not (D182): on the
+    hosted build the line stood above a card that had drawn.
 12. Save the turn number, the last completed interaction ID, and every
     forwarded message, also when the turn fails or is cancelled, then release
     the lease and emit `completed`.
@@ -793,8 +808,8 @@ nothing.
 | Overloaded while a model is at its request limit for the key | Turn fails with `gemini_quota_exhausted`, so a client with another key moves to it (D171) |
 | Unknown or expired previous interaction | Retry once on a fresh interaction |
 | Stored chain refused with `invalid_request` before anything is drawn | The turn starts over once on a new conversation |
-| Model output invalid after corrections | Model text plus the retry notice |
-| A reply with no plan panel yet, no inline ask, or no words | One finishing round asks for what is missing; what was sent stands |
+| Model output invalid after corrections | Model text, and the retry notice when the turn drew nothing |
+| A reply with no words, or one that drew nothing of what its tools handed it | One finishing round asks for what is missing; what was sent stands |
 | Words written before the tools ran | Dropped when the round ends in tool calls, unless no later words come |
 | A money figure that cannot be right | `compute_affordability` answers with `doubts` and seeds nothing; Gemini asks which figure is right |
 | Tool error | The model hears the error and says so in a sentence |

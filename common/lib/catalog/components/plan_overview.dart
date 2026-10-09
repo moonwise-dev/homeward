@@ -15,9 +15,10 @@ final class PlanOverview extends CatalogComponent {
 
   @override
   String get description =>
-      "The plan at a glance, first on the plan panel: the household's story "
-      'so far in your words, and the steps you are working through for '
-      'them, each done with what you found, the one you are on now, or next.';
+      'The plan at a glance, drawn when the buyer asks where things stand: '
+      "the household's story so far in your words, and the steps you are "
+      'working through for them, each done with what you found, the one '
+      'you are on now, or next.';
 
   @override
   bool get agentVisible => true;

@@ -22,9 +22,10 @@ final class UpdateBrief extends AgentTool {
       'brief, your notes on it, which surfaces bind as /brief. Call it '
       'whenever the buyer tells you something, with what they said and, in '
       'the same call, what follows from it that they did not say, as '
-      'deduced, such as what the home must have. It does not draw: a Brief '
-      'on the plan shows it. It stores nothing if any item fails a check, '
-      'and returns the whole brief.';
+      'deduced, such as what the home must have. It does not draw, and '
+      'the buyer sees the brief only when they ask what you know. It keeps '
+      'every item it can, names under leftOut the ones it could not, and '
+      'returns the whole brief.';
 
   @override
   Map<String, Object?> get parameters => {
@@ -54,7 +55,8 @@ final class UpdateBrief extends AgentTool {
                   'saved". '
                   'Keep what the buyer said and what you conclude from it as '
                   'separate items. Write a figure in digits as the buyer '
-                  'wrote it, such as 55,000 kronor; it must appear in words.',
+                  'wrote it, such as 55,000 kronor; a figure they did not '
+                  'write leaves the item out.',
             },
             'source': {
               'type': 'string',
@@ -70,10 +72,11 @@ final class UpdateBrief extends AgentTool {
               'type': 'string',
               'description':
                   "The buyer's words it came from, copied exactly from one "
-                  'of their messages.',
+                  'of their messages. Leave it out when you cannot copy '
+                  'them exactly.',
             },
           },
-          'required': ['id', 'kind', 'text', 'source', 'words'],
+          'required': ['id', 'kind', 'text', 'source'],
         },
       },
       'remove': {
@@ -86,23 +89,18 @@ final class UpdateBrief extends AgentTool {
 
   @override
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {
-    final items = [
+    final given = [
       for (final item in arguments['items'] as List<Object?>? ?? const [])
         if (item is Map<String, Object?>) item,
     ];
-    final problems = [
-      for (final (index, item) in items.indexed)
-        if (_problem(item, context.buyerWords) case final problem?)
-          'items[$index]: $problem',
+    final problems = {
+      for (final (index, item) in given.indexed)
+        index: ?_problem(item, context.buyerWords),
+    };
+    final items = [
+      for (final (index, item) in given.indexed)
+        if (!problems.containsKey(index)) item,
     ];
-    if (problems.isNotEmpty) {
-      return ToolResult(
-        modelResult: {
-          'error': 'Nothing was recorded; fix the problems and call again.',
-          'problems': problems,
-        },
-      );
-    }
     final brief = {
       ...switch (context.slices[briefSlice.name]) {
         final Map<String, Object?> brief => brief,
@@ -113,40 +111,60 @@ final class UpdateBrief extends AgentTool {
       brief.remove(id);
     }
     for (final item in items) {
-      brief[item['id']! as String] = _itemOf(item).toJson();
+      brief[item['id']! as String] = _itemOf(
+        item,
+        context.buyerWords,
+      ).toJson();
     }
     final money = items.any((item) => item['kind'] == BriefKind.money.name);
+    final notes = [
+      if (problems.isNotEmpty)
+        'The items under leftOut were not recorded. Do not call again for '
+            'them; carry on with your reply.',
+      if (money)
+        'A money figure was recorded. If they are buying, or have not '
+            'said whether they rent, call compute_affordability with '
+            'it now, before you reply, unless you already did in this '
+            'turn: it checks that the figure makes sense and says '
+            'what is still missing. If they rent, do not: split_rent '
+            'takes what each of them earns.',
+    ];
     return ToolResult(
       modelResult: {
         'brief': brief,
-        'note': [
-          if (money)
-            'A money figure was recorded. If they are buying, or have not '
-                'said whether they rent, call compute_affordability with '
-                'it now, before you reply, unless you already did in this '
-                'turn: it checks that the figure makes sense and says '
-                'what is still missing. If they rent, do not: split_rent '
-                'takes what each of them earns.',
-          'In your reply send the plan again: the PlanOverview with the '
-              'story and steps as they stand now, and a Brief with an '
-              'answer action under it.',
-        ].join(' '),
+        if (problems.isNotEmpty)
+          'leftOut': [
+            for (final MapEntry(key: index, value: problem) in problems.entries)
+              'items[$index]: $problem',
+          ],
+        if (notes.isNotEmpty) 'note': notes.join(' '),
       },
       seeds: {briefSlice.name: brief},
     );
   }
 
-  BriefItem _itemOf(Map<String, Object?> item) => BriefItem(
-    id: item['id']! as String,
-    kind: BriefKind.values.byName(item['kind']! as String),
-    text: (item['text']! as String).trim(),
-    source: FactSource.values.byName(item['source']! as String),
-    words: (item['words']! as String).replaceAll(_edges, ''),
-  );
+  BriefItem _itemOf(Map<String, Object?> item, List<String> buyerWords) {
+    final source = FactSource.values.byName(item['source']! as String);
+    final words = switch (item['words']) {
+      final String words when _appearsIn(words, buyerWords) => words.replaceAll(
+        _edges,
+        '',
+      ),
+      _ => null,
+    };
+    return BriefItem(
+      id: item['id']! as String,
+      kind: BriefKind.values.byName(item['kind']! as String),
+      text: (item['text']! as String).trim(),
+      source: words == null && source == FactSource.said
+          ? FactSource.deduced
+          : source,
+      words: words,
+    );
+  }
 
   String? _problem(Map<String, Object?> item, List<String> buyerWords) {
     final id = item['id'];
-    final words = item['words'];
     final text = item['text'];
     if (id is! String || !_idPattern.hasMatch(id)) {
       return 'id must be lowercase words joined by hyphens.';
@@ -160,19 +178,13 @@ final class UpdateBrief extends AgentTool {
     if (text is! String || text.trim().isEmpty) {
       return 'text must be a sentence.';
     }
-    if (words is! String || !_appearsIn(words, buyerWords)) {
-      return 'words must be copied exactly from something the buyer wrote.';
-    }
-    final unsaid =
-        numbersIn(
-              text,
-            )
-            .where((number) => !_isSmallCount(number))
-            .toSet()
-            .difference(numbersIn(words));
+    final unsaid = numbersIn(text)
+        .where((number) => !_isSmallCount(number))
+        .toSet()
+        .difference(numbersIn(buyerWords.join(' ')));
     if (unsaid.isNotEmpty) {
-      return 'text has ${unsaid.join(', ')}, which is not in words; write '
-          'figures only as the buyer wrote them.';
+      return 'text has ${unsaid.join(', ')}, which the buyer did not write; '
+          'a figure in the brief is always their own.';
     }
     return null;
   }

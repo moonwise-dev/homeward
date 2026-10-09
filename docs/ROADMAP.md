@@ -44,6 +44,22 @@ As of 2026-10-08.
   new one, and on a phone the Plan tab carries a dot. Looked at in headless
   Chrome over five live turns, at 1440 and 390 dp, in both themes, with a
   reload in between. Not looked at: a real phone.
+- **Answer first, ask little, no card owed** (D182, 2026-10-09). Probed on
+  a local server with the three opening messages, on
+  `gemini-3.5-flash-lite`. The move with two incomes: 2 model rounds and
+  14 s, where the hosted build took 6 rounds and 32 s and drew no plan; it
+  drew the city card and one `Questions` card. The home they picked: 5
+  rounds, 30 s, one correction; it drew what they can borrow, the rule
+  that limits it, a month's cost, buying against renting, and the home,
+  with a yes or no built from basic components; its text was the model's
+  own notes on component IDs, which is not fixed. Two friends in Lisbon: 3
+  rounds, 21 s; the city, the map with both workplaces, three homes, and a
+  two-button ask; after a tap the reply ended in words with no ask. Seen
+  and left: `compute_affordability` still asks for the household and other
+  loans where it could assume them, and for take-home pay where it could
+  estimate it; it refused a figure once as not the buyer's words; and
+  renters are shown homes for sale. The README still describes the plan
+  header and the brief on screen.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, both from commit
   `bf1a0fb`. On the public server: `/health`, the agent card with its
@@ -101,16 +117,21 @@ The order agreed on 2026-10-08 (D181):
    included.
 2. Done on 2026-10-09: the build as it stands is hosted. Left of it: a
    turn and a reload through the public page with a person's own key.
-3. One day on the assessment: one new block and a prompt change on the
+3. Tools that assume and estimate: `compute_affordability` answers from
+   what it has, assumes no other loans and no children until told, takes
+   the household from the buyer's words, and estimates take-home pay from
+   pay before tax with a sourced table for each market, so the first
+   reply to a move shows what they can borrow.
+4. One day on the assessment: one new block and a prompt change on the
    tools there are, run against the three messages, with nothing removed.
    If Gemini draws it reliably, the step list, the brief as a card, the two
    panels, the inline ask, and D180's chips go in one change. If not, the
    hosted build stands.
-4. Then a price set against sample sales, and a listing the buyer pastes
+5. Then a price set against sample sales, and a listing the buyer pastes
    (S13).
-5. The licence and notice, the description, screenshots, the logo, and the
+6. The licence and notice, the description, screenshots, the logo, and the
    Figma file, once the catalog has settled.
-6. A rehearsal on the hosted build, and the video if it is wanted.
+7. A rehearsal on the hosted build, and the video if it is wanted.
 
 ## Later
 

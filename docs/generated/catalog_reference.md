@@ -38,7 +38,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 
 ### PlanOverview
 
-The plan at a glance, first on the plan panel: the household's story so far in your words, and the steps you are working through for them, each done with what you found, the one you are on now, or next.
+The plan at a glance, drawn when the buyer asks where things stand: the household's story so far in your words, and the steps you are working through for them, each done with what you found, the one you are on now, or next.
 
 | Property | Kind | Required | Path | Seeded by |
 | --- | --- | --- | --- | --- |
@@ -56,7 +56,7 @@ One item of the brief, with where it came from; a deduction offers Right and Not
 
 ### Brief
 
-Sections of the brief update_brief kept, one kind or several, each item with where it came from; a deduction offers Right and Not quite when it has an answer action.
+Sections of the brief update_brief kept, drawn when the buyer asks what you know: one kind or several, each item with where it came from; a deduction offers Right and Not quite when it has an answer action.
 
 | Property | Kind | Required | Path | Seeded by |
 | --- | --- | --- | --- | --- |

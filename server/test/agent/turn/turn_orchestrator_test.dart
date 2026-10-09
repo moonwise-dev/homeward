@@ -234,11 +234,10 @@ void main() {
     },
   );
 
-  test('a reply with no plan and no ask is asked once to finish it', () async {
+  test('a reply in words alone is a finished turn', () async {
     sessions.create();
     final script = ScriptedInteractions([
       reply('i1', text: 'A bostadsrätt is a share in an association.'),
-      reply('i2', text: jsonEncode({'messages': <Object?>[]})),
     ]);
 
     final events = await send(
@@ -246,17 +245,7 @@ void main() {
       'What is a bostadsrätt?',
     ).toList();
 
-    expect(script.requests, hasLength(2));
-    expect(
-      (script.requests[1].input as TextInput).text,
-      allOf(
-        contains('drew no plan panel'),
-        contains('drew no inline ask'),
-        isNot(contains('no words')),
-      ),
-    );
-    expect(script.requests[1].previousInteractionId, 'i1');
-    expect(script.requests[1].responseSchema, isNotNull);
+    expect(script.requests, hasLength(1));
     expect(messagesIn(events), isEmpty);
     expect(
       events.last,

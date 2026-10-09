@@ -506,8 +506,10 @@ place each turn.
   answer with its one button (D165). Between the reply and the ask, a line
   of chips names each plan card the turn added or changed; a tap shows that
   card on the plan (D180).
-- **The plan panel** (D131): the plan's living surface, `plan`. Each turn
-  changes it in place as the turn streams. Each child of its root `Column` is
+- **The plan panel** (D131): the plan's living surface, `plan`, which
+  holds what tools produced, the newest first; the overview and the brief
+  are drawn when the buyer asks for them (D182). Each turn changes it in
+  place as the turn streams. Each child of its root `Column` is
   drawn as a card of its own, entering as it is added (D169). A fact Homeward
   deduced offers Right and Not quite; a tap goes to Homeward as the buyer's
   next message (D144).

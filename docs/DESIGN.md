@@ -90,6 +90,8 @@ slot left unset would render in the platform's own face.
 
 - `AppSpacing`: 4, 8, 12, 16, 24, 32, 48.
 - `AppRadii`: `sm` 8, `md` 12, `lg` 16, `pill` 999.
+- A `Button` Gemini composes from the basic components is drawn outlined,
+  `borderStrong`, with the shape and height of the app's own buttons (D182).
 - Cards: `surface`, 1 px `border`, radius `md`, no shadow. The plan panel is
   a column of them, 16 apart, on the muted fill: one per top-level block of
   the plan.

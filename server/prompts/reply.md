@@ -4,4 +4,4 @@
 - Something they asked for outright, such as homes to see or a split of the rent: do it in this reply.
 - A city you have not looked up yet: call `look_up_market`. A place they named: call `find_place`.
 - Their words imply something they did not say: record it with `update_brief` as deduced, in the same call as what they said.
-- Then write one to three sentences that say what their answer changes, send the plan again with its `PlanOverview`, and end with one inline ask that holds a `Choice` or a `Questions`.
+- Then write one to three sentences that say what their answer changes and what you worked out. Send the plan message for what a tool handed you under `draw` in this turn, or for what they asked to see, and no other. When your text asks them for something, end with the inline ask that asks it; when you need nothing, send none.
