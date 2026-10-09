@@ -4,6 +4,9 @@ import '../../tools/draw.dart';
 
 const showCardAction = 'show_card';
 
+const _homeCard = 'HomeCard';
+const _homesAtOnce = 3;
+
 List<Map<String, Object?>> waitingCardButtons(
   Map<String, Map<String, Object?>> handed,
   Iterable<String> shown,
@@ -12,10 +15,23 @@ List<Map<String, Object?>> waitingCardButtons(
     for (final MapEntry(key: id, value: body) in handed.entries)
       if (!shown.contains(id)) (id: id, type: '${body['component']}'),
   ];
+  final homes = [
+    for (final card in waiting)
+      if (card.type == _homeCard) card.id,
+  ];
   final offered = [
+    if (homes.isNotEmpty)
+      (
+        id: 'homes',
+        label: 'More homes',
+        opens: {'cards': homes.take(_homesAtOnce).toList()},
+      ),
     for (final MapEntry(key: type, value: label) in planSectionHeadings.entries)
-      if (waiting.where((card) => card.type == type).toList() case [final card])
-        (id: card.id, label: label),
+      if (type != _homeCard)
+        if (waiting.where((card) => card.type == type).toList() case [
+          final card,
+        ])
+          (id: card.id, label: label, opens: {'card': card.id}),
   ];
   if (offered.isEmpty) {
     return const [];
@@ -37,7 +53,7 @@ List<Map<String, Object?>> waitingCardButtons(
         'action': {
           'event': {
             'name': showCardAction,
-            'context': {'card': card.id, 'label': card.label},
+            'context': {...card.opens, 'label': card.label},
           },
         },
       }),

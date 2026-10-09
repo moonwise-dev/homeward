@@ -225,9 +225,14 @@ As of 2026-10-09.
   they can borrow and the household, with no other loans, employment,
   and tax residence assumed. Left out: tables for
   dependents and a single earner, the Azores and Madeira, and pensions.
+- **More homes** (D193, 2026-10-09). While home cards wait, the row under
+  the plan has a More homes button that opens the next three after the
+  ones on the plan, with no model round. In headless Chrome at 1440 dp,
+  after the Lisbon message: three flats, a tap, six flats in the search's
+  order, and the button still there for the rest.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, first from commit
-  `bf1a0fb` and again the same day with D182 to D192; one live turn on the
+  `bf1a0fb` and again the same day with D182 to D193; one live turn on the
   redeployed server drew its cards after 5 s. On the public server: `/health`, the agent card with its
   public URL, a new session, `/dev` shut, a preflight from the Hosting
   origin, and one live turn in 25 s. On the public page, in headless

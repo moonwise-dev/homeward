@@ -729,7 +729,9 @@ owner, and leases it; `turn_run.dart` runs one turn:
    otherwise (D187). The same message ends the plan with the cards that
    wait (D190): a `Column` named `more` that holds a caption and a `Row` of
    `Button`s, one for each waiting card whose kind has a heading and only
-   one waiting card, each sending `show_card` with the card's ID. The
+   one waiting card, each sending `show_card` with the card's ID, and,
+   while home cards wait, More homes, which sends the next three and has
+   them placed after the last home on the plan (D193). The
    server redraws it after every tool round and at the end of the turn,
    and leaves it out of the screen Gemini is shown. The message goes through the same validation as Gemini's, and
    one that fails is logged and dropped, never sent back to Gemini to

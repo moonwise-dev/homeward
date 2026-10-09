@@ -90,6 +90,7 @@ final class TurnRun {
   final _shownWhenAlone = <String>[];
   final _putFirst = <String>[];
   final _takenOff = <String>{};
+  final _putAfter = <String, List<String>>{};
   final Map<String, String> _cardNotes;
   var _cardAsks = false;
   var _askOnly = false;
@@ -693,6 +694,8 @@ final class TurnRun {
     final onTop = [..._shownOnTop];
     final whenAlone = [..._shownWhenAlone];
     final takenOff = {..._takenOff};
+    final after = {..._putAfter};
+    _putAfter.clear();
     _putFirst.clear();
     _shownOnTop.clear();
     _shownWhenAlone.clear();
@@ -705,7 +708,7 @@ final class TurnRun {
     final kept = {
       ...first,
       ...onTop.where((id) => !children.contains(id)),
-      ...children,
+      for (final id in children) ...[id, ...?after[id]],
     }.where((id) => !takenOff.contains(id));
     final cards = kept.isEmpty ? whenAlone : [...kept];
     if (cards.isEmpty && children.isEmpty) {
@@ -806,6 +809,7 @@ final class TurnRun {
     _validator.seeds = {..._validator.seeds, ...result.seeds};
     _putFirst.addAll(result.showCards);
     _takenOff.addAll(result.removeCards);
+    _putAfter.addAll(result.showCardsAfter);
     _cardAsks = _cardAsks || result.asksOnCard;
     _cardNotes.addAll(result.cardNotes);
     return FunctionResult(

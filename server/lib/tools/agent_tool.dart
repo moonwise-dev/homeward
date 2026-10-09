@@ -15,6 +15,7 @@ abstract class ToolResult with _$ToolResult {
     @Default({}) Map<String, Object?> logFields,
     @Default([]) List<String> showCards,
     @Default([]) List<String> removeCards,
+    @Default({}) Map<String, List<String>> showCardsAfter,
     @Default(false) bool asksOnCard,
     @Default({}) Map<String, String> cardNotes,
   }) = _ToolResult;

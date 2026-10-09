@@ -46,6 +46,10 @@ final class ArrangePlan extends AgentTool {
     ('show_card', {'card': final String card}) => {
       'show': [card],
     },
+    ('show_card', {'cards': final List<Object?> cards}) => {
+      'show': cards.whereType<String>().toList(),
+      'afterTheirKind': true,
+    },
     _ => null,
   };
 
@@ -72,6 +76,11 @@ final class ArrangePlan extends AgentTool {
         },
       );
     }
+    final after = arguments['afterTheirKind'] == true
+        ? context.onPlan
+              .where((id) => show.any((shown) => _kind(shown) == _kind(id)))
+              .lastOrNull
+        : null;
     final wasThere = [
       for (final id in show)
         if (context.onPlan.contains(id)) id,
@@ -89,11 +98,14 @@ final class ArrangePlan extends AgentTool {
             'in your text what the cards under means tell this household, '
             'never only that they are on the plan.',
       },
-      showCards: show,
+      showCards: after == null ? show : const [],
+      showCardsAfter: {?after: show},
       removeCards: remove,
       logFields: {'show': show.length, 'remove': remove.length},
     );
   }
+
+  static String _kind(String id) => id.split('-').first;
 
   static List<String> _ids(Object? value) => switch (value) {
     final List<Object?> ids => ids.whereType<String>().toList(),
