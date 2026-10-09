@@ -32,19 +32,23 @@ what is open.
 
 ## How It Works
 
-- **The conversation and the plan** (D139). Questions and options arrive as
-  cards inline in the conversation, so the history shows each decision, and
-  every reply ends with one: a choice to tap, a few facts to fill in, or what
-  to look at next (D164, D165). Beside it, the plan panel is one living
-  surface Gemini changes in place (D131), drawn as a stack of cards: first
-  the household's story so far and the steps Homeward is working through for
-  them, then what it understood, the homes on the shortlist, the week on the
-  map, and the money. On a phone the plan is a tab.
+- **The conversation and the plan** (D139). A reply answers first (D182):
+  a tool's result goes on the plan as a card the moment the tool answers
+  (D185), only the card that answers what was asked (D187), and Gemini says
+  in a sentence or two what it means and what it assumed. It asks at most
+  once, last: a sentence with two or three buttons inline in the
+  conversation, composed from basic components, or nothing when it needs
+  nothing. What Homeward assumed is marked on the card, with one button to
+  say it is right, and a button on a card runs its tool at once (D188). The
+  plan is one living surface changed in place (D131). On a wide screen it
+  sits beside the conversation; on a phone it follows the conversation in
+  one scroll (D189).
 - **An order of work, not a script** (D164). Homeward understands the move
   before the money: who moves and where, what the home must do, then what
   they can borrow, then homes. A buyer who opens with a money question gets
-  the money first. Gemini writes the steps for each household, so a couple
-  buying and two friends sharing see different plans.
+  the money first. A couple buying and two friends sharing see different
+  plans, and the story and steps Gemini sees for a household are shown when
+  they ask where things stand (D182).
 - **Figures are checked** (D166). A take-home pay that could not cover a
   household's everyday costs is questioned before it is used, with the
   figure given and the likely one to tap.
@@ -52,8 +56,8 @@ what is open.
   agent keeps a plan: incomes and savings as stated, needs, habits (a place and
   how often), wants, places, and what is still open. Each item says where it
   came from: said by the buyer, deduced from their words, measured by a tool,
-  or quoted from a source. The buyer sees the brief and can correct any of it
-  (D132).
+  or quoted from a source. The buyer sees the brief when they ask what
+  Homeward knows, and can correct any of it (D132, D182).
 - **Money in every journey** (D138). Affordability, monthly cost, mortgage
   options, the stress test, upfront costs, buy versus rent, and rent split are
   computed in shared code from sample rates and rules for the demo cities,
