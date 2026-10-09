@@ -164,11 +164,25 @@ As of 2026-10-08.
   three steps in some runs, each a round of 4 to 6 s; its first round
   takes about 6 s, much of it writing the brief; it offered as the next
   thing to look at cards already on the plan, which the prompt now
-  forbids and one run confirmed; `use_down_payment`, `keep_home`,
-  `split_this_rent`, and `take_split` still go through Gemini.
+  forbids and one run confirmed.
+- **A reply to a tap takes one round** (D188, 2026-10-09). Probed on a
+  local server with `gemini-3.5-flash-lite`. Before: Split this rent,
+  Split equally, and Keep each took 3 rounds and 14 to 16 s, because
+  Gemini called again the tool the tap had run and then asked in a round
+  of its own. After: These are right, 1 or 2 rounds and 8 to 11 s, text
+  after 3 s and two buttons, a month's cost or homes to see; Work out this
+  home, the monthly cost at once and a reply with two buttons; Keep, in
+  the browser, 1 round and 8 s, the shortlist on the plan and two buttons,
+  travel times or the rent split. An ask named for the wrong turn cost a
+  correction round in two taps of four and is now renamed. Looked at in
+  headless Chrome at 1440 dp: the Lisbon message and the Keep tap. Seen
+  and left: Gemini thinks for 300 to 800 tokens before a one-sentence
+  reply to a tap, 2 to 4 s of it; when it leaves the buttons out, the
+  round that fetches them adds about 5 s, and it has drawn them every
+  time since it stopped being constrained, six of six.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, first from commit
-  `bf1a0fb` and again the same day with D182 to D187; one live turn on the
+  `bf1a0fb` and again the same day with D182 to D188; one live turn on the
   redeployed server drew its cards after 5 s. On the public server: `/health`, the agent card with its
   public URL, a new session, `/dev` shut, a preflight from the Hosting
   origin, and one live turn in 25 s. On the public page, in headless
@@ -186,8 +200,9 @@ As of 2026-10-08.
   Moonwise was asked for two budgets, a spend cap of 10 dollars on Cloud
   Run and an alert at 1 dollar on the project; the owner's account cannot
   see budgets, so neither is confirmed here. The service allows one
-  instance and keeps none warm. The key screen has no link to the gallery
-  yet, so a visitor without a key reaches the catalog only by its URL.
+  instance and keeps none warm. Since D188 the key screen says what
+  Homeward is and links the gallery, so a visitor without a key reaches
+  the catalog.
 - **The repository** is at `github.com/moonwise-dev/homeward`, private, on
   `main`. `make hooks` runs `make check` before every push.
 - **What to expect from a turn.** First text after 4 to 26 s on the free
@@ -203,7 +218,7 @@ What Google asked for on 2026-10-06, due 2026-10-16 (D172).
 
 | Asked for | State | Left to do |
 | --- | --- | --- |
-| A public web build | Hosted on 2026-10-09 at `https://homeward-genui.web.app` | A turn, a reload, and Safari on it; a link from the key screen to the gallery |
+| A public web build | Hosted on 2026-10-09 at `https://homeward-genui.web.app` | A turn, a reload, and Safari on it |
 | A golden script, with clickable prompts | Drafted on 2026-10-08: three opening messages on the empty plan, each sent with a tap, taken from journeys 1, 4, and 3 of the README | The owner's edit of the three, and the screen each must end on (D181) |
 | A place that shows the catalog | Built: `/gallery`, from the app bar or by URL, with no key | A look at it as a stranger would arrive |
 | A logo, vector or high-resolution PNG | None | Moonwise's or Homeward's mark |

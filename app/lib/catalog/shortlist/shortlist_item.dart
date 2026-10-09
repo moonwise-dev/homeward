@@ -10,14 +10,17 @@ import 'shortlist_view.dart';
 
 final shortlistItem = catalogItemFor(const Shortlist(), (itemContext) {
   final data = itemContext.data as JsonMap;
-  ValueChanged<PricedHome>? send(Object? action, String verb) => action == null
+  ValueChanged<PricedHome>? send(
+    Object? action,
+    String Function(PricedHome home) verb,
+  ) => action == null
       ? null
       : (home) => dispatchAction(
           itemContext,
           action,
           adding: {
             'home': home.listing.id,
-            'label': '$verb ${home.listing.address}',
+            'label': '${verb(home)} ${home.listing.address}',
           },
         );
 
@@ -34,8 +37,11 @@ final shortlistItem = catalogItemFor(const Shortlist(), (itemContext) {
         ? const SizedBox.shrink()
         : ShortlistView(
             homes: homes,
-            onChoose: send(data['choose'], 'Work out'),
-            onDrop: send(data['drop'], 'Drop'),
+            onChoose: send(
+              data['choose'],
+              (home) => home.rent == null ? 'Work out' : 'Split the rent of',
+            ),
+            onDrop: send(data['drop'], (_) => 'Drop'),
           ),
   );
 });

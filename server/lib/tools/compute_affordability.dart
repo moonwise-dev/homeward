@@ -255,6 +255,13 @@ final class ComputeAffordability extends AgentTool {
     ('confirm_household', _) => const {'assumedRight': true},
     ('work_out_home', {'home': final String home}) => {'home': home},
     ('take_rate', {'loanType': final String rate}) => {'loanType': rate},
+    ('use_down_payment', {'downPayment': final String amount}) =>
+      switch (numbersIn(amount).map(num.tryParse).nonNulls.toList()) {
+        [final amount] => {
+          'downPayment': {'amount': amount},
+        },
+        _ => null,
+      },
     _ => null,
   };
 

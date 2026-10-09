@@ -25,7 +25,9 @@ final homeCardItem = catalogItemFor(const HomeCard(), (itemContext) {
                     data['choose'],
                     adding: {
                       'home': home.listing.id,
-                      'label': 'Work out ${home.listing.address}',
+                      'label': home.rent == null
+                          ? 'Work out ${home.listing.address}'
+                          : 'Split the rent of ${home.listing.address}',
                     },
                   ),
             onKeep: data['keep'] == null

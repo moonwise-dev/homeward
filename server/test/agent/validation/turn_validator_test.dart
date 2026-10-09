@@ -84,16 +84,16 @@ void main() {
   });
 
   test('rejections are A2UI VALIDATION_FAILED errors', () {
-    final outcome = firstTurn().validate(create('t2-budget')) as Rejected;
+    final outcome = firstTurn().validate(create('sidebar')) as Rejected;
 
     expect(outcome.failure.toJson(), {
       'version': 'v0.9',
       'error': {
         'code': 'VALIDATION_FAILED',
-        'surfaceId': 't2-budget',
+        'surfaceId': 'sidebar',
         'path': '/createSurface/surfaceId',
         'message':
-            'Surface id "t2-budget" is neither the plan panel, "plan", nor an '
+            'Surface id "sidebar" is neither the plan panel, "plan", nor an '
             'inline ask of turn 1, such as "t1-budget"',
       },
     });
@@ -123,7 +123,7 @@ void main() {
     ),
     (
       'ownership: another surface',
-      () => [create('t2-budget')],
+      () => [create('sidebar')],
       'neither the plan panel',
     ),
     (

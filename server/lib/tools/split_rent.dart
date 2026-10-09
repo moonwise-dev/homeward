@@ -58,7 +58,11 @@ final class SplitRent extends AgentTool {
       },
       'people': {
         'type': 'array',
-        'description': '$minPeople to $maxPeople people sharing the home.',
+        'description':
+            '$minPeople to $maxPeople people sharing the home. Once a '
+            'split is worked out they are kept, with their bills and the '
+            'home or rent, so pass again only what changes, such as rule '
+            'or another home.',
         'items': {
           'type': 'object',
           'properties': {
@@ -86,11 +90,21 @@ final class SplitRent extends AgentTool {
         'description': 'Optional. The rule the buyer took from RentSplit.',
       },
     },
-    'required': ['people'],
   };
 
   @override
-  ToolResult run(Map<String, Object?> arguments, ToolContext context) {
+  Map<String, Object?>? argumentsForTap(
+    String action,
+    Map<String, Object?> context,
+  ) => switch ((action, context)) {
+    ('split_this_rent', {'home': final String home}) => {'home': home},
+    ('take_split', {'rule': final String rule}) => {'rule': rule},
+    _ => null,
+  };
+
+  @override
+  ToolResult run(Map<String, Object?> passed, ToolContext context) {
+    final arguments = {..._keptFor(passed, context), ...passed};
     final firstShown = arguments['rent'] == null
         ? _firstRentedHome(context)
         : null;
@@ -237,11 +251,38 @@ final class SplitRent extends AgentTool {
         'note':
             'The split is in /rentSplit; never write the amounts in your '
             'text. $drawNote When the buyer takes a rule, call split_rent '
-            'again with it as rule.',
+            'again with only rule; for another flat, with only home.',
       },
       seeds: {rentSplitSlice.name: jsonDecode(jsonEncode(slice.toJson()))},
       logFields: {'people': people.length, 'rules': rules.length},
     );
+  }
+
+  static Map<String, Object?> _keptFor(
+    Map<String, Object?> passed,
+    ToolContext context,
+  ) {
+    final kept = switch (context.slices[rentSplitSlice.name]) {
+      final Map<String, Object?> json => RentSplitSlice.fromJson(json),
+      _ => null,
+    };
+    if (kept == null || passed['people'] != null) {
+      return const {};
+    }
+    final named = passed['home'] != null || passed['rent'] != null;
+    return {
+      'people': [
+        for (final person in kept.people)
+          {
+            'label': person.label,
+            if (person.income case final income?) 'income': argumentOf(income),
+            'roomM2': ?person.roomM2,
+          },
+      ],
+      if (kept.bills case final bills?) 'bills': argumentOf(bills),
+      if (!named) 'home': ?kept.homeId,
+      if (!named && kept.rent.stated) 'rent': argumentOf(kept.rent.monthly),
+    };
   }
 
   static String? _firstRentedHome(ToolContext context) =>

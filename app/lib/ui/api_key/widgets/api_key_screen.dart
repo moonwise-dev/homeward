@@ -37,7 +37,15 @@ class ApiKeyScreen extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Homeward runs on your own Gemini API key. You can create one for '
+            'Homeward is a home-finance agent. Tell it about a move, and it '
+            'works out what you can borrow, what a home costs you each '
+            'month, and how a rent splits, on a screen it composes for your '
+            'household.',
+            style: styles.body,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            'It runs on your own Gemini API key. You can create one for '
             'free in Google AI Studio.',
             style: styles.body,
           ),
@@ -95,6 +103,14 @@ class ApiKeyScreen extends HookConsumerWidget {
               onPressed: viewModel.removeKey,
             ),
           ],
+          const SizedBox(height: AppSpacing.xs),
+          AppButton(
+            label: 'See the building blocks without a key',
+            icon: Icons.widgets_outlined,
+            variant: AppButtonVariant.text,
+            fullWidth: true,
+            onPressed: () => context.push(AppRoutes.gallery),
+          ),
           const SizedBox(height: AppSpacing.lg),
           const KeyDisclosure(),
         ],

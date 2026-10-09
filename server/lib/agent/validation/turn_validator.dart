@@ -93,6 +93,9 @@ final class TurnValidator {
     if (_unknownEnvelopeField(json) case (final path, final problem)) {
       return _reject(_surfaceIdIn(json), path, problem);
     }
+    if (_renumbered(json) case final renumbered?) {
+      return validate(jsonEncode(renumbered));
+    }
     if (json
         case {
           'updateComponents': {'components': final List<Object?> components},
@@ -357,6 +360,29 @@ final class TurnValidator {
     final end = (offset + 40).clamp(0, source.length);
     return ' at character $offset, near `${source.substring(start, end)}`';
   }
+
+  Map<String, Object?>? _renumbered(Map<String, Object?> json) {
+    for (final key in const ['createSurface', 'updateComponents']) {
+      if (json[key]
+          case {
+                'surfaceId': final String id,
+              } &&
+              final Map<String, Object?> body) {
+        final slug = _anyTurnPattern.firstMatch(id)?[1];
+        if (slug != null &&
+            !_inlinePattern.hasMatch(id) &&
+            _surface(id) == null) {
+          return {
+            ...json,
+            key: {...body, 'surfaceId': InlineSurfaces.id(turn, slug)},
+          };
+        }
+      }
+    }
+    return null;
+  }
+
+  static final _anyTurnPattern = RegExp(r'^t\d+-([a-z0-9]+(?:-[a-z0-9]+)*)$');
 
   String? _ownershipProblem(String surfaceId) =>
       surfaceId == planSurfaceId || _inlinePattern.hasMatch(surfaceId)

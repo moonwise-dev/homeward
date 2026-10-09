@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:common/common.dart';
 
 const amountParameter = {
@@ -72,3 +74,8 @@ bool isUnsaid(Object? argument, Set<String> said) => switch (argument) {
 
 String _plain(num amount) =>
     amount == amount.roundToDouble() ? '${amount.round()}' : '$amount';
+
+Map<String, Object?> argumentOf(Money money) => {
+  'amount': money.minorUnits / pow(10, money.currency.minorDigits),
+  'currency': money.currency.code,
+};

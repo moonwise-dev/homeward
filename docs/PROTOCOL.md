@@ -376,8 +376,9 @@ pass rejects it.
    turn's number. The model may send only `createSurface`, with the Homeward
    catalog ID and at most one inline surface per turn, and `updateComponents`
    for `plan` or for this turn's inline surface; an update to one that does
-   not exist yet creates it under the same rules (D184).
-   `updateDataModel` and `deleteSurface` are the server's.
+   not exist yet creates it under the same rules (D184). An inline ID
+   with another turn's number that names no surface is renamed for this
+   turn (D188). `updateDataModel` and `deleteSurface` are the server's.
 4. **Allow-list.** Component is in the agent-visible catalog subset.
    `a2ui_core` does not check this, so the pass does.
 5. **Schema.** Components validate against the Homeward catalog document from

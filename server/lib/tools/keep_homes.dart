@@ -47,6 +47,23 @@ final class KeepHomes extends AgentTool {
   };
 
   @override
+  Map<String, Object?>? argumentsForTap(
+    String action,
+    Map<String, Object?> context,
+  ) => switch ((action, context)) {
+    ('keep_home', {'home': final String home, 'keep': final bool keep}) => {
+      keep ? 'keep' : 'drop': [home],
+    },
+    ('drop_home', {'home': final String home}) => {
+      'drop': [home],
+    },
+    _ => null,
+  };
+
+  static String _chooses(Object? homes) =>
+      rentingIn(homes) ? 'split_this_rent' : 'work_out_home';
+
+  @override
   ToolResult run(Map<String, Object?> arguments, ToolContext context) {
     final keep = _ids(arguments['keep']);
     final drop = _ids(arguments['drop']);
@@ -94,7 +111,7 @@ final class KeepHomes extends AgentTool {
         'draw': [
           block('shortlist', 'Shortlist', {
             'homes': boundTo('/homes'),
-            'choose': sends('work_out_home'),
+            'choose': sends(_chooses(homes)),
             'drop': sends('drop_home'),
           }),
           if (kept.length >= 2)
@@ -103,7 +120,7 @@ final class KeepHomes extends AgentTool {
                 for (final id in shortlist.keys.where(kept.contains).take(3))
                   boundTo('/homes/$id'),
               ],
-              'choose': sends('work_out_home'),
+              'choose': sends(_chooses(homes)),
             }),
         ],
         'note': drawNote,

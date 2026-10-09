@@ -144,11 +144,16 @@ final class TurnRun {
         yield* _showHandedCards();
       }
     }
+    final tapAnswered = switch (tapAnswer) {
+      FunctionResult(:final result) => !_isError(result),
+      null => false,
+    };
     final firstInput = InteractionInput.text(switch (turnInput) {
       TextTurnInput(:final text) => text,
       ActionTurnInput(:final action, :final surfaceData) => [
         actionInput(action, surfaceData),
-        if (tapAnswer case FunctionResult(:final name, :final result))
+        if (tapAnswer case FunctionResult(:final name, :final result)
+            when tapAnswered)
           tapAnsweredInput(name, result),
       ].join('\n'),
     });
@@ -180,7 +185,7 @@ final class TurnRun {
       var textChars = 0;
       final request = _request(
         input,
-        allowToolCalls: toolRounds < settings.maxToolRounds,
+        allowToolCalls: !tapAnswered && toolRounds < settings.maxToolRounds,
         constrained: constrained,
       );
       try {
@@ -450,6 +455,9 @@ final class TurnRun {
       return;
     }
   }
+
+  static bool _isError(Object? result) =>
+      result is Map<String, Object?> && result['error'] != null;
 
   Researcher _researcher(String apiKey, Future<void>? cancellation) =>
       GeminiResearcher(

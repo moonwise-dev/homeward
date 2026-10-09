@@ -67,7 +67,9 @@ class ShortlistView extends HookWidget {
               ),
             ),
           Text(
-            'Sample listings, not for sale. An estimate, not advice.',
+            kept.every((home) => home.rent != null)
+                ? 'Sample listings, not for rent. An estimate, not advice.'
+                : 'Sample listings, not for sale. An estimate, not advice.',
             style: styles.caption,
           ),
         ],
@@ -125,12 +127,12 @@ class _Row extends StatelessWidget {
                     style: styles.caption,
                   ),
                   const SizedBox(height: AppSpacing.xxs),
-                  if (cost == null)
+                  if (cost == null && home.rent == null)
                     Text(
                       'Not worked out for you yet',
                       style: styles.caption,
                     )
-                  else ...[
+                  else if (cost != null) ...[
                     Text(
                       '${moneyText(cost.monthly.totalWithFee)} a month',
                       style: styles.figure.copyWith(
@@ -151,7 +153,9 @@ class _Row extends StatelessWidget {
                       if (onChoose != null)
                         TextButton(
                           onPressed: () => onChoose(home),
-                          child: const Text('Work out'),
+                          child: Text(
+                            home.rent == null ? 'Work out' : 'Split this rent',
+                          ),
                         ),
                       if (onDrop != null)
                         TextButton(

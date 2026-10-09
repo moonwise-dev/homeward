@@ -580,7 +580,9 @@ the cent. It seeds `/rentSplit` for `RentSplit` and answers with the rules
 it could work out and which figures would add the others. When the buyer
 takes a rule, Gemini calls it again with `rule`. Without a home or a rent
 it splits the first flat `search_homes` showed for renting and says which
-(D187), so it can run in the same step as the search.
+(D187), so it can run in the same step as the search. It keeps the people,
+the bills, and the home or rent of its last answer (D188): a later call
+passes only what changes, a rule or another home.
 
 `compare_buy_rent` (C9, D155) compares buying a sample home with renting
 one like it. It takes the home's ID, the rent the buyer stated if any, and
@@ -673,8 +675,14 @@ owner, and leases it; `turn_run.dart` runs one turn:
 3. Write the first input: the buyer's text, or the action with its context and
    surface data. When a tool claims the action as a tap on its own card's
    button (D187), the server runs that tool first, shows its cards, and
-   adds its answer to the input with a note not to call it again, so the
-   reply takes one model round.
+   adds its answer to the input; the reply then runs with tools off
+   (D188), so it takes one model round, and its note asks for one or two
+   sentences and an ask with buttons when something is worth doing next.
+   A tap whose tool answers with an error is left to Gemini. The taps
+   claimed: `confirm_household`, `work_out_home`, `take_rate`, and
+   `use_down_payment` by `compute_affordability`; `keep_home` and
+   `drop_home` by `keep_homes`; `split_this_rent` and `take_split` by
+   `split_rent`.
 4. Before every model request, assemble the system instruction with a fresh
    turn context, and declare the tools.
 5. Call `interactions.create` with streaming, `previous_interaction_id` when
@@ -902,7 +910,8 @@ nothing.
 | Model output invalid after corrections | Model text, and the retry notice when the turn drew nothing |
 | A reply with no words | One finishing round asks for them; what was drawn stands |
 | A reply that asks in words and draws no ask | One finishing round asks for the ask alone, unconstrained, and keeps only its `a2ui` block; a card that asks by itself, such as the household card's button, counts as the ask |
-| A tap on a card's own button that a tool claims | The tool runs before the first model round, and Gemini hears its answer with the tap |
+| A tap on a card's own button that a tool claims | The tool runs before the first model round, and Gemini hears its answer with the tap and replies with tools off |
+| An inline ask named for another turn, such as `t3-next` in turn 2 | Renamed for this turn when no surface has that name |
 | A plan message that names a card where a component belongs | The card is put first on the plan, as `arrange_plan` would |
 | Words written before the tools ran | Dropped when the round ends in tool calls, unless no later words come |
 | Words that hold the model's notes to itself or code | Taken back, and the one finishing round asks for sentences for the buyer |
