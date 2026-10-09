@@ -44,26 +44,27 @@ As of 2026-10-08.
   new one, and on a phone the Plan tab carries a dot. Looked at in headless
   Chrome over five live turns, at 1440 and 390 dp, in both themes, with a
   reload in between. Not looked at: a real phone.
-- **Not hosted, and the path to it checked locally on 2026-10-08.** The
-  image from `make server-image` used to stop at start: this checkout's
-  `markets` and `server/prompts` are readable by their owner only, and the
-  image runs as another user, so the Dockerfile now hands both to that
-  user. With that, the container answered `/health`, the agent card, a new
-  session, and a preflight from the Hosting origin, kept `/dev` shut, and
-  ran one live turn in 10 s. The Wasm release build opened on the key
-  screen and drew `/gallery` with no key, served with Hosting's two
-  headers. `cupertino_icons` is back in the app: the release build named
-  it as missing, since Flutter's own widgets draw from it. The same day
-  the owner's own Google account was given Cloud Run Admin, Service Account
-  User, Artifact Registry Writer, Firebase Hosting Admin, and Logs Viewer
-  on the project, and holds every permission the two deploy targets use.
-  Billing was off on `homeward-genui` until 2026-10-09, which is why the
-  Cloud Run service answered 503 and Artifact Registry refused; Moonwise
-  turned it back on that day. The service answers again, on the revision
-  of 2026-09-17, which still asks for a Firebase sign-in, so the two
-  deploy targets have yet to run. A budget alert and an automatic cut-off
-  are not set up yet. The key screen has no link to the gallery yet, so a
-  visitor without a key reaches the catalog only by its URL.
+- **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
+  server on Cloud Run at the URL in the `Makefile`, both from commit
+  `bf1a0fb`. On the public server: `/health`, the agent card with its
+  public URL, a new session, `/dev` shut, a preflight from the Hosting
+  origin, and one live turn in 25 s. On the public page, in headless
+  Chrome: the key screen at 1440 and 390 dp, and `/gallery/WeekMap` by its
+  URL with the map drawn. Not looked at there: a turn through the page,
+  which needs a person's own key, a reload of a plan, and Safari.
+  What it took: the image used to stop at start, because this checkout's
+  `markets` and `server/prompts` are readable by their owner only and the
+  image runs as another user, so the Dockerfile hands both to that user;
+  `cupertino_icons` came back, since the release build named it missing;
+  the owner's own Google account was given Cloud Run Admin, Service
+  Account User, Artifact Registry Writer, Firebase Hosting Admin, and Logs
+  Viewer; and billing on `homeward-genui`, off until that day, which is
+  why the service had answered 503, was turned back on by Moonwise.
+  Moonwise was asked for two budgets, a spend cap of 10 dollars on Cloud
+  Run and an alert at 1 dollar on the project; the owner's account cannot
+  see budgets, so neither is confirmed here. The service allows one
+  instance and keeps none warm. The key screen has no link to the gallery
+  yet, so a visitor without a key reaches the catalog only by its URL.
 - **The repository** is at `github.com/moonwise-dev/homeward`, private, on
   `main`. `make hooks` runs `make check` before every push.
 - **What to expect from a turn.** First text after 4 to 26 s on the free
@@ -79,7 +80,7 @@ What Google asked for on 2026-10-06, due 2026-10-16 (D172).
 
 | Asked for | State | Left to do |
 | --- | --- | --- |
-| A public web build | Not hosted | Deploy the server to Cloud Run and the web build to Hosting; check a turn, a reload, and Safari there |
+| A public web build | Hosted on 2026-10-09 at `https://homeward-genui.web.app` | A turn, a reload, and Safari on it; a link from the key screen to the gallery |
 | A golden script, with clickable prompts | Drafted on 2026-10-08: three opening messages on the empty plan, each sent with a tap, taken from journeys 1, 4, and 3 of the README | The owner's edit of the three, and the screen each must end on (D181) |
 | A place that shows the catalog | Built: `/gallery`, from the app bar or by URL, with no key | A look at it as a stranger would arrive |
 | A logo, vector or high-resolution PNG | None | Moonwise's or Homeward's mark |
@@ -98,9 +99,8 @@ The order agreed on 2026-10-08 (D181):
 1. The golden script: three opening messages and the screen each must end
    on. It is the finish line, and what the three do not need goes, blocks
    included.
-2. Host the build as it stands, since it is the least certain step:
-   the two deploy targets, then a turn, a reload, and the gallery on the
-   public address.
+2. Done on 2026-10-09: the build as it stands is hosted. Left of it: a
+   turn and a reload through the public page with a person's own key.
 3. One day on the assessment: one new block and a prompt change on the
    tools there are, run against the three messages, with nothing removed.
    If Gemini draws it reliably, the step list, the brief as a card, the two
