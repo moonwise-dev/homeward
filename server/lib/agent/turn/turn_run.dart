@@ -32,6 +32,7 @@ import 'correction_input.dart';
 import 'create_interaction.dart';
 import 'read_interaction.dart';
 import 'drawn_components.dart';
+import 'notes_to_self.dart';
 import 'progress_log.dart';
 import 'replay_shadow.dart';
 import 'retry_notice.dart';
@@ -314,7 +315,9 @@ final class TurnRun {
         yield* _refreshSlices();
         input = InteractionInput.functionResults(
           results,
-          note: toolRounds < settings.maxToolRounds ? null : toolsDoneNote,
+          note: toolRounds < settings.maxToolRounds
+              ? toolResultsNote
+              : toolsDoneNote,
         );
         continue;
       }
@@ -347,6 +350,15 @@ final class TurnRun {
           ..write(textBeforeRound);
         yield* _emitText();
       }
+      final notesToSelf =
+          finishingRounds < settings.maxFinishingRounds &&
+          _pendingFailures.isEmpty &&
+          holdsNotesToSelf(_text.toString());
+      if (notesToSelf) {
+        _text.clear();
+        _wordsBeforeTools = '';
+        yield* _emitText();
+      }
       final noWords =
           _text.toString().trim().isEmpty &&
           (calls.isNotEmpty || _wordsBeforeTools.isEmpty);
@@ -358,10 +370,19 @@ final class TurnRun {
         _log.info(
           LogEntry(
             'Reply of turn $turn is unfinished',
-            fields: {'turn': turn, 'noWords': noWords, 'noScreen': noScreen},
+            fields: {
+              'turn': turn,
+              'noWords': noWords,
+              'noScreen': noScreen,
+              'notesToSelf': notesToSelf,
+            },
           ),
         );
-        final note = unfinishedReplyInput(words: noWords, screen: noScreen);
+        final note = unfinishedReplyInput(
+          words: noWords,
+          screen: noScreen,
+          notes: notesToSelf,
+        );
         if (calls.isEmpty) {
           input = InteractionInput.text(note);
         } else {
@@ -620,6 +641,17 @@ final class TurnRun {
     );
     _validator.seeds = {..._validator.seeds, ...result.seeds};
     _handedDraw = _handedDraw || result.modelResult['draw'] != null;
+    for (final key in const ['draw', 'drawWhenAsked']) {
+      if (result.modelResult[key] case final List<Object?> blocks) {
+        for (final block in blocks) {
+          if (block case final Map<String, Object?> component) {
+            if (component['id'] case final String id) {
+              _validator.handed[id] = component;
+            }
+          }
+        }
+      }
+    }
     return FunctionResult(
       callId: call.callId,
       name: call.name,

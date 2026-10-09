@@ -190,6 +190,10 @@ of 5 a minute and 24 of 20 a day.
   other answer.
 - **Say what the answer changes.** A reply begins with what Gemini can now
   work out, assume, or rule out, never with thanks or the answer repeated.
+- **Assume, estimate, and say so** (D183). A tool answers from what it has:
+  what the buyer has not said it assumes as the common case or estimates
+  from a sourced table, marks it on the screen, and Gemini asks once
+  whether it is right. A tool asks only for what cannot be assumed.
 - **A figure is checked before it is used** (D166). `compute_affordability`
   refuses pay that cannot be right and says why; Gemini says what looks off
   and offers the figure given and the figure it thinks was meant.
@@ -307,13 +311,15 @@ from the sample rules of a covered market, Sweden or Portugal, which the
 server loads from `markets/` at startup. Its arguments are the figures the
 buyer stated, such as incomes, savings, and debts, each with its currency and
 period, and the household: adults, children's ages, borrowers, residency, and
-use of the home. Every amount other than zero must appear in the buyer's words, as
-`update_brief` checks. The buyer's words include what an action's context
-carries, its text and its numbers, such as an amount typed into a
-`MoneyInput` (D158). It returns what it still needs, each fact with the
-pack's reason, or the result: the largest loan, the highest price the savings
-and the rules allow, and the rule that limits it, with its source. It seeds
-`/affordability`, which `AffordabilitySummary` and `RuleNote` bind. Its
+use of the home. Every amount other than zero must appear in the buyer's
+words, as `update_brief` checks; one that does not is left out and named
+under `leftOut`, and the tool works with the rest (D183). The buyer's words
+include what an action's context carries, its text and its numbers, such as
+an amount typed into a `MoneyInput` (D158). It returns what it still needs,
+each fact with the pack's reason, or the result: the largest loan, the
+highest price the savings and the rules allow, and the rule that limits it,
+with its source. It seeds `/affordability`, which `AffordabilitySummary`,
+`HouseholdSummary`, and `RuleNote` bind. Its
 market is one of the covered packs, listed in its description, so for a home
 anywhere else Gemini tells the buyer the sample does not cover it. Incomes,
 debts, and savings are lists in their own currencies, converted with the
@@ -333,28 +339,41 @@ meant, and calls again with the answer, with `confirmed` naming the argument
 when the buyer stands by theirs. A figure is doubted only in the call that
 passes it.
 
-When facts are missing, `needs` lists them all, each with `ask`, the fields
-for it in plain words, such as "What you take home together" as money a
-month or "Where you pay tax" as a pick, and its note tells Gemini to ask for
-them together in one `Questions` card, six fields at most, and to pass only
-what the buyer said, never a guess that there are no children or no loans. Gemini calls the
-tool before it asks for money facts, with the market alone if that is all it
-has, so one card asks for everything. Three things keep the list short. Every
-adult is taken as a borrower unless the buyer says otherwise. Where age only
-picks the living-cost bracket, as in Sweden, an adult of 35 is assumed; the
-slice marks it with `ageAssumed`, and `HouseholdSummary` leaves it out.
-Portugal, where age sets the longest term, still asks. Both are listed with
-what else the tool assumed. And once it has answered, the tool keeps that
-household and its figures for the market, so a later call passes only what is
-new, such as `home`. The market itself may be left out: the tool takes it
-from the last run, or from the one city `look_up_market` has looked up.
+The tool needs two things from the buyer, what they earn and what they
+have saved, or a price in place of savings. Everything else it assumes or
+estimates when it is not passed, and says so (D183). `assumeUnstated` in
+`common` fills what the market's pack lists under `profileFields` and the
+buyer has not said: one adult for each income passed, no children, no other
+loans, an oldest borrower of 35, and, where the pack asks, tax residence in
+the market, a home to live in, and employment. Every adult is taken as a
+borrower. Take-home pay comes from pay before tax through the market's
+income tax table, `markets/income_tax`, each income taxed as one person's
+pay; Sweden has one, Skatteverket's 2026 table for Stockholm, and Portugal
+has none yet, so there take-home pay is still asked for. The slice lists
+each under `assumed`, with `takeHomeSource` for the estimate, and
+`HouseholdSummary` marks those lines. An assumption stays, and stays
+marked, until a call passes the fact; take-home pay is estimated again when
+pay before tax is passed again.
+
+When income or savings are missing, `needs` lists them, each with `ask`, the
+fields for it in plain words, such as "What you earn together before tax" as
+money a month, and its note tells Gemini to ask for them together in one
+`Questions` card. Gemini calls the tool before it asks for money facts, with
+the market alone if that is all it has. Once it has answered, the tool keeps
+that household and its figures for the market, so a later call passes only
+what is new, such as `home`. The market itself may be left out: the tool
+takes it from the last run, or from the one city `look_up_market` has looked
+up.
 
 With the result it answers `limit`, one sentence on what sets the limit, the
 savings, the income, or what is left to live on, for Gemini to put in its own
-words; `draw`, the summary, the limiting rule, and the monthly cost; and
-`drawWhenAsked`, the stress test, the costs on the day, the down payment
-slider, the rates, the loan year by year, and the household, each ready to
-add when the buyer asks or picks it as the next thing to look at.
+words; `assumedAboutThem`, what it assumed or estimated about the household,
+with a note to say so in the reply and ask once whether it is right; `draw`,
+the summary, the household when anything about it was assumed, the limiting
+rule, and the monthly cost; and `drawWhenAsked`, the stress test, the costs
+on the day, the down payment slider, the rates, the loan year by year, and
+the household when nothing was assumed, each ready to add when the buyer
+asks or picks it as the next thing to look at.
 
 The buyer's preferences shape what a home costs them a month (C5b, D147):
 the price of a home they name, the down payment they want to make, and the
@@ -625,13 +644,23 @@ owner, and leases it; `turn_run.dart` runs one turn:
    tool seeded that its components bind, then the components. A surface whose
    tree never validates never reaches the buyer. A round that ends with a
    surface created but no components counts as a rejected message, so the
-   correction round asks for its `updateComponents` (C5b).
+   correction round asks for its `updateComponents` (C5b). When a message
+   names a component in a container's children and leaves its body out,
+   and a tool handed that component over under `draw` or `drawWhenAsked`
+   in this turn, the body is filled in from the tool's answer (D183): on
+   2026-10-09 such a message was rejected and both correction rounds came
+   back empty, so the turn drew nothing.
 8. When the round ended with function calls, run them in the order the model
    made them and continue the interaction with every result at once, at most
    three tool rounds, plus at most two rounds that only read `component_docs`.
-   The request after the last allowed tool round ends with a note
-   that tools are done and sets `tool_choice` to `none` (D85). Every round is
-   logged with its status, the names of the tools called, and its duration.
+   Every batch of tool results carries a short note (D183): call what the
+   buyer's message still asks for, then reply in one message, sentences
+   first and the `a2ui` block after. Without it Flash-Lite often sent the
+   surfaces without words, or the words without surfaces, and each cost a
+   finishing round. The request after the last allowed tool round ends
+   with a note that tools are done and sets `tool_choice` to `none` (D85).
+   Every round is logged with its status, the names of the tools called,
+   and its duration.
 9. When messages were rejected, continue with one text input listing each
    `VALIDATION_FAILED` error, at most `HOMEWARD_MAX_CORRECTIONS` rounds. The
    correction round asks with an enforced response schema (D110): a JSON object
@@ -645,7 +674,10 @@ owner, and leases it; `turn_run.dart` runs one turn:
     a note that names what is missing and asks for that only, at most
     `HOMEWARD_MAX_FINISHING_ROUNDS` times (D168). Unfinished means one of
     two things (D182): no words at all, or nothing drawn in a turn where a
-    tool handed over components under `draw`. Missing messages are asked
+    tool handed over components under `draw`. Words that hold the model's
+    notes to itself count as no words (D183): text with a backtick, a JSON
+    object, or a protocol word such as `updateComponents` is taken back,
+    and the note says why. Missing messages are asked
     for under the correction round's schema; missing words in a free
     round, since the schema holds no prose. A round that still asks for a
     tool after the last tool round is unfinished too: its words, written
@@ -811,6 +843,8 @@ nothing.
 | Model output invalid after corrections | Model text, and the retry notice when the turn drew nothing |
 | A reply with no words, or one that drew nothing of what its tools handed it | One finishing round asks for what is missing; what was sent stands |
 | Words written before the tools ran | Dropped when the round ends in tool calls, unless no later words come |
+| Words that hold the model's notes to itself or code | Taken back, and the one finishing round asks for sentences for the buyer |
+| A message that names a handed block without its body | The body is filled in from the tool's answer |
 | A money figure that cannot be right | `compute_affordability` answers with `doubts` and seeds nothing; Gemini asks which figure is right |
 | Tool error | The model hears the error and says so in a sentence |
 | A tool throws | The model hears that the tool failed and nothing was changed; the error is logged |

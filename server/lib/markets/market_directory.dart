@@ -90,6 +90,7 @@ final class MarketDirectory {
       referenceRates: _data.rates,
       exchangeRates: _tableFor(pack.currency!, profile, currencies),
       livingCosts: _data.livingCosts[id.countryCode],
+      incomeTax: _data.incomeTax[id.countryCode],
       currencies: currencies,
     );
   }

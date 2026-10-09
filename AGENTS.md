@@ -45,8 +45,8 @@ includes.
 - `tool` - Dart CLIs: catalog skill generation and checks, the A2UI schema
   vendoring, the live probe, the local development server. Never deployed.
 - `markets` - sample data, not a package: rule packs, rates, living costs,
-  exchange rates, and the sample homes of Stockholm and Lisbon, each with its
-  source. The server loads it at startup.
+  income tax tables, exchange rates, and the sample homes of Stockholm and
+  Lisbon, each with its source. The server loads it at startup.
 - `docs` - canonical product, architecture, protocol, catalog, agent, data,
   design, quality, and roadmap documents.
 

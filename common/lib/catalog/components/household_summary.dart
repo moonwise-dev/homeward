@@ -15,9 +15,10 @@ final class HouseholdSummary extends CatalogComponent {
 
   @override
   String get description =>
-      'Who the household is and the figures they stated, as '
-      'compute_affordability kept them: the people, residency, work, and '
-      'the incomes, debts, and savings they gave.';
+      'What the figures rest on, as compute_affordability kept it: the '
+      'people, residency, work, incomes, other loans, and savings. A line '
+      'the tool assumed or estimated is marked, so draw it when the tool '
+      'hands it over, and when the buyer asks who the household is.';
 
   @override
   bool get agentVisible => true;
@@ -48,6 +49,11 @@ final class HouseholdSummary extends CatalogComponent {
       name: 'A household buying in Funchal',
       componentsJson: _example,
       dataModel: funchalAffordabilityDataModel,
+    ),
+    CatalogExample(
+      name: 'One buyer who gave pay and savings, the rest assumed',
+      componentsJson: _example,
+      dataModel: assumedAffordabilityDataModel,
     ),
   ];
 

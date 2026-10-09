@@ -60,6 +60,32 @@ As of 2026-10-08.
   estimate it; it refused a figure once as not the buyer's words; and
   renters are shown homes for sale. The README still describes the plan
   header and the brief on screen.
+- **Tools assume and estimate** (D183, 2026-10-09, not deployed).
+  `compute_affordability` needs only income and savings; the rest it
+  assumes or estimates and marks. Probed on a local server with
+  the three opening messages, on `gemini-3.5-flash-lite`, each run more
+  than once while the loop notes were tuned; the last run of each: the
+  move with two incomes, 2 rounds and 11 s, with what they can borrow, the
+  household with children, other loans, and age marked as assumed and
+  take-home pay as estimated from Skatteverket's table, the rule, a
+  month's cost, the city, and a two-button ask whether that is right; a
+  correction in the next turn, a car loan and a child, recalculated in 3
+  rounds and 16 s, one of them a correction of a button. The home they
+  picked: 3 rounds, 15 s, nothing assumed; what they can borrow, a month's
+  cost, the costs on the day, and buying against renting. Two friends in
+  Lisbon: 2 rounds, 13 s; three homes, the map, the city, no ask. Looked
+  at in headless Chrome at 1440 dp: the first message's reply, and the
+  household example in the gallery. Seen on the way and addressed: the
+  model sent surfaces without words or words without surfaces, its notes
+  leaked into the text once, it claimed an update no tool had made, and
+  one turn drew nothing after it named a handed block without its body.
+  Seen and left: two of eight button asks needed a correction round, one
+  for a missing ID and one for the action's shape; one reply named its
+  cards by their component names; a buyer who said "no debts" was once
+  shown that as assumed, because Gemini did not pass it; renters are shown
+  homes for sale; the README is stale. Left out: Portugal's tax table, so
+  there take-home pay is still asked for; pay before tax from take-home
+  pay; an answer without savings or a price.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, both from commit
   `bf1a0fb`. On the public server: `/health`, the agent card with its
@@ -117,11 +143,12 @@ The order agreed on 2026-10-08 (D181):
    included.
 2. Done on 2026-10-09: the build as it stands is hosted. Left of it: a
    turn and a reload through the public page with a person's own key.
-3. Tools that assume and estimate: `compute_affordability` answers from
-   what it has, assumes no other loans and no children until told, takes
-   the household from the buyer's words, and estimates take-home pay from
-   pay before tax with a sourced table for each market, so the first
-   reply to a move shows what they can borrow.
+3. Done on 2026-10-09 (D183): tools that assume and estimate.
+   `compute_affordability` answers from income and savings, assumes no
+   other loans and no children until told, takes the household from the
+   buyer's words, and estimates take-home pay from pay before tax with
+   Skatteverket's table, so the first reply to a move shows what they can
+   borrow. Left of it: Portugal's table.
 4. One day on the assessment: one new block and a prompt change on the
    tools there are, run against the three messages, with nothing removed.
    If Gemini draws it reliably, the step list, the brief as a card, the two

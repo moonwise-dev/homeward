@@ -25,6 +25,17 @@ final stockholmProfile = BuyerProfile(
   childAges: const [],
 );
 
+final stockholmLoneProfile = BuyerProfile(
+  age: 35,
+  netMonthlyIncome: _sek(56950),
+  grossMonthlyIncome: _sek(85000),
+  monthlyDebtPayments: _sek(0),
+  savings: _sek(900000),
+  borrowers: 1,
+  adults: 1,
+  childAges: const [],
+);
+
 final stockholmScenario = Scenario(
   price: _sek(4500000),
   downPayment: _sek(450000),

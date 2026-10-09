@@ -13,7 +13,7 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `Brief` | Understanding | yes | `brief` | `brief` | The household and its needs |
 | `Choice` | Understanding | yes | `question`, `options`, `answer` |  | Rent first or buy |
 | `Questions` | Understanding | yes | `fields`, `answer` |  | The money a loan needs, Who is moving |
-| `HouseholdSummary` | Understanding | yes | `affordability` | `affordability` | A Stockholm couple, A household buying in Funchal |
+| `HouseholdSummary` | Understanding | yes | `affordability` | `affordability` | A Stockholm couple, A household buying in Funchal, One buyer who gave pay and savings, the rest assumed |
 | `MoneyInput` | Money | yes | `label`, `value`, `currency` |  | Take-home pay |
 | `AffordabilitySummary` | Money | yes | `affordability` | `affordability` | A Stockholm couple |
 | `MonthlyCostBreakdown` | Money | yes | `affordability` | `affordability` | A Stockholm flat with an association fee |
@@ -90,7 +90,7 @@ A few facts only the buyer knows, asked together: each an amount, a number, a sh
 
 ### HouseholdSummary
 
-Who the household is and the figures they stated, as compute_affordability kept them: the people, residency, work, and the incomes, debts, and savings they gave.
+What the figures rest on, as compute_affordability kept it: the people, residency, work, incomes, other loans, and savings. A line the tool assumed or estimated is marked, so draw it when the tool hands it over, and when the buyer asks who the household is.
 
 | Property | Kind | Required | Path | Seeded by |
 | --- | --- | --- | --- | --- |

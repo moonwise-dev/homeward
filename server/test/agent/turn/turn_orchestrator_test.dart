@@ -125,7 +125,7 @@ void main() {
       expect(second.previousInteractionId, 'i1');
       final input = second.input as FunctionResultsInput;
       expect(input.results.single.result, {'found': 'KTH'});
-      expect(input.note, isNull);
+      expect(input.note, toolResultsNote);
 
       final saved = sessions.find('s-1')!;
       expect(saved.turnCount, 1);

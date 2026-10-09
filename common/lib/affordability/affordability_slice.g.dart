@@ -38,7 +38,8 @@ _AffordabilitySlice _$AffordabilitySliceFromJson(
       'schedule',
       'profile',
       'downPaymentStated',
-      'ageAssumed',
+      'assumed',
+      'takeHomeSource',
       'homeId',
       'homeName',
     ],
@@ -148,7 +149,18 @@ _AffordabilitySlice _$AffordabilitySliceFromJson(
       'downPaymentStated',
       (v) => v as bool? ?? false,
     ),
-    ageAssumed: $checkedConvert('ageAssumed', (v) => v as bool? ?? false),
+    assumed: $checkedConvert(
+      'assumed',
+      (v) =>
+          (v as List<dynamic>?)
+              ?.map((e) => $enumDecode(_$ProfileAssumptionEnumMap, e))
+              .toSet() ??
+          const {},
+    ),
+    takeHomeSource: $checkedConvert(
+      'takeHomeSource',
+      (v) => v == null ? null : Source.fromJson(v as Map<String, dynamic>),
+    ),
     homeId: $checkedConvert('homeId', (v) => v as String?),
     homeName: $checkedConvert('homeName', (v) => v as String?),
   );
@@ -184,9 +196,23 @@ Map<String, dynamic> _$AffordabilitySliceToJson(
   'schedule': ?instance.schedule?.toJson(),
   'profile': ?instance.profile?.toJson(),
   'downPaymentStated': instance.downPaymentStated,
-  'ageAssumed': instance.ageAssumed,
+  'assumed': instance.assumed
+      .map((e) => _$ProfileAssumptionEnumMap[e]!)
+      .toList(),
+  'takeHomeSource': ?instance.takeHomeSource?.toJson(),
   'homeId': ?instance.homeId,
   'homeName': ?instance.homeName,
+};
+
+const _$ProfileAssumptionEnumMap = {
+  ProfileAssumption.takeHomePay: 'takeHomePay',
+  ProfileAssumption.debts: 'debts',
+  ProfileAssumption.children: 'children',
+  ProfileAssumption.adults: 'adults',
+  ProfileAssumption.residency: 'residency',
+  ProfileAssumption.use: 'use',
+  ProfileAssumption.employment: 'employment',
+  ProfileAssumption.age: 'age',
 };
 
 _MonthlyFigures _$MonthlyFiguresFromJson(Map<String, dynamic> json) =>

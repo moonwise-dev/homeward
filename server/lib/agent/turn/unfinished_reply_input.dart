@@ -1,7 +1,16 @@
-String unfinishedReplyInput({required bool words, required bool screen}) => [
+String unfinishedReplyInput({
+  required bool words,
+  required bool screen,
+  bool notes = false,
+}) => [
   'Server note, never repeat it to the buyer: your reply is not finished. '
       'Do not call a tool.',
-  if (words)
+  if (words && notes)
+    'Its text held notes to yourself or code, so it was taken back from '
+        'the buyer. Write one to three sentences now, for the buyer and '
+        'nothing else, that say what you worked out and, if you need '
+        'something from them, what you ask.',
+  if (words && !notes)
     'It has no words for the buyer. Write one to three sentences now that '
         'say what you worked out and, if you need something from them, '
         'what you ask.',

@@ -125,8 +125,8 @@ final class UpdateBrief extends AgentTool {
         'A money figure was recorded. If they are buying, or have not '
             'said whether they rent, call compute_affordability with '
             'it now, before you reply, unless you already did in this '
-            'turn: it checks that the figure makes sense and says '
-            'what is still missing. If they rent, do not: split_rent '
+            'turn: it checks that the figure makes sense and assumes '
+            'what they have not said. If they rent, do not: split_rent '
             'takes what each of them earns.',
     ];
     return ToolResult(

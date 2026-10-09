@@ -88,8 +88,8 @@ common/lib/
   affordability/  largest loan, maximum price, monthly ceilings, stress rate,
                   down payment bounds, the binding rule
   costs/          purchase costs from a market's cost rules
-  markets/        market rule packs, reference rates, living costs, exchange
-                  rates, resolved for one buyer
+  markets/        market rule packs, reference rates, living costs, income tax
+                  tables, exchange rates, resolved for one buyer
   samples/        the labelled sample homes: Listing, kind of home, outdoor space,
                   style, and a home priced for one household
   profile/        BuyerProfile, the facts the rules read
@@ -307,7 +307,7 @@ environment variable (D115): from a Secret Manager secret on Cloud Run, from
 | `HOMEWARD_ALLOWED_ORIGINS` | CORS origins |
 | `HOMEWARD_PUBLIC_URL` | Base URL clients call, used for the agent card's `url` |
 | `HOMEWARD_PROMPTS_DIR` | Prompt files; `/app/prompts` in the image |
-| `HOMEWARD_MARKETS_DIR` | Sample market packs, rates, living costs, exchange rates, and homes; `markets` from the repository root locally, `/app/markets` in the image |
+| `HOMEWARD_MARKETS_DIR` | Sample market packs, rates, living costs, income tax tables, exchange rates, and homes; `markets` from the repository root locally, `/app/markets` in the image |
 | `HOMEWARD_LOG_FORMAT` | `json` in the image, `text` by default locally |
 | `GOOGLE_CLOUD_PROJECT` | The project named in a log line's trace link |
 

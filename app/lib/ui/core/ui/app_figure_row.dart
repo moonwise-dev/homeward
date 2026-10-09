@@ -10,6 +10,7 @@ class AppFigureRow extends StatelessWidget {
     required this.figure,
     this.isTotal = false,
     this.color,
+    this.note,
     super.key,
   });
 
@@ -17,6 +18,7 @@ class AppFigureRow extends StatelessWidget {
   final String figure;
   final bool isTotal;
   final Color? color;
+  final String? note;
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +35,21 @@ class AppFigureRow extends StatelessWidget {
         textBaseline: TextBaseline.alphabetic,
         children: [
           Expanded(
-            child: Text(
-              label,
-              style: isTotal
-                  ? styles.body.copyWith(fontWeight: FontWeight.w600)
-                  : styles.body.copyWith(color: colors.textSecondary),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: isTotal
+                      ? styles.body.copyWith(fontWeight: FontWeight.w600)
+                      : styles.body.copyWith(color: colors.textSecondary),
+                ),
+                if (note case final note?)
+                  Text(
+                    note,
+                    style: styles.caption.copyWith(color: colors.accent),
+                  ),
+              ],
             ),
           ),
           const SizedBox(width: AppSpacing.sm),

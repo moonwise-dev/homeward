@@ -88,6 +88,33 @@ MarketsData loadMarkets(Directory root) {
     }
   }
 
+  final incomeTax = <CountryCode, IncomeTaxTable>{};
+  for (final file in _jsonFiles(Directory('${root.path}/income_tax'))) {
+    final table = parse(
+      file,
+      (json) => IncomeTaxTable.fromJson(json! as Map<String, Object?>),
+    );
+    if (table != null && !table.isReadable) {
+      findings.add(
+        findingError(
+          file.path,
+          'An income tax table needs two points and a rate above the last',
+        ),
+      );
+    } else if (table != null) {
+      try {
+        incomeTax[CountryCode.parse(_stem(file))] = table;
+      } on FormatException {
+        findings.add(
+          findingError(
+            file.path,
+            'Income tax files are named by country code',
+          ),
+        );
+      }
+    }
+  }
+
   final cities = <String, ListingInventory>{};
   for (final file in _jsonFiles(Directory('${root.path}/listings'))) {
     final inventory = parse(
@@ -104,6 +131,7 @@ MarketsData loadMarkets(Directory root) {
     rates: rates,
     exchangeRates: exchangeRates,
     livingCosts: livingCosts,
+    incomeTax: incomeTax,
     cities: cities,
     loadFindings: findings,
   );

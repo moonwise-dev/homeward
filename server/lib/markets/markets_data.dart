@@ -7,6 +7,7 @@ typedef MarketsData = ({
   Map<String, ReferenceRate> rates,
   List<ExchangeRateTable> exchangeRates,
   Map<CountryCode, LivingCosts> livingCosts,
+  Map<CountryCode, IncomeTaxTable> incomeTax,
   Map<String, ListingInventory> cities,
   List<Finding> loadFindings,
 });

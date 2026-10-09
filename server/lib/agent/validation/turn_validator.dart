@@ -20,6 +20,7 @@ final class TurnValidator {
   final CatalogValidator catalog;
   final MessageProcessor<ComponentApi> shadow;
   Map<String, Object?> seeds;
+  final handed = <String, Map<String, Object?>>{};
   final RegExp _inlinePattern;
   final _sentThisTurn = <String, Set<String>>{};
   final _inlineCreated = <String>{};
@@ -151,6 +152,24 @@ final class TurnValidator {
       for (final component in surface.componentsModel.all)
         component.id: component.toJson(),
     };
+    final named = {
+      ...merged.keys,
+      for (final component in message.components) component['id'],
+    };
+    final leftOut = {
+      for (final component in [...merged.values, ...message.components])
+        for (final child in childReferences(component))
+          if (!named.contains(child)) child,
+    };
+    final filled = [for (final id in leftOut) ?handed[id]];
+    if (filled.isNotEmpty) {
+      return _updateComponents(
+        UpdateComponentsMessage(
+          surfaceId: surfaceId,
+          components: [...message.components, ...filled],
+        ),
+      );
+    }
     final data = {
       ...switch (surface.dataModel.get('/')) {
         final Map<String, Object?> data => data,

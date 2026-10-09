@@ -11,6 +11,7 @@ import 'cost_rule.dart';
 import 'coverage.dart';
 import 'exchange_rate.dart';
 import 'identified.dart';
+import 'income_tax_table.dart';
 import 'lending_rules.dart';
 import 'living_costs.dart';
 import 'loan_type.dart';
@@ -48,6 +49,7 @@ abstract class ResolvedMarket with _$ResolvedMarket {
     @Default({}) Map<String, ReferenceRate> referenceRates,
     @Default({}) Map<String, ExchangeRate> exchangeRates,
     LivingCosts? livingCosts,
+    IncomeTaxTable? incomeTax,
     required List<Source> sources,
     required Map<String, PendingRule> pendingRules,
     required Set<ProfileField> requiredFields,
@@ -98,6 +100,7 @@ ResolvedMarket resolveForBuyer(
   Map<String, ReferenceRate> referenceRates = const {},
   ExchangeRateTable? exchangeRates,
   LivingCosts? livingCosts,
+  IncomeTaxTable? incomeTax,
   Set<Currency> currencies = const {},
 }) {
   final currency = pack.currency;
@@ -195,6 +198,7 @@ ResolvedMarket resolveForBuyer(
           other.code: ?exchangeRates?.between(other, currency),
     },
     livingCosts: resolvedLending.leftToLiveOn.isEmpty ? null : livingCosts,
+    incomeTax: incomeTax,
     sources: pack.sources,
     pendingRules: pendingRules,
     requiredFields: {

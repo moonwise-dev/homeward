@@ -27,6 +27,7 @@ _ResolvedMarket _$ResolvedMarketFromJson(
       'referenceRates',
       'exchangeRates',
       'livingCosts',
+      'incomeTax',
       'sources',
       'pendingRules',
       'requiredFields',
@@ -121,6 +122,11 @@ _ResolvedMarket _$ResolvedMarketFromJson(
       'livingCosts',
       (v) => v == null ? null : LivingCosts.fromJson(v as Map<String, dynamic>),
     ),
+    incomeTax: $checkedConvert(
+      'incomeTax',
+      (v) =>
+          v == null ? null : IncomeTaxTable.fromJson(v as Map<String, dynamic>),
+    ),
     sources: $checkedConvert(
       'sources',
       (v) => (v as List<dynamic>)
@@ -167,6 +173,7 @@ Map<String, dynamic> _$ResolvedMarketToJson(
     (k, e) => MapEntry(k, e.toJson()),
   ),
   'livingCosts': ?instance.livingCosts?.toJson(),
+  'incomeTax': ?instance.incomeTax?.toJson(),
   'sources': instance.sources.map((e) => e.toJson()).toList(),
   'pendingRules': instance.pendingRules.map((k, e) => MapEntry(k, e.toJson())),
   'requiredFields': instance.requiredFields

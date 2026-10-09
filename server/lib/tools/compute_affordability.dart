@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:common/common.dart';
 
@@ -31,6 +32,17 @@ final class ComputeAffordability extends AgentTool {
     'monthlyDebtPayments': 'debtPayments',
   };
 
+  static const _assumedArgument = {
+    ProfileAssumption.adults: 'adults',
+    ProfileAssumption.children: 'childAges',
+    ProfileAssumption.age: 'age',
+    ProfileAssumption.debts: 'debtPayments',
+    ProfileAssumption.takeHomePay: 'netIncomes',
+    ProfileAssumption.residency: 'taxResidence',
+    ProfileAssumption.use: 'use',
+    ProfileAssumption.employment: 'employment',
+  };
+
   @override
   String get name => 'compute_affordability';
 
@@ -39,18 +51,23 @@ final class ComputeAffordability extends AgentTool {
       'Works out what this household can borrow and the highest price its '
       'savings and the lending rules allow, from sample rules for a covered '
       'market: ${[for (final MapEntry(:key, :value) in markets.covered.entries) '$value ($key)'].join(', ')}. '
-      'Until it has answered, pass everything the buyer has told you each '
-      'time; once it has answered, it keeps that household and its '
-      'figures, so pass again only what is new or changed, such as home. '
-      'Call it as soon as the buyer gives any money figure, and before you '
-      'ask for money facts, with what you have, even the market alone: its '
-      'needs are what one Questions card should ask. Pass only figures the '
-      'buyer stated, as they '
-      'stated them; a figure not in their words is refused. It answers with '
-      'doubts, figures that do not make sense and must be checked with the '
-      'buyer before they are used; or with needs, every fact still missing '
-      'and why, to ask for together; or it seeds /affordability for '
-      'AffordabilitySummary, RuleNote, '
+      'It needs only what they earn and what they have saved, or a price. '
+      'Everything else you do not pass it assumes or estimates, and names '
+      'under assumedAboutThem: who lives in the home, no children, no '
+      'other loans, and their take-home pay from their pay before tax. So '
+      'never ask for those before calling it. Pass what their words say '
+      'they do not have too: debtPayments [] for no debts, childAges [] '
+      'for no children. Until it has answered, pass '
+      'everything the buyer has told you each time; once it has answered, '
+      'it keeps that household and its figures, so pass again only what is '
+      'new or changed, such as home. Call it as soon as the buyer gives '
+      'any money figure, and before you ask for money facts, with what you '
+      'have, even the market alone. Pass only figures the buyer stated, as '
+      'they stated them; a figure not in their words is left out. It '
+      'answers with doubts, figures that do not make sense and must be '
+      'checked with the buyer before they are used; or with needs, the '
+      'facts only the buyer has, to ask for together; or it seeds '
+      '/affordability for AffordabilitySummary, HouseholdSummary, RuleNote, '
       'MonthlyCostBreakdown, StressTestChart, PurchaseCostsTable, '
       'DownPaymentSlider, MortgageOptions, and LoanBalanceChart, and lists '
       "what it assumed that is the buyer's to decide. For a home anywhere "
@@ -75,10 +92,18 @@ final class ComputeAffordability extends AgentTool {
             'savings' => 'Each amount saved, in the currency it is held in.',
             'debtPayments' =>
               'Each debt payment as the buyer stated it; [] when they said '
-                  'they have none.',
+                  'they have none. Leave it out when they have not said: '
+                  'none is assumed.',
+            'netIncomes' =>
+              'Take-home pay, each amount as the buyer stated it, per '
+                  'person or combined, in its own currency; never split or '
+                  'add them. Leave it out when they gave only pay before '
+                  'tax: it is estimated from that.',
             _ =>
-              'Each amount as the buyer stated it, per person or combined, '
-                  'in its own currency; never split or add them.',
+              'Pay before tax, each amount as the buyer stated it, per '
+                  'person or combined, in its own currency; never split or '
+                  'add them. An income they gave without saying which it '
+                  'is goes here.',
           },
         },
       'home': {
@@ -106,20 +131,24 @@ final class ComputeAffordability extends AgentTool {
       },
       'age': {
         'type': 'integer',
-        'description': 'Age of the oldest borrower.',
+        'description':
+            'Age of the oldest borrower; without it $assumedAdultAge is '
+            'assumed.',
       },
       'adults': {
         'type': 'integer',
         'description':
-            'How many adults will live in the home, borrowers or not; a '
-            'small count you may deduce from their words.',
+            'How many adults will live in the home, borrowers or not; '
+            'deduce it from their words, such as two for a couple. Without '
+            'it, one adult for each income is assumed.',
       },
       'childAges': {
         'type': 'array',
         'items': {'type': 'integer'},
         'description':
-            'The age of each child who will live in the home; [] when there '
-            'are none.',
+            'The age of each child who will live in the home; [] when they '
+            'said there are none. Leave it out when they have not said: '
+            'none is assumed.',
       },
       'borrowers': {'type': 'integer'},
       'taxResidence': {
@@ -241,26 +270,21 @@ final class ComputeAffordability extends AgentTool {
         for (final argument in _argumentsOf(arguments[name]))
           if (isUnsaid(argument, said)) name,
     };
-    if (unsaid.isNotEmpty) {
-      return ToolResult(
-        modelResult: {
-          'error':
-              '${unsaid.join(', ')} not in the buyer\'s words; pass only '
-              'figures they stated, or ask them.',
-        },
-      );
-    }
+    final passed = {
+      for (final MapEntry(:key, :value) in arguments.entries)
+        if (!unsaid.contains(key)) key: value,
+    };
     final amounts = {
       for (final name in _lists)
-        if (arguments[name] != null)
+        if (passed[name] != null)
           name: [
-            for (final argument in _argumentsOf(arguments[name]))
+            for (final argument in _argumentsOf(passed[name]))
               monthlyOf(moneyFromArgument(argument, currency), argument),
           ],
     };
     final home = {
       for (final name in _homeAmounts)
-        if (arguments[name] case final argument?)
+        if (passed[name] case final argument?)
           name: monthlyOf(moneyFromArgument(argument, currency), argument),
       if (sample?.listing case final listing?) ...{
         'price': listing.price,
@@ -272,12 +296,20 @@ final class ComputeAffordability extends AgentTool {
       _ => null,
     };
     final kept = earlier?.profile;
-    final base = BuyerProfile(
-      age:
-          arguments['age'] as int? ??
-          (earlier?.ageAssumed ?? false ? null : kept?.age),
-      adults: arguments['adults'] as int? ?? kept?.adults,
-      childAges: switch (arguments['childAges']) {
+    final assumedEarlier = earlier?.assumed ?? const <ProfileAssumption>{};
+    final estimateAgain =
+        passed['grossIncomes'] != null &&
+        assumedEarlier.contains(ProfileAssumption.takeHomePay);
+    final carried = {
+      for (final assumption in assumedEarlier)
+        if (passed[_assumedArgument[assumption]] == null &&
+            !(estimateAgain && assumption == ProfileAssumption.takeHomePay))
+          assumption,
+    };
+    final people = BuyerProfile(
+      age: passed['age'] as int? ?? kept?.age,
+      adults: passed['adults'] as int? ?? kept?.adults,
+      childAges: switch (passed['childAges']) {
         final List<Object?> ages => [
           for (final age in ages)
             if (age is int) age,
@@ -285,33 +317,27 @@ final class ComputeAffordability extends AgentTool {
         _ => kept?.childAges,
       },
       borrowers:
-          arguments['borrowers'] as int? ??
-          arguments['adults'] as int? ??
+          passed['borrowers'] as int? ??
+          passed['adults'] as int? ??
           kept?.borrowers,
-      taxResidence: switch (arguments['taxResidence']) {
+      taxResidence: switch (passed['taxResidence']) {
         final String code => CountryCode.parse(code.toUpperCase()),
         _ => kept?.taxResidence,
       },
-      use: _enum(PropertyUse.values, arguments['use']) ?? kept?.use,
+      use: _enum(PropertyUse.values, passed['use']) ?? kept?.use,
       employment:
-          _enum(Employment.values, arguments['employment']) ?? kept?.employment,
+          _enum(Employment.values, passed['employment']) ?? kept?.employment,
       residencyIntent:
-          _enum(ResidencyIntent.values, arguments['residencyIntent']) ??
+          _enum(ResidencyIntent.values, passed['residencyIntent']) ??
           kept?.residencyIntent,
-      formerResident:
-          arguments['formerResident'] as bool? ?? kept?.formerResident,
+      formerResident: passed['formerResident'] as bool? ?? kept?.formerResident,
     );
     final currencies = {
       for (final list in amounts.values)
         for (final money in list) money.currency,
       for (final money in home.values) money.currency,
     };
-    final rates = markets.resolveFor(id, base, currencies: currencies)!;
-    final ageAssumed =
-        base.age == null &&
-        !rates.missingFor(RuleSection.lending).contains(ProfileField.age) &&
-        rates.lending.incomeAdjustments.isEmpty &&
-        rates.lending.maxAgeAtMaturity.isEmpty;
+    final rates = markets.resolveFor(id, people, currencies: currencies)!;
     final totals = {
       for (final MapEntry(key: name, value: list) in amounts.entries)
         name: totalInMarket(rates, list),
@@ -338,18 +364,41 @@ final class ComputeAffordability extends AgentTool {
         },
       );
     }
-    final profile = base.copyWith(
-      age: ageAssumed ? assumedAdultAge : base.age,
-      grossMonthlyIncome: totals['grossIncomes'] ?? kept?.grossMonthlyIncome,
-      netMonthlyIncome: totals['netIncomes'] ?? kept?.netMonthlyIncome,
-      monthlyDebtPayments: totals['debtPayments'] ?? kept?.monthlyDebtPayments,
-      savings: totals['savings'] ?? kept?.savings,
+    final (profile: filled, assumed: unstated) = assumeUnstated(
+      profile: people.copyWith(
+        grossMonthlyIncome: totals['grossIncomes'] ?? kept?.grossMonthlyIncome,
+        netMonthlyIncome:
+            totals['netIncomes'] ??
+            (estimateAgain ? null : kept?.netMonthlyIncome),
+        monthlyDebtPayments:
+            totals['debtPayments'] ?? kept?.monthlyDebtPayments,
+        savings: totals['savings'] ?? kept?.savings,
+      ),
+      pack: markets.packFor(id)!,
+      incomes: max(
+        amounts['grossIncomes']?.length ?? 0,
+        amounts['netIncomes']?.length ?? 0,
+      ),
     );
+    final takeHome = filled.netMonthlyIncome == null
+        ? estimatedTakeHome(
+            rates,
+            amounts['grossIncomes'] ?? [?filled.grossMonthlyIncome],
+          )
+        : null;
+    final profile = filled.copyWith(
+      netMonthlyIncome: filled.netMonthlyIncome ?? takeHome,
+    );
+    final assumed = {
+      ...carried,
+      ...unstated,
+      if (takeHome != null) ProfileAssumption.takeHomePay,
+    };
     final market = markets.resolveFor(id, profile, currencies: currencies)!;
-    final confirmed = {...?arguments['confirmed'] as List<Object?>?};
+    final confirmed = {...?passed['confirmed'] as List<Object?>?};
     final doubts = [
       for (final doubted in figureDoubts(market: market, profile: profile))
-        if (arguments[_doubted(doubted.doubt)] != null &&
+        if (passed[_doubted(doubted.doubt)] != null &&
             !confirmed.contains(_doubted(doubted.doubt)))
           doubted,
     ];
@@ -377,18 +426,23 @@ final class ComputeAffordability extends AgentTool {
         },
       );
     }
+    final leftOut = [
+      for (final name in unsaid)
+        "$name: not in the buyer's words, so it was not used.",
+    ];
     return switch (answerAffordability(
       market: market,
       profile: profile,
       price: inMarket['price'],
       downPayment: inMarket['downPayment'],
       monthlyFee: inMarket['homeFee'],
-      termYears: arguments['termYears'] as int?,
-      loanTypeId: arguments['loanType'] as String?,
+      termYears: passed['termYears'] as int?,
+      loanTypeId: passed['loanType'] as String?,
     )) {
       AffordabilityNeeds(:final missing, :final unconverted) => ToolResult(
         logFields: {
           'needs': [for (final field in missing) field.name],
+          if (unsaid.isNotEmpty) 'leftOut': [...unsaid],
         },
         modelResult: {
           'needs': [
@@ -407,30 +461,36 @@ final class ComputeAffordability extends AgentTool {
                   'ask': _ask(field, market),
                 },
           ],
+          if (leftOut.isNotEmpty) 'leftOut': leftOut,
           if (unconverted.isNotEmpty)
             'noExchangeRateFor': [for (final c in unconverted) c.code],
           'note':
-              'Nothing was worked out yet. Pass what the buyer said or '
-              'the brief holds, and call again in this turn; never guess '
-              'that there are no children or no loans. Ask for everything '
-              'still missing together, in one Questions card in this '
-              'reply: ask holds the fields for each fact, to use as they '
-              'are with an id of your own. A card holds six fields at '
-              'most; ask what is left over in the next turn. Never ask for '
-              'one fact a turn.',
+              'Nothing was worked out yet: needs holds the facts only the '
+              'buyer has, and everything else is assumed until they say '
+              'otherwise. When their words or the brief already hold one, '
+              'pass it and call again in this turn. Otherwise ask for them '
+              'together in this reply, in one Questions card: ask holds '
+              'the fields for each fact, to use as they are with an id of '
+              'your own.',
         },
       ),
       AffordabilityAnswered(:final assessed, slice: final answered) =>
         _answered(
           assessed,
           _withHome(
-            answered.copyWith(ageAssumed: ageAssumed),
+            answered.copyWith(
+              assumed: assumed,
+              takeHomeSource: assumed.contains(ProfileAssumption.takeHomePay)
+                  ? market.incomeTax?.source
+                  : null,
+            ),
             sample?.listing,
           ),
-          arguments,
+          passed,
           inMarket,
           market,
           context,
+          leftOut,
         ),
     };
   }
@@ -442,10 +502,17 @@ final class ComputeAffordability extends AgentTool {
     Map<String, Money> inMarket,
     ResolvedMarket market,
     ToolContext context,
+    List<String> leftOut,
   ) => ToolResult(
-    logFields: {'answered': true},
+    logFields: {
+      'answered': true,
+      if (slice.assumed.isNotEmpty)
+        'assumed': [for (final assumption in slice.assumed) assumption.name],
+      if (leftOut.isNotEmpty) 'leftOut': leftOut.length,
+    },
     modelResult: {
       'answered': true,
+      if (leftOut.isNotEmpty) 'leftOut': leftOut,
       'limitingRule': assessed.binding?.kind.name,
       'withinSavings': switch ((slice.cashNeeded, slice.savings)) {
         (final cash?, final saved?) => cash <= saved,
@@ -475,14 +542,19 @@ final class ComputeAffordability extends AgentTool {
         if (inMarket['homeFee'] == null) 'homeFee': 'none',
         if (arguments['loanType'] == null) 'loanType': slice.loanTypeId,
         if (arguments['borrowers'] == null) 'borrowers': 'every adult',
-        if (slice.ageAssumed)
-          'age':
-              'adults of $assumedAdultAge, which only moves the sample '
-              'everyday costs a little',
       },
+      if (slice.assumed.isNotEmpty)
+        'assumedAboutThem': {
+          for (final assumption in ProfileAssumption.values)
+            if (slice.assumed.contains(assumption) &&
+                (assumption != ProfileAssumption.age || _ageSetsLoan(market)))
+              _assumedArgument[assumption]!: _assumedText(assumption, slice),
+        },
       'limit': _limit(assessed.binding?.kind),
       'draw': [
         block('summary', 'AffordabilitySummary', _affordability),
+        if (slice.assumed.isNotEmpty)
+          block('household', 'HouseholdSummary', _affordability),
         if (slice.binding != null)
           block('limit', 'RuleNote', {
             'rule': boundTo('/affordability/binding'),
@@ -501,7 +573,8 @@ final class ComputeAffordability extends AgentTool {
           'choose': sends('take_rate'),
         }),
         block('loan', 'LoanBalanceChart', _affordability),
-        block('household', 'HouseholdSummary', _affordability),
+        if (slice.assumed.isEmpty)
+          block('household', 'HouseholdSummary', _affordability),
       ],
       'note':
           'The figures are in /affordability; never write them in your '
@@ -510,10 +583,11 @@ final class ComputeAffordability extends AgentTool {
           'the costs on the day, other down payments, the rates side by '
           'side, the loan year by year, or who the household is. In your '
           'reply say in your own plain words what limit says, and what it '
-          'means for the home they can look at. What was assumed is the '
-          "buyer's to decide; nothing else can be computed yet, so offer "
-          'no other choice. When they apply a down payment or take a '
-          'rate, call this tool again with it as downPayment or loanType.',
+          'means for the home they can look at. ${slice.assumed.isEmpty ? '' : _assumedNote}'
+          "What is under assumed is the buyer's to decide; nothing else "
+          'can be computed yet, so offer no other choice. When they apply '
+          'a down payment or take a rate, call this tool again with it as '
+          'downPayment or loanType.',
     },
     seeds: {
       'affordability': jsonDecode(jsonEncode(slice.toJson())),
@@ -527,6 +601,43 @@ final class ComputeAffordability extends AgentTool {
         },
     },
   );
+
+  static const _assumedNote =
+      'assumedAboutThem holds, the one that moves the answer most first, '
+      'what their words did not say and this tool assumed or estimated; '
+      'the household card under draw shows each one marked, with its '
+      'figure. If their words already said one of these, such as no '
+      'debts or no children, call again with it now, before you reply. '
+      'Otherwise say in your text what you assumed about them, in plain '
+      'words and without figures, and ask once whether that is right, '
+      'before any other question. When they say it is, call again '
+      'with what they confirmed, such as childAges [] and debtPayments [], '
+      'so it is no longer marked; when they correct something, call again '
+      'with their figure. ';
+
+  static String _assumedText(
+    ProfileAssumption assumption,
+    AffordabilitySlice slice,
+  ) => switch (assumption) {
+    ProfileAssumption.adults =>
+      '${slice.profile?.adults}, one for each income passed',
+    ProfileAssumption.children => 'none',
+    ProfileAssumption.age => 'the oldest borrower is $assumedAdultAge',
+    ProfileAssumption.debts => 'no other loans',
+    ProfileAssumption.takeHomePay =>
+      'estimated from their pay before tax with '
+          "${slice.takeHomeSource?.publisher ?? 'the market'}'s tax table, "
+          "each income taxed as one person's pay; the household card "
+          'shows the figure',
+    ProfileAssumption.residency => 'they pay tax in ${slice.marketName}',
+    ProfileAssumption.use => 'a home to live in',
+    ProfileAssumption.employment => 'employed',
+  };
+
+  static bool _ageSetsLoan(ResolvedMarket market) =>
+      market.lending.incomeAdjustments.isNotEmpty ||
+      market.lending.maxAgeAtMaturity.isNotEmpty ||
+      market.lending.maxTermYears.any((rule) => rule.appliesTo?.age != null);
 
   String? _marketInUse(Map<String, Object?> slices) {
     if (slices[affordabilityDataSlice.name] case {

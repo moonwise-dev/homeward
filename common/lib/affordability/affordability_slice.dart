@@ -8,6 +8,7 @@ import '../money/money.dart';
 import '../money/ppm_json_converter.dart';
 import '../money/rate.dart';
 import '../profile/buyer_profile.dart';
+import '../profile/profile_assumption.dart';
 import 'constraint_kind.dart';
 import 'loan_schedule.dart';
 import 'stress_curve.dart';
@@ -46,7 +47,8 @@ abstract class AffordabilitySlice with _$AffordabilitySlice {
     LoanSchedule? schedule,
     BuyerProfile? profile,
     @Default(false) bool downPaymentStated,
-    @Default(false) bool ageAssumed,
+    @Default({}) Set<ProfileAssumption> assumed,
+    Source? takeHomeSource,
     String? homeId,
     String? homeName,
   }) = _AffordabilitySlice;
