@@ -16,7 +16,7 @@ decided and why, and `docs/SPIKES.md` the evidence.
 
 ## Where We Are
 
-As of 2026-10-08.
+As of 2026-10-09.
 
 - **Built.** 27 blocks in five families, thirteen tools, and the journeys
   of the README, rehearsed with the probe; a gallery page per block; the
@@ -277,28 +277,30 @@ What Google asked for on 2026-10-06, due 2026-10-16 (D172).
 In this order, each a small chunk that ends with `make check` green, a live
 probe, and a visual look.
 
-The order agreed on 2026-10-08 (D181):
+The order agreed on 2026-10-08 (D181), as it stands on 2026-10-09:
 
-1. The golden script: three opening messages and the screen each must end
-   on. It is the finish line, and what the three do not need goes, blocks
-   included.
-2. Done on 2026-10-09: the build as it stands is hosted. Left of it: a
-   turn and a reload through the public page with a person's own key.
-3. Done on 2026-10-09 (D183): tools that assume and estimate.
-   `compute_affordability` answers from income and savings, assumes no
-   other loans and no children until told, takes the household from the
-   buyer's words, and estimates take-home pay from pay before tax with
-   Skatteverket's table, so the first reply to a move shows what they can
-   borrow. Portugal's table followed the same day (D192).
-4. One day on the assessment: one new block and a prompt change on the
-   tools there are, run against the three messages, with nothing removed.
-   If Gemini draws it reliably, the step list, the brief as a card, the two
-   panels, the inline ask, and D180's chips go in one change. If not, the
-   hosted build stands.
+1. The golden script. Drafted: the three opening messages, with the screen
+   each ends on and two or three taps to follow, are in the README under
+   Three Ways In. Left of it: the owner's read of the three, and what the
+   three do not need, blocks included, which nothing has removed yet.
+2. Done on 2026-10-09: the build is hosted, and was deployed again with
+   each of D182 to D192. Left of it: a turn and a reload through the
+   public page with a person's own key, in Chrome and Safari.
+3. Done on 2026-10-09 (D183, D192): tools that assume and estimate, in
+   Sweden and Portugal.
+4. The assessment, taken another way (D185 to D191), with nothing removed.
+   The plan holds what the tools worked out, only the card that answers,
+   with the rest listed as buttons; the step list and the brief show when
+   asked for; a tap on a card runs its tool, and one that only moves cards
+   draws no reply; on a phone the plan follows the conversation in one
+   scroll. Open, and the owner's to decide: whether a wide screen keeps
+   its two panes, and whether one block that sums up what works, what to
+   watch, and what is open is still wanted on top.
 5. Then a price set against sample sales, and a listing the buyer pastes
    (S13).
-6. The licence and notice, the description, screenshots, the logo, and the
-   Figma file, once the catalog has settled.
+6. The licence and notice are in (2026-10-09), and a description and
+   screenshots are drafted outside the repository. Left: the logo, the
+   Figma file, and Moonwise making the repository public.
 7. A rehearsal on the hosted build, and the video if it is wanted.
 
 ## Later
