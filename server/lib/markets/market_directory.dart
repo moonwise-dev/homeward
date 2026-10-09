@@ -64,6 +64,8 @@ final class MarketDirectory {
       if (word.length > 3 && !_commonWords.contains(word)) word,
   };
 
+  static final _markup = RegExp('[<{[]');
+
   static final _notLetters = RegExp(r'[^\p{L}]+', unicode: true);
 
   static const _commonWords = {
@@ -116,7 +118,7 @@ final class MarketDirectory {
   };
 
   String? coveredCode(String named) {
-    final wanted = named.trim().toLowerCase();
+    final wanted = named.split(_markup).first.trim().toLowerCase();
     for (final MapEntry(key: code, value: name) in covered.entries) {
       if (code.toLowerCase() == wanted || name.toLowerCase() == wanted) {
         return code;

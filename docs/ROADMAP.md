@@ -185,9 +185,15 @@ As of 2026-10-08.
   `HomeSwipe` shows rents to people who rent, the style prompt asks for
   what a result means and forbids describing the screen, and a reply to a
   tap never runs a tool even when Gemini calls one.
+- **On a phone, one scroll** (D189, 2026-10-09). Below 1000 dp the plan
+  follows the conversation in the same column, where two tabs kept the
+  figure away from the words. Looked at in headless Chrome at 390 dp: the
+  first opening message, with what they can borrow right under the reply,
+  and a tap on These are right. A row of two buttons overflowed there and
+  now wraps. Not looked at: a real phone, and Safari.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, first from commit
-  `bf1a0fb` and again the same day with D182 to D188; one live turn on the
+  `bf1a0fb` and again the same day with D182 to D189; one live turn on the
   redeployed server drew its cards after 5 s. On the public server: `/health`, the agent card with its
   public URL, a new session, `/dev` shut, a preflight from the Hosting
   origin, and one live turn in 25 s. On the public page, in headless

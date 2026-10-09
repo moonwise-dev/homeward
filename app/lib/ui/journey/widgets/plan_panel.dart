@@ -8,6 +8,47 @@ import '../../core/themes/colors.dart';
 import '../../core/themes/dimens.dart';
 import '../../core/themes/text_styles.dart';
 
+class InlinePlan extends StatelessWidget {
+  const InlinePlan({
+    required this.sessionId,
+    required this.isRunning,
+    required this.changes,
+    required this.focus,
+    super.key,
+  });
+
+  final String sessionId;
+  final bool isRunning;
+  final List<PlanChange> changes;
+  final ValueNotifier<String?> focus;
+
+  @override
+  Widget build(BuildContext context) {
+    final styles = AppTextStyles.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: AppSpacing.sm,
+        children: [
+          Text('Your plan', style: styles.label),
+          IgnorePointer(
+            ignoring: isRunning,
+            child: PlanMarks(
+              changes: changes,
+              focus: focus,
+              child: PlanSurfaceView(
+                sessionId: sessionId,
+                surfaceId: planSurfaceId,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class PlanPanel extends StatelessWidget {
   const PlanPanel({
     required this.sessionId,

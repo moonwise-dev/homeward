@@ -30,6 +30,7 @@ import 'shortlist/shortlist_item.dart';
 import 'stress_test_chart/stress_test_chart_item.dart';
 import 'week_map/week_map_item.dart';
 import 'weekly_travel/weekly_travel_item.dart';
+import 'wrapping_row.dart';
 
 Catalog homewardGenuiCatalog() {
   final basic = BasicCatalogItems.asNoAssetCatalog();
@@ -37,7 +38,8 @@ Catalog homewardGenuiCatalog() {
     [
       for (final item in [
         for (final item in basic.items)
-          if (agentVisibleBasicComponents.contains(item.name)) item,
+          if (agentVisibleBasicComponents.contains(item.name))
+            item.name == 'Row' ? wrappingRow(item) : item,
         planOverviewItem,
         factItem,
         briefItem,

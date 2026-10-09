@@ -466,7 +466,7 @@ place each turn.
 
 | Width | Layout |
 | --- | --- |
-| < 1000 dp | Two tabs, Conversation and Plan, each filling the screen. The Plan tab carries a dot while it holds a change the buyer has not seen (D180). The wire inspector opens as a sheet. |
+| < 1000 dp | One column that scrolls (D189): the conversation, and under its latest reply the plan, headed Your plan, so the answer sits right below the words. A chip in a reply scrolls to its card. The wire inspector opens as a sheet. |
 | ≥ 1000 dp | The conversation, at most 640 dp wide, beside the plan panel. The wire inspector can open as a third pane, 380–440 dp wide, from the app bar. |
 
 ### Screens
