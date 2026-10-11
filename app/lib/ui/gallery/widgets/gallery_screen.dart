@@ -15,11 +15,16 @@ class GalleryScreen extends ConsumerWidget {
 
   final String? componentName;
 
+  static const _opensOn = 'AffordabilitySummary';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final styles = AppTextStyles.of(context);
     void toPlan() => context.go(AppRoutes.resuming(ref.read(openPlanProvider)));
-    final provider = galleryViewModelProvider(componentName);
+    final isWide = MediaQuery.sizeOf(context).width >= AppSizes.twoPane;
+    final provider = galleryViewModelProvider(
+      componentName ?? (isWide ? _opensOn : null),
+    );
     final state = ref.watch(provider);
     final selected = state.selected;
     final example = state.example;
@@ -37,53 +42,49 @@ class GalleryScreen extends ConsumerWidget {
             exampleIndex: state.exampleIndex,
             onShowExample: ref.read(provider.notifier).showExample,
           );
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth >= AppSizes.twoPane) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Catalog gallery'),
-              leading: BackButton(onPressed: toPlan),
+    if (isWide) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Catalog gallery'),
+          leading: BackButton(onPressed: toPlan),
+        ),
+        body: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(width: AppSizes.sidePane, child: index),
+            const VerticalDivider(width: 1),
+            Expanded(
+              child:
+                  page ??
+                  Center(
+                    child: Text(
+                      'Pick a block to see it with its parameters.',
+                      style: styles.caption,
+                    ),
+                  ),
             ),
-            body: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(width: AppSizes.sidePane, child: index),
-                const VerticalDivider(width: 1),
-                Expanded(
-                  child:
-                      page ??
-                      Center(
-                        child: Text(
-                          'Pick a block to see it with its parameters.',
-                          style: styles.caption,
-                        ),
-                      ),
-                ),
-              ],
+          ],
+        ),
+      );
+    }
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Catalog gallery'),
+        leading: BackButton(
+          onPressed: page == null
+              ? toPlan
+              : () => context.go(AppRoutes.gallery),
+        ),
+        actions: [
+          if (page != null)
+            IconButton(
+              tooltip: 'Back to your plan',
+              icon: const Icon(Icons.home_outlined),
+              onPressed: toPlan,
             ),
-          );
-        }
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Catalog gallery'),
-            leading: BackButton(
-              onPressed: page == null
-                  ? toPlan
-                  : () => context.go(AppRoutes.gallery),
-            ),
-            actions: [
-              if (page != null)
-                IconButton(
-                  tooltip: 'Back to your plan',
-                  icon: const Icon(Icons.home_outlined),
-                  onPressed: toPlan,
-                ),
-            ],
-          ),
-          body: page ?? index,
-        );
-      },
+        ],
+      ),
+      body: page ?? index,
     );
   }
 }

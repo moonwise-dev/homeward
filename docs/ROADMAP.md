@@ -295,7 +295,7 @@ What Google asked for on 2026-10-06, due 2026-10-16 (D172).
 | --- | --- | --- |
 | A public web build | Hosted on 2026-10-09 at `https://homeward-genui.web.app`; rehearsed on the hosted server and looked at in WebKit on 2026-10-11 | A turn and a reload through the page with a person's key, in Chrome, Safari, and on an iPhone |
 | A golden script, with clickable prompts | Drafted on 2026-10-08: three opening messages on the empty plan, each sent with a tap, taken from journeys 1, 4, and 3 of the README | The owner's edit of the three, and the screen each must end on (D181) |
-| A place that shows the catalog | Built: `/gallery`, from the app bar or by URL, with no key | A look at it as a stranger would arrive |
+| A place that shows the catalog | Built: `/gallery`, from the app bar or by URL, with no key; looked at on the hosted page on 2026-10-11, and a wide screen now opens on a block where it showed an empty pane | Nothing |
 | A logo, vector or high-resolution PNG | None | Moonwise's or Homeward's mark |
 | The repository open-sourced under Apache 2.0, with a Figma file of every catalog component | Private; `LICENSE` and `NOTICE` added on 2026-10-09, the notice naming the OFL fonts, the Unsplash photographers, OpenStreetMap, and the sample data; eight photos no code used were removed; no Figma file | Moonwise confirming the copyright line, "Copyright 2026 Moonwise", the Figma file, and Moonwise making it public |
 | A short description with one or two screenshots | The README was rewritten on 2026-10-09 for the screen as it is since D182 to D188; a three-sentence description and screenshots were drafted outside the repository | The owner's edit of the description, and the screenshots taken again on the final build |

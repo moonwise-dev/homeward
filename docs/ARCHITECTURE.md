@@ -545,7 +545,9 @@ place each turn.
 **Catalog gallery.**
 
 - `/gallery` is an index of every Homeward component grouped by family, each
-  with its one-line description (D160).
+  with its one-line description (D160). On a wide screen, where the index
+  sits beside the component, it opens on `AffordabilitySummary`, so a
+  visitor never lands on an empty pane.
 - `/gallery/:component` shows one component: its name, family, and
   description; its declared examples, one at a time with a switcher, each
   drawn from its example data model as the journey draws it; its parameters,
