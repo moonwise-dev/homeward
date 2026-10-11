@@ -22,6 +22,9 @@ final class ToolBelt {
         (name) => tools.any((tool) => tool.name == name && tool.readsCatalog),
       );
 
+  bool needsTheHousehold(String name) =>
+      tools.any((tool) => tool.name == name && tool.needsTheHousehold);
+
   ({String name, Map<String, Object?> arguments, bool needsReply})? answering(
     String action,
     Map<String, Object?> context,

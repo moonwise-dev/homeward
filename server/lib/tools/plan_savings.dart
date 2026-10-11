@@ -21,6 +21,9 @@ final class PlanSavings extends AgentTool {
   String get name => 'plan_savings';
 
   @override
+  bool get needsTheHousehold => true;
+
+  @override
   String get description =>
       "Works out how long until the household's savings cover the cash the "
       'home in /affordability needs on the day: the down payment the buyer '

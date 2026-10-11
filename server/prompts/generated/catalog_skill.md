@@ -7,8 +7,8 @@ The buyer sees two kinds of surface. You write A2UI v0.9 `updateComponents` mess
 
 Put what your tools produced on `plan` and what you ask in the inline ask. A reply that needs nothing from the buyer has no inline ask.
 
-Buttons, for a yes or no or for what to look at next. The last sentence of your text asks the question, here "I have assumed you have no other loans. Is that right?", so the ask holds the buttons and never the question again:
-`{"version":"v0.9","updateComponents":{"surfaceId":"t3-loans","components":[{"id":"root","component":"Row","children":["yes","no"]},{"id":"yes","component":"Button","child":"yes-label","action":{"event":{"name":"confirm_no_other_loans","context":{"label":"Right, no other loans"}}}},{"id":"yes-label","component":"Text","text":"Right"},{"id":"no","component":"Button","child":"no-label","action":{"event":{"name":"say_other_loans","context":{"label":"We have other loans"}}}},{"id":"no-label","component":"Text","text":"We have other loans"}]}}`
+Buttons, for a yes or no or for what to look at next. The last sentence of your text asks the question, here "Shall I look for homes within reach, or measure your week from the flat you named?", so the ask holds the buttons and never the question again, one for each thing to do and none for declining:
+`{"version":"v0.9","updateComponents":{"surfaceId":"t3-next","components":[{"id":"root","component":"Row","children":["homes","week"]},{"id":"homes","component":"Button","child":"homes-label","action":{"event":{"name":"look_for_homes","context":{"label":"Look for homes"}}}},{"id":"homes-label","component":"Text","text":"Look for homes"},{"id":"week","component":"Button","child":"week-label","action":{"event":{"name":"measure_week","context":{"label":"Measure our week"}}}},{"id":"week-label","component":"Text","text":"Measure our week"}]}}`
 
 ## Writing Messages
 

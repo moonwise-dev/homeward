@@ -404,7 +404,13 @@ message that asks several things: each entry holds the card, `monthly`,
 `costs`, `stress`, `down-payment`, `rates`, `loan`, `household`, or `limit`,
 and `theirWords`, the words of the buyer that ask for it. A card whose
 words are not in what the buyer wrote waits instead; without that check
-Gemini named four cards for a message that asked for none.
+Gemini named four cards for a message that asked for none. `show` also
+takes `buy-vs-rent` (D196): with a `home` passed, the tool works out buying
+that home against renting one like it with the code `compare_buy_rent`
+uses, seeds `/buyVsRent`, and hands `BuyVsRent` with its other cards, so a
+message that asks what a home costs and whether to buy it is answered by
+one call. Asked without a home, it answers that nothing was compared and
+that the figures are not for the home either, and to call again with it.
 
 The household card carries a `confirm` action while a line is assumed, a
 button that reads These are right, so Gemini draws no ask for the
@@ -722,7 +728,9 @@ owner, and leases it; `turn_run.dart` runs one turn:
    name, is rejected with the reason, and a line of closing brackets left
    over after a message is ignored.
 8. When the round ended with function calls, run them in the order the model
-   made them and continue the interaction with every result at once, at most
+   made them, with the tools that read the household
+   `compute_affordability` keeps, `compare_buy_rent` and `plan_savings`,
+   after the others (D196), and continue the interaction with every result at once, at most
    three tool rounds, plus at most two rounds that only read `component_docs`.
    After the tools ran, the server shows what they handed over under
    `draw` (D185): it sends the plan's `root` with those cards' IDs put

@@ -8,6 +8,7 @@ import 'agent_tool.dart';
 import 'draw.dart';
 import 'household_in.dart';
 import 'amount_arguments.dart';
+import 'compare_buy_rent.dart';
 import 'kept_homes.dart';
 import 'numbers_in.dart';
 import 'their_words.dart';
@@ -113,9 +114,11 @@ final class ComputeAffordability extends AgentTool {
       'home': {
         'type': 'string',
         'description':
-            'Optional. A sample home the buyer picked: its ID from '
-            'search_homes, or the words they named it by, such as its '
-            'street or what it is, which needs no search first. Its price and fee come '
+            'A sample home the buyer picked: its ID from search_homes, or '
+            'the words they named it by, such as its street or what it '
+            'is, which needs no search first. Pass it whenever their '
+            'message asks about one home, or every figure is for the '
+            'highest price they reach instead. Its price and fee come '
             'from the listing, so pass no price or homeFee with it.',
       },
       'price': {
@@ -196,7 +199,7 @@ final class ComputeAffordability extends AgentTool {
           'properties': {
             'card': {
               'type': 'string',
-              'enum': [..._askedFor.keys],
+              'enum': [..._askedFor.keys, CompareBuyRent.cardId],
             },
             'theirWords': {
               'type': 'string',
@@ -210,7 +213,9 @@ final class ComputeAffordability extends AgentTool {
         'description':
             "Optional. Cards the buyer's message asks for in so many "
             'words, to put on the plan with the answer: '
-            '${_waitingText()}. Leave it out when their message asks for '
+            '${_waitingText()}, and ${CompareBuyRent.cardId} for buying '
+            'the home you pass as home against renting one like it. '
+            'Leave it out when their message asks for '
             'none of these, as a message that only gives their pay and '
             'savings does; a card whose words are not theirs waits.',
       },
@@ -551,6 +556,7 @@ final class ComputeAffordability extends AgentTool {
           market,
           context,
           leftOut,
+          sample?.listing,
         ),
     };
   }
@@ -563,95 +569,127 @@ final class ComputeAffordability extends AgentTool {
     ResolvedMarket market,
     ToolContext context,
     List<String> leftOut,
-  ) => ToolResult(
-    logFields: {
-      'answered': true,
-      if (slice.assumed.isNotEmpty)
-        'assumed': [for (final assumption in slice.assumed) assumption.name],
-      if (leftOut.isNotEmpty) 'leftOut': leftOut.length,
-      if (_asked(arguments, context).isNotEmpty)
-        'show': [..._asked(arguments, context)],
-    },
-    modelResult: {
-      'answered': true,
-      if (leftOut.isNotEmpty) 'leftOut': leftOut,
-      'limitingRule': assessed.binding?.kind.name,
-      'withinSavings': switch ((slice.cashNeeded, slice.savings)) {
-        (final cash?, final saved?) => cash <= saved,
-        _ => null,
+    Listing? home,
+  ) {
+    final comparison =
+        home != null &&
+            _asked(arguments, context).contains(CompareBuyRent.cardId)
+        ? CompareBuyRent.answerFor(home, market, slice)
+        : null;
+    final compared = switch (comparison?.modelResult) {
+      final Map<String, Object?> answer => answer,
+      _ => const <String, Object?>{},
+    };
+    return ToolResult(
+      logFields: {
+        'answered': true,
+        if (slice.assumed.isNotEmpty)
+          'assumed': [for (final assumption in slice.assumed) assumption.name],
+        if (leftOut.isNotEmpty) 'leftOut': leftOut.length,
+        if (_asked(arguments, context).isNotEmpty)
+          'show': [..._asked(arguments, context)],
       },
-      'withinRules': slice.loan <= slice.maxLoan,
-      'passesStressTest': switch (slice.stress) {
-        StressCurve(:final limit?, :final stressRate, :final points) =>
-          points
-              .where((point) => point.annualRate == stressRate)
-              .every((point) => point.cost <= limit),
-        _ => null,
-      },
-      'purchaseCosts': slice.purchaseCosts.length,
-      'assumed': {
-        if (inMarket['price'] == null)
-          'price': 'the highest price the savings reach',
-        if (inMarket['downPayment'] == null)
-          'downPayment': switch (slice.whatIf?.steps.first.downPayment) {
-            final minimum? when slice.downPayment < minimum =>
-              'the most the savings can put down, less than the rules '
-                  'require',
-            _ => 'the minimum the rules allow',
+      modelResult: {
+        'answered': true,
+        if (leftOut.isNotEmpty) 'leftOut': leftOut,
+        'limitingRule': assessed.binding?.kind.name,
+        'withinSavings': switch ((slice.cashNeeded, slice.savings)) {
+          (final cash?, final saved?) => cash <= saved,
+          _ => null,
+        },
+        'withinRules': slice.loan <= slice.maxLoan,
+        'passesStressTest': switch (slice.stress) {
+          StressCurve(:final limit?, :final stressRate, :final points) =>
+            points
+                .where((point) => point.annualRate == stressRate)
+                .every((point) => point.cost <= limit),
+          _ => null,
+        },
+        'purchaseCosts': slice.purchaseCosts.length,
+        'assumed': {
+          if (inMarket['price'] == null)
+            'price': 'the highest price the savings reach',
+          if (inMarket['downPayment'] == null)
+            'downPayment': switch (slice.whatIf?.steps.first.downPayment) {
+              final minimum? when slice.downPayment < minimum =>
+                'the most the savings can put down, less than the rules '
+                    'require',
+              _ => 'the minimum the rules allow',
+            },
+          if (termMovesPayment(market) && arguments['termYears'] == null)
+            'termYears': slice.termYears,
+          if (inMarket['homeFee'] == null) 'homeFee': 'none',
+          if (arguments['loanType'] == null) 'loanType': slice.loanTypeId,
+          if (arguments['borrowers'] == null) 'borrowers': 'every adult',
+        },
+        if (slice.assumed.isNotEmpty)
+          'assumedAboutThem': {
+            for (final assumption in ProfileAssumption.values)
+              if (slice.assumed.contains(assumption) &&
+                  (assumption != ProfileAssumption.age || _ageSetsLoan(market)))
+                _assumedArgument[assumption]!: _assumedText(assumption, slice),
           },
-        if (termMovesPayment(market) && arguments['termYears'] == null)
-          'termYears': slice.termYears,
-        if (inMarket['homeFee'] == null) 'homeFee': 'none',
-        if (arguments['loanType'] == null) 'loanType': slice.loanTypeId,
-        if (arguments['borrowers'] == null) 'borrowers': 'every adult',
+        'limit': _limit(assessed.binding?.kind),
+        shownOnTopKey: [
+          for (final (:card, :shown) in _cards(slice, inMarket))
+            if (shown || _asked(arguments, context).contains(card['id'])) card,
+          ...?compared[shownOnTopKey] as List<Object?>?,
+        ],
+        if (comparison != null)
+          'buyingAgainstRenting': {
+            for (final MapEntry(:key, :value) in compared.entries)
+              if (key != shownOnTopKey) key: value,
+          }
+        else if (_asked(arguments, context).contains(CompareBuyRent.cardId))
+          'buyingAgainstRenting': {
+            'notWorkedOut': home == null
+                ? 'It compares one home with renting one like it, and no '
+                      'home was passed, so these figures are not for the '
+                      'home they asked about either. Call this tool again '
+                      'now with home, the words they named it by, and the '
+                      'same show. Until then say nothing about buying '
+                      'against renting.'
+                : 'This home could not be priced for them, so say nothing '
+                      'about buying against renting.',
+          },
+        waitingKey: [
+          for (final (:card, :shown) in _cards(slice, inMarket))
+            if (!shown && !_asked(arguments, context).contains(card['id']))
+              card,
+        ],
+        'note':
+            'The figures are in /affordability; never write them in your '
+            'text. $drawNote The cards under drawWhenAsked wait: put one on '
+            'the plan when the buyer asks for it or picks it as the next '
+            'thing to look at, with arrange_plan and its id, or under show '
+            'when you call this tool again: ${_waitingText()}. In your '
+            'reply say in your own plain words what limit says, and what it '
+            'means for the home they can look at. ${slice.assumed.isEmpty ? '' : _assumedNote}'
+            "What is under assumed is the buyer's to decide; nothing else "
+            'can be computed yet, so offer no other choice. When they apply '
+            'a down payment or take a rate, call this tool again with it as '
+            'downPayment or loanType.',
       },
-      if (slice.assumed.isNotEmpty)
-        'assumedAboutThem': {
-          for (final assumption in ProfileAssumption.values)
-            if (slice.assumed.contains(assumption) &&
-                (assumption != ProfileAssumption.age || _ageSetsLoan(market)))
-              _assumedArgument[assumption]!: _assumedText(assumption, slice),
-        },
-      'limit': _limit(assessed.binding?.kind),
-      shownOnTopKey: [
-        for (final (:card, :shown) in _cards(slice, inMarket))
-          if (shown || _asked(arguments, context).contains(card['id'])) card,
-      ],
-      waitingKey: [
-        for (final (:card, :shown) in _cards(slice, inMarket))
-          if (!shown && !_asked(arguments, context).contains(card['id'])) card,
-      ],
-      'note':
-          'The figures are in /affordability; never write them in your '
-          'text. $drawNote The cards under drawWhenAsked wait: put one on '
-          'the plan when the buyer asks for it or picks it as the next '
-          'thing to look at, with arrange_plan and its id, or under show '
-          'when you call this tool again: ${_waitingText()}. In your '
-          'reply say in your own plain words what limit says, and what it '
-          'means for the home they can look at. ${slice.assumed.isEmpty ? '' : _assumedNote}'
-          "What is under assumed is the buyer's to decide; nothing else "
-          'can be computed yet, so offer no other choice. When they apply '
-          'a down payment or take a rate, call this tool again with it as '
-          'downPayment or loanType.',
-    },
-    asksOnCard: slice.awaitsConfirmation,
-    cardNotes: _cardNotes(assessed, slice),
-    seeds: {
-      'affordability': jsonDecode(jsonEncode(slice.toJson())),
-      if (_homesToPrice(context, slice) case final ids when ids.isNotEmpty)
-        homesSlice.name: {
-          for (final MapEntry(:key, :value)
-              in markets
-                  .pricedHomes(
-                    ids,
-                    slice,
-                    kept: keptHomesIn(context.slices[homesSlice.name]),
-                  )
-                  .entries)
-            key: jsonDecode(jsonEncode(value.toJson())),
-        },
-    },
-  );
+      asksOnCard: slice.awaitsConfirmation,
+      cardNotes: _cardNotes(assessed, slice),
+      seeds: {
+        ...?comparison?.seeds,
+        'affordability': jsonDecode(jsonEncode(slice.toJson())),
+        if (_homesToPrice(context, slice) case final ids when ids.isNotEmpty)
+          homesSlice.name: {
+            for (final MapEntry(:key, :value)
+                in markets
+                    .pricedHomes(
+                      ids,
+                      slice,
+                      kept: keptHomesIn(context.slices[homesSlice.name]),
+                    )
+                    .entries)
+              key: jsonDecode(jsonEncode(value.toJson())),
+          },
+      },
+    );
+  }
 
   static Map<String, String> _cardNotes(
     AssessedAffordability assessed,

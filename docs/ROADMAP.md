@@ -243,8 +243,8 @@ As of 2026-10-09.
   with no waiting card offered, eight asks all rows of buttons with the
   question once, and the other two starters in 3 rounds, 15 s and 19 s.
   Left: a reply to a tap takes a second round about half the time, to
-  fetch buttons its question came without; and Gemini still adds a Not
-  yet button to an offer, which the prompt asks it not to.
+  fetch buttons its question came without. Not yet on every offer went
+  with D196.
 - **Looked at in WebKit** (D195, 2026-10-11). The engine Safari runs,
   loaded from a script, since this machine has no iOS Simulator and Safari
   cannot be driven without changing its settings. The hosted page starts
@@ -255,10 +255,18 @@ As of 2026-10-09.
   the server sent them; a comment line after a quiet event now brings
   them in 0.15 s. Not looked at: Safari itself, an iPhone, and a turn
   through the hosted server from WebKit, which needs a key typed in.
+- **One call answers a home** (D196, 2026-10-11). `compute_affordability`
+  works out buying against renting too when the message asks for it, so
+  the second opening message is answered by one call: the comparison card
+  in seven local runs of seven, five of them in two rounds and 11 to
+  14 s, where a run that morning had left the question unanswered. The ask's example in the skill
+  is an offer of two things to do, and Not yet is gone from four asks of
+  four; Gemini now often offers the example's own pair, homes and the
+  week. Left: a reply that leaves out the home still costs a third round.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, first from commit
   `bf1a0fb`, again the same day with D182 to D193, and on 2026-10-11 with
-  D194 and D195; one live turn on the redeployed server drew its cards after 5 s. On the public server: `/health`, the agent card with its
+  D194 to D196; one live turn on the redeployed server drew its cards after 5 s. On the public server: `/health`, the agent card with its
   public URL, a new session, `/dev` shut, a preflight from the Hosting
   origin, and one live turn in 25 s. On the public page, in headless
   Chrome: the key screen at 1440 and 390 dp, and `/gallery/WeekMap` by its

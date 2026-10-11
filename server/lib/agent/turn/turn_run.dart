@@ -361,7 +361,10 @@ final class TurnRun {
         final results = <FunctionResult>[];
         final researcher = _researcher(apiKey, cancellation);
         yield* _progress.whileRunning(() async {
-          for (final call in calls) {
+          for (final call in [
+            ...calls.where((call) => !tools.needsTheHousehold(call.name)),
+            ...calls.where((call) => tools.needsTheHousehold(call.name)),
+          ]) {
             results.add(await _runCall(call, researcher));
           }
         });

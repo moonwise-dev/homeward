@@ -39,6 +39,8 @@ abstract class AgentTool {
 
   bool get tapsNeedNoReply => false;
 
+  bool get needsTheHousehold => false;
+
   FunctionDeclaration get declaration => FunctionDeclaration(
     name: name,
     description: description,

@@ -15,14 +15,21 @@ final class CompareBuyRent extends AgentTool {
 
   final MarketDirectory markets;
 
+  static const cardId = 'buy-vs-rent';
+
   @override
   String get name => 'compare_buy_rent';
 
   @override
+  bool get needsTheHousehold => true;
+
+  @override
   String get description =>
       'Compares buying a sample home with renting one like it, for the '
-      'household compute_affordability kept, so call it after that tool, '
-      'in the same step when you can: year by year, the '
+      'household compute_affordability kept, so call it after that tool; '
+      'when their message asks for it as you call compute_affordability '
+      'with a home, name buy-vs-rent under its show instead, and one '
+      'call answers both. It adds up, year by year, the '
       'costs on the day, interest after any deduction, and the fee against '
       "the rent, and the equity built. The rent is the area's estimate unless "
       'the buyer stated one. It seeds /buyVsRent for BuyVsRent and answers '
@@ -109,33 +116,52 @@ final class CompareBuyRent extends AgentTool {
         },
       );
     }
+    return answerFor(
+          sample.listing,
+          market,
+          household,
+          rent: rent,
+          years: years,
+        ) ??
+        _error(
+          'The household is missing figures; call compute_affordability '
+          'first.',
+        );
+  }
+
+  static ToolResult? answerFor(
+    Listing listing,
+    ResolvedMarket market,
+    AffordabilitySlice household, {
+    RentFigure? rent,
+    int? years,
+  }) {
     final home = homeAffordability(
-      sample.listing,
+      listing,
       market: market,
       household: household,
     );
     if (home == null) {
-      return _error(
-        'The household is missing figures; call compute_affordability first.',
-      );
+      return null;
     }
+    final asked = rent ?? RentFigure.like(listing);
     final slice = compareBuyAndRent(
       home: home,
       market: market,
-      rent: rent,
+      rent: asked,
       years: years,
     );
     final at = slice.at(slice.years);
     return ToolResult(
       modelResult: {
-        'home': sample.listing.id,
+        'home': listing.id,
         'years': slice.years,
         if (slice.yearsAssumed) 'assumed': {'years': slice.years},
         'cheaperOverTheYears': at.buying <= at.renting ? 'buying' : 'renting',
         'breakEvenYear': slice.breakEvenYear,
-        'rent': rent.stated
+        'rent': asked.stated
             ? 'as the buyer stated'
-            : {'estimate': true, 'source': rent.source},
+            : {'estimate': true, 'source': asked.source},
         'leavesOut': [
           "the home's price changing",
           'what the savings would earn',
@@ -143,9 +169,7 @@ final class CompareBuyRent extends AgentTool {
           "a house's upkeep",
         ],
         'draw': [
-          block('buy-vs-rent', 'BuyVsRent', {
-            'comparison': boundTo('/buyVsRent'),
-          }),
+          block(cardId, 'BuyVsRent', {'comparison': boundTo('/buyVsRent')}),
         ],
         'note':
             'The comparison is in /buyVsRent; never write the amounts in '
@@ -155,7 +179,7 @@ final class CompareBuyRent extends AgentTool {
       seeds: {buyVsRentSlice.name: jsonDecode(jsonEncode(slice.toJson()))},
       logFields: {
         'yearsAssumed': slice.yearsAssumed,
-        'rentStated': rent.stated,
+        'rentStated': asked.stated,
       },
     );
   }

@@ -109,9 +109,10 @@ A couple weighing one sample home.
 > cost us each month, what do we pay on the day, and is buying it better than
 > renting something like it?
 
-`compute_affordability` finds the flat by the words they named it by and
-prices it for this household, and `compare_buy_rent` adds up buying against
-renting a home like it, year by year. One reply answers all three questions:
+`compute_affordability` finds the flat by the words they named it by, prices
+it for this household, and, since the message asks, adds up buying against
+renting a home like it, year by year, with the code `compare_buy_rent` uses.
+One call answers all three questions:
 the plan shows the home,
 [`MonthlyCostBreakdown`](docs/generated/catalog_reference.md#monthlycostbreakdown),
 [`PurchaseCostsTable`](docs/generated/catalog_reference.md#purchasecoststable),
