@@ -180,7 +180,11 @@ recorded `genui_a2a` sending exactly these.
 ### Server To Client
 
 Each SSE event is `data: {"jsonrpc":"2.0","id":<request id>,"result":<event>}`
-followed by a blank line. The server emits only two event kinds, because
+followed by a blank line. When nothing follows an event for 50 ms the
+server writes a comment, a line holding only `:` and a blank line, which
+every SSE client ignores (D195): WebKit, and so Safari, keeps the end of
+an event it has received from the page until more bytes arrive, and the
+plan's cards sat there for about 3 s. The server emits only two event kinds, because
 `genui_a2a` rejects any other kind with an uncaught error and ignores
 `artifact-update`:
 

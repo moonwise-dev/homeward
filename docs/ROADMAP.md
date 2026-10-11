@@ -245,10 +245,20 @@ As of 2026-10-09.
   Left: a reply to a tap takes a second round about half the time, to
   fetch buttons its question came without; and Gemini still adds a Not
   yet button to an offer, which the prompt asks it not to.
+- **Looked at in WebKit** (D195, 2026-10-11). The engine Safari runs,
+  loaded from a script, since this machine has no iOS Simulator and Safari
+  cannot be driven without changing its settings. The hosted page starts
+  there on the JavaScript build with CanvasKit and draws the key screen. A
+  build served locally with the hosted headers ran the first starter in
+  12 s, opened a waiting card, took These are right, and restored the plan
+  on a reload. The plan's cards used to reach the page about 3 s after
+  the server sent them; a comment line after a quiet event now brings
+  them in 0.15 s. Not looked at: Safari itself, an iPhone, and a turn
+  through the hosted server from WebKit, which needs a key typed in.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, first from commit
   `bf1a0fb`, again the same day with D182 to D193, and on 2026-10-11 with
-  D194; one live turn on the redeployed server drew its cards after 5 s. On the public server: `/health`, the agent card with its
+  D194 and D195; one live turn on the redeployed server drew its cards after 5 s. On the public server: `/health`, the agent card with its
   public URL, a new session, `/dev` shut, a preflight from the Hosting
   origin, and one live turn in 25 s. On the public page, in headless
   Chrome: the key screen at 1440 and 390 dp, and `/gallery/WeekMap` by its
@@ -283,7 +293,7 @@ What Google asked for on 2026-10-06, due 2026-10-16 (D172).
 
 | Asked for | State | Left to do |
 | --- | --- | --- |
-| A public web build | Hosted on 2026-10-09 at `https://homeward-genui.web.app` | A turn, a reload, and Safari on it |
+| A public web build | Hosted on 2026-10-09 at `https://homeward-genui.web.app`; rehearsed on the hosted server and looked at in WebKit on 2026-10-11 | A turn and a reload through the page with a person's key, in Chrome, Safari, and on an iPhone |
 | A golden script, with clickable prompts | Drafted on 2026-10-08: three opening messages on the empty plan, each sent with a tap, taken from journeys 1, 4, and 3 of the README | The owner's edit of the three, and the screen each must end on (D181) |
 | A place that shows the catalog | Built: `/gallery`, from the app bar or by URL, with no key | A look at it as a stranger would arrive |
 | A logo, vector or high-resolution PNG | None | Moonwise's or Homeward's mark |
@@ -370,7 +380,7 @@ went, is in `docs/ROADMAP.md` at `93e1e1a`.
 | Google's review asks for official SDKs, and the Gemini call is Homeward's own REST client | A mandatory comment that costs days in the review window | The client calls the API Google recommends, for which Google lists no Dart package; the question is put to Google before anything is swapped (D177) |
 | Sessions live in the memory of one Cloud Run instance (D174) | A restart, a new deploy, or a second instance loses every open plan | One instance; the app starts a new plan when the server no longer holds the one in its URL; nothing a buyer cannot retype |
 | Nobody signs in, so any caller can open sessions and run turns (D173) | Server time and open-data requests spent on someone's script | A turn needs a Gemini key that Gemini accepts, and spends that key's quota; open-data requests go one at a time per service; one instance, at most 500 sessions |
-| Safari untested with `require-corp` and cross-origin streaming | iPhone viewers cannot stream a turn | Check macOS and iOS Safari on the hosted build; fall back to single-threaded Wasm without isolation headers for Safari |
+| Safari itself and an iPhone are unchecked; only its engine was, on a Mac (D195) | A fault that shows only in Safari's own shell or on iOS | In WebKit the page runs the JavaScript build under `require-corp` and streams a turn across origins; a person opens the hosted page in Safari and on an iPhone before the submission |
 | Buyers' personal details in the EU | Compliance exposure | No account and no name asked; a plan lives only in the server's memory, in `europe-north1`, until it is dropped; no content in logs |
 | The buyer has to bring a Gemini key | Fewer people try the demo | One-screen key flow with a direct AI Studio link; starter prompts on the empty plan |
 | A Google A2A client changes what it accepts | Other clients stop rendering Homeward | Server emits only `task` and `status-update`, full text snapshots; `genui_a2a` contract test in the app |
