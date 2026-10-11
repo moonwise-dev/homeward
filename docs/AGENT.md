@@ -190,8 +190,10 @@ of 5 a minute and 24 of 20 a day.
   A decision with consequences is a `Choice` with Gemini's recommendation
   first and why (C4b, D145). Several facts only the buyer knows are asked
   together in one `Questions` card (D165). A yes or no, or what to look at
-  next, is a sentence with buttons, built from basic components. When
-  nothing is needed the reply ends in words. Typing stays open for any
+  next, is two or three buttons under the reply, a `Row` of `Button`s:
+  the reply's last sentence asks, so the question is written once, and
+  an offer has no button for declining (D194). When nothing is needed
+  the reply ends in words. Typing stays open for any
   other answer.
 - **Say what the answer changes.** A reply begins with what Gemini can now
   work out, assume, or rule out, never with thanks or the answer repeated.
@@ -678,7 +680,8 @@ owner, and leases it; `turn_run.dart` runs one turn:
    button (D187), the server runs that tool first, shows its cards, and
    adds its answer to the input; the reply then runs with tools off
    (D188), so it takes one model round, and its note asks for one or two
-   sentences and an ask with buttons when something is worth doing next.
+   sentences first and, when something is worth doing next, a question
+   that ends them with its buttons after.
    A tap whose tool answers with an error is left to Gemini. The taps
    claimed: `confirm_household`, `work_out_home`, `take_rate`, and
    `use_down_payment` by `compute_affordability`; `keep_home` and
@@ -733,7 +736,10 @@ owner, and leases it; `turn_run.dart` runs one turn:
    while home cards wait, More homes, which sends the next three and has
    them placed after the last home on the plan (D193). The
    server redraws it after every tool round and at the end of the turn,
-   and leaves it out of the screen Gemini is shown. The message goes through the same validation as Gemini's, and
+   and leaves it out of the screen Gemini is shown. Instead, each note
+   the server sends before Gemini writes, after tool results, after a
+   tap a tool answered, and when an ask is missing, names those buttons
+   by their words and says to offer none of them (D194). The message goes through the same validation as Gemini's, and
    one that fails is logged and dropped, never sent back to Gemini to
    correct. Every batch of tool results carries a short note (D183): call
    what the buyer's message still asks for, then reply with sentences for

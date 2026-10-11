@@ -36,8 +36,8 @@ what is open.
   a tool's result goes on the plan as a card the moment the tool answers
   (D185), only the card that answers what was asked (D187), and Gemini says
   in a sentence or two what it means and what it assumed. It asks at most
-  once, last: a sentence with two or three buttons inline in the
-  conversation, composed from basic components, or nothing when it needs
+  once, last: its closing sentence with two or three buttons under it,
+  composed from basic components (D194), or nothing when it needs
   nothing. What Homeward assumed is marked on the card, with one button to
   say it is right, and a button on a card runs its tool at once (D188).
   Under its cards the plan lists what else was worked out, each a button

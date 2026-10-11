@@ -34,8 +34,8 @@ conversation goes, so two households end up on two different screens.
   that answers what was asked; the rest wait, listed under the plan as
   buttons built from basic components, and open with a tap. Gemini
   writes the words, arranges the plan, and composes each question from basic
-  components, a sentence and two or three buttons, inline in the
-  conversation. A button on a card runs its tool at once.
+  components: the reply's last sentence asks, and two or three buttons
+  sit under it. A button on a card runs its tool at once.
 
 Homeward explains and estimates; it does not give financial advice. The rules,
 rates, and homes are labelled samples.

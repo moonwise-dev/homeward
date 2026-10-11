@@ -16,5 +16,5 @@ const missingAskInput =
     'something, and you drew nothing for them to tap. Send the a2ui '
     'block with the inline ask for it now, and no sentences: one '
     'updateComponents for a surface named for this turn, whose root is a '
-    'Column with a Text and a Row of Buttons, or a Choice, or a Questions '
-    'card. Do not call a tool.';
+    'Row of Buttons that answer your question, or a Choice, or a '
+    'Questions card. Do not call a tool.';

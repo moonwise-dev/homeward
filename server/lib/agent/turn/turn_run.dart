@@ -178,6 +178,7 @@ final class TurnRun {
               tapAnsweredInput(name, result),
           ],
         },
+        if (tapAnswered) ?_alreadyOffered,
         if (unheard.isNotEmpty) unheardTapsNote(unheard),
       ].join('\n'),
     );
@@ -368,9 +369,13 @@ final class TurnRun {
         yield* _showHandedCards();
         input = InteractionInput.functionResults(
           results,
-          note: toolRounds < settings.maxToolRounds
-              ? toolResultsNote
-              : toolsDoneNote,
+          note: [
+            if (toolRounds < settings.maxToolRounds)
+              toolResultsNote
+            else
+              toolsDoneNote,
+            ?_alreadyOffered,
+          ].join(' '),
         );
         continue;
       }
@@ -438,7 +443,7 @@ final class TurnRun {
         );
         final note = noWords
             ? unfinishedReplyInput(notes: notesToSelf)
-            : missingAskInput;
+            : [missingAskInput, ?_alreadyOffered].join(' ');
         if (calls.isEmpty) {
           input = InteractionInput.text(note);
         } else {
@@ -482,6 +487,12 @@ final class TurnRun {
       return;
     }
   }
+
+  String? get _alreadyOffered =>
+      switch (waitingButtonLabels(_validator.screen ?? const [])) {
+        [] => null,
+        final labels => alreadyOfferedNote(labels),
+      };
 
   List<String> get _unheardTaps => [
     for (final record

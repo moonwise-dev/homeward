@@ -22,12 +22,19 @@ String tapAnsweredInput(String tool, Object? answer) => [
       'answer:',
   jsonEncode(answer),
   'The cards it handed over under draw are on the plan already. Reply '
-      'now with one or two sentences that say what this means for them, '
-      'from what the tools have told you. When there is work worth doing '
-      'next that no tool has done, such as homes to see or their week '
-      'from a home, offer it: right after your sentences add the a2ui '
-      'block with that ask and two or three buttons.',
+      'now, sentences first: one or two that say what this means for '
+      'them, from what the tools have told you. When there is work worth '
+      'doing next that no tool has done, such as homes to see or their '
+      'week from a home, end those sentences with the question that '
+      'offers it, and add the a2ui block with its buttons right after '
+      'them.',
 ].join('\n');
+
+String alreadyOfferedNote(Iterable<String> labels) =>
+    'Under the plan the buyer already has a button for each of these: '
+    "${labels.join(', ')}. Never offer one of them, in your sentences or "
+    'as a button of your ask. When you offer what to do next, offer only '
+    'work no tool has done yet.';
 
 String unheardTapsNote(Iterable<String> taps) =>
     'Server note, never repeat it to the buyer: since your last reply '

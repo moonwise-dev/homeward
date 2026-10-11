@@ -56,11 +56,6 @@ class ExchangeSection extends ConsumerWidget {
               ),
             if (entry.text.isNotEmpty)
               SelectableText(entry.text, style: styles.body),
-            if (changes.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: AppSpacing.sm),
-                child: PlanReceipt(changes: changes, onShow: onShowOnPlan),
-              ),
             for (final surfaceId in inlineSurfaceIds(entry))
               Padding(
                 padding: const EdgeInsets.only(top: AppSpacing.md),
@@ -71,17 +66,17 @@ class ExchangeSection extends ConsumerWidget {
                     duration: AppMotion.of(context, AppMotion.surface),
                     child: AppSurfaceEntry(
                       key: ValueKey(surfaceId),
-                      child: AppCard(
-                        child: Surface(
-                          surfaceContext: agent.surfaceContext(
-                            sessionId,
-                            surfaceId,
-                          ),
-                        ),
+                      child: _InlineAsk(
+                        surface: agent.surfaceContext(sessionId, surfaceId),
                       ),
                     ),
                   ),
                 ),
+              ),
+            if (changes.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.sm),
+                child: PlanReceipt(changes: changes, onShow: onShowOnPlan),
               ),
             ..._ending(AppColors.of(context)),
           ],
@@ -117,4 +112,20 @@ class ExchangeSection extends ConsumerWidget {
     ],
     AgentTurnStatus.streaming || AgentTurnStatus.completed => const [],
   };
+}
+
+class _InlineAsk extends StatelessWidget {
+  const _InlineAsk({required this.surface});
+
+  final SurfaceContext surface;
+
+  @override
+  Widget build(BuildContext context) => ValueListenableBuilder(
+    valueListenable: surface.definition,
+    builder: (context, definition, child) =>
+        definition?.components['root']?.type == 'Row'
+        ? child!
+        : AppCard(child: child!),
+    child: Surface(surfaceContext: surface),
+  );
 }

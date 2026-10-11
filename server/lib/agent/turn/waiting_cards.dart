@@ -62,6 +62,17 @@ List<Map<String, Object?>> waitingCardButtons(
   ];
 }
 
+List<String> waitingButtonLabels(List<Map<String, Object?>> screen) => [
+  for (final component in screen)
+    if (component
+        case {
+          'id': final String id,
+          'action': {'event': {'context': {'label': final String label}}},
+        }
+        when id.startsWith('$planMoreId-'))
+      label,
+];
+
 List<Map<String, Object?>> withoutWaitingButtons(
   List<Map<String, Object?>> screen,
 ) => [

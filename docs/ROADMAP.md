@@ -230,10 +230,25 @@ As of 2026-10-09.
   ones on the plan, with no model round. In headless Chrome at 1440 dp,
   after the Lisbon message: three flats, a tap, six flats in the search's
   order, and the button still there for the rest.
+- **An ask is its buttons** (D194, 2026-10-11). A yes or no, or what to
+  look at next, is a row of buttons under the reply, whose last sentence
+  asks: the question is written once, and the app draws the row with no
+  card around it, before the line that says what changed on the plan.
+  Every note the server sends before Gemini writes names the buttons the
+  buyer already has under the plan, so it offers none of them. A rehearsal
+  on the hosted build that morning, the first starter, These are right, a
+  waiting card opened in 37 ms, and a question about it, had shown both
+  faults: the question twice, word for word, and What a month costs
+  offered again. After it, locally: thirteen runs of that starter and tap
+  with no waiting card offered, eight asks all rows of buttons with the
+  question once, and the other two starters in 3 rounds, 15 s and 19 s.
+  Left: a reply to a tap takes a second round about half the time, to
+  fetch buttons its question came without; and Gemini still adds a Not
+  yet button to an offer, which the prompt asks it not to.
 - **Hosted since 2026-10-09** at `https://homeward-genui.web.app`, with the
   server on Cloud Run at the URL in the `Makefile`, first from commit
-  `bf1a0fb` and again the same day with D182 to D193; one live turn on the
-  redeployed server drew its cards after 5 s. On the public server: `/health`, the agent card with its
+  `bf1a0fb`, again the same day with D182 to D193, and on 2026-10-11 with
+  D194; one live turn on the redeployed server drew its cards after 5 s. On the public server: `/health`, the agent card with its
   public URL, a new session, `/dev` shut, a preflight from the Hosting
   origin, and one live turn in 25 s. On the public page, in headless
   Chrome: the key screen at 1440 and 390 dp, and `/gallery/WeekMap` by its
@@ -350,7 +365,7 @@ went, is in `docs/ROADMAP.md` at `93e1e1a`.
 
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
-| The submission is due 2026-10-16 and nothing is hosted, licensed, or drawn in Figma yet | A late or partial submission | Host first, since it is the least certain step; the Figma file and the licence need Moonwise, so they are asked for at once (Open Questions) |
+| The submission is due 2026-10-16, and the logo, the Figma file, and the public repository are not there yet | A partial submission | The build is hosted and licensed since 2026-10-09; what is left needs Moonwise, and is asked for (Open Questions) |
 | genui is marked highly experimental and is being redesigned as `a2ui_core`, `a2ui_agent`, and `a2ui_flutter`; `a2ui_core` 0.2 already differs from the 0.1 that genui 0.10 needs | Rework in the catalog and the validation passes | Exact versions pinned; genui confined to a few files (`docs/ARCHITECTURE.md`); no upgrade before the submission |
 | Google's review asks for official SDKs, and the Gemini call is Homeward's own REST client | A mandatory comment that costs days in the review window | The client calls the API Google recommends, for which Google lists no Dart package; the question is put to Google before anything is swapped (D177) |
 | Sessions live in the memory of one Cloud Run instance (D174) | A restart, a new deploy, or a second instance loses every open plan | One instance; the app starts a new plan when the server no longer holds the one in its URL; nothing a buyer cannot retype |
@@ -387,7 +402,7 @@ went, is in `docs/ROADMAP.md` at `93e1e1a`.
 2. Whether the map on OpenStreetMap's tiles is acceptable, where the travel
    example Google linked draws Google Maps (D163).
 3. Who makes the Figma file, and when Moonwise makes the repository public.
-4. Which blocks stay (Next, 3).
+4. Which blocks stay (Next, 1).
 5. Whether Andrew Brogdon's team still wants a recording, and by when.
 6. Catalog ID domain: `moonwise.se/homeward` or a dedicated domain.
 7. Whether figures should be valued on the spot for each household's story
