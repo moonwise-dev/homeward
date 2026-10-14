@@ -305,7 +305,7 @@ What Google asked for on 2026-10-06, due 2026-10-16 (D172).
 | A golden script, with clickable prompts | Drafted on 2026-10-08: three opening messages on the empty plan, each sent with a tap, taken from journeys 1, 4, and 3 of the README | The owner's edit of the three, and the screen each must end on (D181) |
 | A place that shows the catalog | Built: `/gallery`, from the app bar or by URL, with no key; looked at on the hosted page on 2026-10-11, and a wide screen now opens on a block where it showed an empty pane | Nothing |
 | A logo, vector or high-resolution PNG | None | Moonwise's or Homeward's mark |
-| The repository open-sourced under Apache 2.0, with a Figma file of every catalog component | Private; `LICENSE` and `NOTICE` added on 2026-10-09, the notice naming the OFL fonts, the Unsplash photographers, OpenStreetMap, and the sample data; eight photos no code used were removed; no Figma file | Moonwise confirming the copyright line, "Copyright 2026 Moonwise", the Figma file, and Moonwise making it public |
+| The repository open-sourced under Apache 2.0, with a Figma file of every catalog component | Private; `LICENSE` and `NOTICE` added on 2026-10-09, the notice naming the OFL fonts, the Unsplash photographers, OpenStreetMap, and the sample data; eight photos no code used were removed. A Figma file of every block, built on 2026-10-14 through Figma's connector in the owner's own Figma, on the free plan: the tokens as variables and text styles, the 27 blocks as components bound to them, made from shared parts with auto layout, and the sample photos | Moonwise confirming the copyright line, "Copyright 2026 Moonwise", the Figma file shared by link or moved to Moonwise's team, and Moonwise making the repository public |
 | A short description with one or two screenshots | The README was rewritten on 2026-10-09 for the screen as it is since D182 to D188; a three-sentence description and screenshots were drafted outside the repository | The owner's edit of the description, and the screenshots taken again on the final build |
 | A video, optional | A 74 s recorded run from 2026-10-06, outside the repository | Record again on the hosted build if it is wanted |
 | Official SDKs, in the review that follows | genui renders; the Gemini call is our own REST client | Ask Google which package it expects (D177) |
@@ -337,8 +337,9 @@ The order agreed on 2026-10-08 (D181), as it stands on 2026-10-09:
 5. Then a price set against sample sales, and a listing the buyer pastes
    (S13).
 6. The licence and notice are in (2026-10-09), and a description and
-   screenshots are drafted outside the repository. Left: the logo, the
-   Figma file, and Moonwise making the repository public.
+   screenshots are drafted outside the repository, and the Figma file is
+   built (2026-10-14). Left: the logo, sharing the Figma file, and Moonwise
+   making the repository public.
 7. A rehearsal on the hosted build, and the video if it is wanted.
 
 ## Later
@@ -383,7 +384,7 @@ went, is in `docs/ROADMAP.md` at `93e1e1a`.
 
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
-| The submission is due 2026-10-16, and the logo, the Figma file, and the public repository are not there yet | A partial submission | The build is hosted and licensed since 2026-10-09; what is left needs Moonwise, and is asked for (Open Questions) |
+| The submission is due 2026-10-16, and the logo and the public repository are not there yet | A partial submission | The build is hosted and licensed since 2026-10-09; what is left needs Moonwise, and is asked for (Open Questions) |
 | genui is marked highly experimental and is being redesigned as `a2ui_core`, `a2ui_agent`, and `a2ui_flutter`; `a2ui_core` 0.2 already differs from the 0.1 that genui 0.10 needs | Rework in the catalog and the validation passes | Exact versions pinned; genui confined to a few files (`docs/ARCHITECTURE.md`); no upgrade before the submission |
 | Google's review asks for official SDKs, and the Gemini call is Homeward's own REST client | A mandatory comment that costs days in the review window | The client calls the API Google recommends, for which Google lists no Dart package; the question is put to Google before anything is swapped (D177) |
 | Sessions live in the memory of one Cloud Run instance (D174) | A restart, a new deploy, or a second instance loses every open plan | One instance; the app starts a new plan when the server no longer holds the one in its URL; nothing a buyer cannot retype |
@@ -419,7 +420,7 @@ went, is in `docs/ROADMAP.md` at `93e1e1a`.
    `generateContent` (D177).
 2. Whether the map on OpenStreetMap's tiles is acceptable, where the travel
    example Google linked draws Google Maps (D163).
-3. Who makes the Figma file, and when Moonwise makes the repository public.
+3. Whether the Figma file stays in the owner's Figma or moves to Moonwise's team, and when Moonwise makes the repository public.
 4. Which blocks stay (Next, 1).
 5. Whether Andrew Brogdon's team still wants a recording, and by when.
 6. Catalog ID domain: `moonwise.se/homeward` or a dedicated domain.
