@@ -184,6 +184,10 @@ drawn by a plain Flutter widget in `app/lib/catalog`. The
 [catalog reference](docs/generated/catalog_reference.md) lists each with its
 properties, what it binds, and the tool that seeds it.
 
+The [Figma file](https://www.figma.com/design/F84w8gj9FQ2LHAGarZw2U2) holds
+every block as a component, built from shared parts and bound to Homeward's
+colours, spacing, radii, and text styles as variables and styles.
+
 | Family | Blocks |
 | --- | --- |
 | Understanding | `PlanOverview`, `Fact`, `Brief`, `Choice`, `Questions`, `HouseholdSummary` |
