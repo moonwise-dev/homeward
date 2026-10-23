@@ -308,7 +308,7 @@ What Google asked for on 2026-10-06, due 2026-10-16 (D172).
 | The repository open-sourced under Apache 2.0, with a Figma file of every catalog component | Private; `LICENSE` and `NOTICE` added on 2026-10-09, the notice naming the OFL fonts, the Unsplash photographers, OpenStreetMap, and the sample data; eight photos no code used were removed. A Figma file of every block, built on 2026-10-14 through Figma's connector in the owner's own Figma, on the free plan: the tokens as variables and text styles, the 27 blocks as components bound to them, made from shared parts with auto layout, and the sample photos | Moonwise confirming the copyright line, "Copyright 2026 Moonwise", the Figma file shared by link or moved to Moonwise's team, and Moonwise making the repository public |
 | A short description with one or two screenshots | The README was rewritten on 2026-10-09 for the screen as it is since D182 to D188; a three-sentence description and screenshots were drafted outside the repository | The owner's edit of the description, and the screenshots taken again on the final build |
 | A video, optional | A 74 s recorded run from 2026-10-06, outside the repository | Record again on the hosted build if it is wanted |
-| Official SDKs, in the review that follows | genui renders; the Gemini call is our own REST client | Ask Google which package it expects (D177) |
+| Official SDKs, in the review that follows | genui renders; the Gemini call is our own REST client, which Google accepted after the submission (D197) | Nothing; a Genkit Dart wrapper around it would be welcome, not required |
 
 ## Next
 
@@ -386,7 +386,6 @@ went, is in `docs/ROADMAP.md` at `93e1e1a`.
 | --- | --- | --- |
 | The submission is due 2026-10-16, and the logo and the public repository are not there yet | A partial submission | The build is hosted and licensed since 2026-10-09; what is left needs Moonwise, and is asked for (Open Questions) |
 | genui is marked highly experimental and is being redesigned as `a2ui_core`, `a2ui_agent`, and `a2ui_flutter`; `a2ui_core` 0.2 already differs from the 0.1 that genui 0.10 needs | Rework in the catalog and the validation passes | Exact versions pinned; genui confined to a few files (`docs/ARCHITECTURE.md`); no upgrade before the submission |
-| Google's review asks for official SDKs, and the Gemini call is Homeward's own REST client | A mandatory comment that costs days in the review window | The client calls the API Google recommends, for which Google lists no Dart package; the question is put to Google before anything is swapped (D177) |
 | Sessions live in the memory of one Cloud Run instance (D174) | A restart, a new deploy, or a second instance loses every open plan | One instance; the app starts a new plan when the server no longer holds the one in its URL; nothing a buyer cannot retype |
 | Nobody signs in, so any caller can open sessions and run turns (D173) | Server time and open-data requests spent on someone's script | A turn needs a Gemini key that Gemini accepts, and spends that key's quota; open-data requests go one at a time per service; one instance, at most 500 sessions |
 | Safari itself and an iPhone are unchecked; only its engine was, on a Mac (D195) | A fault that shows only in Safari's own shell or on iOS | In WebKit the page runs the JavaScript build under `require-corp` and streams a turn across origins; a person opens the hosted page in Safari and on an iPhone before the submission |
@@ -410,21 +409,18 @@ went, is in `docs/ROADMAP.md` at `93e1e1a`.
 | Sample homes read as fake | The needs reading looks staged | Labelled as samples; reading a pasted real listing follows after the recording (D142) |
 | Homeward reads as a relocation app, not a finance sample | Google's finance vertical goes unmet; field engineers find no reusable finance components | Money in every journey and in the recording, finance blocks first in the build order (D138) |
 | A catalog of 25 to 30 components outgrows the prompt | Slower turns, more corrections, the free tier's token limits | Progressive disclosure after S16 (D140) |
-| Area samples miss the household's own situation: Stockholm's official rents are first-hand leases a newcomer rarely gets without years in the queue, while second-hand rents run about 2.5 times higher, so `BuyVsRent` makes renting look cheaper there than a newcomer finds it | A comparison that is sourced yet wrong for the buyer in front of it | Each figure carries its source and what it measures, and Gemini sees it; a rent the buyer states replaces the estimate; valuing each situation on the spot from the buyer's story is Open Question 8 |
+| Area samples miss the household's own situation: Stockholm's official rents are first-hand leases a newcomer rarely gets without years in the queue, while second-hand rents run about 2.5 times higher, so `BuyVsRent` makes renting look cheaper there than a newcomer finds it | A comparison that is sourced yet wrong for the buyer in front of it | Each figure carries its source and what it measures, and Gemini sees it; a rent the buyer states replaces the estimate; valuing each situation on the spot from the buyer's story is Open Question 6 |
 | The restored finance was the slowest and least reliable part before (D125) | Money turns fail on camera | The math returns without the scripted deal: Gemini composes the finance blocks freely, and tools seed the figures |
 
 ## Open Questions
 
-1. Which package Google's review expects for the Gemini call from a Dart
-   server: our client on the Interactions API, or Genkit Dart on
-   `generateContent` (D177).
-2. Whether the map on OpenStreetMap's tiles is acceptable, where the travel
+1. Whether the map on OpenStreetMap's tiles is acceptable, where the travel
    example Google linked draws Google Maps (D163).
-3. Whether the Figma file stays in the owner's Figma or moves to Moonwise's team, and when Moonwise makes the repository public.
-4. Which blocks stay (Next, 1).
-5. Whether Andrew Brogdon's team still wants a recording, and by when.
-6. Catalog ID domain: `moonwise.se/homeward` or a dedicated domain.
-7. Whether figures should be valued on the spot for each household's story
+2. Whether the Figma file stays in the owner's Figma or moves to Moonwise's team, and when Moonwise makes the repository public.
+3. Which blocks stay (Next, 1).
+4. Whether Andrew Brogdon's team still wants a recording, and by when.
+5. Catalog ID domain: `moonwise.se/homeward` or a dedicated domain.
+6. Whether figures should be valued on the spot for each household's story
    rather than from area samples. The Stockholm rent gotcha (D155, Risks)
    shows the limit: a sourced median can be the wrong figure for this
    buyer. Revisit with S12 and the brief.

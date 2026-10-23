@@ -215,8 +215,9 @@ Rules:
 - `common/catalog` drives server validation, app widgets, and the prompt skill
   from one declaration.
 - The Interactions API is plain REST with SSE streaming, so `server/lib/gemini`
-  is a thin typed client (S2). Google lists no Dart package for that API;
-  whether the review wants Genkit Dart instead is open (D177).
+  is a thin typed client (S2). Google lists no Dart package for that API,
+  Genkit Dart does not support it, and Google's review accepts this client
+  (D197).
 
 ### Routes
 
