@@ -26,7 +26,7 @@ final class HomeSwipe extends CatalogComponent {
   Map<String, Schema> get properties => {
     'homes': CatalogSchemas.slice(
       '/swipe/homes',
-      'Always { "path": "/swipe/homes" }, after search_homes dealt a deck.',
+      'Always { "@path": "/swipe/homes" }, after search_homes dealt a deck.',
     ),
     'done': CatalogSchemas.action,
   };
@@ -46,7 +46,7 @@ final class HomeSwipe extends CatalogComponent {
   {
     "id": "root",
     "component": "HomeSwipe",
-    "homes": { "path": "/swipe/homes" },
+    "homes": { "@path": "/swipe/homes" },
     "done": { "event": { "name": "swiped", "context": {} } }
   }
 ]

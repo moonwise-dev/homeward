@@ -28,7 +28,7 @@ final class HomeCard extends CatalogComponent {
   @override
   Map<String, Schema> get properties => {
     'home': CatalogSchemas.bound(
-      'One home search_homes found, { "path": "/homes/<id>" }.',
+      'One home search_homes found, { "@path": "/homes/<id>" }.',
     ),
     'choose': CatalogSchemas.action,
     'keep': CatalogSchemas.action,
@@ -50,14 +50,14 @@ final class HomeCard extends CatalogComponent {
   {
     "id": "nacka",
     "component": "HomeCard",
-    "home": { "path": "/homes/sto-12" },
+    "home": { "@path": "/homes/sto-12" },
     "choose": { "event": { "name": "work_out_home", "context": {} } },
     "keep": { "event": { "name": "keep_home", "context": {} } }
   },
   {
     "id": "vasastan",
     "component": "HomeCard",
-    "home": { "path": "/homes/sto-01" },
+    "home": { "@path": "/homes/sto-01" },
     "choose": { "event": { "name": "work_out_home", "context": {} } },
     "keep": { "event": { "name": "keep_home", "context": {} } }
   }
@@ -72,7 +72,7 @@ final class HomeCard extends CatalogComponent {
   {
     "id": "root",
     "component": "HomeCard",
-    "home": { "path": "/homes/sto-01" },
+    "home": { "@path": "/homes/sto-01" },
     "choose": { "event": { "name": "split_this_rent", "context": {} } },
     "keep": { "event": { "name": "keep_home", "context": {} } }
   }

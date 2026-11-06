@@ -401,11 +401,11 @@ buyer asks or picks it as the next thing to look at.
 
 `show` names cards the buyer's message asks for, so one call answers a
 message that asks several things: each entry holds the card, `monthly`,
-`costs`, `stress`, `down-payment`, `rates`, `loan`, `household`, or `limit`,
+`costs`, `stress`, `down_payment`, `rates`, `loan`, `household`, or `limit`,
 and `theirWords`, the words of the buyer that ask for it. A card whose
 words are not in what the buyer wrote waits instead; without that check
 Gemini named four cards for a message that asked for none. `show` also
-takes `buy-vs-rent` (D196): with a `home` passed, the tool works out buying
+takes `buy_vs_rent` (D196, D198): with a `home` passed, the tool works out buying
 that home against renting one like it with the code `compare_buy_rent`
 uses, seeds `/buyVsRent`, and hands `BuyVsRent` with its other cards, so a
 message that asks what a home costs and whether to buy it is answered by

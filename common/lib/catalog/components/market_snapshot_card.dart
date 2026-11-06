@@ -26,7 +26,7 @@ final class MarketSnapshotCard extends CatalogComponent {
   @override
   Map<String, Schema> get properties => {
     'market': CatalogSchemas.bound(
-      'One city look_up_market described, { "path": "/markets/<city>" }.',
+      'One city look_up_market described, { "@path": "/markets/<city>" }.',
     ),
   };
 
@@ -42,7 +42,7 @@ final class MarketSnapshotCard extends CatalogComponent {
       name: 'Stockholm',
       componentsJson: '''
 [
-  { "id": "root", "component": "MarketSnapshotCard", "market": { "path": "/markets/stockholm" } }
+  { "id": "root", "component": "MarketSnapshotCard", "market": { "@path": "/markets/stockholm" } }
 ]
 ''',
       dataModel: stockholmMarketSnapshotDataModel,

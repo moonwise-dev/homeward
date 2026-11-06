@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:a2ui_core/a2ui_core.dart';
 import 'package:common/common.dart';
+import 'package:homeward_server/agent/turn/replay_shadow.dart';
 import 'package:homeward_server/agent/validation/turn_validator.dart';
 import 'package:homeward_server/agent/validation/validation_outcome.dart';
 
@@ -63,9 +63,7 @@ String? _firstRejection(CatalogValidator catalog, CatalogExample example) {
   final validator = TurnValidator(
     turn: 1,
     catalog: catalog,
-    shadow: MessageProcessor<ComponentApi>(
-      catalogs: [Catalog(id: homewardCatalogId, components: const [])],
-    ),
+    shadow: replayShadow(const []),
     seeds: example.dataModel,
   );
   for (final message in exampleMessages(example)) {

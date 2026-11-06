@@ -26,7 +26,7 @@ final class LoanBalanceChart extends CatalogComponent {
   Map<String, Schema> get properties => {
     'affordability': CatalogSchemas.slice(
       '/affordability',
-      'Always { "path": "/affordability" }, after compute_affordability '
+      'Always { "@path": "/affordability" }, after compute_affordability '
           'answered.',
     ),
   };
@@ -56,7 +56,7 @@ final class LoanBalanceChart extends CatalogComponent {
   {
     "id": "root",
     "component": "LoanBalanceChart",
-    "affordability": { "path": "/affordability" }
+    "affordability": { "@path": "/affordability" }
   }
 ]
 ''';

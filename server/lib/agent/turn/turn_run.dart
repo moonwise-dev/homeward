@@ -730,6 +730,7 @@ final class TurnRun {
     }
     final more = waitingCardButtons(_validator.handed, cards);
     final shown = UpdateComponentsMessage(
+      version: A2uiExtension.version,
       surfaceId: planSurfaceId,
       components: [
         {

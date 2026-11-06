@@ -718,7 +718,7 @@ final class ComputeAffordability extends AgentTool {
     'monthly':
         'A month of this loan: interest, the amortization the rules '
         "require, and the home's own fee when it has one.",
-    'down-payment':
+    'down_payment':
         'A larger down payment lowers the loan and the monthly cost; the '
         'slider starts at the least the rules allow and ends at their '
         'savings.',
@@ -734,7 +734,7 @@ final class ComputeAffordability extends AgentTool {
     'monthly': 'what a month costs',
     'costs': 'what they pay on the day',
     'stress': 'what happens when rates rise',
-    'down-payment': 'other down payments',
+    'down_payment': 'other down payments',
     'rates': 'the rates side by side',
     'loan': 'the loan year by year',
     'household': 'who the figures rest on',
@@ -790,7 +790,7 @@ final class ComputeAffordability extends AgentTool {
     if (slice.homeId case final id?) (card: homeCard(id), shown: true),
     (card: block('stress', 'StressTestChart', _affordability), shown: false),
     (
-      card: block('down-payment', 'DownPaymentSlider', {
+      card: block('down_payment', 'DownPaymentSlider', {
         ..._affordability,
         'apply': sends('use_down_payment'),
       }),

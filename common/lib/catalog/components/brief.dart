@@ -28,7 +28,7 @@ final class Brief extends CatalogComponent {
   Map<String, Schema> get properties => {
     'brief': CatalogSchemas.slice(
       '/brief',
-      'Always { "path": "/brief" }, after update_brief recorded an item.',
+      'Always { "@path": "/brief" }, after update_brief recorded an item.',
     ),
     'kinds': Schema.list(
       description:
@@ -56,7 +56,7 @@ final class Brief extends CatalogComponent {
   {
     "id": "root",
     "component": "Brief",
-    "brief": { "path": "/brief" },
+    "brief": { "@path": "/brief" },
     "kinds": ["household", "need", "want", "open"],
     "answer": { "event": { "name": "check_fact", "context": {} } }
   }

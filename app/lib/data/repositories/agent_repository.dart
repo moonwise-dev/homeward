@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
-import 'package:a2ui_core/a2ui_core.dart' as a2ui;
+import 'package:a2ui_core/a2ui_core.dart' show A2uiRendererAction;
+import 'package:a2ui_flutter/a2ui_flutter.dart' show CatalogImplementation;
 import 'package:common/common.dart';
-import 'package:genui/genui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../catalog/homeward_catalog.dart';
@@ -14,6 +14,7 @@ import '../../domain/models/plan_conversation.dart';
 import '../services/wire_log.dart';
 import 'gemini_key_repository.dart';
 import 'plan_snapshot.dart';
+import 'renderer_surfaces.dart';
 import 'repository_guard.dart';
 
 part 'agent_repository.g.dart';
@@ -27,7 +28,7 @@ abstract interface class AgentRepository {
 
   Stream<TurnFailure> watchFailures(String sessionId);
 
-  SurfaceContext surfaceContext(String sessionId, String surfaceId);
+  ValueListenable<RendererSurface?> surface(String sessionId, String surfaceId);
 
   Future<void> sendText(String sessionId, String text);
 
@@ -36,12 +37,12 @@ abstract interface class AgentRepository {
   Future<void> stop(String sessionId);
 }
 
-class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
-  GenUiAgentRepository(this._client, this._geminiKeys, this._catalog);
+class A2uiAgentRepository with RepositoryGuard implements AgentRepository {
+  A2uiAgentRepository(this._client, this._geminiKeys, this._catalog);
 
   final HomewardClient _client;
   final GeminiKeyRepository _geminiKeys;
-  final Catalog _catalog;
+  final CatalogImplementation _catalog;
   final _plans = <String, _PlanSession>{};
   var _lastEntryId = 0;
 
@@ -65,8 +66,10 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
       _plan(sessionId).failures.stream;
 
   @override
-  SurfaceContext surfaceContext(String sessionId, String surfaceId) =>
-      _plan(sessionId).surfaces.contextFor(surfaceId);
+  ValueListenable<RendererSurface?> surface(
+    String sessionId,
+    String surfaceId,
+  ) => _plan(sessionId).surfaces.watch(surfaceId);
 
   @override
   Future<void> open(String sessionId) => guard(() async {
@@ -78,9 +81,7 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
     final turns = (await _client.transcript(sessionId)).turns;
     var before = plan.snapshot;
     for (final (index, turn) in turns.indexed) {
-      for (final message in turn.messages) {
-        plan.surfaces.handleMessage(a2ui.A2uiMessage.fromJson(message));
-      }
+      turn.messages.forEach(plan.surfaces.apply);
       final askedAgain =
           turn.status == TurnStatus.failed &&
           turns.elementAtOrNull(index + 1)?.input == turn.input;
@@ -185,46 +186,44 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
   });
 
   _PlanSession _plan(String sessionId) => _plans.putIfAbsent(sessionId, () {
-    final plan = _PlanSession(SurfaceController(catalogs: [_catalog]));
-    plan.submissions = plan.surfaces.onSubmit.listen(
-      (message) => _onSubmit(sessionId, plan, message),
+    final plan = _PlanSession(RendererSurfaces(_catalog));
+    plan.surfaces.onAction.subscribe(
+      (action) => _onAction(sessionId, plan, action),
     );
     return plan;
   });
 
-  void _onSubmit(String sessionId, _PlanSession plan, ChatMessage message) {
-    for (final part in message.parts.uiInteractionParts) {
-      switch (jsonDecode(part.interaction)) {
-        case {'action': final Map<String, Object?> json}:
-          final action = ClientAction.fromJson(json);
-          final surfaceData = plan.surfaces
-              .contextFor(action.surfaceId)
-              .dataModel
-              .getValue<Object?>(DataPath.root);
-          plan.add(
-            TranscriptEntry.buyerAction(
-              id: _newEntryId(),
-              actionName: action.name,
-              label: action.context['label'] as String?,
-            ),
-          );
-          unawaited(
-            _run(
-              sessionId,
-              plan,
-              TurnRequest.action(
-                action,
-                surfaceData: switch (_normalized(surfaceData)) {
-                  final Map<String, Object?> data => data,
-                  _ => const {},
-                },
-              ),
-            ),
-          );
-        case {'error': final Object? error}:
-          log('Surface reported ${jsonEncode(error)}', name: 'genui');
-      }
-    }
+  void _onAction(
+    String sessionId,
+    _PlanSession plan,
+    A2uiRendererAction rendered,
+  ) {
+    final action = ClientAction(
+      name: rendered.name,
+      surfaceId: rendered.surfaceId,
+      sourceComponentId: rendered.sourceComponentId,
+      timestamp: rendered.timestamp.toIso8601String(),
+      context: _normalized(rendered.context)! as Map<String, Object?>,
+    );
+    plan.add(
+      TranscriptEntry.buyerAction(
+        id: _newEntryId(),
+        actionName: action.name,
+        label: action.context['label'] as String?,
+      ),
+    );
+    unawaited(
+      _run(
+        sessionId,
+        plan,
+        TurnRequest.action(
+          action,
+          surfaceData:
+              _normalized(plan.surfaces.dataOf(action.surfaceId))!
+                  as Map<String, Object?>,
+        ),
+      ),
+    );
   }
 
   Future<void> _run(
@@ -386,8 +385,8 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
       case AgentText(:final text):
         plan.updateAgent(entryId, (entry) => entry.copyWith(text: text));
       case AgentA2ui(:final message):
-        final normalized = _normalized(message)! as Map<String, dynamic>;
-        plan.surfaces.handleMessage(a2ui.A2uiMessage.fromJson(normalized));
+        final normalized = _normalized(message)! as Map<String, Object?>;
+        plan.surfaces.apply(normalized);
         if (normalized case {
           'createSurface': {'surfaceId': final String surfaceId},
         }) {
@@ -487,18 +486,17 @@ class GenUiAgentRepository with RepositoryGuard implements AgentRepository {
 class _PlanSession {
   _PlanSession(this.surfaces);
 
-  final SurfaceController surfaces;
+  final RendererSurfaces surfaces;
   final entries = <TranscriptEntry>[];
   final changes = StreamController<void>.broadcast(sync: true);
   final failures = StreamController<TurnFailure>.broadcast();
-  StreamSubscription<ChatMessage>? submissions;
   Completer<void>? stopRequest;
   String? taskId;
   PlanSnapshot before = const {};
   var isRunning = false;
   var isOpened = false;
 
-  PlanSnapshot get snapshot => planSnapshot(surfaces.contextFor(planSurfaceId));
+  PlanSnapshot get snapshot => planSnapshot(surfaces[planSurfaceId]);
 
   List<PlanChange> get turnChanges => planChanges(before, snapshot);
 
@@ -536,8 +534,8 @@ class _PlanSession {
 }
 
 @Riverpod(keepAlive: true)
-AgentRepository agentRepository(Ref ref) => GenUiAgentRepository(
+AgentRepository agentRepository(Ref ref) => A2uiAgentRepository(
   ref.watch(homewardClientProvider),
   ref.watch(geminiKeyRepositoryProvider),
-  homewardGenuiCatalog(),
+  homewardRendererCatalog(),
 );

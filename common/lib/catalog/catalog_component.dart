@@ -50,6 +50,15 @@ abstract class CatalogComponent implements ComponentApi {
   List<CatalogExample> get examples;
 
   @override
+  List<String>? get allowedParents => null;
+
+  @override
+  List<String>? get allowedChildren => null;
+
+  @override
+  Map<String, Object?>? get metadata => null;
+
+  @override
   Schema get schema => Schema.object(
     description: description,
     properties: {

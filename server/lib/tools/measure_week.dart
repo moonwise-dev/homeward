@@ -167,14 +167,14 @@ final class MeasureWeek extends AgentTool {
             'markers': boundTo('/places'),
             'routes': boundTo('/week/$fromId'),
           }),
-          block('week-$fromId', 'WeeklyTravel', {
+          block(componentIdOf('week_$fromId'), 'WeeklyTravel', {
             'week': boundTo('/week/$fromId'),
           }),
         ],
         'note':
             'The week is in /week/$fromId; never write the minutes in '
             'your text. $drawNote One trip alone is a RouteSummary bound '
-            'to { "path": "/week/$fromId/trips/<n>" }.',
+            'to { "@path": "/week/$fromId/trips/<n>" }.',
       },
       seeds: {
         weekSlice.name: {

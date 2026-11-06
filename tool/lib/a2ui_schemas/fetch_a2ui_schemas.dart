@@ -1,17 +1,17 @@
 import 'package:http/http.dart' as http;
 
-const a2uiSpecCommit = '11894222949ef5418096fe0adf537d23e2358754';
+const a2uiSpecCommit = '7cc5a263be29985927380ddf527eab2177f549e8';
 
 typedef A2uiSchemaFile = ({String constant, String path});
 
 const a2uiSchemaFiles = <A2uiSchemaFile>[
   (
     constant: 'a2uiCommonTypesJson',
-    path: 'specification/v0_9/json/common_types.json',
+    path: 'specification/v1_0/json/common_types.json',
   ),
   (
     constant: 'a2uiBasicCatalogJson',
-    path: 'specification/v0_9/catalogs/basic/catalog.json',
+    path: 'catalogs/basic/v1/catalog.json',
   ),
 ];
 

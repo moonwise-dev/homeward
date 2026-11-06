@@ -1,25 +1,25 @@
-import 'package:genui/genui.dart';
+import 'package:a2ui_core/a2ui_core.dart';
+import 'package:a2ui_flutter/a2ui_flutter.dart';
 
 Future<void> dispatchAction(
-  CatalogItemContext itemContext,
-  Object? action, {
+  ComponentNode<ComponentImplementation> node,
+  String property, {
   Map<String, Object?> adding = const {},
 }) async {
-  if (action case {
+  final context = node.context;
+  if (context?.componentModel.properties[property] case {
     'event': {'name': final String name} && final Map<String, Object?> event,
   }) {
-    itemContext.dispatchEvent(
-      UserActionEvent(
-        name: name,
-        sourceComponentId: itemContext.id,
-        context: {
-          ...await resolveContext(
-            itemContext.dataContext,
-            event['context'] as JsonMap?,
-          ),
+    await context!.dispatchAction({
+      'event': {
+        'name': name,
+        'context': {
+          if (event['context'] case final Map<String, Object?> given)
+            for (final MapEntry(:key, :value) in given.entries)
+              key: context.dataContext.resolveDynamicValue(value),
           ...adding,
         },
-      ),
-    );
+      },
+    });
   }
 }

@@ -24,9 +24,9 @@ final class RuleNote extends CatalogComponent {
   @override
   Map<String, Schema> get properties => {
     'rule': CatalogSchemas.bound(
-      'One rule compute_affordability checked: { "path": '
+      'One rule compute_affordability checked: { "@path": '
       '"/affordability/binding" } for the rule that limits the loan, or '
-      '{ "path": "/affordability/checks/<n>" }.',
+      '{ "@path": "/affordability/checks/<n>" }.',
     ),
   };
 
@@ -45,7 +45,7 @@ final class RuleNote extends CatalogComponent {
   {
     "id": "root",
     "component": "RuleNote",
-    "rule": { "path": "/affordability/binding" }
+    "rule": { "@path": "/affordability/binding" }
   }
 ]
 ''',

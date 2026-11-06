@@ -56,7 +56,7 @@ includes.
 - `docs/ARCHITECTURE.md` - system shape, packages, the server's routes and
   configuration, the app's screens, running and deploying it, code rules,
   and the quality gate.
-- `docs/PROTOCOL.md` - A2UI v0.9 usage and the A2A subset on the wire.
+- `docs/PROTOCOL.md` - A2UI v1.0 usage and the A2A subset on the wire.
 - `docs/CATALOG.md` - the Homeward component catalog and client functions.
 - `docs/AGENT.md` - agent loop, prompts, tools, voice door.
 - `docs/DESIGN.md` - design tokens and how generated UI stays on-brand.

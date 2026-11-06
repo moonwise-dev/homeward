@@ -171,5 +171,13 @@ and nothing calls `ScaffoldMessenger`.
 
 ## A2UI Theme
 
-A2UI v0.9 `createSurface.theme` is not used. The renderer's native theme
-decides appearance, which is also the direction of A2UI v1.0.
+A2UI v1.0 has no surface theme. The renderer's native theme decides
+appearance: `a2ui_flutter`'s basic components are Material widgets and take
+`AppTheme`.
+
+## Demo Header
+
+Every screen sits under one line, This is a demo project by Moonwise to
+showcase A2UI apps (D199), on `accentSoft` in the caption style.
+`AppDemoHeader` wraps the router in `MaterialApp.builder`, so no screen draws
+it and none can leave it out.

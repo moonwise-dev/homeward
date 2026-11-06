@@ -83,8 +83,8 @@ void main() {
             as String;
 
     expect(
-      jsonDecode(schema.replaceAll('common_types.json', commonTypesId)),
-      coreCatalogDocument(),
+      jsonDecode(schema),
+      jsonDecode(compactCatalogJson(coreCatalogDocument())),
     );
     for (final name in componentIndex().keys) {
       expect(skill, contains('- `$name`: '));

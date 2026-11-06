@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:genui/genui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../data/repositories/agent_repository.dart';
+import '../../../data/repositories/renderer_surfaces.dart';
 import '../../core/ui/app_json_block.dart';
 
 class SurfaceDataView extends HookConsumerWidget {
@@ -19,15 +19,19 @@ class SurfaceDataView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final agent = ref.watch(agentRepositoryProvider);
-    final data = useMemoized(
-      () => agent
-          .surfaceContext(sessionId, surfaceId)
-          .dataModel
-          .subscribe<Object>(DataPath.root),
-      [sessionId, surfaceId],
+    final surface = useValueListenable<RendererSurface?>(
+      useMemoized(
+        () => agent.surface(sessionId, surfaceId),
+        [sessionId, surfaceId],
+      ),
     );
-    useEffect(() => data.dispose, [data]);
-    final value = useValueListenable(data);
-    return AppJsonBlock(value: value, empty: 'Nothing bound yet');
+    final value = useState<Object?>(null);
+    useEffect(
+      () => surface?.dataModel
+          .watch<Object?>('/')
+          .subscribe((data) => value.value = data),
+      [surface],
+    );
+    return AppJsonBlock(value: value.value, empty: 'Nothing bound yet');
   }
 }

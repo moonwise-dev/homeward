@@ -15,7 +15,7 @@ final class CompareBuyRent extends AgentTool {
 
   final MarketDirectory markets;
 
-  static const cardId = 'buy-vs-rent';
+  static const cardId = 'buy_vs_rent';
 
   @override
   String get name => 'compare_buy_rent';
@@ -28,7 +28,7 @@ final class CompareBuyRent extends AgentTool {
       'Compares buying a sample home with renting one like it, for the '
       'household compute_affordability kept, so call it after that tool; '
       'when their message asks for it as you call compute_affordability '
-      'with a home, name buy-vs-rent under its show instead, and one '
+      'with a home, name buy_vs_rent under its show instead, and one '
       'call answers both. It adds up, year by year, the '
       'costs on the day, interest after any deduction, and the fee against '
       "the rent, and the equity built. The rent is the area's estimate unless "

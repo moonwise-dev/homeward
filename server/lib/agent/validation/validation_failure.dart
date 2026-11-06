@@ -1,3 +1,4 @@
+import 'package:common/common.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'validation_failure.freezed.dart';
@@ -15,7 +16,7 @@ abstract class ValidationFailure with _$ValidationFailure {
   static const validationFailed = 'VALIDATION_FAILED';
 
   Map<String, Object?> toJson() => {
-    'version': 'v0.9',
+    'version': A2uiExtension.version,
     'error': {
       'code': validationFailed,
       'surfaceId': surfaceId,

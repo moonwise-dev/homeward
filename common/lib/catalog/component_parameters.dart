@@ -38,7 +38,7 @@ ComponentParameter _parameter(
   final kind = switch (schema) {
     _ when bound => ParameterKind.binding,
     _ when _isAction(schema) => ParameterKind.action,
-    {'properties': {'path': _}} => ParameterKind.input,
+    {'properties': {'@path': _}} => ParameterKind.input,
     {'enum': _} => ParameterKind.choice,
     {'type': 'array'} => ParameterKind.list,
     {'type': 'number' || 'integer'} => ParameterKind.number,
@@ -49,8 +49,9 @@ ComponentParameter _parameter(
     name: name,
     kind: kind,
     required: component.requiredProperties.contains(name),
-    description: switch (schema['description']) {
-      final String text when !text.startsWith('REF:') => text,
+    description: switch (schema) {
+      {'commonTypesRef': _} => null,
+      {'description': final String text} => text,
       _ => null,
     },
     path: bound || kind == ParameterKind.input ? path : null,
@@ -67,16 +68,16 @@ ComponentParameter _parameter(
 }
 
 bool _isAction(Map<String, Object?> schema) => switch (schema) {
-  {'description': final String text} when text.endsWith(r'$defs/Action') =>
+  {'commonTypesRef': final String ref} when ref.endsWith(r'$defs/Action') =>
     true,
   {'properties': {'event': _}} => true,
   _ => false,
 };
 
-final _describedPath = RegExp(r'\{ "path": "([^"]+)" \}');
+final _describedPath = RegExp(r'\{ "@path": "([^"]+)" \}');
 
 String? _pathOf(Map<String, Object?> schema) => switch (schema) {
-  {'properties': {'path': {'const': final String path}}} => path,
+  {'properties': {'@path': {'const': final String path}}} => path,
   {'description': final String text} =>
     _describedPath.firstMatch(text)?.group(1),
   _ => null,
@@ -89,9 +90,9 @@ String? _examplePath(CatalogComponent component, String name) {
         continue;
       }
       switch (json[name]) {
-        case {'path': final String path}:
+        case {'@path': final String path}:
           return path;
-        case [{'path': final String path}, ...]:
+        case [{'@path': final String path}, ...]:
           return path;
       }
     }

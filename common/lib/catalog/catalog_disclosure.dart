@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../a2ui/generated/a2ui_v09_schemas.dart';
+import '../a2ui/generated/a2ui_v10_schemas.dart';
 import 'agent_visible_basic_components.dart';
 import 'core_components.dart';
 import 'homeward_catalog.dart';

@@ -24,8 +24,8 @@ void main() {
       {
         'id': 'title',
         'component': 'Text',
-        'text': 'Your budget',
-        'variant': 'h3',
+        'text': '### Your budget',
+        'variant': 'body',
       },
       {
         'id': 'root',
@@ -48,13 +48,13 @@ void main() {
         'id': 'name',
         'component': 'TextField',
         'label': 'Name',
-        'value': {'path': '/profile/name'},
+        'value': {'@path': '/profile/name'},
         'checks': [
           {
             'condition': {
-              'call': 'required',
+              '@call': 'required',
               'args': {
-                'value': {'path': '/profile/name'},
+                'value': {'@path': '/profile/name'},
               },
             },
             'message': 'Required',
@@ -90,9 +90,9 @@ void main() {
           'checks': [
             {
               'condition': {
-                'call': 'isAffordable',
+                '@call': 'isAffordable',
                 'args': {
-                  'scenario': {'path': '/scenario'},
+                  'scenario': {'@path': '/scenario'},
                 },
               },
               'message': 'No',

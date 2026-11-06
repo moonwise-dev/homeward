@@ -49,4 +49,4 @@ final class AgentRepositoryProvider
   }
 }
 
-String _$agentRepositoryHash() => r'c2ee69d1b2c8ccba174f21e7bf57a434cf6523f8';
+String _$agentRepositoryHash() => r'61b859f9bf6da3caedf0130c12be39eb6a5835a1';

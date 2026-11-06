@@ -59,7 +59,7 @@ void main() {
       'streaming': true,
       'extensions': [
         {
-          'uri': 'https://a2ui.org/a2a-extension/a2ui/v0.9',
+          'uri': 'https://a2ui.org/a2a-extension/a2ui/v1.0',
           'required': true,
           'params': {
             'supportedCatalogIds': [

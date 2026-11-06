@@ -62,14 +62,10 @@ Map<String, Object?> _functionCall(Iterable<String> names) => {
   'type': 'object',
   'description': 'Invokes a named function on the client.',
   'properties': {
-    'call': {'type': 'string', 'enum': names.toList()},
+    '@call': {'type': 'string', 'enum': names.toList()},
     'args': {'type': 'object'},
-    'returnType': {
-      'type': 'string',
-      'enum': ['string', 'number', 'boolean', 'array', 'object', 'any', 'void'],
-    },
   },
-  'required': ['call'],
+  'required': ['@call'],
 };
 
 final _message = {
@@ -149,10 +145,12 @@ Map<String, Object?> _flattened(
       _resolved(part, defs),
   ];
   final properties = <String, Object?>{
+    'id': {r'$ref': r'#/$defs/ComponentId'},
     for (final part in parts)
       ...part['properties'] as Map<String, Object?>? ?? const {},
   }..removeWhere((name, _) => _optionalExtras.contains(name));
   final required = {
+    'id',
     for (final part in parts)
       ...(part['required'] as List<Object?>? ?? const []).cast<String>(),
   }.difference(_optionalExtras);

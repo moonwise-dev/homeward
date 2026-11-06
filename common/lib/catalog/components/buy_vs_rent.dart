@@ -27,7 +27,7 @@ final class BuyVsRent extends CatalogComponent {
   Map<String, Schema> get properties => {
     'comparison': CatalogSchemas.slice(
       '/buyVsRent',
-      'Always { "path": "/buyVsRent" }, after compare_buy_rent answered.',
+      'Always { "@path": "/buyVsRent" }, after compare_buy_rent answered.',
     ),
   };
 
@@ -46,7 +46,7 @@ final class BuyVsRent extends CatalogComponent {
   {
     "id": "root",
     "component": "BuyVsRent",
-    "comparison": { "path": "/buyVsRent" }
+    "comparison": { "@path": "/buyVsRent" }
   }
 ]
 ''',

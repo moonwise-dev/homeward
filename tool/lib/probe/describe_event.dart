@@ -41,7 +41,7 @@ String _describeComponent(Map<String, Object?> component) {
   final line = [
     '${component['id']}: ${component['component']}',
     for (final MapEntry(:key, :value) in component.entries)
-      if (value case {'path': final String path}) '$key=$path',
+      if (value case {'@path': final String path}) '$key=$path',
     for (final key in const ['focus', 'zoom', 'travelMode'])
       if (component[key] case final Object value) '$key=$value',
     for (final value in component.values)

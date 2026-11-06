@@ -1,24 +1,21 @@
-import 'dart:convert';
-
-import 'package:a2ui_core/a2ui_core.dart' as a2ui;
 import 'package:common/common.dart';
-import 'package:genui/genui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../catalog/homeward_catalog.dart';
 import '../../domain/models/gallery_component.dart';
+import 'renderer_surfaces.dart';
 
 part 'gallery_repository.g.dart';
 
 abstract interface class GalleryRepository {
   List<GalleryComponent> get components;
 
-  SurfaceContext surfaceContext(String surfaceId);
+  ValueListenable<RendererSurface?> surface(String surfaceId);
 }
 
-class GenUiGalleryRepository implements GalleryRepository {
-  GenUiGalleryRepository(Catalog catalog)
-    : _surfaces = SurfaceController(catalogs: [catalog]) {
+class A2uiGalleryRepository implements GalleryRepository {
+  A2uiGalleryRepository(RendererSurfaces surfaces) : _surfaces = surfaces {
     for (final component in homewardComponents) {
       _components.add(
         GalleryComponent(
@@ -28,53 +25,33 @@ class GenUiGalleryRepository implements GalleryRepository {
           parameters: componentParameters(component),
           examples: [
             for (final (index, example) in component.examples.indexed)
-              _show('gallery-${component.name}-$index', example),
+              _show(componentIdOf('gallery_${component.name}_$index'), example),
           ],
         ),
       );
     }
   }
 
-  final SurfaceController _surfaces;
+  final RendererSurfaces _surfaces;
   final _components = <GalleryComponent>[];
 
   @override
   List<GalleryComponent> get components => List.unmodifiable(_components);
 
   @override
-  SurfaceContext surfaceContext(String surfaceId) =>
-      _surfaces.contextFor(surfaceId);
+  ValueListenable<RendererSurface?> surface(String surfaceId) =>
+      _surfaces.watch(surfaceId);
 
   GalleryExample _show(String surfaceId, CatalogExample example) {
-    for (final message in [
-      {
-        'createSurface': {
-          'surfaceId': surfaceId,
-          'catalogId': homewardCatalogId,
-        },
+    _surfaces.apply({
+      'version': A2uiExtension.version,
+      'createSurface': {
+        'surfaceId': surfaceId,
+        'catalogId': homewardCatalogId,
+        'components': example.components,
+        'dataModel': example.dataModel,
       },
-      for (final MapEntry(key: slice, :value) in example.dataModel.entries)
-        {
-          'updateDataModel': {
-            'surfaceId': surfaceId,
-            'path': '/$slice',
-            'value': value,
-          },
-        },
-      {
-        'updateComponents': {
-          'surfaceId': surfaceId,
-          'components': example.components,
-        },
-      },
-    ]) {
-      _surfaces.handleMessage(
-        a2ui.A2uiMessage.fromJson(
-          jsonDecode(jsonEncode({'version': A2uiExtension.version, ...message}))
-              as Map<String, dynamic>,
-        ),
-      );
-    }
+    });
     return GalleryExample(
       surfaceId: surfaceId,
       name: example.name,
@@ -86,4 +63,4 @@ class GenUiGalleryRepository implements GalleryRepository {
 
 @Riverpod(keepAlive: true)
 GalleryRepository galleryRepository(Ref ref) =>
-    GenUiGalleryRepository(homewardGenuiCatalog());
+    A2uiGalleryRepository(RendererSurfaces(homewardRendererCatalog()));

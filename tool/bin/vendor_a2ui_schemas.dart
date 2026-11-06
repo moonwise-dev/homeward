@@ -15,7 +15,7 @@ Future<void> main(List<String> arguments) async {
     final contents = await fetchA2uiSchemas(client);
     await File(arguments.single).writeAsString(renderA2uiSchemas(contents));
     stdout.writeln(
-      'Wrote ${contents.length} A2UI v0.9 schemas at $a2uiSpecCommit',
+      'Wrote ${contents.length} A2UI v1.0 schemas at $a2uiSpecCommit',
     );
   } finally {
     client.close();

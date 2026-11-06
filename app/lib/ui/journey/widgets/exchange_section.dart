@@ -1,8 +1,10 @@
+import 'package:a2ui_core/a2ui_core.dart';
 import 'package:flutter/material.dart';
-import 'package:genui/genui.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../catalog/surface_views.dart';
 import '../../../data/repositories/agent_repository.dart';
+import '../../../data/repositories/renderer_surfaces.dart';
 import '../../../domain/models/plan_conversation.dart';
 import '../../core/themes/colors.dart';
 import '../../core/themes/dimens.dart';
@@ -66,8 +68,9 @@ class ExchangeSection extends ConsumerWidget {
                     duration: AppMotion.of(context, AppMotion.surface),
                     child: AppSurfaceEntry(
                       key: ValueKey(surfaceId),
-                      child: _InlineAsk(
-                        surface: agent.surfaceContext(sessionId, surfaceId),
+                      child: SurfaceView(
+                        surface: agent.surface(sessionId, surfaceId),
+                        frame: _askFrame,
                       ),
                     ),
                   ),
@@ -114,18 +117,50 @@ class ExchangeSection extends ConsumerWidget {
   };
 }
 
-class _InlineAsk extends StatelessWidget {
-  const _InlineAsk({required this.surface});
+Widget _askFrame(RendererSurface surface, Widget child) =>
+    _AskFrame(surface: surface, child: child);
 
-  final SurfaceContext surface;
+class _AskFrame extends StatefulWidget {
+  const _AskFrame({required this.surface, required this.child});
+
+  final RendererSurface surface;
+  final Widget child;
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder(
-    valueListenable: surface.definition,
-    builder: (context, definition, child) =>
-        definition?.components['root']?.type == 'Row'
-        ? child!
-        : AppCard(child: child!),
-    child: Surface(surfaceContext: surface),
-  );
+  State<_AskFrame> createState() => _AskFrameState();
 }
+
+class _AskFrameState extends State<_AskFrame> {
+  late Subscription _created = _watch();
+
+  Subscription _watch() => widget.surface.componentsModel.onCreated.subscribe(
+    (ComponentModel component) {
+      if (component.id == _rootId) {
+        setState(() {});
+      }
+    },
+  );
+
+  @override
+  void didUpdateWidget(_AskFrame oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!identical(oldWidget.surface, widget.surface)) {
+      _created.unsubscribe();
+      _created = _watch();
+    }
+  }
+
+  @override
+  void dispose() {
+    _created.unsubscribe();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      widget.surface.componentsModel.get(_rootId)?.type == 'Row'
+      ? widget.child
+      : AppCard(child: widget.child);
+}
+
+const _rootId = 'root';

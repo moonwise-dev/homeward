@@ -24,9 +24,9 @@ story needs.
   which implements `ComponentApi` from `a2ui_core`. It carries:
   - the name;
   - its family: understanding, money, homes, place and travel, or trust;
-  - properties built with `json_schema_builder`, `CommonSchemas`, and
+  - properties built with `json_schema_builder`, `CommonSchemasV1`, and
     `CatalogSchemas` (`common/lib/catalog/catalog_schemas.dart`);
-  - bound properties, which accept only `{ "path" }` for any figure a buyer
+  - bound properties, which accept only `{ "@path" }` for any figure a buyer
     relies on;
   - agent visibility;
   - one or more example component trees, each with a data model;
@@ -55,17 +55,18 @@ Never edit them by hand.
 
 ## 4. Implement it in the app
 
-- **The item.** `app/lib/catalog/<component>/<component>_item.dart` is a genui
-  `CatalogItem` built with `catalogItemFor(const <Component>(), …)`, so its
-  name and schema come from the declaration. It reads bindings through typed
-  readers over `DataContext`, and calls `common` for any figure it computes.
+- **The item.** `app/lib/catalog/<component>/<component>_item.dart` is an
+  `a2ui_flutter` `ComponentImplementation` built with
+  `catalogItemFor(const <Component>(), …)`, so its name and schema come from
+  the declaration. Its builder reads resolved bindings from `props`, parses
+  them with `jsonModelOf`, sends an action with `dispatchAction(node, …)`,
+  and calls `common` for any figure it computes.
 - **The view.** `app/lib/catalog/<component>/<component>_view.dart` is a plain
-  widget with no genui imports, built from `app/lib/ui/core` and the design
+  widget with no A2UI imports, built from `app/lib/ui/core` and the design
   tokens in `docs/DESIGN.md`. The gallery renders this widget.
-- **Register it** in `homewardGenuiCatalog()` in
+- **Register it** in `homewardRendererCatalog()` in
   `app/lib/catalog/homeward_catalog.dart`.
 - **Binding rules** (spike S4, `docs/CATALOG.md`):
-  - subscribe to a slice once per widget state, and dispose it;
   - everything written to the data model is JSON-shaped;
   - client functions stay scalar and cheap.
 

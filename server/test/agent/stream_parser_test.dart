@@ -6,9 +6,9 @@ import 'package:test/test.dart';
 
 void main() {
   const createSurface =
-      '{"version":"v0.9","createSurface":{"surfaceId":"t1-budget","catalogId":"https://moonwise.se/homeward/catalogs/v1/catalog.json","sendDataModel":true}}';
+      '{"version":"1.0","createSurface":{"surfaceId":"t1-budget","catalogId":"https://moonwise.se/homeward/catalogs/v1/catalog.json","sendDataModel":true}}';
   const updateComponents =
-      '{"version":"v0.9","updateComponents":{"surfaceId":"t1-budget","components":[{"id":"root","component":"Text","text":"`code` and ```a2ui"}]}}';
+      '{"version":"1.0","updateComponents":{"surfaceId":"t1-budget","components":[{"id":"root","component":"Text","text":"`code` and ```a2ui"}]}}';
   final response = [
     'Here is what you can afford in Stockholm.',
     'Inline `code` stays prose, and so does ```a2ui mid-line.',
@@ -121,7 +121,7 @@ void main() {
     const prettyPrinted = [
       '```a2ui',
       '{',
-      '  "version": "v0.9",',
+      '  "version": "1.0",',
       '  "createSurface": {',
       '    "surfaceId": "t1-form",',
       '    "note": "a } and a \\" stay inside the string"',

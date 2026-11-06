@@ -1,8 +1,11 @@
 # Homeward
 
+> This is a demo project by Moonwise to showcase A2UI apps.
+
 Homeward is a home-finance agent: Moonwise's finance and fintech sample for
-Flutter's GenUI initiative, built on [A2UI](https://a2ui.org) v0.9 and
-[genui](https://pub.dev/packages/genui).
+Flutter's GenUI initiative, built on [A2UI](https://a2ui.org) v1.0 with
+Google's Dart SDK, [`a2ui_core`](https://pub.dev/packages/a2ui_core), and its
+Flutter renderer, [`a2ui_flutter`](https://pub.dev/packages/a2ui_flutter).
 
 A household tells Homeward about a move in its own words. Homeward works
 through it the way a coding agent works through a codebase: it deduces what

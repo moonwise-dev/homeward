@@ -273,7 +273,7 @@ final class SearchHomes extends AgentTool {
 
   static const _dealNote =
       ' The deck is in /swipe/homes: show it with { "id": "deck", '
-      '"component": "HomeSwipe", "homes": { "path": "/swipe/homes" }, '
+      '"component": "HomeSwipe", "homes": { "@path": "/swipe/homes" }, '
       '"done": { "event": { "name": "finish_deck", "context": {} } } } '
       'instead of the cards; when the buyer finishes, call keep_homes with '
       'the kept IDs as keep and the others as passed.';

@@ -1,11 +1,11 @@
+import 'package:a2ui_flutter/a2ui_flutter.dart';
 import 'package:common/common.dart';
-import 'package:genui/genui.dart';
 
-CatalogItem catalogItemFor(
+ComponentImplementation catalogItemFor(
   CatalogComponent component,
-  CatalogWidgetBuilder builder,
-) => CatalogItem(
+  ComponentWidgetBuilder builder,
+) => ComponentImplementation(
   name: component.name,
-  dataSchema: component.schema,
-  widgetBuilder: builder,
+  schema: component.schema,
+  builder: builder,
 );

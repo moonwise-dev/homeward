@@ -217,7 +217,7 @@ final class ReadListings extends AgentTool {
   }
 
   static Map<String, Object?> _card(Listing listing) =>
-      block('read-${listing.id}', 'ListingQuote', {
+      block(componentIdOf('read_${listing.id}'), 'ListingQuote', {
         'reading': boundTo('/reads/${listing.id}'),
       });
 

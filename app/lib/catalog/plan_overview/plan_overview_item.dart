@@ -1,15 +1,14 @@
 import 'package:common/common.dart';
-import 'package:genui/genui.dart';
 
 import '../catalog_item_for.dart';
 import 'plan_overview_view.dart';
 
-final planOverviewItem = catalogItemFor(const PlanOverview(), (itemContext) {
-  final data = itemContext.data as JsonMap;
-  return PlanOverviewView(
-    story: data['story'] as String? ?? '',
+final planOverviewItem = catalogItemFor(
+  const PlanOverview(),
+  (_, _, props, _) => PlanOverviewView(
+    story: props.string('story') ?? '',
     steps: [
-      for (final step in data['steps'] as List<Object?>? ?? const [])
+      for (final step in props.list('steps'))
         if (step case {'title': final String title})
           (
             title: title,
@@ -20,5 +19,5 @@ final planOverviewItem = catalogItemFor(const PlanOverview(), (itemContext) {
             note: step['note'] as String?,
           ),
     ],
-  );
-});
+  ),
+);

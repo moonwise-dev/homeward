@@ -25,8 +25,8 @@ final class HomeComparison extends CatalogComponent {
   @override
   Map<String, Schema> get properties => {
     'homes': Schema.list(
-      description: 'Two or three homes, each { "path": "/homes/<id>" }.',
-      items: CatalogSchemas.bound('One home, { "path": "/homes/<id>" }.'),
+      description: 'Two or three homes, each { "@path": "/homes/<id>" }.',
+      items: CatalogSchemas.bound('One home, { "@path": "/homes/<id>" }.'),
       minItems: 2,
       maxItems: 3,
     ),
@@ -49,8 +49,8 @@ final class HomeComparison extends CatalogComponent {
     "id": "root",
     "component": "HomeComparison",
     "homes": [
-      { "path": "/homes/sto-12" },
-      { "path": "/homes/sto-01" }
+      { "@path": "/homes/sto-12" },
+      { "@path": "/homes/sto-01" }
     ],
     "choose": { "event": { "name": "work_out_home", "context": {} } }
   }

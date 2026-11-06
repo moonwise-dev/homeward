@@ -24,7 +24,7 @@ final class RouteSummary extends CatalogComponent {
   @override
   Map<String, Schema> get properties => {
     'trip': CatalogSchemas.bound(
-      'One trip, { "path": "/week/<from>/trips/<n>" }.',
+      'One trip, { "@path": "/week/<from>/trips/<n>" }.',
     ),
   };
 
@@ -40,7 +40,7 @@ final class RouteSummary extends CatalogComponent {
       name: 'To KTH by public transport',
       componentsJson: '''
 [
-  { "id": "root", "component": "RouteSummary", "trip": { "path": "/week/sto-12/trips/0" } }
+  { "id": "root", "component": "RouteSummary", "trip": { "@path": "/week/sto-12/trips/0" } }
 ]
 ''',
       dataModel: stockholmWeekDataModel,

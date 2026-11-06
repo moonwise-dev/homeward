@@ -22,7 +22,7 @@ import '../support/test_research.dart';
 void main() {
   final recording = File('../app/test/fixtures/recorded_turn.sse');
 
-  test('the turn the app test replays is the turn the server streams', () async {
+  test('the turn the app test renders is the turn the server streams', () async {
     final sessions = SessionRepository(newId: () => 's-1');
     sessions.create();
     var messages = 0;
@@ -90,7 +90,7 @@ void main() {
 
 List<Map<String, Object?>> _surface() => [
   {
-    'version': 'v0.9',
+    'version': '1.0',
     'createSurface': {
       'surfaceId': 'plan',
       'catalogId': homewardCatalogId,
@@ -98,7 +98,7 @@ List<Map<String, Object?>> _surface() => [
     },
   },
   {
-    'version': 'v0.9',
+    'version': '1.0',
     'updateComponents': {
       'surfaceId': 'plan',
       'components': [
@@ -110,14 +110,13 @@ List<Map<String, Object?>> _surface() => [
         {
           'id': 'title',
           'component': 'Text',
-          'text': 'What the home has to have',
-          'variant': 'h3',
+          'text': '### What the home has to have',
         },
         {
           'id': 'notes',
           'component': 'TextField',
           'label': 'Anything else?',
-          'value': {'path': '/notes'},
+          'value': {'@path': '/notes'},
         },
         {
           'id': 'done',
@@ -128,7 +127,7 @@ List<Map<String, Object?>> _surface() => [
             'event': {
               'name': 'confirm_story',
               'context': {
-                'notes': {'path': '/notes'},
+                'notes': {'@path': '/notes'},
               },
             },
           },

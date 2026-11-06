@@ -38,18 +38,18 @@ List<Map<String, Object?>> waitingCardButtons(
   }
   return [
     block(planMoreId, 'Column', {
-      'children': ['$planMoreId-title', '$planMoreId-cards'],
+      'children': ['${planMoreId}_title', '${planMoreId}_cards'],
     }),
-    block('$planMoreId-title', 'Text', {
+    block('${planMoreId}_title', 'Text', {
       'text': 'Also worked out for you',
       'variant': 'caption',
     }),
-    block('$planMoreId-cards', 'Row', {
-      'children': [for (final card in offered) '$planMoreId-${card.id}'],
+    block('${planMoreId}_cards', 'Row', {
+      'children': [for (final card in offered) '${planMoreId}_${card.id}'],
     }),
     for (final card in offered) ...[
-      block('$planMoreId-${card.id}', 'Button', {
-        'child': '$planMoreId-${card.id}-label',
+      block('${planMoreId}_${card.id}', 'Button', {
+        'child': '${planMoreId}_${card.id}_label',
         'action': {
           'event': {
             'name': showCardAction,
@@ -57,7 +57,7 @@ List<Map<String, Object?>> waitingCardButtons(
           },
         },
       }),
-      block('$planMoreId-${card.id}-label', 'Text', {'text': card.label}),
+      block('${planMoreId}_${card.id}_label', 'Text', {'text': card.label}),
     ],
   ];
 }
@@ -69,7 +69,7 @@ List<String> waitingButtonLabels(List<Map<String, Object?>> screen) => [
           'id': final String id,
           'action': {'event': {'context': {'label': final String label}}},
         }
-        when id.startsWith('$planMoreId-'))
+        when id.startsWith('${planMoreId}_'))
       label,
 ];
 

@@ -6,7 +6,7 @@ import 'package:test/test.dart';
 
 void main() {
   const createSurface = {
-    'version': 'v0.9',
+    'version': '1.0',
     'createSurface': {'surfaceId': 't1-q', 'catalogId': 'c'},
   };
 

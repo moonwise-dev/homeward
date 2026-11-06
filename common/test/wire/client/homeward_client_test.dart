@@ -72,7 +72,7 @@ void main() {
   );
 
   const createSurface = {
-    'version': 'v0.9',
+    'version': '1.0',
     'createSurface': {'surfaceId': 't1-profile', 'catalogId': 'c'},
   };
 
@@ -212,8 +212,8 @@ void main() {
           'messageId': 'm-1',
           'contextId': 's-1',
           'metadata': {
-            'a2uiClientCapabilities': {
-              'v0.9': {
+            'a2uiRendererCapabilities': {
+              '1.0': {
                 'supportedCatalogIds': [homewardCatalogId],
               },
             },
@@ -253,13 +253,13 @@ void main() {
     expect(message['parts'], [
       {
         'kind': 'data',
-        'data': {'version': 'v0.9', 'action': action.toJson()},
+        'data': {'version': '1.0', 'action': action.toJson()},
       },
     ]);
     expect(
       message['metadata'],
-      containsPair('a2uiClientDataModel', {
-        'version': 'v0.9',
+      containsPair('a2uiRendererDataModel', {
+        'version': '1.0',
         'surfaces': {
           't1-profile': {
             'profile': {'adults': 2},

@@ -1,5 +1,6 @@
 import 'package:a2ui_core/a2ui_core.dart';
 import 'package:collection/collection.dart';
+import 'package:common/common.dart';
 
 import '../validation/component_tree.dart';
 
@@ -15,16 +16,16 @@ final class SurfaceSeeder {
   Iterable<String> get awaitingComponents => _pendingCreates.keys;
 
   List<Map<String, Object?>> forward(
-    A2uiMessage message,
+    AgentToRendererMessage message,
     Map<String, Object?> seeds,
   ) => switch (message) {
     CreateSurfaceMessage(:final surfaceId) => _hold(surfaceId, message),
     UpdateComponentsMessage(:final surfaceId, :final components) => [
       if (_pendingCreates.remove(surfaceId) case final create?)
         CreateSurfaceMessage(
+          version: A2uiExtension.version,
           surfaceId: surfaceId,
           catalogId: create.catalogId,
-          theme: create.theme,
           sendDataModel: true,
         ).toJson(),
       ...refresh(surfaceId, boundSlices(components), seeds),
@@ -41,6 +42,7 @@ final class SurfaceSeeder {
     for (final slice in slices)
       if (seeds.containsKey(slice) && _changes(surfaceId, slice, seeds[slice]))
         UpdateDataModelMessage(
+          version: A2uiExtension.version,
           surfaceId: surfaceId,
           path: '/$slice',
           value: seeds[slice],

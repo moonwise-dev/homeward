@@ -27,11 +27,11 @@ final class WeekMap extends CatalogComponent {
   Map<String, Schema> get properties => {
     'markers': CatalogSchemas.slice(
       '/places',
-      'Always { "path": "/places" }, after find_place.',
+      'Always { "@path": "/places" }, after find_place.',
     ),
     'routes': CatalogSchemas.bound(
       'One starting point measure_week measured, '
-      '{ "path": "/week/<from>" }. Leave it out to show the places alone.',
+      '{ "@path": "/week/<from>" }. Leave it out to show the places alone.',
     ),
   };
 
@@ -50,8 +50,8 @@ final class WeekMap extends CatalogComponent {
   {
     "id": "root",
     "component": "WeekMap",
-    "markers": { "path": "/places" },
-    "routes": { "path": "/week/sto-12" }
+    "markers": { "@path": "/places" },
+    "routes": { "@path": "/week/sto-12" }
   }
 ]
 ''',
@@ -61,7 +61,7 @@ final class WeekMap extends CatalogComponent {
       name: 'The places before a week is measured',
       componentsJson: '''
 [
-  { "id": "root", "component": "WeekMap", "markers": { "path": "/places" } }
+  { "id": "root", "component": "WeekMap", "markers": { "@path": "/places" } }
 ]
 ''',
       dataModel: stockholmWeekDataModel,

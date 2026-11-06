@@ -26,7 +26,7 @@ final class DownPaymentSlider extends CatalogComponent {
   Map<String, Schema> get properties => {
     'affordability': CatalogSchemas.slice(
       '/affordability',
-      'Always { "path": "/affordability" }, after compute_affordability '
+      'Always { "@path": "/affordability" }, after compute_affordability '
           'answered.',
     ),
     'apply': CatalogSchemas.action,
@@ -57,7 +57,7 @@ final class DownPaymentSlider extends CatalogComponent {
   {
     "id": "root",
     "component": "DownPaymentSlider",
-    "affordability": { "path": "/affordability" },
+    "affordability": { "@path": "/affordability" },
     "apply": { "event": { "name": "use_down_payment", "context": {} } }
   }
 ]

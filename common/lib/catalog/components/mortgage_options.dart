@@ -27,7 +27,7 @@ final class MortgageOptions extends CatalogComponent {
   Map<String, Schema> get properties => {
     'affordability': CatalogSchemas.slice(
       '/affordability',
-      'Always { "path": "/affordability" }, after compute_affordability '
+      'Always { "@path": "/affordability" }, after compute_affordability '
           'answered.',
     ),
     'choose': CatalogSchemas.action,
@@ -58,7 +58,7 @@ final class MortgageOptions extends CatalogComponent {
   {
     "id": "root",
     "component": "MortgageOptions",
-    "affordability": { "path": "/affordability" },
+    "affordability": { "@path": "/affordability" },
     "choose": { "event": { "name": "choose_rate", "context": {} } }
   }
 ]

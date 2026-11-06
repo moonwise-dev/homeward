@@ -1,5 +1,6 @@
 const basicComponentSummaries = {
-  'Text': 'Text, with simple Markdown and a style variant such as a heading',
+  'Text':
+      'Text, with simple Markdown such as a ### heading, as body or caption',
   'Row': 'Lays out its children side by side',
   'Column': 'Stacks its children vertically',
   'Card': 'A raised container around one child',

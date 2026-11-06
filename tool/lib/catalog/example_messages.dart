@@ -5,7 +5,7 @@ import 'package:common/common.dart';
 List<String> exampleMessages(CatalogExample example) {
   return [
     jsonEncode({
-      'version': 'v0.9',
+      'version': A2uiExtension.version,
       'createSurface': {
         'surfaceId': planSurfaceId,
         'catalogId': homewardCatalogId,
@@ -13,7 +13,7 @@ List<String> exampleMessages(CatalogExample example) {
       },
     }),
     jsonEncode({
-      'version': 'v0.9',
+      'version': A2uiExtension.version,
       'updateComponents': {
         'surfaceId': planSurfaceId,
         'components': example.components,

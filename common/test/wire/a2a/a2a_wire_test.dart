@@ -19,7 +19,7 @@ void main() {
             {
               'kind': 'data',
               'data': {
-                'version': 'v0.9',
+                'version': '1.0',
                 'action': {
                   'surfaceId': 't3-affordability',
                   'name': 'commit_scenario',
@@ -32,8 +32,8 @@ void main() {
             },
           ],
           'metadata': {
-            'a2uiClientCapabilities': {
-              'v0.9': {
+            'a2uiRendererCapabilities': {
+              '1.0': {
                 'supportedCatalogIds': [homewardCatalogId],
               },
             },
@@ -80,8 +80,8 @@ void main() {
           parts: [
             A2aPart.text(text: 'Your limit is set by the loan-to-value cap.'),
             A2aPart.data(
-              data: {'version': 'v0.9'},
-              metadata: {'mimeType': 'application/json+a2ui'},
+              data: {'version': '1.0'},
+              metadata: {'mimeType': 'application/a2ui+json'},
             ),
           ],
         ),
@@ -110,8 +110,8 @@ void main() {
             },
             {
               'kind': 'data',
-              'data': {'version': 'v0.9'},
-              'metadata': {'mimeType': 'application/json+a2ui'},
+              'data': {'version': '1.0'},
+              'metadata': {'mimeType': 'application/a2ui+json'},
             },
           ],
           'messageId': 'm-1',

@@ -24,7 +24,7 @@ final class Fact extends CatalogComponent {
   @override
   Map<String, Schema> get properties => {
     'fact': CatalogSchemas.bound(
-      'One item update_brief recorded, { "path": "/brief/<id>" }.',
+      'One item update_brief recorded, { "@path": "/brief/<id>" }.',
     ),
     'answer': Schema.object(
       description:
@@ -61,10 +61,10 @@ final class Fact extends CatalogComponent {
   {
     "id": "stairs",
     "component": "Fact",
-    "fact": { "path": "/brief/step-free" },
+    "fact": { "@path": "/brief/step-free" },
     "answer": { "event": { "name": "check_fact", "context": {} } }
   },
-  { "id": "city", "component": "Fact", "fact": { "path": "/brief/city" } }
+  { "id": "city", "component": "Fact", "fact": { "@path": "/brief/city" } }
 ]
 ''',
       dataModel: stockholmBriefDataModel,

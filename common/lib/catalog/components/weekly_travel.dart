@@ -25,7 +25,7 @@ final class WeeklyTravel extends CatalogComponent {
   @override
   Map<String, Schema> get properties => {
     'week': CatalogSchemas.bound(
-      'One starting point measure_week measured, { "path": "/week/<from>" }.',
+      'One starting point measure_week measured, { "@path": "/week/<from>" }.',
     ),
   };
 
@@ -41,7 +41,7 @@ final class WeeklyTravel extends CatalogComponent {
       name: 'A week from a flat in Nacka',
       componentsJson: '''
 [
-  { "id": "root", "component": "WeeklyTravel", "week": { "path": "/week/sto-12" } }
+  { "id": "root", "component": "WeeklyTravel", "week": { "@path": "/week/sto-12" } }
 ]
 ''',
       dataModel: stockholmWeekDataModel,

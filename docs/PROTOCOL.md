@@ -1,33 +1,43 @@
 # Homeward Protocol
 
-Homeward speaks two protocols: **A2UI v0.9** for the interface, carried over a
+Homeward speaks two protocols: **A2UI v1.0** for the interface, carried over a
 **subset of A2A** between the Flutter app and the Dart server.
 
 ## Versions
 
 | Layer | Version | Why |
 | --- | --- | --- |
-| A2UI | v0.9 | What `genui` 0.10.x implements and what the Flutter team presents |
-| A2UI A2A extension | `https://a2ui.org/a2a-extension/a2ui/v0.9` | Matches the A2UI version |
-| A2A | The version `genui_a2a` speaks, confirmed in spike S1 | Client compatibility decides it |
+| A2UI | v1.0 | The current version, implemented by Google's Dart SDK `a2ui_core` and its Flutter renderer `a2ui_flutter`, which replace `genui` (D198) |
+| A2UI A2A extension | `https://a2ui.org/a2a-extension/a2ui/v1.0` | Matches the A2UI version |
+| A2A | 0.3.0, as spike S1 confirmed | Client compatibility decides it |
 
-### Upgrade Path
+### From v0.9
 
-- **v0.9.1** standardizes the payload MIME type as `application/a2ui+json`
-  (v0.9 used `application/json+a2ui`). Adopt when `genui` does. The server
-  accepts both on input and emits whichever the client advertises.
-- **v1.0** is a release candidate. It adds `components` and `dataModel` inside
-  `createSurface`, typed renderer and agent function calls, and removes theme
-  branding properties. Do not adopt before `genui` supports it. Keep every
-  version-specific shape inside `common/wire` and `server/lib/agent` so the
-  upgrade is local.
+Homeward moved from v0.9 to v1.0 on 2026-11-06 (D198), when Google asked the
+consultants to use the 1.0 SDKs and renderers for the showcase. What changed
+on the wire:
+
+- `version` is `"1.0"` in every message, and the payload MIME type is
+  `application/a2ui+json`.
+- A binding is `{"@path": "/affordability"}` and a function call
+  `{"@call": "formatNumber", "args": {…}}`; a plain object with `path` or
+  `call` is data. List templates and `updateDataModel` keep their plain
+  `path`.
+- Component IDs are UAX #31 identifiers: letters, digits, and underscores.
+  The server's cards are named `home_sto_12`, `buy_vs_rent`, `more_monthly`.
+- Text has the `body` and `caption` variants; a heading is a Markdown
+  heading in its text, such as `### Your budget`.
+- The metadata keys are `a2uiRendererCapabilities`, keyed by `"1.0"`, and
+  `a2uiRendererDataModel`.
+- A `createSurface` may carry its components and data model; the gallery
+  creates each example that way.
 
 ## Catalogs
 
 | Catalog | ID |
 | --- | --- |
 | Homeward | `https://moonwise.se/homeward/catalogs/v1/catalog.json` |
-| Basic | `https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json` |
+| Basic | `https://a2ui.org/specification/v1_0/catalogs/basic/catalog.json` |
 
 The Homeward catalog includes the basic components listed in
 `docs/CATALOG.md` plus the Homeward components. The catalog ID is a contract,
@@ -54,7 +64,7 @@ model yet.
     "streaming": true,
     "extensions": [
       {
-        "uri": "https://a2ui.org/a2a-extension/a2ui/v0.9",
+        "uri": "https://a2ui.org/a2a-extension/a2ui/v1.0",
         "required": true,
         "params": {
           "supportedCatalogIds": [
@@ -70,7 +80,7 @@ model yet.
   },
   "security": [{ "gemini": [] }],
   "defaultInputModes": ["text/plain", "application/json"],
-  "defaultOutputModes": ["text/plain", "application/json+a2ui"],
+  "defaultOutputModes": ["text/plain", "application/a2ui+json"],
   "skills": [
     { "id": "home-finance", "name": "Home finance", "description": "Works out what a household can borrow, what a home costs them each month, and how it holds up, and builds a screen made for them.", "tags": ["home-finance", "mortgage", "rent"] }
   ]
@@ -78,7 +88,7 @@ model yet.
 ```
 
 `protocolVersion`, `defaultInputModes`, `defaultOutputModes`, and skill `tags`
-are required by `genui_a2a`'s agent card parser. `url` comes from
+are required by A2A agent card parsers. `url` comes from
 `HOMEWARD_PUBLIC_URL`. The card is built from the Freezed A2A models in
 `common/lib/wire/a2a`, which the server encodes every A2A message with.
 
@@ -119,8 +129,8 @@ A text turn:
       "contextId": "s-9a2",
       "parts": [{ "kind": "text", "text": "We are moving to Stockholm for my job at KTH, and my mum is moving in with us" }],
       "metadata": {
-        "a2uiClientCapabilities": {
-          "v0.9": {
+        "a2uiRendererCapabilities": {
+          "1.0": {
             "supportedCatalogIds": ["https://moonwise.se/homeward/catalogs/v1/catalog.json"]
           }
         }
@@ -130,15 +140,15 @@ A text turn:
 }
 ```
 
-An action turn carries the A2UI action as a data part, exactly as genui's
-`SurfaceController` submits it, references the previous task, and carries the
-surface data model in metadata:
+An action turn carries the A2UI action as a data part, as `a2ui_core`'s
+`MessageProcessor` reports it from `onAction`, references the previous task,
+and carries the surface data model in metadata:
 
 ```json
 {
   "kind": "data",
   "data": {
-    "version": "v0.9",
+    "version": "1.0",
     "action": {
       "surfaceId": "t3-home",
       "name": "keep_home",
@@ -150,20 +160,20 @@ surface data model in metadata:
 }
 ```
 
-- genui does not attach the data model; the app reads it from
-  `SurfaceController.contextFor(surfaceId).dataModel` and puts it in metadata.
-- genui writes `timestamp` in local time without a zone. The server never uses
-  it and records its own receive time.
-- The client sends `a2uiClientCapabilities` on every turn.
+- The app reads the data model from the surface's `SurfaceModel.dataModel`
+  and puts it in metadata.
+- The app writes `timestamp` in local time. The server never uses it and
+  records its own receive time.
+- The client sends `a2uiRendererCapabilities` on every turn.
 - Clients may serialize absent optional fields as explicit `null`
   (`configuration`, `metadata`, `extensions`, `taskId`). The server treats
   `null` and absent the same.
 
 ```json
 "metadata": {
-  "a2uiClientCapabilities": { "v0.9": { "supportedCatalogIds": ["…"] } },
-  "a2uiClientDataModel": {
-    "version": "v0.9",
+  "a2uiRendererCapabilities": { "1.0": { "supportedCatalogIds": ["…"] } },
+  "a2uiRendererDataModel": {
+    "version": "1.0",
     "surfaces": {
       "t3-home": {
         "notes": "A garden for the dog"
@@ -173,9 +183,8 @@ surface data model in metadata:
 }
 ```
 
-Both shapes are what `a2ui_core` 0.1.1 produces through
-`MessageProcessor.getClientCapabilities` and `getClientDataModel`, and spike S1
-recorded `genui_a2a` sending exactly these.
+Both shapes are the v1.0 A2A extension's: the renderer's capabilities keyed
+by protocol version, and the renderer data model by surface.
 
 ### Server To Client
 
@@ -184,9 +193,8 @@ followed by a blank line. When nothing follows an event for 50 ms the
 server writes a comment, a line holding only `:` and a blank line, which
 every SSE client ignores (D195): WebKit, and so Safari, keeps the end of
 an event it has received from the page until more bytes arrive, and the
-plan's cards sat there for about 3 s. The server emits only two event kinds, because
-`genui_a2a` rejects any other kind with an uncaught error and ignores
-`artifact-update`:
+plan's cards sat there for about 3 s. The server emits only two event kinds, the
+ones every A2A streaming client reads:
 
 | Kind | When |
 | --- | --- |
@@ -230,15 +238,15 @@ A `failed` status is not used, because A2A clients surface it only as text.
 ```json
 {
   "kind": "data",
-  "metadata": { "mimeType": "application/json+a2ui" },
+  "metadata": { "mimeType": "application/a2ui+json" },
   "data": {
-    "version": "v0.9",
+    "version": "1.0",
     "updateComponents": {
       "surfaceId": "t3-home",
       "components": [
         { "id": "root", "component": "Column", "children": ["title", "notes", "keep"] },
-        { "id": "title", "component": "Text", "text": "What the home has to have", "variant": "h3" },
-        { "id": "notes", "component": "TextField", "label": "Anything else?", "value": { "path": "/notes" } },
+        { "id": "title", "component": "Text", "text": "### What the home has to have" },
+        { "id": "notes", "component": "TextField", "label": "Anything else?", "value": { "@path": "/notes" } },
         { "id": "keep", "component": "Button", "child": "keep_label", "action": { "event": { "name": "keep_home", "context": { "homeId": "h1" } } } },
         { "id": "keep_label", "component": "Text", "text": "Keep this one" }
       ]
@@ -248,7 +256,7 @@ A `failed` status is not used, because A2A clients surface it only as text.
 ```
 
 A progress data part carries its own media type, so an A2UI client that does
-not know it skips it; `genui_a2a` 0.10.x logs a warning and moves on. Step
+not know it skips it. Step
 labels are written by the tool, never by the model.
 
 ```json
@@ -267,16 +275,15 @@ labels are written by the tool, never by the model.
 
 ### Extension Activation
 
-The client sends `X-A2A-Extensions: https://a2ui.org/a2a-extension/a2ui/v0.9`.
+The client sends `X-A2A-Extensions: https://a2ui.org/a2a-extension/a2ui/v1.0`.
 The server rejects `message/stream` without it.
 
 ### Clients
 
 - The Homeward app uses its own client in `common/wire`, built on the same A2A
-  models the server encodes with. See `docs/SPIKES.md` S1 for why it does not
-  use `genui_a2a`.
-- The server stays compatible with `genui_a2a` 0.10.x: every rule above holds for
-  it, and a contract test replays recorded server streams through its connector.
+  models the server encodes with (D176). Its A2UI messages go to `a2ui_core`'s
+  `MessageProcessor`, and an app test replays a stream the server recorded
+  through it.
 
 ## Surfaces
 
@@ -305,7 +312,7 @@ the record of that decision. `planSurfaceId` and `InlineSurfaces` in
 - Every later turn changes the same surface in place with `updateComponents`:
   a component whose ID exists replaces it, a new ID adds one, and the model
   sends only what changes. A component no longer reachable from `root` stays in
-  the surface unseen; A2UI v0.9 has no message that removes one.
+  the surface unseen; A2UI v1.0 has no message that removes one.
 - The data model persists across turns. The server seeds new tool results into
   it; what the buyer entered stays until they change it.
 - An inline surface is created and filled in its own turn and never changed
@@ -316,7 +323,7 @@ the record of that decision. `planSurfaceId` and `InlineSurfaces` in
 ### Replay
 
 Every A2UI message the server forwards is stored with its turn. Opening a plan
-replays them in order into a fresh `SurfaceController`. Uncommitted what-if
+replays them in order into a fresh `a2ui_core` `MessageProcessor`. Uncommitted what-if
 changes are not stored and are not replayed.
 
 ## Data Model
@@ -370,12 +377,16 @@ pass rejects it.
    rather than joined to the next. Anything
    else is rejected with the text around the error and the surface ID the
    text names, so the correction knows which message to send again.
-2. **Envelope.** `A2uiMessage.fromJson` from `a2ui_core`: exactly one message
-   type, `version` is `v0.9`. It reports wrong field types as raw cast errors,
-   so the pass maps any `TypeError` to a `VALIDATION_FAILED` error. It ignores
-   fields the v0.9 envelope does not define, so the pass rejects them first: a
-   live run on 2026-09-26 put the components inside `createSurface`, which was
-   accepted and then drew nothing.
+2. **Envelope.** `version` is `"1.0"`, checked first so a message in another
+   version is named as such. Then `AgentToRendererMessage.fromJson` from
+   `a2ui_core`: exactly one message type, with fields of the right types.
+   The pass rejects fields Homeward does not use in a `createSurface` before
+   that: a live run on 2026-09-26 put the components inside `createSurface`,
+   which v1.0 now allows, and Homeward still wants them in `updateComponents`
+   (D184). A component ID Gemini wrote that is not a UAX #31 identifier, such
+   as `homes-label`, has each character outside one replaced by an
+   underscore, in the ID and in every reference to it, before anything is
+   checked, since a rejection would cost a model round (D198).
 3. **Ownership.** The surface ID is `plan`, or `t{turn}-{slug}` with this
    turn's number. The model may send only `createSurface`, with the Homeward
    catalog ID and at most one inline surface per turn, and `updateComponents`
@@ -390,12 +401,14 @@ pass rejects it.
 5. **Schema.** Components validate against the Homeward catalog document from
    `homewardCatalogDocument()` through `CatalogValidator` in `common/a2ui`.
    The document composes the agent-visible basic components and functions of
-   the A2UI v0.9 basic catalog, vendored from the spec repository at a pinned
-   commit (D67), with the Homeward components and functions. Function calls
-   therefore resolve against every function the catalog declares, and unknown
-   or misspelled properties fail.
+   the A2UI v1.0 basic catalog, vendored from the spec repository at a pinned
+   commit (D67, D198), with the Homeward components and functions. Each
+   component is checked as v1.0's envelope checks it: `ComponentCommon` and
+   the component's schema together, with no property left over. Function
+   calls therefore resolve against every function the catalog declares, and
+   unknown or misspelled properties fail.
 6. **Bound numbers.** Money, rate, and percentage properties are typed as
-   `CommonSchemas.dataBinding` or a function call in the schema, so a literal
+   an `{"@path": …}` binding or a function call in the schema, so a literal
    fails pass 5. This pass exists as a separate test fixture, not separate
    code.
 7. **Structure.** Exactly one `root`, every child ID exists, no cycles, and
@@ -404,7 +417,7 @@ pass rejects it.
    component from earlier turns merged with each `updateComponents`, so every
    message must leave a complete tree; components earlier turns left
    unreachable are not orphans. References are read from `child`, `children`,
-   `tabs[].child`, `trigger`, and `content` as the v0.9 basic catalog defines
+   `tabs[].child`, `trigger`, and `content` as the v1.0 basic catalog defines
    them.
 8. **Paths.** The session's stored messages are replayed into an `a2ui_core`
    `MessageProcessor` at the start of the turn. Each candidate message goes

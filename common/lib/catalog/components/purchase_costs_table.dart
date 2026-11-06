@@ -26,7 +26,7 @@ final class PurchaseCostsTable extends CatalogComponent {
   Map<String, Schema> get properties => {
     'affordability': CatalogSchemas.slice(
       '/affordability',
-      'Always { "path": "/affordability" }, after compute_affordability '
+      'Always { "@path": "/affordability" }, after compute_affordability '
           'answered.',
     ),
   };
@@ -46,7 +46,7 @@ final class PurchaseCostsTable extends CatalogComponent {
   {
     "id": "root",
     "component": "PurchaseCostsTable",
-    "affordability": { "path": "/affordability" }
+    "affordability": { "@path": "/affordability" }
   }
 ]
 ''',

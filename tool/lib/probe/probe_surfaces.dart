@@ -204,7 +204,7 @@ final class ProbeSurfaces {
                     in ((event['context'] as Map<String, Object?>?) ?? const {})
                         .entries)
                   key: switch (value) {
-                    {'path': final String path} => _resolve(data, path),
+                    {'@path': final String path} => _resolve(data, path),
                     _ => value,
                   },
                 ...tapped,

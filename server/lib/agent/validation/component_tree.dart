@@ -19,9 +19,43 @@ Iterable<String> childReferences(Map<String, Object?> component) sync* {
   }
 }
 
+Map<String, Object?> withIdsRenamed(
+  Map<String, Object?> component,
+  String Function(String id) rename,
+) => {
+  for (final MapEntry(:key, :value) in component.entries)
+    key: switch ((key, value)) {
+      ('id' || 'child' || 'trigger' || 'content', final String id) => rename(
+        id,
+      ),
+      ('children', final List<Object?> ids) => [
+        for (final id in ids) id is String ? rename(id) : id,
+      ],
+      (
+        'children',
+        {'componentId': final String id} && final Map<String, Object?> template,
+      ) =>
+        {
+          ...template,
+          'componentId': rename(id),
+        },
+      ('tabs', final List<Object?> tabs) => [
+        for (final tab in tabs)
+          switch (tab) {
+            {'child': final String id} && final Map<String, Object?> body => {
+              ...body,
+              'child': rename(id),
+            },
+            _ => tab,
+          },
+      ],
+      _ => value,
+    },
+};
+
 Iterable<String> boundPaths(Object? json) sync* {
   switch (json) {
-    case {'path': final String path} when json.length == 1:
+    case {'@path': final String path} when json.length == 1:
       yield path;
     case {'componentId': String _, 'path': final String path}
         when json.length == 2:

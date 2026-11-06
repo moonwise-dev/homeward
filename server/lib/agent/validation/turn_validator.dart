@@ -71,7 +71,7 @@ final class TurnValidator {
   ];
 
   SurfaceModel<ComponentApi>? _surface(String surfaceId) =>
-      shadow.groupModel.getSurface(surfaceId);
+      shadow.model.getSurface(surfaceId);
 
   ValidationOutcome validate(String source) {
     final Object? json;
@@ -90,11 +90,21 @@ final class TurnValidator {
     if (json is! Map<String, Object?>) {
       return _reject('', '', 'Each a2ui message must be one JSON object');
     }
+    if (json['version'] != A2uiExtension.version) {
+      return _reject(
+        _surfaceIdIn(json),
+        '/version',
+        'Each a2ui message has "version": "${A2uiExtension.version}"',
+      );
+    }
     if (_unknownEnvelopeField(json) case (final path, final problem)) {
       return _reject(_surfaceIdIn(json), path, problem);
     }
     if (_renumbered(json) case final renumbered?) {
       return validate(jsonEncode(renumbered));
+    }
+    if (_withIdentifierIds(json) case final renamed?) {
+      return validate(jsonEncode(renamed));
     }
     if (json
         case {
@@ -120,9 +130,9 @@ final class TurnValidator {
               }),
             );
     }
-    final A2uiMessage message;
+    final AgentToRendererMessage message;
     try {
-      message = A2uiMessage.fromJson(json);
+      message = AgentToRendererMessage.fromJson(json);
     } on A2uiValidationError catch (error) {
       return _reject(_surfaceIdIn(json), '', error.message);
     } on TypeError catch (error) {
@@ -195,6 +205,7 @@ final class TurnValidator {
     }
     if (_surface(surfaceId) == null) {
       final creation = CreateSurfaceMessage(
+        version: A2uiExtension.version,
         surfaceId: surfaceId,
         catalogId: homewardCatalogId,
         sendDataModel: true,
@@ -338,6 +349,7 @@ final class TurnValidator {
         ...childReferences(component),
     };
     return UpdateComponentsMessage(
+      version: A2uiExtension.version,
       surfaceId: message.surfaceId,
       components: [
         ...sent,
@@ -382,6 +394,35 @@ final class TurnValidator {
     return null;
   }
 
+  Map<String, Object?>? _withIdentifierIds(Map<String, Object?> json) {
+    if (json case {
+      'updateComponents':
+          {'components': final List<Object?> components} &&
+          final Map<String, Object?> body,
+    }) {
+      var renamed = false;
+      String rename(String id) {
+        final valid = componentIdOf(id);
+        renamed = renamed || valid != id;
+        return valid;
+      }
+
+      final renamedComponents = [
+        for (final component in components)
+          component is Map<String, Object?>
+              ? withIdsRenamed(component, rename)
+              : component,
+      ];
+      if (renamed) {
+        return {
+          ...json,
+          'updateComponents': {...body, 'components': renamedComponents},
+        };
+      }
+    }
+    return null;
+  }
+
   static final _anyTurnPattern = RegExp(r'^t\d+-([a-z0-9]+(?:-[a-z0-9]+)*)$');
 
   String? _ownershipProblem(String surfaceId) =>
@@ -391,7 +432,10 @@ final class TurnValidator {
             '"$planSurfaceId", nor an inline ask of turn $turn, such as '
             '"${InlineSurfaces.id(turn, 'budget')}"';
 
-  ValidationOutcome _apply(A2uiMessage message, void Function() record) {
+  ValidationOutcome _apply(
+    AgentToRendererMessage message,
+    void Function() record,
+  ) {
     try {
       shadow.processMessages([message]);
     } on A2uiError catch (error) {
@@ -454,6 +498,6 @@ final class TurnValidator {
 }
 
 const _envelopeFields = {
-  'createSurface': {'surfaceId', 'catalogId', 'theme', 'sendDataModel'},
+  'createSurface': {'surfaceId', 'catalogId', 'sendDataModel'},
   'updateComponents': {'surfaceId', 'components'},
 };

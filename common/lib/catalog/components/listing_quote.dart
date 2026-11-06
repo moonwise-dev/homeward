@@ -25,7 +25,7 @@ final class ListingQuote extends CatalogComponent {
   @override
   Map<String, Schema> get properties => {
     'reading': CatalogSchemas.bound(
-      'One home read_listings read, { "path": "/reads/<id>" }.',
+      'One home read_listings read, { "@path": "/reads/<id>" }.',
     ),
   };
 
@@ -41,7 +41,7 @@ final class ListingQuote extends CatalogComponent {
       name: 'A flat in Nacka read for three needs',
       componentsJson: '''
 [
-  { "id": "root", "component": "ListingQuote", "reading": { "path": "/reads/sto-12" } }
+  { "id": "root", "component": "ListingQuote", "reading": { "@path": "/reads/sto-12" } }
 ]
 ''',
       dataModel: stockholmReadsDataModel,

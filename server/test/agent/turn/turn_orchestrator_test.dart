@@ -59,7 +59,7 @@ void main() {
   String a2ui(String surfaceId, List<Map<String, Object?>> components) => [
     '```a2ui',
     jsonEncode({
-      'version': 'v0.9',
+      'version': '1.0',
       'createSurface': {
         'surfaceId': surfaceId,
         'catalogId': homewardCatalogId,
@@ -67,7 +67,7 @@ void main() {
       },
     }),
     jsonEncode({
-      'version': 'v0.9',
+      'version': '1.0',
       'updateComponents': {'surfaceId': surfaceId, 'components': components},
     }),
     '```',
@@ -97,7 +97,7 @@ void main() {
                 {
                   'id': 'root',
                   'component': 'Text',
-                  'text': {'path': '/places/kth/name'},
+                  'text': {'@path': '/places/kth/name'},
                 },
               ])}',
         ),
@@ -311,7 +311,7 @@ void main() {
           text: jsonEncode({
             'messages': [
               {
-                'version': 'v0.9',
+                'version': '1.0',
                 'updateComponents': {
                   'surfaceId': 'plan',
                   'components': note(),
@@ -353,7 +353,7 @@ void main() {
         text: [
           '```a2ui',
           jsonEncode({
-            'version': 'v0.9',
+            'version': '1.0',
             'updateComponents': {'surfaceId': 'plan', 'components': note()},
           }),
           '```',

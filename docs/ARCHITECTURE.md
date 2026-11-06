@@ -9,7 +9,7 @@ and `docs/CATALOG.md` the blocks.
 ```text
 ┌─────────────────────── app (Flutter: Web, iOS, Android) ────────────────────────┐
 │ screens ─ view models ─ repositories                                            │
-│ genui SurfaceController ◄── Homeward catalog (items + client functions)         │
+│ a2ui_core MessageProcessor + a2ui_flutter A2uiSurface ◄── Homeward catalog      │
 │                                   └── common (pure Dart)                        │
 └───────────────┬──────────────────────────────────────────────────▲──────────────┘
                 │ A2A JSON-RPC message/stream + the buyer's Gemini key │ SSE: text + A2UI
@@ -132,10 +132,12 @@ Rules:
 - `catalog/` is the contract shared by the app's widget implementations, the
   server's validation passes, and the generated prompt skill. A component that
   is not declared here does not exist.
-- A2UI protocol types come from `a2ui_core`, the pure Dart package genui is
-  built on, pinned to an exact version: message classes, `ComponentApi`,
-  `Catalog`, `CommonSchemas`, and `MessageProcessor`. `common/a2ui` adds only
-  what it lacks. No Homeward package re-implements a type `a2ui_core` provides.
+- A2UI protocol types come from `a2ui_core`, Google's Dart SDK for A2UI v1.0,
+  pinned to an exact version: message classes, `ComponentApi`, `Catalog`,
+  `CommonSchemasV1`, and `MessageProcessor` (D198). `common/a2ui` adds only
+  what it lacks: the vendored v1.0 schemas and the per-component validator
+  whose errors are handed back to Gemini. No Homeward package re-implements a
+  type `a2ui_core` provides.
 
 ## `/server`
 
@@ -357,9 +359,9 @@ app/lib/
       view_model/         <feature>_view_model.dart: the notifier and its state
       widgets/            <feature>_screen.dart and the widgets only it uses
   catalog/
-    homeward_catalog.dart the genui catalog: every item and client function
+    homeward_catalog.dart the a2ui_flutter catalog: the basic components Gemini may use and every Homeward item
     plan_sections.dart    draws each child of the plan's root as a card
-    bindings/             typed readers over genui DataContext
+    bindings/             JSON parsers for resolved bindings, and the action sender
     <component>/          <component>_item.dart and <component>_view.dart
 ```
 
@@ -386,15 +388,16 @@ prefix reserved for `lib/ui/core`.
 | `GeminiKeyRepository` | `flutter_secure_storage`, session memory on web, the local server's development keys while none is saved |
 | `AppearanceRepository` | `flutter_secure_storage` |
 | `KeyVerificationRepository` | The server's `/api/keys/verify` |
-| `AgentRepository` | The Homeward A2A client from `common/wire`, a `SurfaceController` per plan, the turn event stream; a new session, and a plan's turns from the server for replay |
-| `GalleryRepository` | The declared examples, drawn as surfaces in a `SurfaceController` of its own |
+| `AgentRepository` | The Homeward A2A client from `common/wire`, an `a2ui_core` `MessageProcessor` per plan through `RendererSurfaces`, the turn event stream; a new session, and a plan's turns from the server for replay |
+| `GalleryRepository` | The declared examples, each created with its components and data model in one `createSurface`, in a `MessageProcessor` of its own |
 
 ### Flutter Stack
 
-- `genui` pinned to an exact version, A2UI v0.9.
-- The A2A connection uses the Homeward client from `common/wire`, not
-  `genui_a2a`; see `docs/SPIKES.md` S1 and D176. `genui_a2a` appears only in
-  the app's contract test.
+- `a2ui_flutter` and `a2ui_core` pinned to exact versions, A2UI v1.0 (D198).
+  They replace `genui` and `genui_a2a`, which the Flutter team is redesigning
+  as these packages.
+- The A2A connection uses the Homeward client from `common/wire`; see
+  `docs/SPIKES.md` S1 and D176.
 - `http`, `freezed`, `json_serializable`.
 - `riverpod_annotation`, `flutter_riverpod`, `hooks_riverpod`, `flutter_hooks`.
 - `go_router`.
@@ -407,30 +410,33 @@ prefix reserved for `lib/ui/core`.
 - `google_fonts` with runtime fetching off, drawing the faces in
   `app/assets/fonts`; `intl`; `url_launcher`.
 
-### genui Boundary
+### Renderer Boundary
 
-genui is 0.x and changes shape between minor versions. Everything that touches
-its API is confined to a few places:
+`a2ui_core` and `a2ui_flutter` are 0.x and change shape between minor
+versions. Everything that touches their API is confined to a few places:
 
-- `app/lib/catalog/` for catalog items, client functions, data bindings, and
-  the plan and gallery surface views.
-- `app/lib/data/repositories/agent_repository.dart` and its provider for the
-  `SurfaceController`: it submits actions from `onSubmit` through the Homeward
-  A2A client, attaching capabilities and the surface data model, and feeds
-  every received `a2ui_core` message to `handleMessage`.
-- `app/lib/data/repositories/gallery_repository.dart`, which holds a
-  `SurfaceController` of its own for the declared examples.
+- `app/lib/catalog/` for catalog items, the action sender, and the plan and
+  gallery surface views.
+- `app/lib/data/repositories/renderer_surfaces.dart`, which holds a
+  `MessageProcessor`, applies each message, logs what it refuses, and
+  publishes each surface as it is created.
+- `app/lib/data/repositories/agent_repository.dart`, which sends each action
+  from `onAction` through the Homeward A2A client with the surface's data
+  model.
+- `app/lib/data/repositories/gallery_repository.dart` for the declared
+  examples.
 
-Features read surfaces through providers and never construct genui objects.
-Two widgets import genui for one type each: the journey's
-`exchange_section.dart` renders a turn's inline ask with `Surface`, and the
-inspector's `surface_data_view.dart` subscribes to a surface's data model. A
-genui upgrade should touch these files and nothing else.
+Features read surfaces through providers and never construct a processor.
+Two widgets name one renderer type each: the journey's `exchange_section.dart`
+watches a turn's inline ask for a `Row` root, and the inspector's
+`surface_data_view.dart` watches a surface's data model. An SDK upgrade should
+touch these files and nothing else.
 
-Each catalog item is three layers, and only the first knows about genui:
+Each catalog item is three layers, and only the first knows about the
+renderer:
 
 ```text
-catalog/<component>/<component>_item.dart   CatalogItem: schema from common, reads bindings, builds the view
+catalog/<component>/<component>_item.dart   ComponentImplementation: schema from common, reads resolved bindings, builds the view
 catalog/<component>/<component>_view.dart   the widget, from typed values and App* widgets
 common/lib/...                              the numbers, when the component shows any
 ```
@@ -779,7 +785,7 @@ stories, and a visual look at the result.
 | --- | --- |
 | `common` | `money`: every rounding mode and step against a hand table and against exact big integer arithmetic, on the VM and in Chrome because web integers are 53-bit. `finance`, `affordability`, `costs`: annuity and straight amortization, the largest loan, the maximum price, down payment bounds, the interest deduction, the stress curve, purchase costs. `markets`: rule packs read and overlaid, which rules apply to a buyer, reference rates, living costs, exchange rates. `catalog` and `a2ui`: each component listed once, every declared example valid against its schema, bound properties refusing literals and unknown properties. `wire`: the A2A models round-trip the frames recorded in spike S1; the client turns text, A2UI, cancel, and JSON-RPC error events into turn events |
 | `server` | The stream parser across arbitrary delta boundaries. One fixture per validation pass of `docs/PROTOCOL.md`. The turn loop: tool calls answered in order with their seeds, the tool round cap, actions handed to the model, correction rounds, the retry notice, model fallback, quota errors, starting over on a refused history, unknown sessions and the one-turn lease. Prompts that state no rule values and name only tools and components that exist. The open-data clients and the listing reader. Sessions created and read back. The routes, CORS, and that no log record carries a key. The Gemini client against the streams and error bodies recorded in spikes S2 and S3 under `server/test/fixtures/` |
-| `app` | Every catalog example pumped through the gallery repository and the real `Surface` widget at phone width. The `genui_a2a` compatibility test: a turn the server streamed, recorded in `app/test/fixtures/recorded_turn.sse` by `server/test/a2a/recorded_turn_test.dart`, replayed through `genui_a2a`'s `A2uiAgentConnector` into a `SurfaceController` holding the Homeward catalog, which proves a client built on the Flutter team's connector renders Homeward's turns. The wire log, the key repository's development keys, and the theme's faces |
+| `app` | Every catalog example created as a v1.0 surface through the gallery repository, accepted by `a2ui_core`'s processor, and pumped through `a2ui_flutter`'s `A2uiSurface` at phone width. A turn the server streamed, recorded in `app/test/fixtures/recorded_turn.sse` by `server/test/a2a/recorded_turn_test.dart`, replayed into the renderer and drawn. The wire log, the key repository's development keys, and the theme's faces |
 | `tool` | The catalog check and its generated outputs, the probe's reading of surfaces, the local server launcher |
 
 Gemini is never called in `make test`. `make probe` runs live turns against a

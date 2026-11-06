@@ -1,11 +1,12 @@
 import 'package:common/common.dart';
-import 'package:genui/genui.dart';
+import 'package:a2ui_core/a2ui_core.dart';
+import 'package:a2ui_flutter/a2ui_flutter.dart';
+import 'package:a2ui_flutter/basic_catalog.dart';
 
 import 'affordability_summary/affordability_summary_item.dart';
 import 'brief/brief_item.dart';
 import 'buy_vs_rent/buy_vs_rent_item.dart';
 import 'choice/choice_item.dart';
-import 'client_functions.dart';
 import 'down_payment_slider/down_payment_slider_item.dart';
 import 'fact/fact_item.dart';
 import 'home_card/home_card_item.dart';
@@ -32,12 +33,14 @@ import 'week_map/week_map_item.dart';
 import 'weekly_travel/weekly_travel_item.dart';
 import 'wrapping_row.dart';
 
-Catalog homewardGenuiCatalog() {
-  final basic = BasicCatalogItems.asNoAssetCatalog();
-  return Catalog(
-    [
+CatalogImplementation homewardRendererCatalog() {
+  final basic = basicCatalog();
+  return CatalogImplementation(
+    id: homewardCatalogId,
+    protocolVersion: A2uiProtocolVersion.v1_0,
+    components: [
       for (final item in [
-        for (final item in basic.items)
+        for (final item in basic.components.values)
           if (agentVisibleBasicComponents.contains(item.name))
             item.name == 'Row' ? wrappingRow(item) : item,
         planOverviewItem,
@@ -70,10 +73,7 @@ Catalog homewardGenuiCatalog() {
       ])
         asPlanSections(item),
     ],
-    functions: [
-      ...basic.functions,
-      for (final function in homewardFunctions) CatalogClientFunction(function),
-    ],
-    catalogId: homewardCatalogId,
+    functions: basic.functions.values.toList(),
+    definitions: basic.definitions,
   );
 }

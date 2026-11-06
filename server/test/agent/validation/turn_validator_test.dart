@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:a2ui_core/a2ui_core.dart';
 import 'package:common/common.dart';
+import 'package:homeward_server/agent/turn/replay_shadow.dart';
 import 'package:homeward_server/agent/validation/turn_validator.dart';
 import 'package:homeward_server/agent/validation/validation_outcome.dart';
 import 'package:test/test.dart';
@@ -13,12 +13,7 @@ void main() {
       TurnValidator(
         turn: 1,
         catalog: catalog,
-        shadow:
-            MessageProcessor<ComponentApi>(
-              catalogs: [Catalog(id: homewardCatalogId, components: const [])],
-            )..processMessages([
-              for (final json in earlier) A2uiMessage.fromJson(json),
-            ]),
+        shadow: replayShadow(earlier),
         seeds: const {
           'home': {'name': 'Flat on Odengatan', 'rooms': 3},
         },
@@ -28,7 +23,7 @@ void main() {
 
   String create(String surfaceId, {String catalogId = homewardCatalogId}) =>
       jsonEncode({
-        'version': 'v0.9',
+        'version': '1.0',
         'createSurface': {
           'surfaceId': surfaceId,
           'catalogId': catalogId,
@@ -38,7 +33,7 @@ void main() {
 
   String update(String surfaceId, List<Map<String, Object?>> components) =>
       jsonEncode({
-        'version': 'v0.9',
+        'version': '1.0',
         'updateComponents': {'surfaceId': surfaceId, 'components': components},
       });
 
@@ -51,7 +46,7 @@ void main() {
     {
       'id': 'name',
       'component': 'Text',
-      'text': {'path': '/home/name'},
+      'text': {'@path': '/home/name'},
     },
     {
       'id': 'keep',
@@ -87,7 +82,7 @@ void main() {
     final outcome = firstTurn().validate(create('sidebar')) as Rejected;
 
     expect(outcome.failure.toJson(), {
-      'version': 'v0.9',
+      'version': '1.0',
       'error': {
         'code': 'VALIDATION_FAILED',
         'surfaceId': 'sidebar',
@@ -107,19 +102,19 @@ void main() {
       () => [
         '{"version":"v0.8","createSurface":{"surfaceId":"t1-a","catalogId":"x"}}',
       ],
-      "version 'v0.9'",
+      '"version": "1.0"',
     ),
     (
       'envelope: two message types',
-      () => ['{"version":"v0.9","createSurface":{},"deleteSurface":{}}'],
+      () => ['{"version":"1.0","createSurface":{},"deleteSurface":{}}'],
       'exactly one',
     ),
     (
       'envelope: wrong field type',
       () => [
-        '{"version":"v0.9","createSurface":{"surfaceId":7,"catalogId":"x"}}',
+        '{"version":"1.0","createSurface":{"surfaceId":7,"catalogId":"x"}}',
       ],
-      'wrong type',
+      'must be a String',
     ),
     (
       'ownership: another surface',
@@ -129,13 +124,13 @@ void main() {
     (
       'ownership: data model writes',
       () => [
-        '{"version":"v0.9","updateDataModel":{"surfaceId":"plan","path":"/x","value":1}}',
+        '{"version":"1.0","updateDataModel":{"surfaceId":"plan","path":"/x","value":1}}',
       ],
       'bind components to paths',
     ),
     (
       'ownership: deleting',
-      () => ['{"version":"v0.9","deleteSurface":{"surfaceId":"plan"}}'],
+      () => ['{"version":"1.0","deleteSurface":{"surfaceId":"plan"}}'],
       'cannot be deleted',
     ),
     (
@@ -219,7 +214,7 @@ void main() {
           {
             'id': 'root',
             'component': 'Text',
-            'text': {'path': '/lineup/nothing/name'},
+            'text': {'@path': '/lineup/nothing/name'},
           },
         ]),
       ],
@@ -261,7 +256,7 @@ void main() {
             'id': 'root',
             'component': 'TextField',
             'label': 'Anything else about the home?',
-            'value': {'path': '/home/notes'},
+            'value': {'@path': '/home/notes'},
           },
         ]),
       ),
@@ -302,7 +297,7 @@ void main() {
   final earlierScreen = [
     jsonDecode(create('plan')) as Map<String, Object?>,
     {
-      'version': 'v0.9',
+      'version': '1.0',
       'updateDataModel': {
         'surfaceId': 'plan',
         'path': '/week',
@@ -319,7 +314,7 @@ void main() {
         {
           'id': 'office',
           'component': 'Text',
-          'text': {'path': '/week/office'},
+          'text': {'@path': '/week/office'},
         },
         {'id': 'note', 'component': 'Text', 'text': 'Tell me more'},
       ]),
@@ -375,7 +370,7 @@ void main() {
           {
             'id': 'note',
             'component': 'Text',
-            'text': {'path': '/week/days'},
+            'text': {'@path': '/week/days'},
           },
         ]),
       ),

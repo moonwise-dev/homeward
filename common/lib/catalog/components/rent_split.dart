@@ -27,7 +27,7 @@ final class RentSplit extends CatalogComponent {
   Map<String, Schema> get properties => {
     'split': CatalogSchemas.slice(
       '/rentSplit',
-      'Always { "path": "/rentSplit" }, after split_rent answered.',
+      'Always { "@path": "/rentSplit" }, after split_rent answered.',
     ),
     'choose': CatalogSchemas.action,
   };
@@ -47,7 +47,7 @@ final class RentSplit extends CatalogComponent {
   {
     "id": "root",
     "component": "RentSplit",
-    "split": { "path": "/rentSplit" },
+    "split": { "@path": "/rentSplit" },
     "choose": { "event": { "name": "choose_split", "context": {} } }
   }
 ]

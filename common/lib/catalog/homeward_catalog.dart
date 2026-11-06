@@ -65,7 +65,8 @@ const homewardComponents = <CatalogComponent>[
 
 const homewardFunctions = <CatalogFunction>[];
 
-final homewardCatalog = Catalog<CatalogComponent>(
+final homewardCatalog = Catalog<CatalogComponent, FunctionApi>(
   id: homewardCatalogId,
   components: homewardComponents,
+  protocolVersion: A2uiProtocolVersion.v1_0,
 );

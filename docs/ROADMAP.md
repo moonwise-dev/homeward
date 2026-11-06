@@ -13,6 +13,8 @@ decided and why, and `docs/SPIKES.md` the evidence.
 | To schedule | A user study with Google's UX research on how developers build with GenUI: a screener, about an hour of questions beforehand, and an hour's interview | Email after the session, introduced by Abdallah Shaban |
 | ~2026-10-10 | Recording for Andrew Brogdon's GenUI video segment; the submission lists a video as optional | Andrew Brogdon, 2026-09-10; confirm it is still wanted |
 | 2026-11 | Livestream premiere, date unannounced | Andrew Brogdon, 2026-09-10 |
+| 2026-11-09 | Final checks done, end of day: the project tested and working, on the 1.0 SDKs and renderers, and every screen headed as a demo by the company | Hilda Arteaga, 2026-11-06 |
+| 2026-11-11 | The showcase | Hilda Arteaga, 2026-11-06 |
 
 ## Where We Are
 
@@ -294,6 +296,16 @@ As of 2026-10-09.
   are counted per model per key, 500 a day on each Flash-Lite, and reset at
   midnight Pacific. A demo should set `HOMEWARD_HEADERS_DEADLINE=40` and
   `HOMEWARD_FIRST_STEP_DEADLINE=60` (`docs/AGENT.md`, Model Selection).
+
+## The Showcase
+
+Google's final checks, asked on 2026-11-06 for 2026-11-09.
+
+| Asked for | State | Left to do |
+| --- | --- | --- |
+| Test the project and verify it works | The three opening messages and the confirm tap through the probe, and two of them with their taps in Chrome, on a local server on 2026-11-06 (D198) | Deploy the server and the web build, then one run of the golden script on `https://homeward-genui.web.app` with a person's key |
+| Upgrade to the 1.0 SDKs and renderers | A2UI v1.0 with `a2ui_core` 0.5.0 and `a2ui_flutter` 0.1.0, in place of `genui` (D198) | The deploy |
+| A header on each thing, saying it is a demo project by the company to showcase A2UI apps | On every screen of the app and at the top of the README (D199) | The deploy |
 
 ## The Submission
 

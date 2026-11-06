@@ -54,4 +54,4 @@ final class GalleryRepositoryProvider
   }
 }
 
-String _$galleryRepositoryHash() => r'2a972fe4def298729d9b7828e37c53790b92b7f5';
+String _$galleryRepositoryHash() => r'efa0f0b58596d8e3e8ceb8182a40be3faccd8317';

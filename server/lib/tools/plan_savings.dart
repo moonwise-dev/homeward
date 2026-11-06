@@ -118,7 +118,7 @@ final class PlanSavings extends AgentTool {
           'incomes changing',
         ],
         'draw': [
-          block('savings-plan', 'SavingsPlan', {
+          block('savings_plan', 'SavingsPlan', {
             'plan': boundTo('/savingsPlan'),
           }),
         ],

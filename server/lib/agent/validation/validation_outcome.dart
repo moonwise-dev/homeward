@@ -9,7 +9,7 @@ sealed class ValidationOutcome {
 final class Accepted extends ValidationOutcome {
   const Accepted(this.message, {this.created});
 
-  final A2uiMessage message;
+  final AgentToRendererMessage message;
   final CreateSurfaceMessage? created;
 }
 

@@ -29,7 +29,7 @@ final class HouseholdSummary extends CatalogComponent {
   Map<String, Schema> get properties => {
     'affordability': CatalogSchemas.slice(
       '/affordability',
-      'Always { "path": "/affordability" }, after compute_affordability '
+      'Always { "@path": "/affordability" }, after compute_affordability '
           'answered.',
     ),
     'confirm': CatalogSchemas.action,
@@ -65,7 +65,7 @@ final class HouseholdSummary extends CatalogComponent {
   {
     "id": "root",
     "component": "HouseholdSummary",
-    "affordability": { "path": "/affordability" },
+    "affordability": { "@path": "/affordability" },
     "confirm": { "event": { "name": "confirm_household", "context": {} } }
   }
 ]
@@ -73,7 +73,7 @@ final class HouseholdSummary extends CatalogComponent {
 
   static const _example = '''
 [
-  { "id": "root", "component": "HouseholdSummary", "affordability": { "path": "/affordability" } }
+  { "id": "root", "component": "HouseholdSummary", "affordability": { "@path": "/affordability" } }
 ]
 ''';
 }

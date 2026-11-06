@@ -7,7 +7,7 @@ void main() {
   test('describes A2UI messages without their values', () {
     expect(
       describeA2uiMessage({
-        'version': 'v0.9',
+        'version': '1.0',
         'updateComponents': {
           'surfaceId': 't1-profile',
           'components': [
@@ -15,7 +15,7 @@ void main() {
             {
               'id': 'income',
               'component': 'MoneyInput',
-              'value': {'path': '/profile/netMonthlyIncome'},
+              'value': {'@path': '/profile/netMonthlyIncome'},
               'action': {
                 'event': {'name': 'commit_profile'},
               },
@@ -48,7 +48,7 @@ void main() {
             {
               'id': 'draft',
               'component': 'StoryDraft',
-              'story': {'path': '/story'},
+              'story': {'@path': '/story'},
               'segments': [
                 {'type': 'text', 'text': 'You will go '},
                 {'type': 'mode', 'assumed': true},
@@ -125,7 +125,7 @@ void main() {
                   'name': 'commit_profile',
                   'context': {
                     'profilePath': '/profile',
-                    'marketId': {'path': '/selection/marketId'},
+                    'marketId': {'@path': '/selection/marketId'},
                   },
                 },
               },

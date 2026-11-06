@@ -8,6 +8,7 @@ import 'ui/core/messages/app_messages.dart';
 import 'routing/router.dart';
 import 'ui/core/messages/app_message_overlay.dart';
 import 'ui/core/themes/theme.dart';
+import 'ui/core/ui/app_demo_header.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,11 +28,13 @@ class HomewardApp extends ConsumerWidget {
     darkTheme: AppTheme.dark,
     themeMode: ref.watch(appearanceProvider).value ?? ThemeMode.system,
     routerConfig: ref.watch(appRouterProvider),
-    builder: (context, child) => AppMessageOverlay(
-      message: ref.watch(appMessagesProvider),
-      onDismiss: (messageId) =>
-          ref.read(appMessagesProvider.notifier).clear(messageId: messageId),
-      child: child ?? const SizedBox.shrink(),
+    builder: (context, child) => AppDemoHeader(
+      child: AppMessageOverlay(
+        message: ref.watch(appMessagesProvider),
+        onDismiss: (messageId) =>
+            ref.read(appMessagesProvider.notifier).clear(messageId: messageId),
+        child: child ?? const SizedBox.shrink(),
+      ),
     ),
   );
 }

@@ -2,9 +2,10 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:common/common.dart';
-import 'package:genui/genui.dart';
+import 'package:a2ui_core/a2ui_core.dart';
 
 import '../../domain/models/plan_conversation.dart';
+import 'renderer_surfaces.dart';
 
 typedef PlanSection = ({String type, String signature});
 
@@ -14,10 +15,13 @@ const _rootId = 'root';
 const _childKeys = {'child', 'children', 'tabs', 'trigger', 'content'};
 const _containers = {'Card', 'Column', 'Row', 'List'};
 
-PlanSnapshot planSnapshot(SurfaceContext surface) {
-  final components = surface.definition.value?.components;
-  final root = components?[_rootId];
-  if (components == null || root == null) {
+PlanSnapshot planSnapshot(RendererSurface? surface) {
+  final components = {
+    for (final component in surface?.componentsModel.all ?? <ComponentModel>[])
+      component.id: component,
+  };
+  final root = components[_rootId];
+  if (surface == null || root == null) {
     return const {};
   }
   final sectionIds = switch (root.properties) {
@@ -49,7 +53,7 @@ List<PlanChange> planChanges(PlanSnapshot before, PlanSnapshot after) => [
 
 PlanSection _section(
   String sectionId,
-  Map<String, Component> components,
+  Map<String, ComponentModel> components,
   DataModel data,
 ) {
   final seen = <String>{};
@@ -70,7 +74,7 @@ PlanSection _section(
       onChild: visit,
       onPath: (path) => parts.add([
         path,
-        _sorted(data.getValue<Object?>(DataPath(path))),
+        _sorted(data.get(path)),
       ]),
     );
   }
@@ -92,7 +96,7 @@ void _walk(
     case final String id when namesChildren:
       onChild(id);
     case final Map<Object?, Object?> map:
-      if (map['path'] case final String path when path.startsWith('/')) {
+      if (map['@path'] case final String path when path.startsWith('/')) {
         onPath(path);
       }
       for (final MapEntry(:key, :value) in map.entries) {

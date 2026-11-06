@@ -142,7 +142,7 @@ void main() {
                 {
                   'kind': 'data',
                   'data': {
-                    'version': 'v0.9',
+                    'version': '1.0',
                     'action': {
                       'surfaceId': 't1-start',
                       'name': 'keep_home',
@@ -156,8 +156,8 @@ void main() {
               'messageId': 'm-2',
               'contextId': 's-1',
               'metadata': {
-                'a2uiClientDataModel': {
-                  'version': 'v0.9',
+                'a2uiRendererDataModel': {
+                  'version': '1.0',
                   'surfaces': {
                     't1-start': {'notes': 'A garden for the dog'},
                   },

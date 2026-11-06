@@ -4,12 +4,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:homeward/catalog/homeward_catalog.dart';
 import 'package:homeward/catalog/surface_views.dart';
 import 'package:homeward/data/repositories/gallery_repository.dart';
+import 'package:homeward/data/repositories/renderer_surfaces.dart';
 import 'package:homeward/ui/core/themes/colors.dart';
 import 'package:homeward/ui/core/themes/theme.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
-  final repository = GenUiGalleryRepository(homewardGenuiCatalog());
+  final repository = A2uiGalleryRepository(
+    RendererSurfaces(homewardRendererCatalog()),
+  );
 
   testWidgets('every catalog example renders', (tester) async {
     await tester.binding.setSurfaceSize(const Size(420, 2400));
@@ -38,6 +41,11 @@ void main() {
         expect(
           tester.takeException(),
           isNull,
+          reason: '${component.name}: ${example.name}',
+        );
+        expect(
+          repository.surface(example.surfaceId).value,
+          isNotNull,
           reason: '${component.name}: ${example.name}',
         );
       }

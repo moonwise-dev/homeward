@@ -77,7 +77,7 @@ void main() {
 }
 
 Iterable<String> _boundPaths(Object? json) sync* {
-  if (json case {'path': final String path} when json.length == 1) {
+  if (json case {'@path': final String path} when json.length == 1) {
     yield path;
   } else if (json is Map<String, Object?>) {
     for (final value in json.values) {

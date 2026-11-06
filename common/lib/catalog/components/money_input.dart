@@ -26,7 +26,7 @@ final class MoneyInput extends CatalogComponent {
   Map<String, Schema> get properties => {
     'label': Schema.string(),
     'value': CatalogSchemas.bound(
-      'Where the amount is written, such as { "path": "/answers/income" }.',
+      'Where the amount is written, such as { "@path": "/answers/income" }.',
     ),
     'currency': Schema.string(
       description: 'The ISO 4217 code the buyer uses, such as SEK or EUR.',
@@ -50,20 +50,20 @@ final class MoneyInput extends CatalogComponent {
     "id": "income",
     "component": "MoneyInput",
     "label": "What you take home together",
-    "value": { "path": "/answers/income" },
+    "value": { "@path": "/answers/income" },
     "currency": "SEK",
     "period": "month"
   },
   { "id": "root", "component": "Column", "children": ["income", "send"] },
-  { "id": "send-label", "component": "Text", "text": "Use this" },
+  { "id": "send_label", "component": "Text", "text": "Use this" },
   {
     "id": "send",
     "component": "Button",
-    "child": "send-label",
+    "child": "send_label",
     "action": {
       "event": {
         "name": "give_income",
-        "context": { "income": { "path": "/answers/income" } }
+        "context": { "income": { "@path": "/answers/income" } }
       }
     }
   }

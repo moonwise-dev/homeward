@@ -26,7 +26,7 @@ final class Shortlist extends CatalogComponent {
   Map<String, Schema> get properties => {
     'homes': CatalogSchemas.slice(
       '/homes',
-      'Always { "path": "/homes" }, after search_homes or keep_homes.',
+      'Always { "@path": "/homes" }, after search_homes or keep_homes.',
     ),
     'choose': CatalogSchemas.action,
     'drop': CatalogSchemas.action,
@@ -47,7 +47,7 @@ final class Shortlist extends CatalogComponent {
   {
     "id": "root",
     "component": "Shortlist",
-    "homes": { "path": "/homes" },
+    "homes": { "@path": "/homes" },
     "choose": { "event": { "name": "work_out_home", "context": {} } },
     "drop": { "event": { "name": "drop_home", "context": {} } }
   }

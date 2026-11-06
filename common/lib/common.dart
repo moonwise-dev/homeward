@@ -1,5 +1,5 @@
 export 'a2ui/catalog_validator.dart';
-export 'a2ui/generated/a2ui_v09_schemas.dart';
+export 'a2ui/generated/a2ui_v10_schemas.dart';
 export 'affordability/affordability.dart';
 export 'affordability/affordability_answer.dart';
 export 'affordability/affordability_slice.dart';

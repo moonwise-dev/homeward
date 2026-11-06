@@ -7,7 +7,7 @@ void main() {
   test('a batched envelope becomes one message per surface', () {
     final parts = splitBatchedMessages(
       jsonEncode({
-        'version': 'v0.9',
+        'version': '1.0',
         'createSurface': [
           {'surfaceId': 't1-a', 'catalogId': 'c'},
           {'surfaceId': 't1-b', 'catalogId': 'c'},
@@ -17,11 +17,11 @@ void main() {
 
     expect(parts.map(jsonDecode), [
       {
-        'version': 'v0.9',
+        'version': '1.0',
         'createSurface': {'surfaceId': 't1-a', 'catalogId': 'c'},
       },
       {
-        'version': 'v0.9',
+        'version': '1.0',
         'createSurface': {'surfaceId': 't1-b', 'catalogId': 'c'},
       },
     ]);
@@ -47,7 +47,7 @@ void main() {
       {'id': 'root', 'component': 'Text', 'text': 'Hello'},
     ];
     final bare = jsonEncode({
-      'version': 'v0.9',
+      'version': '1.0',
       'updateComponents': components,
     });
 
@@ -55,7 +55,7 @@ void main() {
       splitBatchedMessages(bare, lastSurfaceId: 't1-story').map(jsonDecode),
       [
         {
-          'version': 'v0.9',
+          'version': '1.0',
           'updateComponents': {
             'surfaceId': 't1-story',
             'components': components,

@@ -1,21 +1,17 @@
 import 'package:common/common.dart';
-import 'package:genui/genui.dart';
 
 import '../bindings/binding_actions.dart';
 import '../catalog_item_for.dart';
 import 'questions_view.dart';
 
-final questionsItem = catalogItemFor(const Questions(), (itemContext) {
-  final data = itemContext.data as JsonMap;
-  return QuestionsView(
-    title: data['title'] as String?,
-    sendLabel: data['send'] as String?,
+final questionsItem = catalogItemFor(
+  const Questions(),
+  (_, node, props, _) => QuestionsView(
+    title: props.string('title'),
+    sendLabel: props.string('send'),
     fields: [
-      for (final field in data['fields'] as List<Object?>? ?? const [])
-        if (field case {
-          'id': final String id,
-          'label': final String label,
-        })
+      for (final field in props.list('fields'))
+        if (field case {'id': final String id, 'label': final String label})
           (
             id: id,
             label: label,
@@ -33,9 +29,9 @@ final questionsItem = catalogItemFor(const Questions(), (itemContext) {
           ),
     ],
     onSend: (answers, label) => dispatchAction(
-      itemContext,
-      data['answer'],
+      node,
+      'answer',
       adding: {'answers': answers, 'label': label},
     ),
-  );
-});
+  ),
+);

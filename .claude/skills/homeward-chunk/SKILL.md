@@ -38,7 +38,7 @@ Update the canonical doc the chunk changes before any code: `docs/AGENT.md`,
   question, a wording, or a step in code.
 - Adding a catalog block: use the `homeward-block` skill.
 - Adding an agent tool: use the `homeward-tool` skill.
-- The Dart MCP server can read the pinned sources of genui and `a2ui_core`
+- The Dart MCP server can read the pinned sources of `a2ui_flutter` and `a2ui_core`
   from the pub cache (`read_package_uris`, `rip_grep_packages`). Read them
   rather than guess.
 

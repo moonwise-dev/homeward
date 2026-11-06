@@ -243,7 +243,7 @@ final class SplitRent extends AgentTool {
               'No home was named, so this splits the first flat shown, '
               '${sample.listing.addressLine}; say so.',
         'draw': [
-          block('rent-split', 'RentSplit', {
+          block('rent_split', 'RentSplit', {
             'split': boundTo('/rentSplit'),
             'choose': sends('take_split'),
           }),

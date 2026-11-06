@@ -46,7 +46,7 @@ void main() {
             outputText: 'Sweden it is.',
             status: TurnStatus.completed,
             messages: [
-              {'version': 'v0.9'},
+              {'version': '1.0'},
             ],
           ),
         ],

@@ -27,7 +27,7 @@ final class SavingsPlan extends CatalogComponent {
   Map<String, Schema> get properties => {
     'plan': CatalogSchemas.slice(
       '/savingsPlan',
-      'Always { "path": "/savingsPlan" }, after plan_savings answered.',
+      'Always { "@path": "/savingsPlan" }, after plan_savings answered.',
     ),
   };
 
@@ -53,7 +53,7 @@ final class SavingsPlan extends CatalogComponent {
 
   static const _example = '''
 [
-  { "id": "root", "component": "SavingsPlan", "plan": { "path": "/savingsPlan" } }
+  { "id": "root", "component": "SavingsPlan", "plan": { "@path": "/savingsPlan" } }
 ]
 ''';
 }
