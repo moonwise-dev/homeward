@@ -27,9 +27,11 @@ class HomeCardView extends HookWidget {
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
     final styles = AppTextStyles.of(context);
-    final sent = useState(false);
+    final chosen = useState(false);
+    final keeping = useState(false);
     useEffect(() {
-      sent.value = false;
+      chosen.value = false;
+      keeping.value = false;
       return null;
     }, [home]);
     final listing = home.listing;
@@ -38,11 +40,6 @@ class HomeCardView extends HookWidget {
     final fee = listing.monthlyFee;
     final onChoose = this.onChoose;
     final onKeep = this.onKeep;
-    void send(VoidCallback action) {
-      sent.value = true;
-      action();
-    }
-
     return DecoratedBox(
       decoration: BoxDecoration(
         color: colors.surface,
@@ -109,16 +106,24 @@ class HomeCardView extends HookWidget {
               children: [
                 if (onChoose != null)
                   TextButton(
-                    onPressed: sent.value ? null : () => send(onChoose),
+                    onPressed: chosen.value
+                        ? null
+                        : () {
+                            chosen.value = true;
+                            onChoose();
+                          },
                     child: Text(
                       rent == null ? 'Work out this home' : 'Split this rent',
                     ),
                   ),
                 if (onKeep != null)
                   TextButton(
-                    onPressed: sent.value
+                    onPressed: keeping.value
                         ? null
-                        : () => send(() => onKeep(!home.kept)),
+                        : () {
+                            keeping.value = true;
+                            onKeep(!home.kept);
+                          },
                     child: Text(home.kept ? 'Drop from shortlist' : 'Keep'),
                   ),
               ],

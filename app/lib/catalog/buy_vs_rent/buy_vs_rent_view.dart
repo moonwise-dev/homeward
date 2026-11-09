@@ -9,6 +9,7 @@ import '../../ui/core/ui/app_chart_key.dart';
 import '../../ui/core/ui/app_figure_row.dart';
 import '../../ui/core/ui/app_line_chart.dart';
 import '../list_text.dart';
+import '../../ui/core/ui/app_status_chip.dart';
 import '../money_text.dart';
 import '../rent_text.dart';
 
@@ -36,8 +37,16 @@ class BuyVsRentView extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Buying against renting', style: styles.label),
-        const SizedBox(height: AppSpacing.xxs),
+        AppBlockTitle(
+          title: 'Buying against renting',
+          status: AppStatusChip(
+            label:
+                '${buyingCheaper ? 'Buying' : 'Renting'} ahead after '
+                '${yearsText(years.value)}',
+            tone: buyingCheaper ? AppTone.positive : AppTone.info,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
         Text(
           '${slice.homeName ?? 'This home'}: buy at ${moneyText(slice.price)}, '
           'or rent one like it at ${moneyText(slice.rent.monthly)} a month.',

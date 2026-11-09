@@ -154,7 +154,9 @@ Layout and text: `AppPage`, `AppCard`, `AppBulletList`, `AppChatBubble`,
 
 Input: `AppButton`, `AppTextField`, `AppSelectField`.
 
-Figures and status: `AppFigureRow`, `AppStatusLine`.
+Figures and status: `AppFigureRow`, `AppStatusLine`, `AppBlockTitle`,
+`AppStatusChip`, `AppStatTiles`, `AppMeter`, `AppStackedBar`, `AppDetails`,
+`AppSourceNote`.
 
 Feedback: `AppMessageOverlay`, `AppToast`, `AppLoadingIndicator`.
 
@@ -174,6 +176,33 @@ and nothing calls `ScaffoldMessenger`.
 A2UI v1.0 has no surface theme. The renderer's native theme decides
 appearance: `a2ui_flutter`'s basic components are Material widgets and take
 `AppTheme`.
+
+## App Shell
+
+Homeward is an app with GenUI inside (D200). The areas, the rail and bottom
+bar, the Overview numbers, and the assistant are Flutter screens; the cards
+in each area are the generated `plan` surface. An area is on `surfaceMuted`
+with its name in the display style, its cards 16 apart. Overview's numbers
+are `AppStatTiles` outlined on `surface`. A waiting card is an outlined chip
+with a plus. An area with news carries an `accent` dot.
+
+## Block Anatomy
+
+Every block has one anatomy (D201):
+
+1. On the plan, the card opens with its area's icon in an `accentSoft`
+   circle and the area's name in `accent` capitals.
+2. `AppBlockTitle`: the title in the title style, and an `AppStatusChip`
+   with the verdict, tinted from `positive`, `warning`, `danger`, `info`, or
+   the secondary text.
+3. The figure that answers, in `figureLarge`, with one line of what it is.
+4. A picture of it: `AppMeter` for a value against a limit, with a mark at
+   the limit and `danger` past it; `AppStackedBar` for a sum of parts; or the
+   block's chart.
+5. `AppStatTiles` for the key figures, two to four across.
+6. `AppDetails`, a toggle to the full breakdown in `AppFigureRow`s.
+7. `AppSourceNote`: sources, the estimate label, and what a figure rests on,
+   in the caption style beside an info icon.
 
 ## Demo Header
 

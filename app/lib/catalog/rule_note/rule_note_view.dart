@@ -5,6 +5,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../ui/core/themes/colors.dart';
 import '../../ui/core/themes/dimens.dart';
 import '../../ui/core/themes/text_styles.dart';
+import '../../ui/core/ui/app_source_note.dart';
+import '../../ui/core/ui/app_status_chip.dart';
 import '../money_text.dart';
 
 class RuleNoteView extends StatelessWidget {
@@ -17,52 +19,45 @@ class RuleNoteView extends StatelessWidget {
     final colors = AppColors.of(context);
     final styles = AppTextStyles.of(context);
     final source = rule.source;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 2),
-          child: Icon(Icons.gavel_outlined, size: 18, color: colors.accent),
-        ),
-        const SizedBox(width: AppSpacing.sm),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                ruleLabel(rule.kind),
-                style: styles.body.copyWith(fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: AppSpacing.xxs),
-              Text(
-                'Allows a loan up to ${moneyText(rule.maxLoan)}; '
-                '${rule.allows ? 'your loan is within it' : 'your loan is over it'}.',
-                style: styles.body.copyWith(
-                  color: rule.allows ? colors.textSecondary : colors.danger,
-                ),
-              ),
-              if (source != null) ...[
-                const SizedBox(height: AppSpacing.xs),
-                InkWell(
-                  onTap: () => launchUrl(Uri.parse(source.url)),
-                  child: Text(
-                    '${source.publisher}: ${source.title}',
-                    style: styles.label.copyWith(
-                      color: colors.accent,
-                      decoration: TextDecoration.underline,
-                      decorationColor: colors.accent,
-                    ),
-                  ),
-                ),
-                Text(
-                  'Read ${source.retrievedAt}. Sample rule for '
-                  '${rule.marketName}.',
-                  style: styles.caption,
-                ),
-              ],
-            ],
+        AppBlockTitle(
+          title: ruleLabel(rule.kind),
+          status: AppStatusChip(
+            label: rule.allows
+                ? 'Your loan is within it'
+                : 'Your loan is over it',
+            tone: rule.allows ? AppTone.positive : AppTone.danger,
           ),
         ),
+        const SizedBox(height: AppSpacing.sm),
+        Text(moneyText(rule.maxLoan), style: styles.figureLarge),
+        Text(
+          'The largest loan this rule allows',
+          style: styles.caption.copyWith(color: colors.textSecondary),
+        ),
+        if (source != null) ...[
+          const SizedBox(height: AppSpacing.sm),
+          InkWell(
+            onTap: () => launchUrl(Uri.parse(source.url)),
+            child: Text(
+              '${source.publisher}: ${source.title}',
+              style: styles.label.copyWith(
+                color: colors.accent,
+                decoration: TextDecoration.underline,
+                decorationColor: colors.accent,
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          AppSourceNote(
+            lines: [
+              'Read ${source.retrievedAt}. Sample rule for '
+                  '${rule.marketName}.',
+            ],
+          ),
+        ],
       ],
     );
   }

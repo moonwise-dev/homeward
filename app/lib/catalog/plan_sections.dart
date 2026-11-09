@@ -86,7 +86,7 @@ Widget _marked(
     sectionId: child.componentId,
     child: child.type == 'Card'
         ? buildChild(child)
-        : _Section(child: buildChild(child)),
+        : _Section(type: child.type, child: buildChild(child)),
   ),
 );
 
@@ -135,19 +135,69 @@ class _AreaEmpty extends StatelessWidget {
 }
 
 class _Section extends StatelessWidget {
-  const _Section({required this.child});
+  const _Section({required this.child, this.type});
 
   final Widget child;
+  final String? type;
 
   @override
-  Widget build(BuildContext context) => AppCard(
-    child: AnimatedSize(
-      duration: AppMotion.of(context, AppMotion.surface),
-      curve: AppMotion.curve,
-      alignment: Alignment.topCenter,
-      child: SizedBox(width: double.infinity, child: child),
-    ),
-  );
+  Widget build(BuildContext context) {
+    final type = this.type;
+    return AppCard(
+      child: AnimatedSize(
+        duration: AppMotion.of(context, AppMotion.surface),
+        curve: AppMotion.curve,
+        alignment: Alignment.topCenter,
+        child: SizedBox(
+          width: double.infinity,
+          child: type == null || !planSectionHeadings.containsKey(type)
+              ? child
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  spacing: AppSpacing.sm,
+                  children: [
+                    _Eyebrow(area: PlanArea.of(type)),
+                    child,
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Eyebrow extends StatelessWidget {
+  const _Eyebrow({required this.area});
+
+  final PlanArea area;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
+    return Row(
+      spacing: AppSpacing.xs,
+      children: [
+        Container(
+          width: 24,
+          height: 24,
+          decoration: BoxDecoration(
+            color: colors.accentSoft,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(area.selectedIcon, size: 14, color: colors.accent),
+        ),
+        Text(
+          area.label.toUpperCase(),
+          style: styles.caption.copyWith(
+            color: colors.accent,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.8,
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class PlanMarks extends InheritedWidget {

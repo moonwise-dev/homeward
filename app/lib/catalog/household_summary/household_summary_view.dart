@@ -7,6 +7,7 @@ import '../../ui/core/themes/colors.dart';
 import '../../ui/core/themes/dimens.dart';
 import '../../ui/core/themes/text_styles.dart';
 import '../../ui/core/ui/app_figure_row.dart';
+import '../../ui/core/ui/app_status_chip.dart';
 import '../money_text.dart';
 
 class HouseholdSummaryView extends HookWidget {
@@ -39,8 +40,16 @@ class HouseholdSummaryView extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Your household', style: styles.label),
-        const SizedBox(height: AppSpacing.xxs),
+        AppBlockTitle(
+          title: 'Your household',
+          status: AppStatusChip(
+            label: slice.awaitsConfirmation
+                ? '${slice.assumed.length} assumed'
+                : 'From what you said',
+            tone: slice.awaitsConfirmation ? AppTone.warning : AppTone.positive,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
         Text(
           slice.awaitsConfirmation
               ? 'What the figures rest on. Homeward assumed what you have '
