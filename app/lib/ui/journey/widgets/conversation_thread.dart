@@ -17,7 +17,6 @@ class ConversationThread extends StatelessWidget {
     required this.onShowOnPlan,
     this.pending,
     this.pendingPrompt,
-    this.plan,
     super.key,
   });
 
@@ -28,7 +27,6 @@ class ConversationThread extends StatelessWidget {
   final ValueChanged<String> onRetry;
   final VoidCallback onStop;
   final ValueChanged<String> onShowOnPlan;
-  final Widget? plan;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +68,6 @@ class ConversationThread extends StatelessWidget {
                     child: WorkingCard(entry: pending, onStop: onStop),
                   ),
                 ),
-              ?plan,
             ],
           ),
         ),

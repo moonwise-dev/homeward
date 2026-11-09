@@ -1,10 +1,11 @@
 import 'dart:async';
 
+import 'package:a2ui_core/a2ui_core.dart';
+import 'package:a2ui_flutter/a2ui_flutter.dart';
 import 'package:common/common.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:a2ui_flutter/a2ui_flutter.dart';
 
 import '../domain/models/plan_conversation.dart';
 import '../ui/core/themes/colors.dart';
@@ -13,6 +14,8 @@ import '../ui/core/themes/motion.dart';
 import '../ui/core/themes/text_styles.dart';
 import '../ui/core/ui/app_card.dart';
 import '../ui/core/ui/app_surface_entry.dart';
+import 'plan_areas.dart';
+import 'waiting_chips.dart';
 
 const _rootId = 'root';
 
@@ -32,31 +35,104 @@ ComponentImplementation asPlanSections(ComponentImplementation item) =>
             child: item.builder(context, node, props, buildChild),
           );
         }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          spacing: AppSpacing.md,
-          children: [
-            for (final child in props.children('children'))
-              if (!child.isPlaceholder && child.type != 'Divider')
+        final area = PlanAreaScope.maybeOf(context);
+        final children = [
+          for (final child in props.children('children'))
+            if (!child.isPlaceholder && child.type != 'Divider') child,
+        ];
+        if (area == null) {
+          return _Sections(
+            children: [
+              for (final child in children)
                 if (child.componentId == planMoreId)
                   KeyedSubtree(
                     key: const ValueKey(planMoreId),
                     child: buildChild(child),
                   )
                 else
-                  AppSurfaceEntry(
-                    key: ValueKey(child.componentId),
-                    child: _MarkedSection(
-                      sectionId: child.componentId,
-                      child: child.type == 'Card'
-                          ? buildChild(child)
-                          : _Section(child: buildChild(child)),
-                    ),
-                  ),
+                  _marked(child, buildChild),
+            ],
+          );
+        }
+        final shown = [
+          for (final child in children)
+            if (child.componentId != planMoreId &&
+                PlanArea.of(child.type) == area)
+              child,
+        ];
+        final waiting = [
+          for (final more in children)
+            if (more.componentId == planMoreId)
+              for (final card in waitingCardsIn(more))
+                if (PlanArea.of(card.type) == area) card,
+        ];
+        return _Sections(
+          children: [
+            for (final child in shown) _marked(child, buildChild),
+            if (shown.isEmpty) _AreaEmpty(area: area),
+            if (waiting.isNotEmpty)
+              WaitingChips(key: const ValueKey(planMoreId), cards: waiting),
           ],
         );
       },
     );
+
+Widget _marked(
+  ComponentNode<ComponentImplementation> child,
+  ChildWidgetBuilder buildChild,
+) => AppSurfaceEntry(
+  key: ValueKey(child.componentId),
+  child: _MarkedSection(
+    sectionId: child.componentId,
+    child: child.type == 'Card'
+        ? buildChild(child)
+        : _Section(child: buildChild(child)),
+  ),
+);
+
+class _Sections extends StatelessWidget {
+  const _Sections({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    spacing: AppSpacing.md,
+    children: children,
+  );
+}
+
+class _AreaEmpty extends StatelessWidget {
+  const _AreaEmpty({required this.area});
+
+  final PlanArea area;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final styles = AppTextStyles.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+      child: Column(
+        spacing: AppSpacing.xs,
+        children: [
+          Icon(area.icon, color: colors.textTertiary, size: 32),
+          Text(
+            area.empty,
+            style: styles.body.copyWith(color: colors.textSecondary),
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            'Ask the assistant, and it appears here.',
+            style: styles.caption.copyWith(color: colors.textTertiary),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class _Section extends StatelessWidget {
   const _Section({required this.child});
