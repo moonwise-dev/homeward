@@ -307,14 +307,6 @@ Google's final checks, asked on 2026-11-06 for 2026-11-09.
 | Upgrade to the 1.0 SDKs and renderers | A2UI v1.0 with `a2ui_core` 0.5.0 and `a2ui_flutter` 0.1.0, in place of `genui` (D198) | The deploy |
 | A header on each thing, saying it is a demo project by the company to showcase A2UI apps | On every screen of the app and at the top of the README (D199) | The deploy |
 
-On 2026-11-09, after the deploy, the owner asked for a real app with GenUI
-inside and better blocks, to try before the showcase: the four areas and the
-assistant (D200) and one anatomy for every block (D201), checked locally on
-the three opening messages and their taps. The tag `showcase-ready` marks the
-build that is live, to return to: `git checkout showcase-ready`, then
-`make deploy-server` and `make deploy-web`. Left: the owner's look, then a
-push and a deploy on their word.
-
 ## The Submission
 
 What Google asked for on 2026-10-06, due 2026-10-16 (D172).

@@ -6,11 +6,6 @@ import '../../ui/core/themes/colors.dart';
 import '../../ui/core/themes/dimens.dart';
 import '../../ui/core/themes/text_styles.dart';
 import '../../ui/core/ui/app_figure_row.dart';
-import '../../ui/core/ui/app_details.dart';
-import '../../ui/core/ui/app_meter.dart';
-import '../../ui/core/ui/app_source_note.dart';
-import '../../ui/core/ui/app_stat_tiles.dart';
-import '../../ui/core/ui/app_status_chip.dart';
 import '../money_text.dart';
 
 class PurchaseCostsTableView extends StatelessWidget {
@@ -30,74 +25,42 @@ class PurchaseCostsTableView extends StatelessWidget {
           in slice.purchaseCosts.map((line) => line.source).nonNulls)
         source.id: source,
     }.values;
-    final short = cashNeeded != null && savings != null && cashNeeded > savings;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppBlockTitle(
-          title: 'Costs on the day',
-          status: cashNeeded == null || savings == null
-              ? null
-              : AppStatusChip(
-                  label: short
-                      ? 'Short by ${moneyText(cashNeeded - savings)}'
-                      : 'Your savings cover it',
-                  tone: short ? AppTone.danger : AppTone.positive,
-                ),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        if (cashNeeded != null) ...[
-          Text(moneyText(cashNeeded), style: styles.figureLarge),
-          Text(
-            'Cash needed on the day: the down payment and the purchase costs',
-            style: styles.caption.copyWith(color: colors.textSecondary),
-          ),
-        ],
-        if (cashNeeded != null && savings != null) ...[
-          const SizedBox(height: AppSpacing.md),
-          AppMeter(
-            value: cashNeeded.minorUnits.toDouble(),
-            limit: savings.minorUnits.toDouble(),
-            valueLabel: 'Cash needed ${moneyText(cashNeeded)}',
-            limitLabel: 'Savings ${moneyText(savings)}',
-          ),
-        ],
-        const SizedBox(height: AppSpacing.md),
-        AppStatTiles(
-          stats: [
-            appStat('Down payment', moneyText(slice.downPayment)),
-            if (total != null) appStat('Taxes and fees', moneyText(total)),
-            if (savings != null) appStat('Your savings', moneyText(savings)),
-          ],
-        ),
+        Text('Costs on the day', style: styles.label),
+        const SizedBox(height: AppSpacing.xs),
         if (slice.purchaseCosts.isEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: AppSpacing.sm),
-            child: Text(
-              'The sample rules for ${slice.marketName} list no purchase '
-              'taxes or fees.',
-              style: styles.body,
-            ),
-          )
-        else
-          AppDetails(
-            label: 'Show each cost',
-            openLabel: 'Hide each cost',
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (final line in slice.purchaseCosts) ..._line(line, styles),
-                if (total != null) ...[
-                  const Divider(height: AppSpacing.md),
-                  AppFigureRow(
-                    label: 'Costs on the day',
-                    figure: moneyText(total),
-                    isTotal: true,
-                  ),
-                ],
-              ],
-            ),
+          Text(
+            'The sample rules for ${slice.marketName} list no purchase taxes '
+            'or fees.',
+            style: styles.body,
           ),
+        for (final line in slice.purchaseCosts) ..._line(line, styles),
+        if (total != null && slice.purchaseCosts.isNotEmpty) ...[
+          const Divider(height: AppSpacing.md),
+          AppFigureRow(
+            label: 'Costs on the day',
+            figure: moneyText(total),
+            isTotal: true,
+          ),
+        ],
+        AppFigureRow(
+          label: 'Down payment',
+          figure: moneyText(slice.downPayment),
+        ),
+        if (cashNeeded != null)
+          AppFigureRow(
+            label: 'Cash needed',
+            figure: moneyText(cashNeeded),
+            isTotal: true,
+            color: savings != null && cashNeeded > savings
+                ? colors.danger
+                : colors.text,
+          ),
+        if (savings != null)
+          AppFigureRow(label: 'Your savings', figure: moneyText(savings)),
+        const SizedBox(height: AppSpacing.sm),
         for (final source in sources)
           InkWell(
             onTap: () => launchUrl(Uri.parse(source.url)),
@@ -110,11 +73,10 @@ class PurchaseCostsTableView extends StatelessWidget {
               ),
             ),
           ),
-        const SizedBox(height: AppSpacing.xs),
-        AppSourceNote(
-          lines: [
-            'Sample rules for ${slice.marketName}. An estimate, not advice.',
-          ],
+        const SizedBox(height: AppSpacing.xxs),
+        Text(
+          'Sample rules for ${slice.marketName}. An estimate, not advice.',
+          style: styles.caption,
         ),
       ],
     );

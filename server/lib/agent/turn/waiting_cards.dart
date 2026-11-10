@@ -23,7 +23,6 @@ List<Map<String, Object?>> waitingCardButtons(
     if (homes.isNotEmpty)
       (
         id: 'homes',
-        type: _homeCard,
         label: 'More homes',
         opens: {'cards': homes.take(_homesAtOnce).toList()},
       ),
@@ -32,7 +31,7 @@ List<Map<String, Object?>> waitingCardButtons(
         if (waiting.where((card) => card.type == type).toList() case [
           final card,
         ])
-          (id: card.id, type: type, label: label, opens: {'card': card.id}),
+          (id: card.id, label: label, opens: {'card': card.id}),
   ];
   if (offered.isEmpty) {
     return const [];
@@ -54,7 +53,7 @@ List<Map<String, Object?>> waitingCardButtons(
         'action': {
           'event': {
             'name': showCardAction,
-            'context': {...card.opens, 'type': card.type, 'label': card.label},
+            'context': {...card.opens, 'label': card.label},
           },
         },
       }),

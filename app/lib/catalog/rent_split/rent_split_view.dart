@@ -7,7 +7,6 @@ import '../../ui/core/themes/dimens.dart';
 import '../../ui/core/themes/text_styles.dart';
 import '../../ui/core/ui/app_button.dart';
 import '../../ui/core/ui/app_figure_row.dart';
-import '../../ui/core/ui/app_status_chip.dart';
 import '../money_text.dart';
 import '../rent_text.dart';
 
@@ -39,14 +38,8 @@ class RentSplitView extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppBlockTitle(
-          title: 'Splitting the rent',
-          status: AppStatusChip(
-            label: splitRuleLabel(split.rule),
-            tone: taken ? AppTone.positive : AppTone.neutral,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.xs),
+        Text('Splitting the rent', style: styles.label),
+        const SizedBox(height: AppSpacing.xxs),
         Text(
           [
             ?slice.homeName,

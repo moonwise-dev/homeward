@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import '../../ui/core/themes/colors.dart';
 import '../../ui/core/themes/dimens.dart';
 import '../../ui/core/themes/text_styles.dart';
-import '../../ui/core/ui/app_source_note.dart';
-import '../../ui/core/ui/app_stat_tiles.dart';
-import '../../ui/core/ui/app_status_chip.dart';
+import '../../ui/core/ui/app_figure_row.dart';
 import '../../ui/core/ui/app_line_chart.dart';
 import '../money_text.dart';
 
@@ -31,16 +29,8 @@ class StressTestChartView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppBlockTitle(
-          title: 'If rates rise',
-          status: AppStatusChip(
-            label: withinLimit
-                ? 'Holds at ${percentText(curve.stressRate)}'
-                : 'Too much at ${percentText(curve.stressRate)}',
-            tone: withinLimit ? AppTone.positive : AppTone.danger,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.md),
+        Text('If rates rise', style: styles.label),
+        const SizedBox(height: AppSpacing.sm),
         AppLineChart(
           summary: [
             'The monthly cost goes from ${moneyText(today)} at '
@@ -72,18 +62,18 @@ class StressTestChartView extends StatelessWidget {
           limit: limit == null ? null : majorUnits(limit),
           limitLabel: limit == null ? null : 'Most you can carry',
         ),
-        const SizedBox(height: AppSpacing.md),
-        AppStatTiles(
-          stats: [
-            appStat('A month today', moneyText(today)),
-            appStat(
-              'A month at ${percentText(curve.stressRate)}',
-              moneyText(stressed),
-              color: withinLimit ? null : colors.danger,
-            ),
-            if (limit != null) appStat('Most you can carry', moneyText(limit)),
-          ],
+        const SizedBox(height: AppSpacing.sm),
+        AppFigureRow(label: 'A month today', figure: moneyText(today)),
+        AppFigureRow(
+          label: 'A month at ${percentText(curve.stressRate)}',
+          figure: moneyText(stressed),
+          color: withinLimit ? colors.text : colors.danger,
         ),
+        if (limit != null)
+          AppFigureRow(
+            label: 'Most you can carry a month',
+            figure: moneyText(limit),
+          ),
         if (limit != null && limitKind != null)
           Padding(
             padding: const EdgeInsets.only(top: AppSpacing.xxs),
@@ -94,14 +84,13 @@ class StressTestChartView extends StatelessWidget {
             ),
           ),
         const SizedBox(height: AppSpacing.sm),
-        AppSourceNote(
-          lines: [
-            [
-              if (curve.afterDeduction) 'After the interest deduction.',
-              'Loan payments only. Sample rules and rates for '
-                  '${slice.marketName}. An estimate, not advice.',
-            ].join(' '),
-          ],
+        Text(
+          [
+            if (curve.afterDeduction) 'After the interest deduction.',
+            'Loan payments only. Sample rules and rates for '
+                '${slice.marketName}. An estimate, not advice.',
+          ].join(' '),
+          style: styles.caption,
         ),
       ],
     );
