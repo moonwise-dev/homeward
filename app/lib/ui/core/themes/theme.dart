@@ -13,10 +13,12 @@ abstract final class AppTheme {
     final styles = AppTextStyles(colors);
     final colorScheme = ColorScheme(
       brightness: brightness,
-      primary: colors.accent,
-      onPrimary: colors.onAccent,
+      primary: colors.brand,
+      onPrimary: colors.onBrand,
       secondary: colors.accent,
       onSecondary: colors.onAccent,
+      secondaryContainer: colors.surfaceMuted,
+      onSecondaryContainer: colors.text,
       surface: colors.surface,
       onSurface: colors.text,
       onSurfaceVariant: colors.textSecondary,
@@ -30,7 +32,7 @@ abstract final class AppTheme {
 
     OutlineInputBorder fieldBorder(Color color, [double width = 1]) =>
         OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadii.sm),
+          borderRadius: BorderRadius.circular(AppRadii.md),
           borderSide: BorderSide(color: color, width: width),
         );
 
@@ -38,6 +40,8 @@ abstract final class AppTheme {
       StadiumBorder(),
     );
     const buttonSize = WidgetStatePropertyAll(Size(64, AppSizes.control));
+    final quietFill = WidgetStatePropertyAll(colors.surfaceMuted);
+    final quietInk = WidgetStatePropertyAll(colors.text);
 
     return ThemeData(
       useMaterial3: true,
@@ -45,6 +49,10 @@ abstract final class AppTheme {
       colorScheme: colorScheme,
       extensions: [colors],
       scaffoldBackgroundColor: colors.background,
+      splashFactory: NoSplash.splashFactory,
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      hoverColor: colors.text.withValues(alpha: 0.04),
       textTheme: TextTheme(
         displayLarge: styles.display,
         displayMedium: styles.display,
@@ -68,21 +76,22 @@ abstract final class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         foregroundColor: colors.text,
-        titleTextStyle: styles.title,
+        titleTextStyle: styles.title.copyWith(fontSize: 18),
+        centerTitle: false,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: colors.surface,
+        fillColor: colors.surfaceMuted,
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
-          vertical: AppSpacing.sm,
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.md - 2,
         ),
         hintStyle: styles.body.copyWith(color: colors.textTertiary),
         labelStyle: styles.label,
         errorStyle: styles.caption.copyWith(color: colors.danger),
-        border: fieldBorder(colors.border),
-        enabledBorder: fieldBorder(colors.border),
-        focusedBorder: fieldBorder(colors.accent, 1.5),
+        border: fieldBorder(Colors.transparent),
+        enabledBorder: fieldBorder(Colors.transparent),
+        focusedBorder: fieldBorder(colors.brand, 1.5),
         errorBorder: fieldBorder(colors.danger),
         focusedErrorBorder: fieldBorder(colors.danger, 1.5),
       ),
@@ -99,9 +108,9 @@ abstract final class AppTheme {
           minimumSize: buttonSize,
           shape: buttonShape,
           elevation: const WidgetStatePropertyAll(0),
-          side: WidgetStatePropertyAll(
-            BorderSide(color: colors.borderStrong),
-          ),
+          backgroundColor: quietFill,
+          foregroundColor: quietInk,
+          textStyle: WidgetStatePropertyAll(styles.button),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -109,16 +118,57 @@ abstract final class AppTheme {
           minimumSize: buttonSize,
           shape: buttonShape,
           textStyle: WidgetStatePropertyAll(styles.button),
-          side: WidgetStatePropertyAll(
-            BorderSide(color: colors.borderStrong),
-          ),
+          backgroundColor: quietFill,
+          foregroundColor: quietInk,
+          side: const WidgetStatePropertyAll(BorderSide.none),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
           minimumSize: buttonSize,
           textStyle: WidgetStatePropertyAll(styles.button),
+          foregroundColor: WidgetStatePropertyAll(colors.accent),
         ),
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: WidgetStatePropertyAll(colors.text),
+        ),
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: colors.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 8,
+        shadowColor: colors.shadow,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          side: BorderSide(color: colors.border),
+        ),
+        textStyle: styles.body,
+      ),
+      sliderTheme: SliderThemeData(
+        activeTrackColor: colors.brand,
+        inactiveTrackColor: colors.surfaceMuted,
+        thumbColor: colors.brand,
+        overlayColor: colors.accentSoft,
+        trackHeight: 4,
+      ),
+      switchTheme: SwitchThemeData(
+        trackColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? colors.brand
+              : colors.surfaceMuted,
+        ),
+        thumbColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? colors.onBrand
+              : colors.textTertiary,
+        ),
+        trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: colors.brand,
+        linearTrackColor: colors.surfaceMuted,
       ),
       checkboxTheme: CheckboxThemeData(
         shape: RoundedRectangleBorder(
@@ -126,18 +176,46 @@ abstract final class AppTheme {
         ),
       ),
       dividerTheme: DividerThemeData(color: colors.border, space: 1),
+      cardTheme: CardThemeData(
+        color: colors.surfaceMuted,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+        ),
+      ),
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected)
+                ? colors.brand
+                : colors.surfaceMuted,
+          ),
+          foregroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected)
+                ? colors.onBrand
+                : colors.text,
+          ),
+          side: WidgetStatePropertyAll(
+            BorderSide(color: colors.surface, width: 2),
+          ),
+          textStyle: WidgetStatePropertyAll(styles.label),
+        ),
+      ),
       chipTheme: ChipThemeData(
-        backgroundColor: colors.surface,
-        selectedColor: colors.accentSoft,
-        side: WidgetStateBorderSide.resolveWith(
-          (states) => BorderSide(
-            color: states.contains(WidgetState.selected)
-                ? colors.accent
-                : colors.border,
+        backgroundColor: colors.surfaceMuted,
+        selectedColor: colors.brand,
+        side: BorderSide.none,
+        labelStyle: styles.label.copyWith(
+          color: WidgetStateColor.resolveWith(
+            (states) => states.contains(WidgetState.selected)
+                ? colors.onBrand
+                : colors.text,
           ),
         ),
-        labelStyle: styles.label.copyWith(color: colors.text),
-        checkmarkColor: colors.accent,
+        checkmarkColor: colors.onBrand,
+        showCheckmark: false,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadii.pill),
         ),

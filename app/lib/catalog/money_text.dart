@@ -76,3 +76,16 @@ String monthText(CalendarDate date) =>
 String exchangeRateText(ExchangeRate rate) =>
     'Your ${rate.from.code} counted at 1 ${rate.from.code} = ${rate.rate} '
     '${rate.to.code}, ${rate.source.publisher}, ${rate.asOf}.';
+
+String pinMoneyText(Money money) {
+  final major = majorUnits(money);
+  final thousands = major / 1000;
+  final figure = major < 1000
+      ? NumberFormat('#,##0', 'en').format(major)
+      : '${NumberFormat(thousands < 100 ? '0.0' : '0', 'en').format(thousands)}k';
+  return switch (_symbols[money.currency.code]) {
+    final symbol? => '$symbol$figure',
+    null =>
+      '$figure ${money.currency.code == 'SEK' ? 'kr' : money.currency.code}',
+  };
+}

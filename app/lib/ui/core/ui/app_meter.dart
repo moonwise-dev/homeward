@@ -31,7 +31,8 @@ class AppMeter extends StatelessWidget {
     final filled = scale <= 0 ? 0.0 : (value / scale).clamp(0.0, 1.0);
     final mark = scale <= 0 ? 1.0 : (limit / scale).clamp(0.0, 1.0);
     final over = value > limit;
-    final fill = color ?? (over ? colors.danger : colors.accent);
+    final fill = color ?? (over ? colors.alert : colors.brand);
+    final ink = color ?? (over ? colors.warning : colors.accent);
     return Semantics(
       label: '$valueLabel against $limitLabel',
       excludeSemantics: true,
@@ -85,7 +86,7 @@ class AppMeter extends StatelessWidget {
               Expanded(
                 child: Text(
                   valueLabel,
-                  style: styles.caption.copyWith(color: fill),
+                  style: styles.caption.copyWith(color: ink),
                 ),
               ),
               Text(

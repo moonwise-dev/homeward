@@ -3,9 +3,9 @@ import 'package:a2ui_flutter/a2ui_flutter.dart';
 import 'package:common/common.dart';
 import 'package:flutter/material.dart';
 
-import '../ui/core/themes/colors.dart';
 import '../ui/core/themes/dimens.dart';
 import '../ui/core/themes/text_styles.dart';
+import '../ui/core/ui/app_option.dart';
 import 'bindings/binding_actions.dart';
 
 typedef WaitingCard = ({
@@ -42,40 +42,44 @@ String _typeOfLabel(String label) => label == 'More homes'
               ?.key ??
           '';
 
-class WaitingChips extends StatelessWidget {
-  const WaitingChips({required this.cards, super.key});
+class WaitingTiles extends StatelessWidget {
+  const WaitingTiles({required this.cards, super.key});
 
   final List<WaitingCard> cards;
 
+  static const _minTileWidth = 240.0;
+
   @override
-  Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
-    final styles = AppTextStyles.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: AppSpacing.xs,
-      children: [
-        Text(
-          'Also worked out for you',
-          style: styles.caption.copyWith(color: colors.textTertiary),
-        ),
-        Wrap(
-          spacing: AppSpacing.xs,
-          runSpacing: AppSpacing.xs,
-          children: [
-            for (final card in cards)
-              ActionChip(
-                avatar: Icon(Icons.add, size: 18, color: colors.accent),
-                label: Text(card.label),
-                labelStyle: styles.label.copyWith(color: colors.text),
-                backgroundColor: colors.surface,
-                side: BorderSide(color: colors.border),
-                shape: const StadiumBorder(),
-                onPressed: () => dispatchAction(card.button, 'action'),
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      final columns = (constraints.maxWidth / _minTileWidth).floor().clamp(
+        1,
+        2,
+      );
+      final width =
+          (constraints.maxWidth - AppSpacing.xs * (columns - 1)) / columns;
+      return Wrap(
+        spacing: AppSpacing.xs,
+        runSpacing: AppSpacing.xs,
+        children: [
+          SizedBox(
+            width: constraints.maxWidth,
+            child: Text(
+              'Also worked out for you',
+              style: AppTextStyles.of(context).label,
+            ),
+          ),
+          for (final card in cards)
+            SizedBox(
+              width: width,
+              child: AppOptionTile(
+                title: card.label,
+                icon: Icons.add_rounded,
+                onTap: () => dispatchAction(card.button, 'action'),
               ),
-          ],
-        ),
-      ],
-    );
-  }
+            ),
+        ],
+      );
+    },
+  );
 }

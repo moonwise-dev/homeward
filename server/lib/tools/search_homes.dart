@@ -35,6 +35,20 @@ final class SearchHomes extends AgentTool {
       'what they like.';
 
   @override
+  Map<String, Object?>? argumentsForTap(
+    String action,
+    Map<String, Object?> context,
+  ) => switch ((action, context)) {
+    (
+      'choose_areas',
+      {'city': final String city, 'areas': final List<Object?> areas},
+    )
+        when areas.isNotEmpty =>
+      {'city': city, 'areas': areas},
+    _ => null,
+  };
+
+  @override
   Map<String, Object?> get parameters => {
     'type': 'object',
     'properties': {

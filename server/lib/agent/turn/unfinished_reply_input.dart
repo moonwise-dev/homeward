@@ -6,7 +6,7 @@ String unfinishedReplyInput({required bool notes}) => [
         'the buyer.'
   else
     'It has no words for the buyer.',
-  'Write one to three sentences now, for the buyer and nothing else, that '
+  'Write one or two short sentences now, for the buyer and nothing else, that '
       'say what you worked out and, if you need something from them, what '
       'you ask. Write only those sentences; the screen is already drawn.',
 ].join('\n');

@@ -49,7 +49,7 @@ final class Providers {
         sessions: repository,
         createInteraction: createInteraction,
         prompts: prompts,
-        tools: ToolBelt(homewardTools(markets, research)),
+        tools: ToolBelt(homewardTools(markets, research), offered: mapTools),
         catalog: CatalogValidator(homewardCatalogDocument()),
         readInteraction: readInteraction,
         settings: TurnSettings(

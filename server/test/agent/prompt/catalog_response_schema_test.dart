@@ -47,6 +47,7 @@ void main() {
           'Questions',
           'AffordabilitySummary',
           'RuleNote',
+          'MustHave',
         ])
           '#/\$defs/component_$name',
       ],

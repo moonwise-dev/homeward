@@ -3,6 +3,7 @@ import 'brief_slice.dart';
 import 'buy_vs_rent_slice.dart';
 import 'data_slice.dart';
 import 'homes_slice.dart';
+import 'map_slice.dart';
 import 'markets_slice.dart';
 import 'places_slice.dart';
 import 'reads_slice.dart';
@@ -19,6 +20,7 @@ const dataModelSlices = <DataSlice>[
   swipeSlice,
   placesSlice,
   weekSlice,
+  mapSlice,
   rentSplitSlice,
   buyVsRentSlice,
   savingsPlanSlice,

@@ -54,7 +54,7 @@ class _StatTile extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: filled ? colors.surfaceMuted : colors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.sm),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         border: filled ? null : Border.all(color: colors.border),
       ),
       child: Padding(

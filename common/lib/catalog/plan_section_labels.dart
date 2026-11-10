@@ -18,6 +18,8 @@ const planSectionHeadings = {
   'ListingQuote': 'What the listing says',
   'MarketSnapshotCard': 'The city at a glance',
   'WeekMap': 'Your week on the map',
+  'HomeMap': 'Homes on the map',
+  'MustHave': 'Must-haves',
   'WeeklyTravel': 'Your week of travel',
   'RouteSummary': 'A route',
   'RuleNote': 'The lending rule',

@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 
-import '../../ui/core/themes/colors.dart';
 import '../../ui/core/themes/dimens.dart';
 import '../../ui/core/themes/text_styles.dart';
 import '../../ui/core/ui/app_button.dart';
+import '../../ui/core/ui/app_option.dart';
 import '../../ui/core/ui/app_text_field.dart';
 
 enum QuestionKind { money, number, text, pick }
@@ -208,34 +208,17 @@ class _Pick extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
     final styles = AppTextStyles.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(field.label, style: styles.label),
         const SizedBox(height: AppSpacing.xs),
-        Wrap(
-          spacing: AppSpacing.xs,
-          runSpacing: AppSpacing.xs,
-          children: [
-            for (final option in field.options)
-              ChoiceChip(
-                label: Text(option),
-                selected: chosen == option,
-                showCheckmark: false,
-                labelStyle: styles.body.copyWith(
-                  color: chosen == option ? colors.accent : colors.text,
-                  fontWeight: chosen == option ? FontWeight.w600 : null,
-                ),
-                selectedColor: colors.accentSoft,
-                backgroundColor: colors.surface,
-                side: BorderSide(
-                  color: chosen == option ? colors.accent : colors.border,
-                ),
-                onSelected: enabled ? (_) => onChosen(option) : null,
-              ),
-          ],
+        AppOptionPills(
+          labels: field.options,
+          selected: chosen,
+          enabled: enabled,
+          onSelect: onChosen,
         ),
       ],
     );

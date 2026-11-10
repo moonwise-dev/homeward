@@ -13,30 +13,41 @@ final class AppTextStyles {
 
   final AppColors colors;
 
-  TextStyle get display => GoogleFonts.fraunces(
-    fontSize: 28,
+  TextStyle get display => GoogleFonts.inter(
+    fontSize: 32,
     fontWeight: FontWeight.w600,
-    height: 1.2,
+    height: 1.15,
+    letterSpacing: -0.9,
     color: colors.text,
   );
 
-  TextStyle get title => GoogleFonts.fraunces(
-    fontSize: 20,
+  TextStyle get title => GoogleFonts.inter(
+    fontSize: 19,
     fontWeight: FontWeight.w600,
     height: 1.25,
+    letterSpacing: -0.35,
+    color: colors.text,
+  );
+
+  TextStyle get lead => GoogleFonts.inter(
+    fontSize: 19,
+    fontWeight: FontWeight.w500,
+    height: 1.42,
+    letterSpacing: -0.3,
     color: colors.text,
   );
 
   TextStyle get body => GoogleFonts.inter(
     fontSize: 15,
     fontWeight: FontWeight.w400,
-    height: 1.45,
+    height: 1.5,
+    letterSpacing: -0.1,
     color: colors.text,
   );
 
   TextStyle get label => GoogleFonts.inter(
     fontSize: 13,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w600,
     height: 1.3,
     color: colors.textSecondary,
   );
@@ -62,17 +73,19 @@ final class AppTextStyles {
   );
 
   TextStyle get figureLarge => GoogleFonts.inter(
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: FontWeight.w600,
-    height: 1.15,
+    height: 1.1,
+    letterSpacing: -1.1,
     color: colors.text,
     fontFeatures: _tabular,
   );
 
   TextStyle get figure => GoogleFonts.inter(
     fontSize: 17,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w600,
     height: 1.3,
+    letterSpacing: -0.3,
     color: colors.text,
     fontFeatures: _tabular,
   );

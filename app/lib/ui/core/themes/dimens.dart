@@ -12,12 +12,14 @@ abstract final class AppRadii {
   static const double sm = 8;
   static const double md = 12;
   static const double lg = 16;
+  static const double xl = 22;
   static const double pill = 999;
 }
 
 abstract final class AppSizes {
   static const double control = 48;
-  static const double contentWidth = 640;
+  static const double contentWidth = 680;
+  static const double stepWidth = 600;
   static const double widePage = 1040;
   static const double overlayCard = 420;
   static const double sidePane = 380;

@@ -11,6 +11,9 @@ Money monthlyInterestDeduction({
   if (borrowers < 1) {
     throw ArgumentError.value(borrowers, 'borrowers', 'Must be positive');
   }
+  if (monthlyInterest.minorUnits <= 0) {
+    return monthlyInterest.copyWith(minorUnits: 0);
+  }
   final sharing = rule.perBorrower ? borrowers : 1;
   final yearlyInterest = monthlyInterest * 12;
   final share = yearlyInterest.copyWith(

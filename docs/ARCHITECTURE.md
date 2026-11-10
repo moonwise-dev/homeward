@@ -450,7 +450,7 @@ renders identically in the catalog gallery and in the journey.
 | --- | --- |
 | `/startup` | Waits for the key, opens a new plan, and goes to it |
 | `/key` | Gemini key |
-| `/plans/:sessionId` | The app for one plan: its areas and the assistant (D200) |
+| `/plans/:sessionId` | One plan: the opening card, then the map (D207) |
 | `/gallery` | Catalog gallery |
 | `/gallery/:component` | One catalog component |
 
@@ -466,17 +466,29 @@ renders identically in the catalog gallery and in the journey.
 
 ### Layout
 
-A plan is an app with GenUI inside (D200): four areas, Overview, Money,
-Homes, and Places, each showing the blocks of the one `plan` surface that
-belong to it (`app/lib/catalog/plan_areas.dart`), and the assistant, which is
-the conversation with each exchange and its inline ask. Overview opens on
-the household's numbers, native tiles read from the slices the tools seeded
-(`overview_header.dart`). The cards that wait are chips in their own area.
+A plan is one screen, the map (D206, D207), `app/lib/ui/explore/`. Before
+the first message, an opening card over a map of Europe takes one sentence
+or one of three stories. While the first answer comes, the map flies to the
+city the words name, with the city's name and no other words. Then
+`ExploreScreen` reads `/map` from the `plan` surface's data model
+(`usePlanData`) and draws, natively: price pins for every home, the places
+of the week, the routes of the homes in view, and a count of homes left on
+the map (`map_canvas.dart`); beside it, Gemini's line, the household's
+story in four slots whose chips open native editors and send `edit_story`
+(`story_panel.dart`, `story_editor.dart`, D208), Gemini's inline row of
+`MustHave`s rendered through A2UI in the last slot, a travel limit to the
+place they go most, and the homes left, ranked (`explore_parts.dart`). `ExploreScope` hands the must-haves the homes and
+the narrowing, so a tap narrows at once with no turn. A pin or a row opens
+the home's sheet, and two kept homes compare side by side
+(`home_sheet.dart`). Children, a new place, and Tell Homeward more open the
+ask sheet (`ask_sheet.dart`); words are a new Gemini turn.
 
 | Width | Layout |
 | --- | --- |
-| < 1000 dp | A bottom bar: Assistant, then the four areas. A chip in a reply opens its card's area and scrolls to it; an area the last turn changed carries a dot. The wire inspector opens as a sheet. |
-| ≥ 1000 dp | A navigation rail, the selected area, and the assistant on the right, 420 dp wide. When a turn ends, the area of the card it added opens. Under the hood, in the menu, opens the wire inspector as a fourth pane. |
+| < 1000 dp | The map fills the screen, and the panel is a sheet that slides up over it. Under the hood, in the menu, opens the wire inspector as a sheet. |
+| ≥ 1000 dp | The map fills the screen, and the panel, 440 dp wide, floats on its left. Under the hood opens the wire inspector as a pane on the right. |
+
+Show what Gemini made, in the menu, outlines every part a surface drew.
 
 ### Screens
 

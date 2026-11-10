@@ -80,6 +80,8 @@ declaration, run `make catalog`.
     left empty.
   - `@tap <action> {context}` sends any block's action with context added,
     such as a down payment.
+  - `@app <action> {context}` sends an action the app sends from its own
+    controls, such as `edit_story` with `{"savings": 900000}`.
   - `HOMEWARD_PROBE_DETAIL` prints what Gemini wrote in each block and the
     brief; `HOMEWARD_PROBE_PAUSE_SECONDS` paces the turns under Flash-Lite's
     requests a minute.

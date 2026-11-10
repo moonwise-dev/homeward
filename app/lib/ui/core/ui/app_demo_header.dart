@@ -20,7 +20,7 @@ class AppDemoHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Material(
-          color: colors.accentSoft,
+          color: Color.alphaBlend(colors.accentSoft, colors.background),
           child: SafeArea(
             bottom: false,
             child: Semantics(

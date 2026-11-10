@@ -153,10 +153,11 @@ arc:
 1. A few words become a plan: the household's story, the steps Homeward
    will work through, what it deduced marked as assumed, and one card asked
    inline.
-2. Back and forth, the app fills in for this household (D200): Overview
-   with its numbers and the household, Money with what it can afford,
-   Places with its week on a map, and Homes. A figure that
-   cannot be right is questioned, not used.
+2. One map, from the whole city to two or three homes (D206, D207): every
+   sample home priced for this household, the ones over budget fading, a
+   travel limit and Gemini's must-haves narrowing the rest at once, each
+   home with a six-word why. A figure that cannot be right is questioned,
+   not used.
 3. Homes appear with what each costs this household a month and why it fits;
    the mortgage options and the stress test follow for the one they like.
 4. A correction reshapes the plan in place.

@@ -137,14 +137,23 @@ class _LineChartPainter extends CustomPainter {
           ..lineTo(at(points.last.x, minY).dx, plot.bottom)
           ..lineTo(at(points.first.x, minY).dx, plot.bottom)
           ..close(),
-        Paint()..color = colors.accentSoft,
+        Paint()
+          ..shader = LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              colors.brand.withValues(alpha: 0.22),
+              colors.brand.withValues(alpha: 0),
+            ],
+          ).createShader(plot),
       )
       ..drawPath(
         line,
         Paint()
-          ..color = colors.accent
+          ..color = colors.brand
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 2
+          ..strokeWidth = 2.5
+          ..strokeCap = StrokeCap.round
           ..strokeJoin = StrokeJoin.round,
       );
     if (comparison.length > 1) {

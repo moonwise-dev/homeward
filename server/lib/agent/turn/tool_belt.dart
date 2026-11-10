@@ -8,12 +8,16 @@ import '../../tools/tool_context.dart';
 final _log = Logger('tools');
 
 final class ToolBelt {
-  const ToolBelt(this.tools);
+  const ToolBelt(this.tools, {this.offered});
 
   final List<AgentTool> tools;
+  final Set<String>? offered;
+
+  bool offers(String name) => offered?.contains(name) ?? true;
 
   List<FunctionDeclaration> get declarations => [
-    for (final tool in tools) tool.declaration,
+    for (final tool in tools)
+      if (offered?.contains(tool.name) ?? true) tool.declaration,
   ];
 
   bool onlyReadCatalog(Iterable<String> names) =>
@@ -86,3 +90,10 @@ final class ToolBelt {
     return result;
   }
 }
+
+const mapTools = {
+  'compute_affordability',
+  'find_place',
+  'map_homes',
+  'write_whys',
+};

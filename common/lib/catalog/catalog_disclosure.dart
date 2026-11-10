@@ -29,10 +29,10 @@ Map<String, String> componentIndex() => {
       component.name: component.description,
 };
 
-Map<String, Object?> coreCatalogDocument() {
+Map<String, Object?> coreCatalogDocument({Set<String> names = coreComponents}) {
   final core = [
     for (final name in _components.keys)
-      if (coreComponents.contains(name)) name,
+      if (names.contains(name)) name,
   ];
   return {
     ..._document,

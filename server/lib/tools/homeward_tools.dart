@@ -6,28 +6,38 @@ import 'arrange_plan.dart';
 import 'compare_buy_rent.dart';
 import 'component_docs.dart';
 import 'compute_affordability.dart';
+import 'edit_story.dart';
 import 'find_place.dart';
 import 'keep_homes.dart';
 import 'look_up_market.dart';
+import 'map_homes.dart';
 import 'measure_week.dart';
 import 'plan_savings.dart';
 import 'read_listings.dart';
 import 'search_homes.dart';
 import 'split_rent.dart';
 import 'update_brief.dart';
+import 'write_whys.dart';
 
-List<AgentTool> homewardTools(MarketDirectory markets, Research research) => [
-  const ComponentDocs(),
-  const UpdateBrief(),
-  const ArrangePlan(),
-  LookUpMarket(markets),
-  ComputeAffordability(markets),
-  PlanSavings(markets),
-  SearchHomes(markets),
-  KeepHomes(markets),
-  ReadListings(markets, ListingReader()),
-  FindPlace(research),
-  MeasureWeek(markets, research),
-  SplitRent(markets),
-  CompareBuyRent(markets),
-];
+List<AgentTool> homewardTools(MarketDirectory markets, Research research) {
+  final affordability = ComputeAffordability(markets);
+  final mapHomes = MapHomes(markets, research);
+  return [
+    const ComponentDocs(),
+    const UpdateBrief(),
+    const ArrangePlan(),
+    LookUpMarket(markets),
+    affordability,
+    PlanSavings(markets),
+    SearchHomes(markets),
+    KeepHomes(markets),
+    ReadListings(markets, ListingReader()),
+    FindPlace(research),
+    MeasureWeek(markets, research),
+    mapHomes,
+    EditStory(affordability, mapHomes),
+    const WriteWhys(),
+    SplitRent(markets),
+    CompareBuyRent(markets),
+  ];
+}

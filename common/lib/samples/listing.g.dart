@@ -27,6 +27,7 @@ _Listing _$ListingFromJson(Map<String, dynamic> json) =>
           'floor',
           'yearBuilt',
           'outdoor',
+          'lift',
           'style',
           'price',
           'monthlyFee',
@@ -65,6 +66,7 @@ _Listing _$ListingFromJson(Map<String, dynamic> json) =>
           'outdoor',
           (v) => $enumDecode(_$OutdoorSpaceEnumMap, v),
         ),
+        lift: $checkedConvert('lift', (v) => v as bool?),
         style: $checkedConvert(
           'style',
           (v) => $enumDecode(_$HomeStyleEnumMap, v),
@@ -117,6 +119,7 @@ Map<String, dynamic> _$ListingToJson(_Listing instance) => <String, dynamic>{
   'floor': ?instance.floor,
   'yearBuilt': ?instance.yearBuilt,
   'outdoor': _$OutdoorSpaceEnumMap[instance.outdoor]!,
+  'lift': ?instance.lift,
   'style': _$HomeStyleEnumMap[instance.style]!,
   'price': instance.price.toJson(),
   'monthlyFee': ?instance.monthlyFee?.toJson(),

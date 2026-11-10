@@ -35,6 +35,8 @@ Catalog ID: `https://moonwise.se/homeward/catalogs/v1/catalog.json`
 | `WeeklyTravel` | Place and travel | yes | `week` | `week` | A week from a flat in Nacka |
 | `RouteSummary` | Place and travel | yes | `trip` | `trip` | To KTH by public transport |
 | `WeekMap` | Place and travel | yes | `markers` | `markers`, `routes` | A week from a flat in Nacka, The places before a week is measured |
+| `HomeMap` | Place and travel | yes | `map` | `map` | Homes for a couple working at KTH |
+| `MustHave` | Homes | yes | `kind`, `label` |  | Must-haves for a couple working at KTH |
 
 ### PlanOverview
 
@@ -277,6 +279,24 @@ A map on OpenStreetMap of the places find_place found, each a pin with its name;
 | --- | --- | --- | --- | --- |
 | `markers` | binding | yes | `/places` | `find_place` |
 | `routes` | binding | no | `/week/<from>` | `measure_week` |
+
+### HomeMap
+
+The city's sample homes from map_homes on a map, each with what it costs this household a month, the places of their week, and the homes left after the budget, the travel limit, and the must-haves the buyer turned on. map_homes draws it; never draw it yourself.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `map` | binding | yes | `/map` | `map_homes` |
+
+### MustHave
+
+One must-have the buyer can turn on to narrow the homes on the map, such as two bedrooms for a family or a lift for a parent who visits. It shows how many homes it would keep before it is tapped, and the map narrows at once, without a reply. Kinds: bedrooms, bedrooms at least; size, square metres at least; balcony, a balcony or a garden; garden, a garden; house, a house; flat, a flat; lift, a lift; builtAfter, built in this year or later.
+
+| Property | Kind | Required | Path | Seeded by |
+| --- | --- | --- | --- | --- |
+| `kind` | choice: bedrooms, size, balcony, garden, house, flat, lift, builtAfter | yes |  |  |
+| `atLeast` | number | no |  |  |
+| `label` | text | yes |  |  |
 ## Basic Components
 
 Agent-visible from the A2UI v0.9 basic catalog: `Text`, `Row`, `Column`, `Card`, `Divider`, `List`, `Tabs`, `Icon`, `Button`, `CheckBox`, `ChoicePicker`, `TextField`, `DateTimeInput`.
@@ -349,6 +369,16 @@ The buyer's week measured with measure_week: an object by starting point, a samp
 | --- | --- | --- |
 | `/week/<from>` | object read by Homeward components | One week: { fromId, fromName, from, trips }. Bind it whole to a WeeklyTravel, or to the routes of a WeekMap. |
 | `/week/<from>/trips/<n>` | object read by Homeward components | One trip: { placeName, perWeek, mode, minutes, meters, polyline }, the route it was measured on as an encoded polyline. Bind it to a RouteSummary. |
+
+### `/map`
+
+The city's sample homes for this household, from map_homes: each priced for them, the places of their week, and the minutes from each area to each place. Seeded by `map_homes`.
+
+| Path | Value | Meaning |
+| --- | --- | --- |
+| `/map/cityName` | string | The city |
+| `/map/highestPrice` | money object { "minorUnits": integer, "currency": ISO 4217 code } | The highest price the rules allow, or the rent a month they can pay |
+| `/map/homes` | object read by Homeward components | Every sample home, priced for the household, with whether it is within the budget and its why; bind the whole slice to a HomeMap |
 
 ### `/rentSplit`
 

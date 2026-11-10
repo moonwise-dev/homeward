@@ -315,6 +315,27 @@ build that is live, to return to: `git checkout showcase-ready`, then
 `make deploy-server` and `make deploy-web`. Left: the owner's look, then a
 push and a deploy on their word.
 
+That evening the owner found the areas a set of tabs and the look washed
+out, and pointed at GenLatte's fixed screens and Robinhood's mobile app.
+The conversation now reads as chapters after a three-tap onboarding, with a
+strip of the plan's parts and numbers on top (D202), in a white and black
+look with one vivid green (D203). The tag `app-shell` marks the areas build,
+deployed at the time, to return to the same way. Later that night the
+owner chose steps over chat: one screen a step, Gemini's reply cut to a
+line or two in the prompt, What next? tiles, and no Material ripple or
+floating labels (D204). Then the order: the week came after the homes, so
+it ruled nothing out. A plan is now six steps the app sets, with an Areas
+step that checks every area against the budget and measures the week from
+it, `compare_areas` and `AreaMap` (D205). On 2026-11-10 the owner found that
+still unorganized, and the plan is now map first (D206): one screen that
+answers which neighbourhoods to look at and why, built after the showcase
+once the owner agrees its demo script and sketch. The showcase presents the
+live build. Later that day the owner asked to go ahead, and map first was
+built in the working tree (D207): 50 sample homes a city, `map_homes`,
+`write_whys`, `MustHave`, and the one-screen app. Then the story: four
+slots whose chips are edited in place and re-map without Gemini (D208).
+Nothing is committed or deployed.
+
 ## The Submission
 
 What Google asked for on 2026-10-06, due 2026-10-16 (D172).

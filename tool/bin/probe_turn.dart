@@ -13,7 +13,8 @@ Future<void> main(List<String> arguments) async {
     stderr.writeln(
       'Usage: probe_turn <server url> '
       '<message, @action {slice overrides}, @pick <option or number>, '
-      '@fill <answer> | <answer>, or @tap <action> {added context}>…\n'
+      '@fill <answer> | <answer>, @tap <action> {added context}, or '
+      '@app <action> {context}>…\n'
       'Gemini keys come from ${GeminiKeys.names.join(' and ')}, '
       'which make reads from .env.',
     );
@@ -71,6 +72,21 @@ TurnRequest? _requestFor(String input, ProbeSurfaces surfaces) {
   }
   final name = input.substring(1, separator == -1 ? null : separator);
   final rest = separator == -1 ? '' : input.substring(separator + 1).trim();
+  if (name == 'app') {
+    final space = rest.indexOf(' ');
+    return TurnRequest.action(
+      ClientAction(
+        name: space == -1 ? rest : rest.substring(0, space),
+        surfaceId: planSurfaceId,
+        sourceComponentId: 'app',
+        timestamp: DateTime.now().toUtc().toIso8601String(),
+        context: space == -1
+            ? const {}
+            : jsonDecode(rest.substring(space + 1)) as Map<String, Object?>,
+      ),
+      surfaceData: const {},
+    );
+  }
   final tapped = switch (name) {
     'pick' => surfaces.pick(rest),
     'fill' => surfaces.fill([

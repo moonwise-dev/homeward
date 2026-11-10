@@ -76,7 +76,7 @@ class LoanBalanceChartView extends HookWidget {
         const SizedBox(height: AppSpacing.xs),
         Row(
           children: [
-            AppChartKey(label: 'What you own', color: colors.accent),
+            AppChartKey(label: 'What you own', color: colors.brand),
             const SizedBox(width: AppSpacing.md),
             AppChartKey(label: 'What you owe', color: colors.warning),
           ],

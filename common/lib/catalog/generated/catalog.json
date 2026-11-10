@@ -1963,6 +1963,96 @@
         "markers"
       ],
       "additionalProperties": false
+    },
+    "HomeMap": {
+      "type": "object",
+      "description": "The city's sample homes from map_homes on a map, each with what it costs this household a month, the places of their week, and the homes left after the budget, the travel limit, and the must-haves the buyer turned on. map_homes draws it; never draw it yourself.",
+      "properties": {
+        "id": {
+          "$ref": "common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "HomeMap"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "map": {
+          "type": "object",
+          "description": "Always { \"@path\": \"/map\" }, after map_homes.",
+          "properties": {
+            "@path": {
+              "type": "string",
+              "const": "/map"
+            }
+          },
+          "required": [
+            "@path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "map"
+      ],
+      "additionalProperties": false
+    },
+    "MustHave": {
+      "type": "object",
+      "description": "One must-have the buyer can turn on to narrow the homes on the map, such as two bedrooms for a family or a lift for a parent who visits. It shows how many homes it would keep before it is tapped, and the map narrows at once, without a reply. Kinds: bedrooms, bedrooms at least; size, square metres at least; balcony, a balcony or a garden; garden, a garden; house, a house; flat, a flat; lift, a lift; builtAfter, built in this year or later.",
+      "properties": {
+        "id": {
+          "$ref": "common_types.json#/$defs/ComponentId",
+          "description": "The unique identifier for a component."
+        },
+        "component": {
+          "type": "string",
+          "const": "MustHave"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "accessibility": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "bedrooms",
+            "size",
+            "balcony",
+            "garden",
+            "house",
+            "flat",
+            "lift",
+            "builtAfter"
+          ]
+        },
+        "atLeast": {
+          "type": "integer",
+          "description": "Only for bedrooms, size, and builtAfter: the fewest bedrooms, square metres, or the earliest year."
+        },
+        "label": {
+          "type": "string",
+          "description": "At most four words, in the buyer's terms, such as \"Room for the twins\" or \"A lift for Mum\". No figures beyond the one in atLeast."
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "kind",
+        "label"
+      ],
+      "additionalProperties": false
     }
   },
   "functions": {
@@ -2579,6 +2669,12 @@
         },
         {
           "$ref": "#/components/WeekMap"
+        },
+        {
+          "$ref": "#/components/HomeMap"
+        },
+        {
+          "$ref": "#/components/MustHave"
         }
       ]
     },

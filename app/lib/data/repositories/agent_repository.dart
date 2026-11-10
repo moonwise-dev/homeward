@@ -35,6 +35,12 @@ abstract interface class AgentRepository {
   Future<void> retry(String sessionId, String entryId);
 
   Future<void> stop(String sessionId);
+
+  Future<void> sendAction(
+    String sessionId,
+    String name,
+    Map<String, Object?> context,
+  );
 }
 
 class A2uiAgentRepository with RepositoryGuard implements AgentRepository {
@@ -184,6 +190,37 @@ class A2uiAgentRepository with RepositoryGuard implements AgentRepository {
       await _client.cancelTask(taskId);
     }
   });
+
+  @override
+  Future<void> sendAction(
+    String sessionId,
+    String name,
+    Map<String, Object?> context,
+  ) {
+    final plan = _plan(sessionId);
+    if (plan.isRunning) {
+      return Future.value();
+    }
+    final action = ClientAction(
+      name: name,
+      surfaceId: planSurfaceId,
+      sourceComponentId: 'story',
+      timestamp: DateTime.now().toUtc().toIso8601String(),
+      context: context,
+    );
+    plan.add(
+      TranscriptEntry.buyerAction(
+        id: _newEntryId(),
+        actionName: name,
+        label: context['label'] as String?,
+      ),
+    );
+    return _run(
+      sessionId,
+      plan,
+      TurnRequest.action(action, surfaceData: const {}),
+    );
+  }
 
   _PlanSession _plan(String sessionId) => _plans.putIfAbsent(sessionId, () {
     final plan = _PlanSession(RendererSurfaces(_catalog));

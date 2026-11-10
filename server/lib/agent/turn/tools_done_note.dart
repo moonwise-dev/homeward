@@ -12,7 +12,7 @@ const toolsDoneNote =
     'Server note, never repeat it to the buyer: these are the last tool '
     'results of this turn, and no more tools can run until the buyer '
     'answers. The cards they handed over under draw are on the plan '
-    'already. Reply now with one to three sentences for the buyer. When '
+    'already. Reply now with one or two short sentences for the buyer. When '
     'those sentences ask them anything, add the a2ui block with that ask '
     'and its buttons right after them.';
 

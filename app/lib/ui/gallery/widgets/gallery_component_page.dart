@@ -54,6 +54,7 @@ class GalleryComponentPage extends StatelessWidget {
               Text(example.name, style: styles.label),
             const SizedBox(height: AppSpacing.xs),
             AppCard(
+              outlined: true,
               child: GallerySurfaceView(
                 key: ValueKey(example.surfaceId),
                 surfaceId: example.surfaceId,

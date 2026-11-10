@@ -13,6 +13,7 @@ import '../../gemini/tool_choice.dart';
 import '../../logging/log_entry.dart';
 import '../../research/gemini_researcher.dart';
 import '../../research/researcher.dart';
+import '../../tools/agent_tool.dart';
 import '../../tools/draw.dart';
 import '../../tools/tool_context.dart';
 import '../actions/action_input.dart';
@@ -145,6 +146,7 @@ final class TurnRun {
               arguments: answering.arguments,
             ),
             _researcher(apiKey, cancellation),
+            tapped: true,
           );
         });
         yield* _refreshSlices();
@@ -803,24 +805,33 @@ final class TurnRun {
 
   Future<FunctionResult> _runCall(
     FunctionCall call,
-    Researcher researcher,
-  ) async {
-    final result = await tools.call(
-      call.name,
-      call.arguments,
-      context: ToolContext(
-        steps: _progress,
-        slices: _validator.seeds,
-        cards: {..._validator.handed.keys},
-        onPlan: _planChildren ?? const [],
-        cardNotes: _cardNotes,
-        buyerWords: buyerWords([
-          for (final record in _session.turns) record.input,
-          _turnRequest,
-        ]),
-        researcher: researcher,
-      ),
-    );
+    Researcher researcher, {
+    bool tapped = false,
+  }) async {
+    final result = !tapped && !tools.offers(call.name)
+        ? ToolResult(
+            modelResult: {
+              'error':
+                  'There is no tool named ${call.name} here; use the tools '
+                  'you have.',
+            },
+          )
+        : await tools.call(
+            call.name,
+            call.arguments,
+            context: ToolContext(
+              steps: _progress,
+              slices: _validator.seeds,
+              cards: {..._validator.handed.keys},
+              onPlan: _planChildren ?? const [],
+              cardNotes: _cardNotes,
+              buyerWords: buyerWords([
+                for (final record in _session.turns) record.input,
+                _turnRequest,
+              ]),
+              researcher: researcher,
+            ),
+          );
     _validator.seeds = {..._validator.seeds, ...result.seeds};
     _putFirst.addAll(result.showCards);
     _takenOff.addAll(result.removeCards);

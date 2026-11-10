@@ -125,7 +125,7 @@ class WeekMapView extends HookWidget {
                           Polyline(
                             points: route,
                             strokeWidth: 4,
-                            color: colors.accent,
+                            color: colors.brand,
                             borderStrokeWidth: 2,
                             borderColor: colors.surface,
                           ),

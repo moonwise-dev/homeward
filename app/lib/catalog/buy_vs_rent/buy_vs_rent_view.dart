@@ -82,7 +82,7 @@ class BuyVsRentView extends HookWidget {
         const SizedBox(height: AppSpacing.xs),
         Row(
           children: [
-            AppChartKey(label: 'Buying', color: colors.accent),
+            AppChartKey(label: 'Buying', color: colors.brand),
             const SizedBox(width: AppSpacing.md),
             AppChartKey(label: 'Renting', color: colors.warning),
           ],

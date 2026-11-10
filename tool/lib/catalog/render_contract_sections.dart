@@ -2,8 +2,11 @@ import 'package:common/common.dart';
 
 import 'markdown.dart';
 
-String renderDataModelSlices(String heading) => [
-  for (final slice in dataModelSlices)
+String renderDataModelSlices(
+  String heading, {
+  Iterable<DataSlice> slices = dataModelSlices,
+}) => [
+  for (final slice in slices)
     [
       '$heading ${code(slice.path)}',
       '${slice.description} Seeded by ${code(slice.seededBy)}.',

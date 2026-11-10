@@ -42,9 +42,8 @@ class HomeCardView extends HookWidget {
     final onKeep = this.onKeep;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: BorderRadius.circular(AppRadii.md),
-        border: Border.all(color: colors.border),
+        color: colors.surfaceMuted,
+        borderRadius: BorderRadius.circular(AppRadii.lg),
       ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.sm),

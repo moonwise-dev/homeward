@@ -30,6 +30,8 @@ import 'savings_plan/savings_plan_item.dart';
 import 'shortlist/shortlist_item.dart';
 import 'stress_test_chart/stress_test_chart_item.dart';
 import 'week_map/week_map_item.dart';
+import 'home_map/home_map_item.dart';
+import 'must_have/must_have_item.dart';
 import 'weekly_travel/weekly_travel_item.dart';
 import 'wrapping_row.dart';
 
@@ -70,6 +72,8 @@ CatalogImplementation homewardRendererCatalog() {
         weeklyTravelItem,
         routeSummaryItem,
         weekMapItem,
+        homeMapItem,
+        mustHaveItem,
       ])
         asPlanSections(item),
     ],

@@ -29,6 +29,7 @@ abstract class Listing with _$Listing {
     int? floor,
     int? yearBuilt,
     required OutdoorSpace outdoor,
+    bool? lift,
     required HomeStyle style,
     required Money price,
     Money? monthlyFee,

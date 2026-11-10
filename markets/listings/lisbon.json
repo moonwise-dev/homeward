@@ -51,7 +51,8 @@
         "lis-01-2",
         "lis-01-3"
       ],
-      "photoCredit": "Photos: Freguesia de Estrela, Jessica Martins, Mihai Moisa / Unsplash"
+      "photoCredit": "Photos: Freguesia de Estrela, Jessica Martins, Mihai Moisa / Unsplash",
+      "lift": false
     },
     {
       "id": "lis-02",
@@ -102,7 +103,8 @@
         "lis-02-3",
         "lis-02-4"
       ],
-      "photoCredit": "Photos: Glauco Zuccaccia, Aquilion Property / Unsplash"
+      "photoCredit": "Photos: Glauco Zuccaccia, Aquilion Property / Unsplash",
+      "lift": true
     },
     {
       "id": "lis-03",
@@ -152,7 +154,8 @@
         "lis-03-2",
         "lis-03-3"
       ],
-      "photoCredit": "Photos: Evgeniy Beloshytskiy, Danilo Rios, Dalila Moreira / Unsplash"
+      "photoCredit": "Photos: Evgeniy Beloshytskiy, Danilo Rios, Dalila Moreira / Unsplash",
+      "lift": true
     },
     {
       "id": "lis-04",
@@ -203,7 +206,8 @@
         "lis-04-3",
         "lis-04-4"
       ],
-      "photoCredit": "Photos: Artem Astashov, Julia / Unsplash"
+      "photoCredit": "Photos: Artem Astashov, Julia / Unsplash",
+      "lift": false
     },
     {
       "id": "lis-05",
@@ -253,7 +257,8 @@
         "lis-05-2",
         "lis-05-3"
       ],
-      "photoCredit": "Photos: Diego García, Christian Lue, João Reguengos / Unsplash"
+      "photoCredit": "Photos: Diego García, Christian Lue, João Reguengos / Unsplash",
+      "lift": false
     },
     {
       "id": "lis-06",
@@ -303,7 +308,8 @@
         "lis-06-2",
         "lis-06-3"
       ],
-      "photoCredit": "Photos: Dmitrii E., Margo Evardson, Aleksandra Dementeva / Unsplash"
+      "photoCredit": "Photos: Dmitrii E., Margo Evardson, Aleksandra Dementeva / Unsplash",
+      "lift": false
     },
     {
       "id": "lis-07",
@@ -354,7 +360,8 @@
         "lis-07-3",
         "lis-07-4"
       ],
-      "photoCredit": "Photos: Bruno Rothstein, Piotr AMS, Joao Emanuel, Marina Poliukhovich / Unsplash"
+      "photoCredit": "Photos: Bruno Rothstein, Piotr AMS, Joao Emanuel, Marina Poliukhovich / Unsplash",
+      "lift": true
     },
     {
       "id": "lis-08",
@@ -404,7 +411,8 @@
         "lis-08-2",
         "lis-08-3"
       ],
-      "photoCredit": "Photos: Noa van Ieperen, Clay Banks, Steven Ungermann / Unsplash"
+      "photoCredit": "Photos: Noa van Ieperen, Clay Banks, Steven Ungermann / Unsplash",
+      "lift": true
     },
     {
       "id": "lis-09",
@@ -454,7 +462,8 @@
         "lis-09-2",
         "lis-09-3"
       ],
-      "photoCredit": "Photos: Ivan Rohovchenko, David Kuvaev, Ruben Aster / Unsplash"
+      "photoCredit": "Photos: Ivan Rohovchenko, David Kuvaev, Ruben Aster / Unsplash",
+      "lift": true
     },
     {
       "id": "lis-10",
@@ -549,7 +558,8 @@
         "lis-11-2",
         "lis-11-3"
       ],
-      "photoCredit": "Photos: Augusto Lopes, Caroline Badran / Unsplash"
+      "photoCredit": "Photos: Augusto Lopes, Caroline Badran / Unsplash",
+      "lift": true
     },
     {
       "id": "lis-12",
@@ -685,6 +695,1875 @@
         "lis-14-3"
       ],
       "photoCredit": "Photos: Alex Kolodziej, Azzedine Rouichi, Ola K. / Unsplash"
+    },
+    {
+      "id": "lis-15",
+      "areaId": "santo-antonio",
+      "areaName": "Príncipe Real",
+      "name": "Rua da Escola Politécnica",
+      "title": "A classic two-bedroom flat in Príncipe Real",
+      "blurb": "85 square metres with a balcony, no lift.",
+      "description": "A two-bedroom flat on the third floor of a 1900 building on Rua da Escola Politécnica, 85 square metres in all. The balcony faces west and takes the evening sun. There is no lift. The bathroom has a shower and space for a washing machine.",
+      "address": "Rua da Escola Politécnica 120",
+      "point": {
+        "lat": 38.7175555,
+        "lng": -9.1508779
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 85,
+      "floor": 3,
+      "yearBuilt": 1900,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 59500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 8500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 700000,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 698600,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 2133,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Santo António parish, 12 months to March 2026",
+      "photos": [
+        "lis-01-1",
+        "lis-01-2",
+        "lis-01-3"
+      ],
+      "photoCredit": "Photos: Freguesia de Estrela, Jessica Martins, Mihai Moisa / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-16",
+      "areaId": "santo-antonio",
+      "areaName": "Príncipe Real",
+      "name": "Rua Dom Pedro V",
+      "title": "A light one-bedroom flat",
+      "blurb": "55 square metres with windows onto a quiet courtyard, no lift.",
+      "description": "A one-bedroom flat on the second floor of a 1890 building on Rua Dom Pedro V, 55 square metres in all. There is no balcony, but the windows open onto a quiet courtyard. There is no lift. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Rua Dom Pedro V 60",
+      "point": {
+        "lat": 38.7157942,
+        "lng": -9.1461418
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 55,
+      "floor": 2,
+      "yearBuilt": 1890,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 39000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 5500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 709091,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 698600,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 2133,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Santo António parish, 12 months to March 2026",
+      "photos": [
+        "lis-02-1",
+        "lis-02-2",
+        "lis-02-3"
+      ],
+      "photoCredit": "Photos: Glauco Zuccaccia, Aquilion Property / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-17",
+      "areaId": "santo-antonio",
+      "areaName": "Príncipe Real",
+      "name": "Rua do Salitre",
+      "title": "A modern three-bedroom flat in Príncipe Real",
+      "blurb": "Three bedrooms in a 1965 building, with a lift.",
+      "description": "A three-bedroom flat on the fifth floor of a 1965 building on Rua do Salitre, 120 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. The kitchen was renewed in 2013 and has room for a table of four.",
+      "address": "Rua do Salitre 120",
+      "point": {
+        "lat": 38.7198702,
+        "lng": -9.1512749
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 120,
+      "floor": 5,
+      "yearBuilt": 1965,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 80000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 12000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 666667,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 698600,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 2133,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Santo António parish, 12 months to March 2026",
+      "photos": [
+        "lis-03-1",
+        "lis-03-2",
+        "lis-03-3"
+      ],
+      "photoCredit": "Photos: Evgeniy Beloshytskiy, Danilo Rios, Dalila Moreira / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-18",
+      "areaId": "misericordia",
+      "areaName": "Santos",
+      "name": "Rua de Santos-o-Velho",
+      "title": "A light one-bedroom flat",
+      "blurb": "52 square metres with windows onto a quiet courtyard, no lift.",
+      "description": "A one-bedroom flat on the second floor of a 1880 building on Rua de Santos-o-Velho, 52 square metres in all. There is no balcony, but the windows open onto a quiet courtyard. There is no lift. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Rua de Santos-o-Velho 40",
+      "point": {
+        "lat": 38.7071238,
+        "lng": -9.1571831
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 52,
+      "floor": 2,
+      "yearBuilt": 1880,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 32000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 5000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 615385,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 591300,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 2000,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Misericórdia parish, 12 months to March 2026",
+      "photos": [
+        "lis-04-1",
+        "lis-04-2",
+        "lis-04-3"
+      ],
+      "photoCredit": "Photos: Artem Astashov, Julia / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-19",
+      "areaId": "misericordia",
+      "areaName": "Santos",
+      "name": "Avenida Dom Carlos I",
+      "title": "A classic two-bedroom flat in Santos",
+      "blurb": "80 square metres with a balcony, a lift.",
+      "description": "A two-bedroom flat on the fourth floor of a 1940 building on Avenida Dom Carlos I, 80 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Avenida Dom Carlos I 100",
+      "point": {
+        "lat": 38.7089835,
+        "lng": -9.1528756
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 80,
+      "floor": 4,
+      "yearBuilt": 1940,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 48000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 8000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 600000,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 591300,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 2000,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Misericórdia parish, 12 months to March 2026",
+      "photos": [
+        "lis-05-1",
+        "lis-05-2",
+        "lis-05-3"
+      ],
+      "photoCredit": "Photos: Diego García, Christian Lue, João Reguengos / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-20",
+      "areaId": "misericordia",
+      "areaName": "Santos",
+      "name": "Calçada Marquês de Abrantes",
+      "title": "A light two-bedroom flat with a balcony",
+      "blurb": "74 square metres with a balcony, no lift.",
+      "description": "A two-bedroom flat on the third floor of a 1890 building on Calçada Marquês de Abrantes, 74 square metres in all. The balcony faces west and takes the evening sun. There is no lift. The bathroom has a shower and space for a washing machine.",
+      "address": "Calçada Marquês de Abrantes 50",
+      "point": {
+        "lat": 38.7079863,
+        "lng": -9.1541128
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 74,
+      "floor": 3,
+      "yearBuilt": 1890,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 42000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 7500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 567568,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 591300,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 2000,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Misericórdia parish, 12 months to March 2026",
+      "photos": [
+        "lis-06-1",
+        "lis-06-2",
+        "lis-06-3"
+      ],
+      "photoCredit": "Photos: Dmitrii E., Margo Evardson, Aleksandra Dementeva / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-21",
+      "areaId": "estrela",
+      "areaName": "Lapa",
+      "name": "Rua de São Domingos à Lapa",
+      "title": "A classic three-bedroom flat in Lapa",
+      "blurb": "130 square metres with a balcony, no lift.",
+      "description": "A three-bedroom flat on the second floor of a 1910 building on Rua de São Domingos à Lapa, 130 square metres in all. A small balcony off the living room looks over the courtyard. There is no lift. The kitchen was renewed in 2016 and has room for a table of four.",
+      "address": "Rua de São Domingos à Lapa 50",
+      "point": {
+        "lat": 38.7095118,
+        "lng": -9.1623213
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 130,
+      "floor": 2,
+      "yearBuilt": 1910,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 75000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 13000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 576923,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 583300,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1964,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Estrela parish, 12 months to March 2026",
+      "photos": [
+        "lis-07-1",
+        "lis-07-2",
+        "lis-07-3"
+      ],
+      "photoCredit": "Photos: Bruno Rothstein, Piotr AMS, Joao Emanuel, Marina Poliukhovich / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-22",
+      "areaId": "estrela",
+      "areaName": "Lapa",
+      "name": "Rua do Prior",
+      "title": "A classic two-bedroom flat in Lapa",
+      "blurb": "88 square metres with a balcony, a lift.",
+      "description": "A two-bedroom flat on the third floor of a 1930 building on Rua do Prior, 88 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. The kitchen was renewed in 2015 and has room for a table of six.",
+      "address": "Rua do Prior 20",
+      "point": {
+        "lat": 38.706282,
+        "lng": -9.1634623
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 88,
+      "floor": 3,
+      "yearBuilt": 1930,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 50500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 9000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 573864,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 583300,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1964,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Estrela parish, 12 months to March 2026",
+      "photos": [
+        "lis-08-1",
+        "lis-08-2",
+        "lis-08-3"
+      ],
+      "photoCredit": "Photos: Noa van Ieperen, Clay Banks, Steven Ungermann / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-23",
+      "areaId": "estrela",
+      "areaName": "Lapa",
+      "name": "Rua de Buenos Aires",
+      "title": "A one-bedroom flat on the first floor",
+      "blurb": "One bedroom in a 1900 building, without a lift.",
+      "description": "A one-bedroom flat on the first floor of a 1900 building on Rua de Buenos Aires, 60 square metres in all. There is no balcony; the living room has two tall windows onto the street. There is no lift. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Rua de Buenos Aires 20",
+      "point": {
+        "lat": 38.7112817,
+        "lng": -9.1609187
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 60,
+      "floor": 1,
+      "yearBuilt": 1900,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 33000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 6000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 550000,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 583300,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1964,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Estrela parish, 12 months to March 2026",
+      "photos": [
+        "lis-09-1",
+        "lis-09-2",
+        "lis-09-3"
+      ],
+      "photoCredit": "Photos: Ivan Rohovchenko, David Kuvaev, Ruben Aster / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-24",
+      "areaId": "campo-de-ourique",
+      "areaName": "Campo de Ourique",
+      "name": "Rua Ferreira Borges",
+      "title": "A classic two-bedroom flat in Campo de Ourique",
+      "blurb": "78 square metres with a balcony, a lift.",
+      "description": "A two-bedroom flat on the fourth floor of a 1950 building on Rua Ferreira Borges, 78 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. The kitchen was renewed in 2015 and has room for a table of six.",
+      "address": "Rua Ferreira Borges 100",
+      "point": {
+        "lat": 38.7188321,
+        "lng": -9.1640296
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 78,
+      "floor": 4,
+      "yearBuilt": 1950,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 45500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 8000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 583333,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 597900,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1909,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Campo de Ourique parish, 12 months to March 2026",
+      "photos": [
+        "lis-11-1",
+        "lis-11-2",
+        "lis-11-3"
+      ],
+      "photoCredit": "Photos: Augusto Lopes, Caroline Badran / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-25",
+      "areaId": "campo-de-ourique",
+      "areaName": "Campo de Ourique",
+      "name": "Rua Saraiva de Carvalho",
+      "title": "A light one-bedroom flat",
+      "blurb": "One bedroom in a 1930 building, without a lift.",
+      "description": "A one-bedroom flat on the second floor of a 1930 building on Rua Saraiva de Carvalho, 55 square metres in all. There is no balcony, but the windows open onto a quiet courtyard. There is no lift. The kitchen was renewed in 2013 and has room for a table of six.",
+      "address": "Rua Saraiva de Carvalho 150",
+      "point": {
+        "lat": 38.7161904,
+        "lng": -9.16219
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 55,
+      "floor": 2,
+      "yearBuilt": 1930,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 31500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 5500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 572727,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 597900,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1909,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Campo de Ourique parish, 12 months to March 2026",
+      "photos": [
+        "lis-01-1",
+        "lis-01-2",
+        "lis-01-3"
+      ],
+      "photoCredit": "Photos: Freguesia de Estrela, Jessica Martins, Mihai Moisa / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-26",
+      "areaId": "campo-de-ourique",
+      "areaName": "Campo de Ourique",
+      "name": "Rua Coelho da Rocha",
+      "title": "A light three-bedroom flat with a balcony",
+      "blurb": "110 square metres with a balcony, a lift.",
+      "description": "A three-bedroom flat on the fifth floor of a 1960 building on Rua Coelho da Rocha, 110 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. The kitchen was renewed in 2017 and has room for a table of six.",
+      "address": "Rua Coelho da Rocha 60",
+      "point": {
+        "lat": 38.7165181,
+        "lng": -9.1647801
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 110,
+      "floor": 5,
+      "yearBuilt": 1960,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 66500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 11000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 604545,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 597900,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1909,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Campo de Ourique parish, 12 months to March 2026",
+      "photos": [
+        "lis-02-1",
+        "lis-02-2",
+        "lis-02-3"
+      ],
+      "photoCredit": "Photos: Glauco Zuccaccia, Aquilion Property / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-27",
+      "areaId": "santa-maria-maior",
+      "areaName": "Alfama",
+      "name": "Rua de São Miguel",
+      "title": "A classic one-bedroom flat in Alfama",
+      "blurb": "One bedroom in a 1850 building, without a lift.",
+      "description": "A one-bedroom flat on the second floor of a 1850 building on Rua de São Miguel, 45 square metres in all. A small balcony off the living room looks over the courtyard. There is no lift. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Rua de São Miguel 20",
+      "point": {
+        "lat": 38.7108958,
+        "lng": -9.1291931
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 45,
+      "floor": 2,
+      "yearBuilt": 1850,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 21500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 4500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 477778,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 500000,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1944,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Santa Maria Maior parish, 12 months to March 2026",
+      "photos": [
+        "lis-03-1",
+        "lis-03-2",
+        "lis-03-3"
+      ],
+      "photoCredit": "Photos: Evgeniy Beloshytskiy, Danilo Rios, Dalila Moreira / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-28",
+      "areaId": "santa-maria-maior",
+      "areaName": "Alfama",
+      "name": "Rua dos Remédios",
+      "title": "A light two-bedroom flat with a balcony",
+      "blurb": "Two bedrooms in a 1880 building, without a lift.",
+      "description": "A two-bedroom flat on the third floor of a 1880 building on Rua dos Remédios, 70 square metres in all. A small balcony off the living room looks over the courtyard. There is no lift. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Rua dos Remédios 80",
+      "point": {
+        "lat": 38.7122311,
+        "lng": -9.1265711
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 70,
+      "floor": 3,
+      "yearBuilt": 1880,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 33500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 7000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 478571,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 500000,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1944,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Santa Maria Maior parish, 12 months to March 2026",
+      "photos": [
+        "lis-04-1",
+        "lis-04-2",
+        "lis-04-3"
+      ],
+      "photoCredit": "Photos: Artem Astashov, Julia / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-29",
+      "areaId": "santa-maria-maior",
+      "areaName": "Alfama",
+      "name": "Rua da Madalena",
+      "title": "A two-bedroom flat on the fourth floor",
+      "blurb": "82 square metres with windows onto a quiet courtyard, a lift.",
+      "description": "A two-bedroom flat on the fourth floor of a 1900 building on Rua da Madalena, 82 square metres in all. There is no balcony; the living room has two tall windows onto the street. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Rua da Madalena 150",
+      "point": {
+        "lat": 38.712688,
+        "lng": -9.1362142
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 82,
+      "floor": 4,
+      "yearBuilt": 1900,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 43000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 8000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 524390,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 500000,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1944,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Santa Maria Maior parish, 12 months to March 2026",
+      "photos": [
+        "lis-05-1",
+        "lis-05-2",
+        "lis-05-3"
+      ],
+      "photoCredit": "Photos: Diego García, Christian Lue, João Reguengos / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-30",
+      "areaId": "sao-vicente",
+      "areaName": "Graça",
+      "name": "Rua da Graça",
+      "title": "A light two-bedroom flat with a balcony",
+      "blurb": "75 square metres with a balcony, no lift.",
+      "description": "A two-bedroom flat on the third floor of a 1920 building on Rua da Graça, 75 square metres in all. The balcony faces south over the street and the trees. There is no lift. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Rua da Graça 100",
+      "point": {
+        "lat": 38.7195916,
+        "lng": -9.1301188
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 75,
+      "floor": 3,
+      "yearBuilt": 1920,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 35500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 7500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 473333,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 495400,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1844,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in São Vicente parish, 12 months to March 2026",
+      "photos": [
+        "lis-06-1",
+        "lis-06-2",
+        "lis-06-3"
+      ],
+      "photoCredit": "Photos: Dmitrii E., Margo Evardson, Aleksandra Dementeva / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-31",
+      "areaId": "sao-vicente",
+      "areaName": "Graça",
+      "name": "Rua Senhora da Glória",
+      "title": "A light one-bedroom flat",
+      "blurb": "One bedroom in a 1910 building, without a lift.",
+      "description": "A one-bedroom flat on the second floor of a 1910 building on Rua Senhora da Glória, 50 square metres in all. There is no balcony, but the windows open onto a quiet courtyard. There is no lift. The kitchen was renewed in 2020 and has room for a table of four.",
+      "address": "Rua Senhora da Glória 50",
+      "point": {
+        "lat": 38.7188952,
+        "lng": -9.1278917
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 50,
+      "floor": 2,
+      "yearBuilt": 1910,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 26500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 5000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 530000,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 495400,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1844,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in São Vicente parish, 12 months to March 2026",
+      "photos": [
+        "lis-07-1",
+        "lis-07-2",
+        "lis-07-3"
+      ],
+      "photoCredit": "Photos: Bruno Rothstein, Piotr AMS, Joao Emanuel, Marina Poliukhovich / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-32",
+      "areaId": "sao-vicente",
+      "areaName": "Graça",
+      "name": "Rua Angelina Vidal",
+      "title": "A classic three-bedroom flat in Graça",
+      "blurb": "Three bedrooms in a 1950 building, with a lift.",
+      "description": "A three-bedroom flat on the fourth floor of a 1950 building on Rua Angelina Vidal, 100 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Rua Angelina Vidal 40",
+      "point": {
+        "lat": 38.7234683,
+        "lng": -9.131751
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 100,
+      "floor": 4,
+      "yearBuilt": 1950,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 48000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 10000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 480000,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 495400,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1844,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in São Vicente parish, 12 months to March 2026",
+      "photos": [
+        "lis-08-1",
+        "lis-08-2",
+        "lis-08-3"
+      ],
+      "photoCredit": "Photos: Noa van Ieperen, Clay Banks, Steven Ungermann / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-33",
+      "areaId": "parque-das-nacoes",
+      "areaName": "Parque das Nações",
+      "name": "Alameda dos Oceanos",
+      "title": "A modern two-bedroom flat in Parque das Nações",
+      "blurb": "95 square metres with a balcony, a lift.",
+      "description": "A two-bedroom flat on the sixth floor of a 2005 building on Alameda dos Oceanos, 95 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Alameda dos Oceanos 50",
+      "point": {
+        "lat": 38.7563607,
+        "lng": -9.0969008
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 95,
+      "floor": 6,
+      "yearBuilt": 2005,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 64000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 9500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 673684,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 640700,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1868,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Parque das Nações parish, 12 months to March 2026",
+      "photos": [
+        "lis-09-1",
+        "lis-09-2",
+        "lis-09-3"
+      ],
+      "photoCredit": "Photos: Ivan Rohovchenko, David Kuvaev, Ruben Aster / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-34",
+      "areaId": "parque-das-nacoes",
+      "areaName": "Parque das Nações",
+      "name": "Rua da Pimenta",
+      "title": "A one-bedroom flat on the third floor",
+      "blurb": "60 square metres with a balcony, a lift.",
+      "description": "A one-bedroom flat on the third floor of a 2001 building on Rua da Pimenta, 60 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. The kitchen was renewed in 2013 and has room for a table of six.",
+      "address": "Rua da Pimenta 30",
+      "point": {
+        "lat": 38.7709238,
+        "lng": -9.0922652
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 60,
+      "floor": 3,
+      "yearBuilt": 2001,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 38500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 6000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 641667,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 640700,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1868,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Parque das Nações parish, 12 months to March 2026",
+      "photos": [
+        "lis-11-1",
+        "lis-11-2",
+        "lis-11-3"
+      ],
+      "photoCredit": "Photos: Augusto Lopes, Caroline Badran / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-35",
+      "areaId": "alvalade",
+      "areaName": "Alvalade",
+      "name": "Avenida da Igreja",
+      "title": "A two-bedroom flat on the fourth floor",
+      "blurb": "85 square metres with a balcony, a lift.",
+      "description": "A two-bedroom flat on the fourth floor of a 1952 building on Avenida da Igreja, 85 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Avenida da Igreja 30",
+      "point": {
+        "lat": 38.7536618,
+        "lng": -9.1428437
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 85,
+      "floor": 4,
+      "yearBuilt": 1952,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 40500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 8500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 476471,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 504100,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1722,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Lisbon municipality, since INE puts Alvalade below it without a figure, 12 months to March 2026",
+      "photos": [
+        "lis-01-1",
+        "lis-01-2",
+        "lis-01-3"
+      ],
+      "photoCredit": "Photos: Freguesia de Estrela, Jessica Martins, Mihai Moisa / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-36",
+      "areaId": "alvalade",
+      "areaName": "Alvalade",
+      "name": "Avenida de Roma",
+      "title": "A light three-bedroom flat with a balcony",
+      "blurb": "120 square metres with a balcony, a lift.",
+      "description": "A three-bedroom flat on the sixth floor of a 1958 building on Avenida de Roma, 120 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Avenida de Roma 80",
+      "point": {
+        "lat": 38.7517319,
+        "lng": -9.1427822
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 120,
+      "floor": 6,
+      "yearBuilt": 1958,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 59000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 12000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 491667,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 504100,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1722,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Lisbon municipality, since INE puts Alvalade below it without a figure, 12 months to March 2026",
+      "photos": [
+        "lis-02-1",
+        "lis-02-2",
+        "lis-02-3"
+      ],
+      "photoCredit": "Photos: Glauco Zuccaccia, Aquilion Property / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-37",
+      "areaId": "alvalade",
+      "areaName": "Alvalade",
+      "name": "Rua Afonso Lopes Vieira",
+      "title": "A modern one-bedroom flat in Alvalade",
+      "blurb": "One bedroom in a 1950 building, without a lift.",
+      "description": "A one-bedroom flat on the second floor of a 1950 building on Rua Afonso Lopes Vieira, 55 square metres in all. The balcony faces south over the street and the trees. There is no lift. The kitchen was renewed in 2016 and has room for a table of six.",
+      "address": "Rua Afonso Lopes Vieira 20",
+      "point": {
+        "lat": 38.7523056,
+        "lng": -9.1482981
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 55,
+      "floor": 2,
+      "yearBuilt": 1950,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 28000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 5500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 509091,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 504100,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1722,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Lisbon municipality, since INE puts Alvalade below it without a figure, 12 months to March 2026",
+      "photos": [
+        "lis-03-1",
+        "lis-03-2",
+        "lis-03-3"
+      ],
+      "photoCredit": "Photos: Evgeniy Beloshytskiy, Danilo Rios, Dalila Moreira / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-38",
+      "areaId": "carcavelos",
+      "areaName": "Carcavelos",
+      "name": "Avenida Jorge V",
+      "title": "A modern two-bedroom flat in Carcavelos",
+      "blurb": "Two bedrooms in a 1990 building, with a lift.",
+      "description": "A two-bedroom flat on the third floor of a 1990 building on Avenida Jorge V, 85 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Avenida Jorge V 20",
+      "point": {
+        "lat": 38.6848027,
+        "lng": -9.3384487
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 85,
+      "floor": 3,
+      "yearBuilt": 1990,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 39500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 8500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 464706,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 487000,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1650,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Cascais municipality, 12 months to March 2026",
+      "photos": [
+        "lis-04-1",
+        "lis-04-2",
+        "lis-04-3"
+      ],
+      "photoCredit": "Photos: Artem Astashov, Julia / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-39",
+      "areaId": "carcavelos",
+      "areaName": "Carcavelos",
+      "name": "Avenida do Loureiro",
+      "title": "A modern family house with a deep garden",
+      "blurb": "Three bedrooms over two floors, a garden, and parking by the gate.",
+      "description": "A modern house from 1975 on Avenida do Loureiro, with three bedrooms over two floors and 160 square metres in all. A deck runs along the back of the house onto a sheltered lawn. There is parking for one car by the gate. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Avenida do Loureiro 30",
+      "point": {
+        "lat": 38.6937662,
+        "lng": -9.3357315
+      },
+      "homeType": "house",
+      "rooms": 5,
+      "bedrooms": 3,
+      "sizeM2": 160,
+      "yearBuilt": 1975,
+      "outdoor": "garden",
+      "style": "modern",
+      "price": {
+        "minorUnits": 73000000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 456250,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 487000,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1650,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Cascais municipality, 12 months to March 2026",
+      "photos": [
+        "lis-10-1",
+        "lis-10-2",
+        "lis-10-3"
+      ],
+      "photoCredit": "Photos: Lynn Van den Broeck, David Marquez / Unsplash, of a similar sample home"
+    },
+    {
+      "id": "lis-40",
+      "areaId": "cascais-estoril",
+      "areaName": "Cascais",
+      "name": "Avenida 25 de Abril",
+      "title": "A two-bedroom flat on the fourth floor",
+      "blurb": "Two bedrooms in a 1985 building, with a lift.",
+      "description": "A two-bedroom flat on the fourth floor of a 1985 building on Avenida 25 de Abril, 90 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. The kitchen was renewed in 2018 and has room for a table of six.",
+      "address": "Avenida 25 de Abril 120",
+      "point": {
+        "lat": 38.6952031,
+        "lng": -9.4303574
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 90,
+      "floor": 4,
+      "yearBuilt": 1985,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 50000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 9000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 555556,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 545900,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1650,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Cascais municipality, 12 months to March 2026",
+      "photos": [
+        "lis-05-1",
+        "lis-05-2",
+        "lis-05-3"
+      ],
+      "photoCredit": "Photos: Diego García, Christian Lue, João Reguengos / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-41",
+      "areaId": "cascais-estoril",
+      "areaName": "Cascais",
+      "name": "Rua Frederico Arouca",
+      "title": "A one-bedroom flat on the second floor",
+      "blurb": "One bedroom in a 1950 building, without a lift.",
+      "description": "A one-bedroom flat on the second floor of a 1950 building on Rua Frederico Arouca, 60 square metres in all. There is no balcony; the living room has two tall windows onto the street. There is no lift. The bathroom has a shower and space for a washing machine.",
+      "address": "Rua Frederico Arouca 40",
+      "point": {
+        "lat": 38.698322,
+        "lng": -9.4201639
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 60,
+      "floor": 2,
+      "yearBuilt": 1950,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 33000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 6000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 550000,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 545900,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1650,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Cascais municipality, 12 months to March 2026",
+      "photos": [
+        "lis-06-1",
+        "lis-06-2",
+        "lis-06-3"
+      ],
+      "photoCredit": "Photos: Dmitrii E., Margo Evardson, Aleksandra Dementeva / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-42",
+      "areaId": "cascais-estoril",
+      "areaName": "Cascais",
+      "name": "Avenida Marginal",
+      "title": "A three-bedroom house on a quiet road",
+      "blurb": "Three bedrooms over two floors, a garden, and parking by the gate.",
+      "description": "A classic house from 1940 on Avenida Marginal, with three bedrooms over two floors and 180 square metres in all. A deck runs along the back of the house onto a sheltered lawn. There is parking for one car by the gate. The kitchen was renewed in 2015 and has room for a table of four.",
+      "address": "Avenida Marginal 7000",
+      "point": {
+        "lat": 38.6873625,
+        "lng": -9.3588786
+      },
+      "homeType": "house",
+      "rooms": 5,
+      "bedrooms": 3,
+      "sizeM2": 180,
+      "yearBuilt": 1940,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 96500000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 536111,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 545900,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1650,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Cascais municipality, 12 months to March 2026",
+      "photos": [
+        "lis-12-1",
+        "lis-12-2",
+        "lis-12-3"
+      ],
+      "photoCredit": "Photos: Leandro Barreto, Azzedine Rouichi / Unsplash, of a similar sample home"
+    },
+    {
+      "id": "lis-43",
+      "areaId": "cascais-estoril",
+      "areaName": "Cascais",
+      "name": "Rua Visconde da Luz",
+      "title": "A light two-bedroom flat with a balcony",
+      "blurb": "80 square metres with a balcony, a lift.",
+      "description": "A two-bedroom flat on the third floor of a 1960 building on Rua Visconde da Luz, 80 square metres in all. A small balcony off the living room looks over the courtyard. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Rua Visconde da Luz 20",
+      "point": {
+        "lat": 38.7000975,
+        "lng": -9.4222141
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 80,
+      "floor": 3,
+      "yearBuilt": 1960,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 45000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 8000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 562500,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 545900,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1650,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Cascais municipality, 12 months to March 2026",
+      "photos": [
+        "lis-07-1",
+        "lis-07-2",
+        "lis-07-3"
+      ],
+      "photoCredit": "Photos: Bruno Rothstein, Piotr AMS, Joao Emanuel, Marina Poliukhovich / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-44",
+      "areaId": "costa-da-caparica",
+      "areaName": "Costa da Caparica",
+      "name": "Rua dos Pescadores",
+      "title": "A one-bedroom flat on the second floor",
+      "blurb": "One bedroom in a 1980 building, without a lift.",
+      "description": "A one-bedroom flat on the second floor of a 1980 building on Rua dos Pescadores, 55 square metres in all. The balcony faces west and takes the evening sun. There is no lift. The bathroom has a shower and space for a washing machine.",
+      "address": "Rua dos Pescadores 30",
+      "point": {
+        "lat": 38.6436124,
+        "lng": -9.2349425
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 55,
+      "floor": 2,
+      "yearBuilt": 1980,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 23500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 5500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 427273,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 442600,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1364,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Almada municipality, first quarter of 2026",
+      "photos": [
+        "lis-08-1",
+        "lis-08-2",
+        "lis-08-3"
+      ],
+      "photoCredit": "Photos: Noa van Ieperen, Clay Banks, Steven Ungermann / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-45",
+      "areaId": "costa-da-caparica",
+      "areaName": "Costa da Caparica",
+      "name": "Avenida General Humberto Delgado",
+      "title": "A light two-bedroom flat with a balcony",
+      "blurb": "Two bedrooms in a 1995 building, with a lift.",
+      "description": "A two-bedroom flat on the fifth floor of a 1995 building on Avenida General Humberto Delgado, 80 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. The kitchen was renewed in 2013 and has room for a table of four.",
+      "address": "Avenida General Humberto Delgado 40",
+      "point": {
+        "lat": 38.6438392,
+        "lng": -9.2378525
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 80,
+      "floor": 5,
+      "yearBuilt": 1995,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 33500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 8000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 418750,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 442600,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1364,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Almada municipality, first quarter of 2026",
+      "photos": [
+        "lis-09-1",
+        "lis-09-2",
+        "lis-09-3"
+      ],
+      "photoCredit": "Photos: Ivan Rohovchenko, David Kuvaev, Ruben Aster / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-46",
+      "areaId": "costa-da-caparica",
+      "areaName": "Costa da Caparica",
+      "name": "Avenida 1º de Maio",
+      "title": "A three-bedroom flat on the third floor",
+      "blurb": "Three bedrooms in a 2005 building, with a lift.",
+      "description": "A three-bedroom flat on the third floor of a 2005 building on Avenida 1º de Maio, 105 square metres in all. A small balcony off the living room looks over the courtyard. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Avenida 1º de Maio 20",
+      "point": {
+        "lat": 38.6457459,
+        "lng": -9.2347327
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 105,
+      "floor": 3,
+      "yearBuilt": 2005,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 48500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 10500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 461905,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 442600,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1364,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Almada municipality, first quarter of 2026",
+      "photos": [
+        "lis-11-1",
+        "lis-11-2",
+        "lis-11-3"
+      ],
+      "photoCredit": "Photos: Augusto Lopes, Caroline Badran / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-47",
+      "areaId": "costa-da-caparica",
+      "areaName": "Costa da Caparica",
+      "name": "Rua Mestre Manuel",
+      "title": "A two-bedroom flat on the second floor",
+      "blurb": "Two bedrooms in a 1990 building, without a lift.",
+      "description": "A two-bedroom flat on the second floor of a 1990 building on Rua Mestre Manuel, 72 square metres in all. The balcony faces west and takes the evening sun. There is no lift. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Rua Mestre Manuel 10",
+      "point": {
+        "lat": 38.6430534,
+        "lng": -9.2361871
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 72,
+      "floor": 2,
+      "yearBuilt": 1990,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 34000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 7000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 472222,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 442600,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1364,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in Almada municipality, first quarter of 2026",
+      "photos": [
+        "lis-01-1",
+        "lis-01-2",
+        "lis-01-3"
+      ],
+      "photoCredit": "Photos: Freguesia de Estrela, Jessica Martins, Mihai Moisa / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-48",
+      "areaId": "sintra",
+      "areaName": "Sintra",
+      "name": "Avenida Heliodoro Salgado",
+      "title": "A light two-bedroom flat with a balcony",
+      "blurb": "85 square metres with a balcony, a lift.",
+      "description": "A two-bedroom flat on the third floor of a 1970 building on Avenida Heliodoro Salgado, 85 square metres in all. A small balcony off the living room looks over the courtyard. The building has a lift to every floor. The kitchen was renewed in 2015 and has room for a table of six.",
+      "address": "Avenida Heliodoro Salgado 30",
+      "point": {
+        "lat": 38.8019814,
+        "lng": -9.3823709
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 85,
+      "floor": 3,
+      "yearBuilt": 1970,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 29000000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 8500,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 341176,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 346500,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1443,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in the Grande Lisboa sub-region, 12 months to March 2026",
+      "photos": [
+        "lis-02-1",
+        "lis-02-2",
+        "lis-02-3"
+      ],
+      "photoCredit": "Photos: Glauco Zuccaccia, Aquilion Property / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "lis-49",
+      "areaId": "sintra",
+      "areaName": "Sintra",
+      "name": "Volta do Duche",
+      "title": "A classic one-bedroom flat in Sintra",
+      "blurb": "One bedroom in a 1930 building, without a lift.",
+      "description": "A one-bedroom flat on the second floor of a 1930 building on Volta do Duche, 60 square metres in all. The balcony faces south over the street and the trees. There is no lift. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Volta do Duche 10",
+      "point": {
+        "lat": 38.7982098,
+        "lng": -9.3883908
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 60,
+      "floor": 2,
+      "yearBuilt": 1930,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 20500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 6000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 341667,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 346500,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1443,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in the Grande Lisboa sub-region, 12 months to March 2026",
+      "photos": [
+        "lis-03-1",
+        "lis-03-2",
+        "lis-03-3"
+      ],
+      "photoCredit": "Photos: Evgeniy Beloshytskiy, Danilo Rios, Dalila Moreira / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "lis-50",
+      "areaId": "sintra",
+      "areaName": "Sintra",
+      "name": "Rua Doutor Alfredo da Costa",
+      "title": "A three-bedroom house on a quiet road",
+      "blurb": "Three bedrooms over two floors, a garden, and parking by the gate.",
+      "description": "A classic house from 1925 on Rua Doutor Alfredo da Costa, with three bedrooms over two floors and 170 square metres in all. The garden faces south and has a paved terrace and a lawn for play. There is parking for one car by the gate. The bathroom has a shower and space for a washing machine.",
+      "address": "Rua Doutor Alfredo da Costa 40",
+      "point": {
+        "lat": 38.7996494,
+        "lng": -9.3857693
+      },
+      "homeType": "house",
+      "rooms": 5,
+      "bedrooms": 3,
+      "sizeM2": 170,
+      "yearBuilt": 1925,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 56500000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 332353,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 346500,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1443,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in the Grande Lisboa sub-region, 12 months to March 2026",
+      "photos": [
+        "lis-13-1",
+        "lis-13-2",
+        "lis-13-3"
+      ],
+      "photoCredit": "Photos: Frederico Ferreira, Aalo Lens / Unsplash, of a similar sample home"
+    },
+    {
+      "id": "lis-51",
+      "areaId": "sintra",
+      "areaName": "Sintra",
+      "name": "Rua Câmara Pestana",
+      "title": "A two-bedroom flat on the fourth floor",
+      "blurb": "78 square metres with a balcony, a lift.",
+      "description": "A two-bedroom flat on the fourth floor of a 1965 building on Rua Câmara Pestana, 78 square metres in all. A small balcony off the living room looks over the courtyard. The building has a lift to every floor. The kitchen was renewed in 2013 and has room for a table of six.",
+      "address": "Rua Câmara Pestana 20",
+      "point": {
+        "lat": 38.8028157,
+        "lng": -9.3846474
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 78,
+      "floor": 4,
+      "yearBuilt": 1965,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 25500000,
+        "currency": "EUR"
+      },
+      "monthlyFee": {
+        "minorUnits": 8000,
+        "currency": "EUR"
+      },
+      "pricePerM2": {
+        "minorUnits": 326923,
+        "currency": "EUR"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 346500,
+        "currency": "EUR"
+      },
+      "priceSource": "INE, Statistics Portugal, 12 months to March 2026",
+      "areaRentPerM2": {
+        "minorUnits": 1443,
+        "currency": "EUR"
+      },
+      "rentSource": "INE, Statistics Portugal, median rent of new leases in the Grande Lisboa sub-region, 12 months to March 2026",
+      "photos": [
+        "lis-04-1",
+        "lis-04-2",
+        "lis-04-3"
+      ],
+      "photoCredit": "Photos: Artem Astashov, Julia / Unsplash, of a similar sample home",
+      "lift": true
     }
   ]
 }

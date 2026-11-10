@@ -14,16 +14,20 @@ class WeekMapPin {
     required this.point,
     required this.label,
     this.isHome = false,
+    this.isMuted = false,
+    this.detail,
     this.trips = const [],
   });
 
   final GeoPoint point;
   final String label;
   final bool isHome;
+  final bool isMuted;
+  final String? detail;
   final List<Trip> trips;
 
   String? get tripsText => trips.isEmpty
-      ? null
+      ? detail
       : [
           for (final trip in trips)
             switch (trip.minutes) {
@@ -154,14 +158,18 @@ class _Dot extends StatelessWidget {
     final colors = AppColors.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: pin.isHome ? colors.accent : colors.text,
+        color: pin.isHome
+            ? colors.brand
+            : pin.isMuted
+            ? colors.textTertiary
+            : colors.text,
         shape: BoxShape.circle,
         border: Border.all(color: colors.surface, width: 2),
       ),
       child: Icon(
         pin.isHome ? Icons.home_outlined : Icons.place_outlined,
         size: 16,
-        color: pin.isHome ? colors.onAccent : colors.surface,
+        color: pin.isHome ? colors.onBrand : colors.surface,
       ),
     );
   }
@@ -185,7 +193,11 @@ class _Pill extends StatelessWidget {
         color: colors.surface,
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: Border.all(
-          color: pin.isHome ? colors.accent : colors.text,
+          color: pin.isHome
+              ? colors.accent
+              : pin.isMuted
+              ? colors.border
+              : colors.text,
           width: 1.5,
         ),
       ),
@@ -203,12 +215,14 @@ class _Pill extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  modeIcon(pin.trips.first.mode),
-                  size: 14,
-                  color: colors.accent,
-                ),
-                const SizedBox(width: 2),
+                if (pin.trips.isNotEmpty) ...[
+                  Icon(
+                    modeIcon(pin.trips.first.mode),
+                    size: 14,
+                    color: colors.accent,
+                  ),
+                  const SizedBox(width: 2),
+                ],
                 Flexible(
                   child: Text(
                     text,

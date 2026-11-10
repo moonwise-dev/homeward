@@ -5,6 +5,7 @@ const askComponents = {
   'Button',
   'Choice',
   'Questions',
+  'MustHave',
 };
 
 const coreComponents = {
@@ -21,4 +22,5 @@ const coreComponents = {
   'Questions',
   'AffordabilitySummary',
   'RuleNote',
+  'MustHave',
 };

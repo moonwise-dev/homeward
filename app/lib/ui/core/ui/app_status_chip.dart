@@ -16,21 +16,28 @@ class AppStatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
     final styles = AppTextStyles.of(context);
-    final color = toneColor(colors, tone);
+    final (fill, ink) = switch (tone) {
+      AppTone.positive => (colors.brand, colors.onBrand),
+      AppTone.warning || AppTone.danger => (colors.alert, colors.onAlert),
+      AppTone.info || AppTone.neutral => (
+        colors.surfaceMuted,
+        toneColor(colors, tone),
+      ),
+    };
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
+        color: fill,
         borderRadius: BorderRadius.circular(AppRadii.pill),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.xs,
-          vertical: AppSpacing.xxs,
+          horizontal: AppSpacing.sm - 2,
+          vertical: AppSpacing.xxs + 1,
         ),
         child: Text(
           label,
           style: styles.caption.copyWith(
-            color: color,
+            color: ink,
             fontWeight: FontWeight.w600,
           ),
         ),

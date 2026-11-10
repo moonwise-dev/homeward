@@ -227,7 +227,35 @@ A turn starts from one of two inputs:
   them into one message, and Gemini decides what they mean. Actions are not a
   fixed list and the server applies none of them itself.
 
-There are no stages and no open decisions in code. The turn context tells
+The app is one map (D206, D207), and Gemini has three narrow jobs there,
+from `server/prompts/role.md`: turn the buyer's words into the arguments of
+`compute_affordability`, `find_place`, and `map_homes`, called in one step;
+write each home's why with `write_whys`; and end its reply with a row of
+`MustHave`s chosen for this household. The server offers Gemini only those
+four tools (`mapTools` in `tool_belt.dart`); the others stay registered for
+taps. Its line is at most twelve words (`style.md`).
+
+`map_homes` (D207) prices every sample home of the city for the household:
+what a month costs and the cash on the day from `/affordability`, or for a
+household that rents the rent of a home like it, and the month if rates
+rise. It gates each on the budget, then measures the week's trips, as
+`measure_week` takes them, from the centre of the six areas with a home in
+budget that lie nearest the week, so a turn stays near half a minute. It
+seeds `/map` (`CityHomes` in `common`) and draws one `HomeMap`, and answers
+Gemini with the homes in budget, nearest first, and how many have each
+must-have, so its options split them. `write_whys` adds up to 16 whys of at
+most six words, with no figures. Narrowing and ranking are the app's, by the
+rule in `common/lib/areas/home_funnel.dart`: no model call.
+
+A chip the buyer changes (D208) comes back as the app's own action,
+`edit_story`, with the changed fact: `adults`, `grossMonthlyIncome`,
+`savings`, or `maxRent` in major units, a `trip` with its days a week and
+way, or `removePlace`. The tap runs `edit_story` and no model round: it calls
+`compute_affordability` with the one changed fact, which carries the rest of
+the household, and `map_homes` with the places as they stand. A fact it
+cannot use falls back to a Gemini turn, as any tap does.
+
+The turn context tells
 Gemini the turn number and the screen as it stands: every component of the
 plan's one surface, `plan`, or an empty list before a turn has drawn it. Gemini
 changes that screen in place, sending only the components that change, the way

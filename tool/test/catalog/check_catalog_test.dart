@@ -72,7 +72,7 @@ void main() {
     ]);
   });
 
-  test('the skill carries the exact core schema and indexes the rest', () {
+  test('the skill carries the exact schema of what Gemini writes', () {
     final skill = renderCatalogSkill();
     final schema = RegExp(
       r'## Catalog Schema\n\n.*?\n\n```json\n(.*?)\n```',
@@ -84,12 +84,9 @@ void main() {
 
     expect(
       jsonDecode(schema),
-      jsonDecode(compactCatalogJson(coreCatalogDocument())),
+      jsonDecode(compactCatalogJson(coreCatalogDocument(names: askComponents))),
     );
-    for (final name in componentIndex().keys) {
-      expect(skill, contains('- `$name`: '));
-    }
-    expect(skill, contains('`plan`, the plan panel'));
+    expect(skill, contains('a row of must-haves'));
     expect(skill, isNot(contains(commonTypesId)));
   });
 }

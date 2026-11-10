@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../themes/dimens.dart';
+import '../themes/text_styles.dart';
+
 class AppTextField extends HookWidget {
   const AppTextField({
     required this.label,
@@ -52,7 +55,8 @@ class AppTextField extends HookWidget {
       return null;
     }, [value]);
 
-    return TextField(
+    final styles = AppTextStyles.of(context);
+    final field = TextField(
       controller: controller,
       onChanged: onChanged,
       onSubmitted: onSubmitted,
@@ -64,12 +68,20 @@ class AppTextField extends HookWidget {
       textInputAction: textInputAction,
       autofillHints: autofillHints,
       inputFormatters: inputFormatters,
+      style: styles.body.copyWith(fontSize: 16),
       decoration: InputDecoration(
-        labelText: label,
         hintText: hintText,
         errorText: errorText,
         suffixIcon: suffix,
       ),
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: AppSpacing.xs - 2,
+      children: [
+        Text(label, style: styles.label),
+        field,
+      ],
     );
   }
 }

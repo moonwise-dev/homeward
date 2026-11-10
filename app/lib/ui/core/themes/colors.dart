@@ -12,6 +12,10 @@ final class AppColors extends ThemeExtension<AppColors> {
     required this.textTertiary,
     required this.accent,
     required this.onAccent,
+    required this.brand,
+    required this.onBrand,
+    required this.alert,
+    required this.onAlert,
     required this.onPhoto,
     required this.accentSoft,
     required this.info,
@@ -22,42 +26,50 @@ final class AppColors extends ThemeExtension<AppColors> {
   });
 
   static const light = AppColors(
-    background: Color(0xFFF6F4EF),
+    background: Color(0xFFFFFFFF),
     surface: Color(0xFFFFFFFF),
-    surfaceMuted: Color(0xFFEFECE5),
-    border: Color(0xFFDDD8CD),
-    borderStrong: Color(0xFFC5BFB1),
-    text: Color(0xFF17212B),
-    textSecondary: Color(0xC417212B),
-    textTertiary: Color(0xA017212B),
-    accent: Color(0xFF1D5C4D),
+    surfaceMuted: Color(0xFFF3F4F5),
+    border: Color(0xFFE8EAEC),
+    borderStrong: Color(0xFFD3D6DA),
+    text: Color(0xFF0B0D0E),
+    textSecondary: Color(0xBA0B0D0E),
+    textTertiary: Color(0x9E0B0D0E),
+    accent: Color(0xFF007A3D),
     onAccent: Color(0xFFFFFFFF),
+    brand: Color(0xFF00C46A),
+    onBrand: Color(0xFF04140B),
+    alert: Color(0xFFFF6A3D),
+    onAlert: Color(0xFF1F0A03),
     onPhoto: Color(0xFFFFFFFF),
-    accentSoft: Color(0x1A1D5C4D),
-    info: Color(0xFF2B5C8A),
-    positive: Color(0xFF2E7D5B),
-    warning: Color(0xFFA86B12),
-    danger: Color(0xFFB3261E),
-    shadow: Color(0x1F17212B),
+    accentSoft: Color(0x2400C46A),
+    info: Color(0xFF2563EB),
+    positive: Color(0xFF007A3D),
+    warning: Color(0xFFC93F0B),
+    danger: Color(0xFFD92D20),
+    shadow: Color(0x140B0D0E),
   );
 
   static const dark = AppColors(
-    background: Color(0xFF141311),
-    surface: Color(0xFF1D1B18),
-    surfaceMuted: Color(0xFF262420),
-    border: Color(0xFF36332D),
-    borderStrong: Color(0xFF4A463E),
-    text: Color(0xFFEEEAE2),
-    textSecondary: Color(0xC7EEEAE2),
-    textTertiary: Color(0x9EEEEAE2),
-    accent: Color(0xFF6DBFA3),
-    onAccent: Color(0xFF0E1F1A),
+    background: Color(0xFF000000),
+    surface: Color(0xFF000000),
+    surfaceMuted: Color(0xFF16181A),
+    border: Color(0xFF26292C),
+    borderStrong: Color(0xFF3A3E42),
+    text: Color(0xFFF5F6F7),
+    textSecondary: Color(0xC7F5F6F7),
+    textTertiary: Color(0xA3F5F6F7),
+    accent: Color(0xFF1FD67A),
+    onAccent: Color(0xFF04140B),
+    brand: Color(0xFF1FD67A),
+    onBrand: Color(0xFF04140B),
+    alert: Color(0xFFFF7A45),
+    onAlert: Color(0xFF1F0A03),
     onPhoto: Color(0xFFFFFFFF),
-    accentSoft: Color(0x246DBFA3),
-    info: Color(0xFF7FAEDB),
-    positive: Color(0xFF6CC49A),
-    warning: Color(0xFFE0A94A),
-    danger: Color(0xFFF2877E),
+    accentSoft: Color(0x291FD67A),
+    info: Color(0xFF6EA8FF),
+    positive: Color(0xFF1FD67A),
+    warning: Color(0xFFFF8A50),
+    danger: Color(0xFFFF6B5E),
     shadow: Color(0x66000000),
   );
 
@@ -74,6 +86,10 @@ final class AppColors extends ThemeExtension<AppColors> {
   final Color textTertiary;
   final Color accent;
   final Color onAccent;
+  final Color brand;
+  final Color onBrand;
+  final Color alert;
+  final Color onAlert;
   final Color onPhoto;
   final Color accentSoft;
   final Color info;
@@ -102,6 +118,10 @@ final class AppColors extends ThemeExtension<AppColors> {
       textTertiary: mix(textTertiary, other.textTertiary),
       accent: mix(accent, other.accent),
       onAccent: mix(onAccent, other.onAccent),
+      brand: mix(brand, other.brand),
+      onBrand: mix(onBrand, other.onBrand),
+      alert: mix(alert, other.alert),
+      onAlert: mix(onAlert, other.onAlert),
       onPhoto: mix(onPhoto, other.onPhoto),
       accentSoft: mix(accentSoft, other.accentSoft),
       info: mix(info, other.info),

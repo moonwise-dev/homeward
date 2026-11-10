@@ -52,7 +52,8 @@
         "sto-01-3",
         "sto-01-4"
       ],
-      "photoCredit": "Photos: Oscar Nord, Taitopia Render, Andrew V / Unsplash"
+      "photoCredit": "Photos: Oscar Nord, Taitopia Render, Andrew V / Unsplash",
+      "lift": true
     },
     {
       "id": "sto-02",
@@ -102,7 +103,8 @@
         "sto-02-2",
         "sto-02-3"
       ],
-      "photoCredit": "Photos: Damir Yakupov, Lisa Anna / Unsplash"
+      "photoCredit": "Photos: Damir Yakupov, Lisa Anna / Unsplash",
+      "lift": false
     },
     {
       "id": "sto-03",
@@ -152,7 +154,8 @@
         "sto-03-2",
         "sto-03-3"
       ],
-      "photoCredit": "Photos: Samuel Horn af Rantzien, Davide Colonna, Erika Osberg / Unsplash"
+      "photoCredit": "Photos: Samuel Horn af Rantzien, Davide Colonna, Erika Osberg / Unsplash",
+      "lift": true
     },
     {
       "id": "sto-04",
@@ -202,7 +205,8 @@
         "sto-04-2",
         "sto-04-3"
       ],
-      "photoCredit": "Photos: Enza Brunero, Puscas Adryan, Jon Flobrant / Unsplash"
+      "photoCredit": "Photos: Enza Brunero, Puscas Adryan, Jon Flobrant / Unsplash",
+      "lift": false
     },
     {
       "id": "sto-05",
@@ -252,7 +256,8 @@
         "sto-05-2",
         "sto-05-3"
       ],
-      "photoCredit": "Photos: Spencer James Lucas, Uffe One, Wemel Wood / Unsplash"
+      "photoCredit": "Photos: Spencer James Lucas, Uffe One, Wemel Wood / Unsplash",
+      "lift": true
     },
     {
       "id": "sto-06",
@@ -303,7 +308,8 @@
         "sto-06-3",
         "sto-06-4"
       ],
-      "photoCredit": "Photos: Samuel Bryngelsson, Steven Ungermann, Bluewater Sweden, Caroline Badran / Unsplash"
+      "photoCredit": "Photos: Samuel Bryngelsson, Steven Ungermann, Bluewater Sweden, Caroline Badran / Unsplash",
+      "lift": true
     },
     {
       "id": "sto-07",
@@ -579,7 +585,8 @@
         "sto-12-2",
         "sto-12-3"
       ],
-      "photoCredit": "Photos: Tobias Wilden, Alex Tyson / Unsplash"
+      "photoCredit": "Photos: Tobias Wilden, Alex Tyson / Unsplash",
+      "lift": true
     },
     {
       "id": "sto-13",
@@ -674,7 +681,1826 @@
         "sto-14-2",
         "sto-14-3"
       ],
-      "photoCredit": "Photos: Valeriia Kryshchuk, Irena Oze / Unsplash"
+      "photoCredit": "Photos: Valeriia Kryshchuk, Irena Oze / Unsplash",
+      "lift": true
+    },
+    {
+      "id": "sto-15",
+      "areaId": "vasastan",
+      "areaName": "Vasastan",
+      "name": "Upplandsgatan",
+      "title": "A light one-bedroom flat",
+      "blurb": "One bedroom in a 1928 building, with a lift.",
+      "description": "A one-bedroom flat on the second floor of a 1928 building on Upplandsgatan, 44 square metres in all. There is no balcony; the living room has two tall windows onto the street. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Upplandsgatan 72",
+      "point": {
+        "lat": 59.3453046,
+        "lng": 18.0460591
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 44,
+      "floor": 2,
+      "yearBuilt": 1928,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 579000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 264000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 13159091,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 13486000,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15700,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Norra innerstaden in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-01-1",
+        "sto-01-2",
+        "sto-01-3"
+      ],
+      "photoCredit": "Photos: Oscar Nord, Taitopia Render, Andrew V / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-16",
+      "areaId": "vasastan",
+      "areaName": "Vasastan",
+      "name": "Sankt Eriksgatan",
+      "title": "A two-bedroom flat on the fifth floor",
+      "blurb": "Two bedrooms in a 1931 building, with a lift.",
+      "description": "A two-bedroom flat on the fifth floor of a 1931 building on Sankt Eriksgatan, 66 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Sankt Eriksgatan 98",
+      "point": {
+        "lat": 59.3432979,
+        "lng": 18.0392281
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 66,
+      "floor": 5,
+      "yearBuilt": 1931,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 945000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 396000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 14318182,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 13486000,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15700,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Norra innerstaden in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-02-1",
+        "sto-02-2",
+        "sto-02-3"
+      ],
+      "photoCredit": "Photos: Damir Yakupov, Lisa Anna / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-17",
+      "areaId": "vasastan",
+      "areaName": "Vasastan",
+      "name": "Norrtullsgatan",
+      "title": "A light one-bedroom flat",
+      "blurb": "36 square metres with windows onto a quiet courtyard, no lift.",
+      "description": "A one-bedroom flat on the first floor of a 1902 building on Norrtullsgatan, 36 square metres in all. There is no balcony, but the windows open onto a quiet courtyard. There is no lift. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Norrtullsgatan 31",
+      "point": {
+        "lat": 59.3446025,
+        "lng": 18.0491244
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 36,
+      "floor": 1,
+      "yearBuilt": 1902,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 452000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 216000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 12555556,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 13486000,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15700,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Norra innerstaden in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-03-1",
+        "sto-03-2",
+        "sto-03-3"
+      ],
+      "photoCredit": "Photos: Samuel Horn af Rantzien, Davide Colonna, Erika Osberg / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "sto-18",
+      "areaId": "ostermalm",
+      "areaName": "Östermalm",
+      "name": "Karlavägen",
+      "title": "A two-bedroom flat on the third floor",
+      "blurb": "84 square metres with windows onto a quiet courtyard, a lift.",
+      "description": "A two-bedroom flat on the third floor of a 1897 building on Karlavägen, 84 square metres in all. There is no balcony, but the windows open onto a quiet courtyard. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Karlavägen 58",
+      "point": {
+        "lat": 59.3389853,
+        "lng": 18.0827281
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 84,
+      "floor": 3,
+      "yearBuilt": 1897,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1034000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 504000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 12309524,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 12762900,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15700,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Norra innerstaden in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-04-1",
+        "sto-04-2",
+        "sto-04-3"
+      ],
+      "photoCredit": "Photos: Enza Brunero, Puscas Adryan, Jon Flobrant / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-19",
+      "areaId": "ostermalm",
+      "areaName": "Östermalm",
+      "name": "Linnégatan",
+      "title": "A classic one-bedroom flat in Östermalm",
+      "blurb": "One bedroom in a 1890 building, with a lift.",
+      "description": "A one-bedroom flat on the fourth floor of a 1890 building on Linnégatan, 48 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Linnégatan 40",
+      "point": {
+        "lat": 59.3366976,
+        "lng": 18.0824301
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 48,
+      "floor": 4,
+      "yearBuilt": 1890,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 656000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 288000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 13666667,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 12762900,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15700,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Norra innerstaden in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-05-1",
+        "sto-05-2",
+        "sto-05-3"
+      ],
+      "photoCredit": "Photos: Spencer James Lucas, Uffe One, Wemel Wood / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-20",
+      "areaId": "ostermalm",
+      "areaName": "Östermalm",
+      "name": "Valhallavägen",
+      "title": "A three-bedroom flat on the sixth floor",
+      "blurb": "102 square metres with a balcony, a lift.",
+      "description": "A three-bedroom flat on the sixth floor of a 1936 building on Valhallavägen, 102 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Valhallavägen 120",
+      "point": {
+        "lat": 59.3423642,
+        "lng": 18.082899
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 102,
+      "floor": 6,
+      "yearBuilt": 1936,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1363000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 612000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 13362745,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 12762900,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15700,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Norra innerstaden in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-06-1",
+        "sto-06-2",
+        "sto-06-3"
+      ],
+      "photoCredit": "Photos: Samuel Bryngelsson, Steven Ungermann, Bluewater Sweden, Caroline Badran / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-21",
+      "areaId": "sodermalm",
+      "areaName": "Södermalm",
+      "name": "Götgatan",
+      "title": "A one-bedroom flat on the fourth floor",
+      "blurb": "42 square metres with windows onto a quiet courtyard, a lift.",
+      "description": "A one-bedroom flat on the fourth floor of a 1930 building on Götgatan, 42 square metres in all. There is no balcony, but the windows open onto a quiet courtyard. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Götgatan 76",
+      "point": {
+        "lat": 59.3124288,
+        "lng": 18.0739213
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 42,
+      "floor": 4,
+      "yearBuilt": 1930,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 485000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 252000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 11547619,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 11458500,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 16225,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Södermalm in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-12-1",
+        "sto-12-2",
+        "sto-12-3"
+      ],
+      "photoCredit": "Photos: Tobias Wilden, Alex Tyson / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-22",
+      "areaId": "sodermalm",
+      "areaName": "Södermalm",
+      "name": "Folkungagatan",
+      "title": "A classic two-bedroom flat in Södermalm",
+      "blurb": "64 square metres with windows onto a quiet courtyard, no lift.",
+      "description": "A two-bedroom flat on the second floor of a 1928 building on Folkungagatan, 64 square metres in all. There is no balcony; the living room has two tall windows onto the street. There is no lift. The kitchen was renewed in 2013 and has room for a table of four.",
+      "address": "Folkungagatan 98",
+      "point": {
+        "lat": 59.3151883,
+        "lng": 18.081999
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 64,
+      "floor": 2,
+      "yearBuilt": 1928,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 704000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 384000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 11000000,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 11458500,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 16225,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Södermalm in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-14-1",
+        "sto-14-2",
+        "sto-14-3"
+      ],
+      "photoCredit": "Photos: Valeriia Kryshchuk, Irena Oze / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "sto-23",
+      "areaId": "sodermalm",
+      "areaName": "Södermalm",
+      "name": "Ringvägen",
+      "title": "A light two-bedroom flat with a balcony",
+      "blurb": "70 square metres with a balcony, a lift.",
+      "description": "A two-bedroom flat on the sixth floor of a 1962 building on Ringvägen, 70 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Ringvägen 112",
+      "point": {
+        "lat": 59.3079148,
+        "lng": 18.0794101
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 70,
+      "floor": 6,
+      "yearBuilt": 1962,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 824000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 420000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 11771429,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 11458500,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 16225,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Södermalm in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-01-1",
+        "sto-01-2",
+        "sto-01-3"
+      ],
+      "photoCredit": "Photos: Oscar Nord, Taitopia Render, Andrew V / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-24",
+      "areaId": "sodermalm",
+      "areaName": "Södermalm",
+      "name": "Bondegatan",
+      "title": "A one-bedroom flat on the third floor",
+      "blurb": "38 square metres with windows onto a quiet courtyard, no lift.",
+      "description": "A one-bedroom flat on the third floor of a 1905 building on Bondegatan, 38 square metres in all. There is no balcony; the living room has two tall windows onto the street. There is no lift. The kitchen was renewed in 2019 and has room for a table of six.",
+      "address": "Bondegatan 44",
+      "point": {
+        "lat": 59.3132625,
+        "lng": 18.0827775
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 38,
+      "floor": 3,
+      "yearBuilt": 1905,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 451000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 228000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 11868421,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 11458500,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 16225,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Södermalm in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-02-1",
+        "sto-02-2",
+        "sto-02-3"
+      ],
+      "photoCredit": "Photos: Damir Yakupov, Lisa Anna / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "sto-25",
+      "areaId": "kungsholmen",
+      "areaName": "Kungsholmen",
+      "name": "Fleminggatan",
+      "title": "A classic one-bedroom flat in Kungsholmen",
+      "blurb": "46 square metres with a balcony, a lift.",
+      "description": "A one-bedroom flat on the fifth floor of a 1934 building on Fleminggatan, 46 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. The kitchen was renewed in 2017 and has room for a table of six.",
+      "address": "Fleminggatan 70",
+      "point": {
+        "lat": 59.3352939,
+        "lng": 18.0270709
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 46,
+      "floor": 5,
+      "yearBuilt": 1934,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 526000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 276000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 11434783,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 11211500,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15717,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Kungsholmen in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-03-1",
+        "sto-03-2",
+        "sto-03-3"
+      ],
+      "photoCredit": "Photos: Samuel Horn af Rantzien, Davide Colonna, Erika Osberg / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-26",
+      "areaId": "kungsholmen",
+      "areaName": "Kungsholmen",
+      "name": "Hantverkargatan",
+      "title": "A light two-bedroom flat",
+      "blurb": "Two bedrooms in a 1925 building, with a lift.",
+      "description": "A two-bedroom flat on the third floor of a 1925 building on Hantverkargatan, 68 square metres in all. There is no balcony; the living room has two tall windows onto the street. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Hantverkargatan 34",
+      "point": {
+        "lat": 59.3293685,
+        "lng": 18.0410185
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 68,
+      "floor": 3,
+      "yearBuilt": 1925,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 745000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 408000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 10955882,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 11211500,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15717,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Kungsholmen in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-04-1",
+        "sto-04-2",
+        "sto-04-3"
+      ],
+      "photoCredit": "Photos: Enza Brunero, Puscas Adryan, Jon Flobrant / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-27",
+      "areaId": "kungsholmen",
+      "areaName": "Kungsholmen",
+      "name": "Sankt Göransgatan",
+      "title": "A two-bedroom flat on the seventh floor",
+      "blurb": "Two bedrooms in a 2014 building, with a lift.",
+      "description": "A two-bedroom flat on the seventh floor of a 2014 building on Sankt Göransgatan, 74 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Sankt Göransgatan 90",
+      "point": {
+        "lat": 59.334008,
+        "lng": 18.0271346
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 74,
+      "floor": 7,
+      "yearBuilt": 2014,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 909000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 444000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 12283784,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 11211500,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15717,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Kungsholmen in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-05-1",
+        "sto-05-2",
+        "sto-05-3"
+      ],
+      "photoCredit": "Photos: Spencer James Lucas, Uffe One, Wemel Wood / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-28",
+      "areaId": "solna",
+      "areaName": "Solna",
+      "name": "Råsundavägen",
+      "title": "A light one-bedroom flat with a balcony",
+      "blurb": "45 square metres with a balcony, a lift.",
+      "description": "A one-bedroom flat on the third floor of a 1949 building on Råsundavägen, 45 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Råsundavägen 120",
+      "point": {
+        "lat": 59.3659272,
+        "lng": 17.9915453
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 45,
+      "floor": 3,
+      "yearBuilt": 1949,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 291000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 270000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 6466667,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6451800,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 13883,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Solna in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-06-1",
+        "sto-06-2",
+        "sto-06-3"
+      ],
+      "photoCredit": "Photos: Samuel Bryngelsson, Steven Ungermann, Bluewater Sweden, Caroline Badran / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-29",
+      "areaId": "solna",
+      "areaName": "Solna",
+      "name": "Hannebergsgatan",
+      "title": "A light two-bedroom flat with a balcony",
+      "blurb": "Two bedrooms in a 2008 building, with a lift.",
+      "description": "A two-bedroom flat on the fourth floor of a 2008 building on Hannebergsgatan, 70 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Hannebergsgatan 20",
+      "point": {
+        "lat": 59.3573737,
+        "lng": 18.0008847
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 70,
+      "floor": 4,
+      "yearBuilt": 2008,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 464000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 420000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 6628571,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6451800,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 13883,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Solna in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-12-1",
+        "sto-12-2",
+        "sto-12-3"
+      ],
+      "photoCredit": "Photos: Tobias Wilden, Alex Tyson / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-30",
+      "areaId": "solna",
+      "areaName": "Solna",
+      "name": "Sundbybergsvägen",
+      "title": "A three-bedroom flat on the ninth floor",
+      "blurb": "Three bedrooms in a 2019 building, with a lift.",
+      "description": "A three-bedroom flat on the ninth floor of a 2019 building on Sundbybergsvägen, 88 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. The kitchen was renewed in 2019 and has room for a table of six.",
+      "address": "Sundbybergsvägen 9",
+      "point": {
+        "lat": 59.3554853,
+        "lng": 18.0027294
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 88,
+      "floor": 9,
+      "yearBuilt": 2019,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 626000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 528000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 7113636,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6451800,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 13883,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Solna in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-14-1",
+        "sto-14-2",
+        "sto-14-3"
+      ],
+      "photoCredit": "Photos: Valeriia Kryshchuk, Irena Oze / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-31",
+      "areaId": "solna",
+      "areaName": "Solna",
+      "name": "Frösundaleden",
+      "title": "A light two-bedroom flat with a balcony",
+      "blurb": "Two bedrooms in a 2017 building, with a lift.",
+      "description": "A two-bedroom flat on the fifth floor of a 2017 building on Frösundaleden, 64 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Frösundaleden 2",
+      "point": {
+        "lat": 59.3648389,
+        "lng": 18.0208687
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 64,
+      "floor": 5,
+      "yearBuilt": 2017,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 411000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 384000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 6421875,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6451800,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 13883,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Solna in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-01-1",
+        "sto-01-2",
+        "sto-01-3"
+      ],
+      "photoCredit": "Photos: Oscar Nord, Taitopia Render, Andrew V / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-32",
+      "areaId": "danderyd",
+      "areaName": "Danderyd",
+      "name": "Vendevägen",
+      "title": "A modern two-bedroom flat in Danderyd",
+      "blurb": "75 square metres with a balcony, a lift.",
+      "description": "A two-bedroom flat on the third floor of a 1982 building on Vendevägen, 75 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. The kitchen was renewed in 2019 and has room for a table of four.",
+      "address": "Vendevägen 7",
+      "point": {
+        "lat": 59.3971287,
+        "lng": 18.0893326
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 75,
+      "floor": 3,
+      "yearBuilt": 1982,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 717000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 450000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 9560000,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 9220400,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15225,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Danderyd in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-02-1",
+        "sto-02-2",
+        "sto-02-3"
+      ],
+      "photoCredit": "Photos: Damir Yakupov, Lisa Anna / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-33",
+      "areaId": "danderyd",
+      "areaName": "Danderyd",
+      "name": "Enebybergsvägen",
+      "title": "A classic family house with a sunny garden",
+      "blurb": "Three bedrooms over two floors, a garden, and parking by the gate.",
+      "description": "A classic house from 1958 on Enebybergsvägen, with three bedrooms over two floors and 130 square metres in all. A deck runs along the back of the house onto a sheltered lawn. There is parking for one car by the gate. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Enebybergsvägen 10",
+      "point": {
+        "lat": 59.4118216,
+        "lng": 18.0342955
+      },
+      "homeType": "house",
+      "rooms": 5,
+      "bedrooms": 3,
+      "sizeM2": 130,
+      "yearBuilt": 1958,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1166000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 8969231,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 9220400,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15225,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Danderyd in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-07-1",
+        "sto-07-2",
+        "sto-07-3"
+      ],
+      "photoCredit": "Photos: Emil Widlund, Bailey Alexander / Unsplash, of a similar sample home"
+    },
+    {
+      "id": "sto-34",
+      "areaId": "danderyd",
+      "areaName": "Danderyd",
+      "name": "Edsviksvägen",
+      "title": "A light one-bedroom flat with a balcony",
+      "blurb": "One bedroom in a 1965 building, with a lift.",
+      "description": "A one-bedroom flat on the second floor of a 1965 building on Edsviksvägen, 52 square metres in all. A small balcony off the living room looks over the courtyard. The building has a lift to every floor. The kitchen was renewed in 2017 and has room for a table of four.",
+      "address": "Edsviksvägen 20",
+      "point": {
+        "lat": 59.4001984,
+        "lng": 18.0298112
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 52,
+      "floor": 2,
+      "yearBuilt": 1965,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 484000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 312000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 9307692,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 9220400,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15225,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Danderyd in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-03-1",
+        "sto-03-2",
+        "sto-03-3"
+      ],
+      "photoCredit": "Photos: Samuel Horn af Rantzien, Davide Colonna, Erika Osberg / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-35",
+      "areaId": "lidingo",
+      "areaName": "Lidingö",
+      "name": "Stockholmsvägen",
+      "title": "A two-bedroom flat on the fourth floor",
+      "blurb": "72 square metres with a balcony, a lift.",
+      "description": "A two-bedroom flat on the fourth floor of a 1960 building on Stockholmsvägen, 72 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Stockholmsvägen 50",
+      "point": {
+        "lat": 59.3642727,
+        "lng": 18.1336281
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 72,
+      "floor": 4,
+      "yearBuilt": 1960,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 711000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 432000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 9875000,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 10397100,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 14725,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Lidingö in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-04-1",
+        "sto-04-2",
+        "sto-04-3"
+      ],
+      "photoCredit": "Photos: Enza Brunero, Puscas Adryan, Jon Flobrant / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-36",
+      "areaId": "lidingo",
+      "areaName": "Lidingö",
+      "name": "Södra Kungsvägen",
+      "title": "A three-bedroom house on a quiet road",
+      "blurb": "Three bedrooms over two floors, a garden, and parking by the gate.",
+      "description": "A classic house from 1938 on Södra Kungsvägen, with three bedrooms over two floors and 135 square metres in all. The garden is fenced, with a terrace outside the kitchen and fruit trees at the back. There is parking for one car by the gate. The bathroom has a shower and space for a washing machine.",
+      "address": "Södra Kungsvägen 200",
+      "point": {
+        "lat": 59.3640066,
+        "lng": 18.1249916
+      },
+      "homeType": "house",
+      "rooms": 5,
+      "bedrooms": 3,
+      "sizeM2": 135,
+      "yearBuilt": 1938,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1322000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 9792593,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 10397100,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 14725,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Lidingö in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-08-1",
+        "sto-08-2",
+        "sto-08-3"
+      ],
+      "photoCredit": "Photos: Frantisek Duris, Clay Banks / Unsplash, of a similar sample home"
+    },
+    {
+      "id": "sto-37",
+      "areaId": "bromma",
+      "areaName": "Bromma",
+      "name": "Alviksvägen",
+      "title": "A two-bedroom flat on the third floor",
+      "blurb": "64 square metres with a balcony, no lift.",
+      "description": "A two-bedroom flat on the third floor of a 1946 building on Alviksvägen, 64 square metres in all. The balcony faces south over the street and the trees. There is no lift. The kitchen was renewed in 2019 and has room for a table of six.",
+      "address": "Alviksvägen 40",
+      "point": {
+        "lat": 59.3278887,
+        "lng": 17.9733144
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 64,
+      "floor": 3,
+      "yearBuilt": 1946,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 477000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 384000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 7453125,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 7136800,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15442,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Bromma in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-05-1",
+        "sto-05-2",
+        "sto-05-3"
+      ],
+      "photoCredit": "Photos: Spencer James Lucas, Uffe One, Wemel Wood / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "sto-38",
+      "areaId": "bromma",
+      "areaName": "Bromma",
+      "name": "Bällstavägen",
+      "title": "A modern one-bedroom flat in Bromma",
+      "blurb": "44 square metres with a balcony, a lift.",
+      "description": "A one-bedroom flat on the fourth floor of a 2016 building on Bällstavägen, 44 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. The kitchen was renewed in 2016 and has room for a table of four.",
+      "address": "Bällstavägen 40",
+      "point": {
+        "lat": 59.3611081,
+        "lng": 17.9462611
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 44,
+      "floor": 4,
+      "yearBuilt": 2016,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 333000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 264000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 7568182,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 7136800,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15442,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Bromma in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-06-1",
+        "sto-06-2",
+        "sto-06-3"
+      ],
+      "photoCredit": "Photos: Samuel Bryngelsson, Steven Ungermann, Bluewater Sweden, Caroline Badran / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-39",
+      "areaId": "bromma",
+      "areaName": "Bromma",
+      "name": "Ålstensgatan",
+      "title": "A classic family house with a sheltered garden",
+      "blurb": "Four bedrooms over two floors, a garden, and parking by the gate.",
+      "description": "A classic house from 1931 on Ålstensgatan, with four bedrooms over two floors and 160 square metres in all. A deck runs along the back of the house onto a sheltered lawn. There is parking for one car by the gate. The bathroom has a shower and space for a washing machine.",
+      "address": "Ålstensgatan 40",
+      "point": {
+        "lat": 59.321621,
+        "lng": 17.9551571
+      },
+      "homeType": "house",
+      "rooms": 6,
+      "bedrooms": 4,
+      "sizeM2": 160,
+      "yearBuilt": 1931,
+      "outdoor": "garden",
+      "style": "classic",
+      "price": {
+        "minorUnits": 1102000000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 6887500,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 7136800,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15442,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Bromma in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-09-1",
+        "sto-09-2",
+        "sto-09-3"
+      ],
+      "photoCredit": "Photos: Samuel Bryngelsson, Clay Banks / Unsplash, of a similar sample home"
+    },
+    {
+      "id": "sto-40",
+      "areaId": "nacka",
+      "areaName": "Nacka",
+      "name": "Järla Gårdsväg",
+      "title": "A two-bedroom flat on the fourth floor",
+      "blurb": "Two bedrooms in a 2017 building, with a lift.",
+      "description": "A two-bedroom flat on the fourth floor of a 2017 building on Järla Gårdsväg, 70 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Järla Gårdsväg 12",
+      "point": {
+        "lat": 59.3060154,
+        "lng": 18.1542551
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 70,
+      "floor": 4,
+      "yearBuilt": 2017,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 443000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 420000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 6328571,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6033400,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15158,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Nacka in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-12-1",
+        "sto-12-2",
+        "sto-12-3"
+      ],
+      "photoCredit": "Photos: Tobias Wilden, Alex Tyson / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-41",
+      "areaId": "nacka",
+      "areaName": "Nacka",
+      "name": "Vikdalsvägen",
+      "title": "A light one-bedroom flat with a balcony",
+      "blurb": "One bedroom in a 1966 building, with a lift.",
+      "description": "A one-bedroom flat on the third floor of a 1966 building on Vikdalsvägen, 46 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Vikdalsvägen 20",
+      "point": {
+        "lat": 59.3124654,
+        "lng": 18.1624781
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 46,
+      "floor": 3,
+      "yearBuilt": 1966,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 267000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 276000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 5804348,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6033400,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15158,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Nacka in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-14-1",
+        "sto-14-2",
+        "sto-14-3"
+      ],
+      "photoCredit": "Photos: Valeriia Kryshchuk, Irena Oze / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-42",
+      "areaId": "nacka",
+      "areaName": "Nacka",
+      "name": "Augustendalsvägen",
+      "title": "A modern three-bedroom flat in Nacka",
+      "blurb": "96 square metres with a balcony, a lift.",
+      "description": "A three-bedroom flat on the sixth floor of a 2004 building on Augustendalsvägen, 96 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Augustendalsvägen 30",
+      "point": {
+        "lat": 59.3175854,
+        "lng": 18.1631445
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 96,
+      "floor": 6,
+      "yearBuilt": 2004,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 608000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 576000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 6333333,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6033400,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15158,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Nacka in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-01-1",
+        "sto-01-2",
+        "sto-01-3"
+      ],
+      "photoCredit": "Photos: Oscar Nord, Taitopia Render, Andrew V / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-43",
+      "areaId": "nacka",
+      "areaName": "Nacka",
+      "name": "Ektorpsvägen",
+      "title": "A two-bedroom flat on the second floor",
+      "blurb": "Two bedrooms in a 1970 building, without a lift.",
+      "description": "A two-bedroom flat on the second floor of a 1970 building on Ektorpsvägen, 66 square metres in all. The balcony faces south over the street and the trees. There is no lift. The bathroom has a shower and space for a washing machine.",
+      "address": "Ektorpsvägen 10",
+      "point": {
+        "lat": 59.3164316,
+        "lng": 18.2010546
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 66,
+      "floor": 2,
+      "yearBuilt": 1970,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 395000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 396000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 5984848,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6033400,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15158,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Nacka in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-02-1",
+        "sto-02-2",
+        "sto-02-3"
+      ],
+      "photoCredit": "Photos: Damir Yakupov, Lisa Anna / Unsplash, of a similar sample home",
+      "lift": false
+    },
+    {
+      "id": "sto-44",
+      "areaId": "sundbyberg",
+      "areaName": "Sundbyberg",
+      "name": "Landsvägen",
+      "title": "A light one-bedroom flat with a balcony",
+      "blurb": "42 square metres with a balcony, a lift.",
+      "description": "A one-bedroom flat on the third floor of a 1939 building on Landsvägen, 42 square metres in all. The balcony faces south over the street and the trees. The building has a lift to every floor. The kitchen was renewed in 2017 and has room for a table of four.",
+      "address": "Landsvägen 50",
+      "point": {
+        "lat": 59.3602008,
+        "lng": 17.9724202
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 42,
+      "floor": 3,
+      "yearBuilt": 1939,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 284000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 252000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 6761905,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6689000,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 12825,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Sundbyberg in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-03-1",
+        "sto-03-2",
+        "sto-03-3"
+      ],
+      "photoCredit": "Photos: Samuel Horn af Rantzien, Davide Colonna, Erika Osberg / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-45",
+      "areaId": "sundbyberg",
+      "areaName": "Sundbyberg",
+      "name": "Sturegatan",
+      "title": "A two-bedroom flat on the fifth floor",
+      "blurb": "Two bedrooms in a 2011 building, with a lift.",
+      "description": "A two-bedroom flat on the fifth floor of a 2011 building on Sturegatan, 64 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. The bathroom has a shower and space for a washing machine.",
+      "address": "Sturegatan 30",
+      "point": {
+        "lat": 59.3635984,
+        "lng": 17.9671472
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 64,
+      "floor": 5,
+      "yearBuilt": 2011,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 475000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 384000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 7421875,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6689000,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 12825,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Sundbyberg in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-04-1",
+        "sto-04-2",
+        "sto-04-3"
+      ],
+      "photoCredit": "Photos: Enza Brunero, Puscas Adryan, Jon Flobrant / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-46",
+      "areaId": "sundbyberg",
+      "areaName": "Sundbyberg",
+      "name": "Esplanaden",
+      "title": "A light three-bedroom flat with a balcony",
+      "blurb": "86 square metres with a balcony, a lift.",
+      "description": "A three-bedroom flat on the fourth floor of a 1952 building on Esplanaden, 86 square metres in all. A small balcony off the living room looks over the courtyard. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Esplanaden 10",
+      "point": {
+        "lat": 59.362532,
+        "lng": 17.965526
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 86,
+      "floor": 4,
+      "yearBuilt": 1952,
+      "outdoor": "balcony",
+      "style": "classic",
+      "price": {
+        "minorUnits": 598000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 516000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 6953488,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 6689000,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 12825,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Sundbyberg in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-05-1",
+        "sto-05-2",
+        "sto-05-3"
+      ],
+      "photoCredit": "Photos: Spencer James Lucas, Uffe One, Wemel Wood / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-47",
+      "areaId": "liljeholmen",
+      "areaName": "Liljeholmen",
+      "name": "Liljeholmsstranden",
+      "title": "A two-bedroom flat on the sixth floor",
+      "blurb": "Two bedrooms in a 2009 building, with a lift.",
+      "description": "A two-bedroom flat on the sixth floor of a 2009 building on Liljeholmsstranden, 68 square metres in all. A small balcony off the living room looks over the courtyard. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Liljeholmsstranden 3",
+      "point": {
+        "lat": 59.3138073,
+        "lng": 18.0281058
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 68,
+      "floor": 6,
+      "yearBuilt": 2009,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 590000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 408000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 8676471,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 8088100,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15508,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Hägersten-Älvsjö in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-06-1",
+        "sto-06-2",
+        "sto-06-3"
+      ],
+      "photoCredit": "Photos: Samuel Bryngelsson, Steven Ungermann, Bluewater Sweden, Caroline Badran / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-48",
+      "areaId": "liljeholmen",
+      "areaName": "Liljeholmen",
+      "name": "Sjöviksbacken",
+      "title": "A light one-bedroom flat with a balcony",
+      "blurb": "One bedroom in a 2012 building, with a lift.",
+      "description": "A one-bedroom flat on the fourth floor of a 2012 building on Sjöviksbacken, 42 square metres in all. A small balcony off the living room looks over the courtyard. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Sjöviksbacken 10",
+      "point": {
+        "lat": 59.3017586,
+        "lng": 18.026593
+      },
+      "homeType": "flat",
+      "rooms": 2,
+      "bedrooms": 1,
+      "sizeM2": 42,
+      "floor": 4,
+      "yearBuilt": 2012,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 371000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 252000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 8833333,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 8088100,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15508,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Hägersten-Älvsjö in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-12-1",
+        "sto-12-2",
+        "sto-12-3"
+      ],
+      "photoCredit": "Photos: Tobias Wilden, Alex Tyson / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-49",
+      "areaId": "liljeholmen",
+      "areaName": "Liljeholmen",
+      "name": "Lövholmsvägen",
+      "title": "A modern three-bedroom flat in Liljeholmen",
+      "blurb": "Three bedrooms in a 2021 building, with a lift.",
+      "description": "A three-bedroom flat on the eighth floor of a 2021 building on Lövholmsvägen, 90 square metres in all. The balcony faces west and takes the evening sun. The building has a lift to every floor. Storage is in the cellar, and there is a room for bicycles.",
+      "address": "Lövholmsvägen 15",
+      "point": {
+        "lat": 59.3150021,
+        "lng": 18.0073345
+      },
+      "homeType": "flat",
+      "rooms": 4,
+      "bedrooms": 3,
+      "sizeM2": 90,
+      "floor": 8,
+      "yearBuilt": 2021,
+      "outdoor": "balcony",
+      "style": "modern",
+      "price": {
+        "minorUnits": 737000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 540000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 8188889,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 8088100,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15508,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Hägersten-Älvsjö in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-14-1",
+        "sto-14-2",
+        "sto-14-3"
+      ],
+      "photoCredit": "Photos: Valeriia Kryshchuk, Irena Oze / Unsplash, of a similar sample home",
+      "lift": true
+    },
+    {
+      "id": "sto-50",
+      "areaId": "liljeholmen",
+      "areaName": "Liljeholmen",
+      "name": "Liljeholmsvägen",
+      "title": "A classic two-bedroom flat in Liljeholmen",
+      "blurb": "Two bedrooms in a 1937 building, with a lift.",
+      "description": "A two-bedroom flat on the third floor of a 1937 building on Liljeholmsvägen, 62 square metres in all. There is no balcony, but the windows open onto a quiet courtyard. The building has a lift to every floor. The kitchen was renewed in 2019 and has room for a table of four.",
+      "address": "Liljeholmsvägen 20",
+      "point": {
+        "lat": 59.3130354,
+        "lng": 18.0290426
+      },
+      "homeType": "flat",
+      "rooms": 3,
+      "bedrooms": 2,
+      "sizeM2": 62,
+      "floor": 3,
+      "yearBuilt": 1937,
+      "outdoor": "none",
+      "style": "classic",
+      "price": {
+        "minorUnits": 524000000,
+        "currency": "SEK"
+      },
+      "monthlyFee": {
+        "minorUnits": 372000,
+        "currency": "SEK"
+      },
+      "pricePerM2": {
+        "minorUnits": 8451613,
+        "currency": "SEK"
+      },
+      "areaPricePerM2": {
+        "minorUnits": 8088100,
+        "currency": "SEK"
+      },
+      "priceSource": "Svensk Mäklarstatistik, June to August 2026",
+      "areaRentPerM2": {
+        "minorUnits": 15508,
+        "currency": "SEK"
+      },
+      "rentSource": "Statistics Sweden, median rent of first-hand leases in Hägersten-Älvsjö in 2025, which take years in the housing queue",
+      "photos": [
+        "sto-01-1",
+        "sto-01-2",
+        "sto-01-3"
+      ],
+      "photoCredit": "Photos: Oscar Nord, Taitopia Render, Andrew V / Unsplash, of a similar sample home",
+      "lift": true
     }
   ]
 }

@@ -64,6 +64,14 @@ class JourneyViewModel extends _$JourneyViewModel
     await ref.read(agentRepositoryProvider).sendText(sessionId, message);
   }
 
+  Future<void> editStory(Map<String, Object?> context) => ref
+      .read(agentRepositoryProvider)
+      .sendAction(
+        sessionId,
+        'edit_story',
+        context,
+      );
+
   Future<void> startOver() async {
     final router = ref.read(appRouterProvider);
     if (state.conversation.isRunning) {
@@ -124,53 +132,38 @@ abstract class JourneyState with _$JourneyState {
 
   const JourneyState._();
 
-  List<JourneySection> get sections => [
-    for (final (index, entry) in conversation.entries.indexed)
-      if (entry case final AgentEntry agent
-          when agent.status != AgentTurnStatus.streaming ||
-              inlineSurfaceIds(agent).isNotEmpty)
-        JourneySection(
-          entry: agent,
-          prompt: switch (conversation.entries.elementAtOrNull(index - 1)) {
-            final BuyerEntry prompt => prompt,
-            final BuyerActionEntry prompt => prompt,
-            _ => null,
-          },
-        ),
-  ];
+  AgentEntry? get latest => _lastAgent((_) => true);
 
-  AgentEntry? get pending => switch (conversation.entries.lastOrNull) {
-    final AgentEntry entry
-        when entry.status == AgentTurnStatus.streaming &&
-            inlineSurfaceIds(entry).isEmpty =>
-      entry,
-    _ => null,
-  };
-
-  TranscriptEntry? get pendingPrompt => pending == null
-      ? null
-      : switch (conversation.entries.elementAtOrNull(
-          conversation.entries.length - 2,
-        )) {
-          final BuyerEntry prompt => prompt,
-          final BuyerActionEntry prompt => prompt,
-          _ => null,
-        };
-
-  bool get hasPlan => conversation.entries.any(
-    (entry) => entry is AgentEntry && entry.surfaceIds.contains(planSurfaceId),
+  AgentEntry? get latestLine => _lastAgent(
+    (entry) =>
+        entry.text.trim().isNotEmpty || entry.status == AgentTurnStatus.failed,
   );
 
-  List<PlanChange> get latestChanges =>
-      switch (conversation.entries.lastOrNull) {
-        AgentEntry(:final planChanges) => planChanges,
-        _ => const [],
-      };
+  bool get isEditing => conversation.isRunning && _lastBuyerIsEdit;
 
-  String? get sectionToShow =>
-      (latestChanges.where((change) => change.isNew).firstOrNull ??
-              latestChanges.where(_isWorthNaming).firstOrNull)
-          ?.sectionId;
+  bool get _lastBuyerIsEdit {
+    for (final entry in conversation.entries.reversed) {
+      if (entry is BuyerEntry) {
+        return false;
+      }
+      if (entry is BuyerActionEntry) {
+        return entry.actionName == 'edit_story';
+      }
+    }
+    return false;
+  }
+
+  AgentEntry? get latestCompleted =>
+      _lastAgent((entry) => entry.status != AgentTurnStatus.streaming);
+
+  AgentEntry? _lastAgent(bool Function(AgentEntry entry) matches) {
+    for (final entry in conversation.entries.reversed) {
+      if (entry is AgentEntry && matches(entry)) {
+        return entry;
+      }
+    }
+    return null;
+  }
 }
 
 List<PlanChange> receiptChanges(AgentEntry entry) => [
@@ -185,13 +178,6 @@ List<String> inlineSurfaceIds(AgentEntry entry) => [
   for (final surfaceId in entry.surfaceIds)
     if (surfaceId != planSurfaceId) surfaceId,
 ];
-
-final class JourneySection {
-  const JourneySection({required this.entry, this.prompt});
-
-  final AgentEntry entry;
-  final TranscriptEntry? prompt;
-}
 
 String _quotaResetMessage(Duration? retryAfter, DateTime now) {
   const limited =

@@ -48,7 +48,7 @@ class MonthlyCostBreakdownView extends StatelessWidget {
               label: 'Interest at ${percentText(slice.annualRate)}',
               figure: moneyText(monthly.interest),
               value: monthly.interest.minorUnits.toDouble(),
-              color: colors.accent,
+              color: colors.brand,
             ),
             (
               label: switch (monthly.amortizationRate) {
