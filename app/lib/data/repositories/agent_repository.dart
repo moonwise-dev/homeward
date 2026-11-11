@@ -47,7 +47,11 @@ class A2uiAgentRepository with RepositoryGuard implements AgentRepository {
   var _lastEntryId = 0;
 
   @override
-  Future<String> create() => guard(_client.createSession);
+  Future<String> create() => guard(() async {
+    final sessionId = await _client.createSession();
+    _plan(sessionId).isOpened = true;
+    return sessionId;
+  });
 
   @override
   Stream<PlanConversation> watchConversation(String sessionId) {
@@ -78,7 +82,13 @@ class A2uiAgentRepository with RepositoryGuard implements AgentRepository {
       return;
     }
     plan.isOpened = true;
-    final turns = (await _client.transcript(sessionId)).turns;
+    final List<TurnRecord> turns;
+    try {
+      turns = (await _client.transcript(sessionId)).turns;
+    } on Object {
+      plan.isOpened = false;
+      rethrow;
+    }
     var before = plan.snapshot;
     for (final (index, turn) in turns.indexed) {
       turn.messages.forEach(plan.surfaces.apply);

@@ -87,6 +87,8 @@ class JourneyViewModel extends _$JourneyViewModel
 
   void _onFailure(TurnFailure failure) {
     switch (failure.error) {
+      case ServerAppError(code: HomewardErrorCode.sessionNotFound):
+        unawaited(_startAgain(failure.entryId));
       case ServerAppError(code: HomewardErrorCode.geminiKeyInvalid):
         showErrorMessage(error: failure.error);
         ref.read(geminiKeyProvider.notifier).remove();
@@ -101,6 +103,35 @@ class JourneyViewModel extends _$JourneyViewModel
         );
       case _:
         break;
+    }
+  }
+
+  Future<void> _startAgain(String entryId) async {
+    final router = ref.read(appRouterProvider);
+    final agent = ref.read(agentRepositoryProvider);
+    final words = switch ([
+      for (final entry in state.conversation.entries)
+        if (entry.id == entryId) entry,
+    ].firstOrNull) {
+      AgentEntry(request: TextTurnRequest(:final text)) => text,
+      _ => null,
+    };
+    if (words == null) {
+      router.go(AppRoutes.startup);
+      return;
+    }
+    try {
+      final sessionId = await agent.create();
+      showInfoMessage(
+        message:
+            'Your plan had expired on the server, so a new one started '
+            'with your words.',
+      );
+      unawaited(agent.sendText(sessionId, words));
+      router.go(AppRoutes.planOf(sessionId));
+    } on Object catch (error, stackTrace) {
+      logError(error, stackTrace);
+      showErrorMessage(error: error);
     }
   }
 }
